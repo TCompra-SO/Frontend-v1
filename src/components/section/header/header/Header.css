@@ -1,0 +1,31 @@
+.navbar-container {
+  flex: 0.5; 
+  justify-content: flex-start; 
+}
+
+.main-menu {
+  display: flex;
+  justify-content: flex-end; 
+  border-bottom: 0;
+}
+
+.dropdown-menu {
+  justify-content: flex-end; 
+  display: block; 
+}
+
+.item-label {
+  display: none;
+  margin-left: 8px;
+}
+
+@media (max-width: 600px) {
+  .main-menu {
+    display: none; 
+  }
+
+  .item-label, .icon{
+    display: flex; 
+  }
+
+}
