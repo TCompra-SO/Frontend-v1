@@ -1,9 +1,12 @@
-import Header from "./components/section/header/header/Header"
+// import Header from "./components/section/header/header/Header"
+
+import Loading from "./pages/utils/loading"
 
 function App() {
   return (
     <>
-      <Header />
+      {/* <Header /> */}
+      <Loading></Loading>
     </>
   )
 }
