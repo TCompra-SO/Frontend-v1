@@ -3,6 +3,10 @@ import { ProFormSegmented, ProFormText } from "@ant-design/pro-components";
 import { Lengths } from "../../../utilities/lengths";
 import { useState } from "react";
 
+interface DniProps {
+  onChangeTypeDoc: () => void; 
+}
+
 const docType = {
   DNI: 'DNI',
   RUC: 'RUC'
@@ -38,13 +42,12 @@ const rulesRuc =  [
   }
 ];
 
-export default function Dni() {
+export default function Dni({ onChangeTypeDoc }: DniProps) {
   const [docLabel, setDocLabel] = useState(docType.DNI);
-
+  
   return (
     <>
       <ProFormSegmented 
-        
         name="selectType"
         valueEnum={{
           open: docType.DNI,
@@ -53,7 +56,10 @@ export default function Dni() {
         fieldProps={{
           block: true,
         }}
-        getValueFromEvent={(label) => { label == 'open' ? setDocLabel(docType.DNI) : setDocLabel(docType.RUC) }}
+        getValueFromEvent={(label) => { 
+          onChangeTypeDoc();
+          label == 'open' ? setDocLabel(docType.DNI) : setDocLabel(docType.RUC);  
+        }}
       />
       <ProFormText
         name="document"
@@ -63,7 +69,7 @@ export default function Dni() {
             <IdcardOutlined
               className={'prefixIcon'}
             />
-          ),
+          ),         
         }}
         placeholder={docLabel}
         rules={docLabel == docType.DNI ? rulesDni : rulesRuc}
