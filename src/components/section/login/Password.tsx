@@ -1,6 +1,7 @@
 import { LockOutlined } from '@ant-design/icons';
 import { ProFormText } from '@ant-design/pro-components';
 import { Lengths } from '../../../utilities/lengths';
+import './items.css';
 
 export default function Password() {
   return (

@@ -1,6 +1,7 @@
 import { UserOutlined } from "@ant-design/icons";
 import { ProFormText } from "@ant-design/pro-components";
 import { Lengths } from "../../../utilities/lengths";
+import './items.css';
 
 export default function Email() {
   return (
@@ -18,7 +19,8 @@ export default function Email() {
       rules={[
         {
           required: true,
-          message: 'Campo obligatorio',
+          message: 'Ingresa un email válido',
+          type: "email",
         },
         {
           min: Lengths.email.min,

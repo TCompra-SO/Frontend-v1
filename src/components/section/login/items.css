@@ -1,0 +1,4 @@
+/* Muestra sólo el primer error de validación */
+form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
+  display: none;
+}
