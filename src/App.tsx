@@ -1,6 +1,12 @@
+import Login from "./components/section/login/Login"
+
 
 function App() {
-  return <></>
+  return (
+    <>
+      <Login></Login>
+    </>
+  )
 }
 
 export default App
