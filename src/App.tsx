@@ -1,11 +1,12 @@
-import Header from "./components/section/header/header/Header"
+import { CarContainerOptions } from "./components/CardContainerOptions/CardContainerOptions"
+import { utilitieListOptions } from "./utilities/UtilitiesForCardContainer/CardContainerOptionsList"
 
 function App() {
-  return (
-    <>
-      <Header />
-    </>
-  )
+  return <>
+    <div>
+      <CarContainerOptions listOptions={utilitieListOptions} />
+    </div>
+  </> 
 }
 
 export default App
