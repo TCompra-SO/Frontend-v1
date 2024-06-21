@@ -5,9 +5,12 @@ import video from '../assets/videos/video-login.webm';
 import { Form, Tabs } from 'antd';
 import Email from '../components/section/login/Email';
 import Password from '../components/section/login/Password';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Dni from '../components/section/login/Dni';
 import { TabsProps } from 'antd/lib';
+import usePost from '../hooks/auth/usePost';
+import { LoginRequest } from '../models/Auth';
+import login from '../services/auth/login.service';
 
 const LoginType = {
   LOGIN: 'login',
@@ -26,6 +29,20 @@ const tabItems: TabsProps['items'] = [
 ]
 
 export default function Login() {
+
+  async function HandleLogin() {
+    try {
+      const res = await usePost<LoginRequest>(login, {email: 'tygrejesus8@gmail.com', password: '123456789'});
+      console.log(res);
+    } catch (error) {
+      console.error('Error during login:', error);
+    }
+  }
+  
+  useEffect(() => {
+    HandleLogin(); 
+  }, []);
+  
 
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
   const [form] = Form.useForm();
