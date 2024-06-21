@@ -1,11 +1,12 @@
-import Login from "./pages/Login"
 // import Header from "./components/section/header/header/Header"
+
+import Loading from "./pages/utils/loading"
 
 function App() {
   return (
     <>
       {/* <Header /> */}
-      <Login></Login>
+      <Loading></Loading>
     </>
   )
 }
