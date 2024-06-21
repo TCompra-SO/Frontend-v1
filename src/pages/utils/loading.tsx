@@ -8,7 +8,7 @@ export default function Loading() {
 
   setTimeout(() => {
     setIsLoading(false); 
-  }, 2000); 
+  },5000); 
   
   const defaultOptions = {
     loop: true,
