@@ -1,9 +1,11 @@
-import Header from "./components/section/header/header/Header"
+import Login from "./pages/Login"
+// import Header from "./components/section/header/header/Header"
 
 function App() {
   return (
     <>
-      <Header />
+      {/* <Header /> */}
+      <Login></Login>
     </>
   )
 }
