@@ -3,14 +3,10 @@ import { ProFormSegmented, ProFormText } from "@ant-design/pro-components";
 import { Lengths } from "../../../utilities/lengths";
 import { useState } from "react";
 import './items.css';
+import { DocType } from "../../../utilities/types";
 
 interface DniProps {
-  onChangeTypeDoc: () => void; 
-}
-
-const docType = {
-  DNI: 'DNI',
-  RUC: 'RUC'
+  onChangeTypeDoc: (type: string) => void; 
 }
 
 const rulesDni =  [
@@ -31,7 +27,7 @@ const rulesDni =  [
 const rulesRuc =  [
   {
     required: true,
-    message: 'Campo obligatorioee',
+    message: 'Campo obligatorio',
   },
   {
     min: Lengths.ruc.min,
@@ -44,22 +40,22 @@ const rulesRuc =  [
 ];
 
 export default function Dni({ onChangeTypeDoc }: DniProps) {
-  const [docLabel, setDocLabel] = useState(docType.DNI);
+  const [docLabel, setDocLabel] = useState(DocType.DNI);
   
   return (
     <>
       <ProFormSegmented 
         name="selectType"
         valueEnum={{
-          open: docType.DNI,
-          closed: docType.RUC,
+          open: DocType.DNI,
+          closed: DocType.RUC,
         }}
         fieldProps={{
           block: true,
         }}
         getValueFromEvent={(label) => { 
-          onChangeTypeDoc();
-          label == 'open' ? setDocLabel(docType.DNI) : setDocLabel(docType.RUC);  
+          label == 'open' ? setDocLabel(DocType.DNI) : setDocLabel(DocType.RUC);  
+          onChangeTypeDoc(label == 'open' ? DocType.DNI : DocType.RUC);
         }}
       />
       <ProFormText
@@ -73,7 +69,7 @@ export default function Dni({ onChangeTypeDoc }: DniProps) {
           ),         
         }}
         placeholder={docLabel}
-        rules={docLabel == docType.DNI ? rulesDni : rulesRuc}
+        rules={docLabel == DocType.DNI ? rulesDni : rulesRuc}
       />
     </>
   )

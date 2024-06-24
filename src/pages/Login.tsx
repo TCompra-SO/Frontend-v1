@@ -8,6 +8,18 @@ import Password from '../components/section/login/Password';
 import { useState } from 'react';
 import Dni from '../components/section/login/Dni';
 import { TabsProps } from 'antd/lib';
+import usePost from '../hooks/auth/usePost';
+import { RegisterRequest } from '../models/Auth';
+import login from '../services/auth/login.service';
+import { register } from '../services/auth/register.service';
+import { useDispatch } from 'react-redux';
+import { setUser, setUid } from '../redux/userSlice';
+import { DocType } from '../utilities/types';
+// import { useSelector } from 'react-redux';
+
+interface LoginProps {
+  onChangeLoadingPage: (isLoading: boolean) => void; 
+}
 
 const LoginType = {
   LOGIN: 'login',
@@ -25,9 +37,11 @@ const tabItems: TabsProps['items'] = [
   },
 ]
 
-export default function Login() {
-
+export default function Login(props: LoginProps) {
+  const dispatch = useDispatch();
+  // const user = useSelector((state: any) => state.user);
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
+  const [docType, setDocType] = useState(DocType.DNI);
   const [form] = Form.useForm();
 
   function changeLabel(loginType: string) {
@@ -38,9 +52,40 @@ export default function Login() {
     form.resetFields();
   }
 
-  function handleChangeTypeDoc() {
-    form.setFieldsValue({document: ''})
+  function handleChangeTypeDoc(type: string) {
+    form.setFieldsValue({document: ''});
+    setDocType(type);
   }
+
+  function HandleSubmit(values: any) {
+    let data: RegisterRequest;
+    let callbackFn = null;
+    if (loginType == LoginType.LOGIN) {
+      data = { email: values.email, password: values.password };
+      callbackFn = login;
+    } else {
+      data = { email: values.email, password: values.password, profileType: 'Premium', userType: 'admin' };
+      if (docType == DocType.DNI) data.dni = values.document;
+      else data.ruc = values.document;
+      callbackFn = register;
+    }
+
+    props.onChangeLoadingPage(true);
+    usePost<RegisterRequest>(callbackFn, data).then(res => {
+      props.onChangeLoadingPage(false);
+      if (!res.error) {
+        if (loginType == LoginType.REGISTER)
+          dispatch(setUid(res.data));
+        else {
+          dispatch(setUser(res.data));
+          localStorage.setItem('token', res.data.token);
+        }
+      }
+    }).catch(error => {
+      console.error('Error en login:', error);
+      props.onChangeLoadingPage(false);
+    });
+  } 
 
   return (
     <>
@@ -52,6 +97,7 @@ export default function Login() {
     >
       <LoginFormPage
         form={form}
+        onFinish={HandleSubmit}
         backgroundImageUrl={backgroundImage}
         backgroundVideoUrl={video}
         logo={logo}
@@ -71,7 +117,7 @@ export default function Login() {
             style: {
               background: '#BC1373',
               width: '100%'
-            }
+            },
           }
         }}
       >
