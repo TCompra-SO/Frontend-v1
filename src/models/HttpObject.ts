@@ -1,5 +1,5 @@
 export interface HttpObject {
-  data: object | null,
+  data: any | null,
   loading: boolean,
   error: string | null
 }

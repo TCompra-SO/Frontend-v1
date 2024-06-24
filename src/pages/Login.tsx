@@ -77,11 +77,13 @@ export default function Login(props: LoginProps) {
       if (!res.error) {
         if (loginType == LoginType.REGISTER)
           dispatch(setUid(res.data));
-        else 
+        else {
           dispatch(setUser(res.data));
+          localStorage.setItem('token', res.data.token);
+        }
       }
     }).catch(error => {
-      console.error('Error during login:', error);
+      console.error('Error en login:', error);
       props.onChangeLoadingPage(false);
     });
   } 
