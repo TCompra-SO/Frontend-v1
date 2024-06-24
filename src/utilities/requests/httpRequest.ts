@@ -1,14 +1,15 @@
 import axios, { AxiosResponse } from "axios";
 import { HttpObject } from "../../models/HttpObject";
+import { useState } from "react";
 
 export default async function httpRequest<T>(
   url: string,
   method: 'get' | 'post' | 'put' | 'delete',
   dataToSend?: T
 ): Promise<HttpObject> {
-  let loading = true;
-  let data: any = null;
-  let error: string | null = null;
+  const [loading, setLoading] = useState<boolean>(true);
+  const [data, setData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
   
   try {
     let response: AxiosResponse;
@@ -28,11 +29,11 @@ export default async function httpRequest<T>(
         break;
     }
 
-    data = response.data;
-    loading = false;
+    setData(response.data);
+    setLoading(false);
   } catch (err) {
-    error = 'Error al obtener datos';
-    loading = false;
+    setError('Error al obtener datos');
+    setLoading(false);
     console.error('HTTP Request Error:', err);
   }
 
