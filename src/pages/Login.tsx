@@ -54,7 +54,6 @@ export default function Login(props: LoginProps) {
 
   function handleChangeTypeDoc(type: string) {
     form.setFieldsValue({document: ''});
-    console.log(type);
     setDocType(type);
   }
 
