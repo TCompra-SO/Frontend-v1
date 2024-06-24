@@ -1,8 +1,9 @@
-import { LoginRequest } from "../../models/Auth";
-import httpRequest from "../../utilities/requests/postRequest";
+import { RegisterRequest } from "../../models/Auth";
+import httpRequest from "../../utilities/requests/httpRequest";
+import { Routes } from "../../utilities/routes";
 
-export default async function login (loginData: LoginRequest) {
-  const url = 'x';
-  const response = await httpRequest<LoginRequest>(url, 'post', loginData);
+export default function login (loginData: RegisterRequest) {
+  const url = `${import.meta.env.VITE_API_BASE_URL}${Routes.auth}login`;
+  const response = httpRequest<RegisterRequest>(url, 'post', loginData);
   return response;
 }

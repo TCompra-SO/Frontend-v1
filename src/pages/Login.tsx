@@ -5,12 +5,17 @@ import video from '../assets/videos/video-login.webm';
 import { Form, Tabs } from 'antd';
 import Email from '../components/section/login/Email';
 import Password from '../components/section/login/Password';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Dni from '../components/section/login/Dni';
 import { TabsProps } from 'antd/lib';
 import usePost from '../hooks/auth/usePost';
-import { LoginRequest } from '../models/Auth';
+import { RegisterRequest } from '../models/Auth';
 import login from '../services/auth/login.service';
+import { register } from '../services/auth/register.service';
+
+interface LoginProps {
+  onChangeLoadingPage: (isLoading: boolean) => void; 
+}
 
 const LoginType = {
   LOGIN: 'login',
@@ -28,21 +33,7 @@ const tabItems: TabsProps['items'] = [
   },
 ]
 
-export default function Login() {
-
-  async function HandleLogin() {
-    try {
-      const res = await usePost<LoginRequest>(login, {email: 'tygrejesus8@gmail.com', password: '123456789'});
-      console.log(res);
-    } catch (error) {
-      console.error('Error during login:', error);
-    }
-  }
-  
-  useEffect(() => {
-    HandleLogin(); 
-  }, []);
-  
+export default function Login(props: LoginProps) {
 
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
   const [form] = Form.useForm();
@@ -59,6 +50,27 @@ export default function Login() {
     form.setFieldsValue({document: ''})
   }
 
+  function HandleSubmit(values: any) {
+    let data: RegisterRequest;
+    let callbackFn = null;
+    if (loginType == LoginType.LOGIN) {
+      data = { email: values.email, password: values.password };
+      callbackFn = login;
+    } else {
+      data = { email: values.email, password: values.password, profileType: 'Premium', userType: 'admin', dni: values.document };
+      callbackFn = register;
+    }
+
+    props.onChangeLoadingPage(true);
+    usePost<RegisterRequest>(callbackFn, data).then(res => {
+      props.onChangeLoadingPage(false);
+      console.log(res.data, res.error, res.loading);
+    }).catch(error => {
+      console.error('Error during login:', error);
+      props.onChangeLoadingPage(false);
+    });
+  } 
+
   return (
     <>
     <div
@@ -69,6 +81,7 @@ export default function Login() {
     >
       <LoginFormPage
         form={form}
+        onFinish={HandleSubmit}
         backgroundImageUrl={backgroundImage}
         backgroundVideoUrl={video}
         logo={logo}
@@ -88,7 +101,7 @@ export default function Login() {
             style: {
               background: '#BC1373',
               width: '100%'
-            }
+            },
           }
         }}
       >

@@ -6,9 +6,9 @@ export interface LoginRequest {
 export interface RegisterRequest {
   email: string,
   password: string,
-  profileType: string,
-  userType: string,
-  dni: string
+  profileType?: string,
+  userType?: string,
+  dni?: string
 }
 
 export interface ProfileRequest {

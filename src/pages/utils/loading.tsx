@@ -6,9 +6,9 @@ import { Flex } from 'antd';
 export default function Loading() {
   const [isLoading, setIsLoading] = useState(true);
 
-  setTimeout(() => {
-    setIsLoading(false); 
-  },5000); 
+  // setTimeout(() => {
+  //   setIsLoading(false); 
+  // }, props.time); 
   
   const defaultOptions = {
     loop: true,

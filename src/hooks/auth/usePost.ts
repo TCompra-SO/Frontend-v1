@@ -1,8 +1,10 @@
-type CallbackFunction<T> = (data: T) => Promise<object>;
+import { HttpObject } from "../../models/HttpObject";
 
-async function usePost <T>( CallbackFunction: CallbackFunction<T>,  dataToSend: T) {
-  const res = await CallbackFunction(dataToSend);
-  return res;
+type CallbackFunction<T> = (data: T) => Promise<HttpObject>;
+
+function usePost <T>( CallbackFunction: CallbackFunction<T>,  dataToSend: T) {
+  const response = CallbackFunction(dataToSend);
+  return response;
 }
 
 export default usePost;
