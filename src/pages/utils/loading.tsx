@@ -1,10 +1,8 @@
 import Lottie from 'react-lottie';
 import loadingAnimationData from '../../assets/lotties/loading.json';
-import { useState } from 'react';
 import { Flex } from 'antd';
 
 export default function Loading() {
-  const [isLoading, setIsLoading] = useState(true);
   
   const defaultOptions = {
     loop: true,
@@ -13,17 +11,11 @@ export default function Loading() {
   };
 
   return (
-    <>
-      {isLoading ? (
-        <Flex justify='center' align='center' style={{height: '100vh'}}>
-          <Lottie
-            options={defaultOptions}
-            width='30vh'
-          />
-        </Flex>
-        ) : (
-          <></>
-        )}
-    </>
+    <Flex justify='center' align='center' style={{height: '100vh'}}>
+      <Lottie
+        options={defaultOptions}
+        width='30vh'
+      />
+    </Flex>
   );
 }

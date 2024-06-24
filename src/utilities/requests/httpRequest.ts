@@ -7,9 +7,10 @@ export default async function httpRequest<T>(
   method: 'get' | 'post' | 'put' | 'delete',
   dataToSend?: T
 ): Promise<HttpObject> {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [data, setData] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
+  // const [loading, setLoading] = useState(true);
+  let loading = true;
+  let data: any = null;
+  let error: string | null = null;
   
   try {
     let response: AxiosResponse;
@@ -29,11 +30,13 @@ export default async function httpRequest<T>(
         break;
     }
 
-    setData(response.data);
-    setLoading(false);
+    data = response.data;
+    // setLoading(false);
+    loading = false;
   } catch (err) {
-    setError('Error al obtener datos');
-    setLoading(false);
+    error = 'Error al obtener datos';
+    // setLoading(false);
+    loading = false;
     console.error('HTTP Request Error:', err);
   }
 

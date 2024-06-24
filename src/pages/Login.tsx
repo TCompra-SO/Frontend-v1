@@ -12,6 +12,9 @@ import usePost from '../hooks/auth/usePost';
 import { RegisterRequest } from '../models/Auth';
 import login from '../services/auth/login.service';
 import { register } from '../services/auth/register.service';
+import { useDispatch } from 'react-redux';
+import { addUser } from '../redux/userSlice';
+import { useSelector } from 'react-redux';
 
 interface LoginProps {
   onChangeLoadingPage: (isLoading: boolean) => void; 
@@ -34,7 +37,8 @@ const tabItems: TabsProps['items'] = [
 ]
 
 export default function Login(props: LoginProps) {
-
+  const dispatch = useDispatch();
+  const user = useSelector((state: any) => state.user);
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
   const [form] = Form.useForm();
 
@@ -64,7 +68,8 @@ export default function Login(props: LoginProps) {
     props.onChangeLoadingPage(true);
     usePost<RegisterRequest>(callbackFn, data).then(res => {
       props.onChangeLoadingPage(false);
-      console.log(res.data, res.error, res.loading);
+      if (!res.error)
+        dispatch(addUser(res.data));
     }).catch(error => {
       console.error('Error during login:', error);
       props.onChangeLoadingPage(false);
@@ -86,7 +91,7 @@ export default function Login(props: LoginProps) {
         backgroundVideoUrl={video}
         logo={logo}
         title="TCompra"
-        subTitle="Tu mejor proveedor"
+        subTitle={user.type}
         containerStyle={{ 
           backgroundColor: 'rgba(255, 255, 255, 0.2)',
           backdropFilter: 'blur(10px)',
