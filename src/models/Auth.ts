@@ -8,7 +8,8 @@ export interface RegisterRequest {
   password: string,
   profileType?: string,
   userType?: string,
-  dni?: string
+  dni?: string,
+  ruc?: string
 }
 
 export interface ProfileRequest {

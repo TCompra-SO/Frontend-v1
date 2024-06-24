@@ -13,8 +13,9 @@ import { RegisterRequest } from '../models/Auth';
 import login from '../services/auth/login.service';
 import { register } from '../services/auth/register.service';
 import { useDispatch } from 'react-redux';
-import { addUser } from '../redux/userSlice';
-import { useSelector } from 'react-redux';
+import { setUser, setUid } from '../redux/userSlice';
+import { DocType } from '../utilities/types';
+// import { useSelector } from 'react-redux';
 
 interface LoginProps {
   onChangeLoadingPage: (isLoading: boolean) => void; 
@@ -38,8 +39,9 @@ const tabItems: TabsProps['items'] = [
 
 export default function Login(props: LoginProps) {
   const dispatch = useDispatch();
-  const user = useSelector((state: any) => state.user);
+  // const user = useSelector((state: any) => state.user);
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
+  const [docType, setDocType] = useState(DocType.DNI);
   const [form] = Form.useForm();
 
   function changeLabel(loginType: string) {
@@ -50,8 +52,10 @@ export default function Login(props: LoginProps) {
     form.resetFields();
   }
 
-  function handleChangeTypeDoc() {
-    form.setFieldsValue({document: ''})
+  function handleChangeTypeDoc(type: string) {
+    form.setFieldsValue({document: ''});
+    console.log(type);
+    setDocType(type);
   }
 
   function HandleSubmit(values: any) {
@@ -61,15 +65,21 @@ export default function Login(props: LoginProps) {
       data = { email: values.email, password: values.password };
       callbackFn = login;
     } else {
-      data = { email: values.email, password: values.password, profileType: 'Premium', userType: 'admin', dni: values.document };
+      data = { email: values.email, password: values.password, profileType: 'Premium', userType: 'admin' };
+      if (docType == DocType.DNI) data.dni = values.document;
+      else data.ruc = values.document;
       callbackFn = register;
     }
 
     props.onChangeLoadingPage(true);
     usePost<RegisterRequest>(callbackFn, data).then(res => {
       props.onChangeLoadingPage(false);
-      if (!res.error)
-        dispatch(addUser(res.data));
+      if (!res.error) {
+        if (loginType == LoginType.REGISTER)
+          dispatch(setUid(res.data));
+        else 
+          dispatch(setUser(res.data));
+      }
     }).catch(error => {
       console.error('Error during login:', error);
       props.onChangeLoadingPage(false);
@@ -91,7 +101,7 @@ export default function Login(props: LoginProps) {
         backgroundVideoUrl={video}
         logo={logo}
         title="TCompra"
-        subTitle={user.type}
+        subTitle="Tu mejor proveedor"
         containerStyle={{ 
           backgroundColor: 'rgba(255, 255, 255, 0.2)',
           backdropFilter: 'blur(10px)',
