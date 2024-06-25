@@ -25,10 +25,10 @@ export interface ProfileRequest {
 export interface ValidateCodeRequest {
   email: string,
   code: string,
-  type: string
+  type: "repassword" | "identity_verified"
 }
 
 export interface SendCodeRequest {
   email: string,
-  type: string
+  type: "repassword" | "identity_verified"
 }

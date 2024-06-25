@@ -10,7 +10,7 @@ export default async function httpRequest<T>(
   // const [loading, setLoading] = useState(true);
   let loading = true;
   let data: any = null;
-  let error: string | null = null;
+  let error: {default: string, msg: string} | null = null;
   
   try {
     let response: AxiosResponse;
@@ -33,8 +33,8 @@ export default async function httpRequest<T>(
     data = response.data;
     // setLoading(false);
     loading = false;
-  } catch (err) {
-    error = 'Error al obtener datos';
+  } catch (err: any) {
+    error = { default: 'Error al obtener datos', msg: err.response.data.msg };
     // setLoading(false);
     loading = false;
     console.error('HTTP Request Error:', err);

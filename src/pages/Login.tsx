@@ -11,11 +11,11 @@ import { TabsProps } from 'antd/lib';
 import usePost from '../hooks/auth/usePost';
 import { RegisterRequest } from '../models/Auth';
 import login from '../services/auth/login.service';
-import { register } from '../services/auth/register.service';
 import { useDispatch } from 'react-redux';
 import { setUser, setUid } from '../redux/userSlice';
 import { DocType } from '../utilities/types';
-// import { useSelector } from 'react-redux';
+import ValidateCode from '../components/modals/ValidateCode';
+import register from '../services/auth/register.service';
 
 interface LoginProps {
   onChangeLoadingPage: (isLoading: boolean) => void; 
@@ -39,9 +39,12 @@ const tabItems: TabsProps['items'] = [
 
 export default function Login(props: LoginProps) {
   const dispatch = useDispatch();
-  // const user = useSelector((state: any) => state.user);
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
   const [docType, setDocType] = useState(DocType.DNI);
+  const [isCodeModalOpen, setIsCodeModalVisible] = useState(false);
+  const [email, setEmail] = useState('');
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [showCodeValidation, setShowCodeValidation] = useState(false);
   const [form] = Form.useForm();
 
   function changeLabel(loginType: string) {
@@ -57,9 +60,23 @@ export default function Login(props: LoginProps) {
     setDocType(type);
   }
 
-  function HandleSubmit(values: any) {
+  function handleOpenModal() {
+    setIsCodeModalVisible(true);
+  }
+
+  function handleCloseModal() {
+    setIsCodeModalVisible(false);
+  }
+
+  function handleValidationSuccess() {
+    setShowCodeValidation(false);
+  }
+
+  async function HandleSubmit(values: any) {
     let data: RegisterRequest;
     let callbackFn = null;
+    setEmail(values.email);
+
     if (loginType == LoginType.LOGIN) {
       data = { email: values.email, password: values.password };
       callbackFn = login;
@@ -71,20 +88,24 @@ export default function Login(props: LoginProps) {
     }
 
     props.onChangeLoadingPage(true);
-    usePost<RegisterRequest>(callbackFn, data).then(res => {
+    try {
+      const registerResp = await usePost<RegisterRequest>(callbackFn, data);
       props.onChangeLoadingPage(false);
-      if (!res.error) {
-        if (loginType == LoginType.REGISTER)
-          dispatch(setUid(res.data));
-        else {
-          dispatch(setUser(res.data));
-          localStorage.setItem('token', res.data.token);
+      console.log(registerResp);
+      if (!registerResp.error) {
+        if (loginType == LoginType.REGISTER) {
+          dispatch(setUid(registerResp.data));
+          setRegistrationSuccess(true);
+          setShowCodeValidation(true);
+        } else {
+          dispatch(setUser(registerResp.data));
+          localStorage.setItem('token', registerResp.data.token);
         }
       }
-    }).catch(error => {
+    } catch(error) {
       console.error('Error en login:', error);
       props.onChangeLoadingPage(false);
-    });
+    }
   } 
 
   return (
@@ -142,6 +163,22 @@ export default function Login(props: LoginProps) {
             <Dni onChangeTypeDoc={handleChangeTypeDoc}></Dni>
             <Email></Email>
             <Password></Password>
+            {registrationSuccess && (
+              <>
+                {showCodeValidation && (
+                  <a onClick={handleOpenModal} style={{ float: 'right', marginBottom: '24px', fontWeight: 'bold' }}>
+                    Validar código
+                  </a>
+                )}
+                
+                <ValidateCode 
+                  isOpen={isCodeModalOpen}
+                  onClose={handleCloseModal}
+                  onValidationSucces={handleValidationSuccess}
+                  email={email}
+                />
+              </>
+            )}
           </>
         )}
       </LoginFormPage>
