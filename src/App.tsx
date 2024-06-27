@@ -1,10 +1,12 @@
 import Loading from "./pages/utils/loading"
 import Login from "./pages/Login"
 import { useState } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import Profile from "./pages/Profile";
+import { App as AntdApp } from "antd";
 // import Header from "./components/section/header/header/Header"
 
 function App() {
-  
   const [isLoading, setIsLoading] = useState(false);
 
   function handleChangeLoadingPage(isLoading: boolean) {
@@ -13,9 +15,16 @@ function App() {
 
   return (
     <>
-      {/* <Header /> */}
-      {isLoading && <Loading></Loading>}
-      <Login onChangeLoadingPage={handleChangeLoadingPage}></Login>
+      <AntdApp>
+        {/* <Header /> */}
+        {isLoading && <Loading></Loading>}
+        <Routes>
+          <Route path='/' element={<Login onChangeLoadingPage={handleChangeLoadingPage}></Login>} />
+          <Route path="/profile" element={<Profile onChangeLoadingPage={handleChangeLoadingPage}></Profile>} />
+          <Route path="*" element={<Navigate to="/" replace />}
+          />
+        </Routes>
+      </AntdApp>
     </>
   )
 }

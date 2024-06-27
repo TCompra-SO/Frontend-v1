@@ -101,6 +101,11 @@ export default function ValidateCode({isOpen, onClose, email, onValidationSucces
     const data: SendCodeRequest = {email: email, type: 'identity_verified'};
     const response = await usePost<SendCodeRequest>(sendCode, data);
     console.log(response);
+    // if (!response.error) 
+    beginTimer();
+  }
+
+  function beginTimer() {
     intervalId = setInterval(() => {
       setTimer(prevTimer => {
         if (prevTimer - 1 === 0) {
