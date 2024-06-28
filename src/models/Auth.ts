@@ -32,3 +32,11 @@ export interface SendCodeRequest {
   email: string,
   type: "repassword" | "identity_verified"
 }
+
+export interface CountriesRequest {
+  verify: 1 | 2 // 1: Solo paises | 2: Paises y ciudades
+}
+
+export interface CountryObj {
+  
+}

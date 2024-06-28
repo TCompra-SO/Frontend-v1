@@ -1,5 +1,9 @@
 import { Form, Select } from "antd";
 
+interface CityProps {
+  cities: string[]
+}
+
 const rulesCity =  [
   {
     required: true,
@@ -7,14 +11,7 @@ const rulesCity =  [
   }
 ];
 
-const cities = [
-  {
-    label: 'Arequipa',
-    value: 1
-  }
-]
-
-export default function City() {
+export default function City({cities}: CityProps) {
   return (
     <Form.Item 
       label="Ciudad" 
@@ -22,8 +19,8 @@ export default function City() {
       rules={rulesCity}>
       <Select placeholder='Seleccionar'>
         {cities.map(city => (
-          <Select.Option key={city.value} value={city.label}>
-            {city.label}
+          <Select.Option key={city} value={city}>
+            {city}
           </Select.Option>
         ))}
       </Select>

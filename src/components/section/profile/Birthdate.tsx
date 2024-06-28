@@ -14,7 +14,6 @@ export default function Birthdate() {
       label="Fecha de nacimiento"
       name="birthdate"
       rules={rulesBirthdate}
-      
     >
       <DatePicker format={dateFormat} style={{width: '100%'}}/>
     </Form.Item>

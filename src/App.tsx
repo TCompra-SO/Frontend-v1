@@ -3,7 +3,7 @@ import Login from "./pages/Login"
 import { useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Profile from "./pages/Profile";
-import { App as AntdApp } from "antd";
+import { App as AntdApp, ConfigProvider, theme } from "antd";
 // import Header from "./components/section/header/header/Header"
 
 function App() {
@@ -15,16 +15,28 @@ function App() {
 
   return (
     <>
-      <AntdApp>
-        {/* <Header /> */}
-        {isLoading && <Loading></Loading>}
-        <Routes>
-          <Route path='/' element={<Login onChangeLoadingPage={handleChangeLoadingPage}></Login>} />
-          <Route path="/profile" element={<Profile onChangeLoadingPage={handleChangeLoadingPage}></Profile>} />
-          <Route path="*" element={<Navigate to="/" replace />}
-          />
-        </Routes>
-      </AntdApp>
+      <ConfigProvider
+        theme={{
+          algorithm: theme.defaultAlgorithm,
+          token: {
+            colorPrimary: '#BC1373',
+            borderRadius: 10,
+            colorBgContainer: '#ffffff',
+            fontFamily: 'sans-serif'
+          },
+        }}
+      >
+        <AntdApp>
+          {/* <Header /> */}
+          {isLoading && <Loading></Loading>}
+          <Routes>
+            <Route path='/' element={<Login onChangeLoadingPage={handleChangeLoadingPage}></Login>} />
+            <Route path="/profile" element={<Profile onChangeLoadingPage={handleChangeLoadingPage}></Profile>} />
+            <Route path="*" element={<Navigate to="/" replace />}
+            />
+          </Routes>
+        </AntdApp>
+      </ConfigProvider>
     </>
   )
 }

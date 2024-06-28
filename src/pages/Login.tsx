@@ -77,17 +77,18 @@ export default function Login(props: LoginProps) {
     try {
       const registerResp = await usePost<RegisterRequest>(callbackFn, data);
       props.onChangeLoadingPage(false);
-      console.log(registerResp);
+      
       if (!registerResp.error) {
         if (loginType == LoginType.REGISTER) {
           dispatch(setUid(registerResp.data));
           navigate('/profile', { state: {email: values.email} });
         } else {
+          showNotification(notification, 'success', 'Usuario registrado exitosamente');
           dispatch(setUser(registerResp.data));
           localStorage.setItem('token', registerResp.data.token);
         }
       } else {
-        showNotification(notification, 'error', 'Se produjo un error');
+        showNotification(notification, 'error', registerResp.error);
       }
     } catch(error) {
       console.error('Error en login:', error);
@@ -123,7 +124,6 @@ export default function Login(props: LoginProps) {
           },
           submitButtonProps: {
             style: {
-              background: '#BC1373',
               width: '100%'
             },
           }
@@ -134,13 +134,12 @@ export default function Login(props: LoginProps) {
           activeKey={loginType}
           onChange={(pressedKey) => {setLoginType(pressedKey); resetFields()}}
           items={tabItems}
-          style={{color: '#BC1373'}}
         />
         {loginType == LoginType.LOGIN && (
           <>
             <Email></Email>
             <Password></Password>
-            <a style={{ float: 'right', marginBottom: '24px', fontWeight: 'bold' }}>
+            <a style={{ float: 'right', marginBottom: '24px', fontWeight: 'bold', color: '#007CD1' }}>
               ¿Olvidó su contraseña?
             </a>
           </>

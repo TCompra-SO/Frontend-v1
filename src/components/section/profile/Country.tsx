@@ -1,5 +1,10 @@
 import { Form, Select } from "antd";
 
+interface CountryProps {
+  countries: string[],
+  onChangeCountry: (type: string) => void; 
+}
+
 const rulesCountry =  [
   {
     required: true,
@@ -7,23 +12,22 @@ const rulesCountry =  [
   }
 ];
 
-const countries = [
-  {
-    label: 'Perú',
-    value: 1
-  }
-]
-
-export default function Country() {
+export default function Country({countries, onChangeCountry}: CountryProps) {
   return (
     <Form.Item 
       label="País" 
       name="country" 
       rules={rulesCountry}>
-      <Select placeholder='Seleccionar'>
+      <Select 
+        placeholder='Seleccionar'
+        onChange={onChangeCountry}
+      >
         {countries.map(country => (
-          <Select.Option key={country.value} value={country.label}>
-            {country.label}
+          <Select.Option 
+            key={country} 
+            value={country}
+          >
+              {country}
           </Select.Option>
         ))}
       </Select>

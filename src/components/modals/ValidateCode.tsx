@@ -1,10 +1,11 @@
 import { CheckCircleOutlined, SendOutlined, SolutionOutlined } from "@ant-design/icons";
-import { Button, Divider, Flex, Input, Modal, Steps, StepsProps } from "antd";
+import { App, Button, Divider, Flex, Input, Modal, Steps, StepsProps } from "antd";
 import { useEffect, useState } from "react";
 import usePost from "../../hooks/auth/usePost";
 import { SendCodeRequest, ValidateCodeRequest } from "../../models/Auth";
 import validateCode from "../../services/auth/validateCode.service";
 import sendCode from "../../services/auth/sendCode.service";
+import showNotification from "../../utilities/notification/showNotification";
 
 interface ValidateCodeProps {
   isOpen: boolean,
@@ -54,12 +55,11 @@ const steps: StepsProps['items'] = stepsIni.map((item) => ({ key: item.key, titl
 const expireInSeconds = 10;
 
 export default function ValidateCode({isOpen, onClose, email, onValidationSucces}: ValidateCodeProps) {
+  const { notification } = App.useApp();
   const [current, setCurrent] = useState(0);
   const [validated, setValidated] = useState(false);
   const [waiting, setWaiting] = useState(false);
   const [timer, setTimer] = useState(expireInSeconds);
-  const [errorMsg, setErrorMsg] = useState('');
-  const [showError, setShowError] = useState(false);
   let intervalId: number = 0;
 
   useEffect(() => {
@@ -68,8 +68,6 @@ export default function ValidateCode({isOpen, onClose, email, onValidationSucces
       clearInterval(intervalId);
       setTimer(expireInSeconds);
       setValidated(false);
-      setShowError(false);
-      setErrorMsg('');
     }
   }, [isOpen])
 
@@ -77,32 +75,42 @@ export default function ValidateCode({isOpen, onClose, email, onValidationSucces
     if (current == steps!.length - 1)
       onClose();
     else
-      setCurrent(current + 1);
+      setCurrent((current) => {
+        const next: number= current + 1;
+        steps![next].status = 'finish';
+        return next;
+      });
   }
   
   async function ValidateCode(code: string) {
-    setShowError(false);
-    const data: ValidateCodeRequest = {email: email, type: 'identity_verified', code: code};
+    const data: ValidateCodeRequest = {
+      email: email, 
+      type: 'identity_verified', 
+      code: code
+    };
     const response = await usePost<ValidateCodeRequest>(validateCode, data);
     if (!response.error) {
       setValidated(true);
       onValidationSucces();
+      next();
     }
     else {
-      console.log(response.error);
-      setErrorMsg(response.error.msg);
-      setShowError(true);
+      showNotification(notification, 'error', response.error);
     }
   }
 
   async function ResendCode() {
     setWaiting(true);
-    setShowError(false);
-    const data: SendCodeRequest = {email: email, type: 'identity_verified'};
+    const data: SendCodeRequest = {
+      email: email, 
+      type: 'identity_verified'
+    };
     const response = await usePost<SendCodeRequest>(sendCode, data);
-    console.log(response);
-    // if (!response.error) 
     beginTimer();
+    if (!response.error)
+        showNotification(notification, 'success', 'Se envió el código con éxito');
+    else
+      showNotification(notification, 'error', response.error);
   }
 
   function beginTimer() {
@@ -119,6 +127,7 @@ export default function ValidateCode({isOpen, onClose, email, onValidationSucces
     }, 1000)
   }
 
+
   return (
     <Modal
       centered
@@ -132,7 +141,6 @@ export default function ValidateCode({isOpen, onClose, email, onValidationSucces
           key="submit" 
           type="primary" 
           onClick={next} 
-          style={{background: '#BC1373'}}
           disabled={stepsIni[current].key == 'val' && !validated}
         >
           {current < steps!.length - 1 ? 'Siguiente' : 'Aceptar'}
@@ -155,18 +163,13 @@ export default function ValidateCode({isOpen, onClose, email, onValidationSucces
               <a 
                 style={{ 
                   float: 'right', 
-                  marginBottom: showError ? '0' : '24px',
+                  marginBottom: '24px',
                   pointerEvents: waiting ? 'none' : 'all',
                   cursor: waiting ? 'not-allowed' : ''
                 }} 
                 onClick={ResendCode}>
                   {waiting ? `Podrá reenviar el código en (${timer}) segundos` : 'Reenviar código'}
               </a>
-              {showError && (
-                <div style={{color: 'red', marginBottom: '24px'}}>
-                  {errorMsg}
-                </div>
-              )}
             </>
           )}
         

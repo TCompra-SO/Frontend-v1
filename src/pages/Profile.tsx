@@ -4,37 +4,64 @@ import Phone from "../components/section/profile/Phone";
 import Country from "../components/section/profile/Country";
 import City from "../components/section/profile/City";
 import usePost from "../hooks/auth/usePost";
-import { ProfileRequest, SendCodeRequest } from "../models/Auth";
+import { CountriesRequest, ProfileRequest, SendCodeRequest } from "../models/Auth";
 import createProfile from "../services/auth/profile.service";
 import moment from 'moment';
 import { dateFormat } from "../utilities/globals";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import showNotification from "../utilities/notification/showNotification";
 import ValidateCode from "../components/modals/ValidateCode";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import sendCode from "../services/auth/sendCode.service";
-import backImage from "../assets/images/back-modal.svg";
+import backgroundImage from "../assets/images/silder-tc-04.jpg";
 import Title from "antd/es/typography/Title";
+import getCountries from "../services/utils/country.service";
 
 interface ProfileProps {
   onChangeLoadingPage: (isLoading: boolean) => void; 
 }
 
 export default function Profile(props: ProfileProps) {
-  const {state} = useLocation();
-  const { email } = state;
+  const navigate = useNavigate();
+  // const { state } = useLocation();
+  // const { email } = state;
+  const email='al.h8500@gmail.com';
   const { notification } = App.useApp();
-  // const email='al.h8500@gmail.com';
+  const [form] = Form.useForm();
   const [uid, setUid] = useState(useSelector((state: MainState) => state.user.uid));  
-  console.log(email, uid);
-  const [showCodeValidation, setShowCodeValidation] = useState(false);
   const [isCodeModalOpen, setIsCodeModalVisible] = useState(false);
   const [profileSuccess, setProfileSuccess] = useState(false);
+  const [countries, setCountries] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+  const [countryObj, setCountryObj] = useState<any>({});
 
-  function handleValidationSuccess() {
-    setShowCodeValidation(false);
+  useEffect(() => {
+    GetCountriesAndCities();
+  }, [])
+  
+  
+
+  async function GetCountriesAndCities() {
+    const request: CountriesRequest = { verify: 2 };
+    const response: any = await usePost<CountriesRequest>(getCountries, request);
+    let cityList: string[] = [];
+    if (!response.error) {
+      const countryList = response.data.map((country: any, i: number) => {
+        countryObj[country.country] = country.cities;
+        if (i == 0) cityList = country.cities;
+        return country.country;
+      });
+      setCountries(countryList);
+      setCities(cityList);
+      if (countryList.length) form.setFieldValue('country', countryList[0]);
+    }
+  }
+
+  function handleCountryChange(newCountry: string) {
+    setCities(countryObj[newCountry]);
+    form.setFieldsValue({city: null});
   }
 
   function handleOpenModal() {
@@ -44,6 +71,10 @@ export default function Profile(props: ProfileProps) {
 
   function handleCloseModal() {
     setIsCodeModalVisible(false);
+  }
+
+  function handleValidationSuccess() {
+    navigate('/');
   }
 
   async function HandleSubmit(values: any) {
@@ -56,16 +87,14 @@ export default function Profile(props: ProfileProps) {
       city: values.city,
       phone: values.phone
     }
-    console.log(data);
     const profileResponse = await usePost<ProfileRequest>(createProfile, data);
     props.onChangeLoadingPage(false);
-    console.log(profileResponse);
     
     if (!profileResponse.error) {
       showNotification(notification, 'success', 'Perfil creado con éxito');
       setProfileSuccess(true);
     } else {
-      showNotification(notification, 'error', 'Hubo un error al crear su perfil');
+      showNotification(notification, 'error', profileResponse.error);
     }
   }
 
@@ -78,50 +107,63 @@ export default function Profile(props: ProfileProps) {
       showNotification(notification, 'success', 'Se envió el código con éxito');
       setProfileSuccess(true);
     } else {
-      showNotification(notification, 'error', 'Hubo un error al enviar el código');
+      showNotification(notification, 'error', sendCodeResp.error);
     }
   }
 
   return (
     <>
-      <Row style={{height: '100vh', backgroundColor: 'rgb(253 252 253)'}}>
-        <Col xs={0} sm={0} md={7} lg={8} xl={8}></Col>
-        <Col xs={24} sm={24} md={10} lg={8} xl={8}>
+      <Row style={{
+        height: '100vh', 
+        backgroundImage: `url(${backgroundImage})`,
+      }}>
+        <Col xs={0} sm={0} md={12} lg={12} xl={14}></Col>
+        <Col xs={24} sm={24} md={12} lg={12} xl={10}>
           <Flex align="center" justify="center" 
             style={{
               height: '100%', 
-              backgroundColor: '#FAFAFA', 
+              backgroundColor: 'rgba(255, 255, 255, 0.3)', 
               boxShadow: '0 2px 18px rgba(0, 0, 0, 0.1)',
-              backgroundImage: `url(${backImage})`,
+              backdropFilter: 'blur(10px)',
               backgroundSize: '100%',
               backgroundRepeat: 'no-repeat'
           }}>
             <Form 
+              form={form}
               layout="vertical"
               colon={false} 
               requiredMark={false}
               onFinish={HandleSubmit}
             >
-              <Title>Crea tu perfil</Title>
+              <Title style={{marginBottom: '50px'}}>Crea tu perfil</Title>
               <Birthdate></Birthdate>
               <Phone></Phone>
-              <Country></Country>
-              <City></City>
-
-              {/* {showCodeValidation && (
-                <a onClick={handleOpenModal} style={{ float: 'right', marginBottom: '24px', fontWeight: 'bold' }}>
-                  Validar código
-                </a>
-              )} */}              
+              <Country 
+                countries={countries}
+                onChangeCountry={handleCountryChange}>
+              </Country>
+              <City cities={cities}></City>
+             
               <Form.Item style={{}} wrapperCol={{span: '24'}}>
                 {!profileSuccess && (
-                  <Button type="primary" htmlType="submit" style={{backgroundColor: '#BC1373'}}>
-                    Guardar
+                  <Button 
+                    type="primary" 
+                    htmlType="submit" 
+                    style={{marginTop: '30px', height: '50px'}} 
+                    shape="round"
+                    block={true}>
+                      Guardar
                   </Button>
                 )}
                 {profileSuccess && (
-                  <Button type="default" onClick={handleOpenModal} style={{backgroundColor: '#BC1373'}}>
-                    Enviar código de validación
+                  <Button 
+                    type="primary" 
+                    onClick={handleOpenModal} 
+                    style={{marginTop: '30px', height: '50px'}} 
+                    shape="round"
+                    block={true}
+                    >
+                      Enviar código de validación
                   </Button>
                 )}
               </Form.Item>
@@ -129,7 +171,6 @@ export default function Profile(props: ProfileProps) {
           </Flex>
           
         </Col>
-        <Col xs={0} sm={0} md={7} lg={8} xl={8}></Col>
       </Row>
       <ValidateCode 
         isOpen={isCodeModalOpen}
