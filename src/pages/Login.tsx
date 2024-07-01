@@ -5,10 +5,10 @@ import video from '../assets/videos/video-login.webm';
 import { App, Form, Tabs } from 'antd';
 import Email from '../components/section/login/Email';
 import Password from '../components/section/login/Password';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Dni from '../components/section/login/Dni';
 import { TabsProps } from 'antd/lib';
-import usePost from '../hooks/auth/usePost';
+import usePost from '../hooks/usePost';
 import { RegisterRequest } from '../models/Auth';
 import login from '../services/auth/login.service';
 import { useDispatch } from 'react-redux';
@@ -17,6 +17,8 @@ import { DocType } from '../utilities/types';
 import register from '../services/auth/register.service';
 import { useNavigate } from 'react-router-dom';
 import showNotification from '../utilities/notification/showNotification';
+import useGet from '../hooks/useGet';
+import getTLDs from '../services/utils/topLevelDomains';
 
 interface LoginProps {
   onChangeLoadingPage: (isLoading: boolean) => void; 
@@ -44,7 +46,18 @@ export default function Login(props: LoginProps) {
   const { notification } = App.useApp();
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
   const [docType, setDocType] = useState(DocType.DNI);  
+  const [tlds, setTlds] = useState([]);
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    GetTopLevelDomains();
+  }, [])
+
+  async function GetTopLevelDomains() {
+    const response = await useGet(getTLDs);
+    if (!response.error)
+      setTlds(response.data.split('\n').slice(1, -1));
+  }
 
   function changeLabel(loginType: string) {
     return loginType == LoginType.LOGIN ? 'Iniciar sesión' : 'Registrarse';
@@ -81,9 +94,9 @@ export default function Login(props: LoginProps) {
       if (!registerResp.error) {
         if (loginType == LoginType.REGISTER) {
           dispatch(setUid(registerResp.data));
+          showNotification(notification, 'success', 'Usuario registrado exitosamente');
           navigate('/profile', { state: {email: values.email} });
         } else {
-          showNotification(notification, 'success', 'Usuario registrado exitosamente');
           dispatch(setUser(registerResp.data));
           localStorage.setItem('token', registerResp.data.token);
         }
@@ -137,7 +150,7 @@ export default function Login(props: LoginProps) {
         />
         {loginType == LoginType.LOGIN && (
           <>
-            <Email></Email>
+            <Email tlds={tlds}></Email>
             <Password></Password>
             <a style={{ float: 'right', marginBottom: '24px', fontWeight: 'bold', color: '#007CD1' }}>
               ¿Olvidó su contraseña?
@@ -147,7 +160,7 @@ export default function Login(props: LoginProps) {
         {loginType == LoginType.REGISTER && (
           <>
             <Dni onChangeTypeDoc={handleChangeTypeDoc}></Dni>
-            <Email></Email>
+            <Email tlds={tlds}></Email>
             <Password></Password>
             
           </>

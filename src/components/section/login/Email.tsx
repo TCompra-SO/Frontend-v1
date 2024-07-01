@@ -3,7 +3,24 @@ import { ProFormText } from "@ant-design/pro-components";
 import { Lengths } from "../../../utilities/lengths";
 import './items.css';
 
-export default function Email() {
+interface EmailProps {
+  tlds: string []
+}
+
+export default function Email({ tlds }: EmailProps) {
+
+  function validateDomain(_: any, value: string) {
+    if (value && tlds.length > 0) {
+      const lastDotIndex: number = value.lastIndexOf('.');
+      if (lastDotIndex !== -1) {
+        const segment = value.substring(lastDotIndex + 1).toUpperCase();
+        if (!tlds.includes(segment))
+          return Promise.reject(new Error('Ingresa un email válido '));
+      }
+    }
+    return Promise.resolve();
+  }
+
   return (
     <ProFormText
       name="email"
@@ -29,6 +46,9 @@ export default function Email() {
         {
           max: Lengths.email.max,
           message: `Ingresa máximo ${Lengths.email.max} caracteres`
+        },
+        {
+          validator: validateDomain
         }
       ]}
     />

@@ -16,14 +16,20 @@ export default function httpErrorInterceptor(error: any, type: string): string {
     case Routes.auth.profile:
       switch(code) {
         case 409:
-          erroMsg = 'Este email ya ha sido registrado';
+          erroMsg = 'Este usuario ya tiene un perfil creado';
           break;
       }
       break;
     case Routes.auth.register:
       switch(code) {
+        case 422:
+          erroMsg = 'Número de documento inválido';
+          break;
         case 409:
-          erroMsg = 'Este usuario ya tiene un perfil creado';
+          erroMsg = 'Este email ya ha sido registrado';
+          break;
+        case 403:
+          erroMsg = 'Este número de documento ya ha sido registrado';
           break;
       }
       break;
@@ -53,7 +59,11 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
       }
       break;
+    case '': // No mostrar mensaje
+      erroMsg = '';
+      break;
     default:
+      break;
   }
   return erroMsg;
 }

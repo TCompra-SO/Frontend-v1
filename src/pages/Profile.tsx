@@ -3,7 +3,7 @@ import Birthdate from "../components/section/profile/Birthdate";
 import Phone from "../components/section/profile/Phone";
 import Country from "../components/section/profile/Country";
 import City from "../components/section/profile/City";
-import usePost from "../hooks/auth/usePost";
+import usePost from "../hooks/usePost";
 import { CountriesRequest, ProfileRequest, SendCodeRequest } from "../models/Auth";
 import createProfile from "../services/auth/profile.service";
 import moment from 'moment';
@@ -25,9 +25,8 @@ interface ProfileProps {
 
 export default function Profile(props: ProfileProps) {
   const navigate = useNavigate();
-  // const { state } = useLocation();
-  // const { email } = state;
-  const email='al.h8500@gmail.com';
+  const { state } = useLocation();
+  const { email } = state;
   const { notification } = App.useApp();
   const [form] = Form.useForm();
   const [uid, setUid] = useState(useSelector((state: MainState) => state.user.uid));  
@@ -41,8 +40,6 @@ export default function Profile(props: ProfileProps) {
     GetCountriesAndCities();
   }, [])
   
-  
-
   async function GetCountriesAndCities() {
     const request: CountriesRequest = { verify: 2 };
     const response: any = await usePost<CountriesRequest>(getCountries, request);
@@ -69,12 +66,9 @@ export default function Profile(props: ProfileProps) {
     SendValidationCode();
   }
 
-  function handleCloseModal() {
+  function handleCloseModal(validationSuccess: boolean) {
     setIsCodeModalVisible(false);
-  }
-
-  function handleValidationSuccess() {
-    navigate('/');
+    if (validationSuccess) navigate('/');
   }
 
   async function HandleSubmit(values: any) {
@@ -175,7 +169,6 @@ export default function Profile(props: ProfileProps) {
       <ValidateCode 
         isOpen={isCodeModalOpen}
         onClose={handleCloseModal}
-        onValidationSucces={handleValidationSuccess}
         email={email}
       />
     </>

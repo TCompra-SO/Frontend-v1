@@ -1,7 +1,7 @@
 import { CheckCircleOutlined, SendOutlined, SolutionOutlined } from "@ant-design/icons";
-import { App, Button, Divider, Flex, Input, Modal, Steps, StepsProps } from "antd";
+import { App, Button, Divider, Flex, Form, Input, Modal, Steps, StepsProps } from "antd";
 import { useEffect, useState } from "react";
-import usePost from "../../hooks/auth/usePost";
+import usePost from "../../hooks/usePost";
 import { SendCodeRequest, ValidateCodeRequest } from "../../models/Auth";
 import validateCode from "../../services/auth/validateCode.service";
 import sendCode from "../../services/auth/sendCode.service";
@@ -9,9 +9,8 @@ import showNotification from "../../utilities/notification/showNotification";
 
 interface ValidateCodeProps {
   isOpen: boolean,
-  onClose: () => void,
+  onClose: (validationSuccess: boolean) => void,
   email: string,
-  onValidationSucces: () => void
 }
 
 interface ItemContent {
@@ -52,37 +51,46 @@ const stepsIni: ItemContent[] =[
 
 const steps: StepsProps['items'] = stepsIni.map((item) => ({ key: item.key, title: item.title, icon: item.icon, status: item.status }));
 
-const expireInSeconds = 10;
+const expireInSeconds = 60;
+const timeoutToValidate = 5;
 
-export default function ValidateCode({isOpen, onClose, email, onValidationSucces}: ValidateCodeProps) {
+export default function ValidateCode({isOpen, onClose, email}: ValidateCodeProps) {
   const { notification } = App.useApp();
+  const [form] = Form.useForm();
   const [current, setCurrent] = useState(0);
-  const [validated, setValidated] = useState(false);
   const [waiting, setWaiting] = useState(false);
   const [timer, setTimer] = useState(expireInSeconds);
+  const [timerToValidate, setTimerToValidate] = useState(timeoutToValidate);
+  const [validationSuccess, setValidationSuccess] = useState(false);
   let intervalId: number = 0;
+  let intervalIdValidate: number = 0;
 
   useEffect(() => {
     if (isOpen) {
       setCurrent(0);
       clearInterval(intervalId);
+      clearInterval(intervalIdValidate);
       setTimer(expireInSeconds);
-      setValidated(false);
+      setTimerToValidate(timeoutToValidate);
     }
   }, [isOpen])
 
   function next() {
-    if (current == steps!.length - 1)
-      onClose();
-    else
-      setCurrent((current) => {
-        const next: number= current + 1;
-        steps![next].status = 'finish';
-        return next;
-      });
+    console.log(timerToValidate);
+    setCurrent((current) => {
+      const next: number= current + 1;
+      steps![next].status = 'finish';
+      return next;
+    });
   }
-  
-  async function ValidateCode(code: string) {
+
+  function handleClose() {
+    onClose(validationSuccess);
+  }
+
+  async function ValidateCode() {
+    beginTimerToValidate();
+    const code = form.getFieldValue('code');
     const data: ValidateCodeRequest = {
       email: email, 
       type: 'identity_verified', 
@@ -90,13 +98,14 @@ export default function ValidateCode({isOpen, onClose, email, onValidationSucces
     };
     const response = await usePost<ValidateCodeRequest>(validateCode, data);
     if (!response.error) {
-      setValidated(true);
-      onValidationSucces();
+      setValidationSuccess(true);
       next();
     }
     else {
+      setValidationSuccess(false);
       showNotification(notification, 'error', response.error);
     }
+    form.resetFields();
   }
 
   async function ResendCode() {
@@ -121,10 +130,21 @@ export default function ValidateCode({isOpen, onClose, email, onValidationSucces
           setTimer(expireInSeconds);
           setWaiting(false);
         }
-        const newTimer = prevTimer - 1;
-        return newTimer;
+        return prevTimer - 1;
       });
     }, 1000)
+  }
+
+  function beginTimerToValidate() {
+    intervalIdValidate = setInterval(() => {
+      setTimerToValidate(prevTimer => {
+        if (Number((prevTimer - 0.1).toFixed(1)) === 0) {
+          clearInterval(intervalIdValidate);
+          setTimerToValidate(timeoutToValidate);
+        }
+        return Number((prevTimer - 0.1).toFixed(1));
+      });
+    }, 100)
   }
 
 
@@ -134,16 +154,27 @@ export default function ValidateCode({isOpen, onClose, email, onValidationSucces
       open={isOpen}
       closable={false}
       footer={[
-        <Button key="back" onClick={onClose}>
+        <Button key="back" onClick={handleClose}>
           Cancelar
         </Button>,
         <Button 
           key="submit" 
           type="primary" 
-          onClick={next} 
-          disabled={stepsIni[current].key == 'val' && !validated}
+          onClick={
+            stepsIni[current].key == 'val' ? ValidateCode :
+            stepsIni[current].key == 'done' ? handleClose :
+            next
+          } 
+          disabled={ 
+            stepsIni[current].key != 'val' ? false : 
+            timerToValidate != timeoutToValidate
+          }
         >
-          {current < steps!.length - 1 ? 'Siguiente' : 'Aceptar'}
+          {
+            stepsIni[current].key == 'val' ? `Validar${timerToValidate != timeoutToValidate ? ` (${timerToValidate.toFixed(0)})` : ''}` : 
+            stepsIni[current].key == 'done' ? 'Aceptar' : 
+            'Siguiente'
+          }
         </Button>,
       ]}
     >
@@ -159,7 +190,12 @@ export default function ValidateCode({isOpen, onClose, email, onValidationSucces
         
           {stepsIni[current].showInput && (
             <>
-              <Input.OTP length={6} onChange={ValidateCode}/>
+              <Form form={form}>
+                <Form.Item name='code'>
+                  <Input.OTP length={6}/>
+                </Form.Item>
+              </Form>
+              
               <a 
                 style={{ 
                   float: 'right', 
