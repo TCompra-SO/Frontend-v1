@@ -1,4 +1,4 @@
-import { CountriesRequest } from "../../models/Auth";
+import { CountriesRequest } from "../../models/Interfaces";
 import httpRequest from "../../utilities/requests/httpRequest";
 import { MainRoutes, Routes } from "../../utilities/routes";
 

@@ -2,7 +2,7 @@ import { Routes } from "../utilities/routes";
 
 export default function httpErrorInterceptor(error: any, type: string): string {
   let erroMsg = 'Se produjo un error';
-  const code = error.response.status;
+  const code = error.response?.status;
 
   switch (type) {
     case Routes.auth.login:
