@@ -6,6 +6,7 @@ import { SendCodeRequest, ValidateCodeRequest } from "../../models/Auth";
 import validateCode from "../../services/auth/validateCode.service";
 import sendCode from "../../services/auth/sendCode.service";
 import showNotification from "../../utilities/notification/showNotification";
+import { StepsItemContent } from "../../models/Interfaces";
 
 interface ValidateCodeProps {
   isOpen: boolean,
@@ -13,16 +14,7 @@ interface ValidateCodeProps {
   email: string,
 }
 
-interface ItemContent {
-  key: string,
-  title: string,
-  status: "finish" | "wait" | "process" | "error" | undefined,
-  icon: any,
-  text: string,
-  showInput: boolean
-}
-
-const stepsIni: ItemContent[] =[
+const stepsIni: StepsItemContent[] =[
   {
     key: 'sent',
     title: 'Envío',
@@ -73,10 +65,10 @@ export default function ValidateCode({isOpen, onClose, email}: ValidateCodeProps
       setTimer(expireInSeconds);
       setTimerToValidate(timeoutToValidate);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
 
   function next() {
-    console.log(timerToValidate);
     setCurrent((current) => {
       const next: number= current + 1;
       steps![next].status = 'finish';

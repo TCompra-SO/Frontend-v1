@@ -30,10 +30,6 @@ const menuItems  = [
   },
 ];
 
-// const menuProps: MenuProps = {
-//   items: menuItems
-// };
-
 const navBarItems: MenuProps['items']  = [
   {
     key: 'premium',

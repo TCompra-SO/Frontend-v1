@@ -4,7 +4,7 @@ import Phone from "../components/section/profile/Phone";
 import Country from "../components/section/profile/Country";
 import City from "../components/section/profile/City";
 import usePost from "../hooks/usePost";
-import { CountriesRequest, ProfileRequest, SendCodeRequest } from "../models/Auth";
+import { ProfileRequest, SendCodeRequest } from "../models/Auth";
 import createProfile from "../services/auth/profile.service";
 import moment from 'moment';
 import { dateFormat } from "../utilities/globals";
@@ -18,6 +18,8 @@ import sendCode from "../services/auth/sendCode.service";
 import backgroundImage from "../assets/images/silder-tc-04.jpg";
 import Title from "antd/es/typography/Title";
 import getCountries from "../services/utils/country.service";
+import { CountriesRequest, CountryObj } from "../models/Interfaces";
+import { HttpObject } from "../models/HttpObject";
 
 interface ProfileProps {
   onChangeLoadingPage: (isLoading: boolean) => void; 
@@ -29,25 +31,30 @@ export default function Profile(props: ProfileProps) {
   const { email } = state;
   const { notification } = App.useApp();
   const [form] = Form.useForm();
-  const [uid, setUid] = useState(useSelector((state: MainState) => state.user.uid));  
+  const uid = useSelector((state: MainState) => state.user.uid);  
   const [isCodeModalOpen, setIsCodeModalVisible] = useState(false);
   const [profileSuccess, setProfileSuccess] = useState(false);
   const [countries, setCountries] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
-  const [countryObj, setCountryObj] = useState<any>({});
+  const [countryObj, setCountryObj] = useState<{[key: string]: string[]}>({});
 
   useEffect(() => {
     GetCountriesAndCities();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   
   async function GetCountriesAndCities() {
     const request: CountriesRequest = { verify: 2 };
-    const response: any = await usePost<CountriesRequest>(getCountries, request);
+    const response: HttpObject = await usePost<CountriesRequest>(getCountries, request);
     let cityList: string[] = [];
+
     if (!response.error) {
-      const countryList = response.data.map((country: any, i: number) => {
-        countryObj[country.country] = country.cities;
-        if (i == 0) cityList = country.cities;
+      const countryList: string[] = response.data.map((country: CountryObj, i: number) => {
+        setCountryObj(prevCountryObj => ({
+          ...prevCountryObj,
+          [country.country]: country.cities!
+        }));
+        if (i == 0) cityList = country.cities!;
         return country.country;
       });
       setCountries(countryList);

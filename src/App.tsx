@@ -1,9 +1,10 @@
-import Loading from "./pages/utils/loading"
+
 import Login from "./pages/Login"
 import { useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Profile from "./pages/Profile";
 import { App as AntdApp, ConfigProvider, theme } from "antd";
+import Loading from "./pages/utils/Loading";
 // import Header from "./components/section/header/header/Header"
 
 function App() {

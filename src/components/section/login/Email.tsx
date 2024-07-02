@@ -2,6 +2,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { ProFormText } from "@ant-design/pro-components";
 import { Lengths } from "../../../utilities/lengths";
 import './items.css';
+import { RuleObject } from "antd/es/form";
 
 interface EmailProps {
   tlds: string []
@@ -9,7 +10,7 @@ interface EmailProps {
 
 export default function Email({ tlds }: EmailProps) {
 
-  function validateDomain(_: any, value: string) {
+  function validateDomain(_: RuleObject, value: string) {
     if (value && tlds.length > 0) {
       const lastDotIndex: number = value.lastIndexOf('.');
       if (lastDotIndex !== -1) {

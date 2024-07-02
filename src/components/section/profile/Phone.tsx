@@ -1,7 +1,8 @@
 import { Form, Input, Space } from "antd";
 import { Lengths } from "../../../utilities/lengths";
+import { RuleObject } from "antd/es/form";
 
-function validateNumber(_: any, value: any) {
+function validateNumber(_: RuleObject, value: string) {
   if (value && isNaN(Number(value))) {
     return Promise.reject(new Error('Ingresa un número válido'));
   }
@@ -27,8 +28,6 @@ const rulesPhone =  [
 ];
 
 export default function Phone() {
-
-  
 
   return (
     <Form.Item
