@@ -37,8 +37,8 @@ export default function Phone() {
       rules={rulesPhone}
     >
       <Space.Compact>
-        <Input style={{ width: '15%' }} readOnly={true} defaultValue='+51'/>
-        <Input style={{ width: '85%' }}  />
+        <Input style={{ width: '20%' }} readOnly={true} defaultValue='+51'/>
+        <Input style={{ width: '80%' }}  />
       </Space.Compact>
     </Form.Item>
   )

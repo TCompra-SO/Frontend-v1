@@ -89,6 +89,7 @@ export default function Profile(props: ProfileProps) {
       setProfileSuccess(true);
     } else {
       showNotification(notification, 'error', profileResponse.error);
+      setProfileSuccess(false);
     }
   }
 
@@ -99,7 +100,6 @@ export default function Profile(props: ProfileProps) {
     const sendCodeResp = await usePost<SendCodeRequest>(sendCode, data);
     if (!sendCodeResp.error) {
       showNotification(notification, 'success', 'Se envió el código con éxito');
-      setProfileSuccess(true);
     } else {
       showNotification(notification, 'error', sendCodeResp.error);
     }
@@ -110,17 +110,18 @@ export default function Profile(props: ProfileProps) {
       <Row style={{
         height: '100vh', 
         backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
       }}>
         <Col xs={0} sm={0} md={12} lg={12} xl={14}></Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={10}>
           <Flex align="center" justify="center" 
             style={{
-              height: '100%', 
+              height: '100vh', 
               backgroundColor: 'rgba(255, 255, 255, 0.3)', 
               boxShadow: '0 2px 18px rgba(0, 0, 0, 0.1)',
               backdropFilter: 'blur(10px)',
-              backgroundSize: '100%',
-              backgroundRepeat: 'no-repeat'
+              padding: '0 60px',
           }}>
             <Form 
               form={form}
