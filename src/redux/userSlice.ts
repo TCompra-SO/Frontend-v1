@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { UserState } from "../models/Redux";
 
-const initialState = {
+const initialState: UserState = {
   token: '',
   type: '',
   uid: ''

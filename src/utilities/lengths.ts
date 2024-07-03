@@ -18,5 +18,21 @@ export const Lengths = {
   ruc: {
     min: 11,
     max: 16
+  },
+  uid: {
+    min: 4,
+    max: 20
+  },
+  phone: {
+    min: 4,
+    max: 13
+  },
+  country: {
+    min: 3,
+    max: 30
+  },
+  city: {
+    min: 4,
+    max: 45
   }
 }

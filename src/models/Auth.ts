@@ -14,21 +14,21 @@ export interface RegisterRequest {
 
 export interface ProfileRequest {
   uid: string,
-  gender: string,
+  gender?: string,
   birthdate: string,
   phone: string,
   country: string,
   city: string,
-  type_learning: string
+  type_learning?: string
 }
 
 export interface ValidateCodeRequest {
   email: string,
   code: string,
-  type: string
+  type: "repassword" | "identity_verified"
 }
 
 export interface SendCodeRequest {
   email: string,
-  type: string
+  type: "repassword" | "identity_verified"
 }

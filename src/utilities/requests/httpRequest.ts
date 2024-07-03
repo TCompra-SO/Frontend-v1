@@ -1,13 +1,13 @@
 import axios, { AxiosResponse } from "axios";
 import { HttpObject } from "../../models/HttpObject";
-// import { useState } from "react";
+import httpErrorInterceptor from "../../interceptors/httpErrorInterceptor";
 
 export default async function httpRequest<T>(
   url: string,
   method: 'get' | 'post' | 'put' | 'delete',
-  dataToSend?: T
+  type: string,
+  dataToSend?: T,
 ): Promise<HttpObject> {
-  // const [loading, setLoading] = useState(true);
   let loading = true;
   let data: any = null;
   let error: string | null = null;
@@ -31,11 +31,10 @@ export default async function httpRequest<T>(
     }
 
     data = response.data;
-    // setLoading(false);
     loading = false;
-  } catch (err) {
-    error = 'Error al obtener datos';
-    // setLoading(false);
+  } catch (err: any) {
+    const errorMsg = httpErrorInterceptor(err, type);
+    error = errorMsg;
     loading = false;
     console.error('HTTP Request Error:', err);
   }

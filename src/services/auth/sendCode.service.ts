@@ -1,9 +1,9 @@
 import { SendCodeRequest } from "../../models/Auth";
 import httpRequest from "../../utilities/requests/httpRequest";
-import { Routes } from "../../utilities/routes";
+import { MainRoutes, Routes } from "../../utilities/routes";
 
-export const sendCode = async (sendCodeData: SendCodeRequest) => {
-  const url = `${import.meta.env.VITE_API_BASE_URL}${Routes.auth}validation-code`;
-  const response = await httpRequest<SendCodeRequest>(url, 'post', sendCodeData);
+export default async function sendCode(sendCodeData: SendCodeRequest) {
+  const url = `${import.meta.env.VITE_API_BASE_URL}${MainRoutes.auth}${Routes.auth.sendCode}`;
+  const response = await httpRequest<SendCodeRequest>(url, 'post', Routes.auth.sendCode, sendCodeData);
   return response;
 }

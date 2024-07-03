@@ -2,20 +2,23 @@ import { LoginFormPage } from '@ant-design/pro-components'
 import backgroundImage from '../assets/images/silder-tc-04.jpg';
 import logo from '../assets/images/logo_vertical.svg';
 import video from '../assets/videos/video-login.webm';
-import { Form, Tabs } from 'antd';
+import { App, Form, Tabs } from 'antd';
 import Email from '../components/section/login/Email';
 import Password from '../components/section/login/Password';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Dni from '../components/section/login/Dni';
 import { TabsProps } from 'antd/lib';
-import usePost from '../hooks/auth/usePost';
+import usePost from '../hooks/usePost';
 import { RegisterRequest } from '../models/Auth';
 import login from '../services/auth/login.service';
-import { register } from '../services/auth/register.service';
 import { useDispatch } from 'react-redux';
 import { setUser, setUid } from '../redux/userSlice';
 import { DocType } from '../utilities/types';
-// import { useSelector } from 'react-redux';
+import register from '../services/auth/register.service';
+import { useNavigate } from 'react-router-dom';
+import showNotification from '../utilities/notification/showNotification';
+import useGet from '../hooks/useGet';
+import getTLDs from '../services/utils/topLevelDomains';
 
 interface LoginProps {
   onChangeLoadingPage: (isLoading: boolean) => void; 
@@ -38,11 +41,23 @@ const tabItems: TabsProps['items'] = [
 ]
 
 export default function Login(props: LoginProps) {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const user = useSelector((state: any) => state.user);
+  const { notification } = App.useApp();
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
-  const [docType, setDocType] = useState(DocType.DNI);
+  const [docType, setDocType] = useState(DocType.DNI);  
+  const [tlds, setTlds] = useState([]);
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    GetTopLevelDomains();
+  }, [])
+
+  async function GetTopLevelDomains() {
+    const response = await useGet(getTLDs);
+    if (!response.error)
+      setTlds(response.data.split('\n').slice(1, -1));
+  }
 
   function changeLabel(loginType: string) {
     return loginType == LoginType.LOGIN ? 'Iniciar sesión' : 'Registrarse';
@@ -57,9 +72,10 @@ export default function Login(props: LoginProps) {
     setDocType(type);
   }
 
-  function HandleSubmit(values: any) {
+  async function HandleSubmit(values: any) {
     let data: RegisterRequest;
     let callbackFn = null;
+    
     if (loginType == LoginType.LOGIN) {
       data = { email: values.email, password: values.password };
       callbackFn = login;
@@ -71,20 +87,26 @@ export default function Login(props: LoginProps) {
     }
 
     props.onChangeLoadingPage(true);
-    usePost<RegisterRequest>(callbackFn, data).then(res => {
+    try {
+      const registerResp = await usePost<RegisterRequest>(callbackFn, data);
       props.onChangeLoadingPage(false);
-      if (!res.error) {
-        if (loginType == LoginType.REGISTER)
-          dispatch(setUid(res.data));
-        else {
-          dispatch(setUser(res.data));
-          localStorage.setItem('token', res.data.token);
+      
+      if (!registerResp.error) {
+        if (loginType == LoginType.REGISTER) {
+          dispatch(setUid(registerResp.data));
+          showNotification(notification, 'success', 'Usuario registrado exitosamente');
+          navigate('/profile', { state: {email: values.email} });
+        } else {
+          dispatch(setUser(registerResp.data));
+          localStorage.setItem('token', registerResp.data.token);
         }
+      } else {
+        showNotification(notification, 'error', registerResp.error);
       }
-    }).catch(error => {
+    } catch(error) {
       console.error('Error en login:', error);
       props.onChangeLoadingPage(false);
-    });
+    }
   } 
 
   return (
@@ -115,7 +137,6 @@ export default function Login(props: LoginProps) {
           },
           submitButtonProps: {
             style: {
-              background: '#BC1373',
               width: '100%'
             },
           }
@@ -126,13 +147,12 @@ export default function Login(props: LoginProps) {
           activeKey={loginType}
           onChange={(pressedKey) => {setLoginType(pressedKey); resetFields()}}
           items={tabItems}
-          style={{color: '#BC1373'}}
         />
         {loginType == LoginType.LOGIN && (
           <>
-            <Email></Email>
+            <Email tlds={tlds}></Email>
             <Password></Password>
-            <a style={{ float: 'right', marginBottom: '24px', fontWeight: 'bold' }}>
+            <a style={{ float: 'right', marginBottom: '24px', fontWeight: 'bold', color: '#007CD1' }}>
               ¿Olvidó su contraseña?
             </a>
           </>
@@ -140,8 +160,9 @@ export default function Login(props: LoginProps) {
         {loginType == LoginType.REGISTER && (
           <>
             <Dni onChangeTypeDoc={handleChangeTypeDoc}></Dni>
-            <Email></Email>
+            <Email tlds={tlds}></Email>
             <Password></Password>
+            
           </>
         )}
       </LoginFormPage>

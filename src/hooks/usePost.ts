@@ -1,4 +1,4 @@
-import { HttpObject } from "../../models/HttpObject";
+import { HttpObject } from "../models/HttpObject";
 
 type CallbackFunction<T> = (data: T) => Promise<HttpObject>;
 
