@@ -19,10 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import showNotification from '../utilities/notification/showNotification';
 import useGet from '../hooks/useGet';
 import getTLDs from '../services/utils/topLevelDomains';
-
-interface LoginProps {
-  onChangeLoadingPage: (isLoading: boolean) => void; 
-}
+import { setIsLoading } from '../redux/loadingSlice';
 
 const LoginType = {
   LOGIN: 'login',
@@ -40,7 +37,7 @@ const tabItems: TabsProps['items'] = [
   },
 ]
 
-export default function Login(props: LoginProps) {
+export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { notification } = App.useApp();
@@ -86,11 +83,12 @@ export default function Login(props: LoginProps) {
       callbackFn = register;
     }
 
-    props.onChangeLoadingPage(true);
+    dispatch(setIsLoading(true));
+
     try {
       const registerResp = await usePost<RegisterRequest>(callbackFn, data);
-      props.onChangeLoadingPage(false);
-      
+      dispatch(setIsLoading(false));
+
       if (!registerResp.error) {
         if (loginType == LoginType.REGISTER) {
           dispatch(setUid(registerResp.data));
@@ -98,6 +96,7 @@ export default function Login(props: LoginProps) {
           navigate('/profile', { state: {email: values.email} });
         } else {
           dispatch(setUser(registerResp.data));
+          showNotification(notification, 'success', 'Bienvenido');
           localStorage.setItem('token', registerResp.data.token);
         }
       } else {
@@ -105,7 +104,7 @@ export default function Login(props: LoginProps) {
       }
     } catch(error) {
       console.error('Error en login:', error);
-      props.onChangeLoadingPage(false);
+      dispatch(setIsLoading(false));
     }
   } 
 

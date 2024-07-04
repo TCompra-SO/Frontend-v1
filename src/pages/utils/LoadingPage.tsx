@@ -2,7 +2,7 @@ import Lottie from 'react-lottie';
 import loadingAnimationData from '../../assets/lotties/loading.json';
 import { Flex } from 'antd';
 
-export default function Loading() {
+export default function LoadingPage() {
   
   const defaultOptions = {
     loop: true,
