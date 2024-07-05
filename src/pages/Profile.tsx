@@ -8,7 +8,7 @@ import { ProfileRequest, SendCodeRequest } from "../models/Auth";
 import createProfile from "../services/auth/profile.service";
 import moment from 'moment';
 import { dateFormat } from "../utilities/globals";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { useEffect, useState } from "react";
 import showNotification from "../utilities/notification/showNotification";
@@ -20,13 +20,11 @@ import Title from "antd/es/typography/Title";
 import getCountries from "../services/utils/country.service";
 import { CountriesRequest, CountryObj } from "../models/Interfaces";
 import { HttpObject } from "../models/HttpObject";
+import { setIsLoading } from "../redux/loadingSlice";
 
-interface ProfileProps {
-  onChangeLoadingPage: (isLoading: boolean) => void; 
-}
-
-export default function Profile(props: ProfileProps) {
+export default function Profile() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { state } = useLocation();
   const { email } = state;
   const { notification } = App.useApp();
@@ -79,7 +77,7 @@ export default function Profile(props: ProfileProps) {
   }
 
   async function HandleSubmit(values: any) {
-    props.onChangeLoadingPage(true);
+    dispatch(setIsLoading(true));
     
     const data: ProfileRequest = {
       uid: uid,
@@ -89,7 +87,7 @@ export default function Profile(props: ProfileProps) {
       phone: values.phone
     }
     const profileResponse = await usePost<ProfileRequest>(createProfile, data);
-    props.onChangeLoadingPage(false);
+    dispatch(setIsLoading(false));
     
     if (!profileResponse.error) {
       showNotification(notification, 'success', 'Perfil creado con éxito');
@@ -132,6 +130,7 @@ export default function Profile(props: ProfileProps) {
           }}>
             <Form 
               form={form}
+              disabled={profileSuccess}
               layout="vertical"
               colon={false} 
               requiredMark={false}
@@ -164,6 +163,7 @@ export default function Profile(props: ProfileProps) {
                     style={{marginTop: '30px', height: '50px'}} 
                     shape="round"
                     block={true}
+                    disabled={false}
                     >
                       Enviar código de validación
                   </Button>

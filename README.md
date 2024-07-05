@@ -256,6 +256,14 @@ Interfaz para el estado del `userSlice`.
 | type   | `string` | Tipo de usuario   |
 | uid    | `string` | Uid del usuario   |
 
+##### LoadingState
+
+Interfaz para el estado del `loadingSlice`.
+
+| Nombre | Tipo        | Descripción        |
+| ------ | ----------- | ------------------ |
+| isLoading   | `boolean` | Estado de la página de carga |
+
 ##### MainState
 
 Interfaz para el estado principal de Redux.
@@ -263,12 +271,17 @@ Interfaz para el estado principal de Redux.
 | Nombre | Tipo        | Descripción        |
 | ------ | ----------- | ------------------ |
 | user   | `UserState` | Estado del usuario |
+| loading   | `LoadingState` | Estado de la página de carga |
 
 ## Pages
 
 ### Utils
 
-#### Loading
+#### LoadingCond
+
+Página de carga que llama a `LoadingPage` dependiendo del estado del `loadingSlice` en redux.
+
+#### LoadingPage
 
 Página de carga que muestra una animación de Lottie.
 
@@ -281,12 +294,6 @@ Cuando el formulario es enviado:
 - Login: Inicia sesión y guarda en redux el token y tipo del usuario. Adicionalmente, alamcena el token en el local storage.
 - Registro: Registra al usuario, guarda la uid del usuario en redux y redirecciona a la página de Profile.
 
-_Props_
-
-| Nombre              | Tipo                           | Descripción                                                                                  |
-| ------------------- | ------------------------------ | -------------------------------------------------------------------------------------------- |
-| onChangeLoadingPage | `(isLoading: boolean) => void` | Función de callback llamada para mostrar la página de carga al registrarse o iniciar sesión. |
-
 ### Profile
 
 Página para crear perfil.
@@ -296,17 +303,15 @@ Obtiene la lista de países y ciudades para pasarlas a los componentes de Countr
 Si la creación de perfil se realizó con éxito, se muestra el botón para enviar un código de validación. Al hacer click sobre éste, se envía el código al email del usuario registrado y se abre el modal ValidateCode.
 Cuando el modal es cerrado, y si la validación fue exitosa, redirige a una nueva página.
 
-_Props_
-
-| Nombre              | Tipo                           | Descripción                                                                     |
-| ------------------- | ------------------------------ | ------------------------------------------------------------------------------- |
-| onChangeLoadingPage | `(isLoading: boolean) => void` | Función de callback llamada para mostrar la página de carga al crear un perfil. |
-
 ## Redux
 
 ### store
 
 Crea un _store_ de Redux.
+
+### loadingSlice
+
+Crea un _slice_, con el nombre loading, para el estado de la página de carga, que determina si se muestra o no.
 
 ### userSlice
 
