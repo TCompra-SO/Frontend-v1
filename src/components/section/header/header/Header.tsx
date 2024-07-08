@@ -131,8 +131,7 @@ function Header() {
         <Dropdown 
           menu={dropdownItems} 
           trigger={['click']} 
-          placement="bottomRight" 
-        >            
+          placement="bottomRight" >            
           <DownOutlined />
         </Dropdown>
       </Flex>

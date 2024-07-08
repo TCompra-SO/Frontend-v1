@@ -1,21 +1,16 @@
-
-import Login from "./pages/Login"
-import { useState } from "react";
+import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import Profile from "./pages/Profile";
 import { App as AntdApp, ConfigProvider, theme } from "antd";
-import Loading from "./pages/utils/Loading";
+import LoadingCond from "./pages/utils/LoadingCond.tsx";
+import LoadingPage from "./pages/utils/LoadingPage.tsx";
 import Search from "./pages/Search";
 import Header from "./components/section/header/header/Header";
 import './assets/styles.css';
 
+const Login = lazy(() => import('./pages/Login.tsx'));
+const Profile = lazy(() => import('./pages/Profile.tsx'));
+
 function App() {
-  const [isLoading, setIsLoading] = useState(false);
-
-  function handleChangeLoadingPage(isLoading: boolean) {
-    setIsLoading(isLoading);
-  }
-
   return (
     <>
       <ConfigProvider
@@ -30,13 +25,26 @@ function App() {
         }}
       >
         <AntdApp>
+          <LoadingCond></LoadingCond>
           <Header />
-          {isLoading && <Loading></Loading>}
           <Routes>
-            <Route path='/' element={<Login onChangeLoadingPage={handleChangeLoadingPage}></Login>} />
-            <Route path="/profile" element={<Profile onChangeLoadingPage={handleChangeLoadingPage}></Profile>} />
-            <Route path="/search" element={<Search ></Search>} />
-            <Route path="*" element={<Navigate to="/" replace />}/>
+            <Route path='/' element={
+              <Suspense fallback={<LoadingPage />}>
+                <Login></Login>
+              </Suspense>
+            } />
+            <Route path="/profile" element={
+              <Suspense fallback={<LoadingPage />}>
+                <Profile></Profile>
+              </Suspense>
+            } />
+            <Route path="/search" element={
+              <Suspense fallback={<LoadingPage />}>
+                <Search ></Search>
+              </Suspense>
+            } />
+            <Route path="*" element={<Navigate to="/" replace />}
+            />
           </Routes>
         </AntdApp>
       </ConfigProvider>
