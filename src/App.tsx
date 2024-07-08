@@ -26,7 +26,7 @@ function App() {
       >
         <AntdApp>
           <LoadingCond></LoadingCond>
-          <Header />
+          {/* <Header /> */}
           <Routes>
             <Route path='/' element={
               <Suspense fallback={<LoadingPage />}>
@@ -40,6 +40,7 @@ function App() {
             } />
             <Route path="/search" element={
               <Suspense fallback={<LoadingPage />}>
+                <Header />
                 <Search ></Search>
               </Suspense>
             } />
