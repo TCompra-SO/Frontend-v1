@@ -5,7 +5,9 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Profile from "./pages/Profile";
 import { App as AntdApp, ConfigProvider, theme } from "antd";
 import Loading from "./pages/utils/Loading";
-// import Header from "./components/section/header/header/Header"
+import Search from "./pages/Search";
+import Header from "./components/section/header/header/Header";
+import './assets/styles.css';
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -28,13 +30,13 @@ function App() {
         }}
       >
         <AntdApp>
-          {/* <Header /> */}
+          <Header />
           {isLoading && <Loading></Loading>}
           <Routes>
             <Route path='/' element={<Login onChangeLoadingPage={handleChangeLoadingPage}></Login>} />
             <Route path="/profile" element={<Profile onChangeLoadingPage={handleChangeLoadingPage}></Profile>} />
-            <Route path="*" element={<Navigate to="/" replace />}
-            />
+            <Route path="/search" element={<Search ></Search>} />
+            <Route path="*" element={<Navigate to="/" replace />}/>
           </Routes>
         </AntdApp>
       </ConfigProvider>
