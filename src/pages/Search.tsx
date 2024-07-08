@@ -63,9 +63,7 @@ export default function Search() {
       }}>
         <Form form={form} className='search-form'>
           <Row 
-            // style={{backgroundColor: '#ffffff'}}
           >
-            
             <Col xs={24} sm={24} md={24} lg={20} xl={20}
               style={{
                 padding: '15px'
@@ -77,12 +75,9 @@ export default function Search() {
               >
                 <Company></Company>
               </Row>
-              {/* <Row > */}
-                <Keyword categories={categories} requirements={requirements}></Keyword>
-              {/* </Row> */}
+              <Keyword categories={categories} requirements={requirements}></Keyword>
               <Col xs={0} sm={0} md={0} lg={24} xl={24} style={{height: '20px'}}></Col>
               <Row 
-              // style={{marginTop: '20px'}}
                 gutter={[10, 10]}
               >
                 <Col xs={0} sm={0} md={0} lg={6} xl={6}>
@@ -103,7 +98,6 @@ export default function Search() {
             <Col xs={24} sm={24} md={24} lg={4} xl={4}
               style={{
                 padding: '15px'
-                // paddingTop: '20px'
               }}
             >
               <Row 
@@ -112,27 +106,26 @@ export default function Search() {
                 style={{ height: '100%' }}
                 gutter={10}
               > 
-                <Col flex="auto" lg={24} xl={24}>
-                  <Button 
-                    icon={<SearchOutlined/>}
-                    type="primary"
-                    block={true} 
-                    style={{height: '60px'}}
-                  >
-                    Buscar
-                  </Button>
-                </Col>
                 <Col lg={0} xl={0}>
                   <Button 
                     ghost
-                    style={{height: '60px'}}
+                    style={{height: '80px', borderRadius: '25px'}}
                     onClick={handleShowMoreOptions}
                   >
                     { !showMoreOptions ? <MenuFoldOutlined/> : <MenuUnfoldOutlined/> }
                   </Button>
 
                 </Col>
-                
+                <Col flex="auto" lg={24} xl={24}>
+                  <Button 
+                    icon={<SearchOutlined/>}
+                    type="primary"
+                    block={true} 
+                    style={{height: '80px', borderRadius: '25px', fontSize: '20px'}}
+                  >
+                    Buscar
+                  </Button>
+                </Col>                
               </Row>
             </Col>
 

@@ -27,7 +27,6 @@ export default function Company() {
         ]}
         style={{
           marginBottom: '10px',
-          borderRadius: '50px !important'
         }}
       >
       </Select>
