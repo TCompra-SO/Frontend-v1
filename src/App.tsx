@@ -3,7 +3,9 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { App as AntdApp, ConfigProvider, theme } from "antd";
 import LoadingCond from "./pages/utils/LoadingCond.tsx";
 import LoadingPage from "./pages/utils/LoadingPage.tsx";
-// import Header from "./components/section/header/header/Header"
+import Search from "./pages/Search";
+import Header from "./components/section/header/header/Header";
+import './assets/styles.css';
 
 const Login = lazy(() => import('./pages/Login.tsx'));
 const Profile = lazy(() => import('./pages/Profile.tsx'));
@@ -23,8 +25,8 @@ function App() {
         }}
       >
         <AntdApp>
-          {/* <Header /> */}
           <LoadingCond></LoadingCond>
+          {/* <Header /> */}
           <Routes>
             <Route path='/' element={
               <Suspense fallback={<LoadingPage />}>
@@ -34,6 +36,12 @@ function App() {
             <Route path="/profile" element={
               <Suspense fallback={<LoadingPage />}>
                 <Profile></Profile>
+              </Suspense>
+            } />
+            <Route path="/search" element={
+              <Suspense fallback={<LoadingPage />}>
+                <Header />
+                <Search ></Search>
               </Suspense>
             } />
             <Route path="*" element={<Navigate to="/" replace />}

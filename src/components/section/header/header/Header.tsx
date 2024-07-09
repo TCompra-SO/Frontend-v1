@@ -8,6 +8,7 @@ import UserName from '../items/UserName'
 import { DownOutlined } from '@ant-design/icons';
 import Logout from '../items/Logout';
 import { useEffect, useState } from 'react';
+import ProfileMenu from '../items/ProfileMenu';
 
 const menuItems  = [
   {
@@ -23,6 +24,12 @@ const menuItems  = [
     )
   },
   {
+    key: 'profile',
+    label: (
+      <ProfileMenu />
+    )
+  },
+  {
     key: 'logout',
     label: (
       <Logout />
@@ -31,12 +38,6 @@ const menuItems  = [
 ];
 
 const navBarItems: MenuProps['items']  = [
-  {
-    key: 'premium',
-    label: (
-      <Premium />
-    )
-  },
   {
     key: 'notification',
     label: (
@@ -50,6 +51,12 @@ const navBarItems: MenuProps['items']  = [
     )
   },
   {
+    key: 'premium',
+    label: (
+      <Premium />
+    )
+  },
+  {
     key: 'userName',
     label: (
       <UserName />
@@ -60,12 +67,20 @@ const navBarItems: MenuProps['items']  = [
 function Header() {
 
   const [dropdownItems, setDropdownItems] = useState({
-    items: [{
-      key: 'logout',
-      label: (
-        <Logout />
-      )
-    },]
+    items: [
+      {
+        key: 'profile',
+        label: (
+          <ProfileMenu />
+        )
+      },
+      {
+        key: 'logout',
+        label: (
+          <Logout />
+        )
+      },
+    ]
   });
 
   useEffect(() => {
@@ -76,12 +91,20 @@ function Header() {
         });
       } else {
         setDropdownItems({
-          items: [{
-            key: 'logout',
-            label: (
-              <Logout />
-            )
-          },]
+          items: [
+            {
+              key: 'profile',
+              label: (
+                <ProfileMenu />
+              )
+            },
+            {
+              key: 'logout',
+              label: (
+                <Logout />
+              )
+            },
+          ]
         });
       }
     };
@@ -96,11 +119,19 @@ function Header() {
   }, []);
 
   return (
-    <Flex justify='space-between' align='center'>
+    <Flex justify='space-between' align='center' style={{padding: '10px'}}>
       <Logo />
       <Flex justify='flex-end' align='center' style={{ flex: "auto" }}>
-        <Menu mode="horizontal" className="main-menu" items={navBarItems} style={{ minWidth: 0, flex: "auto" }}/>
-        <Dropdown menu={dropdownItems} trigger={['click']} placement="bottomRight" >            
+        <Menu 
+          mode="horizontal" 
+          className="main-menu" 
+          items={navBarItems} 
+          style={{ minWidth: 0, flex: "auto" }} 
+        />
+        <Dropdown 
+          menu={dropdownItems} 
+          trigger={['click']} 
+          placement="bottomRight" >            
           <DownOutlined />
         </Dropdown>
       </Flex>

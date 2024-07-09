@@ -1,12 +1,10 @@
 import { CrownFilled } from '@ant-design/icons'
-import './items.css'
+import { Tag } from 'antd'
 
 export default function Premium() {
   return (
-    <div className='premium-container'>
-      <div className='premium-navbar'>
-        <CrownFilled /> Premium
-      </div>
-    </div>
+    <Tag color="#ffbf00" style={{fontWeight: 'bold'}}>
+      <CrownFilled /> Premium
+    </Tag>
   )
 }

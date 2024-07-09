@@ -1,11 +1,13 @@
 import { Avatar } from "antd";
 
 export default function UserName() {
-  const userName = "udme";
+  const userName = "first-name last-name";
   return (
     <>
-      <Avatar src="../../../../assets/images/logo-black.svg" size={30} style={{marginRight: '8px'}}/>
-      {userName}
+      <div className="text-truncate" style={{width: '130px'}}>
+        <Avatar src="../../../../assets/images/logo-black.svg" size={30} style={{marginRight: '8px'}}/>
+          {userName}
+      </div>
     </>
   )
 }

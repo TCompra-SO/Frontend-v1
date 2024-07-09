@@ -4,7 +4,7 @@ export interface CountryObj {
 }
 
 export interface CountriesRequest {
-  verify: 1 | 2 // 1: Solo paises | 2: Paises y ciudades
+  verify: 1 | 2 // 1: Solo países | 2: Países y ciudades
 }
 
 export interface StepsItemContent {
@@ -14,4 +14,14 @@ export interface StepsItemContent {
   icon: any,
   text: string,
   showInput: boolean
+}
+
+export interface Category {
+  id: string,
+  name: string
+}
+
+export interface RequirementSearchItem {
+  id: string,
+  title: string
 }
