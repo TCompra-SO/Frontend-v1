@@ -3,3 +3,16 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.table-container-page {
+  padding: 20px 40px;
+  background-color: rgb(250, 247, 249);
+}
+
+.table-container-page .table-container {
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 2px 18px rgba(0, 0, 0, 0.1);
+  font-weight: 500;
+}

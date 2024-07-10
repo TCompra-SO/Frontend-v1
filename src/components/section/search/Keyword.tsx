@@ -1,5 +1,6 @@
-import { Form, Select } from 'antd';
+import { Form } from 'antd';
 import { Category, RequirementSearchItem } from '../../../models/Interfaces';
+import SelectContainer from '../../containers/SelectContainer';
 
 interface KeywordProps {
   categories: Category[],
@@ -12,7 +13,7 @@ export default function Keyword(props: KeywordProps) {
       name='keyWordSearch'
       style={{width: '100%'}}
     >
-      <Select
+      <SelectContainer
         showSearch
         suffixIcon={null}
         placeholder='Buscar...' 
@@ -31,7 +32,7 @@ export default function Keyword(props: KeywordProps) {
           }
         ]}
       >
-      </Select>
+      </SelectContainer>
     </Form.Item>
   )
 }

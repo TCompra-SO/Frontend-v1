@@ -1,4 +1,4 @@
-import { RegisterRequest } from "../../models/Auth";
+import { RegisterRequest } from "../../models/Requests";
 import httpRequest from "../../utilities/requests/httpRequest";
 import { MainRoutes, Routes } from "../../utilities/routes";
 

@@ -8,6 +8,7 @@ import { MenuFoldOutlined, MenuUnfoldOutlined, SearchOutlined } from '@ant-desig
 import { useState } from 'react'
 import { Category, RequirementSearchItem } from '../models/Interfaces'
 import MoreOptionsSearch from '../components/modals/MoreOptionsSearch'
+import { darkColor } from '../utilities/colors'
 
 const categories: Category[] = [
   {
@@ -58,7 +59,7 @@ export default function Search() {
         align='center'
         style={{
           width: '100%',
-          backgroundColor: '#510839',
+          backgroundColor: darkColor,
           padding: '20px'
       }}>
         <Form form={form} className='search-form'>

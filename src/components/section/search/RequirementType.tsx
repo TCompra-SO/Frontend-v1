@@ -1,4 +1,5 @@
-import { Form, Select } from "antd";
+import { Form } from "antd";
+import SelectContainer from "../../containers/SelectContainer";
 
 
 export default function RequirementType() {
@@ -6,7 +7,7 @@ export default function RequirementType() {
     <Form.Item
       name='reqTypeSearch'
     >
-      <Select
+      <SelectContainer
         placeholder='Tipo de requerimiento'
         optionFilterProp="label"
         options={[
@@ -26,7 +27,7 @@ export default function RequirementType() {
         style={{width: '100%'}}
         
         >
-      </Select>
+      </SelectContainer>
     </Form.Item>
   )
 }

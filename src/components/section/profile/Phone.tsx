@@ -1,6 +1,7 @@
-import { Form, Input, Space } from "antd";
+import { Form, Space } from "antd";
 import { Lengths } from "../../../utilities/lengths";
 import { RuleObject } from "antd/es/form";
+import InputContainer from "../../containers/InputContainer";
 
 function validateNumber(_: RuleObject, value: string) {
   if (value && isNaN(Number(value))) {
@@ -36,8 +37,12 @@ export default function Phone() {
       rules={rulesPhone}
     >
       <Space.Compact>
-        <Input style={{ width: '20%' }} readOnly={true} defaultValue='+51'/>
-        <Input style={{ width: '80%' }}  />
+        <InputContainer 
+          style={{ width: '20%' }} 
+          readOnly={true}
+          defaultValue='+51'
+        />
+        <InputContainer style={{ width: '80%' }}/>
       </Space.Compact>
     </Form.Item>
   )

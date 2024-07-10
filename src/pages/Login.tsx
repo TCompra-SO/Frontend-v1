@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import Dni from '../components/section/login/Dni';
 import { TabsProps } from 'antd/lib';
 import usePost from '../hooks/usePost';
-import { RegisterRequest } from '../models/Auth';
+import { RegisterRequest } from '../models/Requests';
 import login from '../services/auth/login.service';
 import { useDispatch } from 'react-redux';
 import { setUser, setUid } from '../redux/userSlice';
@@ -20,6 +20,7 @@ import showNotification from '../utilities/notification/showNotification';
 import useGet from '../hooks/useGet';
 import getTLDs from '../services/utils/topLevelDomains';
 import { setIsLoading } from '../redux/loadingSlice';
+import { linkColor } from '../utilities/colors';
 
 const LoginType = {
   LOGIN: 'login',
@@ -151,7 +152,7 @@ export default function Login() {
           <>
             <Email tlds={tlds}></Email>
             <Password></Password>
-            <a style={{ float: 'right', marginBottom: '24px', fontWeight: 'bold', color: '#007CD1' }}>
+            <a style={{ float: 'right', marginBottom: '24px', fontWeight: 'bold', color: linkColor }}>
               ¿Olvidó su contraseña?
             </a>
           </>

@@ -1,3 +1,9 @@
+export interface HttpObject {
+  data: any | null,
+  loading: boolean,
+  error: string | null
+}
+
 export interface CountryObj {
   country: string,
   cities?: string[]

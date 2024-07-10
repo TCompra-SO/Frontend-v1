@@ -4,7 +4,7 @@ import Phone from "../components/section/profile/Phone";
 import Country from "../components/section/profile/Country";
 import City from "../components/section/profile/City";
 import usePost from "../hooks/usePost";
-import { ProfileRequest, SendCodeRequest } from "../models/Auth";
+import { ProfileRequest, SendCodeRequest } from "../models/Requests";
 import createProfile from "../services/auth/profile.service";
 import moment from 'moment';
 import { dateFormat } from "../utilities/globals";
@@ -18,8 +18,7 @@ import sendCode from "../services/auth/sendCode.service";
 import backgroundImage from "../assets/images/silder-tc-04.jpg";
 import Title from "antd/es/typography/Title";
 import getCountries from "../services/utils/country.service";
-import { CountriesRequest, CountryObj } from "../models/Interfaces";
-import { HttpObject } from "../models/HttpObject";
+import { CountriesRequest, CountryObj, HttpObject } from "../models/Interfaces";
 import { setIsLoading } from "../redux/loadingSlice";
 
 export default function Profile() {
@@ -27,6 +26,7 @@ export default function Profile() {
   const dispatch = useDispatch();
   const { state } = useLocation();
   const { email } = state;
+  // const email = 'aall@gmail.com';
   const { notification } = App.useApp();
   const [form] = Form.useForm();
   const uid = useSelector((state: MainState) => state.user.uid);  

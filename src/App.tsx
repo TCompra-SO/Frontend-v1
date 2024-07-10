@@ -6,6 +6,8 @@ import LoadingPage from "./pages/utils/LoadingPage.tsx";
 import Search from "./pages/Search";
 import Header from "./components/section/header/header/Header";
 import './assets/styles.css';
+import Requirements from "./pages/Requirements.tsx";
+import { lightColor, mainBackgroundColor, primaryColor } from "./utilities/colors.ts";
 
 const Login = lazy(() => import('./pages/Login.tsx'));
 const Profile = lazy(() => import('./pages/Profile.tsx'));
@@ -17,11 +19,19 @@ function App() {
         theme={{
           algorithm: theme.defaultAlgorithm,
           token: {
-            colorPrimary: '#BC1373',
+            colorPrimary: primaryColor,
             borderRadius: 10,
-            colorBgContainer: '#ffffff',
-            fontFamily: 'sans-serif'
+            colorBgContainer: mainBackgroundColor,
+            fontFamily: 'Jost'
           },
+          components: {
+            Table: {
+              headerColor: primaryColor,
+              headerBg: lightColor,
+              headerSortActiveBg: lightColor,
+              headerSortHoverBg: lightColor
+            }
+          }
         }}
       >
         <AntdApp>
@@ -42,6 +52,12 @@ function App() {
               <Suspense fallback={<LoadingPage />}>
                 <Header />
                 <Search ></Search>
+              </Suspense>
+            } />
+            <Route path="/mis-requerimientos" element={
+              <Suspense fallback={<LoadingPage />}>
+                {/* <Header /> */}
+                <Requirements ></Requirements>
               </Suspense>
             } />
             <Route path="*" element={<Navigate to="/" replace />}

@@ -1,4 +1,4 @@
-import { ValidateCodeRequest } from "../../models/Auth";
+import { ValidateCodeRequest } from "../../models/Requests";
 import httpRequest from "../../utilities/requests/httpRequest";
 import { MainRoutes, Routes } from "../../utilities/routes";
 

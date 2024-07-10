@@ -1,12 +1,13 @@
 import { CheckCircleOutlined, SendOutlined, SolutionOutlined } from "@ant-design/icons";
-import { App, Button, Divider, Flex, Form, Input, Modal, Steps, StepsProps } from "antd";
+import { App, Button, Divider, Flex, Form,  Modal, Steps, StepsProps } from "antd";
 import { useEffect, useState } from "react";
 import usePost from "../../hooks/usePost";
-import { SendCodeRequest, ValidateCodeRequest } from "../../models/Auth";
+import { SendCodeRequest, ValidateCodeRequest } from "../../models/Requests";
 import validateCode from "../../services/auth/validateCode.service";
 import sendCode from "../../services/auth/sendCode.service";
 import showNotification from "../../utilities/notification/showNotification";
 import { StepsItemContent } from "../../models/Interfaces";
+import InputContainer from "../containers/InputContainer";
 
 interface ValidateCodeProps {
   isOpen: boolean,
@@ -184,7 +185,7 @@ export default function ValidateCode({isOpen, onClose, email}: ValidateCodeProps
             <>
               <Form form={form}>
                 <Form.Item name='code'>
-                  <Input.OTP length={6}/>
+                  <InputContainer otp={true} length={6}/>
                 </Form.Item>
               </Form>
               

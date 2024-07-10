@@ -1,11 +1,12 @@
-import { Form, Select } from 'antd';
+import { Form } from 'antd';
+import SelectContainer from '../../containers/SelectContainer';
 
 export default function CitySearch() {
   return (
     <Form.Item
       name='citySearch'
     >
-      <Select
+      <SelectContainer
         showSearch
         placeholder='Departamento'
         optionFilterProp="label"
@@ -24,7 +25,7 @@ export default function CitySearch() {
           },
         ]}
       >
-      </Select>
+      </SelectContainer>
     </Form.Item>
   )
 }

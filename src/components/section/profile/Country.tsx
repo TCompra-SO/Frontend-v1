@@ -1,4 +1,5 @@
 import { Form, Select } from "antd";
+// import SelectContainer from "../../containers/SelectContainer";
 
 interface CountryProps {
   countries: string[],
@@ -18,7 +19,7 @@ export default function Country({countries, onChangeCountry}: CountryProps) {
       label="País" 
       name="country" 
       rules={rulesCountry}>
-      <Select 
+      <Select
         placeholder='Seleccionar'
         onChange={onChangeCountry}
       >
@@ -31,6 +32,11 @@ export default function Country({countries, onChangeCountry}: CountryProps) {
           </Select.Option>
         ))}
       </Select>
+      {/* <SelectContainer
+        placeholder="Seleccionar"
+        onChange={onChangeCountry}
+        options={countries.map(country => { return {label: country, value: country}})}
+      /> */}
     </Form.Item>
   )
 }

@@ -1,5 +1,6 @@
-import { Form, Select } from 'antd';
+import { Form } from 'antd';
 import './search.css';
+import SelectContainer from '../../containers/SelectContainer';
 
 export default function Company() {
   return (
@@ -7,8 +8,8 @@ export default function Company() {
       name='companySearch'
       style={{width: '100%'}}
     >
-      <Select
-        showSearch
+      <SelectContainer
+        showSearch={true}
         placeholder='Empresa'
         optionFilterProp="label"
         options={[
@@ -28,8 +29,7 @@ export default function Company() {
         style={{
           marginBottom: '10px',
         }}
-      >
-      </Select>
+      />
     </Form.Item>
   )
 }

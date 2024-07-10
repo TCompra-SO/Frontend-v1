@@ -1,4 +1,4 @@
-import { SendCodeRequest } from "../../models/Auth";
+import { SendCodeRequest } from "../../models/Requests";
 import httpRequest from "../../utilities/requests/httpRequest";
 import { MainRoutes, Routes } from "../../utilities/routes";
 

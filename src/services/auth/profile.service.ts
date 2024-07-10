@@ -1,4 +1,4 @@
-import { ProfileRequest } from "../../models/Auth";
+import { ProfileRequest } from "../../models/Requests";
 import httpRequest from "../../utilities/requests/httpRequest";
 import { MainRoutes, Routes } from "../../utilities/routes";
 
