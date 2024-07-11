@@ -7,7 +7,7 @@ import Search from "./pages/Search";
 import Header from "./components/section/header/header/Header";
 import './assets/styles.css';
 import Requirements from "./pages/Requirements.tsx";
-import { lightColor, mainBackgroundColor, primaryColor } from "./utilities/colors.ts";
+import { lightColor, mainBackgroundColor, primaryColor, secondaryBackgroundColor, tableHeaderTextColor } from "./utilities/colors.ts";
 
 const Login = lazy(() => import('./pages/Login.tsx'));
 const Profile = lazy(() => import('./pages/Profile.tsx'));
@@ -26,10 +26,12 @@ function App() {
           },
           components: {
             Table: {
-              headerColor: primaryColor,
-              headerBg: lightColor,
+              headerColor: tableHeaderTextColor,
+              headerBg: '#ffffff',
               headerSortActiveBg: lightColor,
-              headerSortHoverBg: lightColor
+              headerSortHoverBg: lightColor,
+              // colorBgContainer: '#ffffff',
+              headerSplitColor: 'transparent'
             }
           }
         }}

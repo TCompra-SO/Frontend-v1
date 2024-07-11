@@ -1,7 +1,7 @@
 import { RequirementState, RequirementType, UserTable } from "../utilities/types";
 
 export interface RequirementTableItem {
-  key: React.Key;
+  key: string;
   title: string;
   description: string;
   category: string;
@@ -11,11 +11,13 @@ export interface RequirementTableItem {
   price: number;
   numberOffers: number;
   state: RequirementState;
-  type: RequirementType
+  type: RequirementType;
+  image?: string,
+  subUser?: User
 }
 
 export interface OfferListItem {
-  key: React.Key;
+  key: string;
   title: string;
   description: string;
   coin: string;
@@ -23,7 +25,9 @@ export interface OfferListItem {
   warranty: string;
   deliveryTime: string;
   user: User,
-  location: string
+  location: string,
+  image?: string,
+  subUser?: User
 }
 
 export interface User {

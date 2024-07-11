@@ -1,7 +1,9 @@
-import { Button, Dropdown, Space, Table, TableProps, Tag } from "antd"
+import { Avatar, Button, Dropdown, Flex, Space, Table, TableProps, Tag } from "antd"
 import { RequirementTableItem } from "../../models/MainInterfaces"
-import { RequirementState, RequirementStateMeta, RequirementType } from "../../utilities/types"
+import { RequirementState, RequirementType } from "../../utilities/types"
 import { CaretDownOutlined } from "@ant-design/icons";
+import TagContainer from "../containers/TagContainer";
+import { RequirementStateMeta, lightColor, primaryColor, tableHeaderTextColor } from "../../utilities/colors";
 
 const requirements: RequirementTableItem[] = [
   {
@@ -15,7 +17,8 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 'Arequipa',
     date: '23-04-2023',
-    description: 'Desription'
+    description: 'Desription',
+    image: 'https://imgv3.fotor.com/images/cover-photo-image/AI-illustration-of-a-dragon-by-Fotor-AI-text-to-image-generator.jpg'
   },
   {
     key: '2',
@@ -85,31 +88,63 @@ const requirements: RequirementTableItem[] = [
 ];
 
 const columns: TableProps<RequirementTableItem>['columns'] = [
+  
+  {
+    dataIndex: 'image',
+    align: 'center',
+    // hidden: true,
+    width: 40,
+    render: (_, {image}) => (
+      <Avatar
+        src={image ?? 'https://placehold.co/100x100'}
+      ></Avatar>
+    )
+  },
   {
     title: 'Nombre',
-    dataIndex: 'name',
+    dataIndex: 'title',
     key: 'name',
     align: 'center',
     sorter: (a, b) => a.title.localeCompare(b.title),
     showSorterTooltip: false,
-    render: (_, { title }) => (
-      <div 
-        className="text-truncate"
-        style={{textAlign: 'left'}}
-      >
-        {title}
-      </div>
+    render: (_, { title, category, image }) => (
+      < >
+          {/* <Avatar
+            src={image ?? 'https://placehold.co/100x100'}
+          ></Avatar> */}
+          <Flex vertical>
+          <div 
+            className="text-truncate" 
+            style={{textAlign: 'left'}}
+          >
+            {title}
+          </div>
+          <div
+            className="text-truncate"
+            style={{textAlign: 'left', color: tableHeaderTextColor}}
+          >
+            {category}
+          </div>
+          </Flex>
+      </>
     ),
   },
-  {
-    title: 'Rubro',
-    dataIndex: 'category',
-    key: 'category',
-    align: 'center' ,
-    sorter: (a, b) => a.title.localeCompare(b.title), 
-    showSorterTooltip: false,
-    width: '120px'
-  },
+  // {
+  //   title: 'Rubro',
+  //   dataIndex: 'category',
+  //   key: 'category',
+  //   align: 'center' ,
+  //   sorter: (a, b) => a.title.localeCompare(b.title), 
+  //   showSorterTooltip: false,
+  //   width: '120px',
+  //   render: (_, { category }) => (
+  //     <div 
+  //       style={{textAlign: 'left'}}
+  //     >
+  //       {category}
+  //     </div>
+  //   ),
+  // },
   {
     title: 'Departmento',
     dataIndex: 'location',
@@ -117,7 +152,14 @@ const columns: TableProps<RequirementTableItem>['columns'] = [
     align: 'center',
     sorter: (a, b) => a.title.localeCompare(b.title),
     showSorterTooltip: false,
-    width: '120px'
+    width: '120px',
+    render: (_, { location }) => (
+      <div 
+        style={{textAlign: 'left'}}
+      >
+        {location}
+      </div>
+    ),
   },
   {
     title: 'Fecha',
@@ -151,10 +193,19 @@ const columns: TableProps<RequirementTableItem>['columns'] = [
     render: (_, { numberOffers }) => (
       <Button 
         size="small" 
-        type="primary" 
-        style={{width: '64px', textAlign: 'center', fontSize: '11px'}}
+        type="default" 
+        shape="round"
+        style={{
+          height: '32px', 
+          textAlign: 'center', 
+          fontSize: '15px',
+          fontWeight: '500',
+          color: primaryColor,
+          background: lightColor,
+          border: '0'
+        }}
       >
-        VER: {numberOffers}
+        {numberOffers}
       </Button>
     ),
   },
@@ -165,13 +216,17 @@ const columns: TableProps<RequirementTableItem>['columns'] = [
     dataIndex: 'state',
     showSorterTooltip: false,
     width: '120px',
-    render: (_, { state }) => (
-      <Tag 
-        color={RequirementStateMeta[state].color}
-        style={{width: '70px', textAlign: 'center'}}
-      >
-        {RequirementStateMeta[state].label}
-      </Tag>      
+    render: (_, { state }) => (    
+      <TagContainer
+        color={RequirementStateMeta[state].background}
+        text={RequirementStateMeta[state].label}
+        style={{
+          width: '70px', 
+          textAlign: 'center', 
+          marginInlineEnd: '0',
+          color: RequirementStateMeta[state].color
+        }}
+      />
     ),
   },
   {
@@ -179,7 +234,7 @@ const columns: TableProps<RequirementTableItem>['columns'] = [
     key: 'action',
     align: 'center',
     showSorterTooltip: false,
-    width: '120px',
+    width: '135px',
     render: () => (
       <Space size="middle">
         <Dropdown 
@@ -196,7 +251,7 @@ const columns: TableProps<RequirementTableItem>['columns'] = [
               },
             ]
           }}>
-          <Button size="small" type="primary" style={{fontSize: '11px'}}>
+          <Button size="small" type="primary" ghost style={{fontSize: '11px'}}>
             SELECCIONE <CaretDownOutlined />
           </Button>
         </Dropdown>
@@ -214,6 +269,7 @@ export default function RequirementsTable() {
         columns={columns}
         scroll={{ x: 1200 }}
         style={{width: '100%'}}
+        bordered={false}
         pagination={{ 
           pageSizeOptions,
           showSizeChanger: true,

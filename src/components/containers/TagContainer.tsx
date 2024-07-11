@@ -9,12 +9,21 @@ interface TagContainerProps {
   text?: string,
   color?: string,
   label?: string,
+  includeMarginRight?: boolean
 }
 
 export default function TagContainer(props: TagContainerProps) {
+  let newStyle;
+  if (props.includeMarginRight) {
+    if (props.style) newStyle = props.style;
+  } else {
+    if (props.style) newStyle = {...props.style, marginRight: '0'};
+    else newStyle = {marginRight: '0'};
+  }
+
   if (props.isRequirementTag)
     return (
-      <Tag color={primaryColor} style={props.style}>
+      <Tag color={primaryColor} style={newStyle}>
         {
           props.type == RequirementType.GOOD ? 'Bienes' :
           props.type == RequirementType.SERVICE ? 'Servicios' :
@@ -25,7 +34,7 @@ export default function TagContainer(props: TagContainerProps) {
     )
   else
     return (
-      <Tag color={props.color} style={props.style}>
+      <Tag color={props.color} style={newStyle}>
         { props.label ? props.label + ': ' + props.text : props.text}
       </Tag>
     )

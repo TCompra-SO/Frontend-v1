@@ -1,7 +1,7 @@
 interface ImageContainerProps{ 
   alt: string,
   src: string,
-  style: React.CSSProperties
+  style?: React.CSSProperties
 }
 export default function ImageContainer(props: ImageContainerProps) {
   return (

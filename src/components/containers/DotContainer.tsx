@@ -15,8 +15,10 @@ export default function DotContainer(props: DotContainerProps) {
       icon={faCircle} 
       fontSize={props.fontSize ?? 5} 
       color={props.color ?? primaryColor}
-      style={{marginLeft: props.marginLeft ? '5px' : '0',
-        marginRight: props.marginRight ? '5px' : '0'
+      style={{
+        marginLeft: props.marginLeft ? '6px' : '0',
+        marginRight: props.marginRight ? '6px' : '0',
+        marginBottom:'3px'
       }}
     />
   )

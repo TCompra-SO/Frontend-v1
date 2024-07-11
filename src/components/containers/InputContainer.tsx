@@ -6,7 +6,8 @@ interface InputContainerProps {
   readOnly?: boolean
   defaultValue?: string,
   otp?: boolean,
-  length?: number
+  length?: number,
+  prefix?: React.ReactNode
 }
 
 export default function InputContainer(props: InputContainerProps) {
@@ -16,6 +17,7 @@ export default function InputContainer(props: InputContainerProps) {
 
   return (
     <Input
+      prefix={props.prefix}
       placeholder={props.placeholder}
       style={props.style}
       readOnly={props.readOnly}

@@ -1,10 +1,11 @@
 import { Divider, Modal, } from "antd"
-import { ModalTypes } from "../../utilities/types";
+import { ModalTypes, UserTable } from "../../utilities/types";
 import Title from "antd/es/typography/Title"
 import RequirementInfo from "../section/requirements/RequirementInfo"
 import RequirementOfferFilters from "../section/requirements/RequirementOfferFilters";
 import RequirementOfferList from "../section/requirements/RequirementOfferList";
 import { OfferListItem } from "../../models/MainInterfaces";
+import { primaryColor } from "../../utilities/colors";
 
 interface ModalContainerProps {
   type: ModalTypes
@@ -15,25 +16,33 @@ const offerList: OfferListItem[] = [
     key: '1',
     title: 'Gaming Laptop',
     description: 'High-performance gaming laptop with RGB keyboard',
-    coin: 'USD',
-    price: 1500,
+    coin: '$',
+    price: 150089,
     warranty: '1 year',
     deliveryTime: '2-3 weeks',
     location: 'Madre de dios',
     user: {
       uid: 'user1',
-      name: 'John Doe',
+      name: 'Soluciones Online Soluciones Online Soluciones Online S. A. C.',
       email: 'john.doe@example.com',
       password: 'password123',
       document: '123456789',
-      userTable: 1
-    }
+      userTable: UserTable.COMPANY
+    },
+    subUser: {
+      uid: 'user1',
+      name: 'Javier Alberto Solís Calcina',
+      email: 'javiersolis@example.com',
+      password: 'password123',
+      document: '123456789',
+      userTable: UserTable.COMPANY
+    },
   },
   {
     key: '2',
     title: 'Smartphone',
     description: 'Latest model smartphone with dual cameras',
-    coin: 'EUR',
+    coin: '$',
     price: 800,
     warranty: '2 years',
     deliveryTime: '1-2 weeks',
@@ -52,7 +61,7 @@ const offerList: OfferListItem[] = [
     key: '3',
     title: 'Fitness Tracker',
     description: 'Waterproof fitness tracker with heart rate monitor',
-    coin: 'USD',
+    coin: 's/.',
     price: 100,
     warranty: '6 months',
     deliveryTime: '1 week',
@@ -70,7 +79,7 @@ const offerList: OfferListItem[] = [
     key: '4',
     title: 'Wireless Headphones',
     description: 'Noise-cancelling wireless headphones with Bluetooth',
-    coin: 'GBP',
+    coin: 'S/.',
     price: 120,
     warranty: '1 year',
     deliveryTime: '3-4 weeks',
@@ -88,7 +97,7 @@ const offerList: OfferListItem[] = [
     key: '5',
     title: 'Coffee Machine',
     description: 'Espresso coffee machine with milk frother',
-    coin: 'USD',
+    coin: '$',
     price: 200,
     warranty: '2 years',
     deliveryTime: '2-3 weeks',
@@ -106,7 +115,7 @@ const offerList: OfferListItem[] = [
     key: '6',
     title: 'Portable Speaker',
     description: 'Portable Bluetooth speaker with waterproof design',
-    coin: 'USD',
+    coin: '$',
     price: 80,
     warranty: '1 year',
     deliveryTime: '1-2 weeks',
@@ -124,7 +133,7 @@ const offerList: OfferListItem[] = [
     key: '7',
     title: 'Smartwatch',
     description: 'Fitness-focused smartwatch with GPS and heart rate monitor',
-    coin: 'EUR',
+    coin: 'S/.',
     price: 300,
     warranty: '2 years',
     deliveryTime: '2-3 weeks',
@@ -142,7 +151,7 @@ const offerList: OfferListItem[] = [
     key: '8',
     title: 'Desktop Computer',
     description: 'High-end desktop computer for gaming and professional use',
-    coin: 'USD',
+    coin: '$',
     price: 2500,
     warranty: '3 years',
     deliveryTime: '3-4 weeks',
@@ -160,7 +169,7 @@ const offerList: OfferListItem[] = [
     key: '9',
     title: 'Camera Kit',
     description: 'Professional camera kit with multiple lenses and accessories',
-    coin: 'USD',
+    coin: '$',
     price: 1800,
     warranty: '1 year',
     deliveryTime: '2-3 weeks',
@@ -178,7 +187,7 @@ const offerList: OfferListItem[] = [
     key: '10',
     title: 'Electric Scooter',
     description: 'Foldable electric scooter with long battery life',
-    coin: 'GBP',
+    coin: 'S/.',
     price: 600,
     warranty: '2 years',
     deliveryTime: '2-3 weeks',
@@ -203,8 +212,14 @@ export default function ModalContainer(props: ModalContainerProps) {
           title='ssss hfdjhdj fjdhfjdh jh'
           open={true}
           closable={false}
-          width='700px'
+          width='750px'
           footer={null}
+          style={{ 
+            maxHeight: '75vh', 
+            overflowY: 'scroll', 
+            paddingBottom: '0',
+          }}
+          className="custom-scroll"
         >
           <Divider style={{margin: '10px 0'}}/>
           <RequirementInfo></RequirementInfo>

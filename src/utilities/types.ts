@@ -21,37 +21,6 @@ export enum RequirementState {
   DISPUTE = 8
 }
 
-export const RequirementStateMeta = {
-  1: {
-    color: 'green',
-    label: 'Publicado'
-  },
-  2: {
-    color: '#c3dbff',
-    label: 'Atendido'
-  },
-  3: {
-    color: '#ffc100',
-    label: 'Culminado'
-  },
-  5: {
-    color: 'gray',
-    label: 'Expirado'
-  },
-  6: {
-    color: 'red',
-    label: 'Cancelado'
-  },
-  7: {
-    color: '#e7ddbe',
-    label: 'Eliminado'
-  },
-  8: {
-    color: '#35031f',
-    label: 'En disputa'
-  }
-}
-
 export enum ModalTypes {
   DETAILED_REQUIREMENT = 1,
   VALIDATE_CODE = 2

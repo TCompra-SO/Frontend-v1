@@ -9,6 +9,8 @@ export default function RatingContainer(props: RatingContainerProps) {
   return (
     <Rate 
       disabled={props.readOnly} 
-      defaultValue={props.score} />
+      defaultValue={props.score} 
+      className="custom-rate-star"
+    />
   )
 }

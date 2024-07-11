@@ -13,11 +13,11 @@ import { darkColor } from '../utilities/colors'
 const categories: Category[] = [
   {
     id: '1',
-    name: 'Rubro1 req'
+    name: 'Hardware'
   },
   {
     id: '2',
-    name: 'Rubro2 req'
+    name: 'Casa y hogar'
   }
 ];
 
