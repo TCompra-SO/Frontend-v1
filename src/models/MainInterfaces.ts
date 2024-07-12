@@ -27,7 +27,8 @@ export interface OfferListItem {
   user: User,
   location: string,
   image?: string,
-  subUser?: User
+  subUser?: User,
+  selectionDate?: Date
 }
 
 export interface User {

@@ -1,4 +1,4 @@
-import { Button, Col, Flex,  Form,  Row,  } from 'antd'
+import { Col, Flex,  Form,  Row,  } from 'antd'
 import DateSearch from '../components/section/search/DateSearch'
 import CitySearch from '../components/section/search/CitySearch'
 import RequirementType from '../components/section/search/RequirementType'
@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { Category, RequirementSearchItem } from '../models/Interfaces'
 import MoreOptionsSearch from '../components/modals/MoreOptionsSearch'
 import { darkColor } from '../utilities/colors'
+import ButtonContainer from '../components/containers/ButtonContainer'
 
 const categories: Category[] = [
   {
@@ -108,24 +109,23 @@ export default function Search() {
                 gutter={10}
               > 
                 <Col lg={0} xl={0}>
-                  <Button 
+                  <ButtonContainer 
                     ghost
                     style={{height: '80px', borderRadius: '25px'}}
                     onClick={handleShowMoreOptions}
-                  >
-                    { !showMoreOptions ? <MenuFoldOutlined/> : <MenuUnfoldOutlined/> }
-                  </Button>
+                    text={ !showMoreOptions ? <MenuFoldOutlined/> : <MenuUnfoldOutlined/> }
+                  />
 
                 </Col>
                 <Col flex="auto" lg={24} xl={24}>
-                  <Button 
+                  <ButtonContainer
                     icon={<SearchOutlined/>}
                     type="primary"
                     block={true} 
                     style={{height: '80px', borderRadius: '25px', fontSize: '20px'}}
-                  >
-                    Buscar
-                  </Button>
+                    text='Buscar'
+                  />
+                    
                 </Col>                
               </Row>
             </Col>

@@ -29,7 +29,7 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
             }
             style={{margin: '-12px -16px'}}
           >
-            <RequirementOfferListItemBody/>
+            <RequirementOfferListItemBody offer={offer}/>
           </Panel>
         )
       })

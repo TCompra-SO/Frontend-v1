@@ -1,91 +1,15 @@
-import { Avatar, Button, Dropdown, Flex, Space, Table, TableProps, Tag } from "antd"
+import { Avatar, Dropdown, Flex, Space, Table, TableProps } from "antd"
 import { RequirementTableItem } from "../../models/MainInterfaces"
-import { RequirementState, RequirementType } from "../../utilities/types"
+import { RequirementType } from "../../utilities/types"
 import { CaretDownOutlined } from "@ant-design/icons";
 import TagContainer from "../containers/TagContainer";
 import { RequirementStateMeta, lightColor, primaryColor, tableHeaderTextColor } from "../../utilities/colors";
+import ButtonContainer from "../containers/ButtonContainer";
 
-const requirements: RequirementTableItem[] = [
-  {
-    key: '1',
-    title: 'Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20',
-    category: 'Informática',
-    coin: '$',
-    price: 5500,
-    numberOffers: 999,
-    state: RequirementState.CANCELED,
-    type: RequirementType.GOOD,
-    location: 'Arequipa',
-    date: '23-04-2023',
-    description: 'Desription',
-    image: 'https://imgv3.fotor.com/images/cover-photo-image/AI-illustration-of-a-dragon-by-Fotor-AI-text-to-image-generator.jpg'
-  },
-  {
-    key: '2',
-    title: 'Se necesita un maletín ejecutivo con un compartimento acolchado para un portátil de 15 pulgadas. Se necesita un maletín ejecutivo con un compartimento acolchado para un portátil de 15 pulgadas',
-    category: 'Cuero y calzado',
-    coin: 'S/.',
-    price: 234,
-    numberOffers: 0,
-    state: RequirementState.EXPIRED,
-    type: RequirementType.GOOD,
-    location: 'Lima',
-    date: '23-04-2023',
-    description: 'Desription'
-  },
-  {
-    key: '3',
-    title: 'Se requiere un ordenador portátil resistente para uso en exteriores',
-    category: 'Hardware',
-    coin: 'S/.',
-    price: 230,
-    numberOffers: 0,
-    state: RequirementState.DISPUTE,
-    type: RequirementType.GOOD,
-    location: 'Madre de Dios',
-    date: '23-04-2023',
-    description: 'Desription'
-  },
-  {
-    key: '4',
-    title: 'Necesito 10 Monitores de PC con Variedad en Marca y Tamaño',
-    category: 'Hardware',
-    coin: '$',
-    price: 2323,
-    numberOffers: 3,
-    state: RequirementState.FINISHED,
-    type: RequirementType.GOOD,
-    location: 'Loreto',
-    date: '23-04-2023',
-    description: 'Desription'
-  },
-  {
-    key: '5',
-    title: 'Requiero 15 Escritorios de Oficina con Variedad en Marca y Color',
-    category: 'Carpintería',
-    coin: '$',
-    price: 455,
-    numberOffers: 0,
-    state: RequirementState.PUBLISHED,
-    type: RequirementType.GOOD,
-    location: 'Huancavelica',
-    date: '23-04-2023',
-    description: 'Desription'
-  },
-  {
-    key: '6',
-    title: 'Se requiere comprar muebles para la sala de espera',
-    category: 'Casa y hogar',
-    coin: 'S/. ',
-    price: 500,
-    numberOffers: 1,
-    state: RequirementState.SELECTED,
-    type: RequirementType.GOOD,
-    location: 'Arequipa',
-    date: '03-12-2023',
-    description: 'Desription'
-  }
-];
+interface RequirementsTableProps {
+  type: RequirementType,
+  data: RequirementTableItem[]
+}
 
 const columns: TableProps<RequirementTableItem>['columns'] = [
   
@@ -107,11 +31,8 @@ const columns: TableProps<RequirementTableItem>['columns'] = [
     align: 'center',
     sorter: (a, b) => a.title.localeCompare(b.title),
     showSorterTooltip: false,
-    render: (_, { title, category, image }) => (
+    render: (_, { title, category }) => (
       < >
-          {/* <Avatar
-            src={image ?? 'https://placehold.co/100x100'}
-          ></Avatar> */}
           <Flex vertical>
           <div 
             className="text-truncate" 
@@ -191,10 +112,11 @@ const columns: TableProps<RequirementTableItem>['columns'] = [
     showSorterTooltip: false,
     width: '120px',
     render: (_, { numberOffers }) => (
-      <Button 
+      <ButtonContainer
         size="small" 
         type="default" 
         shape="round"
+        text={numberOffers}
         style={{
           height: '32px', 
           textAlign: 'center', 
@@ -204,9 +126,8 @@ const columns: TableProps<RequirementTableItem>['columns'] = [
           background: lightColor,
           border: '0'
         }}
-      >
-        {numberOffers}
-      </Button>
+      />
+
     ),
   },
   {
@@ -251,21 +172,27 @@ const columns: TableProps<RequirementTableItem>['columns'] = [
               },
             ]
           }}>
-          <Button size="small" type="primary" ghost style={{fontSize: '11px'}}>
-            SELECCIONE <CaretDownOutlined />
-          </Button>
+          <ButtonContainer
+            size="small" 
+            type="primary" 
+            ghost 
+            text='Seleccione'
+            upperCaseSmaller
+            icon={<CaretDownOutlined />}
+            iconPosition="end"
+          />
         </Dropdown>
       </Space>
     ),
   },
 ];
 
-export default function RequirementsTable() {
+export default function RequirementsTable(props: RequirementsTableProps) {
   const pageSizeOptions = ['10', '20', '50', '100'];
 
   return (  
       <Table 
-        dataSource={requirements} 
+        dataSource={props.data} 
         columns={columns}
         scroll={{ x: 1200 }}
         style={{width: '100%'}}
@@ -273,8 +200,14 @@ export default function RequirementsTable() {
         pagination={{ 
           pageSizeOptions,
           showSizeChanger: true,
-          locale: { items_per_page: "/ Bienes por página"}
-          // hideOnSinglePage: true
+          // hideOnSinglePage: true,<
+          locale: { 
+            items_per_page: `/ ${
+              props.type == RequirementType.GOOD ? 'Bienes' : 
+              props.type == RequirementType.SERVICE ? 'Servicios' :
+              props.type == RequirementType.SALE ? 'Liquidaciones' :
+              'Puestos de trabajo' } por página`
+          },
         }}
       >
       </Table>

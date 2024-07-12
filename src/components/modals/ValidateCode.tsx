@@ -1,5 +1,5 @@
 import { CheckCircleOutlined, SendOutlined, SolutionOutlined } from "@ant-design/icons";
-import { App, Button, Divider, Flex, Form,  Modal, Steps, StepsProps } from "antd";
+import { App, Divider, Flex, Form,  Modal, Steps, StepsProps } from "antd";
 import { useEffect, useState } from "react";
 import usePost from "../../hooks/usePost";
 import { SendCodeRequest, ValidateCodeRequest } from "../../models/Requests";
@@ -8,6 +8,7 @@ import sendCode from "../../services/auth/sendCode.service";
 import showNotification from "../../utilities/notification/showNotification";
 import { StepsItemContent } from "../../models/Interfaces";
 import InputContainer from "../containers/InputContainer";
+import ButtonContainer from "../containers/ButtonContainer";
 
 interface ValidateCodeProps {
   isOpen: boolean,
@@ -147,10 +148,8 @@ export default function ValidateCode({isOpen, onClose, email}: ValidateCodeProps
       open={isOpen}
       closable={false}
       footer={[
-        <Button key="back" onClick={handleClose}>
-          Cancelar
-        </Button>,
-        <Button 
+        <ButtonContainer key="back" onClick={handleClose} text='Cancelar'/>,
+        <ButtonContainer
           key="submit" 
           type="primary" 
           onClick={
@@ -162,13 +161,14 @@ export default function ValidateCode({isOpen, onClose, email}: ValidateCodeProps
             stepsIni[current].key != 'val' ? false : 
             timerToValidate != timeoutToValidate
           }
-        >
+          text =
           {
             stepsIni[current].key == 'val' ? `Validar${timerToValidate != timeoutToValidate ? ` (${timerToValidate.toFixed(0)})` : ''}` : 
             stepsIni[current].key == 'done' ? 'Aceptar' : 
             'Siguiente'
           }
-        </Button>,
+        />
+        
       ]}
     >
       <Flex gap="middle" align="center" justify="space-around" vertical >

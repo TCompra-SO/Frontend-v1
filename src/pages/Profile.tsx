@@ -1,4 +1,4 @@
-import { App, Button, Col, Flex, Form, Row } from "antd";
+import { App, Col, Flex, Form, Row } from "antd";
 import Birthdate from "../components/section/profile/Birthdate";
 import Phone from "../components/section/profile/Phone";
 import Country from "../components/section/profile/Country";
@@ -20,6 +20,7 @@ import Title from "antd/es/typography/Title";
 import getCountries from "../services/utils/country.service";
 import { CountriesRequest, CountryObj, HttpObject } from "../models/Interfaces";
 import { setIsLoading } from "../redux/loadingSlice";
+import ButtonContainer from "../components/containers/ButtonContainer";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -147,26 +148,25 @@ export default function Profile() {
              
               <Form.Item style={{}} wrapperCol={{span: '24'}}>
                 {!profileSuccess && (
-                  <Button 
+                  <ButtonContainer
                     type="primary" 
                     htmlType="submit" 
                     style={{marginTop: '30px', height: '50px'}} 
                     shape="round"
-                    block={true}>
-                      Guardar
-                  </Button>
+                    block={true}
+                    text='Guardar'
+                  />
                 )}
                 {profileSuccess && (
-                  <Button 
+                  <ButtonContainer 
                     type="primary" 
                     onClick={handleOpenModal} 
                     style={{marginTop: '30px', height: '50px'}} 
                     shape="round"
                     block={true}
                     disabled={false}
-                    >
-                      Enviar código de validación
-                  </Button>
+                    text='Enviar código de validación'
+                  />
                 )}
               </Form.Item>
             </Form>
