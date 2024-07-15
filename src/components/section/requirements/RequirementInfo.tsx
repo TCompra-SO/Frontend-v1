@@ -35,6 +35,7 @@ export default function RequirementInfo() {
           <TagContainer
             text="SOLUCIONES ONLINE SAC"
             color={lightColor}
+            truncateText
             style={{color: darkColor, fontWeight: 'bold', height: '24px'}}
           />
           <TagContainer

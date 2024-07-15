@@ -3,7 +3,7 @@ import { OfferListItem } from "../../../models/MainInterfaces"
 import TagContainer from "../../containers/TagContainer"
 import { darkColor, lightColor, primaryColor } from "../../../utilities/colors"
 import DotContainer from "../../containers/DotContainer"
-import { UserTable } from "../../../utilities/types"
+import { OfferState, UserTable } from "../../../utilities/types"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faUniversity } from "@fortawesome/free-solid-svg-icons/faUniversity"
 import RatingContainer from "../../containers/RatingContainer"
@@ -21,9 +21,10 @@ export default function RequirementOfferListItemHeader(props: RequirementOfferLi
   const [isSmallScreen] = useState(useScreenSize());
 
   return (
+    <>
     <Row style={{
       ...props.style,
-      borderRadius: '10px',
+      borderRadius: (props.offer.state == OfferState.WINNER || props.offer.state == OfferState.CANCELED) ? '10px 10px 0 0' : '10px',
       padding: '10px',
       boxShadow: '0 2px 18px rgba(0, 0, 0, 0.1)',
       fontWeight: '600'
@@ -34,7 +35,8 @@ export default function RequirementOfferListItemHeader(props: RequirementOfferLi
             <TagContainer
               text={props.offer.user.name}
               color={lightColor}
-              style={{color: darkColor,}}              
+              truncateText
+              style={{color: darkColor}}              
             />
             {
               props.offer.subUser && (
@@ -43,6 +45,7 @@ export default function RequirementOfferListItemHeader(props: RequirementOfferLi
                   <TagContainer
                     text={props.offer.subUser.name}
                     color={lightColor}
+                    truncateText
                     style={{color: darkColor}}
                   />
                 </>
@@ -117,5 +120,21 @@ export default function RequirementOfferListItemHeader(props: RequirementOfferLi
         }        
       </Col>
     </Row>
+    { (props.offer.state == OfferState.WINNER || props.offer.state == OfferState.CANCELED) &&
+      <Flex 
+        justify="center"
+        style={{
+          borderRadius: '0 0 10px 10px',
+          background: props.offer.state == OfferState.WINNER ? 'green' : 'red',
+          padding: '10px',
+          boxShadow: '0 2px 18px rgba(0, 0, 0, 0.1)',
+          fontWeight: '600',
+          color: '#ffffff',
+          fontSize: '1.2em'
+      }}>
+        Oferta { props.offer.state == OfferState.WINNER ? ' elegida' : ' cancelada'}
+      </Flex>
+    }
+    </>
   )
 }

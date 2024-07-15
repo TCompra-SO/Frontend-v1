@@ -2,13 +2,14 @@ import { Col, Flex, Row } from 'antd'
 import RequirementsTable from '../components/common/RequirementsTable';
 import InputContainer from '../components/containers/InputContainer'
 import ModalContainer from '../components/containers/ModalContainer';
-import { ModalTypes, RequirementState, RequirementType, UserTable } from '../utilities/types';
+import { Action, ModalTypes, OfferState, RequirementState, RequirementType, UserTable } from '../utilities/types';
 import Title from 'antd/es/typography/Title';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPeopleCarryBox } from '@fortawesome/free-solid-svg-icons';
 import { primaryColor, lightColor } from '../utilities/colors';
 import { SearchOutlined } from '@ant-design/icons';
 import { OfferListItem, RequirementTableItem } from '../models/MainInterfaces';
+import { useState } from 'react';
 
 const requirements: RequirementTableItem[] = [
   {
@@ -23,7 +24,16 @@ const requirements: RequirementTableItem[] = [
     location: 'Arequipa',
     date: '23-04-2023',
     description: 'Desription',
-    image: 'https://imgv3.fotor.com/images/cover-photo-image/AI-illustration-of-a-dragon-by-Fotor-AI-text-to-image-generator.jpg'
+    image: 'https://imgv3.fotor.com/images/cover-photo-image/AI-illustration-of-a-dragon-by-Fotor-AI-text-to-image-generator.jpg',
+    user: {
+      uid: 'user1',
+      name: 'Soluciones Online Soluciones Online Soluciones Online S. A. C.',
+      email: 'john.doe@example.com',
+      password: 'password123',
+      document: '123456789',
+      userTable: UserTable.COMPANY,
+      tenure: 'Más de 10 años'
+    },
   },
   {
     key: '2',
@@ -36,7 +46,16 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 'Lima',
     date: '23-04-2023',
-    description: 'Desription'
+    description: 'Desription',
+    user: {
+      uid: 'user1',
+      name: 'Soluciones Online Soluciones Online Soluciones Online S. A. C.',
+      email: 'john.doe@example.com',
+      password: 'password123',
+      document: '123456789',
+      userTable: UserTable.COMPANY,
+      tenure: 'Más de 10 años'
+    },
   },
   {
     key: '3',
@@ -49,7 +68,16 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 'Madre de Dios',
     date: '23-04-2023',
-    description: 'Desription'
+    description: 'Desription',
+    user: {
+      uid: 'user1',
+      name: 'Soluciones Online Soluciones Online Soluciones Online S. A. C.',
+      email: 'john.doe@example.com',
+      password: 'password123',
+      document: '123456789',
+      userTable: UserTable.COMPANY,
+      tenure: 'Más de 10 años'
+    },
   },
   {
     key: '4',
@@ -62,7 +90,16 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 'Loreto',
     date: '23-04-2023',
-    description: 'Desription'
+    description: 'Desription',
+    user: {
+      uid: 'user1',
+      name: 'Soluciones Online Soluciones Online Soluciones Online S. A. C.',
+      email: 'john.doe@example.com',
+      password: 'password123',
+      document: '123456789',
+      userTable: UserTable.COMPANY,
+      tenure: 'Más de 10 años'
+    },
   },
   {
     key: '5',
@@ -75,7 +112,16 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 'Huancavelica',
     date: '23-04-2023',
-    description: 'Desription'
+    description: 'Desription',
+    user: {
+      uid: 'user2',
+      name: 'Jane Smith',
+      email: 'jane.smith@example.com',
+      password: 'password456',
+      document: '987654321',
+      tenure: '15 años',
+      userTable: 1
+    }
   },
   {
     key: '6',
@@ -88,7 +134,16 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 'Arequipa',
     date: '03-12-2023',
-    description: 'Desription'
+    description: 'Desription',
+    user: {
+      uid: 'user2',
+      name: 'Jane Smith',
+      email: 'jane.smith@example.com',
+      password: 'password456',
+      document: '987654321',
+      tenure: '15 años',
+      userTable: 1
+    }
   }
 ];
 
@@ -102,6 +157,7 @@ const offerList: OfferListItem[] = [
     warranty: '1 year',
     deliveryTime: '2-3 weeks',
     location: 'Madre de dios',
+    state: OfferState.ACTIVE,
     user: {
       uid: 'user1',
       name: 'Soluciones Online Soluciones Online Soluciones Online S. A. C.',
@@ -113,7 +169,7 @@ const offerList: OfferListItem[] = [
     },
     subUser: {
       uid: 'user1',
-      name: 'Javier Alberto Solís Calcina',
+      name: 'Javier Alberto Solís Calcina Javier Alberto Solís Calcina',
       email: 'javiersolis@example.com',
       password: 'password123',
       document: '123456789',
@@ -130,6 +186,7 @@ const offerList: OfferListItem[] = [
     deliveryTime: '1-2 weeks',
     location: 'Madre de dios',
     selectionDate: new Date(),
+    state: OfferState.CANCELED,
     user: {
       uid: 'user2',
       name: 'Jane Smith',
@@ -149,6 +206,7 @@ const offerList: OfferListItem[] = [
     warranty: '6 months',
     deliveryTime: '1 week',
     location: 'Loreto',
+    state: OfferState.DISPUTE,
     user: {
       uid: 'user3',
       name: 'Fitness Pro Tech Co.',
@@ -167,6 +225,7 @@ const offerList: OfferListItem[] = [
     warranty: '1 year',
     deliveryTime: '3-4 weeks',
     location: 'Loreto',
+    state: OfferState.FINISHED,
     user: {
       uid: 'user4',
       name: 'SoundTech Solutions Ltd.',
@@ -185,6 +244,7 @@ const offerList: OfferListItem[] = [
     warranty: '2 years',
     deliveryTime: '2-3 weeks',
     location: 'Loreto',
+    state: OfferState.WINNER,
     user: {
       uid: 'user5',
       name: 'Coffee Experts Inc.',
@@ -203,6 +263,7 @@ const offerList: OfferListItem[] = [
     warranty: '1 year',
     deliveryTime: '1-2 weeks',
     location: 'Arequipa',
+    state: OfferState.ACTIVE,
     user: {
       uid: 'user6',
       name: 'AudioTech Corp.',
@@ -221,6 +282,7 @@ const offerList: OfferListItem[] = [
     warranty: '2 years',
     deliveryTime: '2-3 weeks',
     location: 'Arequipa',
+    state: OfferState.CANCELED,
     user: {
       uid: 'user7',
       name: 'FitGear Solutions',
@@ -239,6 +301,7 @@ const offerList: OfferListItem[] = [
     warranty: '3 years',
     deliveryTime: '3-4 weeks',
     location: 'Arequipa',
+    state: OfferState.DISPUTE,
     user: {
       uid: 'user8',
       name: 'TechSavvy Inc.',
@@ -257,6 +320,7 @@ const offerList: OfferListItem[] = [
     warranty: '1 year',
     deliveryTime: '2-3 weeks',
     location: 'Lima',
+    state: OfferState.FINISHED,
     user: {
       uid: 'user9',
       name: 'SnapLens Co.',
@@ -275,6 +339,7 @@ const offerList: OfferListItem[] = [
     warranty: '2 years',
     deliveryTime: '2-3 weeks',
     location: 'Lima',
+    state: OfferState.WINNER,
     user: {
       uid: 'user10',
       name: 'EcoWheels Ltd.',
@@ -287,11 +352,35 @@ const offerList: OfferListItem[] = [
 ];
 
 export default function Requirements() {
+  const [modalType, setModalType] = useState(ModalTypes.DETAILED_REQUIREMENT);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [dataModal, setDataModal] = useState<OfferListItem[] | RequirementTableItem | null>(null);
+
+  function handleOnButtonClick(action: Action, data: any) {
+    switch(action) {
+      case Action.SHOW_OFFERS: {
+        const dataReq = data as RequirementTableItem;
+        console.log(dataReq);
+        setModalType(ModalTypes.DETAILED_REQUIREMENT);
+        setDataModal(offerList);
+        setIsOpenModal(true);
+        break;
+      }
+    }
+  }
+
+  function handleCloseModal() {
+    console.log(333)
+    setIsOpenModal(false);
+  }
+
   return (
     <>
       <ModalContainer
-        type={ModalTypes.DETAILED_REQUIREMENT}
-        data={offerList}
+        type={modalType}
+        data={dataModal}
+        isOpen={isOpenModal} 
+        onClose={handleCloseModal}      
       />
       <div className='table-container-page'>
         <Flex 
@@ -329,7 +418,11 @@ export default function Requirements() {
             </Col>
           </Row>
           
-          <RequirementsTable type={RequirementType.GOOD} data={requirements}></RequirementsTable>
+          <RequirementsTable 
+            type={RequirementType.GOOD} 
+            data={requirements}
+            onButtonClick={handleOnButtonClick}
+          />
         </Flex>
     </div>
     </>

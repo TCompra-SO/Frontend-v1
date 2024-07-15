@@ -7,7 +7,7 @@ import Keyword from '../components/section/search/Keyword'
 import { MenuFoldOutlined, MenuUnfoldOutlined, SearchOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import { Category, RequirementSearchItem } from '../models/Interfaces'
-import MoreOptionsSearch from '../components/modals/MoreOptionsSearch'
+import MoreOptionsSearch from '../components/section/search/MoreOptionsSearch'
 import { darkColor } from '../utilities/colors'
 import ButtonContainer from '../components/containers/ButtonContainer'
 

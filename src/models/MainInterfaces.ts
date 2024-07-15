@@ -1,4 +1,4 @@
-import { RequirementState, RequirementType, UserTable } from "../utilities/types";
+import { OfferState, RequirementState, RequirementType, UserTable } from "../utilities/types";
 
 export interface RequirementTableItem {
   key: string;
@@ -13,6 +13,7 @@ export interface RequirementTableItem {
   state: RequirementState;
   type: RequirementType;
   image?: string,
+  user: User,
   subUser?: User
 }
 
@@ -28,7 +29,8 @@ export interface OfferListItem {
   location: string,
   image?: string,
   subUser?: User,
-  selectionDate?: Date
+  selectionDate?: Date,
+  state: OfferState
 }
 
 export interface User {

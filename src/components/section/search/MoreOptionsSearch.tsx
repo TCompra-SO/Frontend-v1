@@ -1,7 +1,7 @@
 import { Modal } from 'antd';
-import CitySearch from '../section/search/CitySearch';
-import RequirementType from '../section/search/RequirementType';
-import DateSearch from '../section/search/DateSearch';
+import CitySearch from './CitySearch';
+import RequirementType from './RequirementType';
+import DateSearch from './DateSearch';
 
 interface MoreOptionsSearchProps {
   visible: boolean,

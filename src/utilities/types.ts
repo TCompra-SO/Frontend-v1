@@ -30,3 +30,20 @@ export enum UserTable {
   COMPANY = 0,
   PERSON = 1
 }
+
+export enum Action {
+  SHOW_OFFERS = 1,
+  DELETE = 2, 
+  CANCEL_REQUIREMENT = 3,
+  FINISH = 4,
+  REPUBLISH = 5,
+  SHOW_SUMMARY = 6
+}
+
+export enum OfferState {
+  ACTIVE = 1,
+  WINNER = 2, 
+  FINISHED = 3, 
+  DISPUTE = 4,
+  CANCELED = 5,
+}

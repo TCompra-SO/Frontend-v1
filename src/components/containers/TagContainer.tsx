@@ -9,7 +9,8 @@ interface TagContainerProps {
   text?: string,
   color?: string,
   label?: string,
-  includeMarginRight?: boolean
+  includeMarginRight?: boolean,
+  truncateText?: boolean
 }
 
 export default function TagContainer(props: TagContainerProps) {
@@ -20,6 +21,8 @@ export default function TagContainer(props: TagContainerProps) {
     if (props.style) newStyle = {...props.style, marginRight: '0'};
     else newStyle = {marginRight: '0'};
   }
+
+  if (props.truncateText) newStyle = {...newStyle, maxWidth: '74vw'};
 
   if (props.isRequirementTag)
     return (
@@ -34,7 +37,7 @@ export default function TagContainer(props: TagContainerProps) {
     )
   else
     return (
-      <Tag color={props.color} style={newStyle}>
+      <Tag color={props.color} style={newStyle} className={props.truncateText ? 'text-truncate' : ''}>
         { props.label ? props.label + ': ' + props.text : props.text}
       </Tag>
     )
