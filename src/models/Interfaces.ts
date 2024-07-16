@@ -1,3 +1,5 @@
+import { PriceFilter, WarrantyFilter } from "../utilities/types"
+
 export interface HttpObject {
   data: any | null,
   loading: boolean,
@@ -30,4 +32,11 @@ export interface Category {
 export interface RequirementSearchItem {
   id: string,
   title: string
+}
+
+export interface OfferFilters {
+  price: PriceFilter,
+  deliveryTime: string,
+  location: string,
+  warranty: WarrantyFilter
 }

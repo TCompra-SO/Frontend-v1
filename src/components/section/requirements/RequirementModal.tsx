@@ -3,13 +3,24 @@ import RequirementInfo from "./RequirementInfo";
 import RequirementOfferFilters from "./RequirementOfferFilters";
 import RequirementOfferList from "./RequirementOfferList";
 import Title from "antd/es/typography/Title";
-import { OfferListItem } from "../../../models/MainInterfaces";
+import { OfferListItem, RequirementTableItem } from "../../../models/MainInterfaces";
+import { useState } from "react";
+import { OfferFilters } from "../../../models/Interfaces";
+import { DeliveryTimeFilter, LocationFilter, PriceFilter, WarrantyFilter } from "../../../utilities/types";
 
-interface RequirementModalBodyProps {
-  offerList: OfferListItem[]
+interface RequirementModalProps {
+  offerList: OfferListItem[],
+  requirement: RequirementTableItem
 }
 
-export default function RequirementModalBody(props: RequirementModalBodyProps) {
+export default function RequirementModal(props: RequirementModalProps) {
+  const [offerFilters, setOfferFilters] = useState<OfferFilters>({
+    price: PriceFilter.ALL, 
+    deliveryTime: DeliveryTimeFilter.ALL,
+    location: LocationFilter.ALL,
+    warranty: WarrantyFilter.ALL
+  });
+
   return (
     <>
       <Divider style={{margin: '10px 0'}}/>
@@ -28,7 +39,11 @@ export default function RequirementModalBody(props: RequirementModalBodyProps) {
       <RequirementOfferFilters></RequirementOfferFilters>
       <Divider style={{margin: '15px 0'}}/>
       <Title style={{textAlign: 'center', marginTop: '0'}} level={4}>Ofertas recibidas</Title>
-      <RequirementOfferList offers={props.offerList}/>
+      <RequirementOfferList 
+        offers={props.offerList}
+        requirement={props.requirement}
+        offerFilters={offerFilters}
+      />
     </>
   )
 }

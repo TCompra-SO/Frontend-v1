@@ -7,6 +7,7 @@ export const lightColor = '#fedef3';
 export const darkColor = '#510839';
 export const linkColor = '#007CD1';
 export const tableHeaderTextColor = '#768286';
+export const modalBackgroundColor = '#fafafa';
 
 export const RequirementStateMeta: {[key: string] : {color: string, background: string, label: string}} = {
   [RequirementState.SELECTED]: {
@@ -21,8 +22,8 @@ export const RequirementStateMeta: {[key: string] : {color: string, background: 
   },
   [RequirementState.PUBLISHED]: {
     color: 'rgb(255, 201, 14)',
-    background: 'rgb(239,228,176)',
-    label: 'Culminado'
+    background: 'rgb(250,242,207)',
+    label: 'Publicado'
   },
   [RequirementState.EXPIRED]: {
     color: 'rgb(148,148,148)',

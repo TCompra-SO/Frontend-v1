@@ -355,15 +355,16 @@ export default function Requirements() {
   const [modalType, setModalType] = useState(ModalTypes.DETAILED_REQUIREMENT);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<OfferListItem[] | RequirementTableItem | null>(null);
+  const [requirement, setRequirement] = useState<null | RequirementTableItem>(null);
 
   function handleOnButtonClick(action: Action, data: any) {
     switch(action) {
       case Action.SHOW_OFFERS: {
         const dataReq = data as RequirementTableItem;
-        console.log(dataReq);
         setModalType(ModalTypes.DETAILED_REQUIREMENT);
         setDataModal(offerList);
         setIsOpenModal(true);
+        setRequirement(dataReq);
         break;
       }
     }
@@ -377,10 +378,19 @@ export default function Requirements() {
   return (
     <>
       <ModalContainer
+        destroyOnClose
+        width='850px'
+        title={requirement?.title}
         type={modalType}
-        data={dataModal}
+        data={{offerList: dataModal, requirement}}
         isOpen={isOpenModal} 
-        onClose={handleCloseModal}      
+        onClose={handleCloseModal}  
+        style={{
+          maxHeight: '75vh', 
+          overflowY: 'scroll', 
+          paddingBottom: '0',
+        }}    
+        className='custom-scroll'
       />
       <div className='table-container-page'>
         <Flex 

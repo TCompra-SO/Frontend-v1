@@ -23,7 +23,9 @@ export enum RequirementState {
 
 export enum ModalTypes {
   DETAILED_REQUIREMENT = 1,
-  VALIDATE_CODE = 2
+  VALIDATE_CODE = 2,
+  CANCEL_PURCHASE_ORDER = 3,
+  SELECT_OFFER = 4
 }
 
 export enum UserTable {
@@ -46,4 +48,24 @@ export enum OfferState {
   FINISHED = 3, 
   DISPUTE = 4,
   CANCELED = 5,
+}
+
+export enum PriceFilter {
+  ALL = 0,
+  ASC = 1,
+  DESC = 2
+}
+
+export enum DeliveryTimeFilter {
+  ALL = '0',
+}
+
+export enum LocationFilter {
+  ALL = '0',
+}
+
+export enum WarrantyFilter {
+  ALL = 0,
+  ASC = 1,
+  DESC = 2
 }
