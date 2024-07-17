@@ -1,33 +1,40 @@
 import { Button } from "antd";
 import { ButtonHTMLType, ButtonShape, ButtonType } from "antd/es/button";
 import { SizeType } from "antd/es/config-provider/SizeContext";
+import { ButtonProps } from "antd/lib";
 import { MouseEventHandler } from "react";
 
-interface ButtonContainerProps {
-  text: React.ReactNode,
-  size?: SizeType,
-  type?: ButtonType,
-  ghost?: boolean,
-  key?: React.Key | null,
-  onClick?: MouseEventHandler,
-  htmlType?: ButtonHTMLType,
-  block?: boolean,
-  shape?: ButtonShape,
-  disabled?: boolean,
-  icon?: React.ReactNode,
-  style?: React.CSSProperties,
-  className?: string,
-  upperCaseSmaller?: boolean,
-  iconPosition?: 'start' | 'end'
+interface ButtonContainerProps extends ButtonProps {
+  text: React.ReactNode;
+  size?: SizeType;
+  type?: ButtonType;
+  ghost?: boolean;
+  key?: React.Key | null;
+  onClick?: MouseEventHandler;
+  htmlType?: ButtonHTMLType;
+  block?: boolean;
+  shape?: ButtonShape;
+  disabled?: boolean;
+  icon?: React.ReactNode;
+  style?: React.CSSProperties;
+  className?: string;
+  upperCaseSmaller?: boolean;
+  iconPosition?: "start" | "end";
 }
 
 export default function ButtonContainer(props: ButtonContainerProps) {
   let newStyle = props.style;
   if (props.upperCaseSmaller)
-    newStyle = {...props.style, textTransform: 'uppercase', fontSize: '0.8em', fontWeight: '600'};
+    newStyle = {
+      ...props.style,
+      textTransform: "uppercase",
+      fontSize: "0.8em",
+      fontWeight: "600",
+    };
 
   return (
     <Button
+      {...props}
       size={props.size}
       type={props.type}
       ghost={props.ghost}
@@ -44,5 +51,5 @@ export default function ButtonContainer(props: ButtonContainerProps) {
     >
       {props.text}
     </Button>
-  )
+  );
 }

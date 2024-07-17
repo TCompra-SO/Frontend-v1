@@ -25,7 +25,7 @@ export enum ModalTypes {
   DETAILED_REQUIREMENT = 1,
   VALIDATE_CODE = 2,
   CANCEL_PURCHASE_ORDER = 3,
-  SELECT_OFFER = 4
+  SELECT_OFFER = 4,
 }
 
 export enum UserTable {

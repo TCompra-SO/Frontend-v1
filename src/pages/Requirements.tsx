@@ -371,7 +371,6 @@ export default function Requirements() {
   }
 
   function handleCloseModal() {
-    console.log(333)
     setIsOpenModal(false);
   }
 

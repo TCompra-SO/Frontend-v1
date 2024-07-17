@@ -1,16 +1,18 @@
 import { Rate } from "antd";
+import { RateProps } from "antd/lib";
 
-interface RatingContainerProps {
-  score: number,
-  readOnly?: boolean
+interface RatingContainerProps extends RateProps {
+  score: number;
+  readOnly?: boolean;
 }
 
 export default function RatingContainer(props: RatingContainerProps) {
   return (
-    <Rate 
-      disabled={props.readOnly} 
-      defaultValue={props.score} 
+    <Rate
+      {...props}
+      disabled={props.readOnly}
+      defaultValue={props.score}
       className="custom-rate-star"
     />
-  )
+  );
 }
