@@ -5,12 +5,17 @@ import LoadingCond from "./pages/utils/LoadingCond.tsx";
 import LoadingPage from "./pages/utils/LoadingPage.tsx";
 import Search from "./pages/Search";
 import Header from "./components/section/header/header/Header";
-import './assets/styles.css';
+import "./assets/styles.css";
 import Requirements from "./pages/Requirements.tsx";
-import { lightColor, mainBackgroundColor, primaryColor, secondaryBackgroundColor, tableHeaderTextColor } from "./utilities/colors.ts";
+import {
+  lightColor,
+  mainBackgroundColor,
+  primaryColor,
+  tableHeaderTextColor,
+} from "./utilities/colors.ts";
 
-const Login = lazy(() => import('./pages/Login.tsx'));
-const Profile = lazy(() => import('./pages/Profile.tsx'));
+const Login = lazy(() => import("./pages/Login.tsx"));
+const Profile = lazy(() => import("./pages/Profile.tsx"));
 
 function App() {
   return (
@@ -22,53 +27,64 @@ function App() {
             colorPrimary: primaryColor,
             borderRadius: 10,
             colorBgContainer: mainBackgroundColor,
-            fontFamily: 'Jost'
+            fontFamily: "Jost",
           },
           components: {
             Table: {
               headerColor: tableHeaderTextColor,
-              headerBg: '#ffffff',
+              headerBg: "#ffffff",
               headerSortActiveBg: lightColor,
               headerSortHoverBg: lightColor,
               // colorBgContainer: '#ffffff',
-              headerSplitColor: 'transparent'
-            }
-          }
+              headerSplitColor: "transparent",
+            },
+          },
         }}
       >
         <AntdApp>
           <LoadingCond></LoadingCond>
           {/* <Header /> */}
           <Routes>
-            <Route path='/' element={
-              <Suspense fallback={<LoadingPage />}>
-                <Login></Login>
-              </Suspense>
-            } />
-            <Route path="/profile" element={
-              <Suspense fallback={<LoadingPage />}>
-                <Profile></Profile>
-              </Suspense>
-            } />
-            <Route path="/search" element={
-              <Suspense fallback={<LoadingPage />}>
-                <Header />
-                <Search ></Search>
-              </Suspense>
-            } />
-            <Route path="/mis-requerimientos" element={
-              <Suspense fallback={<LoadingPage />}>
-                {/* <Header /> */}
-                <Requirements ></Requirements>
-              </Suspense>
-            } />
-            <Route path="*" element={<Navigate to="/" replace />}
+            <Route
+              path="/"
+              element={
+                <Suspense fallback={<LoadingPage />}>
+                  <Login></Login>
+                </Suspense>
+              }
             />
+            <Route
+              path="/profile"
+              element={
+                <Suspense fallback={<LoadingPage />}>
+                  <Profile></Profile>
+                </Suspense>
+              }
+            />
+            <Route
+              path="/search"
+              element={
+                <Suspense fallback={<LoadingPage />}>
+                  <Header />
+                  <Search></Search>
+                </Suspense>
+              }
+            />
+            <Route
+              path="/mis-requerimientos"
+              element={
+                <Suspense fallback={<LoadingPage />}>
+                  {/* <Header /> */}
+                  <Requirements></Requirements>
+                </Suspense>
+              }
+            />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </AntdApp>
       </ConfigProvider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

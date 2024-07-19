@@ -12,6 +12,7 @@ import { OfferFilters } from "../../../models/Interfaces";
 import {
   DeliveryTimeFilter,
   LocationFilter,
+  OfferFilterTypes,
   PriceFilter,
   WarrantyFilter,
 } from "../../../utilities/types";
@@ -29,6 +30,10 @@ export default function RequirementModal(props: RequirementModalProps) {
     warranty: WarrantyFilter.ALL,
   });
 
+  function HandleonFilterChange(filterType: OfferFilterTypes, value: any) {
+    console.log(filterType, value);
+  }
+
   return (
     <>
       <Divider style={{ margin: "10px 0" }} />
@@ -45,7 +50,9 @@ export default function RequirementModal(props: RequirementModalProps) {
         <b>Filtros de búsqueda: </b> Puede seleccionar opciones para ordenar y
         filtrar ofertas
       </div>
-      <RequirementOfferFilters></RequirementOfferFilters>
+      <RequirementOfferFilters
+        onFilterChange={HandleonFilterChange}
+      ></RequirementOfferFilters>
       <Divider style={{ margin: "15px 0" }} />
       <Title style={{ textAlign: "center", marginTop: "0" }} level={4}>
         Ofertas recibidas

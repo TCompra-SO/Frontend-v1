@@ -6,9 +6,7 @@ import { TagProps } from "antd/lib";
 interface TagContainerProps extends TagProps {
   isRequirementTag?: boolean;
   type?: RequirementType;
-  style?: React.CSSProperties;
   text?: string;
-  color?: string;
   label?: string;
   includeMarginRight?: boolean;
   truncateText?: boolean;
@@ -41,7 +39,6 @@ export default function TagContainer(props: TagContainerProps) {
     return (
       <Tag
         {...props}
-        color={props.color}
         style={newStyle}
         className={props.truncateText ? "text-truncate" : ""}
       >

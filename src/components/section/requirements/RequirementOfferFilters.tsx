@@ -3,6 +3,7 @@ import SelectContainer from "../../containers/SelectContainer";
 import { Form } from "antd";
 import { allSelect } from "../../../utilities/globals";
 import { useState } from "react";
+import { OfferFilterTypes } from "../../../utilities/types";
 
 interface Filters {
   price: string;
@@ -11,7 +12,13 @@ interface Filters {
   warranty: string;
 }
 
-export default function RequirementOfferFilters() {
+interface RequirementOfferFiltersProps {
+  onFilterChange: (filterType: OfferFilterTypes, value: any) => void;
+}
+
+export default function RequirementOfferFilters(
+  props: RequirementOfferFiltersProps
+) {
   const [form] = Form.useForm<Filters>();
   const [initialValues] = useState({
     price: allSelect,
@@ -22,10 +29,21 @@ export default function RequirementOfferFilters() {
 
   function onChangeFilters(changedValues: any, allValues: Filters) {
     console.log(allValues);
-    if (changedValues.price) console.log("change price");
-    if (changedValues.location) console.log("change location");
-    if (changedValues.deliveryTime) console.log("change deliveryTime");
-    if (changedValues.warranty) console.log("change warranty");
+    if (changedValues.price) {
+      console.log("change price");
+      props.onFilterChange(OfferFilterTypes.PRICE, changedValues.price);
+    } else if (changedValues.location) {
+      console.log("change location");
+      props.onFilterChange(OfferFilterTypes.LOCATION, changedValues.location);
+    } else if (changedValues.deliveryTime) {
+      console.log("change deliveryTime");
+      props.onFilterChange(
+        OfferFilterTypes.DELIVERY,
+        changedValues.deliveryTime
+      );
+    } else if (changedValues.warranty) {
+      props.onFilterChange(OfferFilterTypes.WARRANTY, changedValues.warranty);
+    }
   }
 
   return (

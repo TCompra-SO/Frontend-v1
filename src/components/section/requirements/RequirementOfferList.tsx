@@ -1,14 +1,17 @@
-import { Collapse } from "antd"
-import { OfferListItem, RequirementTableItem } from "../../../models/MainInterfaces"
-import RequirementOfferListItemHeader from "./RequirementOfferListItemHeader"
+import { Collapse } from "antd";
+import {
+  OfferListItem,
+  RequirementTableItem,
+} from "../../../models/MainInterfaces";
+import RequirementOfferListItemHeader from "./RequirementOfferListItemHeader";
 import RequirementOfferListItemBody from "./RequirementOfferListItemBody";
 import { OfferFilters } from "../../../models/Interfaces";
 const { Panel } = Collapse;
 
 interface RequirementOfferListProps {
-  offers: OfferListItem[],
-  requirement: RequirementTableItem,
-  offerFilters: OfferFilters
+  offers: OfferListItem[];
+  requirement: RequirementTableItem;
+  offerFilters: OfferFilters;
 }
 
 export default function RequirementOfferList(props: RequirementOfferListProps) {
@@ -16,11 +19,11 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
   //   return {
   //     key: offer.key,
   //     children: (
-  //       <Panel 
-  //           key={offer.key} 
+  //       <Panel
+  //           key={offer.key}
   //           showArrow={false}
   //           header={
-  //             <RequirementOfferListItemHeader 
+  //             <RequirementOfferListItemHeader
   //               offer={offer}
   //             />
   //           }
@@ -36,35 +39,29 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
 
   return (
     <>
-    <Collapse 
-      accordion
-      ghost
-      bordered={false}
-      // items={list}
-    >
-    {
-      props.offers.map((offer: OfferListItem) => {
-        return (
-          <Panel 
-            key={offer.key} 
-            showArrow={false}
-            header={
-              <RequirementOfferListItemHeader 
+      <Collapse
+        accordion
+        ghost
+        bordered={false}
+        // items={list}
+      >
+        {props.offers.map((offer: OfferListItem) => {
+          return (
+            <Panel
+              key={offer.key}
+              showArrow={false}
+              header={<RequirementOfferListItemHeader offer={offer} />}
+              style={{ margin: "-12px -16px" }}
+            >
+              <RequirementOfferListItemBody
                 offer={offer}
+                requirement={props.requirement}
+                offerFilters={props.offerFilters}
               />
-            }
-            style={{margin: '-12px -16px'}}
-          >
-            <RequirementOfferListItemBody 
-              offer={offer}
-              requirement={props.requirement}
-              offerFilters={props.offerFilters}
-            />
-          </Panel>
-        )
-      })
-    }
-    </Collapse>
+            </Panel>
+          );
+        })}
+      </Collapse>
     </>
-  )
+  );
 }

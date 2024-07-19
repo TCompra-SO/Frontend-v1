@@ -2,6 +2,173 @@
 
 ## Components
 
+### Common
+
+#### RequirementsTable
+
+Tabla para mostrar datos de requerimientos de diferentes tipos, incluyendo liquidaciones.
+
+_Props_
+
+| Nombre        | Tipo                                  | Descripción                                                                  |
+| ------------- | ------------------------------------- | ---------------------------------------------------------------------------- |
+| type          | `RequirementType`                     | Tipo de requisito (`GOOD`, `SERVICE`, `SALE`, etc.).                         |
+| data          | `RequirementTableItem[]`              | Arreglo de datos para mostrar en la tabla.                                   |
+| onButtonClick | `(action: Action, data: any) => void` | Función de callback llamada al hacer clic en un botón de acción en la tabla. |
+| hiddenColumns | `RequirementTableColumns[]`           | Columnas de la tabla que se deben ocultar.                                   |
+
+### Containers
+
+#### AvatarContainer
+
+Contenedor de Avatar de Antd.
+
+_Props_
+
+| Nombre | Tipo | Descripción |
+| ------ | ---- | ----------- |
+
+#### ButtonContainer
+
+Contenedor de Button de Antd.
+
+_Props_
+
+| Nombre           | Tipo        | Descripción                                                                                               |
+| ---------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| text             | `ReactNode` | El texto que se mostrará en el botón.                                                                     |
+| upperCaseSmaller | `boolean`   | (Opcional) Indica si el texto del botón debe estar en mayúsculas y tener un tamaño de fuente más pequeño. |
+
+### DatePickerContainer
+
+Contenedor de DatePicker de Antd.
+_Props_
+
+| Nombre | Tipo | Descripción |
+| ------ | ---- | ----------- |
+
+### DotContainer
+
+Contenedor para mostrar un punto que funciona como separador entre palabras.
+
+_Props_
+
+| Nombre      | Tipo      | Descripción                                                     |
+| ----------- | --------- | --------------------------------------------------------------- |
+| fontSize    | `number`  | (Opcional) Tamaño de la fuente del ícono.                       |
+| color       | `string`  | (Opcional) Color del ícono.                                     |
+| marginLeft  | `boolean` | (Opcional) Indica si se debe agregar margen izquierdo al ícono. |
+| marginRight | `boolean` | (Opcional) Indica si se debe agregar margen derecho al ícono.   |
+
+### ImageContainer
+
+Contanedor para mostrar una imagen.
+
+_Props_
+
+| Nombre | Tipo                  | Descripción                                        |
+| ------ | --------------------- | -------------------------------------------------- |
+| alt    | `string`              | Texto alternativo para la imagen (atributo `alt`). |
+| src    | `string`              | URL de la fuente de la imagen (atributo `src`).    |
+| style  | `React.CSSProperties` | (Opcional) Estilos CSS para aplicar a la imagen.   |
+
+### InputContainer
+
+Contenedor de Input de Antd.
+
+_Props_
+
+| Nombre       | Tipo                  | Descripción                                                             |
+| ------------ | --------------------- | ----------------------------------------------------------------------- |
+| style        | `React.CSSProperties` | (Opcional) Estilos CSS para aplicar al input.                           |
+| defaultValue | `string`              | (Opcional) Valor predeterminado para el input.                          |
+| otp          | `boolean`             | (Opcional) Indica si se trata de un input para OTP (One-Time Password). |
+| length       | `number`              | (Opcional) Longitud esperada del input para OTP.                        |
+| prefix       | `React.ReactNode`     | (Opcional) Prefijo para el input. Puede ser un nodo React.              |
+
+### ModalContainer
+
+Contenedor de Modal de Antd.
+
+_Props_
+
+| Nombre       | Tipo         | Descripción                                                              |
+| ------------ | ------------ | ------------------------------------------------------------------------ |
+| type         | `ModalTypes` | Tipo de modal que determina el contenido a mostrar.                      |
+| data         | `any`        | Datos necesarios para el contenido del modal.                            |
+| isOpen       | `boolean`    | Indica si el modal está abierto o cerrado.                               |
+| showFooter   | `boolean`    | (Opcional) Indica si se muestra el footer del modal.                     |
+| className    | `string`     | (Opcional) Clase CSS adicional para el modal.                            |
+| maskClosable | `boolean`    | (Opcional) Indica si se puede cerrar el modal haciendo clic fuera de él. |
+
+### ParagraphContainer
+
+Contenedor de Paragraph de Antd.
+
+_Props_
+
+| Nombre     | Tipo              | Descripción                                                                  |
+| ---------- | ----------------- | ---------------------------------------------------------------------------- |
+| text       | `string`          | Texto que se mostrará dentro del párrafo.                                    |
+| rows       | `number`          | Número de filas antes de aplicar el truncamiento (`ellipsis`).               |
+| expandable | `boolean`         | (Opcional) Indica si el párrafo es expandible cuando se aplica truncamiento. |
+| symbol     | `React.ReactNode` | (Opcional) Símbolo adicional a mostrar cuando el párrafo es truncado.        |
+
+### PriceContainer
+
+Contenedor para mostrar el valor de cotización y su moneda usando un formato específico.
+
+_Props_
+
+| Nombre | Tipo     | Descripción                         |
+| ------ | -------- | ----------------------------------- |
+| price  | `number` | El precio a mostrar.                |
+| coin   | `string` | La moneda utilizada para el precio. |
+
+### RatingContainer
+
+Contenedor para Rate de Antd.
+
+_Props_
+
+| Nombre   | Tipo      | Descripción                                              |
+| -------- | --------- | -------------------------------------------------------- |
+| score    | `number`  | El puntaje inicial para la calificación.                 |
+| readOnly | `boolean` | (Opcional) Indica si la calificación es de solo lectura. |
+
+### SelectContainer
+
+Contenedor para Select de Antd.
+
+_Props_
+
+| Nombre | Tipo | Descripción |
+| ------ | ---- | ----------- |
+
+### TagContainer
+
+Contenedor para Tag de Antd. Muestra el tag conun formato específico si isRequirementTag es `true`.
+
+_Props_
+
+| Nombre             | Tipo              | Descripción                                                                                                |
+| ------------------ | ----------------- | ---------------------------------------------------------------------------------------------------------- |
+| isRequirementTag   | `boolean`         | (Opcional) Indica si es una etiqueta de requerimiento.                                                     |
+| type               | `RequirementType` | (Opcional) Tipo de requisito (`GOOD`, `SERVICE`, `SALE`, etc.). Requerido si `isRequirementTag` es `true`. |
+| text               | `string`          | (Opcional) Texto a mostrar en la etiqueta.                                                                 |
+| label              | `string`          | (Opcional) Etiqueta adicional antes del texto.                                                             |
+| includeMarginRight | `boolean`         | (Opcional) Indica si se debe incluir un margen derecho en el estilo de la etiqueta.                        |
+| truncateText       | `boolean`         | (Opcional) Indica si se debe truncar el texto si es demasiado largo.                                       |
+
+### TextAreaContainer
+
+Contenedor de TextArea de Antd.
+
+_Props_
+
+| Nombre | Tipo | Descripción |
+| ------ | ---- | ----------- |
+
 ### Modals
 
 #### ValidateCode
@@ -260,18 +427,18 @@ Interfaz para el estado del `userSlice`.
 
 Interfaz para el estado del `loadingSlice`.
 
-| Nombre | Tipo        | Descripción        |
-| ------ | ----------- | ------------------ |
-| isLoading   | `boolean` | Estado de la página de carga |
+| Nombre    | Tipo      | Descripción                  |
+| --------- | --------- | ---------------------------- |
+| isLoading | `boolean` | Estado de la página de carga |
 
 ##### MainState
 
 Interfaz para el estado principal de Redux.
 
-| Nombre | Tipo        | Descripción        |
-| ------ | ----------- | ------------------ |
-| user   | `UserState` | Estado del usuario |
-| loading   | `LoadingState` | Estado de la página de carga |
+| Nombre  | Tipo           | Descripción                  |
+| ------- | -------------- | ---------------------------- |
+| user    | `UserState`    | Estado del usuario           |
+| loading | `LoadingState` | Estado de la página de carga |
 
 ## Pages
 
