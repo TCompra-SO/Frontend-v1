@@ -5,6 +5,12 @@
   white-space: nowrap;
 }
 
+/* Pasar texto a siguiente línea */
+.long-text-wrap {
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
 /* Rate stars */
 .custom-rate-star .ant-rate-star {
   /* margin-right: 20px;  */
@@ -15,7 +21,7 @@
 
 .table-container-page {
   padding: 20px 40px;
-  background-color: rgb(243, 247, 250);
+  background-color: #f3f7fa;
 }
 
 .table-container-page .table-container {
@@ -27,19 +33,24 @@
   /* border-collapse: separate; */
 }
 
-.table-container-page .table-container .ant-table-wrapper .ant-table-tbody >tr >td {
+.table-container-page
+  .table-container
+  .ant-table-wrapper
+  .ant-table-tbody
+  > tr
+  > td {
   background: #f3f7fa;
   border-bottom: 5px solid white;
   padding: 10px;
 }
 
 .table-container-page .table-container td:first-child {
-  border-top-left-radius: 20px; 
+  border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
 }
 
 .table-container-page .table-container td:last-child {
-  border-top-right-radius: 20px; 
+  border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
 }
 

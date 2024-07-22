@@ -8,10 +8,10 @@ import Header from "./components/section/header/header/Header";
 import "./assets/styles.css";
 import Requirements from "./pages/Requirements.tsx";
 import {
-  lightColor,
   mainBackgroundColor,
   primaryColor,
   tableHeaderTextColor,
+  white,
 } from "./utilities/colors.ts";
 
 const Login = lazy(() => import("./pages/Login.tsx"));
@@ -32,10 +32,9 @@ function App() {
           components: {
             Table: {
               headerColor: tableHeaderTextColor,
-              headerBg: "#ffffff",
-              headerSortActiveBg: lightColor,
-              headerSortHoverBg: lightColor,
-              // colorBgContainer: '#ffffff',
+              headerBg: white,
+              headerSortActiveBg: white,
+              headerSortHoverBg: white,
               headerSplitColor: "transparent",
             },
           },

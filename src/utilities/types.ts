@@ -22,10 +22,12 @@ export enum RequirementState {
 }
 
 export enum ModalTypes {
+  NONE = 0,
   DETAILED_REQUIREMENT = 1,
   VALIDATE_CODE = 2,
   CANCEL_PURCHASE_ORDER = 3,
   SELECT_OFFER = 4,
+  OFFER_SUMMARY = 5,
 }
 
 export enum UserTable {
@@ -41,6 +43,15 @@ export enum Action {
   REPUBLISH = 5,
   SHOW_SUMMARY = 6,
 }
+
+export const ActionLabel = {
+  [Action.SHOW_OFFERS]: "Ver ofertas",
+  [Action.DELETE]: "Eliminar",
+  [Action.CANCEL_REQUIREMENT]: "Cancelar requerimiento",
+  [Action.FINISH]: "Culminar",
+  [Action.REPUBLISH]: "Republicar",
+  [Action.SHOW_SUMMARY]: "Ver resumen",
+};
 
 export enum OfferState {
   ACTIVE = 1,
@@ -88,3 +99,39 @@ export enum RequirementTableColumns {
   PRICE = 7,
   STATE = 8,
 }
+
+export const ActionObjects2 = {
+  [RequirementState.CANCELED]: {
+    [Action.DELETE]: [ActionLabel[Action.DELETE]],
+    [Action.REPUBLISH]: [ActionLabel[Action.REPUBLISH]],
+  },
+  [RequirementState.DISPUTE]: {
+    [Action.SHOW_SUMMARY]: [ActionLabel[Action.SHOW_SUMMARY]],
+  },
+  [RequirementState.EXPIRED]: {
+    [Action.DELETE]: [ActionLabel[Action.DELETE]],
+    [Action.REPUBLISH]: [ActionLabel[Action.REPUBLISH]],
+  },
+  [RequirementState.FINISHED]: {
+    [Action.SHOW_SUMMARY]: [ActionLabel[Action.SHOW_SUMMARY]],
+  },
+  [RequirementState.PUBLISHED]: {
+    [Action.DELETE]: [ActionLabel[Action.DELETE]],
+    [Action.CANCEL_REQUIREMENT]: [ActionLabel[Action.CANCEL_REQUIREMENT]],
+  },
+  [RequirementState.SELECTED]: {
+    [Action.CANCEL_REQUIREMENT]: [ActionLabel[Action.CANCEL_REQUIREMENT]],
+    [Action.FINISH]: [ActionLabel[Action.FINISH]],
+  },
+  [RequirementState.ELIMINATED]: {},
+};
+
+export const ActionByState: { [key in RequirementState]: Array<Action> } = {
+  [RequirementState.CANCELED]: [Action.DELETE, Action.REPUBLISH],
+  [RequirementState.DISPUTE]: [Action.SHOW_SUMMARY],
+  [RequirementState.EXPIRED]: [Action.DELETE, Action.REPUBLISH],
+  [RequirementState.FINISHED]: [Action.SHOW_SUMMARY],
+  [RequirementState.PUBLISHED]: [Action.DELETE, Action.CANCEL_REQUIREMENT],
+  [RequirementState.SELECTED]: [Action.CANCEL_REQUIREMENT, Action.FINISH],
+  [RequirementState.ELIMINATED]: [],
+};

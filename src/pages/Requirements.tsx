@@ -37,11 +37,14 @@ const requirements: RequirementTableItem[] = [
     user: {
       uid: "user1",
       name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
-      email: "john.doe@example.com",
+      email: "john.doejohn.doejohn.doejohn.doe@example.com",
       password: "password123",
       document: "123456789",
       userTable: UserTable.COMPANY,
       tenure: "Más de 10 años",
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
     },
   },
   {
@@ -65,6 +68,9 @@ const requirements: RequirementTableItem[] = [
       document: "123456789",
       userTable: UserTable.COMPANY,
       tenure: "Más de 10 años",
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
     },
   },
   {
@@ -88,6 +94,9 @@ const requirements: RequirementTableItem[] = [
       document: "123456789",
       userTable: UserTable.COMPANY,
       tenure: "Más de 10 años",
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
     },
   },
   {
@@ -110,6 +119,9 @@ const requirements: RequirementTableItem[] = [
       document: "123456789",
       userTable: UserTable.COMPANY,
       tenure: "Más de 10 años",
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
     },
   },
   {
@@ -132,6 +144,9 @@ const requirements: RequirementTableItem[] = [
       document: "987654321",
       tenure: "15 años",
       userTable: 1,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
     },
   },
   {
@@ -154,6 +169,9 @@ const requirements: RequirementTableItem[] = [
       document: "987654321",
       tenure: "15 años",
       userTable: 1,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
     },
   },
 ];
@@ -169,14 +187,18 @@ const offerList: OfferListItem[] = [
     deliveryTime: "2-3 weeks",
     location: "Madre de dios",
     state: OfferState.ACTIVE,
+    type: RequirementType.GOOD,
     user: {
       uid: "user1",
       name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
-      email: "john.doe@example.com",
+      email: "john.doejohn.doejohn.doejohn.doe@example.com",
       password: "password123",
       document: "123456789",
       userTable: UserTable.COMPANY,
       tenure: "Más de 10 años",
+      customerScore: 3.5,
+      sellerScore: 1.5,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
     },
     subUser: {
       uid: "user1",
@@ -185,6 +207,9 @@ const offerList: OfferListItem[] = [
       password: "password123",
       document: "123456789",
       userTable: UserTable.COMPANY,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
     },
   },
   {
@@ -200,6 +225,7 @@ const offerList: OfferListItem[] = [
     location: "Madre de dios",
     selectionDate: new Date(),
     state: OfferState.CANCELED,
+    type: RequirementType.GOOD,
     user: {
       uid: "user2",
       name: "Jane Smith",
@@ -208,6 +234,9 @@ const offerList: OfferListItem[] = [
       document: "987654321",
       tenure: "15 años",
       userTable: 1,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
     },
   },
   {
@@ -220,6 +249,7 @@ const offerList: OfferListItem[] = [
     deliveryTime: "1 week",
     location: "Loreto",
     state: OfferState.DISPUTE,
+    type: RequirementType.GOOD,
     user: {
       uid: "user3",
       name: "Fitness Pro Tech Co.",
@@ -227,6 +257,9 @@ const offerList: OfferListItem[] = [
       password: "password789",
       document: "246810975",
       userTable: 0,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
     },
   },
   {
@@ -239,6 +272,7 @@ const offerList: OfferListItem[] = [
     deliveryTime: "3-4 weeks",
     location: "Loreto",
     state: OfferState.FINISHED,
+    type: RequirementType.GOOD,
     user: {
       uid: "user4",
       name: "SoundTech Solutions Ltd.",
@@ -246,6 +280,9 @@ const offerList: OfferListItem[] = [
       password: "passwordabc",
       document: "135792468",
       userTable: 1,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
     },
   },
   {
@@ -258,6 +295,7 @@ const offerList: OfferListItem[] = [
     deliveryTime: "2-3 weeks",
     location: "Loreto",
     state: OfferState.WINNER,
+    type: RequirementType.GOOD,
     user: {
       uid: "user5",
       name: "Coffee Experts Inc.",
@@ -265,6 +303,9 @@ const offerList: OfferListItem[] = [
       password: "passwordxyz",
       document: "864209753",
       userTable: 0,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
     },
   },
   {
@@ -277,6 +318,7 @@ const offerList: OfferListItem[] = [
     deliveryTime: "1-2 weeks",
     location: "Arequipa",
     state: OfferState.ACTIVE,
+    type: RequirementType.GOOD,
     user: {
       uid: "user6",
       name: "AudioTech Corp.",
@@ -284,6 +326,9 @@ const offerList: OfferListItem[] = [
       password: "password123",
       document: "975310864",
       userTable: 0,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
     },
   },
   {
@@ -296,6 +341,7 @@ const offerList: OfferListItem[] = [
     deliveryTime: "2-3 weeks",
     location: "Arequipa",
     state: OfferState.CANCELED,
+    type: RequirementType.GOOD,
     user: {
       uid: "user7",
       name: "FitGear Solutions",
@@ -303,6 +349,9 @@ const offerList: OfferListItem[] = [
       password: "password456",
       document: "531086479",
       userTable: 1,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
     },
   },
   {
@@ -315,6 +364,7 @@ const offerList: OfferListItem[] = [
     deliveryTime: "3-4 weeks",
     location: "Arequipa",
     state: OfferState.DISPUTE,
+    type: RequirementType.GOOD,
     user: {
       uid: "user8",
       name: "TechSavvy Inc.",
@@ -322,6 +372,9 @@ const offerList: OfferListItem[] = [
       password: "password789",
       document: "123098765",
       userTable: 1,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
     },
   },
   {
@@ -334,6 +387,7 @@ const offerList: OfferListItem[] = [
     deliveryTime: "2-3 weeks",
     location: "Lima",
     state: OfferState.FINISHED,
+    type: RequirementType.GOOD,
     user: {
       uid: "user9",
       name: "SnapLens Co.",
@@ -341,6 +395,9 @@ const offerList: OfferListItem[] = [
       password: "passwordabc",
       document: "098765432",
       userTable: 0,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
     },
   },
   {
@@ -353,6 +410,7 @@ const offerList: OfferListItem[] = [
     deliveryTime: "2-3 weeks",
     location: "Lima",
     state: OfferState.WINNER,
+    type: RequirementType.GOOD,
     user: {
       uid: "user10",
       name: "EcoWheels Ltd.",
@@ -360,29 +418,51 @@ const offerList: OfferListItem[] = [
       password: "passwordxyz",
       document: "456789012",
       userTable: 1,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
     },
   },
 ];
 
 export default function Requirements() {
-  const [modalType, setModalType] = useState(ModalTypes.DETAILED_REQUIREMENT);
+  const [modalType, setModalType] = useState(ModalTypes.NONE);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [dataModal, setDataModal] = useState<
-    OfferListItem[] | RequirementTableItem | null
-  >(null);
-  const [requirement, setRequirement] = useState<null | RequirementTableItem>(
-    null
-  );
+  const [modalTitle, setModalTitle] = useState<React.ReactNode>("");
+  // const [requirement, setRequirement] = useState<null | RequirementTableItem>(
+  //   null
+  // );
+  const [dataModal, setDataModal] = useState<{
+    offerList?: OfferListItem[];
+    offer?: OfferListItem;
+    requirement?: RequirementTableItem | null;
+  } | null>(null);
 
   function handleOnButtonClick(action: Action, data: any) {
+    console.log(action);
     switch (action) {
       case Action.SHOW_OFFERS: {
         const dataReq = data as RequirementTableItem;
         setModalType(ModalTypes.DETAILED_REQUIREMENT);
-        setDataModal(offerList);
+        // setRequirement(dataReq);
+        setDataModal({ offerList, requirement: dataReq });
         setIsOpenModal(true);
-        setRequirement(dataReq);
+        setModalTitle(dataReq.title);
         break;
+      }
+      case Action.SHOW_SUMMARY: {
+        setModalType(ModalTypes.OFFER_SUMMARY);
+        setDataModal({ offer: offerList[0] });
+        setIsOpenModal(true);
+        setModalTitle(
+          <>
+            Resumen
+            <br />
+            <div style={{ fontWeight: "normal" }}>
+              Detalles de oferta ganadora
+            </div>
+          </>
+        );
       }
     }
   }
@@ -395,19 +475,20 @@ export default function Requirements() {
     <>
       <ModalContainer
         destroyOnClose
-        width="850px"
-        title={requirement?.title}
+        title={modalTitle}
         type={modalType}
-        data={{ offerList: dataModal, requirement }}
+        data={dataModal}
         isOpen={isOpenModal}
         onClose={handleCloseModal}
+        className="custom-scroll"
+        width="850px"
         style={{
           maxHeight: "75vh",
           overflowY: "scroll",
           paddingBottom: "0",
         }}
-        className="custom-scroll"
       />
+
       <div className="table-container-page">
         <Flex
           vertical

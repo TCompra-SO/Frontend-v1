@@ -1,4 +1,9 @@
-import { OfferState, RequirementState, RequirementType, UserTable } from "../utilities/types";
+import {
+  OfferState,
+  RequirementState,
+  RequirementType,
+  UserTable,
+} from "../utilities/types";
 
 export interface RequirementTableItem {
   key: string;
@@ -12,9 +17,9 @@ export interface RequirementTableItem {
   numberOffers: number;
   state: RequirementState;
   type: RequirementType;
-  image?: string,
-  user: User,
-  subUser?: User
+  image?: string;
+  user: User;
+  subUser?: User;
 }
 
 export interface OfferListItem {
@@ -25,22 +30,27 @@ export interface OfferListItem {
   price: number;
   warranty: string;
   deliveryTime: string;
-  user: User,
-  location: string,
-  image?: string,
-  subUser?: User,
-  selectionDate?: Date,
-  state: OfferState
+  user: User;
+  location: string;
+  image?: string;
+  subUser?: User;
+  selectionDate?: Date;
+  state: OfferState;
+  type: RequirementType;
 }
 
 export interface User {
-  uid: string,
-  name: string,
-  email: string,
-  password: string,
-  profileType?: string,
-  userType?: string,
-  document: string,
-  tenure?: string,
-  userTable: UserTable
+  uid: string;
+  name: string;
+  email: string;
+  password: string;
+  profileType?: string;
+  userType?: string;
+  document: string;
+  tenure?: string;
+  userTable: UserTable;
+  customerScore: number;
+  sellerScore: number;
+  address: string;
+  phone?: string;
 }

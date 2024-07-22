@@ -53,7 +53,10 @@ export default function RequirementsTable(props: RequirementsTableProps) {
       visibility[RequirementTableColumns.OFFERS]
     ),
     StateColumn(visibility[RequirementTableColumns.STATE]),
-    ActionColumn(visibility[RequirementTableColumns.ACTION]),
+    ActionColumn(
+      props.onButtonClick,
+      visibility[RequirementTableColumns.ACTION]
+    ),
   ];
 
   return (

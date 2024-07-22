@@ -6,19 +6,23 @@ interface ButtonContainerProps extends ButtonProps {
   upperCaseSmaller?: boolean;
 }
 
-export default function ButtonContainer(props: ButtonContainerProps) {
-  let newStyle = props.style;
-  if (props.upperCaseSmaller)
+export default function ButtonContainer({
+  upperCaseSmaller,
+  text,
+  ...rest
+}: ButtonContainerProps) {
+  let newStyle = rest.style;
+  if (upperCaseSmaller)
     newStyle = {
-      ...props.style,
+      ...rest.style,
       textTransform: "uppercase",
       fontSize: "0.8em",
       fontWeight: "600",
     };
 
   return (
-    <Button {...props} style={newStyle}>
-      {props.text}
+    <Button {...rest} style={newStyle}>
+      {text}
     </Button>
   );
 }

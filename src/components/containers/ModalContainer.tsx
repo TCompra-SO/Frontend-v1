@@ -5,20 +5,26 @@ import { ExclamationCircleFilled } from "@ant-design/icons";
 import TextAreaContainer from "./TextAreaContainer";
 import RequirementModalOfferSelected from "../section/requirements/RequirementModalOfferSelected";
 import { ModalProps } from "antd/lib";
+import RequirementOfferSummary from "../section/requirements/RequirementOfferSummary";
 
 interface ModalContainerProps extends ModalProps {
   type: ModalTypes;
   data: any;
   isOpen: boolean;
-  // onClose: (param: boolean?) => void;
+  // onClose?: (param: boolean) => void;
   showFooter?: boolean;
   className?: string;
   maskClosable?: boolean;
+  // width?: string | number;
+  // destroyOnClose?: boolean;
 }
 
 export default function ModalContainer(props: ModalContainerProps) {
   function getContent() {
     switch (props.type) {
+      case ModalTypes.NONE: {
+        return null;
+      }
       case ModalTypes.DETAILED_REQUIREMENT: {
         return (
           <RequirementModal
@@ -47,6 +53,9 @@ export default function ModalContainer(props: ModalContainerProps) {
           />
         );
       }
+      case ModalTypes.OFFER_SUMMARY: {
+        return <RequirementOfferSummary offer={props.data.offer} />;
+      }
     }
   }
 
@@ -67,6 +76,7 @@ export default function ModalContainer(props: ModalContainerProps) {
   else
     return (
       <Modal
+        {...props}
         centered
         open={props.isOpen}
         footer={null}
