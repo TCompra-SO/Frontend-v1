@@ -2,16 +2,14 @@ import { Collapse } from "antd";
 import {
   OfferListItem,
   RequirementTableItem,
-} from "../../../models/MainInterfaces";
+} from "../../../../models/MainInterfaces";
 import RequirementOfferListItemHeader from "./RequirementOfferListItemHeader";
 import RequirementOfferListItemBody from "./RequirementOfferListItemBody";
-import { OfferFilters } from "../../../models/Interfaces";
 const { Panel } = Collapse;
 
 interface RequirementOfferListProps {
   offers: OfferListItem[];
   requirement: RequirementTableItem;
-  offerFilters: OfferFilters;
 }
 
 export default function RequirementOfferList(props: RequirementOfferListProps) {
@@ -56,7 +54,6 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
               <RequirementOfferListItemBody
                 offer={offer}
                 requirement={props.requirement}
-                offerFilters={props.offerFilters}
               />
             </Panel>
           );

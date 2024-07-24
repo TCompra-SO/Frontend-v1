@@ -28,6 +28,7 @@ export enum ModalTypes {
   CANCEL_PURCHASE_ORDER = 3,
   SELECT_OFFER = 4,
   OFFER_SUMMARY = 5,
+  REPUBLISH_REQUIREMENT = 6,
 }
 
 export enum UserTable {

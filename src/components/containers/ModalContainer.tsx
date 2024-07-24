@@ -1,15 +1,17 @@
-import { Flex, Modal } from "antd";
+import { Flex, Modal, Space } from "antd";
 import { ModalTypes } from "../../utilities/types";
-import RequirementModal from "../section/requirements/RequirementModal";
+import RequirementDetail from "../section/requirements/requirementDetail/RequirementDetail";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import TextAreaContainer from "./TextAreaContainer";
 import RequirementModalOfferSelected from "../section/requirements/RequirementModalOfferSelected";
 import { ModalProps } from "antd/lib";
-import RequirementOfferSummary from "../section/requirements/RequirementOfferSummary";
+import RequirementOfferSummary from "../section/requirements/requirementOfferSummary/RequirementOfferSummary";
+import RequirementModalRepublish from "../section/requirements/RequirementModalRepublish";
+import { ModalData } from "../../models/Interfaces";
 
 interface ModalContainerProps extends ModalProps {
   type: ModalTypes;
-  data: any;
+  data: ModalData;
   isOpen: boolean;
   // onClose?: (param: boolean) => void;
   showFooter?: boolean;
@@ -27,34 +29,50 @@ export default function ModalContainer(props: ModalContainerProps) {
       }
       case ModalTypes.DETAILED_REQUIREMENT: {
         return (
-          <RequirementModal
-            offerList={props.data.offerList}
-            requirement={props.data.requirement}
-          />
+          props.data.offerList &&
+          props.data.requirement && (
+            <RequirementDetail
+              offerList={props.data.offerList}
+              requirement={props.data.requirement}
+            />
+          )
         );
       }
       case ModalTypes.CANCEL_PURCHASE_ORDER: {
         return (
           <Flex vertical gap={8}>
-            <span>
-              <ExclamationCircleFilled />{" "}
+            <Space>
+              <ExclamationCircleFilled />
               <b>Indique el motivo de la cancelación</b>
-            </span>
+            </Space>
             <TextAreaContainer rows={4} placeholder="Motivo" maxLength={255} />
           </Flex>
         );
       }
       case ModalTypes.SELECT_OFFER: {
         return (
-          <RequirementModalOfferSelected
-            offer={props.data.offer}
-            requirement={props.data.requirement}
-            offerFilters={props.data.offerFilters}
-          />
+          props.data.offer &&
+          props.data.requirement && (
+            <RequirementModalOfferSelected
+              offer={props.data.offer}
+              requirement={props.data.requirement}
+            />
+          )
         );
       }
       case ModalTypes.OFFER_SUMMARY: {
-        return <RequirementOfferSummary offer={props.data.offer} />;
+        return (
+          props.data.offer && (
+            <RequirementOfferSummary offer={props.data.offer} />
+          )
+        );
+      }
+      case ModalTypes.REPUBLISH_REQUIREMENT: {
+        return (
+          props.data.requirement && (
+            <RequirementModalRepublish requirement={props.data.requirement} />
+          )
+        );
       }
     }
   }

@@ -1,16 +1,11 @@
 import { Col, Flex, Row } from "antd";
-import SelectContainer from "../../containers/SelectContainer";
+import SelectContainer from "../../../containers/SelectContainer";
 import { Form } from "antd";
-import { allSelect } from "../../../utilities/globals";
-import { useState } from "react";
-import { OfferFilterTypes } from "../../../utilities/types";
-
-interface Filters {
-  price: string;
-  location: string;
-  deliveryTime: string;
-  warranty: string;
-}
+import { allSelect } from "../../../../utilities/globals";
+import { useContext, useState } from "react";
+import { OfferFilterTypes } from "../../../../utilities/types";
+import { OfferFilters } from "../../../../models/Interfaces";
+import { requirementDetailContext } from "../../../../contexts/requirementDetailContext";
 
 interface RequirementOfferFiltersProps {
   onFilterChange: (filterType: OfferFilterTypes, value: any) => void;
@@ -19,7 +14,9 @@ interface RequirementOfferFiltersProps {
 export default function RequirementOfferFilters(
   props: RequirementOfferFiltersProps
 ) {
-  const [form] = Form.useForm<Filters>();
+  const { updateFilters } = useContext(requirementDetailContext);
+
+  const [form] = Form.useForm<OfferFilters>();
   const [initialValues] = useState({
     price: allSelect,
     location: allSelect,
@@ -27,8 +24,9 @@ export default function RequirementOfferFilters(
     warranty: allSelect,
   });
 
-  function onChangeFilters(changedValues: any, allValues: Filters) {
+  function onChangeFilters(changedValues: any, allValues: OfferFilters) {
     console.log(allValues);
+    updateFilters(allValues);
     if (changedValues.price) {
       console.log("change price");
       props.onFilterChange(OfferFilterTypes.PRICE, changedValues.price);
@@ -56,7 +54,10 @@ export default function RequirementOfferFilters(
         <Col xs={12} sm={12} md={6} lg={6} xl={6}>
           <Flex vertical align="center">
             <b>Precio</b>
-            <Form.Item name="price" style={{ width: "100%" }}>
+            <Form.Item
+              name="price"
+              style={{ width: "100%", marginBottom: "10px" }}
+            >
               <SelectContainer
                 options={[
                   { value: allSelect, label: "Todos" },
@@ -71,7 +72,10 @@ export default function RequirementOfferFilters(
         <Col xs={12} sm={12} md={6} lg={6} xl={6}>
           <Flex vertical align="center">
             <b>Ubicación</b>
-            <Form.Item name="location" style={{ width: "100%" }}>
+            <Form.Item
+              name="location"
+              style={{ width: "100%", marginBottom: "10px" }}
+            >
               <SelectContainer
                 options={[
                   { value: allSelect, label: "Todos" },
@@ -86,7 +90,10 @@ export default function RequirementOfferFilters(
         <Col xs={12} sm={12} md={6} lg={6} xl={6}>
           <Flex vertical align="center">
             <b>Tiempo de entrega</b>
-            <Form.Item name="deliveryTime" style={{ width: "100%" }}>
+            <Form.Item
+              name="deliveryTime"
+              style={{ width: "100%", marginBottom: "10px" }}
+            >
               <SelectContainer
                 options={[
                   { value: allSelect, label: "Todos" },
@@ -101,7 +108,10 @@ export default function RequirementOfferFilters(
         <Col xs={12} sm={12} md={6} lg={6} xl={6}>
           <Flex vertical align="center">
             <b>Garantía</b>
-            <Form.Item name="warranty" style={{ width: "100%" }}>
+            <Form.Item
+              name="warranty"
+              style={{ width: "100%", marginBottom: "10px" }}
+            >
               <SelectContainer
                 options={[
                   { value: allSelect, label: "Todos" },

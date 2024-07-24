@@ -14,10 +14,12 @@ import {
 import Title from "antd/es/typography/Title";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPeopleCarryBox } from "@fortawesome/free-solid-svg-icons";
-import { primaryColor, lightColor } from "../utilities/colors";
+import { primaryColor, lightColor, rowColor } from "../utilities/colors";
 import { SearchOutlined } from "@ant-design/icons";
 import { OfferListItem, RequirementTableItem } from "../models/MainInterfaces";
 import { useState } from "react";
+import { commonModalWidth } from "../utilities/globals";
+import { ModalData } from "../models/Interfaces";
 
 const requirements: RequirementTableItem[] = [
   {
@@ -31,7 +33,8 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: "Arequipa",
     date: "23-04-2023",
-    description: "Desription",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam lobortis convallis metus a faucibus. Phasellus tristique nec lorem a vulputate. Morbi varius volutpat orci, in viverra risus venenatis sit amet. Duis convallis nisi nec ligula luctus, in elementum orci ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec quam ante, aliquam rhoncus sollicitudin a, lacinia vitae odio. Aenean quis facilisis augue. Donec iaculis aliquam odio, nec fermentum lectus eleifend ac. Sed fermentum nisl eu aliquet pulvinar. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar elit ac volutpat elementum. Donec interdum id turpis ac ultrices. Vivamus et nunc iaculis, suscipit libero nec, lobortis ex. Vestibulum vitae gravida tortor, eleifend placerat mi. Integer mauris nunc, elementum et dui non, posuere malesuada erat. Aliquam semper aliquet interdum.",
     image:
       "https://imgv3.fotor.com/images/cover-photo-image/AI-illustration-of-a-dragon-by-Fotor-AI-text-to-image-generator.jpg",
     user: {
@@ -42,6 +45,17 @@ const requirements: RequirementTableItem[] = [
       document: "123456789",
       userTable: UserTable.COMPANY,
       tenure: "Más de 10 años",
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
+    },
+    subUser: {
+      uid: "subuser1",
+      name: "Javier Req Solís Calcina Javier Alberto Solís Calcina",
+      email: "javiersolis@example.com",
+      password: "password123",
+      document: "123456789",
+      userTable: UserTable.COMPANY,
       customerScore: 0,
       sellerScore: 0,
       address: "Calle San Agustin 107 - Cercado - Arequipa",
@@ -62,7 +76,7 @@ const requirements: RequirementTableItem[] = [
     description: "Desription",
     user: {
       uid: "user1",
-      name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
+      name: "Soluciones Online  S. A. C.",
       email: "john.doe@example.com",
       password: "password123",
       document: "123456789",
@@ -427,24 +441,18 @@ const offerList: OfferListItem[] = [
 
 export default function Requirements() {
   const [modalType, setModalType] = useState(ModalTypes.NONE);
+  const [modalWidth, setModalWidth] = useState(commonModalWidth);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalTitle, setModalTitle] = useState<React.ReactNode>("");
-  // const [requirement, setRequirement] = useState<null | RequirementTableItem>(
-  //   null
-  // );
-  const [dataModal, setDataModal] = useState<{
-    offerList?: OfferListItem[];
-    offer?: OfferListItem;
-    requirement?: RequirementTableItem | null;
-  } | null>(null);
+  const [dataModal, setDataModal] = useState<ModalData>({});
 
   function handleOnButtonClick(action: Action, data: any) {
     console.log(action);
+    setModalWidth(commonModalWidth);
     switch (action) {
       case Action.SHOW_OFFERS: {
         const dataReq = data as RequirementTableItem;
         setModalType(ModalTypes.DETAILED_REQUIREMENT);
-        // setRequirement(dataReq);
         setDataModal({ offerList, requirement: dataReq });
         setIsOpenModal(true);
         setModalTitle(dataReq.title);
@@ -463,6 +471,15 @@ export default function Requirements() {
             </div>
           </>
         );
+        break;
+      }
+      case Action.REPUBLISH: {
+        const dataReq = data as RequirementTableItem;
+        setModalType(ModalTypes.REPUBLISH_REQUIREMENT);
+        setDataModal({ requirement: dataReq });
+        setIsOpenModal(true);
+        setModalTitle("Republicar");
+        setModalWidth("250px");
       }
     }
   }
@@ -481,7 +498,7 @@ export default function Requirements() {
         isOpen={isOpenModal}
         onClose={handleCloseModal}
         className="custom-scroll"
-        width="850px"
+        width={modalWidth}
         style={{
           maxHeight: "75vh",
           overflowY: "scroll",
@@ -520,7 +537,7 @@ export default function Requirements() {
                 placeholder="Buscar..."
                 prefix={<SearchOutlined />}
                 style={{
-                  background: "#f3f7fa",
+                  background: rowColor,
                   border: "0",
                 }}
               />

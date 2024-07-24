@@ -2,7 +2,7 @@ import {
   faCalendarCheck,
   faEnvelope,
   faHandHoldingDollar,
-  faMapMarkerAlt,
+  faMapLocationDot,
   faStopwatch,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,27 +13,25 @@ import {
   lightColor,
   primaryColor,
   secondaryBackgroundColor,
-} from "../../../utilities/colors";
+} from "../../../../utilities/colors";
 import {
   OfferListItem,
   RequirementTableItem,
-} from "../../../models/MainInterfaces";
+} from "../../../../models/MainInterfaces";
 import moment from "moment";
-import { dateFormat } from "../../../utilities/globals";
-import ButtonContainer from "../../containers/ButtonContainer";
-import ModalContainer from "../../containers/ModalContainer";
+import { dateFormat } from "../../../../utilities/globals";
+import ButtonContainer from "../../../containers/ButtonContainer";
+import ModalContainer from "../../../containers/ModalContainer";
 import {
   ModalTypes,
   OfferState,
   RequirementState,
-} from "../../../utilities/types";
+} from "../../../../utilities/types";
 import { useState } from "react";
-import { OfferFilters } from "../../../models/Interfaces";
 
 interface RequirementOfferListItemBodyProps {
   offer: OfferListItem;
   requirement: RequirementTableItem;
-  offerFilters: OfferFilters;
 }
 
 export default function RequirementOfferListItemBody(
@@ -86,7 +84,7 @@ export default function RequirementOfferListItemBody(
         <Col xs={24} sm={12} md={12} lg={12} xl={12}>
           <Space direction="vertical">
             <Space align="start">
-              <FontAwesomeIcon icon={faMapMarkerAlt} color={primaryColor} />
+              <FontAwesomeIcon icon={faMapLocationDot} color={primaryColor} />
               <Space direction="vertical" size={0}>
                 <div style={{ fontSize: "0.9em" }}>Ubicación</div>
                 {props.offer.location}
@@ -110,7 +108,7 @@ export default function RequirementOfferListItemBody(
               <FontAwesomeIcon icon={faEnvelope} color={primaryColor} />
               <Space direction="vertical" size={0}>
                 <div style={{ fontSize: "0.9em" }}>Correo</div>
-                {props.offer.user.email}
+                <div className="long-text-wrap">{props.offer.user.email}</div>
               </Space>
             </Space>
             <Space align="start">
@@ -165,7 +163,7 @@ export default function RequirementOfferListItemBody(
       <ModalContainer
         type={ModalTypes.CANCEL_PURCHASE_ORDER}
         isOpen={modalCancelPurchaseOrderOpen}
-        data={null}
+        data={{}}
         onClose={handleOnCloseModalPurchaseOrder}
         title="Cancelar orden de compra"
         showFooter={true}
@@ -176,7 +174,6 @@ export default function RequirementOfferListItemBody(
         data={{
           offer: props.offer,
           requirement: props.requirement,
-          offerFilters: props.offerFilters,
         }}
         onClose={handleOnCloseModalOfferSelected}
         title="Aviso"

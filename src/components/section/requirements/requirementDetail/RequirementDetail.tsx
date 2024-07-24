@@ -6,38 +6,46 @@ import Title from "antd/es/typography/Title";
 import {
   OfferListItem,
   RequirementTableItem,
-} from "../../../models/MainInterfaces";
+} from "../../../../models/MainInterfaces";
 import { useState } from "react";
-import { OfferFilters } from "../../../models/Interfaces";
+import { OfferFilters } from "../../../../models/Interfaces";
 import {
   DeliveryTimeFilter,
   LocationFilter,
   OfferFilterTypes,
   PriceFilter,
   WarrantyFilter,
-} from "../../../utilities/types";
+} from "../../../../utilities/types";
+import { requirementDetailContext } from "../../../../contexts/requirementDetailContext";
 
-interface RequirementModalProps {
+interface RequirementDetailProps {
   offerList: OfferListItem[];
   requirement: RequirementTableItem;
 }
 
-export default function RequirementModal(props: RequirementModalProps) {
-  const [offerFilters] = useState<OfferFilters>({
+export default function RequirementDetail(props: RequirementDetailProps) {
+  const [offerFilters, setOfferFilters] = useState<OfferFilters>({
     price: PriceFilter.ALL,
     deliveryTime: DeliveryTimeFilter.ALL,
     location: LocationFilter.ALL,
     warranty: WarrantyFilter.ALL,
   });
 
+  function updateFilters(newFilters: OfferFilters) {
+    console.log("updateFilters");
+    setOfferFilters(newFilters);
+  }
+
   function HandleonFilterChange(filterType: OfferFilterTypes, value: any) {
-    console.log(filterType, value);
+    console.log("Cambio en filtro", filterType, value);
   }
 
   return (
-    <>
+    <requirementDetailContext.Provider
+      value={{ filters: offerFilters, updateFilters }}
+    >
       <Divider style={{ margin: "10px 0" }} />
-      <RequirementInfo></RequirementInfo>
+      <RequirementInfo requirement={props.requirement}></RequirementInfo>
       <div
         style={{
           textAlign: "center",
@@ -60,8 +68,7 @@ export default function RequirementModal(props: RequirementModalProps) {
       <RequirementOfferList
         offers={props.offerList}
         requirement={props.requirement}
-        offerFilters={offerFilters}
       />
-    </>
+    </requirementDetailContext.Provider>
   );
 }

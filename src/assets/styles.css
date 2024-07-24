@@ -21,7 +21,7 @@
 
 .table-container-page {
   padding: 20px 40px;
-  background-color: #f3f7fa;
+  background-color: #f3f7fa; /* rowColor */
 }
 
 .table-container-page .table-container {
@@ -39,7 +39,7 @@
   .ant-table-tbody
   > tr
   > td {
-  background: #f3f7fa;
+  background: #f3f7fa; /* rowColor */
   border-bottom: 5px solid white;
   padding: 10px;
 }

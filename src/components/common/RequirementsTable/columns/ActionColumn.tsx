@@ -14,7 +14,7 @@ export default function ActionColumn(
   hidden: boolean = false
 ) {
   const col: ColumnType<RequirementTableItem> = {
-    title: "Action",
+    title: "Acciones",
     key: "action",
     align: "center",
     showSorterTooltip: false,
