@@ -7,7 +7,7 @@ import {
   OfferListItem,
   RequirementTableItem,
 } from "../../../../models/MainInterfaces";
-import { useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import { OfferFilters } from "../../../../models/Interfaces";
 import {
   DeliveryTimeFilter,
@@ -21,6 +21,7 @@ import { requirementDetailContext } from "../../../../contexts/requirementDetail
 interface RequirementDetailProps {
   offerList: OfferListItem[];
   requirement: RequirementTableItem;
+  onClose: (e: SyntheticEvent<Element, Event>) => any;
 }
 
 export default function RequirementDetail(props: RequirementDetailProps) {

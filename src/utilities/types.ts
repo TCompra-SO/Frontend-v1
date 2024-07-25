@@ -1,3 +1,5 @@
+import { allSelect } from "./globals";
+
 export const DocType = {
   DNI: "DNI",
   RUC: "RUC",
@@ -29,6 +31,8 @@ export enum ModalTypes {
   SELECT_OFFER = 4,
   OFFER_SUMMARY = 5,
   REPUBLISH_REQUIREMENT = 6,
+  RATE_CANCELED = 7,
+  RATE_USER = 8,
 }
 
 export enum UserTable {
@@ -43,6 +47,9 @@ export enum Action {
   FINISH = 4,
   REPUBLISH = 5,
   SHOW_SUMMARY = 6,
+  RATE_CANCELED = 7,
+  CANCEL_PURCHASE_ORDER = 8,
+  SELECT_OFFER = 9,
 }
 
 export const ActionLabel = {
@@ -52,6 +59,9 @@ export const ActionLabel = {
   [Action.FINISH]: "Culminar",
   [Action.REPUBLISH]: "Republicar",
   [Action.SHOW_SUMMARY]: "Ver resumen",
+  [Action.RATE_CANCELED]: "Calificar",
+  [Action.CANCEL_PURCHASE_ORDER]: "Cancelar orden de compra",
+  [Action.SELECT_OFFER]: "Seleccionar oferta",
 };
 
 export enum OfferState {
@@ -63,21 +73,21 @@ export enum OfferState {
 }
 
 export enum PriceFilter {
-  ALL = "0",
+  ALL = allSelect,
   ASC = "1",
   DESC = "2",
 }
 
-export enum DeliveryTimeFilter {
-  ALL = "0",
-}
+export const DeliveryTimeFilter = {
+  ALL: allSelect,
+};
 
-export enum LocationFilter {
-  ALL = "0",
-}
+export const LocationFilter = {
+  ALL: allSelect,
+};
 
 export enum WarrantyFilter {
-  ALL = "0",
+  ALL = allSelect,
   ASC = "1",
   DESC = "2",
 }
@@ -101,32 +111,6 @@ export enum RequirementTableColumns {
   STATE = 8,
 }
 
-export const ActionObjects2 = {
-  [RequirementState.CANCELED]: {
-    [Action.DELETE]: [ActionLabel[Action.DELETE]],
-    [Action.REPUBLISH]: [ActionLabel[Action.REPUBLISH]],
-  },
-  [RequirementState.DISPUTE]: {
-    [Action.SHOW_SUMMARY]: [ActionLabel[Action.SHOW_SUMMARY]],
-  },
-  [RequirementState.EXPIRED]: {
-    [Action.DELETE]: [ActionLabel[Action.DELETE]],
-    [Action.REPUBLISH]: [ActionLabel[Action.REPUBLISH]],
-  },
-  [RequirementState.FINISHED]: {
-    [Action.SHOW_SUMMARY]: [ActionLabel[Action.SHOW_SUMMARY]],
-  },
-  [RequirementState.PUBLISHED]: {
-    [Action.DELETE]: [ActionLabel[Action.DELETE]],
-    [Action.CANCEL_REQUIREMENT]: [ActionLabel[Action.CANCEL_REQUIREMENT]],
-  },
-  [RequirementState.SELECTED]: {
-    [Action.CANCEL_REQUIREMENT]: [ActionLabel[Action.CANCEL_REQUIREMENT]],
-    [Action.FINISH]: [ActionLabel[Action.FINISH]],
-  },
-  [RequirementState.ELIMINATED]: {},
-};
-
 export const ActionByState: { [key in RequirementState]: Array<Action> } = {
   [RequirementState.CANCELED]: [Action.DELETE, Action.REPUBLISH],
   [RequirementState.DISPUTE]: [Action.SHOW_SUMMARY],
@@ -136,3 +120,13 @@ export const ActionByState: { [key in RequirementState]: Array<Action> } = {
   [RequirementState.SELECTED]: [Action.CANCEL_REQUIREMENT, Action.FINISH],
   [RequirementState.ELIMINATED]: [],
 };
+
+export enum UserClass {
+  CUSTOMER = 0,
+  SELLER = 1,
+}
+
+export enum SiNo {
+  SI = 1,
+  NO = 0,
+}

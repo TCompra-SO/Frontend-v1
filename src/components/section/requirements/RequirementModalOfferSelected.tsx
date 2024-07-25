@@ -5,19 +5,26 @@ import {
   OfferListItem,
   RequirementTableItem,
 } from "../../../models/MainInterfaces";
-import { useContext } from "react";
+import { SyntheticEvent, useContext } from "react";
 import { requirementDetailContext } from "../../../contexts/requirementDetailContext";
+import ButtonContainer from "../../containers/ButtonContainer";
 
 interface RequirementModalOfferSelectedProps {
   offer: OfferListItem;
   requirement: RequirementTableItem;
+  onClose: (e: SyntheticEvent<Element, Event>) => any;
 }
 
 export default function RequirementModalOfferSelected(
   props: RequirementModalOfferSelectedProps
 ) {
   const { filters } = useContext(requirementDetailContext);
-  console.log(filters);
+
+  function selectOffer(e: SyntheticEvent<Element, Event>) {
+    console.log(props.offer.key, props.requirement.key);
+    console.log(filters);
+    props.onClose(e);
+  }
 
   return (
     <>
@@ -39,8 +46,16 @@ export default function RequirementModalOfferSelected(
         rows={4}
         placeholder="Observaciones"
         maxLength={255}
-        style={{ marginTop: "8px" }}
+        style={{ marginTop: "8px", marginBottom: "10px" }}
       />
+      <Flex gap="small" justify="flex-end">
+        <ButtonContainer text="Aceptar" type="primary" onClick={selectOffer} />
+        <ButtonContainer
+          text="Cancelar"
+          type="primary"
+          onClick={props.onClose}
+        />
+      </Flex>
     </>
   );
 }

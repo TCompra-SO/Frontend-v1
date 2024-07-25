@@ -19,15 +19,19 @@ import {
   RequirementTableItem,
 } from "../../../../models/MainInterfaces";
 import moment from "moment";
-import { dateFormat } from "../../../../utilities/globals";
+import { commonModalWidth, dateFormat } from "../../../../utilities/globals";
 import ButtonContainer from "../../../containers/ButtonContainer";
 import ModalContainer from "../../../containers/ModalContainer";
 import {
+  Action,
+  ActionLabel,
   ModalTypes,
   OfferState,
   RequirementState,
+  UserClass,
 } from "../../../../utilities/types";
 import { useState } from "react";
+import { ModalContent } from "../../../../models/Interfaces";
 
 interface RequirementOfferListItemBodyProps {
   offer: OfferListItem;
@@ -37,24 +41,58 @@ interface RequirementOfferListItemBodyProps {
 export default function RequirementOfferListItemBody(
   props: RequirementOfferListItemBodyProps
 ) {
-  const [modalCancelPurchaseOrderOpen, setModalCancelPurchaseOrderOpen] =
-    useState(false);
-  const [modalOfferSelectedOpen, setModalOfferSelectedOpen] = useState(false);
+  const [modalWidth, setModalWidth] = useState(commonModalWidth);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState<React.ReactNode>("");
+  const [dataModal, setDataModal] = useState<ModalContent>({
+    type: ModalTypes.NONE,
+    data: {},
+  });
 
-  function onCancelPurchaseOrder() {
-    setModalCancelPurchaseOrderOpen(true);
+  function onOpenModal(action: Action) {
+    switch (action) {
+      case Action.CANCEL_PURCHASE_ORDER:
+        setIsOpenModal(true);
+        setModalTitle(ActionLabel[action]);
+        setDataModal({
+          type: ModalTypes.CANCEL_PURCHASE_ORDER,
+          data: {
+            offerId: props.offer.key,
+            requirementId: props.requirement.key,
+          },
+        });
+        setModalWidth("750px");
+        break;
+      case Action.SELECT_OFFER:
+        setIsOpenModal(true);
+        setModalTitle("Aviso");
+        setDataModal({
+          type: ModalTypes.SELECT_OFFER,
+          data: {
+            offer: props.offer,
+            requirement: props.requirement,
+          },
+        });
+        break;
+      case Action.RATE_CANCELED:
+        setIsOpenModal(true);
+        setModalTitle(ActionLabel[action]);
+        setDataModal({
+          type: ModalTypes.RATE_CANCELED,
+          data: {
+            user: props.offer.user,
+            requirementOffertitle: props.requirement.title,
+            type: props.requirement.type,
+            userClass: UserClass.SELLER, // r3v
+            isOffer: false,
+          },
+        });
+        setModalWidth("600px");
+    }
   }
 
-  function handleOnCloseModalPurchaseOrder() {
-    setModalCancelPurchaseOrderOpen(false);
-  }
-
-  function onSelectOffer() {
-    setModalOfferSelectedOpen(true);
-  }
-
-  function handleOnCloseModalOfferSelected() {
-    setModalOfferSelectedOpen(false);
+  function handleOnCloseModal() {
+    setIsOpenModal(false);
   }
 
   return (
@@ -142,43 +180,38 @@ export default function RequirementOfferListItemBody(
         <Flex justify="center" gap="small" style={{ width: "100%" }}>
           {props.offer.state == OfferState.WINNER && (
             <ButtonContainer
-              text="Cancelar orden de compra"
+              text={ActionLabel[Action.CANCEL_PURCHASE_ORDER]}
               type="primary"
-              onClick={onCancelPurchaseOrder}
+              onClick={() => onOpenModal(Action.CANCEL_PURCHASE_ORDER)}
               upperCaseSmaller={true}
             />
           )}
           {props.offer.state == OfferState.ACTIVE &&
             props.requirement.state == RequirementState.PUBLISHED && (
               <ButtonContainer
-                text="Elegir oferta"
+                text={ActionLabel[Action.SELECT_OFFER]}
                 type="primary"
-                onClick={onSelectOffer}
+                onClick={() => onOpenModal(Action.SELECT_OFFER)}
                 upperCaseSmaller={true}
               />
             )}
+          {props.offer.state == OfferState.CANCELED && ( // r3v creador de ofera canceló la oferta
+            <ButtonContainer
+              text={ActionLabel[Action.RATE_CANCELED]}
+              type="primary"
+              onClick={() => onOpenModal(Action.RATE_CANCELED)}
+              upperCaseSmaller={true}
+            />
+          )}
           <ButtonContainer text="Chat" type="primary" upperCaseSmaller={true} />
         </Flex>
       </Row>
       <ModalContainer
-        type={ModalTypes.CANCEL_PURCHASE_ORDER}
-        isOpen={modalCancelPurchaseOrderOpen}
-        data={{}}
-        onClose={handleOnCloseModalPurchaseOrder}
-        title="Cancelar orden de compra"
-        showFooter={true}
-      />
-      <ModalContainer
-        type={ModalTypes.SELECT_OFFER}
-        isOpen={modalOfferSelectedOpen}
-        data={{
-          offer: props.offer,
-          requirement: props.requirement,
-        }}
-        onClose={handleOnCloseModalOfferSelected}
-        title="Aviso"
-        showFooter={true}
-        width="750px"
+        content={dataModal}
+        isOpen={isOpenModal}
+        onClose={handleOnCloseModal}
+        title={modalTitle}
+        width={modalWidth}
       />
     </>
   );

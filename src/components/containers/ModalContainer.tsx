@@ -1,79 +1,82 @@
-import { Flex, Modal, Space } from "antd";
+import { Modal } from "antd";
 import { ModalTypes } from "../../utilities/types";
 import RequirementDetail from "../section/requirements/requirementDetail/RequirementDetail";
-import { ExclamationCircleFilled } from "@ant-design/icons";
-import TextAreaContainer from "./TextAreaContainer";
 import RequirementModalOfferSelected from "../section/requirements/RequirementModalOfferSelected";
 import { ModalProps } from "antd/lib";
 import RequirementOfferSummary from "../section/requirements/requirementOfferSummary/RequirementOfferSummary";
 import RequirementModalRepublish from "../section/requirements/RequirementModalRepublish";
-import { ModalData } from "../../models/Interfaces";
+import { ModalContent } from "../../models/Interfaces";
+import RatingCanceledModal from "../common/RatingCanceledModal";
+import CancelPurchaseOrderModal from "../common/CancelPurchaseOrderModal";
+import RatingModal from "../common/RatingModal";
 
 interface ModalContainerProps extends ModalProps {
-  type: ModalTypes;
-  data: ModalData;
+  content: ModalContent;
   isOpen: boolean;
-  // onClose?: (param: boolean) => void;
   showFooter?: boolean;
   className?: string;
   maskClosable?: boolean;
-  // width?: string | number;
-  // destroyOnClose?: boolean;
+  onClose: (e: React.SyntheticEvent<Element, Event>) => any;
 }
 
 export default function ModalContainer(props: ModalContainerProps) {
   function getContent() {
-    switch (props.type) {
-      case ModalTypes.NONE: {
-        return null;
-      }
+    switch (props.content.type) {
       case ModalTypes.DETAILED_REQUIREMENT: {
         return (
-          props.data.offerList &&
-          props.data.requirement && (
-            <RequirementDetail
-              offerList={props.data.offerList}
-              requirement={props.data.requirement}
-            />
-          )
+          <RequirementDetail
+            offerList={props.content.data.offerList}
+            requirement={props.content.data.requirement}
+            onClose={props.onClose}
+          />
         );
       }
       case ModalTypes.CANCEL_PURCHASE_ORDER: {
         return (
-          <Flex vertical gap={8}>
-            <Space>
-              <ExclamationCircleFilled />
-              <b>Indique el motivo de la cancelación</b>
-            </Space>
-            <TextAreaContainer rows={4} placeholder="Motivo" maxLength={255} />
-          </Flex>
+          <CancelPurchaseOrderModal
+            onClose={props.onClose}
+            offerId={props.content.data.offerId}
+            requirementId={props.content.data.requirementId}
+          />
         );
       }
       case ModalTypes.SELECT_OFFER: {
         return (
-          props.data.offer &&
-          props.data.requirement && (
-            <RequirementModalOfferSelected
-              offer={props.data.offer}
-              requirement={props.data.requirement}
-            />
-          )
+          <RequirementModalOfferSelected
+            offer={props.content.data.offer}
+            requirement={props.content.data.requirement}
+            onClose={props.onClose}
+          />
         );
       }
       case ModalTypes.OFFER_SUMMARY: {
-        return (
-          props.data.offer && (
-            <RequirementOfferSummary offer={props.data.offer} />
-          )
-        );
+        return <RequirementOfferSummary offer={props.content.data.offer} />;
       }
       case ModalTypes.REPUBLISH_REQUIREMENT: {
         return (
-          props.data.requirement && (
-            <RequirementModalRepublish requirement={props.data.requirement} />
-          )
+          <RequirementModalRepublish
+            requirementId={props.content.data.requirementId}
+            onClose={props.onClose}
+          />
         );
       }
+      case ModalTypes.RATE_CANCELED: {
+        return (
+          <RatingCanceledModal
+            user={props.content.data.user}
+            requirementOffertitle={props.content.data.requirementOffertitle}
+            type={props.content.data.type}
+            userClass={props.content.data.userClass}
+            isOffer={props.content.data.isOffer}
+            onClose={props.onClose}
+          />
+        );
+      }
+      // case ModalTypes.RATE_USER: {
+      //   return (
+      //     <RatingModal userClass={"c:/Users/ardn_/Documents/soluciones/Frontend-v1/src/utilities/types".CUSTOMER} type={RequirementType.GOOD} />
+      //   )
+      // }
     }
   }
 
@@ -81,6 +84,7 @@ export default function ModalContainer(props: ModalContainerProps) {
     return (
       <Modal
         {...props}
+        destroyOnClose
         centered
         open={props.isOpen}
         maskClosable={
@@ -95,6 +99,7 @@ export default function ModalContainer(props: ModalContainerProps) {
     return (
       <Modal
         {...props}
+        destroyOnClose
         centered
         open={props.isOpen}
         footer={null}

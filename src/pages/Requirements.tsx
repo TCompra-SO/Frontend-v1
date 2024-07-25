@@ -19,7 +19,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import { OfferListItem, RequirementTableItem } from "../models/MainInterfaces";
 import { useState } from "react";
 import { commonModalWidth } from "../utilities/globals";
-import { ModalData } from "../models/Interfaces";
+import { ModalContent } from "../models/Interfaces";
 
 const requirements: RequirementTableItem[] = [
   {
@@ -440,11 +440,13 @@ const offerList: OfferListItem[] = [
 ];
 
 export default function Requirements() {
-  const [modalType, setModalType] = useState(ModalTypes.NONE);
   const [modalWidth, setModalWidth] = useState(commonModalWidth);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalTitle, setModalTitle] = useState<React.ReactNode>("");
-  const [dataModal, setDataModal] = useState<ModalData>({});
+  const [dataModal, setDataModal] = useState<ModalContent>({
+    type: ModalTypes.NONE,
+    data: {},
+  });
 
   function handleOnButtonClick(action: Action, data: any) {
     console.log(action);
@@ -452,15 +454,19 @@ export default function Requirements() {
     switch (action) {
       case Action.SHOW_OFFERS: {
         const dataReq = data as RequirementTableItem;
-        setModalType(ModalTypes.DETAILED_REQUIREMENT);
-        setDataModal({ offerList, requirement: dataReq });
+        setDataModal({
+          type: ModalTypes.DETAILED_REQUIREMENT,
+          data: { offerList, requirement: dataReq },
+        });
         setIsOpenModal(true);
         setModalTitle(dataReq.title);
         break;
       }
       case Action.SHOW_SUMMARY: {
-        setModalType(ModalTypes.OFFER_SUMMARY);
-        setDataModal({ offer: offerList[0] });
+        setDataModal({
+          type: ModalTypes.OFFER_SUMMARY,
+          data: { offer: offerList[0] },
+        });
         setIsOpenModal(true);
         setModalTitle(
           <>
@@ -475,8 +481,10 @@ export default function Requirements() {
       }
       case Action.REPUBLISH: {
         const dataReq = data as RequirementTableItem;
-        setModalType(ModalTypes.REPUBLISH_REQUIREMENT);
-        setDataModal({ requirement: dataReq });
+        setDataModal({
+          type: ModalTypes.REPUBLISH_REQUIREMENT,
+          data: { requirementId: dataReq.key },
+        });
         setIsOpenModal(true);
         setModalTitle("Republicar");
         setModalWidth("250px");
@@ -493,8 +501,7 @@ export default function Requirements() {
       <ModalContainer
         destroyOnClose
         title={modalTitle}
-        type={modalType}
-        data={dataModal}
+        content={dataModal}
         isOpen={isOpenModal}
         onClose={handleCloseModal}
         className="custom-scroll"

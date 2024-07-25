@@ -3,10 +3,10 @@ import DatePickerContainer from "../../containers/DatePickerContainer";
 import { useState } from "react";
 import dayjs from "dayjs";
 import ButtonContainer from "../../containers/ButtonContainer";
-import { RequirementTableItem } from "../../../models/MainInterfaces";
 
 interface RequirementModalRepublishProps {
-  requirement: RequirementTableItem;
+  requirementId: string;
+  onClose: (e: React.SyntheticEvent<Element, Event>) => any;
 }
 
 export default function RequirementModalRepublish(
@@ -18,8 +18,9 @@ export default function RequirementModalRepublish(
     setNewDate(date);
   }
 
-  function republishRequirement() {
-    console.log(props.requirement, newDate);
+  function republishRequirement(e: React.SyntheticEvent<Element, Event>) {
+    console.log(props.requirementId, newDate);
+    props.onClose(e);
   }
 
   return (
