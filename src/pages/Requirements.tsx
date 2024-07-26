@@ -20,6 +20,7 @@ import { OfferListItem, RequirementTableItem } from "../models/MainInterfaces";
 import { useState } from "react";
 import { commonModalWidth } from "../utilities/globals";
 import { ModalContent } from "../models/Interfaces";
+import RateModalTitleContainer from "../components/containers/RateModalTitleContainer";
 
 const requirements: RequirementTableItem[] = [
   {
@@ -448,18 +449,23 @@ export default function Requirements() {
     data: {},
   });
 
-  function handleOnButtonClick(action: Action, data: any) {
-    console.log(action);
+  function handleCloseModal() {
+    setIsOpenModal(false);
+  }
+
+  function handleOnButtonClick(
+    action: Action,
+    requirement: RequirementTableItem
+  ) {
     setModalWidth(commonModalWidth);
     switch (action) {
       case Action.SHOW_OFFERS: {
-        const dataReq = data as RequirementTableItem;
         setDataModal({
           type: ModalTypes.DETAILED_REQUIREMENT,
-          data: { offerList, requirement: dataReq },
+          data: { offerList, requirement: requirement },
         });
         setIsOpenModal(true);
-        setModalTitle(dataReq.title);
+        setModalTitle(requirement.title);
         break;
       }
       case Action.SHOW_SUMMARY: {
@@ -480,20 +486,54 @@ export default function Requirements() {
         break;
       }
       case Action.REPUBLISH: {
-        const dataReq = data as RequirementTableItem;
         setDataModal({
           type: ModalTypes.REPUBLISH_REQUIREMENT,
-          data: { requirementId: dataReq.key },
+          data: { requirementId: requirement.key },
         });
         setIsOpenModal(true);
         setModalTitle("Republicar");
         setModalWidth("250px");
+        break;
+      }
+      case Action.FINISH: {
+        setDataModal({
+          type: ModalTypes.RATE_USER,
+          data: {
+            user: requirement.user,
+            type: requirement.type,
+            isOffer: false, //r3v
+            requirementOffertitle: requirement.title,
+          },
+        });
+        setIsOpenModal(true);
+        setModalTitle(
+          <RateModalTitleContainer isOffer={false} type={requirement.type} /> //r3v
+        );
+        setModalWidth("450px");
+        break;
+      }
+      case Action.DELETE: {
+        setDataModal({
+          type: ModalTypes.CONFIRM,
+          data: {
+            // onAnswer: ok,
+            onAnswer: (ok: boolean) => {
+              if (!ok) return;
+              deleteRequirement(requirement.key);
+            },
+            text: "¿Está seguro de eliminar el requerimiento?",
+          },
+        });
+        setModalTitle("Aviso");
+        setModalWidth("350px");
+        setIsOpenModal(true);
+        break;
       }
     }
   }
 
-  function handleCloseModal() {
-    setIsOpenModal(false);
+  function deleteRequirement(requirementId: string) {
+    console.log("eliminarreq", requirementId);
   }
 
   return (

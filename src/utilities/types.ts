@@ -33,6 +33,7 @@ export enum ModalTypes {
   REPUBLISH_REQUIREMENT = 6,
   RATE_CANCELED = 7,
   RATE_USER = 8,
+  CONFIRM = 9,
 }
 
 export enum UserTable {

@@ -3,7 +3,6 @@ import {
   PriceFilter,
   RequirementType,
   WarrantyFilter,
-  UserClass,
 } from "../utilities/types";
 import { OfferListItem, RequirementTableItem, User } from "./MainInterfaces";
 
@@ -69,14 +68,18 @@ export interface ModalRateCanceled {
     user: User;
     requirementOffertitle: string;
     type: RequirementType;
-    userClass: UserClass;
     isOffer: boolean;
   };
 }
 
 export interface ModalRateUser {
   type: ModalTypes.RATE_USER;
-  data: {};
+  data: {
+    user: User;
+    requirementOffertitle: string;
+    type: RequirementType;
+    isOffer: boolean;
+  };
 }
 
 export interface ModalRepublishRequirement {
@@ -91,12 +94,21 @@ export interface ModalSelectOffer {
 
 export interface ModalValidateCode {
   type: ModalTypes.VALIDATE_CODE;
-  data: {};
+  data: Record<string, never>;
+}
+
+export interface ModalConfirmation {
+  type: ModalTypes.CONFIRM;
+  data: {
+    text: string;
+    icon?: React.ReactNode;
+    onAnswer: (ok: boolean) => void;
+  };
 }
 
 export interface ModalNone {
   type: ModalTypes.NONE;
-  data: {};
+  data: Record<string, never>;
 }
 
 export type ModalContent =
@@ -108,4 +120,5 @@ export type ModalContent =
   | ModalOfferSummary
   | ModalDetailedRequirement
   | ModalCancelPurchaseOrder
+  | ModalConfirmation
   | ModalNone;

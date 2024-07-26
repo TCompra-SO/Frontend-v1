@@ -17,6 +17,153 @@ _Props_
 | onButtonClick | `(action: Action, data: any) => void` | Función de callback llamada al hacer clic en un botón de acción en la tabla. |
 | hiddenColumns | `RequirementTableColumns[]`           | Columnas de la tabla que se deben ocultar.                                   |
 
+##### columns
+
+###### ActionColumn
+
+Genera una columna de acciones para una tabla, permitiendo realizar acciones basadas en el estado del elemento de la tabla.
+
+_Parámetros_
+
+| Nombre        | Tipo                                                   | Descripción                                                                      |
+| ------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------- |
+| onButtonClick | `(action: Action, data: RequirementTableItem) => void` | Función de callback llamada al hacer clic en una opción de la lista desplegable. |
+| hidden        | `boolean`                                              | Indicador de si la columna debe estar oculta (por defecto es `false`).           |
+
+###### CategoryColumn
+
+Genera una columna que muestra el rubro de los elementos en una tabla.
+
+_Parámetros_
+
+| Nombre | Tipo      | Descripción                                                            |
+| ------ | --------- | ---------------------------------------------------------------------- |
+| hidden | `boolean` | Indicador de si la columna debe estar oculta (por defecto es `false`). |
+
+###### DateColumn
+
+Genera una columna que muestra la fecha de los elementos en una tabla.
+
+_Parámetros_
+
+| Nombre | Tipo      | Descripción                                                            |
+| ------ | --------- | ---------------------------------------------------------------------- |
+| hidden | `boolean` | Indicador de si la columna debe estar oculta (por defecto es `false`). |
+
+###### ImageColumn
+
+Genera una columna que muestra una imagen de los elementos en una tabla.
+
+_Parámetros_
+
+| Nombre | Tipo      | Descripción                                                            |
+| ------ | --------- | ---------------------------------------------------------------------- |
+| hidden | `boolean` | Indicador de si la columna debe estar oculta (por defecto es `false`). |
+
+###### LocationColumn
+
+Genera una columna que muestra la ubicación o departamento de los elementos en una tabla.
+
+_Parámetros_
+
+| Nombre | Tipo      | Descripción                                                            |
+| ------ | --------- | ---------------------------------------------------------------------- |
+| hidden | `boolean` | Indicador de si la columna debe estar oculta (por defecto es `false`). |
+
+###### NameColumn
+
+Genera una columna que muestra el nombre y el rubro de los elementos en una tabla.
+
+_Parámetros_
+
+| Nombre | Tipo      | Descripción                                                            |
+| ------ | --------- | ---------------------------------------------------------------------- |
+| hidden | `boolean` | Indicador de si la columna debe estar oculta (por defecto es `false`). |
+
+###### OffersColumn
+
+Genera una columna que muestra el número de ofertas y un botón que abre un modal que muestra la lista de ofertas.
+
+_Parámetros_
+
+| Nombre        | Tipo                                  | Descripción                                                            |
+| ------------- | ------------------------------------- | ---------------------------------------------------------------------- |
+| onButtonClick | `(action: Action, data: any) => void` | Función de callback llamada al hacer clic en el botón de ofertas.      |
+| hidden        | `boolean`                             | Indicador de si la columna debe estar oculta (por defecto es `false`). |
+
+###### PriceColumn
+
+Genera una columna que muestra el precio de cotización de los elementos en una tabla.
+
+_Parámetros_
+
+| Nombre | Tipo      | Descripción                                                            |
+| ------ | --------- | ---------------------------------------------------------------------- |
+| hidden | `boolean` | Indicador de si la columna debe estar oculta (por defecto es `false`). |
+
+###### StateColumn
+
+Genera una columna que muestra el estado de los elementos en una tabla.
+
+_Parámetros_
+
+| Nombre | Tipo      | Descripción                                                            |
+| ------ | --------- | ---------------------------------------------------------------------- |
+| hidden | `boolean` | Indicador de si la columna debe estar oculta (por defecto es `false`). |
+
+#### CancelPurchaseOrderModal
+
+Un componente modal para cancelar una orden de compra, solicitando al usuario que indique el motivo de la cancelación.
+
+_Props_
+
+| Nombre        | Tipo                                         | Descripción                                     |
+| ------------- | -------------------------------------------- | ----------------------------------------------- |
+| onClose       | `(e: SyntheticEvent<Element, Event>) => any` | Función de callback llamada al cerrar el modal. |
+| offerId       | `string`                                     | ID de la oferta que se está cancelando.         |
+| requirementId | `string`                                     | ID del requerimiento asociado a la oferta.      |
+
+#### ConfirmationModal
+
+Un componente modal que solicita una confirmación al usuario.
+
+_Props_
+
+| Nombre   | Tipo                                               | Descripción                                                                                            |
+| -------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| text     | `string`                                           | Texto que se muestra en el modal.                                                                      |
+| icon     | `React.ReactNode`                                  | Ícono opcional que se muestra en el modal.                                                             |
+| onClose  | `(e: React.SyntheticEvent<Element, Event>) => any` | Función de callback llamada al cerrar el modal.                                                        |
+| onAnswer | `(ok: boolean) => any`                             | Función de callback llamada con la respuesta del usuario (`true` para aceptar, `false` para cancelar). |
+
+#### RatingCanceledModal
+
+Un componente modal que permite calificar a un usuario que ha cancelado una oferta o requerimiento.
+
+_Props_
+
+| Nombre                | Tipo                                               | Descripción                                                          |
+| --------------------- | -------------------------------------------------- | -------------------------------------------------------------------- |
+| user                  | `User`                                             | Información del usuario que está siendo calificado.                  |
+| requirementOffertitle | `string`                                           | Título de la oferta o requerimiento relacionado.                     |
+| type                  | `RequirementType`                                  | Tipo de requerimiento (`GOOD`, `SERVICE`, `SALE`, etc.).             |
+| isOffer               | `boolean`                                          | Indicador de si es una oferta (`true`) o un requerimiento (`false`). |
+| onClose               | `(e: React.SyntheticEvent<Element, Event>) => any` | Función de callback llamada al cerrar el modal.                      |
+
+#### RatingModal
+
+Un componente modal que permite calificar a un usuario, con preguntas sobre la comunicación y otros aspectos relevantes.
+
+_Props_
+
+| Nombre                | Tipo                                               | Descripción                                                          |
+| --------------------- | -------------------------------------------------- | -------------------------------------------------------------------- |
+| user                  | `User`                                             | Información del usuario que está siendo calificado.                  |
+| requirementOffertitle | `string`                                           | Título de la oferta o requerimiento relacionado.                     |
+| type                  | `RequirementType`                                  | Tipo de requerimiento (`GOOD`, `SERVICE`, `SALE`, etc.).             |
+| isOffer               | `boolean`                                          | Indicador de si es una oferta (`true`) o un requerimiento (`false`). |
+| onClose               | `(e: React.SyntheticEvent<Element, Event>) => any` | Función de callback llamada al cerrar el modal.                      |
+
 ### Containers
 
 #### AvatarContainer

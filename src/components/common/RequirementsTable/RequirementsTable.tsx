@@ -19,7 +19,7 @@ import CategoryColumn from "./columns/CategoryColumn";
 interface RequirementsTableProps {
   type: RequirementType;
   data: RequirementTableItem[];
-  onButtonClick: (action: Action, data: any) => void;
+  onButtonClick: (action: Action, data: RequirementTableItem) => void;
   hiddenColumns: RequirementTableColumns[];
 }
 

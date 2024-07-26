@@ -5,12 +5,12 @@ import { rowColor } from "../../utilities/colors";
 import RatingContainer from "../containers/RatingContainer";
 import { useState } from "react";
 import ButtonContainer from "../containers/ButtonContainer";
+import { getUserClass } from "../../utilities/globalFunctions";
 
 interface RatingCanceledModalProps {
   user: User;
   requirementOffertitle: string;
   type: RequirementType;
-  userClass: UserClass;
   isOffer: boolean;
   onClose: (e: React.SyntheticEvent<Element, Event>) => any;
 }
@@ -25,6 +25,8 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
     textAlign: "center",
   };
 
+  const userClass: UserClass = getUserClass(props.isOffer, props.type);
+
   function onScoreChange(score: number) {
     setScore(score);
   }
@@ -38,9 +40,9 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
     <>
       <Flex align="center" style={style} justify="center">
         <b>
-          {`${
-            props.userClass == UserClass.CUSTOMER ? "CLIENTE:" : "PROVEEDOR:"
-          } ${props.user.name}`}
+          {`${userClass == UserClass.CUSTOMER ? "CLIENTE:" : "PROVEEDOR:"} ${
+            props.user.name
+          }`}
         </b>
       </Flex>
       <Flex align="center" justify="center" style={style}>
@@ -58,7 +60,7 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
         style={{ fontSize: "0.9em", ...style }}
       >
         ¿Cómo fue tu comunicación con el
-        {props.userClass == UserClass.CUSTOMER ? "cliente?" : "proveedor?"}
+        {userClass == UserClass.CUSTOMER ? "cliente?" : "proveedor?"}
         <RatingContainer score={0} onChange={onScoreChange} />
       </Flex>
       <Flex justify="center">

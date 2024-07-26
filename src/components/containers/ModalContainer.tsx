@@ -9,6 +9,7 @@ import { ModalContent } from "../../models/Interfaces";
 import RatingCanceledModal from "../common/RatingCanceledModal";
 import CancelPurchaseOrderModal from "../common/CancelPurchaseOrderModal";
 import RatingModal from "../common/RatingModal";
+import ConfirmationModal from "../common/ConfirmationModal";
 
 interface ModalContainerProps extends ModalProps {
   content: ModalContent;
@@ -66,17 +67,32 @@ export default function ModalContainer(props: ModalContainerProps) {
             user={props.content.data.user}
             requirementOffertitle={props.content.data.requirementOffertitle}
             type={props.content.data.type}
-            userClass={props.content.data.userClass}
             isOffer={props.content.data.isOffer}
             onClose={props.onClose}
           />
         );
       }
-      // case ModalTypes.RATE_USER: {
-      //   return (
-      //     <RatingModal userClass={"c:/Users/ardn_/Documents/soluciones/Frontend-v1/src/utilities/types".CUSTOMER} type={RequirementType.GOOD} />
-      //   )
-      // }
+      case ModalTypes.RATE_USER: {
+        return (
+          <RatingModal
+            onClose={props.onClose}
+            user={props.content.data.user}
+            requirementOffertitle={props.content.data.requirementOffertitle}
+            type={props.content.data.type}
+            isOffer={props.content.data.isOffer}
+          />
+        );
+      }
+      case ModalTypes.CONFIRM: {
+        return (
+          <ConfirmationModal
+            text={props.content.data.text}
+            onClose={props.onClose}
+            onAnswer={props.content.data.onAnswer}
+            icon={props.content.data.icon}
+          />
+        );
+      }
     }
   }
 

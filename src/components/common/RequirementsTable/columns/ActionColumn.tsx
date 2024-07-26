@@ -10,7 +10,7 @@ import {
 } from "../../../../utilities/types";
 
 export default function ActionColumn(
-  onButtonClick: (action: Action, data: any) => void,
+  onButtonClick: (action: Action, data: RequirementTableItem) => void,
   hidden: boolean = false
 ) {
   const col: ColumnType<RequirementTableItem> = {

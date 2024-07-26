@@ -28,7 +28,6 @@ import {
   ModalTypes,
   OfferState,
   RequirementState,
-  UserClass,
 } from "../../../../utilities/types";
 import { useState } from "react";
 import { ModalContent } from "../../../../models/Interfaces";
@@ -83,8 +82,7 @@ export default function RequirementOfferListItemBody(
             user: props.offer.user,
             requirementOffertitle: props.requirement.title,
             type: props.requirement.type,
-            userClass: UserClass.SELLER, // r3v
-            isOffer: false,
+            isOffer: false, //r3v
           },
         });
         setModalWidth("600px");
