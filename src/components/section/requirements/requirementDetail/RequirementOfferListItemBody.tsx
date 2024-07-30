@@ -31,6 +31,7 @@ import {
 } from "../../../../utilities/types";
 import { useState } from "react";
 import { ModalContent } from "../../../../models/Interfaces";
+import { useTranslation } from "react-i18next";
 
 interface RequirementOfferListItemBodyProps {
   offer: OfferListItem;
@@ -40,6 +41,7 @@ interface RequirementOfferListItemBodyProps {
 export default function RequirementOfferListItemBody(
   props: RequirementOfferListItemBodyProps
 ) {
+  const { t } = useTranslation();
   const [modalWidth, setModalWidth] = useState(commonModalWidth);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalTitle, setModalTitle] = useState<React.ReactNode>("");
@@ -115,14 +117,14 @@ export default function RequirementOfferListItemBody(
           }}
           level={5}
         >
-          Detalles del ofertante
+          {t("participantDetails")}
         </Title>
         <Col xs={24} sm={12} md={12} lg={12} xl={12}>
           <Space direction="vertical">
             <Space align="start">
               <FontAwesomeIcon icon={faMapLocationDot} color={primaryColor} />
               <Space direction="vertical" size={0}>
-                <div style={{ fontSize: "0.9em" }}>Ubicación</div>
+                <div style={{ fontSize: "0.9em" }}>{t("locationColumn")}</div>
                 {props.offer.location}
               </Space>
             </Space>
@@ -132,7 +134,7 @@ export default function RequirementOfferListItemBody(
                 color={primaryColor}
               />
               <Space direction="vertical" size={0}>
-                <div style={{ fontSize: "0.9em" }}>Precio de cotización</div>
+                <div style={{ fontSize: "0.9em" }}>{t("priceColumn")}</div>
                 {`${props.offer.coin} ${props.offer.price}`}
               </Space>
             </Space>
@@ -143,14 +145,14 @@ export default function RequirementOfferListItemBody(
             <Space align="start">
               <FontAwesomeIcon icon={faEnvelope} color={primaryColor} />
               <Space direction="vertical" size={0}>
-                <div style={{ fontSize: "0.9em" }}>Correo</div>
+                <div style={{ fontSize: "0.9em" }}>{t("email")}</div>
                 <div className="long-text-wrap">{props.offer.user.email}</div>
               </Space>
             </Space>
             <Space align="start">
               <FontAwesomeIcon icon={faStopwatch} color={primaryColor} />
               <Space direction="vertical" size={0}>
-                <div style={{ fontSize: "0.9em" }}>Entrega</div>
+                <div style={{ fontSize: "0.9em" }}>{t("deliveryTime")}</div>
                 {props.offer.deliveryTime}
               </Space>
             </Space>
@@ -169,7 +171,7 @@ export default function RequirementOfferListItemBody(
             }}
           >
             <Space>
-              Fecha de selección:
+              {t("selectionDate")}:
               <FontAwesomeIcon icon={faCalendarCheck} color={primaryColor} />
               {moment(props.offer.selectionDate).format(dateFormat)}
             </Space>
@@ -201,7 +203,11 @@ export default function RequirementOfferListItemBody(
               upperCaseSmaller={true}
             />
           )}
-          <ButtonContainer text="Chat" type="primary" upperCaseSmaller={true} />
+          <ButtonContainer
+            text={t("chat")}
+            type="primary"
+            upperCaseSmaller={true}
+          />
         </Flex>
       </Row>
       <ModalContainer

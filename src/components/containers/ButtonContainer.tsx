@@ -16,7 +16,7 @@ export default function ButtonContainer({
     newStyle = {
       ...rest.style,
       textTransform: "uppercase",
-      fontSize: "0.8em",
+      fontSize: "0.7em",
       fontWeight: "600",
     };
 

@@ -8,13 +8,17 @@ import {
   ActionByState,
   ActionLabel,
 } from "../../../../utilities/types";
+import { useTranslation } from "react-i18next";
 
 export default function ActionColumn(
+  // title: string,
   onButtonClick: (action: Action, data: RequirementTableItem) => void,
   hidden: boolean = false
 ) {
+  const { t } = useTranslation();
+
   const col: ColumnType<RequirementTableItem> = {
-    title: "Acciones",
+    title: t("actionColumn"),
     key: "action",
     align: "center",
     showSorterTooltip: false,
@@ -39,7 +43,7 @@ export default function ActionColumn(
               size="small"
               type="primary"
               ghost
-              text="Seleccione"
+              text={t("select")}
               upperCaseSmaller={true}
               icon={<CaretDownOutlined />}
               iconPosition="end"

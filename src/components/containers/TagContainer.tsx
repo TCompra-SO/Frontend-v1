@@ -2,6 +2,7 @@ import { Tag } from "antd";
 import { RequirementType } from "../../utilities/types";
 import { primaryColor } from "../../utilities/colors";
 import { TagProps } from "antd/lib";
+import { useTranslation } from "react-i18next";
 
 interface TagContainerProps extends TagProps {
   isRequirementTag?: boolean;
@@ -13,6 +14,7 @@ interface TagContainerProps extends TagProps {
 }
 
 export default function TagContainer(props: TagContainerProps) {
+  const { t } = useTranslation();
   let newStyle;
   if (props.includeMarginRight) {
     if (props.style) newStyle = props.style;
@@ -27,12 +29,12 @@ export default function TagContainer(props: TagContainerProps) {
     return (
       <Tag color={primaryColor} style={newStyle}>
         {props.type == RequirementType.GOOD
-          ? "Bienes"
+          ? t("good")
           : props.type == RequirementType.SERVICE
-          ? "Servicios"
+          ? t("service")
           : props.type == RequirementType.SALE
-          ? "Liquidación"
-          : "Puesto de trabajo"}
+          ? t("sale")
+          : t("job")}
       </Tag>
     );
   else

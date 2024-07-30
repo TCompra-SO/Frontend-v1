@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { getUserClass } from "../../utilities/globalFunctions";
 import { RequirementType, UserClass } from "../../utilities/types";
 
@@ -9,16 +10,17 @@ interface RateModalTitleContainerProps {
 export default function RateModalTitleContainer(
   props: RateModalTitleContainerProps
 ) {
+  const { t } = useTranslation();
   const userClass: UserClass = getUserClass(props.isOffer, props.type);
 
   return (
     <>
       <div style={{ fontSize: "1.3em" }}>
-        <b>Culminar</b>
+        <b>{t("finish")}</b>
       </div>
       <div style={{ fontSize: "1em", fontWeight: "normal" }}>
-        Califica a tu{" "}
-        {userClass == UserClass.CUSTOMER ? "Cliente" : "Proveedor"}
+        {t("rateYour")}
+        {userClass == UserClass.CUSTOMER ? t("customer") : t("seller")}
       </div>
     </>
   );

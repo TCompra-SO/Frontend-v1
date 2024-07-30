@@ -3,24 +3,29 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { App as AntdApp, ConfigProvider, theme } from "antd";
 import LoadingCond from "./pages/utils/LoadingCond.tsx";
 import LoadingPage from "./pages/utils/LoadingPage.tsx";
-import Search from "./pages/Search";
 import Header from "./components/section/header/header/Header";
 import "./assets/styles.css";
-import Requirements from "./pages/Requirements.tsx";
 import {
   mainBackgroundColor,
   primaryColor,
   tableHeaderTextColor,
   white,
 } from "./utilities/colors.ts";
+import esEs from "antd/locale/es_ES";
+import enUs from "antd/locale/en_US";
+import i18n from "./utilities/i18n.ts";
 
 const Login = lazy(() => import("./pages/Login.tsx"));
 const Profile = lazy(() => import("./pages/Profile.tsx"));
+const Search = lazy(() => import("./pages/Search.tsx"));
+const Requirements = lazy(() => import("./pages/Requirements.tsx"));
+const currentLanguage = i18n.language;
 
 function App() {
   return (
     <>
       <ConfigProvider
+        locale={currentLanguage == "es" ? esEs : enUs}
         theme={{
           algorithm: theme.defaultAlgorithm,
           token: {

@@ -1,9 +1,12 @@
 import { ColumnType } from "antd/es/table";
 import { RequirementTableItem } from "../../../../models/MainInterfaces";
+import { useTranslation } from "react-i18next";
 
 export default function CategoryColumn(hidden: boolean = false) {
+  const { t } = useTranslation();
+
   const col: ColumnType<RequirementTableItem> = {
-    title: "Rubro",
+    title: t("categoryColumn"),
     dataIndex: "category",
     key: "category",
     align: "center",

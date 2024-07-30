@@ -3,6 +3,7 @@ import { Flex, Space } from "antd";
 import TextAreaContainer from "../containers/TextAreaContainer";
 import { SyntheticEvent, useState } from "react";
 import ButtonContainer from "../containers/ButtonContainer";
+import { useTranslation } from "react-i18next";
 
 interface CancelPurchaseOrderModalProps {
   onClose: (e: SyntheticEvent<Element, Event>) => any;
@@ -13,6 +14,7 @@ interface CancelPurchaseOrderModalProps {
 export default function CancelPurchaseOrderModal(
   props: CancelPurchaseOrderModalProps
 ) {
+  const { t } = useTranslation();
   const [text, setText] = useState<string>("");
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -33,19 +35,19 @@ export default function CancelPurchaseOrderModal(
         </Space>
         <TextAreaContainer
           rows={4}
-          placeholder="Motivo"
+          placeholder={t("reason")}
           maxLength={255}
           onChange={handleTextChange}
         />
       </Flex>
       <Flex justify="flex-end" gap="small">
         <ButtonContainer
-          text="Aceptar"
+          text={t("acceptButton")}
           type="primary"
           onClick={cancelPurchaseOrder}
         />
         <ButtonContainer
-          text="Cancelar"
+          text={t("cancelButton")}
           onClick={props.onClose}
           type="primary"
         />

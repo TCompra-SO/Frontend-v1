@@ -127,7 +127,7 @@ export enum UserClass {
   SELLER = 1,
 }
 
-export enum SiNo {
-  SI = 1,
+export enum YesNo {
+  YES = 1,
   NO = 0,
 }

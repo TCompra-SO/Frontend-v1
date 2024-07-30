@@ -37,6 +37,7 @@ export interface OfferListItem {
   selectionDate?: Date;
   state: OfferState;
   type: RequirementType;
+  igv?: boolean;
 }
 
 export interface User {

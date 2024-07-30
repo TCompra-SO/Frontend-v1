@@ -1,6 +1,7 @@
 import { Flex, Space } from "antd";
 import ButtonContainer from "../containers/ButtonContainer";
 import { ExclamationCircleFilled } from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
 
 interface ConfirmationModalProps {
   text: string;
@@ -14,6 +15,8 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
     props.onClose(e);
   }
 
+  const { t } = useTranslation();
+
   return (
     <Flex vertical>
       <Space>
@@ -24,11 +27,11 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
         <ButtonContainer
           onClick={(e) => closeModal(e, true)}
           type="primary"
-          text="Aceptar"
+          text={t("acceptButton")}
         />
         <ButtonContainer
           onClick={(e) => closeModal(e, false)}
-          text="Cancelar"
+          text={t("cancelButton")}
           type="primary"
         />
       </Flex>

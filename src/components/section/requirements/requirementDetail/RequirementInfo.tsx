@@ -4,20 +4,27 @@ import TagContainer from "../../../containers/TagContainer";
 import RatingContainer from "../../../containers/RatingContainer";
 import ParagraphContainer from "../../../containers/ParagraphContainer";
 import PriceContainer from "../../../containers/PriceContainer";
-import { darkColor, lightColor } from "../../../../utilities/colors";
+import {
+  darkColor,
+  darkerGray,
+  gray,
+  lightColor,
+} from "../../../../utilities/colors";
 import { RequirementType } from "../../../../utilities/types";
 import { RequirementTableItem } from "../../../../models/MainInterfaces";
+import { useTranslation } from "react-i18next";
 
 interface RequirementInfoProps {
   requirement: RequirementTableItem;
 }
 
 export default function RequirementInfo(props: RequirementInfoProps) {
+  const { t } = useTranslation();
+
   return (
     <Row gutter={[10, 10]}>
       <Col xs={24} sm={24} md={6} lg={6} xl={6}>
         <ImageContainer
-          alt="imagen"
           src={props.requirement.image ?? "https://placehold.co/300x300"}
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
@@ -43,7 +50,6 @@ export default function RequirementInfo(props: RequirementInfoProps) {
           text={props.requirement.description}
           rows={3}
           expandable
-          symbol="Ver más"
           style={{ margin: "5px 0", textAlign: "justify" }}
         />
         <Flex wrap gap="small" align="center">
@@ -66,16 +72,16 @@ export default function RequirementInfo(props: RequirementInfoProps) {
             />
           )}
           <TagContainer
-            label="Tiempo de entrega"
+            label={t("deliveryTime")}
             text="2 días"
-            color="#e8e8e8"
-            style={{ color: "#6e6e6e", fontWeight: "bold", height: "24px" }}
+            color={gray}
+            style={{ color: darkerGray, fontWeight: "bold", height: "24px" }}
           />
           <TagContainer
-            label="Fecha de expiración"
+            label={t("expirationDate")}
             text="23-08-2024"
-            color="#e8e8e8"
-            style={{ color: "#6e6e6e", fontWeight: "bold", height: "24px" }}
+            color={gray}
+            style={{ color: darkerGray, fontWeight: "bold", height: "24px" }}
           />
         </Flex>
       </Col>

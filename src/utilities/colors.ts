@@ -11,6 +11,8 @@ export const tableHeaderTextColor = "#768286";
 export const modalBackgroundColor = "#fafafa";
 export const white = "#ffffff";
 export const rowColor = "#f3f7fa";
+export const gray = "#e8e8e8";
+export const darkerGray = "#6e6e6e";
 
 export const RequirementStateMeta: {
   [key: string]: { color: string; background: string; label: string };

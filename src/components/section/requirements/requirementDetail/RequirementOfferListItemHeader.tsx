@@ -25,6 +25,7 @@ import {
 import PriceContainer from "../../../containers/PriceContainer";
 import { useState } from "react";
 import useScreenSize from "../../../../hooks/useScreenSize";
+import { useTranslation } from "react-i18next";
 
 interface RequirementOfferListItemProps {
   offer: OfferListItem;
@@ -38,6 +39,7 @@ export default function RequirementOfferListItemHeader({
   showUserData = true,
   ...props
 }: RequirementOfferListItemProps) {
+  const { t } = useTranslation();
   const [isSmallScreen] = useState(useScreenSize());
 
   return (
@@ -83,14 +85,14 @@ export default function RequirementOfferListItemHeader({
 
                   <DotContainer />
                   {props.offer.user.userTable == UserTable.COMPANY
-                    ? "EMPRESA"
-                    : "PERSONA"}
+                    ? t("company")
+                    : t("persona")}
                 </Flex>
 
                 {props.offer.user.userTable == UserTable.COMPANY && (
                   <Space>
                     <FontAwesomeIcon icon={faUniversity} color={primaryColor} />
-                    Antigüedad: {props.offer.user.tenure}
+                    {t("tenure")}: {props.offer.user.tenure}
                   </Space>
                 )}
               </>
@@ -106,7 +108,7 @@ export default function RequirementOfferListItemHeader({
                     icon={faMapMarkerAlt}
                     color={primaryColor}
                   ></FontAwesomeIcon>
-                  Ubicación: {props.offer.location}
+                  {`${t("locationColumn")}: ${props.offer.location}`}
                 </Space>
               )}
               <Space>
@@ -114,14 +116,14 @@ export default function RequirementOfferListItemHeader({
                   icon={faStopwatch}
                   color={primaryColor}
                 ></FontAwesomeIcon>
-                Entrega: {props.offer.deliveryTime}
+                {`${t("deliveryTime")}: ${props.offer.deliveryTime}`}
               </Space>
               <Space>
                 <FontAwesomeIcon
                   icon={faShieldAlt}
                   color={primaryColor}
                 ></FontAwesomeIcon>
-                Garantía: {props.offer.warranty}
+                {`${t("warranty")}: ${props.offer.warranty}`}
               </Space>
             </Flex>
           </Space>
@@ -149,7 +151,7 @@ export default function RequirementOfferListItemHeader({
                     price={props.offer.price}
                     coin={props.offer.coin}
                   />
-                  / Con IGV
+                  {props.offer.igv && "/ Con IGV"}
                 </Space>
               </Space>
               <Space
@@ -206,7 +208,7 @@ export default function RequirementOfferListItemHeader({
                   price={props.offer.price}
                   coin={props.offer.coin}
                 />
-                / Con IGV
+                {props.offer.igv && "/ Con IGV"}
               </Space>
             </Flex>
           )}
@@ -228,8 +230,9 @@ export default function RequirementOfferListItemHeader({
               fontSize: "1.2em",
             }}
           >
-            Oferta
-            {props.offer.state == OfferState.WINNER ? " elegida" : " cancelada"}
+            {props.offer.state == OfferState.WINNER
+              ? t("selectedOffer")
+              : t("canceledOffer")}
           </Flex>
         )}
     </>

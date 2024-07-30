@@ -17,6 +17,7 @@ import {
   WarrantyFilter,
 } from "../../../../utilities/types";
 import { requirementDetailContext } from "../../../../contexts/requirementDetailContext";
+import { useTranslation } from "react-i18next";
 
 interface RequirementDetailProps {
   offerList: OfferListItem[];
@@ -25,6 +26,7 @@ interface RequirementDetailProps {
 }
 
 export default function RequirementDetail(props: RequirementDetailProps) {
+  const { t } = useTranslation();
   const [offerFilters, setOfferFilters] = useState<OfferFilters>({
     price: PriceFilter.ALL,
     deliveryTime: DeliveryTimeFilter.ALL,
@@ -56,15 +58,14 @@ export default function RequirementDetail(props: RequirementDetailProps) {
           borderRadius: "10px",
         }}
       >
-        <b>Filtros de búsqueda: </b> Puede seleccionar opciones para ordenar y
-        filtrar ofertas
+        <b>{t("searchFilters")}: </b> {t("searchFiltersDesc")}
       </div>
       <RequirementOfferFilters
         onFilterChange={HandleonFilterChange}
       ></RequirementOfferFilters>
       <Divider style={{ margin: "15px 0" }} />
       <Title style={{ textAlign: "center", marginTop: "0" }} level={4}>
-        Ofertas recibidas
+        {t("receivedOffers")}
       </Title>
       <RequirementOfferList
         offers={props.offerList}

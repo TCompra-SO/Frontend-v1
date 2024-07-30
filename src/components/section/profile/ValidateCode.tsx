@@ -13,6 +13,7 @@ import showNotification from "../../../utilities/notification/showNotification";
 import { StepsItemContent } from "../../../models/Interfaces";
 import InputContainer from "../../containers/InputContainer";
 import ButtonContainer from "../../containers/ButtonContainer";
+import { useTranslation } from "react-i18next";
 
 interface ValidateCodeProps {
   isOpen: boolean;
@@ -62,6 +63,7 @@ export default function ValidateCode({
   onClose,
   email,
 }: ValidateCodeProps) {
+  const { t } = useTranslation();
   const { notification } = App.useApp();
   const [form] = Form.useForm();
   const [current, setCurrent] = useState(0);
@@ -123,7 +125,7 @@ export default function ValidateCode({
     const response = await usePost<SendCodeRequest>(sendCode, data);
     beginTimer();
     if (!response.error)
-      showNotification(notification, "success", "Se envió el código con éxito");
+      showNotification(notification, "success", t("sentValidationCode"));
     else showNotification(notification, "error", response.error);
   }
 
@@ -158,7 +160,11 @@ export default function ValidateCode({
       open={isOpen}
       closable={false}
       footer={[
-        <ButtonContainer key="back" onClick={handleClose} text="Cancelar" />,
+        <ButtonContainer
+          key="back"
+          onClick={handleClose}
+          text={t("cancelButton")}
+        />,
         <ButtonContainer
           key="submit"
           type="primary"
@@ -182,8 +188,8 @@ export default function ValidateCode({
                     : ""
                 }`
               : stepsIni[current].key == "done"
-              ? "Aceptar"
-              : "Siguiente"
+              ? t("acceptButton")
+              : t("next")
           }
         />,
       ]}
@@ -215,8 +221,8 @@ export default function ValidateCode({
               onClick={ResendCode}
             >
               {waiting
-                ? `Podrá reenviar el código en (${timer}) segundos`
-                : "Reenviar código"}
+                ? `${t("timerResendValidationCode")}(${timer}) ${t("seconds")}`
+                : t("resendValidationCode")}
             </a>
           </>
         )}

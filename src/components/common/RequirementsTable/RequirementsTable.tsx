@@ -43,7 +43,7 @@ export default function RequirementsTable(props: RequirementsTableProps) {
 
   const columns: TableProps<RequirementTableItem>["columns"] = [
     ImageColumn(visibility[RequirementTableColumns.IMAGE]),
-    NameColumn(visibility[RequirementTableColumns.NAME]),
+    NameColumn(props.type, visibility[RequirementTableColumns.NAME]),
     CategoryColumn(visibility[RequirementTableColumns.CATEGORY]),
     LocationColumn(visibility[RequirementTableColumns.LOCATION]),
     DateColumn(visibility[RequirementTableColumns.DATE]),
@@ -70,17 +70,17 @@ export default function RequirementsTable(props: RequirementsTableProps) {
         pageSizeOptions,
         showSizeChanger: true,
         // hideOnSinglePage: true,<
-        locale: {
-          items_per_page: `/ ${
-            props.type == RequirementType.GOOD
-              ? "Bienes"
-              : props.type == RequirementType.SERVICE
-              ? "Servicios"
-              : props.type == RequirementType.SALE
-              ? "Liquidaciones"
-              : "Puestos de trabajo"
-          } por página`,
-        },
+        // locale: {
+        //   items_per_page: `/ ${
+        //     props.type == RequirementType.GOOD
+        //       ? t("goods")
+        //       : props.type == RequirementType.SERVICE
+        //       ? t("services")
+        //       : props.type == RequirementType.SALE
+        //       ? t("sales")
+        //       : t("jobs")
+        //   } por página`,
+        // },
       }}
     ></Table>
   );

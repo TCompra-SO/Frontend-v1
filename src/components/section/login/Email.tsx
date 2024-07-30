@@ -1,22 +1,24 @@
 import { UserOutlined } from "@ant-design/icons";
 import { ProFormText } from "@ant-design/pro-components";
 import { Lengths } from "../../../utilities/lengths";
-import './items.css';
+import "./items.css";
 import { RuleObject } from "antd/es/form";
+import { useTranslation } from "react-i18next";
 
 interface EmailProps {
-  tlds: string []
+  tlds: string[];
 }
 
 export default function Email({ tlds }: EmailProps) {
+  const { t } = useTranslation();
 
   function validateDomain(_: RuleObject, value: string) {
     if (value && tlds.length > 0) {
-      const lastDotIndex: number = value.lastIndexOf('.');
+      const lastDotIndex: number = value.lastIndexOf(".");
       if (lastDotIndex !== -1) {
         const segment = value.substring(lastDotIndex + 1).toUpperCase();
         if (!tlds.includes(segment))
-          return Promise.reject(new Error('Ingresa un email válido '));
+          return Promise.reject(new Error(t("enterValidEmail")));
       }
     }
     return Promise.resolve();
@@ -25,33 +27,28 @@ export default function Email({ tlds }: EmailProps) {
   return (
     <ProFormText
       name="email"
+      label={t("email")}
+      labelCol={{ span: 0 }}
       fieldProps={{
-        size: 'large',
-        prefix: (
-          <UserOutlined
-            className={'prefixIcon'}
-          />
-        ),
+        size: "large",
+        prefix: <UserOutlined className={"prefixIcon"} />,
       }}
-      placeholder={'Correo electrónico'}
+      placeholder={t("email")}
       rules={[
         {
           required: true,
-          message: 'Ingresa un email válido',
           type: "email",
         },
         {
           min: Lengths.email.min,
-          message: `Ingresa mínimo ${Lengths.email.min} caracteres`
         },
         {
           max: Lengths.email.max,
-          message: `Ingresa máximo ${Lengths.email.max} caracteres`
         },
         {
-          validator: validateDomain
-        }
+          validator: validateDomain,
+        },
       ]}
     />
-  )
+  );
 }

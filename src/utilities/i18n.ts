@@ -1,0 +1,203 @@
+// src/i18n.ts
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+
+// Traducciones de ejemplo
+const resources = {
+  en: {
+    translation: {
+      // Column names
+      actionColumn: "Actions",
+      categoryColumn: "Category",
+      dateColumn: "Date",
+      imageColumn: "Image",
+      locationColumn: "Location",
+      nameColumn: "Name",
+      offersColumn: "Offers",
+      priceColumn: "Price",
+      stateColumn: "State",
+      // Requirement types
+      good: "Good",
+      service: "Service",
+      sale: "Sale",
+      job: "Job",
+      goods: "Goods",
+      services: "Services",
+      sales: "Sales",
+      jobs: "Jobs",
+      requirement: "Requirement",
+      offer: "Offer",
+      // User class
+      customer: "Customer",
+      seller: "Supplier",
+      // User table
+      company: "Company",
+      person: "Person",
+      // Rate questions
+      rateCanceledQuestion: "How was your communication with the ",
+      receivedGoodQuestion: "Did you receive the product?",
+      receivedServiceQuestion: "Did you receive the service?",
+      goodDescriptionQuestion: "Product description was accurate",
+      serviceDescriptionQuestion: "Service description was accurate",
+      supplierCommunicationQuestion: "Communication with the supplier was good",
+      deliverySpeedQuestion: "Delivery speed",
+      sendGoodQuestion: "Did you send the product?",
+      provideServiceQuestion: "Did you provide the service?",
+      customerCommunicationQuestion:
+        "Was there good communication with the client?",
+      paymentTimeQuestion: "Were the payments fast?",
+      recommendCustomerQuestion: "Would you recommend the customer?",
+      // Buttons
+      acceptButton: "Accept",
+      cancelButton: "Cancel",
+      submitRating: "Submit rating",
+      // Rules
+      enterValidEmail: "Enter a valid email",
+      // Sentences
+      rateYour: "Rate your ",
+      mustSelectAnswer: "You must select an answer",
+      sentValidationCode: "Code was sent successfully",
+      timerResendValidationCode: "You can resend the code in ",
+      resendValidationCode: "Resend code",
+      // Requirement
+      searchFilters: "Search filters",
+      searchFiltersDesc: "You can select options to sort and filter offers",
+      receivedOffers: "Received offers",
+      deliveryTime: "Delivery time",
+      expirationDate: "Expiration date",
+      warranty: "Warranty",
+      participantDetails: "Participant details",
+      selectionDate: "Selection date",
+      tenure: "Tenure",
+      selectedOffer: "Selected offer",
+      canceledOffer: "Canceled offer",
+      selectOfferConfirmation: "Are you sure about choosing the offer?",
+      selectDate: "Select a date",
+      // Other
+      yes: "Yes",
+      no: "No",
+      select: "Select",
+      reason: "Reason",
+      rate: "Rate",
+      paragraphSymbol: "More",
+      finish: "Finalize",
+      chat: "Chat",
+      logout: "Log out",
+      notifications: "Notifications",
+      myProfile: "My profile",
+      email: "Email",
+      password: "Password",
+      next: "Next",
+      seconds: "seconds",
+      all: "All",
+      ascending: "Ascending",
+      descending: "Descending",
+      sortedBy: "Sorted by",
+      notes: "Notes",
+    },
+  },
+  es: {
+    translation: {
+      // Column names
+      actionColumn: "Acciones",
+      categoryColumn: "Rubro",
+      dateColumn: "Fecha",
+      imageColumn: "Imagen",
+      locationColumn: "Ubicación",
+      nameColumn: "Nombre",
+      offersColumn: "Ofertas",
+      priceColumn: "Cotización",
+      stateColumn: "Estado",
+      // Requirement types
+      good: "Bien",
+      service: "Servicio",
+      sale: "Liquidación",
+      job: "Puesto de trabajo",
+      goods: "Bienes",
+      services: "Servicios",
+      sales: "Liquidaciones",
+      jobs: "Puestos de trabajo",
+      requirement: "Requerimiento",
+      offer: "Oferta",
+      // User class
+      customer: "Cliente",
+      seller: "Proveedor",
+      // User table
+      company: "Empresa",
+      person: "Persona",
+      // Rate questions
+      rateCanceledQuestion: "¿Cómo fue tu comunicación con el ",
+      receivedGoodQuestion: "¿Recibió el producto?",
+      receivedServiceQuestion: "¿Recibió el servicio?",
+      goodDescriptionQuestion: "La descripción del producto fue exacta",
+      serviceDescriptionQuestion: "La descripción del servicio fue exacta",
+      supplierCommunicationQuestion:
+        "La comunicación con el proveedor fue buena",
+      deliverySpeedQuestion: "La rapidez de la entrega",
+      sendGoodQuestion: "¿Envió el producto?",
+      provideServiceQuestion: "¿Prestó el servicio?",
+      customerCommunicationQuestion: "¿Hubo buena comunicación con el cliente?",
+      paymentTimeQuestion: "¿Los pagos fueron rápidos?",
+      recommendCustomerQuestion: "¿Recomendaría al cliente?",
+      // Buttons
+      acceptButton: "Aceptar",
+      cancelButton: "Cancelar",
+      submitRating: "Enviar calificación",
+      // Rules
+      enterValidEmail: "Ingrese un email válido",
+      // Sentences
+      rateYour: "Califica a tu ",
+      mustSelectAnswer: "Debe seleccionar una respuesta",
+      sentValidationCode: "Se envió el código con éxito",
+      timerResendValidationCode: "Podrá reenviar el código en ",
+      resendValidationCode: "Reenviar código",
+      // Requirement
+      searchFilters: "Filtros de búsqueda",
+      searchFiltersDesc:
+        "Puede seleccionar opciones para ordenar y filtrar ofertas",
+      receivedOffers: "Ofertas recibidas",
+      deliveryTime: "Tiempo de entrega",
+      expirationDate: "Fecha de expiración",
+      warranty: "Garantía",
+      participantDetails: "Detalles del ofertante",
+      selectionDate: "Fecha de selección",
+      tenure: "Antigüedad",
+      selectedOffer: "Oferta elegida",
+      canceledOffer: "Oferta cancelada",
+      selectOfferConfirmation: "¿Está seguro de elegir la oferta?",
+      selectDate: "Seleccione una fecha",
+      // Other
+      yes: "Sí",
+      no: "No",
+      select: "Seleccione",
+      reason: "Motivo",
+      rate: "Calificar",
+      paragraphSymbol: "Ver más",
+      finish: "Culminar",
+      chat: "Chat",
+      logout: "Salir",
+      notifications: "Notificaciones",
+      myProfile: "Mi perfil",
+      email: "Email",
+      password: "Contraseña",
+      next: "Siguiente",
+      seconds: "segundos",
+      all: "Todos",
+      ascending: "Ascendente",
+      descending: "Descendente",
+      sortedBy: "Ordenado por",
+      notes: "Observaciones",
+    },
+  },
+};
+
+i18n.use(initReactI18next).init({
+  resources,
+  lng: "en",
+  fallbackLng: "en",
+  interpolation: {
+    escapeValue: false,
+  },
+});
+
+export default i18n;

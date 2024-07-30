@@ -1,35 +1,33 @@
-import { LockOutlined } from '@ant-design/icons';
-import { ProFormText } from '@ant-design/pro-components';
-import { Lengths } from '../../../utilities/lengths';
-import './items.css';
+import { LockOutlined } from "@ant-design/icons";
+import { ProFormText } from "@ant-design/pro-components";
+import { Lengths } from "../../../utilities/lengths";
+import "./items.css";
+import { useTranslation } from "react-i18next";
 
 export default function Password() {
+  const { t } = useTranslation();
+
   return (
     <ProFormText.Password
       name="password"
+      label={t("password")}
+      labelCol={{ span: 0 }}
       fieldProps={{
-        size: 'large',
-        prefix: (
-          <LockOutlined
-            className={'prefixIcon'}
-          />
-        ),
+        size: "large",
+        prefix: <LockOutlined className={"prefixIcon"} />,
       }}
-      placeholder={'Contraseña'}
+      placeholder={t("password")}
       rules={[
         {
           required: true,
-          message: 'Campo obligatorio',
         },
         {
           min: Lengths.password.min,
-          message: `Ingresa mínimo ${Lengths.password.min} caracteres`
         },
         {
           max: Lengths.password.max,
-          message: `Ingresa máximo ${Lengths.password.max} caracteres`
-        }
+        },
       ]}
     />
-  )
+  );
 }

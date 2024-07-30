@@ -2,10 +2,13 @@ import { ColumnType } from "antd/es/table";
 import { RequirementTableItem } from "../../../../models/MainInterfaces";
 import TagContainer from "../../../containers/TagContainer";
 import { RequirementStateMeta } from "../../../../utilities/colors";
+import { useTranslation } from "react-i18next";
 
 export default function StateColumn(hidden: boolean = false) {
+  const { t } = useTranslation();
+
   const col: ColumnType<RequirementTableItem> = {
-    title: "Estado",
+    title: t("stateColumn"),
     key: "state",
     align: "center",
     dataIndex: "state",

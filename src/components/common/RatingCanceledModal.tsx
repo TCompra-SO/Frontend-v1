@@ -6,6 +6,7 @@ import RatingContainer from "../containers/RatingContainer";
 import { useState } from "react";
 import ButtonContainer from "../containers/ButtonContainer";
 import { getUserClass } from "../../utilities/globalFunctions";
+import { useTranslation } from "react-i18next";
 
 interface RatingCanceledModalProps {
   user: User;
@@ -16,6 +17,7 @@ interface RatingCanceledModalProps {
 }
 
 export default function RatingCanceledModal(props: RatingCanceledModalProps) {
+  const { t } = useTranslation();
   const [score, setScore] = useState(0);
   const style: React.CSSProperties = {
     padding: "15px",
@@ -40,17 +42,19 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
     <>
       <Flex align="center" style={style} justify="center">
         <b>
-          {`${userClass == UserClass.CUSTOMER ? "CLIENTE:" : "PROVEEDOR:"} ${
-            props.user.name
-          }`}
+          {`${
+            userClass == UserClass.CUSTOMER
+              ? `${t("customer").toUpperCase()}:`
+              : `${t("seller").toUpperCase()}:`
+          } ${props.user.name}`}
         </b>
       </Flex>
       <Flex align="center" justify="center" style={style}>
         {props.isOffer
-          ? "Oferta: "
+          ? `${t("offer").toUpperCase()}: `
           : props.type == RequirementType.SALE
-          ? "Liquidación: "
-          : "Requerimiento: "}
+          ? `${t("sale").toUpperCase()}: `
+          : `${t("requirement").toUpperCase()}: `}
         {props.requirementOffertitle}
       </Flex>
       <Flex
@@ -59,21 +63,26 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
         justify="center"
         style={{ fontSize: "0.9em", ...style }}
       >
-        ¿Cómo fue tu comunicación con el
-        {userClass == UserClass.CUSTOMER ? "cliente?" : "proveedor?"}
+        {`${
+          t("rateCanceledQuestion") +
+          (userClass == UserClass.CUSTOMER
+            ? t("customer").toLowerCase()
+            : t("seller").toLowerCase()) +
+          "?"
+        }`}
         <RatingContainer score={0} onChange={onScoreChange} />
       </Flex>
       <Flex justify="center">
         <ButtonContainer
           onClick={saveScore}
-          text="Enviar calificación"
+          text={t("submitRating")}
           block
           style={{ marginRight: "10px" }}
           type="primary"
         />
         <ButtonContainer
           onClick={props.onClose}
-          text="Cancelar"
+          text={t("cancelButton")}
           block
           type="primary"
         />

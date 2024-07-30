@@ -15,7 +15,7 @@ export default function ParagraphContainer(props: ParagraphContainerProps) {
       ellipsis={{
         rows: props.rows,
         expandable: props.expandable ? true : false,
-        symbol: props.symbol,
+        // symbol: props.symbol ?? t('paragraphSymbol'),
       }}
     >
       {props.text}

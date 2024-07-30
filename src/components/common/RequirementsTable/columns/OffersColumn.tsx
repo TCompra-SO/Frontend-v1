@@ -3,13 +3,16 @@ import { RequirementTableItem } from "../../../../models/MainInterfaces";
 import ButtonContainer from "../../../containers/ButtonContainer";
 import { Action } from "../../../../utilities/types";
 import { lightColor, primaryColor } from "../../../../utilities/colors";
+import { useTranslation } from "react-i18next";
 
 export default function OffersColumn(
   onButtonClick: (action: Action, data: any) => void,
   hidden: boolean = false
 ) {
+  const { t } = useTranslation();
+
   const col: ColumnType<RequirementTableItem> = {
-    title: "Ofertas",
+    title: t("offersColumn"),
     dataIndex: "numberOffers",
     key: "offers",
     align: "center",
