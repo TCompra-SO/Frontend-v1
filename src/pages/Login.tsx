@@ -22,7 +22,8 @@ import getTLDs from "../services/utils/topLevelDomains";
 import { setIsLoading } from "../redux/loadingSlice";
 import { linkColor } from "../utilities/colors";
 import useApi from "../hooks/useApi";
-import { MainRoutes, Routes } from "../utilities/routes";
+import { loginService, registerService } from "../services/authService";
+import { useApiParams } from "../models/Interfaces";
 
 const LoginType = {
   LOGIN: "login",
@@ -43,23 +44,49 @@ const tabItems: TabsProps["items"] = [
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loading, data, error, errorMsg, fetch } = useApi<RegisterRequest>(
-    `${import.meta.env.VITE_API_BASE_URL}${MainRoutes.auth}${
-      Routes.auth.login
-    }`,
-    "post",
-    Routes.auth.login,
-    { email: "al.h8500@gmail.com", password: "123456789" }
-  );
   const { notification } = App.useApp();
+  const [clicked, setClicked] = useState(false);
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
   const [docType, setDocType] = useState(DocType.DNI);
   const [tlds, setTlds] = useState([]);
   const [form] = Form.useForm();
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: null,
+    method: "post",
+    dataToSend: null,
+  });
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi<RegisterRequest>({
+      service: apiParams.service,
+      method: apiParams.method,
+      dataToSend: apiParams.dataToSend,
+    });
 
   useEffect(() => {
     GetTopLevelDomains();
   }, []);
+
+  useEffect(() => {
+    dispatch(setIsLoading(loading));
+    if (!loading) {
+      if (responseData && !loading) {
+        console.log(responseData, error);
+      }
+      afterSubmit();
+      setApiParams({
+        service: null,
+        method: "post",
+        dataToSend: null,
+      });
+    }
+  }, [loading]);
+
+  useEffect(() => {
+    if (clicked && apiParams.service) {
+      fetchData();
+      setClicked(false);
+    }
+  }, [clicked]);
 
   async function GetTopLevelDomains() {
     const response = await useGet(getTLDs);
@@ -79,9 +106,51 @@ export default function Login() {
     setDocType(type);
   }
 
-  async function HandleSubmit(values: any) {
-    await fetch();
-    console.log(data);
+  function HandleSubmit(values: any) {
+    if (loginType == LoginType.LOGIN) {
+      setApiParams({
+        service: loginService,
+        method: "post",
+        dataToSend: { email: values.email, password: values.password },
+      });
+    } else {
+      const data: RegisterRequest = {
+        email: values.email,
+        password: values.password,
+        profileType: "Premium",
+        userType: "admin",
+      };
+      if (docType == DocType.DNI) data.dni = values.document;
+      else data.ruc = values.document;
+      setApiParams({
+        service: registerService,
+        method: "post",
+        dataToSend: data,
+      });
+    }
+    setClicked(true);
+  }
+
+  function afterSubmit() {
+    console.log("call1", loading, responseData, error, errorMsg);
+    if (!error && responseData) {
+      console.log("call2", error, !error);
+      if (loginType == LoginType.REGISTER) {
+        dispatch(setUid(responseData));
+        showNotification(
+          notification,
+          "success",
+          "Usuario registrado exitosamente"
+        );
+        navigate("/profile", { state: { email: form.getFieldValue("email") } });
+      } else {
+        dispatch(setUser(responseData));
+        showNotification(notification, "success", "Bienvenido");
+        localStorage.setItem("token", responseData.token);
+      }
+    } else {
+      showNotification(notification, "error", errorMsg);
+    }
   }
 
   async function HandleSubmit2(values: any) {

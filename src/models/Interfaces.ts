@@ -12,6 +12,12 @@ export interface HttpObject {
   error: string | null;
 }
 
+export interface useApiParams<T = any> {
+  service: HttpService | null;
+  method: "get" | "post" | "put" | "delete";
+  dataToSend?: T;
+}
+
 export interface CountryObj {
   country: string;
   cities?: string[];
