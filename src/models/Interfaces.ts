@@ -122,3 +122,8 @@ export type ModalContent =
   | ModalCancelPurchaseOrder
   | ModalConfirmation
   | ModalNone;
+
+export interface HttpService {
+  url: string;
+  type: string;
+}
