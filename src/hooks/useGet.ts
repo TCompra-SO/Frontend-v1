@@ -1,8 +1,8 @@
-import { HttpObject } from "../models/HttpObject";
+import { HttpObject } from "../models/Interfaces";
 
 type CallbackFunction = () => Promise<HttpObject>;
 
-function useGet( CallbackFunction: CallbackFunction) {
+function useGet(CallbackFunction: CallbackFunction) {
   const response = CallbackFunction();
   return response;
 }

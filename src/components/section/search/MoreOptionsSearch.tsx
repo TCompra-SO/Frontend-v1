@@ -1,14 +1,16 @@
-import { Modal } from 'antd';
-import CitySearch from './CitySearch';
-import RequirementType from './RequirementType';
-import DateSearch from './DateSearch';
+import { Modal } from "antd";
+import CitySearch from "./CitySearch";
+import RequirementType from "./RequirementType";
+import DateSearch from "./DateSearch";
+import { useTranslation } from "react-i18next";
 
 interface MoreOptionsSearchProps {
-  visible: boolean,
-  onClose: () => void
+  visible: boolean;
+  onClose: () => void;
 }
 
 export default function MoreOptionsSearch(props: MoreOptionsSearchProps) {
+  const { t } = useTranslation();
 
   return (
     <Modal
@@ -20,8 +22,8 @@ export default function MoreOptionsSearch(props: MoreOptionsSearchProps) {
     >
       <CitySearch></CitySearch>
       <RequirementType></RequirementType>
-      <DateSearch placeholder='Fecha de inicio' name='startDate'/>
-      <DateSearch placeholder='Fecha de fin' name='endDate'/>
+      <DateSearch placeholder={t("startDate")} name="startDate" />
+      <DateSearch placeholder={t("endDate")} name="endDate" />
     </Modal>
-  )
+  );
 }

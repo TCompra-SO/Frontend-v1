@@ -1,31 +1,31 @@
 import axios, { AxiosResponse } from "axios";
-import { HttpObject } from "../../models/HttpObject";
 import httpErrorInterceptor from "../../interceptors/httpErrorInterceptor";
+import { HttpObject } from "../../models/Interfaces";
 
 export default async function httpRequest<T>(
   url: string,
-  method: 'get' | 'post' | 'put' | 'delete',
+  method: "get" | "post" | "put" | "delete",
   type: string,
-  dataToSend?: T,
+  dataToSend?: T
 ): Promise<HttpObject> {
   let loading = true;
   let data: any = null;
   let error: string | null = null;
-  
+
   try {
     let response: AxiosResponse;
-    
+
     switch (method) {
-      case 'get':
+      case "get":
         response = await axios.get(url);
         break;
-      case 'post':
+      case "post":
         response = await axios.post(url, dataToSend);
         break;
-      case 'put':
+      case "put":
         response = await axios.put(url, dataToSend);
         break;
-      case 'delete':
+      case "delete":
         response = await axios.delete(url);
         break;
     }
@@ -36,7 +36,7 @@ export default async function httpRequest<T>(
     const errorMsg = httpErrorInterceptor(err, type);
     error = errorMsg;
     loading = false;
-    console.error('HTTP Request Error:', err);
+    console.error("HTTP Request Error:", err);
   }
 
   return { data, loading, error };

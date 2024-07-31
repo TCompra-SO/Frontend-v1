@@ -25,8 +25,10 @@ const resources = {
       services: "Services",
       sales: "Sales",
       jobs: "Jobs",
-      requirement: "Requirement",
       offer: "Offer",
+      requirement: "Requirement",
+      requirements: "Requirements",
+      requirementType: "Requerimiento type",
       // User class
       customer: "Customer",
       seller: "Supplier",
@@ -59,7 +61,7 @@ const resources = {
       sentValidationCode: "Code was sent successfully",
       timerResendValidationCode: "You can resend the code in ",
       resendValidationCode: "Resend code",
-      // Requirement
+
       searchFilters: "Search filters",
       searchFiltersDesc: "You can select options to sort and filter offers",
       receivedOffers: "Received offers",
@@ -94,6 +96,9 @@ const resources = {
       descending: "Descending",
       sortedBy: "Sorted by",
       notes: "Notes",
+      search: "Search",
+      startDate: "Start date",
+      endDate: "End date",
     },
   },
   es: {
@@ -117,8 +122,10 @@ const resources = {
       services: "Servicios",
       sales: "Liquidaciones",
       jobs: "Puestos de trabajo",
-      requirement: "Requerimiento",
       offer: "Oferta",
+      requirement: "Requerimiento",
+      requirements: "Requerimientos",
+      requirementType: "Tipo de requerimiento",
       // User class
       customer: "Cliente",
       seller: "Proveedor",
@@ -151,7 +158,7 @@ const resources = {
       sentValidationCode: "Se envió el código con éxito",
       timerResendValidationCode: "Podrá reenviar el código en ",
       resendValidationCode: "Reenviar código",
-      // Requirement
+
       searchFilters: "Filtros de búsqueda",
       searchFiltersDesc:
         "Puede seleccionar opciones para ordenar y filtrar ofertas",
@@ -187,6 +194,9 @@ const resources = {
       descending: "Descendente",
       sortedBy: "Ordenado por",
       notes: "Observaciones",
+      search: "Buscar",
+      startDate: "Fecha de inicio",
+      endDate: "Fecha de fin",
     },
   },
 };
