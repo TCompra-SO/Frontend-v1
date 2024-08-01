@@ -33,7 +33,7 @@ export default function ActionColumn(
               items: ActionByState[record.state].map((action: Action) => {
                 return {
                   key: action,
-                  label: ActionLabel[action],
+                  label: t(ActionLabel[action]),
                   onClick: () => onButtonClick(action, record),
                 };
               }),

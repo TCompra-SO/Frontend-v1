@@ -18,9 +18,9 @@ import { primaryColor, lightColor, rowColor } from "../utilities/colors";
 import { SearchOutlined } from "@ant-design/icons";
 import { OfferListItem, RequirementTableItem } from "../models/MainInterfaces";
 import { useState } from "react";
-import { commonModalWidth } from "../utilities/globals";
 import { ModalContent } from "../models/Interfaces";
 import RateModalTitleContainer from "../components/containers/RateModalTitleContainer";
+import { useTranslation } from "react-i18next";
 
 const requirements: RequirementTableItem[] = [
   {
@@ -441,7 +441,7 @@ const offerList: OfferListItem[] = [
 ];
 
 export default function Requirements() {
-  const [modalWidth, setModalWidth] = useState(commonModalWidth);
+  const { t } = useTranslation();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalTitle, setModalTitle] = useState<React.ReactNode>("");
   const [dataModal, setDataModal] = useState<ModalContent>({
@@ -457,7 +457,6 @@ export default function Requirements() {
     action: Action,
     requirement: RequirementTableItem
   ) {
-    setModalWidth(commonModalWidth);
     switch (action) {
       case Action.SHOW_OFFERS: {
         setDataModal({
@@ -476,11 +475,9 @@ export default function Requirements() {
         setIsOpenModal(true);
         setModalTitle(
           <>
-            Resumen
+            {t("summary")}
             <br />
-            <div style={{ fontWeight: "normal" }}>
-              Detalles de oferta ganadora
-            </div>
+            <div style={{ fontWeight: "normal" }}>{t("winnigOfferDetail")}</div>
           </>
         );
         break;
@@ -491,8 +488,7 @@ export default function Requirements() {
           data: { requirementId: requirement.key },
         });
         setIsOpenModal(true);
-        setModalTitle("Republicar");
-        setModalWidth("250px");
+        setModalTitle(t("republish"));
         break;
       }
       case Action.FINISH: {
@@ -509,23 +505,20 @@ export default function Requirements() {
         setModalTitle(
           <RateModalTitleContainer isOffer={false} type={requirement.type} /> //r3v
         );
-        setModalWidth("450px");
         break;
       }
       case Action.DELETE: {
         setDataModal({
           type: ModalTypes.CONFIRM,
           data: {
-            // onAnswer: ok,
             onAnswer: (ok: boolean) => {
               if (!ok) return;
               deleteRequirement(requirement.key);
             },
-            text: "¿Está seguro de eliminar el requerimiento?",
+            text: t("deleteRequirementConfirmation"),
           },
         });
-        setModalTitle("Aviso");
-        setModalWidth("350px");
+        setModalTitle("");
         setIsOpenModal(true);
         break;
       }
@@ -545,7 +538,6 @@ export default function Requirements() {
         isOpen={isOpenModal}
         onClose={handleCloseModal}
         className="custom-scroll"
-        width={modalWidth}
         style={{
           maxHeight: "75vh",
           overflowY: "scroll",
@@ -575,13 +567,14 @@ export default function Requirements() {
                   icon={faPeopleCarryBox}
                 ></FontAwesomeIcon>
                 <Title level={3} style={{ margin: "0" }}>
-                  Listado de Bienes
+                  {`${t("listOf")} ${t("goods")}`}
+                  {/* r3v */}
                 </Title>
               </Flex>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
               <InputContainer
-                placeholder="Buscar..."
+                placeholder={`${t("search")}...`}
                 prefix={<SearchOutlined />}
                 style={{
                   background: rowColor,

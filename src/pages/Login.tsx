@@ -8,22 +8,19 @@ import Password from "../components/section/login/Password";
 import { useEffect, useState } from "react";
 import Dni from "../components/section/login/Dni";
 import { TabsProps } from "antd/lib";
-import usePost from "../hooks/usePost";
-import { RegisterRequest } from "../models/Requests";
-import login from "../services/auth/login.service";
+import { LoginRequest, RegisterRequest } from "../models/Requests";
 import { useDispatch } from "react-redux";
 import { setUser, setUid } from "../redux/userSlice";
 import { DocType } from "../utilities/types";
-import register from "../services/auth/register.service";
 import { useNavigate } from "react-router-dom";
 import showNotification from "../utilities/notification/showNotification";
-import useGet from "../hooks/useGet";
-import getTLDs from "../services/utils/topLevelDomains";
 import { setIsLoading } from "../redux/loadingSlice";
 import { linkColor } from "../utilities/colors";
 import useApi from "../hooks/useApi";
 import { loginService, registerService } from "../services/authService";
 import { useApiParams } from "../models/Interfaces";
+import { TLDsService } from "../services/utilService";
+import { useTranslation } from "react-i18next";
 
 const LoginType = {
   LOGIN: "login",
@@ -44,16 +41,18 @@ const tabItems: TabsProps["items"] = [
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { notification } = App.useApp();
-  const [clicked, setClicked] = useState(false);
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
   const [docType, setDocType] = useState(DocType.DNI);
   const [tlds, setTlds] = useState([]);
   const [form] = Form.useForm();
-  const [apiParams, setApiParams] = useState<useApiParams>({
-    service: null,
-    method: "post",
-    dataToSend: null,
+  const [apiParams, setApiParams] = useState<
+    useApiParams<LoginRequest | RegisterRequest>
+  >({
+    service: TLDsService,
+    method: "get",
+    // dataToSend: null,
   });
   const { loading, responseData, error, errorMsg, fetchData } =
     useApi<RegisterRequest>({
@@ -63,38 +62,32 @@ export default function Login() {
     });
 
   useEffect(() => {
-    GetTopLevelDomains();
-  }, []);
+    if (responseData) {
+      if (apiParams.service == TLDsService)
+        setTlds(responseData.split("\n").slice(1, -1));
+      else if (
+        apiParams.service == loginService ||
+        apiParams.service == registerService
+      )
+        afterSubmit();
+    } else if (error) {
+      showNotification(notification, "error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
 
   useEffect(() => {
     dispatch(setIsLoading(loading));
-    if (!loading) {
-      if (responseData && !loading) {
-        console.log(responseData, error);
-      }
-      afterSubmit();
-      setApiParams({
-        service: null,
-        method: "post",
-        dataToSend: null,
-      });
-    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
   useEffect(() => {
-    if (clicked && apiParams.service) {
-      fetchData();
-      setClicked(false);
-    }
-  }, [clicked]);
-
-  async function GetTopLevelDomains() {
-    const response = await useGet(getTLDs);
-    if (!response.error) setTlds(response.data.split("\n").slice(1, -1));
-  }
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
 
   function changeLabel(loginType: string) {
-    return loginType == LoginType.LOGIN ? "Iniciar sesión" : "Registrarse";
+    return loginType == LoginType.LOGIN ? t("login") : t("register");
   }
 
   function resetFields() {
@@ -108,10 +101,14 @@ export default function Login() {
 
   function HandleSubmit(values: any) {
     if (loginType == LoginType.LOGIN) {
+      const data: LoginRequest = {
+        email: values.email,
+        password: values.password,
+      };
       setApiParams({
         service: loginService,
         method: "post",
-        dataToSend: { email: values.email, password: values.password },
+        dataToSend: data,
       });
     } else {
       const data: RegisterRequest = {
@@ -128,77 +125,17 @@ export default function Login() {
         dataToSend: data,
       });
     }
-    setClicked(true);
   }
 
   function afterSubmit() {
-    console.log("call1", loading, responseData, error, errorMsg);
-    if (!error && responseData) {
-      console.log("call2", error, !error);
-      if (loginType == LoginType.REGISTER) {
-        dispatch(setUid(responseData));
-        showNotification(
-          notification,
-          "success",
-          "Usuario registrado exitosamente"
-        );
-        navigate("/profile", { state: { email: form.getFieldValue("email") } });
-      } else {
-        dispatch(setUser(responseData));
-        showNotification(notification, "success", "Bienvenido");
-        localStorage.setItem("token", responseData.token);
-      }
+    if (loginType == LoginType.REGISTER) {
+      dispatch(setUid(responseData));
+      showNotification(notification, "success", t("registerUserSuccess"));
+      navigate("/profile", { state: { email: form.getFieldValue("email") } });
     } else {
-      showNotification(notification, "error", errorMsg);
-    }
-  }
-
-  async function HandleSubmit2(values: any) {
-    let data: RegisterRequest;
-    let callbackFn = null;
-
-    if (loginType == LoginType.LOGIN) {
-      data = { email: values.email, password: values.password };
-      callbackFn = login;
-    } else {
-      data = {
-        email: values.email,
-        password: values.password,
-        profileType: "Premium",
-        userType: "admin",
-      };
-      if (docType == DocType.DNI) data.dni = values.document;
-      else data.ruc = values.document;
-      callbackFn = register;
-    }
-
-    dispatch(setIsLoading(true));
-
-    try {
-      const registerResp = await usePost<RegisterRequest>(callbackFn, data);
-
-      dispatch(setIsLoading(false));
-
-      if (!registerResp.error) {
-        if (loginType == LoginType.REGISTER) {
-          dispatch(setUid(registerResp.data));
-          showNotification(
-            notification,
-            "success",
-            "Usuario registrado exitosamente"
-          );
-          navigate("/profile", { state: { email: values.email } });
-        } else {
-          dispatch(setUser(registerResp.data));
-          showNotification(notification, "success", "Bienvenido");
-          localStorage.setItem("token", registerResp.data.token);
-        }
-      } else {
-        showNotification(notification, "error", registerResp.error);
-      }
-    } catch (error) {
-      console.error("Error en login:", error);
-      dispatch(setIsLoading(false));
+      dispatch(setUser(responseData));
+      showNotification(notification, "success", t("welcome"));
+      localStorage.setItem("token", responseData.token);
     }
   }
 
@@ -256,7 +193,7 @@ export default function Login() {
                   color: linkColor,
                 }}
               >
-                ¿Olvidó su contraseña?
+                {t("forgotPassword")}
               </a>
             </>
           )}

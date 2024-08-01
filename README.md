@@ -541,9 +541,9 @@ Interfaz para los datos de un país.
 
 Interfaz para solicitar la lista de países.
 
-| Nombre | Tipo     | Descripción                                                   |
-| ------ | -------- | ------------------------------------------------------------- |
-| verify | `1 \| 2` | 1: Sólo nombre de los países. 2: Incluir la lista de ciudades |
+| Nombre | Tipo                   | Descripción                                                    |
+| ------ | ---------------------- | -------------------------------------------------------------- |
+| verify | `CountriesRequestType` | Tipo de solicitud para obtener solo países o países y ciudades |
 
 ##### StepsItemContent
 

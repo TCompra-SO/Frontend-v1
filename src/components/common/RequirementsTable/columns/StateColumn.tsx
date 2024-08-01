@@ -18,7 +18,7 @@ export default function StateColumn(hidden: boolean = false) {
     render: (_, { state }) => (
       <TagContainer
         color={RequirementStateMeta[state].background}
-        text={RequirementStateMeta[state].label}
+        text={t(RequirementStateMeta[state].label)}
         style={{
           width: "70px",
           textAlign: "center",

@@ -1,7 +1,5 @@
 import { App, Col, Flex, Form, Row, Space } from "antd";
-import usePost from "../hooks/usePost";
 import { ProfileRequest, SendCodeRequest } from "../models/Requests";
-import createProfile from "../services/auth/profile.service";
 import moment from "moment";
 import { dateFormat } from "../utilities/globals";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,11 +8,14 @@ import { useEffect, useState } from "react";
 import showNotification from "../utilities/notification/showNotification";
 import ValidateCode from "../components/section/profile/ValidateCode";
 import { useLocation, useNavigate } from "react-router-dom";
-import sendCode from "../services/auth/sendCode.service";
 import backgroundImage from "../assets/images/silder-tc-04.jpg";
 import Title from "antd/es/typography/Title";
-import getCountries from "../services/utils/country.service";
-import { CountriesRequest, CountryObj, HttpObject } from "../models/Interfaces";
+
+import {
+  CountriesRequest,
+  CountryObj,
+  useApiParams,
+} from "../models/Interfaces";
 import { setIsLoading } from "../redux/loadingSlice";
 import ButtonContainer from "../components/containers/ButtonContainer";
 import DatePickerContainer from "../components/containers/DatePickerContainer";
@@ -22,26 +23,27 @@ import InputContainer from "../components/containers/InputContainer";
 import { Lengths } from "../utilities/lengths";
 import { validateNumber } from "../utilities/globalFunctions";
 import SelectContainer from "../components/containers/SelectContainer";
+import useApi from "../hooks/useApi";
+import { countriesService } from "../services/utilService";
+import { profileService, sendCodeService } from "../services/authService";
+import { useTranslation } from "react-i18next";
+import { CountriesRequestType } from "../utilities/types";
 
 const rulesBirthdate = [
   {
     required: true,
-    message: "Campo obligatorio",
   },
 ];
 
 const rulesPhone = [
   {
     required: true,
-    message: "Campo obligatorio",
   },
   {
     min: Lengths.phone.min,
-    message: `Ingresa mínimo ${Lengths.phone.min} caracteres`,
   },
   {
     max: Lengths.phone.max,
-    message: `Ingresa máximo ${Lengths.phone.max} caracteres`,
   },
   {
     validator: validateNumber,
@@ -51,14 +53,12 @@ const rulesPhone = [
 const rulesCountry = [
   {
     required: true,
-    message: "Campo obligatorio",
   },
 ];
 
 const rulesCity = [
   {
     required: true,
-    message: "Campo obligatorio",
   },
 ];
 
@@ -67,7 +67,8 @@ export default function Profile() {
   const dispatch = useDispatch();
   const { state } = useLocation();
   const { email } = state;
-  // const email = 'aall@gmail.com';
+  // const email = "aall@gmail.com";
+  const { t } = useTranslation();
   const { notification } = App.useApp();
   const [form] = Form.useForm();
   const uid = useSelector((state: MainState) => state.user.uid);
@@ -76,35 +77,69 @@ export default function Profile() {
   const [countries, setCountries] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
   const [countryObj, setCountryObj] = useState<{ [key: string]: string[] }>({});
+  const [apiParams, setApiParams] = useState<
+    useApiParams<CountriesRequest | ProfileRequest | SendCodeRequest>
+  >({
+    service: countriesService,
+    method: "post",
+    dataToSend: { verify: CountriesRequestType.COUNTRY_CITY },
+  });
+  const { loading, responseData, error, errorMsg, fetchData } = useApi<
+    CountriesRequest | ProfileRequest | SendCodeRequest
+  >({
+    service: apiParams.service,
+    method: apiParams.method,
+    dataToSend: apiParams.dataToSend,
+  });
 
   useEffect(() => {
-    GetCountriesAndCities();
+    if (apiParams.service == profileService) dispatch(setIsLoading(loading));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [loading]);
 
-  async function GetCountriesAndCities() {
-    const request: CountriesRequest = { verify: 2 };
-    const response: HttpObject = await usePost<CountriesRequest>(
-      getCountries,
-      request
-    );
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      if (apiParams.service == countriesService) {
+        SetCountriesAndCities();
+      } else if (apiParams.service == profileService) {
+        showNotification(notification, "success", t("createProfileSuccess"));
+        setProfileSuccess(true);
+      } else if (apiParams.service == sendCodeService) {
+        showNotification(notification, "success", t("sendCodeSuccess"));
+      }
+    } else if (error) {
+      if (
+        apiParams.service == profileService ||
+        apiParams.service == sendCodeService
+      ) {
+        showNotification(notification, "error", errorMsg);
+        if (apiParams.service == profileService) setProfileSuccess(false);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
+
+  function SetCountriesAndCities() {
     let cityList: string[] = [];
 
-    if (!response.error) {
-      const countryList: string[] = response.data.map(
-        (country: CountryObj, i: number) => {
-          setCountryObj((prevCountryObj) => ({
-            ...prevCountryObj,
-            [country.country]: country.cities!,
-          }));
-          if (i == 0) cityList = country.cities!;
-          return country.country;
-        }
-      );
-      setCountries(countryList);
-      setCities(cityList);
-      if (countryList.length) form.setFieldValue("country", countryList[0]);
-    }
+    const countryList: string[] = responseData.map(
+      (country: CountryObj, i: number) => {
+        setCountryObj((prevCountryObj) => ({
+          ...prevCountryObj,
+          [country.country]: country.cities!,
+        }));
+        if (i == 0) cityList = country.cities!;
+        return country.country;
+      }
+    );
+    setCountries(countryList);
+    setCities(cityList);
+    if (countryList.length) form.setFieldValue("country", countryList[0]);
   }
 
   function handleCountryChange(newCountry: string) {
@@ -123,8 +158,6 @@ export default function Profile() {
   }
 
   async function HandleSubmit(values: any) {
-    dispatch(setIsLoading(true));
-
     const data: ProfileRequest = {
       uid: uid,
       birthdate: moment(values.birthdate).format(dateFormat),
@@ -132,16 +165,11 @@ export default function Profile() {
       city: values.city,
       phone: values.phone,
     };
-    const profileResponse = await usePost<ProfileRequest>(createProfile, data);
-    dispatch(setIsLoading(false));
-
-    if (!profileResponse.error) {
-      showNotification(notification, "success", "Perfil creado con éxito");
-      setProfileSuccess(true);
-    } else {
-      showNotification(notification, "error", profileResponse.error);
-      setProfileSuccess(false);
-    }
+    setApiParams({
+      service: profileService,
+      method: "post",
+      dataToSend: data,
+    });
   }
 
   async function SendValidationCode() {
@@ -149,12 +177,11 @@ export default function Profile() {
       email: email,
       type: "identity_verified",
     };
-    const sendCodeResp = await usePost<SendCodeRequest>(sendCode, data);
-    if (!sendCodeResp.error) {
-      showNotification(notification, "success", "Se envió el código con éxito");
-    } else {
-      showNotification(notification, "error", sendCodeResp.error);
-    }
+    setApiParams({
+      service: sendCodeService,
+      method: "post",
+      dataToSend: data,
+    });
   }
 
   return (
@@ -188,9 +215,11 @@ export default function Profile() {
               requiredMark={false}
               onFinish={HandleSubmit}
             >
-              <Title style={{ marginBottom: "50px" }}>Crea tu perfil</Title>
+              <Title style={{ marginBottom: "50px" }}>
+                {t("createYourProfile")}
+              </Title>
               <Form.Item
-                label="Fecha de nacimiento"
+                label={t("birthdate")}
                 name="birthdate"
                 rules={rulesBirthdate}
               >
@@ -200,7 +229,7 @@ export default function Profile() {
                   style={{ width: "100%" }}
                 />
               </Form.Item>
-              <Form.Item label="Teléfono" name="phone" rules={rulesPhone}>
+              <Form.Item label={t("phone")} name="phone" rules={rulesPhone}>
                 <Space.Compact>
                   <InputContainer
                     style={{ width: "20%" }}
@@ -211,9 +240,13 @@ export default function Profile() {
                 </Space.Compact>
               </Form.Item>
 
-              <Form.Item label="País" name="country" rules={rulesCountry}>
+              <Form.Item
+                label={t("country")}
+                name="country"
+                rules={rulesCountry}
+              >
                 <SelectContainer
-                  placeholder="Seleccionar"
+                  placeholder={t("select")}
                   onChange={handleCountryChange}
                   options={countries.map((country) => {
                     return { label: country, value: country };
@@ -222,7 +255,7 @@ export default function Profile() {
               </Form.Item>
               <Form.Item label="Ciudad" name="city" rules={rulesCity}>
                 <SelectContainer
-                  placeholder="Seleccionar"
+                  placeholder={t("select")}
                   options={cities.map((city) => {
                     return { label: city, value: city, key: city };
                   })}
@@ -237,7 +270,7 @@ export default function Profile() {
                     style={{ marginTop: "30px", height: "50px" }}
                     shape="round"
                     block={true}
-                    text="Guardar"
+                    text={t("saveButton")}
                   />
                 )}
                 {profileSuccess && (
@@ -248,7 +281,7 @@ export default function Profile() {
                     shape="round"
                     block={true}
                     disabled={false}
-                    text="Enviar código de validación"
+                    text={t("sendValidationCode")}
                   />
                 )}
               </Form.Item>

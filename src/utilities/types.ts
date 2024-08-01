@@ -1,4 +1,9 @@
-import { allSelect } from "./globals";
+import {
+  allSelect,
+  commonModalWidth,
+  mediumModalWidth,
+  smallModalWidth,
+} from "./globals";
 
 export const DocType = {
   DNI: "DNI",
@@ -36,6 +41,19 @@ export enum ModalTypes {
   CONFIRM = 9,
 }
 
+export const ModalWidth = {
+  [ModalTypes.NONE]: 0,
+  [ModalTypes.DETAILED_REQUIREMENT]: commonModalWidth,
+  [ModalTypes.VALIDATE_CODE]: mediumModalWidth,
+  [ModalTypes.CANCEL_PURCHASE_ORDER]: mediumModalWidth,
+  [ModalTypes.SELECT_OFFER]: commonModalWidth,
+  [ModalTypes.OFFER_SUMMARY]: commonModalWidth,
+  [ModalTypes.REPUBLISH_REQUIREMENT]: smallModalWidth,
+  [ModalTypes.RATE_CANCELED]: mediumModalWidth,
+  [ModalTypes.RATE_USER]: mediumModalWidth,
+  [ModalTypes.CONFIRM]: mediumModalWidth,
+};
+
 export enum UserTable {
   COMPANY = 0,
   PERSON = 1,
@@ -54,15 +72,15 @@ export enum Action {
 }
 
 export const ActionLabel = {
-  [Action.SHOW_OFFERS]: "Ver ofertas",
-  [Action.DELETE]: "Eliminar",
-  [Action.CANCEL_REQUIREMENT]: "Cancelar requerimiento",
-  [Action.FINISH]: "Culminar",
-  [Action.REPUBLISH]: "Republicar",
-  [Action.SHOW_SUMMARY]: "Ver resumen",
-  [Action.RATE_CANCELED]: "Calificar",
-  [Action.CANCEL_PURCHASE_ORDER]: "Cancelar orden de compra",
-  [Action.SELECT_OFFER]: "Seleccionar oferta",
+  [Action.SHOW_OFFERS]: "showOffers",
+  [Action.DELETE]: "delete",
+  [Action.CANCEL_REQUIREMENT]: "cancelRequirement",
+  [Action.FINISH]: "finish",
+  [Action.REPUBLISH]: "republish",
+  [Action.SHOW_SUMMARY]: "showSummary",
+  [Action.RATE_CANCELED]: "rate",
+  [Action.CANCEL_PURCHASE_ORDER]: "cancelPurchaseOrder",
+  [Action.SELECT_OFFER]: "selectOffer",
 };
 
 export enum OfferState {
@@ -130,4 +148,9 @@ export enum UserClass {
 export enum YesNo {
   YES = 1,
   NO = 0,
+}
+
+export enum CountriesRequestType {
+  COUNTRY = 1,
+  COUNTRY_CITY = 2,
 }

@@ -5,15 +5,17 @@ import {
 } from "@ant-design/icons";
 import { App, Divider, Flex, Form, Modal, Steps, StepsProps } from "antd";
 import { useEffect, useState } from "react";
-import usePost from "../../../hooks/usePost";
 import { SendCodeRequest, ValidateCodeRequest } from "../../../models/Requests";
-import validateCode from "../../../services/auth/validateCode.service";
-import sendCode from "../../../services/auth/sendCode.service";
 import showNotification from "../../../utilities/notification/showNotification";
-import { StepsItemContent } from "../../../models/Interfaces";
-import InputContainer from "../../containers/InputContainer";
+import { StepsItemContent, useApiParams } from "../../../models/Interfaces";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
+import useApi from "../../../hooks/useApi";
+import {
+  sendCodeService,
+  validateCodeService,
+} from "../../../services/authService";
+import OTPInputContainer from "../../containers/OTPInputContainer";
 
 interface ValidateCodeProps {
   isOpen: boolean;
@@ -71,6 +73,19 @@ export default function ValidateCode({
   const [timer, setTimer] = useState(expireInSeconds);
   const [timerToValidate, setTimerToValidate] = useState(timeoutToValidate);
   const [validationSuccess, setValidationSuccess] = useState(false);
+  const [apiParams, setApiParams] = useState<
+    useApiParams<SendCodeRequest | ValidateCodeRequest>
+  >({
+    service: null,
+    method: "get",
+  });
+  const { responseData, error, errorMsg, fetchData } = useApi<
+    ValidateCodeRequest | SendCodeRequest
+  >({
+    service: apiParams.service,
+    method: apiParams.method,
+    dataToSend: apiParams.dataToSend,
+  });
   let intervalId: number = 0;
   let intervalIdValidate: number = 0;
 
@@ -85,6 +100,31 @@ export default function ValidateCode({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      if (apiParams.service == sendCodeService) {
+        beginTimer();
+        showNotification(notification, "success", t("sentValidationCode"));
+      } else if (apiParams.service == validateCodeService) {
+        setValidationSuccess(true);
+        next();
+        form.resetFields();
+      }
+    } else if (error) {
+      showNotification(notification, "error", errorMsg);
+      if (apiParams.service == validateCodeService) {
+        setValidationSuccess(false);
+        form.resetFields();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
+
   function next() {
     setCurrent((current) => {
       const next: number = current + 1;
@@ -97,36 +137,35 @@ export default function ValidateCode({
     onClose(validationSuccess);
   }
 
-  async function ValidateCode() {
-    beginTimerToValidate();
+  function ValidateCode() {
     const code = form.getFieldValue("code");
+    console.log(code);
+    if (!code) return;
+    beginTimerToValidate();
+
     const data: ValidateCodeRequest = {
       email: email,
       type: "identity_verified",
       code: code,
     };
-    const response = await usePost<ValidateCodeRequest>(validateCode, data);
-    if (!response.error) {
-      setValidationSuccess(true);
-      next();
-    } else {
-      setValidationSuccess(false);
-      showNotification(notification, "error", response.error);
-    }
-    form.resetFields();
+    setApiParams({
+      service: validateCodeService,
+      method: "post",
+      dataToSend: data,
+    });
   }
 
-  async function ResendCode() {
+  function ResendCode() {
     setWaiting(true);
     const data: SendCodeRequest = {
       email: email,
       type: "identity_verified",
     };
-    const response = await usePost<SendCodeRequest>(sendCode, data);
-    beginTimer();
-    if (!response.error)
-      showNotification(notification, "success", t("sentValidationCode"));
-    else showNotification(notification, "error", response.error);
+    setApiParams({
+      service: sendCodeService,
+      method: "post",
+      dataToSend: data,
+    });
   }
 
   function beginTimer() {
@@ -182,7 +221,7 @@ export default function ValidateCode({
           }
           text={
             stepsIni[current].key == "val"
-              ? `Validar${
+              ? `${t("validate")}${
                   timerToValidate != timeoutToValidate
                     ? ` (${timerToValidate.toFixed(0)})`
                     : ""
@@ -207,7 +246,7 @@ export default function ValidateCode({
           <>
             <Form form={form}>
               <Form.Item name="code">
-                <InputContainer otp={true} length={6} />
+                <OTPInputContainer length={6} />
               </Form.Item>
             </Form>
 

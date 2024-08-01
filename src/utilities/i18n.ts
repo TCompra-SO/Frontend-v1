@@ -29,6 +29,14 @@ const resources = {
       requirement: "Requirement",
       requirements: "Requirements",
       requirementType: "Requerimiento type",
+      // Requirement state
+      selected: "Selected",
+      finished: "Finished",
+      published: "Published",
+      expired: "Expired",
+      canceled: "Canceled",
+      eliminated: "Eliminated",
+      dispute: "In dispute",
       // User class
       customer: "Customer",
       seller: "Supplier",
@@ -52,16 +60,34 @@ const resources = {
       // Buttons
       acceptButton: "Accept",
       cancelButton: "Cancel",
-      submitRating: "Submit rating",
+      saveButton: "Save",
       // Rules
       enterValidEmail: "Enter a valid email",
-      // Sentences
-      rateYour: "Rate your ",
-      mustSelectAnswer: "You must select an answer",
+      // Error messages
+      errorOccurred: "An error occurred",
+      incorrectEmailPassword: "Incorrect email or password",
+      existingProfile: "This user already has a profile created",
+      invalidDocNumber: "Invalid document number",
+      existingEmail: "This email has already been registered",
+      existingDocNumber: "This document number has already been registered",
+      completeProfile: "Complete your profile before validating your account",
+      generateCodeAgain: "Generate the code again",
+      userAlreadyValidated: "This use has already been validated",
+      generateCodeFirst: "Generate a validation code first",
+      expiredCode: "The code has expired; please generate a new one",
+      incorrectCode: "The code entered is incorrect",
+      // Profile
       sentValidationCode: "Code was sent successfully",
       timerResendValidationCode: "You can resend the code in ",
       resendValidationCode: "Resend code",
-
+      createProfileSuccess: "Profile created successfully",
+      sendCodeSuccess: "Code sent successfully",
+      createYourProfile: "Create your profile",
+      sendValidationCode: "Send validation code",
+      // Requirement
+      submitRating: "Submit rating",
+      rateYour: "Rate your ",
+      mustSelectAnswer: "You must select an answer",
       searchFilters: "Search filters",
       searchFiltersDesc: "You can select options to sort and filter offers",
       receivedOffers: "Received offers",
@@ -75,6 +101,19 @@ const resources = {
       canceledOffer: "Canceled offer",
       selectOfferConfirmation: "Are you sure about choosing the offer?",
       selectDate: "Select a date",
+      winnigOfferDetail: "Winning offer details",
+      deleteRequirementConfirmation: "Are sure about deleting the requirement?",
+      // Login
+      registerUserSuccess: "User registered successfully",
+      welcome: "Welcome",
+      forgotPassword: "Forgot password?",
+      // Action
+      showOffers: "Show offers",
+      delete: "Delete",
+      cancelRequirement: "Cancel requirement",
+      showSummary: "Show summary",
+      cancelPurchaseOrder: "Cancel purchase order",
+      selectOffer: "Select offer",
       // Other
       yes: "Yes",
       no: "No",
@@ -99,6 +138,16 @@ const resources = {
       search: "Search",
       startDate: "Start date",
       endDate: "End date",
+      validate: "Validate",
+      login: "Log in",
+      register: "Register",
+      birthdate: "Birthdate",
+      phone: "Phone",
+      country: "Country",
+      city: "City",
+      summary: "Summary",
+      republish: "Republish",
+      listOf: "List of",
     },
   },
   es: {
@@ -126,6 +175,14 @@ const resources = {
       requirement: "Requerimiento",
       requirements: "Requerimientos",
       requirementType: "Tipo de requerimiento",
+      // Requirement state
+      selected: "Atendido",
+      finished: "Culminado",
+      published: "Publicado",
+      expired: "Expirado",
+      canceled: "Cancelado",
+      eliminated: "Eliminado",
+      dispute: "En disputa",
       // User class
       customer: "Cliente",
       seller: "Proveedor",
@@ -149,16 +206,34 @@ const resources = {
       // Buttons
       acceptButton: "Aceptar",
       cancelButton: "Cancelar",
-      submitRating: "Enviar calificación",
+      saveButton: "Guardar",
       // Rules
       enterValidEmail: "Ingrese un email válido",
-      // Sentences
-      rateYour: "Califica a tu ",
-      mustSelectAnswer: "Debe seleccionar una respuesta",
+      // Error messages
+      errorOccurred: "Se produjo un error",
+      incorrectEmailPassword: "Email o contraseña incorrectos",
+      existingProfile: "Este usuario ya tiene un perfil creado",
+      invalidDocNumber: "Número de documento inválido",
+      existingEmail: "Este email ya ha sido registrado",
+      existingDocNumber: "Este número de documento ya ha sido registrado",
+      completeProfile: "Complete du perfil antes de validar du cuenta",
+      generateCodeAgain: "Genere el código nuevamente",
+      userAlreadyValidated: "Este usuario ya está validado",
+      generateCodeFirst: "Genere un código de validación primero",
+      expiredCode: "El código ha expirado, genere otro nuevamente",
+      incorrectCode: "El código ingresado es incorrecto",
+      // Profile
       sentValidationCode: "Se envió el código con éxito",
       timerResendValidationCode: "Podrá reenviar el código en ",
       resendValidationCode: "Reenviar código",
-
+      createProfileSuccess: "Perfil creado con éxito",
+      sendCodeSuccess: "Se envió el código con éxito",
+      createYourProfile: "Crea tu perfil",
+      sendValidationCode: "Enviar código de validación",
+      // Requirement
+      submitRating: "Enviar calificación",
+      mustSelectAnswer: "Debe seleccionar una respuesta",
+      rateYour: "Califica a tu ",
       searchFilters: "Filtros de búsqueda",
       searchFiltersDesc:
         "Puede seleccionar opciones para ordenar y filtrar ofertas",
@@ -173,6 +248,20 @@ const resources = {
       canceledOffer: "Oferta cancelada",
       selectOfferConfirmation: "¿Está seguro de elegir la oferta?",
       selectDate: "Seleccione una fecha",
+      winnigOfferDetail: "Winning offer details",
+      deleteRequirementConfirmation:
+        "¿Está seguro de eliminar el requerimiento?",
+      // Login
+      registerUserSuccess: "Usuario registrado exitosamente",
+      welcome: "Bienvenido",
+      forgotPassword: "¿Olvidó su contraseña?",
+      // Action
+      showOffers: "Ver ofertas",
+      delete: "Eliminar",
+      cancelRequirement: "Cancelar requerimiento",
+      showSummary: "Ver resumen",
+      cancelPurchaseOrder: "Cancelar orden de compra",
+      selectOffer: "Seleccionar oferta",
       // Other
       yes: "Sí",
       no: "No",
@@ -197,6 +286,16 @@ const resources = {
       search: "Buscar",
       startDate: "Fecha de inicio",
       endDate: "Fecha de fin",
+      validate: "Validar",
+      login: "Iniciar sesión",
+      register: "Registrarse",
+      birthdate: "Fecha de nacimiento",
+      phone: "Teléfono",
+      country: "País",
+      city: "Ciudad",
+      summary: "Resumen",
+      republish: "Republicar",
+      listOf: "Listado de",
     },
   },
 };
@@ -204,7 +303,7 @@ const resources = {
 i18n.use(initReactI18next).init({
   resources,
   lng: "en",
-  fallbackLng: "en",
+  fallbackLng: "es",
   interpolation: {
     escapeValue: false,
   },

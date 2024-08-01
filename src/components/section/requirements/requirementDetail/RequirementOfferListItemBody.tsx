@@ -19,7 +19,7 @@ import {
   RequirementTableItem,
 } from "../../../../models/MainInterfaces";
 import moment from "moment";
-import { commonModalWidth, dateFormat } from "../../../../utilities/globals";
+import { dateFormat } from "../../../../utilities/globals";
 import ButtonContainer from "../../../containers/ButtonContainer";
 import ModalContainer from "../../../containers/ModalContainer";
 import {
@@ -42,7 +42,6 @@ export default function RequirementOfferListItemBody(
   props: RequirementOfferListItemBodyProps
 ) {
   const { t } = useTranslation();
-  const [modalWidth, setModalWidth] = useState(commonModalWidth);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalTitle, setModalTitle] = useState<React.ReactNode>("");
   const [dataModal, setDataModal] = useState<ModalContent>({
@@ -54,7 +53,7 @@ export default function RequirementOfferListItemBody(
     switch (action) {
       case Action.CANCEL_PURCHASE_ORDER:
         setIsOpenModal(true);
-        setModalTitle(ActionLabel[action]);
+        setModalTitle(t(ActionLabel[action]));
         setDataModal({
           type: ModalTypes.CANCEL_PURCHASE_ORDER,
           data: {
@@ -62,7 +61,6 @@ export default function RequirementOfferListItemBody(
             requirementId: props.requirement.key,
           },
         });
-        setModalWidth("750px");
         break;
       case Action.SELECT_OFFER:
         setIsOpenModal(true);
@@ -77,7 +75,7 @@ export default function RequirementOfferListItemBody(
         break;
       case Action.RATE_CANCELED:
         setIsOpenModal(true);
-        setModalTitle(ActionLabel[action]);
+        setModalTitle(t(ActionLabel[action]));
         setDataModal({
           type: ModalTypes.RATE_CANCELED,
           data: {
@@ -87,7 +85,6 @@ export default function RequirementOfferListItemBody(
             isOffer: false, //r3v
           },
         });
-        setModalWidth("600px");
     }
   }
 
@@ -180,7 +177,7 @@ export default function RequirementOfferListItemBody(
         <Flex justify="center" gap="small" style={{ width: "100%" }}>
           {props.offer.state == OfferState.WINNER && (
             <ButtonContainer
-              text={ActionLabel[Action.CANCEL_PURCHASE_ORDER]}
+              text={t(ActionLabel[Action.CANCEL_PURCHASE_ORDER])}
               type="primary"
               onClick={() => onOpenModal(Action.CANCEL_PURCHASE_ORDER)}
               upperCaseSmaller={true}
@@ -189,7 +186,7 @@ export default function RequirementOfferListItemBody(
           {props.offer.state == OfferState.ACTIVE &&
             props.requirement.state == RequirementState.PUBLISHED && (
               <ButtonContainer
-                text={ActionLabel[Action.SELECT_OFFER]}
+                text={t(ActionLabel[Action.SELECT_OFFER])}
                 type="primary"
                 onClick={() => onOpenModal(Action.SELECT_OFFER)}
                 upperCaseSmaller={true}
@@ -197,7 +194,7 @@ export default function RequirementOfferListItemBody(
             )}
           {props.offer.state == OfferState.CANCELED && ( // r3v creador de ofera canceló la oferta
             <ButtonContainer
-              text={ActionLabel[Action.RATE_CANCELED]}
+              text={t(ActionLabel[Action.RATE_CANCELED])}
               type="primary"
               onClick={() => onOpenModal(Action.RATE_CANCELED)}
               upperCaseSmaller={true}
@@ -215,7 +212,6 @@ export default function RequirementOfferListItemBody(
         isOpen={isOpenModal}
         onClose={handleOnCloseModal}
         title={modalTitle}
-        width={modalWidth}
       />
     </>
   );

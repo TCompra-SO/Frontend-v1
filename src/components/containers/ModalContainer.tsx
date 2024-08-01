@@ -1,5 +1,5 @@
 import { Modal } from "antd";
-import { ModalTypes } from "../../utilities/types";
+import { ModalTypes, ModalWidth } from "../../utilities/types";
 import RequirementDetail from "../section/requirements/requirementDetail/RequirementDetail";
 import RequirementModalOfferSelected from "../section/requirements/RequirementModalOfferSelected";
 import { ModalProps } from "antd/lib";
@@ -100,7 +100,9 @@ export default function ModalContainer(props: ModalContainerProps) {
     return (
       <Modal
         {...props}
+        width={ModalWidth[props.content.type]}
         destroyOnClose
+        closable={false}
         centered
         open={props.isOpen}
         maskClosable={
@@ -115,8 +117,10 @@ export default function ModalContainer(props: ModalContainerProps) {
     return (
       <Modal
         {...props}
+        width={ModalWidth[props.content.type]}
         destroyOnClose
         centered
+        closable={false}
         open={props.isOpen}
         footer={null}
         maskClosable={

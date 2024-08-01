@@ -20,36 +20,36 @@ export const RequirementStateMeta: {
   [RequirementState.SELECTED]: {
     color: "rgb(44,169,84)",
     background: "rgb(203, 242, 214)",
-    label: "Atendido",
+    label: "selected",
   },
   [RequirementState.FINISHED]: {
     color: "rgb(46,131,216)",
     background: "rgb(206,232,255)",
-    label: "Culminado",
+    label: "finished",
   },
   [RequirementState.PUBLISHED]: {
     color: "rgb(255, 201, 14)",
     background: "rgb(250,242,207)",
-    label: "Publicado",
+    label: "published",
   },
   [RequirementState.EXPIRED]: {
     color: "rgb(148,148,148)",
     background: "rgb(231,231,231)",
-    label: "Expirado",
+    label: "expired",
   },
   [RequirementState.CANCELED]: {
     color: "rgb(209,62,70)",
     background: "rgb(255,210,215)",
-    label: "Cancelado",
+    label: "canceled",
   },
   [RequirementState.ELIMINATED]: {
     color: "#e7ddbe",
     background: "black",
-    label: "Eliminado",
+    label: "eliminated",
   },
   [RequirementState.DISPUTE]: {
     color: "rgb(56, 162,177)",
     background: "rgb(203,242, 245)",
-    label: "En disputa",
+    label: "dispute",
   },
 };

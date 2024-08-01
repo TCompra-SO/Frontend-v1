@@ -1,4 +1,5 @@
 import {
+  CountriesRequestType,
   ModalTypes,
   PriceFilter,
   RequirementType,
@@ -24,7 +25,7 @@ export interface CountryObj {
 }
 
 export interface CountriesRequest {
-  verify: 1 | 2; // 1: Solo países | 2: Países y ciudades
+  verify: CountriesRequestType;
 }
 
 export interface StepsItemContent {

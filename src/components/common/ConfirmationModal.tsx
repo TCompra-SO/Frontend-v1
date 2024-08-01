@@ -19,7 +19,7 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
 
   return (
     <Flex vertical>
-      <Space>
+      <Space align="start">
         {props.icon ?? <ExclamationCircleFilled />}
         {props.text}
       </Space>
