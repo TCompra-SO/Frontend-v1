@@ -1,11 +1,11 @@
-import { Routes } from "../utilities/routes";
+import { ApiRoutes } from "../utilities/routes";
 
 export default function httpErrorInterceptor(error: any, type: string): string {
   let erroMsg: string = "errorOccurred";
   const code = error.response?.status;
 
   switch (type) {
-    case Routes.auth.login:
+    case ApiRoutes.auth.login:
       switch (code) {
         case 400:
         case 401:
@@ -13,14 +13,14 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
       }
       break;
-    case Routes.auth.profile:
+    case ApiRoutes.auth.profile:
       switch (code) {
         case 409:
           erroMsg = "existingProfile";
           break;
       }
       break;
-    case Routes.auth.register:
+    case ApiRoutes.auth.register:
       switch (code) {
         case 422:
           erroMsg = "invalidDocNumber";
@@ -33,7 +33,7 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
       }
       break;
-    case Routes.auth.sendCode:
+    case ApiRoutes.auth.sendCode:
       switch (code) {
         case 403:
           erroMsg = "completeProfile";
@@ -46,7 +46,7 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
       }
       break;
-    case Routes.auth.validateCode:
+    case ApiRoutes.auth.validateCode:
       switch (code) {
         case 400:
           erroMsg = "generateCodeFirst";

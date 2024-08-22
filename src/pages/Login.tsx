@@ -21,6 +21,7 @@ import { loginService, registerService } from "../services/authService";
 import { useApiParams } from "../models/Interfaces";
 import { TLDsService } from "../services/utilService";
 import { useTranslation } from "react-i18next";
+import { pageRoutes } from "../utilities/routes";
 
 const LoginType = {
   LOGIN: "login",
@@ -131,11 +132,14 @@ export default function Login() {
     if (loginType == LoginType.REGISTER) {
       dispatch(setUid(responseData));
       showNotification(notification, "success", t("registerUserSuccess"));
-      navigate("/profile", { state: { email: form.getFieldValue("email") } });
+      navigate(`/${pageRoutes.profile}`, {
+        state: { email: form.getFieldValue("email") },
+      });
     } else {
       dispatch(setUser(responseData));
       showNotification(notification, "success", t("welcome"));
       localStorage.setItem("token", responseData.token);
+      navigate(`/${pageRoutes.myRequirements}`);
     }
   }
 

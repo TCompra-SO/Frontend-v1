@@ -1,11 +1,11 @@
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { App as AntdApp, ConfigProvider, theme } from "antd";
+import { App as AntdApp, ConfigProvider, Layout, theme } from "antd";
 import LoadingCond from "./pages/utils/LoadingCond.tsx";
 import LoadingPage from "./pages/utils/LoadingPage.tsx";
-import Header from "./components/section/header/header/Header";
 import "./assets/styles.css";
 import {
+  darkColor,
   mainBackgroundColor,
   primaryColor,
   tableHeaderTextColor,
@@ -14,12 +14,46 @@ import {
 import esEs from "antd/locale/es_ES";
 import enUs from "antd/locale/en_US";
 import i18n from "./utilities/i18n.ts";
+import Sider from "antd/es/layout/Sider";
+import { Content, Footer, Header } from "antd/es/layout/layout";
+import { pageRoutes } from "./utilities/routes.ts";
+import Sidebar from "./components/section/sidebar/Sidebar.tsx";
+import MainHeader from "./components/section/header/header/MainHeader.tsx";
 
 const Login = lazy(() => import("./pages/Login.tsx"));
 const Profile = lazy(() => import("./pages/Profile.tsx"));
 const Search = lazy(() => import("./pages/Search.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
 const currentLanguage = i18n.language;
+
+const siderStyle: React.CSSProperties = {
+  overflow: "auto",
+  height: "100vh",
+  position: "fixed",
+  insetInlineStart: 0,
+  top: 0,
+  bottom: 0,
+  scrollbarWidth: "thin",
+  scrollbarColor: "unset",
+};
+
+const MainLayout = ({ children }: { children: React.ReactNode }) => (
+  <Layout style={{ minHeight: "100vh" }}>
+    <Sider collapsible style={{}}>
+      <Sidebar />
+    </Sider>
+    <Layout>
+      <Header
+        style={{ padding: 0, background: "#ffffff" }}
+        children={<MainHeader />}
+      />
+      <Content style={{ margin: "0 16px" }}>{children}</Content>
+      <Footer style={{ textAlign: "center" }}>
+        TCompra ©{new Date().getFullYear()} Soluciones Online S. A. C.
+      </Footer>
+    </Layout>
+  </Layout>
+);
 
 function App() {
   return (
@@ -41,16 +75,21 @@ function App() {
               headerSortActiveBg: white,
               headerSortHoverBg: white,
               headerSplitColor: "transparent",
+              borderColor: "transparent",
+            },
+            Menu: {
+              darkItemBg: darkColor,
+              darkSubMenuItemBg: darkColor,
+              // itemBg: darkColor,
             },
           },
         }}
       >
         <AntdApp>
           <LoadingCond></LoadingCond>
-          {/* <Header /> */}
           <Routes>
             <Route
-              path="/"
+              path={`/${pageRoutes.login}`}
               element={
                 <Suspense fallback={<LoadingPage />}>
                   <Login></Login>
@@ -58,32 +97,29 @@ function App() {
               }
             />
             <Route
-              path="/profile"
+              path="/*"
               element={
-                <Suspense fallback={<LoadingPage />}>
-                  <Profile></Profile>
-                </Suspense>
+                <MainLayout>
+                  <Suspense fallback={<LoadingPage />}>
+                    <Routes>
+                      <Route
+                        path={`/${pageRoutes.profile}`}
+                        element={<Profile />}
+                      />
+                      <Route
+                        path={`/${pageRoutes.search}`}
+                        element={<Search />}
+                      />
+                      <Route
+                        path={`/${pageRoutes.myRequirements}`}
+                        element={<Requirements />}
+                      />
+                      <Route path="*" element={<Navigate to="/" replace />} />
+                    </Routes>
+                  </Suspense>
+                </MainLayout>
               }
             />
-            <Route
-              path="/search"
-              element={
-                <Suspense fallback={<LoadingPage />}>
-                  <Header />
-                  <Search></Search>
-                </Suspense>
-              }
-            />
-            <Route
-              path="/mis-requerimientos"
-              element={
-                <Suspense fallback={<LoadingPage />}>
-                  {/* <Header /> */}
-                  <Requirements></Requirements>
-                </Suspense>
-              }
-            />
-            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </AntdApp>
       </ConfigProvider>

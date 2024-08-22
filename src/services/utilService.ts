@@ -1,5 +1,5 @@
 import { HttpService } from "../models/Interfaces";
-import { MainRoutes, Routes } from "../utilities/routes";
+import { ApiMainRoutes, ApiRoutes } from "../utilities/routes";
 
 export const TLDsService: HttpService = {
   url: "https://data.iana.org/TLD/tlds-alpha-by-domain.txt",
@@ -7,8 +7,8 @@ export const TLDsService: HttpService = {
 };
 
 export const countriesService: HttpService = {
-  url: `${import.meta.env.VITE_API_BASE_URL}${MainRoutes.auth}${
-    Routes.auth.countries
+  url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+    ApiRoutes.auth.countries
   }`,
-  type: Routes.auth.countries,
+  type: ApiRoutes.auth.countries,
 };

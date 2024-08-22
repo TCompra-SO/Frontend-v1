@@ -6,7 +6,7 @@ import { lightColor, primaryColor } from "../../../../utilities/colors";
 import { useTranslation } from "react-i18next";
 
 export default function OffersColumn(
-  onButtonClick: (action: Action, data: any) => void,
+  onButtonClick: (action: Action, data: RequirementTableItem) => void,
   hidden: boolean = false
 ) {
   const { t } = useTranslation();
@@ -18,7 +18,7 @@ export default function OffersColumn(
     align: "center",
     sorter: (a, b) => a.numberOffers - b.numberOffers,
     showSorterTooltip: false,
-    width: "120px",
+    width: "75px",
     hidden,
     render: (_, record) => (
       <ButtonContainer

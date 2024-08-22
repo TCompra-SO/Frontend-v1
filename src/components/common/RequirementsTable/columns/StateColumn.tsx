@@ -13,14 +13,14 @@ export default function StateColumn(hidden: boolean = false) {
     align: "center",
     dataIndex: "state",
     showSorterTooltip: false,
-    width: "120px",
+    width: "100px",
     hidden,
     render: (_, { state }) => (
       <TagContainer
         color={RequirementStateMeta[state].background}
         text={t(RequirementStateMeta[state].label)}
         style={{
-          width: "70px",
+          width: "77px",
           textAlign: "center",
           marginInlineEnd: "0",
           color: RequirementStateMeta[state].color,

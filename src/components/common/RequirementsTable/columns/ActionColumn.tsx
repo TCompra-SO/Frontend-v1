@@ -1,6 +1,6 @@
 import { ColumnType } from "antd/es/table";
 import { RequirementTableItem } from "../../../../models/MainInterfaces";
-import { Dropdown, Space } from "antd";
+import { Dropdown } from "antd";
 import ButtonContainer from "../../../containers/ButtonContainer";
 import { CaretDownOutlined } from "@ant-design/icons";
 import {
@@ -22,34 +22,37 @@ export default function ActionColumn(
     key: "action",
     align: "center",
     showSorterTooltip: false,
-    width: "135px",
+    width: "115px",
     hidden,
     render: (record: RequirementTableItem) => {
       return (
-        <Space size="middle">
-          <Dropdown
-            trigger={["click"]}
-            menu={{
-              items: ActionByState[record.state].map((action: Action) => {
-                return {
-                  key: action,
-                  label: t(ActionLabel[action]),
-                  onClick: () => onButtonClick(action, record),
-                };
-              }),
+        <Dropdown
+          trigger={["click"]}
+          menu={{
+            items: ActionByState[record.state].map((action: Action) => {
+              return {
+                key: action,
+                label: t(ActionLabel[action]),
+                onClick: () => onButtonClick(action, record),
+              };
+            }),
+          }}
+        >
+          <ButtonContainer
+            size="small"
+            type="primary"
+            ghost
+            text={t("select")}
+            upperCaseSmaller={true}
+            icon={<CaretDownOutlined />}
+            iconPosition="end"
+            style={{
+              paddingTop: "15px",
+              paddingBottom: "15px",
+              borderRadius: "10px",
             }}
-          >
-            <ButtonContainer
-              size="small"
-              type="primary"
-              ghost
-              text={t("select")}
-              upperCaseSmaller={true}
-              icon={<CaretDownOutlined />}
-              iconPosition="end"
-            />
-          </Dropdown>
-        </Space>
+          />
+        </Dropdown>
       );
     },
   };

@@ -12,7 +12,7 @@ export default function LocationColumn(hidden: boolean = false) {
     align: "center",
     sorter: (a, b) => a.title.localeCompare(b.title),
     showSorterTooltip: false,
-    width: "120px",
+    width: "105px",
     hidden,
     render: (_, { location }) => (
       <div style={{ textAlign: "left" }}>{location}</div>

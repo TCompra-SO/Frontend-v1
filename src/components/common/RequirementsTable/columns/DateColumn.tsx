@@ -12,7 +12,7 @@ export default function DateColumn(hidden: boolean = false) {
     align: "center",
     showSorterTooltip: false,
     ellipsis: true,
-    width: "120px",
+    width: "100px",
     hidden,
   };
   return col;

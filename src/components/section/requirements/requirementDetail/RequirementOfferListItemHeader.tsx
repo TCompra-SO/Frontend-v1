@@ -92,7 +92,7 @@ export default function RequirementOfferListItemHeader({
                 {props.offer.user.userTable == UserTable.COMPANY && (
                   <Space>
                     <FontAwesomeIcon icon={faUniversity} color={primaryColor} />
-                    {t("tenure")}: {props.offer.user.tenure}
+                    {`${t("tenure")}: ${props.offer.user.tenure}`}
                   </Space>
                 )}
               </>

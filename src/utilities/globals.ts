@@ -5,3 +5,4 @@ export const allSelect: any = "0";
 export const commonModalWidth: number = 850;
 export const mediumModalWidth: number = 350;
 export const smallModalWidth: number = 250;
+export const columnWidth: number = 100;

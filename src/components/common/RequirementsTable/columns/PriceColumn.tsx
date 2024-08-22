@@ -18,7 +18,7 @@ export default function PriceColumn(hidden: boolean = false) {
     ),
     sorter: (a, b) => a.price - b.price,
     showSorterTooltip: false,
-    width: "120px",
+    width: "100px",
   };
   return col;
 }

@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 interface TagContainerProps extends TagProps {
   isRequirementTag?: boolean;
   type?: RequirementType;
-  text?: string;
+  text?: React.ReactNode;
   label?: string;
   includeMarginRight?: boolean;
   truncateText?: boolean;
@@ -44,7 +44,7 @@ export default function TagContainer(props: TagContainerProps) {
         style={newStyle}
         className={props.truncateText ? "text-truncate" : ""}
       >
-        {props.label ? props.label + ": " + props.text : props.text}
+        {props.label ? props.label + ": " : ""} {props.text}
       </Tag>
     );
 }

@@ -63,7 +63,7 @@ export default function RequirementsTable(props: RequirementsTableProps) {
     <Table
       dataSource={props.data}
       columns={columns}
-      scroll={{ x: 1200 }}
+      scroll={{ x: 1000 }}
       style={{ width: "100%" }}
       bordered={false}
       pagination={{

@@ -33,6 +33,7 @@ export interface OfferListItem {
   user: User;
   location: string;
   image?: string;
+  document?: string;
   subUser?: User;
   selectionDate?: Date;
   state: OfferState;
