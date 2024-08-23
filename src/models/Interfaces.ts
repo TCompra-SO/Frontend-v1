@@ -1,11 +1,19 @@
 import {
+  Action,
   CountriesRequestType,
   ModalTypes,
   PriceFilter,
   RequirementType,
+  TableColumns,
+  TableTypes,
   WarrantyFilter,
 } from "../utilities/types";
-import { OfferListItem, RequirementTableItem, User } from "./MainInterfaces";
+import {
+  OfferListItem,
+  RequirementTableItem,
+  TableRecordType,
+  User,
+} from "./MainInterfaces";
 
 export interface HttpObject {
   data: any | null;
@@ -53,6 +61,8 @@ export interface OfferFilters {
   location: string;
   warranty: WarrantyFilter;
 }
+
+/******** Modals *******/
 
 export interface ModalCancelPurchaseOrder {
   type: ModalTypes.CANCEL_PURCHASE_ORDER;
@@ -130,7 +140,32 @@ export type ModalContent =
   | ModalConfirmation
   | ModalNone;
 
+/************************/
+
 export interface HttpService {
   url: string;
   type: string;
 }
+
+/********** Tables *************/
+
+export interface TableHiddenColumns {
+  hiddenColumns: TableColumns[];
+  nameColumnHeader: string;
+  onButtonClick: (action: Action, data: TableRecordType) => void;
+}
+
+export interface TableTypeRequirement extends TableHiddenColumns {
+  type: TableTypes.REQUIREMENT;
+  subType: RequirementType;
+  data: RequirementTableItem[];
+  // onButtonClick: (action: Action, data: RequirementTableItem) => void;
+}
+
+export interface TableTypeOffer extends TableHiddenColumns {
+  type: TableTypes.OFFER;
+  data: OfferListItem[];
+  // onButtonClick: (action: Action, data: OfferListItem) => void;
+}
+
+export type TableType = TableTypeRequirement | TableTypeOffer;

@@ -1,10 +1,5 @@
 import { Table, TableProps } from "antd";
-import { RequirementTableItem } from "../../../models/MainInterfaces";
-import {
-  Action,
-  RequirementTableColumns,
-  RequirementType,
-} from "../../../utilities/types";
+import { TableColumns, TableTypes } from "../../../utilities/types";
 import { pageSizeOptionsSt } from "../../../utilities/globals";
 import ImageColumn from "./columns/ImageColumn";
 import NameColumn from "./columns/NameColumn";
@@ -15,53 +10,90 @@ import OffersColumn from "./columns/OffersColumn";
 import StateColumn from "./columns/StateColumn";
 import ActionColumn from "./columns/ActionColumn";
 import CategoryColumn from "./columns/CategoryColumn";
+import { TableType } from "../../../models/Interfaces";
+import { TableRecordType } from "../../../models/MainInterfaces";
 
 interface RequirementsTableProps {
-  type: RequirementType;
-  data: RequirementTableItem[];
-  onButtonClick: (action: Action, data: RequirementTableItem) => void;
-  hiddenColumns: RequirementTableColumns[];
+  content: TableType;
 }
 
 export default function RequirementsTable(props: RequirementsTableProps) {
   const pageSizeOptions = pageSizeOptionsSt;
-  const visibility: { [key in RequirementTableColumns]: boolean } = {
-    [RequirementTableColumns.IMAGE]: false,
-    [RequirementTableColumns.NAME]: false,
-    [RequirementTableColumns.CATEGORY]: false,
-    [RequirementTableColumns.LOCATION]: false,
-    [RequirementTableColumns.DATE]: false,
-    [RequirementTableColumns.PRICE]: false,
-    [RequirementTableColumns.OFFERS]: false,
-    [RequirementTableColumns.STATE]: false,
-    [RequirementTableColumns.ACTION]: false,
-  };
+  let columns: TableProps<TableRecordType>["columns"] = [];
 
-  props.hiddenColumns.map((hiddenCol) => {
+  // Hacer visibles todas las columnas inicialmente
+  const visibility: { [key in TableColumns]: boolean } = Object.keys(
+    TableColumns
+  )
+    .filter((key) => isNaN(Number(key)))
+    .reduce((acc, key) => {
+      acc[TableColumns[key as keyof typeof TableColumns]] = false;
+      return acc;
+    }, {} as { [key in TableColumns]: boolean });
+
+  // Ocultar columnas
+  props.content.hiddenColumns.map((hiddenCol) => {
     visibility[hiddenCol] = true;
   });
 
-  const columns: TableProps<RequirementTableItem>["columns"] = [
-    ImageColumn(visibility[RequirementTableColumns.IMAGE]),
-    NameColumn(props.type, visibility[RequirementTableColumns.NAME]),
-    CategoryColumn(visibility[RequirementTableColumns.CATEGORY]),
-    LocationColumn(visibility[RequirementTableColumns.LOCATION]),
-    DateColumn(visibility[RequirementTableColumns.DATE]),
-    PriceColumn(visibility[RequirementTableColumns.PRICE]),
-    OffersColumn(
-      props.onButtonClick,
-      visibility[RequirementTableColumns.OFFERS]
-    ),
-    StateColumn(visibility[RequirementTableColumns.STATE]),
-    ActionColumn(
-      props.onButtonClick,
-      visibility[RequirementTableColumns.ACTION]
-    ),
-  ];
+  switch (props.content.type) {
+    case TableTypes.REQUIREMENT:
+      getRequirementTableColumns();
+      break;
+    case TableTypes.OFFER:
+      getOfferTableColumns();
+  }
+
+  function getRequirementTableColumns() {
+    columns = [
+      ImageColumn(visibility[TableColumns.IMAGE]),
+      NameColumn(
+        props.content.type,
+        props.content.nameColumnHeader,
+        visibility[TableColumns.NAME]
+      ),
+      CategoryColumn(props.content.type, visibility[TableColumns.CATEGORY]),
+      LocationColumn(visibility[TableColumns.LOCATION]),
+      DateColumn(visibility[TableColumns.DATE]),
+      PriceColumn(visibility[TableColumns.PRICE]),
+      OffersColumn(
+        props.content.type,
+        props.content.onButtonClick,
+        visibility[TableColumns.OFFERS]
+      ),
+      StateColumn(props.content.type, visibility[TableColumns.STATE]),
+      ActionColumn(
+        props.content.type,
+        props.content.onButtonClick,
+        visibility[TableColumns.ACTION]
+      ),
+    ];
+    return columns;
+  }
+
+  function getOfferTableColumns() {
+    columns = [
+      NameColumn(
+        props.content.type,
+        props.content.nameColumnHeader,
+        visibility[TableColumns.NAME]
+      ),
+      LocationColumn(visibility[TableColumns.LOCATION]),
+      DateColumn(visibility[TableColumns.DATE]),
+      PriceColumn(visibility[TableColumns.PRICE]),
+      StateColumn(props.content.type, visibility[TableColumns.STATE]),
+      ActionColumn(
+        props.content.type,
+        props.content.onButtonClick,
+        visibility[TableColumns.ACTION]
+      ),
+    ];
+    return columns;
+  }
 
   return (
     <Table
-      dataSource={props.data}
+      dataSource={props.content.data}
       columns={columns}
       scroll={{ x: 1000 }}
       style={{ width: "100%" }}

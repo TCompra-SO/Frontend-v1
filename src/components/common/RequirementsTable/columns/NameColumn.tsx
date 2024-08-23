@@ -1,41 +1,39 @@
 import { ColumnType } from "antd/es/table";
-import { RequirementTableItem } from "../../../../models/MainInterfaces";
+import {
+  RequirementTableItem,
+  TableRecordType,
+} from "../../../../models/MainInterfaces";
 import { Flex } from "antd";
 import { tableHeaderTextColor } from "../../../../utilities/colors";
-import { useTranslation } from "react-i18next";
-import { RequirementType } from "../../../../utilities/types";
+import { TableTypes } from "../../../../utilities/types";
 
 export default function NameColumn(
-  type: RequirementType,
+  type: TableTypes,
+  nameColumnHeader: string,
   hidden: boolean = false
 ) {
-  const { t } = useTranslation();
-
-  const col: ColumnType<RequirementTableItem> = {
-    title:
-      type == RequirementType.GOOD || RequirementType.SERVICE
-        ? t("requirement")
-        : type == RequirementType.SALE
-        ? t("sale")
-        : t("job"),
+  const col: ColumnType<TableRecordType> = {
+    title: nameColumnHeader,
     dataIndex: "title",
     key: "name",
     align: "center",
     hidden,
     sorter: (a, b) => a.title.localeCompare(b.title),
     showSorterTooltip: false,
-    render: (_, { title, category }) => (
+    render: (_, record) => (
       <>
         <Flex vertical>
           <div className="text-truncate" style={{ textAlign: "left" }}>
-            {title}
+            {record.title}
           </div>
-          <div
-            className="text-truncate"
-            style={{ textAlign: "left", color: tableHeaderTextColor }}
-          >
-            {category}
-          </div>
+          {type == TableTypes.REQUIREMENT && (
+            <div
+              className="text-truncate"
+              style={{ textAlign: "left", color: tableHeaderTextColor }}
+            >
+              {(record as RequirementTableItem).category}
+            </div>
+          )}
         </Flex>
       </>
     ),

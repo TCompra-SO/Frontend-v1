@@ -1,30 +1,37 @@
 import { ColumnType } from "antd/es/table";
-import { RequirementTableItem } from "../../../../models/MainInterfaces";
+import { TableRecordType } from "../../../../models/MainInterfaces";
 import { Dropdown } from "antd";
 import ButtonContainer from "../../../containers/ButtonContainer";
 import { CaretDownOutlined } from "@ant-design/icons";
 import {
   Action,
-  ActionByState,
+  ActionByStateOffer,
+  ActionByStateRequirement,
   ActionLabel,
+  TableTypes,
 } from "../../../../utilities/types";
 import { useTranslation } from "react-i18next";
 
 export default function ActionColumn(
-  // title: string,
-  onButtonClick: (action: Action, data: RequirementTableItem) => void,
+  type: TableTypes,
+  onButtonClick: (action: Action, data: TableRecordType) => void,
   hidden: boolean = false
 ) {
   const { t } = useTranslation();
 
-  const col: ColumnType<RequirementTableItem> = {
+  const col: ColumnType<TableRecordType> = {
     title: t("actionColumn"),
     key: "action",
     align: "center",
     showSorterTooltip: false,
     width: "115px",
     hidden,
-    render: (record: RequirementTableItem) => {
+    render: (record: TableRecordType) => {
+      const ActionByState: { [key: number]: Action[] } =
+        type == TableTypes.REQUIREMENT
+          ? ActionByStateRequirement
+          : ActionByStateOffer;
+
       return (
         <Dropdown
           trigger={["click"]}

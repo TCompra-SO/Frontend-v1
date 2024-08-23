@@ -19,4 +19,5 @@ export const pageRoutes = {
   profile: "profile",
   search: "search",
   myRequirements: "mis-requerimientos",
+  myOffers: "mis-ofertas",
 };

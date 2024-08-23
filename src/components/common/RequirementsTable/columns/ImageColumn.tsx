@@ -1,9 +1,9 @@
 import { ColumnType } from "antd/es/table";
-import { RequirementTableItem } from "../../../../models/MainInterfaces";
+import { TableRecordType } from "../../../../models/MainInterfaces";
 import AvatarContainer from "../../../containers/AvatarContainer";
 
 export default function ImageColumn(hidden: boolean = false) {
-  const col: ColumnType<RequirementTableItem> = {
+  const col: ColumnType<TableRecordType> = {
     dataIndex: "image",
     align: "center",
     hidden,

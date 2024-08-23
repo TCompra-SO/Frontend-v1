@@ -41,6 +41,8 @@ export interface OfferListItem {
   igv?: boolean;
 }
 
+export type TableRecordType = OfferListItem | RequirementTableItem;
+
 export interface User {
   uid: string;
   name: string;

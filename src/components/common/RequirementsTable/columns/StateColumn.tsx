@@ -1,13 +1,21 @@
 import { ColumnType } from "antd/es/table";
-import { RequirementTableItem } from "../../../../models/MainInterfaces";
+import {
+  OfferListItem,
+  RequirementTableItem,
+  TableRecordType,
+} from "../../../../models/MainInterfaces";
 import TagContainer from "../../../containers/TagContainer";
-import { RequirementStateMeta } from "../../../../utilities/colors";
+import {
+  OfferStateMeta,
+  RequirementStateMeta,
+} from "../../../../utilities/colors";
 import { useTranslation } from "react-i18next";
+import { TableTypes } from "../../../../utilities/types";
 
-export default function StateColumn(hidden: boolean = false) {
+export default function StateColumn(type: TableTypes, hidden: boolean = false) {
   const { t } = useTranslation();
 
-  const col: ColumnType<RequirementTableItem> = {
+  const col: ColumnType<TableRecordType> = {
     title: t("stateColumn"),
     key: "state",
     align: "center",
@@ -15,18 +23,34 @@ export default function StateColumn(hidden: boolean = false) {
     showSorterTooltip: false,
     width: "100px",
     hidden,
-    render: (_, { state }) => (
-      <TagContainer
-        color={RequirementStateMeta[state].background}
-        text={t(RequirementStateMeta[state].label)}
-        style={{
-          width: "77px",
-          textAlign: "center",
-          marginInlineEnd: "0",
-          color: RequirementStateMeta[state].color,
-        }}
-      />
-    ),
+    render: (_, record) => {
+      let background: string = "";
+      let label: string = "";
+      let color: string = background;
+      if (type == TableTypes.REQUIREMENT) {
+        const state = (record as RequirementTableItem).state;
+        background = RequirementStateMeta[state].background;
+        label = t(RequirementStateMeta[state].label);
+        color = RequirementStateMeta[state].color;
+      } else if (type == TableTypes.OFFER) {
+        const state = (record as OfferListItem).state;
+        background = OfferStateMeta[state].background;
+        label = t(OfferStateMeta[state].label);
+        color = OfferStateMeta[state].color;
+      }
+      return (
+        <TagContainer
+          color={background}
+          text={label}
+          style={{
+            width: "77px",
+            textAlign: "center",
+            marginInlineEnd: "0",
+            color: color,
+          }}
+        />
+      );
+    },
   };
   return col;
 }

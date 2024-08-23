@@ -15,7 +15,7 @@ _Props_
 | type          | `RequirementType`                                      | Tipo de requisito (`GOOD`, `SERVICE`, `SALE`, etc.).                         |
 | data          | `RequirementTableItem[]`                               | Arreglo de datos para mostrar en la tabla.                                   |
 | onButtonClick | `(action: Action, data: RequirementTableItem) => void` | Función de callback llamada al hacer clic en un botón de acción en la tabla. |
-| hiddenColumns | `RequirementTableColumns[]`                            | Columnas de la tabla que se deben ocultar.                                   |
+| hiddenColumns | `TableColumns[]`                                       | Columnas de la tabla que se deben ocultar.                                   |
 
 ##### columns
 

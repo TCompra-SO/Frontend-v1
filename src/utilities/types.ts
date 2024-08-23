@@ -17,6 +17,12 @@ export enum RequirementType {
   JOB = 4,
 }
 
+export enum TableTypes {
+  REQUIREMENT = 1,
+  OFFER = 2,
+  PURCHASE_ORDER = 3,
+}
+
 export enum RequirementState {
   PUBLISHED = 1,
   SELECTED = 2,
@@ -69,6 +75,8 @@ export enum Action {
   RATE_CANCELED = 7,
   CANCEL_PURCHASE_ORDER = 8,
   SELECT_OFFER = 9,
+  CHAT = 10,
+  CANCEL_OFFER = 11,
 }
 
 export const ActionLabel = {
@@ -81,6 +89,8 @@ export const ActionLabel = {
   [Action.RATE_CANCELED]: "rate",
   [Action.CANCEL_PURCHASE_ORDER]: "cancelPurchaseOrder",
   [Action.SELECT_OFFER]: "selectOffer",
+  [Action.CHAT]: "goToChat",
+  [Action.CANCEL_OFFER]: "cancelOffer",
 };
 
 export enum OfferState {
@@ -89,6 +99,7 @@ export enum OfferState {
   FINISHED = 3,
   DISPUTE = 4,
   CANCELED = 5,
+  ELIMINATED = 7,
 }
 
 export enum PriceFilter {
@@ -118,7 +129,7 @@ export enum OfferFilterTypes {
   WARRANTY = 4,
 }
 
-export enum RequirementTableColumns {
+export enum TableColumns {
   IMAGE = 0,
   ACTION = 1,
   CATEGORY = 2,
@@ -128,9 +139,19 @@ export enum RequirementTableColumns {
   OFFERS = 6,
   PRICE = 7,
   STATE = 8,
+  REQUIREMENT = 9,
+  TYPE = 10,
+  EMAIL = 11,
+  GOODS = 12,
+  SERVICES = 13,
+  SALES = 14,
+  DOCUMENT = 15,
+  OFFER = 16,
 }
 
-export const ActionByState: { [key in RequirementState]: Array<Action> } = {
+export const ActionByStateRequirement: {
+  [key in RequirementState]: Array<Action>;
+} = {
   [RequirementState.CANCELED]: [Action.DELETE, Action.REPUBLISH],
   [RequirementState.DISPUTE]: [Action.SHOW_SUMMARY],
   [RequirementState.EXPIRED]: [Action.DELETE, Action.REPUBLISH],
@@ -138,6 +159,23 @@ export const ActionByState: { [key in RequirementState]: Array<Action> } = {
   [RequirementState.PUBLISHED]: [Action.DELETE, Action.CANCEL_REQUIREMENT],
   [RequirementState.SELECTED]: [Action.CANCEL_REQUIREMENT, Action.FINISH],
   [RequirementState.ELIMINATED]: [],
+};
+
+export const ActionByStateOffer: { [key in OfferState]: Array<Action> } = {
+  [OfferState.ACTIVE]: [Action.DELETE, Action.SHOW_SUMMARY, Action.CHAT],
+  [OfferState.CANCELED]: [
+    Action.RATE_CANCELED,
+    Action.SHOW_SUMMARY,
+    Action.CHAT,
+  ],
+  [OfferState.DISPUTE]: [Action.SHOW_SUMMARY, Action.CHAT],
+  [OfferState.FINISHED]: [Action.SHOW_SUMMARY, Action.CHAT],
+  [OfferState.WINNER]: [
+    Action.CANCEL_OFFER,
+    Action.FINISH,
+    Action.SHOW_SUMMARY,
+    Action.CHAT,
+  ],
 };
 
 export enum UserClass {

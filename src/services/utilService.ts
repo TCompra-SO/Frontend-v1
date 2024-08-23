@@ -12,3 +12,8 @@ export const countriesService: HttpService = {
   }`,
   type: ApiRoutes.auth.countries,
 };
+
+export const dummyService: HttpService = {
+  url: "https://reqres.in/api/users",
+  type: "",
+};

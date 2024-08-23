@@ -5,7 +5,7 @@ import video from "../assets/videos/video-login.webm";
 import { App, Form, Tabs } from "antd";
 import Email from "../components/section/login/Email";
 import Password from "../components/section/login/Password";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Dni from "../components/section/login/Dni";
 import { TabsProps } from "antd/lib";
 import { LoginRequest, RegisterRequest } from "../models/Requests";
@@ -22,6 +22,7 @@ import { useApiParams } from "../models/Interfaces";
 import { TLDsService } from "../services/utilService";
 import { useTranslation } from "react-i18next";
 import { pageRoutes } from "../utilities/routes";
+import { ListsContext } from "../contexts/listsContext";
 
 const LoginType = {
   LOGIN: "login",
@@ -40,6 +41,8 @@ const tabItems: TabsProps["items"] = [
 ];
 
 export default function Login() {
+  const context = useContext(ListsContext);
+  const { countryList } = context;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { t } = useTranslation();

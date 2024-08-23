@@ -1,4 +1,4 @@
-import { RequirementState } from "./types";
+import { OfferState, RequirementState } from "./types";
 
 export const primaryColor = "#BC1373";
 export const mainBackgroundColor = "#ffffff";
@@ -15,7 +15,11 @@ export const gray = "#e8e8e8";
 export const darkerGray = "#6e6e6e";
 
 export const RequirementStateMeta: {
-  [key: string]: { color: string; background: string; label: string };
+  [key in RequirementState]: {
+    color: string;
+    background: string;
+    label: string;
+  };
 } = {
   [RequirementState.SELECTED]: {
     color: "rgb(44,169,84)",
@@ -48,6 +52,41 @@ export const RequirementStateMeta: {
     label: "eliminated",
   },
   [RequirementState.DISPUTE]: {
+    color: "rgb(56, 162,177)",
+    background: "rgb(203,242, 245)",
+    label: "dispute",
+  },
+};
+
+export const OfferStateMeta: {
+  [key in OfferState]: { color: string; background: string; label: string };
+} = {
+  [OfferState.WINNER]: {
+    color: "rgb(44,169,84)",
+    background: "rgb(203, 242, 214)",
+    label: "winner",
+  },
+  [OfferState.FINISHED]: {
+    color: "rgb(46,131,216)",
+    background: "rgb(206,232,255)",
+    label: "finished",
+  },
+  [OfferState.ACTIVE]: {
+    color: "rgb(255, 201, 14)",
+    background: "rgb(250,242,207)",
+    label: "active",
+  },
+  [OfferState.CANCELED]: {
+    color: "rgb(209,62,70)",
+    background: "rgb(255,210,215)",
+    label: "canceled",
+  },
+  [OfferState.ELIMINATED]: {
+    color: "#e7ddbe",
+    background: "black",
+    label: "eliminated",
+  },
+  [OfferState.DISPUTE]: {
     color: "rgb(56, 162,177)",
     background: "rgb(203,242, 245)",
     label: "dispute",

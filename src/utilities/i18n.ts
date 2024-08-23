@@ -37,6 +37,9 @@ const resources = {
       canceled: "Canceled",
       eliminated: "Eliminated",
       dispute: "In dispute",
+      // Offer state
+      winner: "Winner",
+      active: "Active",
       // User class
       customer: "Customer",
       seller: "Supplier",
@@ -111,9 +114,11 @@ const resources = {
       showOffers: "Show offers",
       delete: "Delete",
       cancelRequirement: "Cancel requirement",
+      cancelOffer: "Cancel offer",
       showSummary: "Show summary",
       cancelPurchaseOrder: "Cancel purchase order",
       selectOffer: "Select offer",
+      goToChat: "Go to chat",
       // Other
       yes: "Yes",
       no: "No",
@@ -183,6 +188,9 @@ const resources = {
       canceled: "Cancelado",
       eliminated: "Eliminado",
       dispute: "En disputa",
+      // Offer state
+      winner: "Ganador",
+      active: "Activo",
       // User class
       customer: "Cliente",
       seller: "Proveedor",
@@ -259,9 +267,11 @@ const resources = {
       showOffers: "Ver ofertas",
       delete: "Eliminar",
       cancelRequirement: "Cancelar requerimiento",
+      cancelOffer: "Cancelar oferta",
       showSummary: "Ver resumen",
       cancelPurchaseOrder: "Cancelar orden de compra",
       selectOffer: "Seleccionar oferta",
+      goToChat: "Ir al chat",
       // Other
       yes: "Sí",
       no: "No",

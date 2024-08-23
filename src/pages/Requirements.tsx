@@ -7,18 +7,23 @@ import {
   ModalTypes,
   OfferState,
   RequirementState,
-  RequirementTableColumns,
+  TableColumns,
   RequirementType,
   UserTable,
+  TableTypes,
 } from "../utilities/types";
 import Title from "antd/es/typography/Title";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPeopleCarryBox } from "@fortawesome/free-solid-svg-icons";
 import { primaryColor, lightColor, rowColor } from "../utilities/colors";
 import { SearchOutlined } from "@ant-design/icons";
-import { OfferListItem, RequirementTableItem } from "../models/MainInterfaces";
+import {
+  OfferListItem,
+  RequirementTableItem,
+  TableRecordType,
+} from "../models/MainInterfaces";
 import { useState } from "react";
-import { ModalContent } from "../models/Interfaces";
+import { ModalContent, TableTypeRequirement } from "../models/Interfaces";
 import RateModalTitleContainer from "../components/containers/RateModalTitleContainer";
 import { useTranslation } from "react-i18next";
 
@@ -780,6 +785,14 @@ export default function Requirements() {
     type: ModalTypes.NONE,
     data: {},
   });
+  const [tableContent, setTableContent] = useState<TableTypeRequirement>({
+    type: TableTypes.REQUIREMENT,
+    data: requirements,
+    subType: RequirementType.GOOD,
+    hiddenColumns: [TableColumns.CATEGORY],
+    nameColumnHeader: t("goods"),
+    onButtonClick: handleOnButtonClick,
+  });
 
   function handleCloseModal() {
     setIsOpenModal(false);
@@ -787,8 +800,9 @@ export default function Requirements() {
 
   function handleOnButtonClick(
     action: Action,
-    requirement: RequirementTableItem
+    prevRequirement: TableRecordType
   ) {
+    const requirement = prevRequirement as RequirementTableItem;
     switch (action) {
       case Action.SHOW_OFFERS: {
         setDataModal({
@@ -917,12 +931,7 @@ export default function Requirements() {
             </Col>
           </Row>
 
-          <RequirementsTable
-            type={RequirementType.GOOD}
-            data={requirements}
-            onButtonClick={handleOnButtonClick}
-            hiddenColumns={[RequirementTableColumns.CATEGORY]}
-          />
+          <RequirementsTable content={tableContent} />
         </Flex>
       </div>
     </>

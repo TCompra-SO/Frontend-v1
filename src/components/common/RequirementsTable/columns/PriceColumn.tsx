@@ -1,11 +1,11 @@
 import { ColumnType } from "antd/es/table";
-import { RequirementTableItem } from "../../../../models/MainInterfaces";
+import { TableRecordType } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
 
 export default function PriceColumn(hidden: boolean = false) {
   const { t } = useTranslation();
 
-  const col: ColumnType<RequirementTableItem> = {
+  const col: ColumnType<TableRecordType> = {
     title: t("priceColumn"),
     dataIndex: "price",
     align: "center",
@@ -18,7 +18,7 @@ export default function PriceColumn(hidden: boolean = false) {
     ),
     sorter: (a, b) => a.price - b.price,
     showSorterTooltip: false,
-    width: "100px",
+    width: "120px",
   };
   return col;
 }
