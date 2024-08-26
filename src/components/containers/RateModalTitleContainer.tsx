@@ -20,7 +20,7 @@ export default function RateModalTitleContainer(
       </div>
       <div style={{ fontSize: "1em", fontWeight: "normal" }}>
         {t("rateYour")}
-        {userClass == UserClass.CUSTOMER ? t("customer") : t("seller")}
+        {userClass == UserClass.CUSTOMER ? t("customer") : t("supplier")}
       </div>
     </>
   );

@@ -12,12 +12,13 @@ import ActionColumn from "./columns/ActionColumn";
 import CategoryColumn from "./columns/CategoryColumn";
 import { TableType } from "../../../models/Interfaces";
 import { TableRecordType } from "../../../models/MainInterfaces";
+import RequirementColumn from "./columns/RequirementColumn";
 
 interface RequirementsTableProps {
   content: TableType;
 }
 
-export default function RequirementsTable(props: RequirementsTableProps) {
+export default function GeneralTable(props: RequirementsTableProps) {
   const pageSizeOptions = pageSizeOptionsSt;
   let columns: TableProps<TableRecordType>["columns"] = [];
 
@@ -38,6 +39,7 @@ export default function RequirementsTable(props: RequirementsTableProps) {
 
   switch (props.content.type) {
     case TableTypes.REQUIREMENT:
+      props.content.data;
       getRequirementTableColumns();
       break;
     case TableTypes.OFFER:
@@ -86,6 +88,17 @@ export default function RequirementsTable(props: RequirementsTableProps) {
         props.content.type,
         props.content.onButtonClick,
         visibility[TableColumns.ACTION]
+      ),
+    ];
+    return columns;
+  }
+
+  function getPurchaseOrderColumns() {
+    columns = [
+      RequirementColumn(
+        TableTypes.PURCHASE_ORDER,
+        props.content.nameColumnHeader,
+        visibility[TableColumns.NAME]
       ),
     ];
     return columns;

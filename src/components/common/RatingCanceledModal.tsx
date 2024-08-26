@@ -45,7 +45,7 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
           {`${
             userClass == UserClass.CUSTOMER
               ? `${t("customer").toUpperCase()}:`
-              : `${t("seller").toUpperCase()}:`
+              : `${t("supplier").toUpperCase()}:`
           } ${props.user.name}`}
         </b>
       </Flex>
@@ -67,7 +67,7 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
           t("rateCanceledQuestion") +
           (userClass == UserClass.CUSTOMER
             ? t("customer").toLowerCase()
-            : t("seller").toLowerCase()) +
+            : t("supplier").toLowerCase()) +
           "?"
         }`}
         <RatingContainer score={0} onChange={onScoreChange} />

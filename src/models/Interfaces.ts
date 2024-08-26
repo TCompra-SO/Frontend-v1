@@ -168,4 +168,14 @@ export interface TableTypeOffer extends TableHiddenColumns {
   // onButtonClick: (action: Action, data: OfferListItem) => void;
 }
 
-export type TableType = TableTypeRequirement | TableTypeOffer;
+export interface TableTypePurchaseOrder extends TableHiddenColumns {
+  type: TableTypes.PURCHASE_ORDER;
+  // data: {
+  //   OfferListItem[];
+  // }
+}
+
+export type TableType =
+  | TableTypeRequirement
+  | TableTypeOffer
+  | TableTypePurchaseOrder;

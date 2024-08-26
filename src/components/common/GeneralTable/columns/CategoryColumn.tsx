@@ -17,7 +17,10 @@ export default function CategoryColumn(
     dataIndex: "category",
     key: "category",
     align: "center",
-    sorter: (a, b) => a.title.localeCompare(b.title),
+    sorter:
+      type == TableTypes.REQUIREMENT
+        ? (a, b) => a.title.localeCompare(b.title)
+        : undefined,
     showSorterTooltip: false,
     width: "120px",
     hidden,

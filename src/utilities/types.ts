@@ -5,6 +5,37 @@ import {
   smallModalWidth,
 } from "./globals";
 
+/**** Estados ***/
+
+export enum RequirementState {
+  PUBLISHED = 1,
+  SELECTED = 2,
+  FINISHED = 3,
+  // DESERTED = 4,
+  EXPIRED = 5,
+  CANCELED = 6,
+  ELIMINATED = 7,
+  DISPUTE = 8,
+}
+
+export enum OfferState {
+  ACTIVE = 1,
+  WINNER = 2,
+  FINISHED = 3,
+  DISPUTE = 4,
+  CANCELED = 5,
+  ELIMINATED = 7,
+}
+
+export enum PurchaseOrderState {
+  PENDING = 1,
+  CANCELED = 2,
+  FINISHED = 3,
+  DISPUTE = 4,
+}
+
+/**************/
+
 export const DocType = {
   DNI: "DNI",
   RUC: "RUC",
@@ -23,16 +54,12 @@ export enum TableTypes {
   PURCHASE_ORDER = 3,
 }
 
-export enum RequirementState {
-  PUBLISHED = 1,
-  SELECTED = 2,
-  FINISHED = 3,
-  // DESERTED = 4,
-  EXPIRED = 5,
-  CANCELED = 6,
-  ELIMINATED = 7,
-  DISPUTE = 8,
+export enum UserTable {
+  COMPANY = 0,
+  PERSON = 1,
 }
+
+/*** Modales ****/
 
 export enum ModalTypes {
   NONE = 0,
@@ -47,7 +74,9 @@ export enum ModalTypes {
   CONFIRM = 9,
 }
 
-export const ModalWidth = {
+export const ModalWidth: {
+  [key in ModalTypes]: number;
+} = {
   [ModalTypes.NONE]: 0,
   [ModalTypes.DETAILED_REQUIREMENT]: commonModalWidth,
   [ModalTypes.VALIDATE_CODE]: mediumModalWidth,
@@ -60,10 +89,7 @@ export const ModalWidth = {
   [ModalTypes.CONFIRM]: mediumModalWidth,
 };
 
-export enum UserTable {
-  COMPANY = 0,
-  PERSON = 1,
-}
+/***** Acciones *****/
 
 export enum Action {
   SHOW_OFFERS = 1,
@@ -77,9 +103,22 @@ export enum Action {
   SELECT_OFFER = 9,
   CHAT = 10,
   CANCEL_OFFER = 11,
+  DOWNLOAD_PURCHASE_ORDER = 12,
+  VIEW_SUPPLIER = 13,
+  VIEW_CUSTOMER = 14,
+  VIEW_HISTORY = 15,
+  VIEW_REQUIREMENTS = 16,
+  VIEW_OFFERS = 17,
+  VIEW_PURCHASE_ORDERS = 18,
+  EDIT_USER = 19,
+  VIEW_DOCUMENT = 20,
+  DOCS_STATE = 21,
+  CANCEL = 22,
 }
 
-export const ActionLabel = {
+export const ActionLabel: {
+  [key in Action]: string;
+} = {
   [Action.SHOW_OFFERS]: "showOffers",
   [Action.DELETE]: "delete",
   [Action.CANCEL_REQUIREMENT]: "cancelRequirement",
@@ -91,16 +130,77 @@ export const ActionLabel = {
   [Action.SELECT_OFFER]: "selectOffer",
   [Action.CHAT]: "goToChat",
   [Action.CANCEL_OFFER]: "cancelOffer",
+  [Action.DOWNLOAD_PURCHASE_ORDER]: "donwloadPurchaseOrder",
+  [Action.VIEW_SUPPLIER]: "viewSupplier",
+  [Action.VIEW_CUSTOMER]: "viewCustomer",
+  [Action.VIEW_HISTORY]: "viewHistory",
+  [Action.VIEW_REQUIREMENTS]: "viewRequirements",
+  [Action.VIEW_OFFERS]: "viewOffers",
+  [Action.VIEW_PURCHASE_ORDERS]: "viewPurchaseOrders",
+  [Action.EDIT_USER]: "editUser",
+  [Action.VIEW_DOCUMENT]: "viewDocument",
+  [Action.DOCS_STATE]: "docsState",
+  [Action.CANCEL]: "cancel",
 };
 
-export enum OfferState {
-  ACTIVE = 1,
-  WINNER = 2,
-  FINISHED = 3,
-  DISPUTE = 4,
-  CANCELED = 5,
-  ELIMINATED = 7,
-}
+export const ActionByStateRequirement: {
+  [key in RequirementState]: Array<Action>;
+} = {
+  [RequirementState.CANCELED]: [Action.DELETE, Action.REPUBLISH],
+  [RequirementState.DISPUTE]: [Action.SHOW_SUMMARY],
+  [RequirementState.EXPIRED]: [Action.DELETE, Action.REPUBLISH],
+  [RequirementState.FINISHED]: [Action.SHOW_SUMMARY],
+  [RequirementState.PUBLISHED]: [Action.DELETE, Action.CANCEL_REQUIREMENT],
+  [RequirementState.SELECTED]: [Action.CANCEL_REQUIREMENT, Action.FINISH],
+  [RequirementState.ELIMINATED]: [],
+};
+
+export const ActionByStateOffer: { [key in OfferState]: Array<Action> } = {
+  [OfferState.ACTIVE]: [Action.DELETE, Action.SHOW_SUMMARY, Action.CHAT],
+  [OfferState.CANCELED]: [
+    Action.RATE_CANCELED,
+    Action.SHOW_SUMMARY,
+    Action.CHAT,
+  ],
+  [OfferState.DISPUTE]: [Action.SHOW_SUMMARY, Action.CHAT],
+  [OfferState.FINISHED]: [Action.SHOW_SUMMARY, Action.CHAT],
+  [OfferState.WINNER]: [
+    Action.CANCEL_OFFER,
+    Action.FINISH,
+    Action.SHOW_SUMMARY,
+    Action.CHAT,
+  ],
+  [OfferState.ELIMINATED]: [],
+};
+
+export const ActionByStatePurchaseOrder: {
+  [key in PurchaseOrderState]: Array<Action>;
+} = {
+  [PurchaseOrderState.PENDING]: [
+    Action.DOWNLOAD_PURCHASE_ORDER,
+    Action.FINISH,
+    Action.VIEW_SUPPLIER,
+    Action.VIEW_HISTORY,
+    Action.CANCEL,
+  ],
+  [PurchaseOrderState.DISPUTE]: [
+    Action.DOWNLOAD_PURCHASE_ORDER,
+    Action.VIEW_SUPPLIER,
+    Action.VIEW_HISTORY,
+  ],
+  [PurchaseOrderState.FINISHED]: [
+    Action.DOWNLOAD_PURCHASE_ORDER,
+    Action.VIEW_SUPPLIER,
+    Action.VIEW_HISTORY,
+  ],
+  [PurchaseOrderState.CANCELED]: [
+    Action.DOWNLOAD_PURCHASE_ORDER,
+    Action.VIEW_SUPPLIER,
+    Action.VIEW_HISTORY,
+  ],
+};
+
+/*********/
 
 export enum PriceFilter {
   ALL = allSelect,
@@ -148,35 +248,6 @@ export enum TableColumns {
   DOCUMENT = 15,
   OFFER = 16,
 }
-
-export const ActionByStateRequirement: {
-  [key in RequirementState]: Array<Action>;
-} = {
-  [RequirementState.CANCELED]: [Action.DELETE, Action.REPUBLISH],
-  [RequirementState.DISPUTE]: [Action.SHOW_SUMMARY],
-  [RequirementState.EXPIRED]: [Action.DELETE, Action.REPUBLISH],
-  [RequirementState.FINISHED]: [Action.SHOW_SUMMARY],
-  [RequirementState.PUBLISHED]: [Action.DELETE, Action.CANCEL_REQUIREMENT],
-  [RequirementState.SELECTED]: [Action.CANCEL_REQUIREMENT, Action.FINISH],
-  [RequirementState.ELIMINATED]: [],
-};
-
-export const ActionByStateOffer: { [key in OfferState]: Array<Action> } = {
-  [OfferState.ACTIVE]: [Action.DELETE, Action.SHOW_SUMMARY, Action.CHAT],
-  [OfferState.CANCELED]: [
-    Action.RATE_CANCELED,
-    Action.SHOW_SUMMARY,
-    Action.CHAT,
-  ],
-  [OfferState.DISPUTE]: [Action.SHOW_SUMMARY, Action.CHAT],
-  [OfferState.FINISHED]: [Action.SHOW_SUMMARY, Action.CHAT],
-  [OfferState.WINNER]: [
-    Action.CANCEL_OFFER,
-    Action.FINISH,
-    Action.SHOW_SUMMARY,
-    Action.CHAT,
-  ],
-};
 
 export enum UserClass {
   CUSTOMER = 0,

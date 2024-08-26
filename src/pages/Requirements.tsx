@@ -1,5 +1,5 @@
 import { Col, Flex, Row } from "antd";
-import RequirementsTable from "../components/common/RequirementsTable/RequirementsTable";
+import GeneralTable from "../components/common/RequirementsTable/GeneralTable";
 import InputContainer from "../components/containers/InputContainer";
 import ModalContainer from "../components/containers/ModalContainer";
 import {
@@ -931,7 +931,7 @@ export default function Requirements() {
             </Col>
           </Row>
 
-          <RequirementsTable content={tableContent} />
+          <GeneralTable content={tableContent} />
         </Flex>
       </div>
     </>

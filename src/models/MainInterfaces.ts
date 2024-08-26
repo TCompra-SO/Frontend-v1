@@ -25,6 +25,7 @@ export interface RequirementTableItem {
 export interface OfferListItem {
   key: string;
   title: string;
+  requirementTitle: string;
   description: string;
   coin: string;
   price: number;
@@ -41,7 +42,14 @@ export interface OfferListItem {
   igv?: boolean;
 }
 
-export type TableRecordType = OfferListItem | RequirementTableItem;
+export interface PurchaseOrder {
+  requirementTitle: string;
+}
+
+export type TableRecordType =
+  | OfferListItem
+  | RequirementTableItem
+  | PurchaseOrder;
 
 export interface User {
   uid: string;

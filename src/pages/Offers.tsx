@@ -18,7 +18,7 @@ import { faPeopleCarryBox } from "@fortawesome/free-solid-svg-icons";
 import Title from "antd/es/typography/Title";
 import InputContainer from "../components/containers/InputContainer";
 import { SearchOutlined } from "@ant-design/icons";
-import RequirementsTable from "../components/common/RequirementsTable/RequirementsTable";
+import GeneralTable from "../components/common/GeneralTable/GeneralTable";
 
 const offerList: OfferListItem[] = [
   {
@@ -348,7 +348,7 @@ export default function Offers() {
               />
             </Col>
           </Row>
-          <RequirementsTable content={tableContent} />
+          <GeneralTable content={tableContent} />
         </Flex>
       </div>
     </>
