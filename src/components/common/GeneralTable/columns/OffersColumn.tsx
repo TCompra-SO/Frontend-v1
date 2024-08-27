@@ -1,8 +1,5 @@
 import { ColumnType } from "antd/es/table";
-import {
-  RequirementTableItem,
-  TableRecordType,
-} from "../../../../models/MainInterfaces";
+import { RequirementTableItem } from "../../../../models/MainInterfaces";
 import ButtonContainer from "../../../containers/ButtonContainer";
 import { Action, TableTypes } from "../../../../utilities/types";
 import { lightColor, primaryColor } from "../../../../utilities/colors";
@@ -10,25 +7,17 @@ import { useTranslation } from "react-i18next";
 
 export default function OffersColumn(
   type: TableTypes,
-  onButtonClick: (action: Action, data: TableRecordType) => void,
+  onButtonClick: (action: Action, data: RequirementTableItem) => void,
   hidden: boolean = false
 ) {
   const { t } = useTranslation();
 
-  const col: ColumnType<TableRecordType> = {
+  const col: ColumnType<RequirementTableItem> = {
     title: t("offersColumn"),
     dataIndex: "numberOffers",
     key: "offers",
     align: "center",
-    sorter: (a, b) => {
-      if ("numberOffers" in a && "numberOffers" in b) {
-        return (
-          (a as RequirementTableItem).numberOffers -
-          (b as RequirementTableItem).numberOffers
-        );
-      }
-      return 0;
-    },
+    sorter: (a, b) => a.numberOffers - b.numberOffers,
     showSorterTooltip: false,
     width: "75px",
     hidden,
@@ -39,7 +28,7 @@ export default function OffersColumn(
             size="small"
             type="default"
             shape="round"
-            text={(record as RequirementTableItem).numberOffers}
+            text={record.numberOffers}
             onClick={() => onButtonClick(Action.SHOW_OFFERS, record)}
             style={{
               height: "32px",

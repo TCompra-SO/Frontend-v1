@@ -10,6 +10,7 @@ import {
 } from "../utilities/types";
 import {
   OfferListItem,
+  PurchaseOrder,
   RequirementTableItem,
   TableRecordType,
   User,
@@ -152,7 +153,7 @@ export interface HttpService {
 export interface TableHiddenColumns {
   hiddenColumns: TableColumns[];
   nameColumnHeader: string;
-  onButtonClick: (action: Action, data: TableRecordType) => void;
+  onButtonClick: (action: Action, data: any) => void;
 }
 
 export interface TableTypeRequirement extends TableHiddenColumns {
@@ -170,9 +171,8 @@ export interface TableTypeOffer extends TableHiddenColumns {
 
 export interface TableTypePurchaseOrder extends TableHiddenColumns {
   type: TableTypes.PURCHASE_ORDER;
-  // data: {
-  //   OfferListItem[];
-  // }
+  data: PurchaseOrder[];
+  // onButtonClick: (action: Action, data: PurchaseOrder) => void;
 }
 
 export type TableType =

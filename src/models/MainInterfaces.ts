@@ -1,5 +1,6 @@
 import {
   OfferState,
+  PurchaseOrderState,
   RequirementState,
   RequirementType,
   UserTable,
@@ -44,6 +45,11 @@ export interface OfferListItem {
 
 export interface PurchaseOrder {
   requirementTitle: string;
+  purchaseDate: Date;
+  state: PurchaseOrderState;
+  user: User;
+  subUser?: User;
+  type: RequirementType;
 }
 
 export type TableRecordType =

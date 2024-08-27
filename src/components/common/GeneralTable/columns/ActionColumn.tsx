@@ -1,5 +1,4 @@
 import { ColumnType } from "antd/es/table";
-import { TableRecordType } from "../../../../models/MainInterfaces";
 import { Dropdown } from "antd";
 import ButtonContainer from "../../../containers/ButtonContainer";
 import { CaretDownOutlined } from "@ant-design/icons";
@@ -14,19 +13,19 @@ import { useTranslation } from "react-i18next";
 
 export default function ActionColumn(
   type: TableTypes,
-  onButtonClick: (action: Action, data: TableRecordType) => void,
+  onButtonClick: (action: Action, data: any) => void,
   hidden: boolean = false
 ) {
   const { t } = useTranslation();
 
-  const col: ColumnType<TableRecordType> = {
+  const col: ColumnType<any> = {
     title: t("actionColumn"),
     key: "action",
     align: "center",
     showSorterTooltip: false,
     width: "115px",
     hidden,
-    render: (record: TableRecordType) => {
+    render: (record) => {
       const ActionByState: { [key: number]: Action[] } =
         type == TableTypes.REQUIREMENT
           ? ActionByStateRequirement

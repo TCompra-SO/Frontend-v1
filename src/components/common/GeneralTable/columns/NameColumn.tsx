@@ -1,7 +1,7 @@
 import { ColumnType } from "antd/es/table";
 import {
+  OfferListItem,
   RequirementTableItem,
-  TableRecordType,
 } from "../../../../models/MainInterfaces";
 import { Flex } from "antd";
 import { tableHeaderTextColor } from "../../../../utilities/colors";
@@ -12,7 +12,7 @@ export default function NameColumn(
   nameColumnHeader: string,
   hidden: boolean = false
 ) {
-  const col: ColumnType<TableRecordType> = {
+  const col: ColumnType<RequirementTableItem | OfferListItem> = {
     title: nameColumnHeader,
     dataIndex: "title",
     key: "name",

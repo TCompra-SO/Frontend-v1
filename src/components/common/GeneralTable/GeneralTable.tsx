@@ -11,8 +11,13 @@ import StateColumn from "./columns/StateColumn";
 import ActionColumn from "./columns/ActionColumn";
 import CategoryColumn from "./columns/CategoryColumn";
 import { TableType } from "../../../models/Interfaces";
-import { TableRecordType } from "../../../models/MainInterfaces";
 import RequirementColumn from "./columns/RequirementColumn";
+import {
+  OfferListItem,
+  PurchaseOrder,
+  RequirementTableItem,
+} from "../../../models/MainInterfaces";
+import { ColumnType } from "antd/es/table";
 
 interface RequirementsTableProps {
   content: TableType;
@@ -20,7 +25,14 @@ interface RequirementsTableProps {
 
 export default function GeneralTable(props: RequirementsTableProps) {
   const pageSizeOptions = pageSizeOptionsSt;
-  let columns: TableProps<TableRecordType>["columns"] = [];
+  let columns: Array<
+    | ColumnType<OfferListItem>
+    | ColumnType<RequirementTableItem>
+    | ColumnType<PurchaseOrder>
+    | ColumnType<OfferListItem | RequirementTableItem>
+    | ColumnType<OfferListItem | PurchaseOrder>
+    | ColumnType<OfferListItem | PurchaseOrder | RequirementTableItem>
+  > = [];
 
   // Hacer visibles todas las columnas inicialmente
   const visibility: { [key in TableColumns]: boolean } = Object.keys(
@@ -37,13 +49,36 @@ export default function GeneralTable(props: RequirementsTableProps) {
     visibility[hiddenCol] = true;
   });
 
+  const tableProps: TableProps = {
+    scroll: { x: 1000 },
+    style: { width: "100%" },
+    bordered: false,
+    pagination: {
+      pageSizeOptions,
+      showSizeChanger: true,
+    },
+  };
+
   switch (props.content.type) {
     case TableTypes.REQUIREMENT:
-      props.content.data;
       getRequirementTableColumns();
-      break;
+      return (
+        <Table
+          dataSource={props.content.data}
+          columns={columns as Array<ColumnType<RequirementTableItem>>}
+          {...tableProps}
+        ></Table>
+      );
+
     case TableTypes.OFFER:
       getOfferTableColumns();
+      return (
+        <Table
+          dataSource={props.content.data}
+          columns={columns as Array<ColumnType<OfferListItem>>}
+          {...tableProps}
+        ></Table>
+      );
   }
 
   function getRequirementTableColumns() {
@@ -56,7 +91,7 @@ export default function GeneralTable(props: RequirementsTableProps) {
       ),
       CategoryColumn(props.content.type, visibility[TableColumns.CATEGORY]),
       LocationColumn(visibility[TableColumns.LOCATION]),
-      DateColumn(visibility[TableColumns.DATE]),
+      DateColumn(props.content.type, visibility[TableColumns.DATE]),
       PriceColumn(visibility[TableColumns.PRICE]),
       OffersColumn(
         props.content.type,
@@ -80,8 +115,9 @@ export default function GeneralTable(props: RequirementsTableProps) {
         props.content.nameColumnHeader,
         visibility[TableColumns.NAME]
       ),
+      RequirementColumn(true, visibility[TableColumns.REQUIREMENT]),
       LocationColumn(visibility[TableColumns.LOCATION]),
-      DateColumn(visibility[TableColumns.DATE]),
+      DateColumn(props.content.type, visibility[TableColumns.DATE]),
       PriceColumn(visibility[TableColumns.PRICE]),
       StateColumn(props.content.type, visibility[TableColumns.STATE]),
       ActionColumn(
@@ -94,39 +130,21 @@ export default function GeneralTable(props: RequirementsTableProps) {
   }
 
   function getPurchaseOrderColumns() {
-    columns = [
-      RequirementColumn(
-        TableTypes.PURCHASE_ORDER,
-        props.content.nameColumnHeader,
-        visibility[TableColumns.NAME]
-      ),
-    ];
+    columns = [RequirementColumn(true, visibility[TableColumns.NAME])];
     return columns;
   }
 
-  return (
-    <Table
-      dataSource={props.content.data}
-      columns={columns}
-      scroll={{ x: 1000 }}
-      style={{ width: "100%" }}
-      bordered={false}
-      pagination={{
-        pageSizeOptions,
-        showSizeChanger: true,
-        // hideOnSinglePage: true,<
-        // locale: {
-        //   items_per_page: `/ ${
-        //     props.type == RequirementType.GOOD
-        //       ? t("goods")
-        //       : props.type == RequirementType.SERVICE
-        //       ? t("services")
-        //       : props.type == RequirementType.SALE
-        //       ? t("sales")
-        //       : t("jobs")
-        //   } por página`,
-        // },
-      }}
-    ></Table>
-  );
+  // return (
+  //   <Table
+  //     dataSource={props.content.data}
+  //     columns={columns as Array<ColumnType<RequirementTableItem>>}
+  //     scroll={{ x: 1000 }}
+  //     style={{ width: "100%" }}
+  //     bordered={false}
+  //     pagination={{
+  //       pageSizeOptions,
+  //       showSizeChanger: true,
+  //     }}
+  //   ></Table>
+  // );
 }

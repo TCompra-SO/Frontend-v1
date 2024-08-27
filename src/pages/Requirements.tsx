@@ -1,5 +1,4 @@
 import { Col, Flex, Row } from "antd";
-import GeneralTable from "../components/common/RequirementsTable/GeneralTable";
 import InputContainer from "../components/containers/InputContainer";
 import ModalContainer from "../components/containers/ModalContainer";
 import {
@@ -26,6 +25,7 @@ import { useState } from "react";
 import { ModalContent, TableTypeRequirement } from "../models/Interfaces";
 import RateModalTitleContainer from "../components/containers/RateModalTitleContainer";
 import { useTranslation } from "react-i18next";
+import GeneralTable from "../components/common/GeneralTable/GeneralTable";
 
 const requirements: RequirementTableItem[] = [
   {
@@ -800,9 +800,9 @@ export default function Requirements() {
 
   function handleOnButtonClick(
     action: Action,
-    prevRequirement: TableRecordType
+    requirement: RequirementTableItem
   ) {
-    const requirement = prevRequirement as RequirementTableItem;
+    // const requirement = prevRequirement as RequirementTableItem;
     switch (action) {
       case Action.SHOW_OFFERS: {
         setDataModal({

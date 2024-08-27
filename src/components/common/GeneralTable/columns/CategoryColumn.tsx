@@ -1,8 +1,5 @@
 import { ColumnType } from "antd/es/table";
-import {
-  RequirementTableItem,
-  TableRecordType,
-} from "../../../../models/MainInterfaces";
+import { RequirementTableItem } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
 import { TableTypes } from "../../../../utilities/types";
 
@@ -12,7 +9,7 @@ export default function CategoryColumn(
 ) {
   const { t } = useTranslation();
 
-  const col: ColumnType<TableRecordType> = {
+  const col: ColumnType<RequirementTableItem> = {
     title: t("categoryColumn"),
     dataIndex: "category",
     key: "category",

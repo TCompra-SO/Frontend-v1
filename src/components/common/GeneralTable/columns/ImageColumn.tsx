@@ -1,16 +1,15 @@
 import { ColumnType } from "antd/es/table";
-import { TableRecordType } from "../../../../models/MainInterfaces";
 import AvatarContainer from "../../../containers/AvatarContainer";
 
 export default function ImageColumn(hidden: boolean = false) {
-  const col: ColumnType<TableRecordType> = {
+  const col: ColumnType<any> = {
     dataIndex: "image",
     align: "center",
     hidden,
     width: 40,
-    render: (_, { image }) => (
+    render: (_, record) => (
       <AvatarContainer
-        src={image ?? "https://placehold.co/100x100"}
+        src={record.image ?? "https://placehold.co/100x100"}
       ></AvatarContainer>
     ),
   };
