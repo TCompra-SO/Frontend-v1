@@ -36,7 +36,7 @@ export default function RequirementModalRepublish(
           style={{ width: "100%" }}
         />
         <ButtonContainer
-          text={t("acceptButton")}
+          children={t("acceptButton")}
           block
           type="primary"
           style={{ marginTop: "9px" }}

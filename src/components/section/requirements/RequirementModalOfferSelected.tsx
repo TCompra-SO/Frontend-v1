@@ -60,12 +60,12 @@ export default function RequirementModalOfferSelected(
       />
       <Flex gap="small" justify="flex-end">
         <ButtonContainer
-          text={t("acceptButton")}
+          children={t("acceptButton")}
           type="primary"
           onClick={selectOffer}
         />
         <ButtonContainer
-          text={t("cancelButton")}
+          children={t("cancelButton")}
           type="primary"
           onClick={props.onClose}
         />

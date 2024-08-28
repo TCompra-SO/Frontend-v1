@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { App as AntdApp, ConfigProvider, Layout, theme } from "antd";
+import { App as AntdApp, ConfigProvider, theme } from "antd";
 import LoadingCond from "./pages/utils/LoadingCond.tsx";
 import LoadingPage from "./pages/utils/LoadingPage.tsx";
 import "./assets/styles.css";
@@ -14,7 +14,6 @@ import {
 import esEs from "antd/locale/es_ES";
 import enUs from "antd/locale/en_US";
 import i18n from "./utilities/i18n.ts";
-import Sider from "antd/es/layout/Sider";
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import { pageRoutes } from "./utilities/routes.ts";
 import Sidebar from "./components/section/sidebar/Sidebar.tsx";
@@ -40,11 +39,25 @@ const currentLanguage = i18n.language;
 // };
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => (
-  <Layout style={{ minHeight: "100vh" }}>
-    <Sider collapsible style={{}}>
-      <Sidebar />
-    </Sider>
-    <Layout>
+  // <Layout style={{ minHeight: "100vh" }}>
+  <div className="t-flex">
+    {/* <Sider
+      width="21%"
+      style={{
+        overflow: "auto",
+        height: "100vh",
+        position: "fixed",
+        insetInlineStart: 0,
+        top: 0,
+        bottom: 0,
+        scrollbarWidth: "thin",
+        scrollbarColor: "unset",
+      }}
+    > */}
+    <Sidebar />
+    {/* </Sider> */}
+    <div className="col-datos">
+      {/* <Layout> */}
       <Header
         style={{ padding: 0, background: "#ffffff" }}
         children={<MainHeader />}
@@ -53,8 +66,12 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => (
       <Footer style={{ textAlign: "center" }}>
         TCompra ©{new Date().getFullYear()} Soluciones Online S. A. C.
       </Footer>
-    </Layout>
-  </Layout>
+      {/* </Layout> */}
+    </div>
+
+    {/* </div> */}
+    {/* </Layout> */}
+  </div>
 );
 
 function App() {

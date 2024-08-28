@@ -48,7 +48,7 @@ export default function ActionColumn(
             size="small"
             type="primary"
             ghost
-            text={t("select")}
+            children={t("select")}
             upperCaseSmaller={true}
             icon={<CaretDownOutlined />}
             iconPosition="end"

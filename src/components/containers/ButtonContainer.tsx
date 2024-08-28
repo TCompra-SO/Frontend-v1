@@ -2,13 +2,13 @@ import { Button } from "antd";
 import { ButtonProps } from "antd/lib";
 
 interface ButtonContainerProps extends ButtonProps {
-  text: React.ReactNode;
   upperCaseSmaller?: boolean;
+  common?: boolean;
 }
 
 export default function ButtonContainer({
   upperCaseSmaller,
-  text,
+  common,
   ...rest
 }: ButtonContainerProps) {
   let newStyle = rest.style;
@@ -20,9 +20,19 @@ export default function ButtonContainer({
       fontWeight: "600",
     };
 
+  if (!common)
+    return (
+      <Button {...rest} style={newStyle}>
+        {rest.children}
+      </Button>
+    );
+
   return (
-    <Button {...rest} style={newStyle}>
-      {text}
-    </Button>
+    <button
+      className={rest.className}
+      onClick={rest.onClick}
+      style={newStyle}
+      children={rest.children}
+    ></button>
   );
 }

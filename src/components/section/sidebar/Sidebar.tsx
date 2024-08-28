@@ -1,62 +1,234 @@
-import {
-  DesktopOutlined,
-  FileOutlined,
-  TeamOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-// import { faHeart, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { faUser } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Menu, MenuProps } from "antd";
-import logo from "../../../assets/images/logo-white.svg";
-
-type MenuItem = Required<MenuProps>["items"][number];
-
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[],
-  style?: React.CSSProperties
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-    style,
-  } as MenuItem;
-}
-
-const items: MenuItem[] = [
-  getItem(
-    "",
-    "",
-    <a href="#">
-      <img className="img-logo" src={logo} alt="Logo" />
-    </a>
-  ),
-  getItem("Option 1", "1", <FontAwesomeIcon icon={faUser} />),
-  getItem("Option 2", "2", <DesktopOutlined />),
-  getItem("User", "sub1", <UserOutlined />, [
-    getItem("Tom", "3"),
-    getItem("Bill", "4"),
-    getItem("Alex", "5"),
-  ]),
-  getItem("Team", "sub2", <TeamOutlined />, [
-    getItem("Team 1", "6"),
-    getItem("Team 2", "8"),
-  ]),
-  getItem("Files", "9", <FileOutlined />),
-];
+import { useState } from "react";
+import ButtonContainer from "../../containers/ButtonContainer";
+import ImageContainer from "../../containers/ImageContainer";
+import { useTranslation } from "react-i18next";
 
 export default function Sidebar() {
+  const { t } = useTranslation();
+  const [menuVisibility, setMenuVisibility] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const buttonClass: string = "btn btn-transparent wd-100 text-left";
+
+  function toggleMenu(menuId: string) {
+    setMenuVisibility((prevVisibility) => ({
+      ...prevVisibility,
+      [menuId]: !prevVisibility[menuId],
+    }));
+  }
+
   return (
-    <Menu
-      theme="dark"
-      defaultSelectedKeys={["1"]}
-      mode="inline"
-      items={items}
-    />
+    <div className="col-menu t-flex">
+      <div>
+        <ImageContainer
+          src="/src/assets/images/logo-white.svg"
+          style={{ width: "100%" }}
+        ></ImageContainer>
+      </div>
+      <div className="menu-tc-1 t-flex scroll-y">
+        <ButtonContainer
+          children={
+            <>
+              <i className="fa-regular fa-user-pen text-center i-btn"></i>{" "}
+              {t("myProfile")}
+            </>
+          }
+          common
+          className={buttonClass}
+        />
+        <ButtonContainer
+          children={
+            <>
+              <i className="fa-regular fa-arrow-down-short-wide text-center i-btn"></i>{" "}
+              {t("myRequirements")}{" "}
+              <i className="fa-solid fa-chevron-down i-sub text-center"></i>
+            </>
+          }
+          common
+          className={buttonClass}
+          onClick={() => toggleMenu("menu1")}
+        />
+        <div
+          className="sub-menu t-flex"
+          style={{ display: menuVisibility["menu1"] ? "block" : "none" }}
+        >
+          <ButtonContainer
+            className="btn btn-transparent wd-100 text-left"
+            common
+          >
+            <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
+            {t("goods")}
+          </ButtonContainer>
+          <ButtonContainer
+            className="btn btn-transparent wd-100 text-left"
+            common
+          >
+            <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
+            {t("services")}
+          </ButtonContainer>
+          <ButtonContainer
+            className="btn btn-transparent wd-100 text-left"
+            common
+          >
+            <i className="fa-regular fa-basket-shopping text-center i-btn"></i>{" "}
+            {t("sales")}
+          </ButtonContainer>
+        </div>
+        <ButtonContainer
+          children={
+            <>
+              <i className="fa-regular fa-arrow-up-wide-short text-center i-btn"></i>{" "}
+              {t("myOffers")}{" "}
+              <i className="fa-solid fa-chevron-down i-sub text-center"></i>
+            </>
+          }
+          common
+          className={buttonClass}
+        />
+        <ButtonContainer
+          children={
+            <>
+              <i className="fa-regular fa-user-tie text-center i-btn"></i>{" "}
+              {t("rrhh")}{" "}
+              <i className="fa-solid fa-chevron-down i-sub text-center"></i>
+            </>
+          }
+          common
+          className={buttonClass}
+        />
+        <ButtonContainer
+          children={
+            <>
+              <i className="fa-regular fa-file-contract text-center i-btn"></i>{" "}
+              {t("purchaseOrder")}{" "}
+              <i className="fa-solid fa-chevron-down i-sub text-center"></i>
+            </>
+          }
+          common
+          className={buttonClass}
+        />
+        <ButtonContainer
+          children={
+            <>
+              <i className="fa-regular fa-comment text-center i-btn"></i>{" "}
+              {t("chat")} <div className="chat-notf">10</div>
+            </>
+          }
+          common
+          className={buttonClass}
+        />
+        <ButtonContainer
+          children={
+            <>
+              <i className="fa-regular fa-users text-center i-btn"></i>{" "}
+              {t("createUsers")}{" "}
+              <i className="fa-solid fa-chevron-down i-sub text-center"></i>
+            </>
+          }
+          common
+          className={buttonClass}
+        />
+        <ButtonContainer
+          children={
+            <>
+              <i className="fa-regular fa-paste text-center i-btn"></i>{" "}
+              {t("goods")}{" "}
+              <i className="fa-solid fa-chevron-down i-sub text-center"></i>
+            </>
+          }
+          common
+          className={buttonClass}
+        />
+        <ButtonContainer
+          children={
+            <>
+              <i className="fa-regular fa-ballot-check text-center i-btn"></i>{" "}
+              {t("offers")}{" "}
+              <i className="fa-solid fa-chevron-down i-sub text-center"></i>
+            </>
+          }
+          common
+          className={buttonClass}
+        />
+        <ButtonContainer
+          children={
+            <>
+              <i className="fa-regular fa-file-certificate text-center i-btn"></i>{" "}
+              {t("certificates")}{" "}
+              <i className="fa-solid fa-chevron-down i-sub text-center"></i>
+            </>
+          }
+          common
+          className={buttonClass}
+        />
+        <ButtonContainer
+          children={
+            <>
+              <i
+                className="fa-regular fa-money-check-pen text-center"
+                style={{ width: "25px;" }}
+              ></i>{" "}
+              {t("finishedPurchaseOrders")}{" "}
+              <i className="fa-solid fa-chevron-down i-sub text-center"></i>
+            </>
+          }
+          common
+          className={buttonClass}
+        />
+        <ButtonContainer
+          children={
+            <>
+              <i className="fa-regular fa-chart-line text-center i-btn"></i>{" "}
+              {t("statistics")}{" "}
+              <i className="fa-solid fa-chevron-down i-sub text-center"></i>
+            </>
+          }
+          common
+          className={buttonClass}
+        />
+      </div>
+      <div className="menu-tc-2 t-flex">
+        <ButtonContainer
+          children={
+            <>
+              <i className="fa-regular fa-crown"></i> {t("premium")}
+            </>
+          }
+          common
+          className="btn btn-default wd-100"
+        />
+        <ButtonContainer
+          children={
+            <>
+              <i className="fa-regular fa-plus"></i> {t("add")}
+            </>
+          }
+          common
+          className="btn btn-white wd-100"
+        />
+      </div>
+      <div className="menu-tc-3 t-flex">
+        <ButtonContainer
+          children={
+            <>
+              <i className="fa-solid fa-question text-center i-btn"></i>{" "}
+              {t("support")}
+            </>
+          }
+          common
+          className={buttonClass}
+        />
+        <ButtonContainer
+          children={
+            <>
+              <i className="fa-regular fa-gear text-center i-btn"></i>{" "}
+              {t("settings")}
+            </>
+          }
+          common
+          className={buttonClass}
+        />
+      </div>
+    </div>
   );
 }

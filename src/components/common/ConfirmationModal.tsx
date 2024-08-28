@@ -27,11 +27,11 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
         <ButtonContainer
           onClick={(e) => closeModal(e, true)}
           type="primary"
-          text={t("acceptButton")}
+          children={t("acceptButton")}
         />
         <ButtonContainer
           onClick={(e) => closeModal(e, false)}
-          text={t("cancelButton")}
+          children={t("cancelButton")}
           type="primary"
         />
       </Flex>

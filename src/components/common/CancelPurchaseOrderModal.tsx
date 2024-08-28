@@ -42,12 +42,12 @@ export default function CancelPurchaseOrderModal(
       </Flex>
       <Flex justify="flex-end" gap="small">
         <ButtonContainer
-          text={t("acceptButton")}
+          children={t("acceptButton")}
           type="primary"
           onClick={cancelPurchaseOrder}
         />
         <ButtonContainer
-          text={t("cancelButton")}
+          children={t("cancelButton")}
           onClick={props.onClose}
           type="primary"
         />

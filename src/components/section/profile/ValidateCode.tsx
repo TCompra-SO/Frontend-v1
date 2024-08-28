@@ -202,7 +202,7 @@ export default function ValidateCode({
         <ButtonContainer
           key="back"
           onClick={handleClose}
-          text={t("cancelButton")}
+          children={t("cancelButton")}
         />,
         <ButtonContainer
           key="submit"
@@ -219,7 +219,7 @@ export default function ValidateCode({
               ? false
               : timerToValidate != timeoutToValidate
           }
-          text={
+          children={
             stepsIni[current].key == "val"
               ? `${t("validate")}${
                   timerToValidate != timeoutToValidate

@@ -75,14 +75,14 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
       <Flex justify="center">
         <ButtonContainer
           onClick={saveScore}
-          text={t("submitRating")}
+          children={t("submitRating")}
           block
           style={{ marginRight: "10px" }}
           type="primary"
         />
         <ButtonContainer
           onClick={props.onClose}
-          text={t("cancelButton")}
+          children={t("cancelButton")}
           block
           type="primary"
         />

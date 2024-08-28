@@ -149,14 +149,14 @@ export default function RatingModal(props: RatingModalProps) {
         <RatingContainer score={0} onChange={(val) => onScoreChange(2, val)} />
       </Flex>
       <ButtonContainer
-        text={t("submitRating")}
+        children={t("submitRating")}
         block
         type="primary"
         style={{ marginBottom: "10px" }}
         onClick={rateUser}
       />
       <ButtonContainer
-        text={t("cancelButton")}
+        children={t("cancelButton")}
         block
         type="primary"
         onClick={closeModal}

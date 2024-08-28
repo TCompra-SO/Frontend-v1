@@ -28,7 +28,7 @@ export default function OffersColumn(
             size="small"
             type="default"
             shape="round"
-            text={record.numberOffers}
+            children={record.numberOffers}
             onClick={() => onButtonClick(Action.SHOW_OFFERS, record)}
             style={{
               height: "32px",

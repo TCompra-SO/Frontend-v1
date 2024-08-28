@@ -135,7 +135,7 @@ export default function Search() {
                       ghost
                       style={{ height: "80px", borderRadius: "25px" }}
                       onClick={handleShowMoreOptions}
-                      text={
+                      children={
                         !showMoreOptions ? (
                           <MenuFoldOutlined />
                         ) : (
@@ -154,7 +154,7 @@ export default function Search() {
                         borderRadius: "25px",
                         fontSize: "20px",
                       }}
-                      text={t("search")}
+                      children={t("search")}
                     />
                   </Col>
                 </Row>

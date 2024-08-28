@@ -4,7 +4,7 @@ import moment from "moment";
 import { dateFormat } from "../utilities/globals";
 import { useDispatch, useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import showNotification from "../utilities/notification/showNotification";
 import ValidateCode from "../components/section/profile/ValidateCode";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -28,7 +28,6 @@ import { countriesService } from "../services/utilService";
 import { profileService, sendCodeService } from "../services/authService";
 import { useTranslation } from "react-i18next";
 import { CountriesRequestType } from "../utilities/types";
-import { ListsContext } from "../contexts/ListsContext";
 
 const rulesBirthdate = [
   {
@@ -66,8 +65,8 @@ const rulesCity = [
 export default function Profile() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const context = useContext(ListsContext);
-  const { countryList } = context;
+  // const context = useContext(ListsContext);
+  // const { countryList } = context;
   const { state } = useLocation();
   const { email } = state;
   // const email = "aall@gmail.com";
@@ -273,7 +272,7 @@ export default function Profile() {
                     style={{ marginTop: "30px", height: "50px" }}
                     shape="round"
                     block={true}
-                    text={t("saveButton")}
+                    children={t("saveButton")}
                   />
                 )}
                 {profileSuccess && (
@@ -284,7 +283,7 @@ export default function Profile() {
                     shape="round"
                     block={true}
                     disabled={false}
-                    text={t("sendValidationCode")}
+                    children={t("sendValidationCode")}
                   />
                 )}
               </Form.Item>

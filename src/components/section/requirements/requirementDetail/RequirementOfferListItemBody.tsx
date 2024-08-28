@@ -177,7 +177,7 @@ export default function RequirementOfferListItemBody(
         <Flex justify="center" gap="small" style={{ width: "100%" }}>
           {props.offer.state == OfferState.WINNER && (
             <ButtonContainer
-              text={t(ActionLabel[Action.CANCEL_PURCHASE_ORDER])}
+              children={t(ActionLabel[Action.CANCEL_PURCHASE_ORDER])}
               type="primary"
               onClick={() => onOpenModal(Action.CANCEL_PURCHASE_ORDER)}
               upperCaseSmaller={true}
@@ -186,7 +186,7 @@ export default function RequirementOfferListItemBody(
           {props.offer.state == OfferState.ACTIVE &&
             props.requirement.state == RequirementState.PUBLISHED && (
               <ButtonContainer
-                text={t(ActionLabel[Action.SELECT_OFFER])}
+                children={t(ActionLabel[Action.SELECT_OFFER])}
                 type="primary"
                 onClick={() => onOpenModal(Action.SELECT_OFFER)}
                 upperCaseSmaller={true}
@@ -194,14 +194,14 @@ export default function RequirementOfferListItemBody(
             )}
           {props.offer.state == OfferState.CANCELED && ( // r3v creador de ofera canceló la oferta
             <ButtonContainer
-              text={t(ActionLabel[Action.RATE_CANCELED])}
+              children={t(ActionLabel[Action.RATE_CANCELED])}
               type="primary"
               onClick={() => onOpenModal(Action.RATE_CANCELED)}
               upperCaseSmaller={true}
             />
           )}
           <ButtonContainer
-            text={t("chat")}
+            children={t("chat")}
             type="primary"
             upperCaseSmaller={true}
           />
