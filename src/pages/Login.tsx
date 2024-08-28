@@ -1,63 +1,94 @@
-import { LoginFormPage } from '@ant-design/pro-components'
-import backgroundImage from '../assets/images/silder-tc-04.jpg';
-import logo from '../assets/images/logo_vertical.svg';
-import video from '../assets/videos/video-login.webm';
-import { App, Form, Tabs } from 'antd';
-import Email from '../components/section/login/Email';
-import Password from '../components/section/login/Password';
-import { useEffect, useState } from 'react';
-import Dni from '../components/section/login/Dni';
-import { TabsProps } from 'antd/lib';
-import usePost from '../hooks/usePost';
-import { RegisterRequest } from '../models/Auth';
-import login from '../services/auth/login.service';
-import { useDispatch } from 'react-redux';
-import { setUser, setUid } from '../redux/userSlice';
-import { DocType } from '../utilities/types';
-import register from '../services/auth/register.service';
-import { useNavigate } from 'react-router-dom';
-import showNotification from '../utilities/notification/showNotification';
-import useGet from '../hooks/useGet';
-import getTLDs from '../services/utils/topLevelDomains';
-import { setIsLoading } from '../redux/loadingSlice';
+import { LoginFormPage } from "@ant-design/pro-components";
+import backgroundImage from "../assets/images/silder-tc-04.jpg";
+import logo from "../assets/images/logo_vertical.svg";
+import video from "../assets/videos/video-login.webm";
+import { App, Form, Tabs } from "antd";
+import Email from "../components/section/login/Email";
+import Password from "../components/section/login/Password";
+import { useEffect, useState } from "react";
+import Dni from "../components/section/login/Dni";
+import { TabsProps } from "antd/lib";
+import { LoginRequest, RegisterRequest } from "../models/Requests";
+import { useDispatch } from "react-redux";
+import { setUser, setUid } from "../redux/userSlice";
+import { DocType } from "../utilities/types";
+import { useNavigate } from "react-router-dom";
+import showNotification from "../utilities/notification/showNotification";
+import { setIsLoading } from "../redux/loadingSlice";
+import { linkColor } from "../utilities/colors";
+import useApi from "../hooks/useApi";
+import { loginService, registerService } from "../services/authService";
+import { useApiParams } from "../models/Interfaces";
+import { TLDsService } from "../services/utilService";
+import { useTranslation } from "react-i18next";
+import { pageRoutes } from "../utilities/routes";
 
 const LoginType = {
-  LOGIN: 'login',
-  REGISTER: 'register'
-}
+  LOGIN: "login",
+  REGISTER: "register",
+};
 
-const tabItems: TabsProps['items'] = [
+const tabItems: TabsProps["items"] = [
   {
     key: LoginType.LOGIN,
-    label: 'Inicia sesión'
+    label: "Inicia sesión",
   },
   {
     key: LoginType.REGISTER,
-    label: 'Regístrate'
+    label: "Regístrate",
   },
-]
+];
 
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { notification } = App.useApp();
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
-  const [docType, setDocType] = useState(DocType.DNI);  
+  const [docType, setDocType] = useState(DocType.DNI);
   const [tlds, setTlds] = useState([]);
   const [form] = Form.useForm();
+  const [apiParams, setApiParams] = useState<
+    useApiParams<LoginRequest | RegisterRequest>
+  >({
+    service: TLDsService,
+    method: "get",
+    // dataToSend: null,
+  });
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi<RegisterRequest>({
+      service: apiParams.service,
+      method: apiParams.method,
+      dataToSend: apiParams.dataToSend,
+    });
 
   useEffect(() => {
-    GetTopLevelDomains();
-  }, [])
+    if (responseData) {
+      if (apiParams.service == TLDsService)
+        setTlds(responseData.split("\n").slice(1, -1));
+      else if (
+        apiParams.service == loginService ||
+        apiParams.service == registerService
+      )
+        afterSubmit();
+    } else if (error) {
+      showNotification(notification, "error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
 
-  async function GetTopLevelDomains() {
-    const response = await useGet(getTLDs);
-    if (!response.error)
-      setTlds(response.data.split('\n').slice(1, -1));
-  }
+  useEffect(() => {
+    dispatch(setIsLoading(loading));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
+
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
 
   function changeLabel(loginType: string) {
-    return loginType == LoginType.LOGIN ? 'Iniciar sesión' : 'Registrarse';
+    return loginType == LoginType.LOGIN ? t("login") : t("register");
   }
 
   function resetFields() {
@@ -65,107 +96,120 @@ export default function Login() {
   }
 
   function handleChangeTypeDoc(type: string) {
-    form.setFieldsValue({document: ''});
+    form.setFieldsValue({ document: "" });
     setDocType(type);
   }
 
-  async function HandleSubmit(values: any) {
-    let data: RegisterRequest;
-    let callbackFn = null;
-    
+  function HandleSubmit(values: any) {
     if (loginType == LoginType.LOGIN) {
-      data = { email: values.email, password: values.password };
-      callbackFn = login;
+      const data: LoginRequest = {
+        email: values.email,
+        password: values.password,
+      };
+      setApiParams({
+        service: loginService,
+        method: "post",
+        dataToSend: data,
+      });
     } else {
-      data = { email: values.email, password: values.password, profileType: 'Premium', userType: 'admin' };
+      const data: RegisterRequest = {
+        email: values.email,
+        password: values.password,
+        profileType: "Premium",
+        userType: "admin",
+      };
       if (docType == DocType.DNI) data.dni = values.document;
       else data.ruc = values.document;
-      callbackFn = register;
+      setApiParams({
+        service: registerService,
+        method: "post",
+        dataToSend: data,
+      });
     }
+  }
 
-    dispatch(setIsLoading(true));
-
-    try {
-      const registerResp = await usePost<RegisterRequest>(callbackFn, data);
-      dispatch(setIsLoading(false));
-
-      if (!registerResp.error) {
-        if (loginType == LoginType.REGISTER) {
-          dispatch(setUid(registerResp.data));
-          showNotification(notification, 'success', 'Usuario registrado exitosamente');
-          navigate('/profile', { state: {email: values.email} });
-        } else {
-          dispatch(setUser(registerResp.data));
-          showNotification(notification, 'success', 'Bienvenido');
-          localStorage.setItem('token', registerResp.data.token);
-        }
-      } else {
-        showNotification(notification, 'error', registerResp.error);
-      }
-    } catch(error) {
-      console.error('Error en login:', error);
-      dispatch(setIsLoading(false));
+  function afterSubmit() {
+    if (loginType == LoginType.REGISTER) {
+      dispatch(setUid(responseData));
+      showNotification(notification, "success", t("registerUserSuccess"));
+      navigate(`/${pageRoutes.profile}`, {
+        state: { email: form.getFieldValue("email") },
+      });
+    } else {
+      dispatch(setUser(responseData));
+      showNotification(notification, "success", t("welcome"));
+      localStorage.setItem("token", responseData.token);
+      navigate(`/${pageRoutes.myRequirements}`);
     }
-  } 
+  }
 
   return (
     <>
-    <div
-      style={{
-        backgroundColor: 'white',
-        height: '100vh',
-      }}
-    >
-      <LoginFormPage
-        form={form}
-        onFinish={HandleSubmit}
-        backgroundImageUrl={backgroundImage}
-        backgroundVideoUrl={video}
-        logo={logo}
-        title="TCompra"
-        subTitle="Tu mejor proveedor"
-        containerStyle={{ 
-          backgroundColor: 'rgba(255, 255, 255, 0.2)',
-          backdropFilter: 'blur(10px)',
-          borderRadius: '10px',
-
-        }}
-        submitter={{ searchConfig: { 
-            submitText: changeLabel(loginType), 
-            resetText: changeLabel(loginType),
-          },
-          submitButtonProps: {
-            style: {
-              width: '100%'
-            },
-          }
+      <div
+        style={{
+          backgroundColor: "white",
+          height: "100vh",
         }}
       >
-        <Tabs
-          centered
-          activeKey={loginType}
-          onChange={(pressedKey) => {setLoginType(pressedKey); resetFields()}}
-          items={tabItems}
-        />
-        {loginType == LoginType.LOGIN && (
-          <>
-            <Email tlds={tlds}></Email>
-            <Password></Password>
-            <a style={{ float: 'right', marginBottom: '24px', fontWeight: 'bold', color: '#007CD1' }}>
-              ¿Olvidó su contraseña?
-            </a>
-          </>
-        )}
-        {loginType == LoginType.REGISTER && (
-          <>
-            <Dni onChangeTypeDoc={handleChangeTypeDoc}></Dni>
-            <Email tlds={tlds}></Email>
-            <Password></Password>
-            
-          </>
-        )}
-      </LoginFormPage>
-    </div>
+        <LoginFormPage
+          form={form}
+          onFinish={HandleSubmit}
+          backgroundImageUrl={backgroundImage}
+          backgroundVideoUrl={video}
+          logo={logo}
+          title="TCompra"
+          subTitle="Tu mejor proveedor"
+          containerStyle={{
+            backgroundColor: "rgba(255, 255, 255, 0.2)",
+            backdropFilter: "blur(10px)",
+            borderRadius: "10px",
+          }}
+          submitter={{
+            searchConfig: {
+              submitText: changeLabel(loginType),
+              resetText: changeLabel(loginType),
+            },
+            submitButtonProps: {
+              style: {
+                width: "100%",
+              },
+            },
+          }}
+        >
+          <Tabs
+            centered
+            activeKey={loginType}
+            onChange={(pressedKey) => {
+              setLoginType(pressedKey);
+              resetFields();
+            }}
+            items={tabItems}
+          />
+          {loginType == LoginType.LOGIN && (
+            <>
+              <Email tlds={tlds}></Email>
+              <Password></Password>
+              <a
+                style={{
+                  float: "right",
+                  marginBottom: "24px",
+                  fontWeight: "bold",
+                  color: linkColor,
+                }}
+              >
+                {t("forgotPassword")}
+              </a>
+            </>
+          )}
+          {loginType == LoginType.REGISTER && (
+            <>
+              <Dni onChangeTypeDoc={handleChangeTypeDoc}></Dni>
+              <Email tlds={tlds}></Email>
+              <Password></Password>
+            </>
+          )}
+        </LoginFormPage>
+      </div>
     </>
-  )
+  );
 }

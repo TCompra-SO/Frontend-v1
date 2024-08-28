@@ -1,66 +1,66 @@
-import { Routes } from "../utilities/routes";
+import { ApiRoutes } from "../utilities/routes";
 
 export default function httpErrorInterceptor(error: any, type: string): string {
-  let erroMsg = 'Se produjo un error';
+  let erroMsg: string = "errorOccurred";
   const code = error.response?.status;
 
   switch (type) {
-    case Routes.auth.login:
-      switch(code) {
+    case ApiRoutes.auth.login:
+      switch (code) {
         case 400:
         case 401:
-          erroMsg = 'Contraseña y/o email incorrectos';
+          erroMsg = "incorrectEmailPassword";
           break;
       }
       break;
-    case Routes.auth.profile:
-      switch(code) {
+    case ApiRoutes.auth.profile:
+      switch (code) {
         case 409:
-          erroMsg = 'Este usuario ya tiene un perfil creado';
+          erroMsg = "existingProfile";
           break;
       }
       break;
-    case Routes.auth.register:
-      switch(code) {
+    case ApiRoutes.auth.register:
+      switch (code) {
         case 422:
-          erroMsg = 'Número de documento inválido';
+          erroMsg = "invalidDocNumber";
           break;
         case 409:
-          erroMsg = 'Este email ya ha sido registrado';
+          erroMsg = "existingEmail";
           break;
         case 403:
-          erroMsg = 'Este número de documento ya ha sido registrado';
+          erroMsg = "existingDocNumber";
           break;
       }
       break;
-    case Routes.auth.sendCode:
-      switch(code) {
+    case ApiRoutes.auth.sendCode:
+      switch (code) {
         case 403:
-          erroMsg = 'Completa tu perfil antes de verificar tu cuenta';
+          erroMsg = "completeProfile";
           break;
         case 409:
-          erroMsg = 'Genera el código nuevamente';
+          erroMsg = "generateCodeAgain";
           break;
         case 410:
-          erroMsg = 'Este usuario ya está verificado';
+          erroMsg = "userAlreadyValidated";
           break;
       }
       break;
-    case Routes.auth.validateCode:
-      switch(code) {
+    case ApiRoutes.auth.validateCode:
+      switch (code) {
         case 400:
-          erroMsg = 'Genera un código de validación primero';
+          erroMsg = "generateCodeFirst";
           break;
         case 410:
-          erroMsg = 'El código ha expirado, genera otro nuevamente';
+          erroMsg = "expiredCode";
           break;
         case 401:
-          erroMsg = 'El código ingresado es incorrecto';
+          erroMsg = "incorrectCode";
           break;
       }
       break;
-    case '': // No mostrar mensaje
-      erroMsg = '';
+    case "": // No mostrar mensaje
+      erroMsg = "";
       break;
     default:
       break;

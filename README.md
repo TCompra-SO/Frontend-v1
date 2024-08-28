@@ -2,27 +2,336 @@
 
 ## Components
 
-### Modals
+### Common
 
-#### ValidateCode
+#### RequirementsTable
 
-Muestra el email al que se envió el código de validación y permite la validación del código a través de un input OTP. También permite reenviar el código con un timeout de 60s. Si la validación fue exitosa, muestra un mensaje indicando que su cuenta fue validada. Si hubo algún error, muestra una notificación.
+Tabla para mostrar datos de requerimientos de diferentes tipos, incluyendo liquidaciones.
 
 _Props_
 
-| Nombre  | Tipo                                   | Descripción                                                                                                |
-| ------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| isOpen  | `boolean`                              | Indica si el modal está abierto o cerrado.                                                                 |
-| onClose | `(validationSuccess: boolean) => void` | Función de callback llamada cuando se cierra el modal, proporcionando el estado de éxito de la validación. |
-| email   | `string`                               | Dirección de correo electrónico al que se enviará el código de validación.                                 |
+| Nombre        | Tipo                                                   | Descripción                                                                  |
+| ------------- | ------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| type          | `RequirementType`                                      | Tipo de requisito (`GOOD`, `SERVICE`, `SALE`, etc.).                         |
+| data          | `RequirementTableItem[]`                               | Arreglo de datos para mostrar en la tabla.                                   |
+| onButtonClick | `(action: Action, data: RequirementTableItem) => void` | Función de callback llamada al hacer clic en un botón de acción en la tabla. |
+| hiddenColumns | `TableColumns[]`                                       | Columnas de la tabla que se deben ocultar.                                   |
+
+##### columns
+
+###### ActionColumn
+
+Genera una columna de acciones para una tabla, permitiendo realizar acciones basadas en el estado del elemento de la tabla.
+
+_Parámetros_
+
+| Nombre        | Tipo                                                   | Descripción                                                                      |
+| ------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------- |
+| onButtonClick | `(action: Action, data: RequirementTableItem) => void` | Función de callback llamada al hacer clic en una opción de la lista desplegable. |
+| hidden        | `boolean`                                              | Indicador de si la columna debe estar oculta (por defecto es `false`).           |
+
+###### CategoryColumn
+
+Genera una columna que muestra el rubro de los elementos en una tabla.
+
+_Parámetros_
+
+| Nombre | Tipo      | Descripción                                                            |
+| ------ | --------- | ---------------------------------------------------------------------- |
+| hidden | `boolean` | Indicador de si la columna debe estar oculta (por defecto es `false`). |
+
+###### DateColumn
+
+Genera una columna que muestra la fecha de los elementos en una tabla.
+
+_Parámetros_
+
+| Nombre | Tipo      | Descripción                                                            |
+| ------ | --------- | ---------------------------------------------------------------------- |
+| hidden | `boolean` | Indicador de si la columna debe estar oculta (por defecto es `false`). |
+
+###### ImageColumn
+
+Genera una columna que muestra una imagen de los elementos en una tabla.
+
+_Parámetros_
+
+| Nombre | Tipo      | Descripción                                                            |
+| ------ | --------- | ---------------------------------------------------------------------- |
+| hidden | `boolean` | Indicador de si la columna debe estar oculta (por defecto es `false`). |
+
+###### LocationColumn
+
+Genera una columna que muestra la ubicación o departamento de los elementos en una tabla.
+
+_Parámetros_
+
+| Nombre | Tipo      | Descripción                                                            |
+| ------ | --------- | ---------------------------------------------------------------------- |
+| hidden | `boolean` | Indicador de si la columna debe estar oculta (por defecto es `false`). |
+
+###### NameColumn
+
+Genera una columna que muestra el nombre y el rubro de los elementos en una tabla.
+
+_Parámetros_
+
+| Nombre | Tipo      | Descripción                                                            |
+| ------ | --------- | ---------------------------------------------------------------------- |
+| hidden | `boolean` | Indicador de si la columna debe estar oculta (por defecto es `false`). |
+
+###### OffersColumn
+
+Genera una columna que muestra el número de ofertas y un botón que abre un modal que muestra la lista de ofertas.
+
+_Parámetros_
+
+| Nombre        | Tipo                                                   | Descripción                                                            |
+| ------------- | ------------------------------------------------------ | ---------------------------------------------------------------------- |
+| onButtonClick | `(action: Action, data: RequirementTableItem) => void` | Función de callback llamada al hacer clic en el botón de ofertas.      |
+| hidden        | `boolean`                                              | Indicador de si la columna debe estar oculta (por defecto es `false`). |
+
+###### PriceColumn
+
+Genera una columna que muestra el precio de cotización de los elementos en una tabla.
+
+_Parámetros_
+
+| Nombre | Tipo      | Descripción                                                            |
+| ------ | --------- | ---------------------------------------------------------------------- |
+| hidden | `boolean` | Indicador de si la columna debe estar oculta (por defecto es `false`). |
+
+###### StateColumn
+
+Genera una columna que muestra el estado de los elementos en una tabla.
+
+_Parámetros_
+
+| Nombre | Tipo      | Descripción                                                            |
+| ------ | --------- | ---------------------------------------------------------------------- |
+| hidden | `boolean` | Indicador de si la columna debe estar oculta (por defecto es `false`). |
+
+#### CancelPurchaseOrderModal
+
+Un componente modal para cancelar una orden de compra, solicitando al usuario que indique el motivo de la cancelación.
+
+_Props_
+
+| Nombre        | Tipo                                         | Descripción                                     |
+| ------------- | -------------------------------------------- | ----------------------------------------------- |
+| onClose       | `(e: SyntheticEvent<Element, Event>) => any` | Función de callback llamada al cerrar el modal. |
+| offerId       | `string`                                     | ID de la oferta que se está cancelando.         |
+| requirementId | `string`                                     | ID del requerimiento asociado a la oferta.      |
+
+#### ConfirmationModal
+
+Un componente modal que solicita una confirmación al usuario.
+
+_Props_
+
+| Nombre   | Tipo                                               | Descripción                                                                                            |
+| -------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| text     | `string`                                           | Texto que se muestra en el modal.                                                                      |
+| icon     | `React.ReactNode`                                  | Ícono opcional que se muestra en el modal.                                                             |
+| onClose  | `(e: React.SyntheticEvent<Element, Event>) => any` | Función de callback llamada al cerrar el modal.                                                        |
+| onAnswer | `(ok: boolean) => any`                             | Función de callback llamada con la respuesta del usuario (`true` para aceptar, `false` para cancelar). |
+
+#### RatingCanceledModal
+
+Un componente modal que permite calificar a un usuario que ha cancelado una oferta o requerimiento.
+
+_Props_
+
+| Nombre                | Tipo                                               | Descripción                                                          |
+| --------------------- | -------------------------------------------------- | -------------------------------------------------------------------- |
+| user                  | `User`                                             | Información del usuario que está siendo calificado.                  |
+| requirementOffertitle | `string`                                           | Título de la oferta o requerimiento relacionado.                     |
+| type                  | `RequirementType`                                  | Tipo de requerimiento (`GOOD`, `SERVICE`, `SALE`, etc.).             |
+| isOffer               | `boolean`                                          | Indicador de si es una oferta (`true`) o un requerimiento (`false`). |
+| onClose               | `(e: React.SyntheticEvent<Element, Event>) => any` | Función de callback llamada al cerrar el modal.                      |
+
+#### RatingModal
+
+Un componente modal que permite calificar a un usuario, con preguntas sobre la comunicación y otros aspectos relevantes.
+
+_Props_
+
+| Nombre                | Tipo                                               | Descripción                                                          |
+| --------------------- | -------------------------------------------------- | -------------------------------------------------------------------- |
+| user                  | `User`                                             | Información del usuario que está siendo calificado.                  |
+| requirementOffertitle | `string`                                           | Título de la oferta o requerimiento relacionado.                     |
+| type                  | `RequirementType`                                  | Tipo de requerimiento (`GOOD`, `SERVICE`, `SALE`, etc.).             |
+| isOffer               | `boolean`                                          | Indicador de si es una oferta (`true`) o un requerimiento (`false`). |
+| onClose               | `(e: React.SyntheticEvent<Element, Event>) => any` | Función de callback llamada al cerrar el modal.                      |
+
+### Containers
+
+#### AvatarContainer
+
+Contenedor de Avatar de Antd.
+
+_Props_
+
+| Nombre | Tipo | Descripción |
+| ------ | ---- | ----------- |
+
+#### ButtonContainer
+
+Contenedor de Button de Antd.
+
+_Props_
+
+| Nombre           | Tipo        | Descripción                                                                                               |
+| ---------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| text             | `ReactNode` | El texto que se mostrará en el botón.                                                                     |
+| upperCaseSmaller | `boolean`   | (Opcional) Indica si el texto del botón debe estar en mayúsculas y tener un tamaño de fuente más pequeño. |
+
+#### DatePickerContainer
+
+Contenedor de DatePicker de Antd.
+_Props_
+
+| Nombre | Tipo | Descripción |
+| ------ | ---- | ----------- |
+
+#### DotContainer
+
+Contenedor para mostrar un punto que funciona como separador entre palabras.
+
+_Props_
+
+| Nombre      | Tipo      | Descripción                                                     |
+| ----------- | --------- | --------------------------------------------------------------- |
+| fontSize    | `number`  | (Opcional) Tamaño de la fuente del ícono.                       |
+| color       | `string`  | (Opcional) Color del ícono.                                     |
+| marginLeft  | `boolean` | (Opcional) Indica si se debe agregar margen izquierdo al ícono. |
+| marginRight | `boolean` | (Opcional) Indica si se debe agregar margen derecho al ícono.   |
+
+#### ImageContainer
+
+Contanedor para mostrar una imagen.
+
+_Props_
+
+| Nombre | Tipo                  | Descripción                                        |
+| ------ | --------------------- | -------------------------------------------------- |
+| alt    | `string`              | Texto alternativo para la imagen (atributo `alt`). |
+| src    | `string`              | URL de la fuente de la imagen (atributo `src`).    |
+| style  | `React.CSSProperties` | (Opcional) Estilos CSS para aplicar a la imagen.   |
+
+#### InputContainer
+
+Contenedor de Input de Antd.
+
+_Props_
+
+| Nombre       | Tipo                  | Descripción                                                             |
+| ------------ | --------------------- | ----------------------------------------------------------------------- |
+| style        | `React.CSSProperties` | (Opcional) Estilos CSS para aplicar al input.                           |
+| defaultValue | `string`              | (Opcional) Valor predeterminado para el input.                          |
+| otp          | `boolean`             | (Opcional) Indica si se trata de un input para OTP (One-Time Password). |
+| length       | `number`              | (Opcional) Longitud esperada del input para OTP.                        |
+| prefix       | `React.ReactNode`     | (Opcional) Prefijo para el input. Puede ser un nodo React.              |
+
+#### ModalContainer
+
+Contenedor de Modal de Antd.
+
+_Props_
+
+| Nombre       | Tipo         | Descripción                                                              |
+| ------------ | ------------ | ------------------------------------------------------------------------ |
+| type         | `ModalTypes` | Tipo de modal que determina el contenido a mostrar.                      |
+| data         | `any`        | Datos necesarios para el contenido del modal.                            |
+| isOpen       | `boolean`    | Indica si el modal está abierto o cerrado.                               |
+| showFooter   | `boolean`    | (Opcional) Indica si se muestra el footer del modal.                     |
+| className    | `string`     | (Opcional) Clase CSS adicional para el modal.                            |
+| maskClosable | `boolean`    | (Opcional) Indica si se puede cerrar el modal haciendo clic fuera de él. |
+
+#### ParagraphContainer
+
+Contenedor de Paragraph de Antd.
+
+_Props_
+
+| Nombre     | Tipo              | Descripción                                                                  |
+| ---------- | ----------------- | ---------------------------------------------------------------------------- |
+| text       | `string`          | Texto que se mostrará dentro del párrafo.                                    |
+| rows       | `number`          | Número de filas antes de aplicar el truncamiento (`ellipsis`).               |
+| expandable | `boolean`         | (Opcional) Indica si el párrafo es expandible cuando se aplica truncamiento. |
+| symbol     | `React.ReactNode` | (Opcional) Símbolo adicional a mostrar cuando el párrafo es truncado.        |
+
+#### PriceContainer
+
+Contenedor para mostrar el valor de cotización y su moneda usando un formato específico.
+
+_Props_
+
+| Nombre | Tipo     | Descripción                         |
+| ------ | -------- | ----------------------------------- |
+| price  | `number` | El precio a mostrar.                |
+| coin   | `string` | La moneda utilizada para el precio. |
+
+#### RateModalTitleContainer
+
+Contenedor para el título del modal para calificar a tu cliente o proveedor.
+
+_Props_
+
+| Nombre  | Tipo              | Descripción                                                        |
+| ------- | ----------------- | ------------------------------------------------------------------ |
+| isOffer | `boolean`         | Indica si se está calificando a la persona/empresa por una oferta. |
+| type    | `RequirementType` | Tipo de requerimiento.                                             |
+
+#### RatingContainer
+
+Contenedor para Rate de Antd.
+
+_Props_
+
+| Nombre   | Tipo      | Descripción                                              |
+| -------- | --------- | -------------------------------------------------------- |
+| score    | `number`  | El puntaje inicial para la calificación.                 |
+| readOnly | `boolean` | (Opcional) Indica si la calificación es de solo lectura. |
+
+### SelectContainer
+
+Contenedor para Select de Antd.
+
+_Props_
+
+| Nombre | Tipo | Descripción |
+| ------ | ---- | ----------- |
+
+### TagContainer
+
+Contenedor para Tag de Antd. Muestra el tag con un formato específico si isRequirementTag es `true`.
+
+_Props_
+
+| Nombre             | Tipo              | Descripción                                                                                                |
+| ------------------ | ----------------- | ---------------------------------------------------------------------------------------------------------- |
+| isRequirementTag   | `boolean`         | (Opcional) Indica si es una etiqueta de requerimiento.                                                     |
+| type               | `RequirementType` | (Opcional) Tipo de requisito (`GOOD`, `SERVICE`, `SALE`, etc.). Requerido si `isRequirementTag` es `true`. |
+| text               | `React.ReactNode` | (Opcional) Texto a mostrar en la etiqueta.                                                                 |
+| label              | `string`          | (Opcional) Etiqueta adicional antes del texto.                                                             |
+| includeMarginRight | `boolean`         | (Opcional) Indica si se debe incluir un margen derecho en el estilo de la etiqueta.                        |
+| truncateText       | `boolean`         | (Opcional) Indica si se debe truncar el texto si es demasiado largo.                                       |
+
+### TextAreaContainer
+
+Contenedor de TextArea de Antd.
+
+_Props_
+
+| Nombre | Tipo | Descripción |
+| ------ | ---- | ----------- |
 
 ### Section
 
 #### Header
 
-##### Header
-
-Muestra el logo de TCompra, la imagen y nombre del usuario, su tipo (si es Premium), e íconos de chat y notificaciones, así como la opción de Salir.
+Muestra la imagen y nombre del usuario, su tipo (si es Premium), así como íconos y otras opciones dependiendo de la ruta actual.
 
 ##### Items
 
@@ -30,9 +339,9 @@ Muestra el logo de TCompra, la imagen y nombre del usuario, su tipo (si es Premi
 
 Muestra el ícono de chat y redirecciona a dicha página.
 
-###### Logo
+<!-- ###### Logo
 
-Muestra el logo de TCompra y redirecciona a home.
+Muestra el logo de TCompra y redirecciona a home. -->
 
 ###### Logout
 
@@ -45,6 +354,10 @@ Muestra el ícono de notificación y despliega la lista de notificaciones.
 ###### Premium
 
 Muestra el label de Premium si el usuario es de ese tipo.
+
+###### ProfileMenu
+
+Muestra la opción para ver el perfil del usuario.
 
 ###### UserName
 
@@ -78,34 +391,25 @@ Input para ingresar una contraseña.
 
 #### Profile
 
-##### Birthdate
+##### ValidateCode
 
-Permite seleccionar una fecha de nacimiento.
-
-##### City
-
-Permite seleccionar una ciudad de entre la lista de ciudades provista.
+Muestra el email al que se envió el código de validación y permite la validación del código a través de un input OTP. También permite reenviar el código con un timeout de 60s. Si la validación fue exitosa, muestra un mensaje indicando que su cuenta fue validada. Si hubo algún error, muestra una notificación.
 
 _Props_
 
-| Nombre | Tipo       | Descripción                                     |
-| ------ | ---------- | ----------------------------------------------- |
-| cities | `string[]` | Lista de ciudades disponibles para seleccionar. |
+| Nombre  | Tipo                                   | Descripción                                                                                                |
+| ------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| isOpen  | `boolean`                              | Indica si el modal está abierto o cerrado.                                                                 |
+| onClose | `(validationSuccess: boolean) => void` | Función de callback llamada cuando se cierra el modal, proporcionando el estado de éxito de la validación. |
+| email   | `string`                               | Dirección de correo electrónico al que se enviará el código de validación.                                 |
 
-##### Country
+#### Requirements
 
-Permite seleecionar un país de entre la lista de países provista. `onChangeCountry` debe actualizar la lista de ciudades que recibe el componente City, de ser necesario.
+##### RequirementDetail
 
-_Props_
+######
 
-| Nombre          | Tipo                     | Descripción                                               |
-| --------------- | ------------------------ | --------------------------------------------------------- |
-| countries       | `string[]`               | Lista de países disponibles para seleccionar.             |
-| onChangeCountry | `(type: string) => void` | Función de callback llamada cuando se selecciona un país. |
-
-##### Phone
-
-Input para ingresar un número de teléfono o celular. Sólo acepta números y muestra un prefijo que corresponde al código de país.
+##### RequirementOfferSummary
 
 ## Hooks
 
@@ -227,9 +531,9 @@ Interfaz para los datos de un país.
 
 Interfaz para solicitar la lista de países.
 
-| Nombre | Tipo     | Descripción                                                   |
-| ------ | -------- | ------------------------------------------------------------- |
-| verify | `1 \| 2` | 1: Sólo nombre de los países. 2: Incluir la lista de ciudades |
+| Nombre | Tipo                   | Descripción                                                    |
+| ------ | ---------------------- | -------------------------------------------------------------- |
+| verify | `CountriesRequestType` | Tipo de solicitud para obtener solo países o países y ciudades |
 
 ##### StepsItemContent
 
@@ -260,18 +564,18 @@ Interfaz para el estado del `userSlice`.
 
 Interfaz para el estado del `loadingSlice`.
 
-| Nombre | Tipo        | Descripción        |
-| ------ | ----------- | ------------------ |
-| isLoading   | `boolean` | Estado de la página de carga |
+| Nombre    | Tipo      | Descripción                  |
+| --------- | --------- | ---------------------------- |
+| isLoading | `boolean` | Estado de la página de carga |
 
 ##### MainState
 
 Interfaz para el estado principal de Redux.
 
-| Nombre | Tipo        | Descripción        |
-| ------ | ----------- | ------------------ |
-| user   | `UserState` | Estado del usuario |
-| loading   | `LoadingState` | Estado de la página de carga |
+| Nombre  | Tipo           | Descripción                  |
+| ------- | -------------- | ---------------------------- |
+| user    | `UserState`    | Estado del usuario           |
+| loading | `LoadingState` | Estado de la página de carga |
 
 ## Pages
 

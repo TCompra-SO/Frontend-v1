@@ -1,32 +1,30 @@
-import { Form, Select } from "antd";
-
+import { Form } from "antd";
+import SelectContainer from "../../containers/SelectContainer";
+import { useTranslation } from "react-i18next";
 
 export default function RequirementType() {
+  const { t } = useTranslation();
   return (
-    <Form.Item
-      name='reqTypeSearch'
-    >
-      <Select
-        placeholder='Tipo de requerimiento'
+    <Form.Item name="reqTypeSearch">
+      <SelectContainer
+        placeholder={t("requirementType")}
         optionFilterProp="label"
         options={[
           {
-            value: 'jack',
-            label: 'Jack',
+            value: "jack",
+            label: "Jack",
           },
           {
-            value: 'lucy',
-            label: 'Lucy',
+            value: "lucy",
+            label: "Lucy",
           },
           {
-            value: 'tom',
-            label: 'Tom',
+            value: "tom",
+            label: "Tom",
           },
         ]}
-        style={{width: '100%'}}
-        
-        >
-      </Select>
+        style={{ width: "100%" }}
+      ></SelectContainer>
     </Form.Item>
-  )
+  );
 }
