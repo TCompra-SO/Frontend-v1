@@ -1,7 +1,6 @@
 import { UserOutlined } from "@ant-design/icons";
 import { ProFormText } from "@ant-design/pro-components";
 import { Lengths } from "../../../utilities/lengths";
-import "./items.css";
 import { RuleObject } from "antd/es/form";
 import { useTranslation } from "react-i18next";
 

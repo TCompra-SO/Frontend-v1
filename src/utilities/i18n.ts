@@ -100,7 +100,7 @@ const resources = {
       warranty: "Warranty",
       participantDetails: "Participant details",
       selectionDate: "Selection date",
-      tenure: "Tenure",
+      tenure: "Business tenure",
       selectedOffer: "Selected offer",
       canceledOffer: "Canceled offer",
       selectOfferConfirmation: "Are you sure about choosing the offer?",
@@ -141,6 +141,8 @@ const resources = {
       finishedPurchaseOrders: "Finished Orders",
       statistics: "Statistics",
       purchaseOrder: "Purchase Order",
+      // Validation 
+      noBlankSpaces: "Enter a valid value",
       // Other
       yes: "Yes",
       no: "No",
@@ -177,7 +179,12 @@ const resources = {
       premium: "Premium",
       add: "Add",
       support: "Support",
-      settings: "Settings"
+      settings: "Settings",
+      categories: "Categories",
+      category: "Category",
+      address: "Address",
+      specialty: "Specialty",
+      aboutMe: "About me",
     },
   },
   es: {
@@ -319,6 +326,8 @@ const resources = {
       finishedPurchaseOrders: "Órdenes Culminadas",
       statistics: "Estadísticas",
       purchaseOrder: "Órden de compra",
+      // Validation 
+      noBlankSpaces: "Ingrese un valor válido",
       // Other
       yes: "Sí",
       no: "No",
@@ -355,7 +364,12 @@ const resources = {
       premium: "Premium",
       add: "Agregar",
       support: "Soporte",
-      settings: "Configuración"
+      settings: "Configuración",
+      categories: "Rubros",
+      category: "Rubro",
+      address: "Dirección",
+      specialty: "Especialidad",
+      aboutMe: "Sobre mí",
     },
   },
 };

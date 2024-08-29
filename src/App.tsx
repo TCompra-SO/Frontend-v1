@@ -117,15 +117,19 @@ function App() {
                 }
               />
               <Route
+                path={`/${pageRoutes.profile}`}
+                element={
+                  <Suspense fallback={<LoadingPage />}>
+                    <Profile></Profile>
+                  </Suspense>
+                }
+              />
+              <Route
                 path="/*"
                 element={
                   <MainLayout>
                     <Suspense fallback={<LoadingPage />}>
                       <Routes>
-                        <Route
-                          path={`/${pageRoutes.profile}`}
-                          element={<Profile />}
-                        />
                         <Route
                           path={`/${pageRoutes.search}`}
                           element={<Search />}

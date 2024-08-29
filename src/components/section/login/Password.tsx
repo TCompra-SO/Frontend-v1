@@ -1,7 +1,6 @@
 import { LockOutlined } from "@ant-design/icons";
 import { ProFormText } from "@ant-design/pro-components";
 import { Lengths } from "../../../utilities/lengths";
-import "./items.css";
 import { useTranslation } from "react-i18next";
 
 export default function Password() {

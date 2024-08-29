@@ -2,7 +2,6 @@ import { IdcardOutlined } from "@ant-design/icons";
 import { ProFormSegmented, ProFormText } from "@ant-design/pro-components";
 import { Lengths } from "../../../utilities/lengths";
 import { useState } from "react";
-import "./items.css";
 import { DocType } from "../../../utilities/types";
 
 interface DniProps {

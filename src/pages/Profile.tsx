@@ -1,4 +1,4 @@
-import { App, Col, Flex, Form, Row, Space } from "antd";
+import { App, Col, Flex, Form, Input, Row, Space } from "antd";
 import { ProfileRequest, SendCodeRequest } from "../models/Requests";
 import moment from "moment";
 import { dateFormat } from "../utilities/globals";
@@ -18,7 +18,7 @@ import {
 } from "../models/Interfaces";
 import { setIsLoading } from "../redux/loadingSlice";
 import ButtonContainer from "../components/containers/ButtonContainer";
-import DatePickerContainer from "../components/containers/DatePickerContainer";
+// import DatePickerContainer from "../components/containers/DatePickerContainer";
 import InputContainer from "../components/containers/InputContainer";
 import { Lengths } from "../utilities/lengths";
 import { validateNumber } from "../utilities/globalFunctions";
@@ -27,11 +27,28 @@ import useApi from "../hooks/useApi";
 import { countriesService } from "../services/utilService";
 import { profileService, sendCodeService } from "../services/authService";
 import { useTranslation } from "react-i18next";
-import { CountriesRequestType } from "../utilities/types";
+import { CountriesRequestType, DocType } from "../utilities/types";
+import ImageContainer from "../components/containers/ImageContainer";
+import { useNoBlankSpacesValidator } from "../hooks/validators";
 
-const rulesBirthdate = [
+// const rulesBirthdate = [
+//   {
+//     required: true,
+//   },
+// ];
+
+const rulesAddress = [
   {
     required: true,
+  },
+  {
+    min: Lengths.address.min,
+  },
+  {
+    max: Lengths.address.max,
+  },
+  {
+    // validator: useNoBlankSpacesValidator(),
   },
 ];
 
@@ -62,19 +79,45 @@ const rulesCity = [
   },
 ];
 
+const rulesCategory = [
+  {
+    required: true,
+  },
+];
+
+const rulesTenure = [
+  {
+    required: true,
+  },
+];
+
+const rulesSpecialty = [
+  {
+    required: true,
+  },
+  {
+    min: Lengths.specialty.min,
+  },
+  {
+    max: Lengths.specialty.max,
+  },
+];
+
 export default function Profile() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // const context = useContext(ListsContext);
   // const { countryList } = context;
-  const { state } = useLocation();
-  const { email } = state;
-  // const email = "aall@gmail.com";
+  // const { state } = useLocation();
+  // const { email, type } = state;
+  const email = "aall@gmail.com";
+  const type = DocType.RUC;
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const [form] = Form.useForm();
   const uid = useSelector((state: MainState) => state.user.uid);
   const [isCodeModalOpen, setIsCodeModalVisible] = useState(false);
+  const [imageSrc, setImageSrc] = useState("");
   const [profileSuccess, setProfileSuccess] = useState(false);
   const [countries, setCountries] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
@@ -160,6 +203,7 @@ export default function Profile() {
   }
 
   async function HandleSubmit(values: any) {
+    console.log(values);
     const data: ProfileRequest = {
       uid: uid,
       birthdate: moment(values.birthdate).format(dateFormat),
@@ -184,6 +228,13 @@ export default function Profile() {
       method: "post",
       dataToSend: data,
     });
+  }
+
+  function handleChangeImage(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageSrc(URL.createObjectURL(file));
+    }
   }
 
   return (
@@ -212,7 +263,7 @@ export default function Profile() {
             <Form
               form={form}
               disabled={profileSuccess}
-              layout="vertical"
+              // layout="vertical"
               colon={false}
               requiredMark={false}
               onFinish={HandleSubmit}
@@ -220,7 +271,7 @@ export default function Profile() {
               <Title style={{ marginBottom: "50px" }}>
                 {t("createYourProfile")}
               </Title>
-              <Form.Item
+              {/* <Form.Item
                 label={t("birthdate")}
                 name="birthdate"
                 rules={rulesBirthdate}
@@ -229,6 +280,24 @@ export default function Profile() {
                   disabled={profileSuccess}
                   format={dateFormat}
                   style={{ width: "100%" }}
+                />
+              </Form.Item> */}
+              <ImageContainer
+                fallback="https://placehold.co/100x100"
+                style={{
+                  borderRadius: 50,
+                  width: 100,
+                  height: 100,
+                  objectFit: "cover",
+                }}
+                src={imageSrc}
+                preview={false}
+              />
+              <Form.Item name="image">
+                <Input
+                  accept="image/*"
+                  type="file"
+                  onChange={handleChangeImage}
                 />
               </Form.Item>
               <Form.Item label={t("phone")} name="phone" rules={rulesPhone}>
@@ -240,6 +309,14 @@ export default function Profile() {
                   />
                   <InputContainer style={{ width: "80%" }} />
                 </Space.Compact>
+              </Form.Item>
+
+              <Form.Item
+                label={t("address")}
+                name="address"
+                rules={rulesAddress}
+              >
+                <InputContainer />
               </Form.Item>
 
               <Form.Item
@@ -255,13 +332,63 @@ export default function Profile() {
                   })}
                 />
               </Form.Item>
-              <Form.Item label="Ciudad" name="city" rules={rulesCity}>
+              <Form.Item label={t("city")} name="city" rules={rulesCity}>
                 <SelectContainer
                   placeholder={t("select")}
                   options={cities.map((city) => {
                     return { label: city, value: city, key: city };
                   })}
                 />
+              </Form.Item>
+
+              {type == DocType.RUC && (
+                <>
+                  <Form.Item
+                    name="tenure"
+                    label={t("tenure")}
+                    rules={rulesTenure}
+                  >
+                    <SelectContainer placeholder={t("select")} />
+                  </Form.Item>
+                  <Form.Item
+                    label={t("specialty")}
+                    name="specialty"
+                    rules={rulesSpecialty}
+                  >
+                    <InputContainer />
+                  </Form.Item>
+                  <Form.Item label={t("aboutMe")} name="aboutMe">
+                    <InputContainer />
+                  </Form.Item>
+                </>
+              )}
+
+              {t("categories")}
+              <Form.Item
+                name="category1"
+                label={t("category")}
+                labelCol={{ span: 0 }}
+                rules={rulesCategory}
+              >
+                <SelectContainer placeholder={t("select")} />
+              </Form.Item>
+
+              <Form.Item
+                name="category2"
+                label={t("category")}
+                labelCol={{ span: 0 }}
+                rules={rulesCategory}
+              >
+                <SelectContainer placeholder={t("select")} />
+              </Form.Item>
+
+              <Form.Item
+                name="category3"
+                label={t("category")}
+                labelCol={{ span: 0 }}
+                rules={rulesCategory}
+              >
+                <SelectContainer placeholder={t("select")} />
               </Form.Item>
 
               <Form.Item style={{}} wrapperCol={{ span: "24" }}>

@@ -133,7 +133,7 @@ export default function Login() {
       dispatch(setUid(responseData));
       showNotification(notification, "success", t("registerUserSuccess"));
       navigate(`/${pageRoutes.profile}`, {
-        state: { email: form.getFieldValue("email") },
+        state: { email: form.getFieldValue("email"), type: docType },
       });
     } else {
       dispatch(setUser(responseData));

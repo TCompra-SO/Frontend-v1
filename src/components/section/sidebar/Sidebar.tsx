@@ -23,6 +23,7 @@ export default function Sidebar() {
         <ImageContainer
           src="/src/assets/images/logo-white.svg"
           style={{ width: "100%" }}
+          preview={false}
         ></ImageContainer>
       </div>
       <div className="menu-tc-1 t-flex scroll-y">
