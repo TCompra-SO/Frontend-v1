@@ -26,6 +26,7 @@ import { ModalContent, TableTypeRequirement } from "../models/Interfaces";
 import RateModalTitleContainer from "../components/containers/RateModalTitleContainer";
 import { useTranslation } from "react-i18next";
 import GeneralTable from "../components/common/GeneralTable/GeneralTable";
+import ContentHeader from "../components/common/ContentHeader";
 
 const requirements: RequirementTableItem[] = [
   {
@@ -533,6 +534,8 @@ const offerList: OfferListItem[] = [
     key: "1",
     title: "Gaming Laptop",
     description: "High-performance gaming laptop with RGB keyboard",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "$",
     price: 150089.56,
     warranty: "1 year",
@@ -568,6 +571,8 @@ const offerList: OfferListItem[] = [
     key: "2",
     title:
       "Smartphone Latest model smartphone with dual cameras Latest model smartphone with dual cameras",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     description:
       "Latest model smartphone with dual cameras, Waterproof fitness tracker with heart rate monitor",
     coin: "$",
@@ -595,6 +600,8 @@ const offerList: OfferListItem[] = [
     key: "3",
     title: "Fitness Tracker",
     description: "",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "s/.",
     price: 100,
     warranty: "6 months",
@@ -618,6 +625,8 @@ const offerList: OfferListItem[] = [
     key: "4",
     title: "Wireless Headphones",
     description: "Noise-cancelling wireless headphones with Bluetooth",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "S/.",
     price: 120,
     warranty: "1 year",
@@ -641,6 +650,8 @@ const offerList: OfferListItem[] = [
     key: "5",
     title: "Coffee Machine",
     description: "Espresso coffee machine with milk frother",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "$",
     price: 200,
     warranty: "2 years",
@@ -664,6 +675,8 @@ const offerList: OfferListItem[] = [
     key: "6",
     title: "Portable Speaker",
     description: "Portable Bluetooth speaker with waterproof design",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "$",
     price: 80,
     warranty: "1 year",
@@ -687,6 +700,8 @@ const offerList: OfferListItem[] = [
     key: "7",
     title: "Smartwatch",
     description: "Fitness-focused smartwatch with GPS and heart rate monitor",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "S/.",
     price: 300,
     warranty: "2 years",
@@ -710,6 +725,8 @@ const offerList: OfferListItem[] = [
     key: "8",
     title: "Desktop Computer",
     description: "High-end desktop computer for gaming and professional use",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "$",
     price: 2500,
     warranty: "3 years",
@@ -733,6 +750,8 @@ const offerList: OfferListItem[] = [
     key: "9",
     title: "Camera Kit",
     description: "Professional camera kit with multiple lenses and accessories",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "$",
     price: 1800,
     warranty: "1 year",
@@ -756,6 +775,8 @@ const offerList: OfferListItem[] = [
     key: "10",
     title: "Electric Scooter",
     description: "Foldable electric scooter with long battery life",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "S/.",
     price: 600,
     warranty: "2 years",
@@ -890,8 +911,8 @@ export default function Requirements() {
           paddingBottom: "0",
         }}
       />
-
-      <div className="table-container-page">
+      <ContentHeader title={t("myRequirements")} />
+      <div className="table-container-page card-white">
         <Flex
           vertical
           justify="center"

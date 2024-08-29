@@ -58,11 +58,13 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => (
     {/* </Sider> */}
     <div className="col-datos">
       {/* <Layout> */}
-      <Header
+      {/* <Header
         style={{ padding: 0, background: "#ffffff" }}
         children={<MainHeader />}
-      />
-      <Content style={{ margin: "0 16px" }}>{children}</Content>
+      /> */}
+      <MainHeader />
+      {/* <Content style={{ margin: "0 16px" }}>{children}</Content> */}
+      <div className="tc-datos">{children}</div>
       <Footer style={{ textAlign: "center" }}>
         TCompra ©{new Date().getFullYear()} Soluciones Online S. A. C.
       </Footer>

@@ -94,23 +94,43 @@ function MainHeader() {
   }, []);
 
   return (
-    <Flex justify="space-between" align="center" style={{ padding: "0 10px" }}>
-      <Flex justify="flex-end" align="center" style={{ flex: "auto" }}>
-        <Menu
-          mode="horizontal"
-          className="main-menu"
-          items={navBarItems}
-          style={{ minWidth: 0, flex: "auto" }}
-        />
-        <Dropdown
-          menu={dropdownItems}
-          trigger={["click"]}
-          placement="bottomRight"
-        >
-          <FontAwesomeIcon icon={faCaretDown} />
-        </Dropdown>
-      </Flex>
-    </Flex>
+    // <Flex justify="space-between" align="center" style={{ padding: "0 10px" }}>
+    //   <Flex justify="flex-end" align="center" style={{ flex: "auto" }}>
+    //     <Menu
+    //       mode="horizontal"
+    //       className="main-menu"
+    //       items={navBarItems}
+    //       style={{ minWidth: 0, flex: "auto" }}
+    //     />
+    //     <Dropdown
+    //       menu={dropdownItems}
+    //       trigger={["click"]}
+    //       placement="bottomRight"
+    //     >
+    //       <FontAwesomeIcon icon={faCaretDown} />
+    //     </Dropdown>
+    //   </Flex>
+    // </Flex>
+    <div className="t-flex header-tc">
+      <i className="fa-solid fa-bars-progress i-menu"></i>
+      <div className="t-flex options-tc">
+        <div className="user-premium">
+          <i className="fa-regular fa-crown"></i> Premium
+        </div>
+        <div>
+          <i className="fa-regular fa-messages i-opt"></i>
+          <b className="i-notf"></b>
+        </div>
+        <div>
+          <i className="fa-regular fa-bell i-opt"></i>
+          <b className="i-notf"></b>
+        </div>
+        <img src="img/avatar.jpg" alt="avatar" />
+        <div className="user-opt">
+          Usuario <i className="fa-regular fa-caret-down"></i>
+        </div>
+      </div>
+    </div>
   );
 }
 

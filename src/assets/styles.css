@@ -369,8 +369,6 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
 /* Tablas */
 
 .table-container-page {
-  /* padding: 20px 40px; */
-  background-color: #f3f7fa; /* rowColor */
 }
 
 .table-container-page .table-container {
