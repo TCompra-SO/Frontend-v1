@@ -14,7 +14,7 @@ import {
 import esEs from "antd/locale/es_ES";
 import enUs from "antd/locale/en_US";
 import i18n from "./utilities/i18n.ts";
-import { Content, Footer, Header } from "antd/es/layout/layout";
+import { Footer } from "antd/es/layout/layout";
 import { pageRoutes } from "./utilities/routes.ts";
 import Sidebar from "./components/section/sidebar/Sidebar.tsx";
 import MainHeader from "./components/section/header/header/MainHeader.tsx";
@@ -27,52 +27,18 @@ const Requirements = lazy(() => import("./pages/Requirements.tsx"));
 const Offers = lazy(() => import("./pages/Offers.tsx"));
 const currentLanguage = i18n.language;
 
-// const siderStyle: React.CSSProperties = {
-//   overflow: "auto",
-//   height: "100vh",
-//   position: "fixed",
-//   insetInlineStart: 0,
-//   top: 0,
-//   bottom: 0,
-//   scrollbarWidth: "thin",
-//   scrollbarColor: "unset",
-// };
-
 const MainLayout = ({ children }: { children: React.ReactNode }) => (
-  // <Layout style={{ minHeight: "100vh" }}>
   <div className="t-flex">
-    {/* <Sider
-      width="21%"
-      style={{
-        overflow: "auto",
-        height: "100vh",
-        position: "fixed",
-        insetInlineStart: 0,
-        top: 0,
-        bottom: 0,
-        scrollbarWidth: "thin",
-        scrollbarColor: "unset",
-      }}
-    > */}
     <Sidebar />
-    {/* </Sider> */}
-    <div className="col-datos">
-      {/* <Layout> */}
-      {/* <Header
-        style={{ padding: 0, background: "#ffffff" }}
-        children={<MainHeader />}
-      /> */}
-      <MainHeader />
-      {/* <Content style={{ margin: "0 16px" }}>{children}</Content> */}
-      <div className="tc-datos">{children}</div>
-      <Footer style={{ textAlign: "center" }}>
-        TCompra ©{new Date().getFullYear()} Soluciones Online S. A. C.
-      </Footer>
-      {/* </Layout> */}
-    </div>
 
-    {/* </div> */}
-    {/* </Layout> */}
+    <div className="col-datos">
+      <MainHeader />
+
+      <div className="tc-datos scroll-y">{children}</div>
+      {/* <Footer style={{ textAlign: "center" }}>
+        TCompra ©{new Date().getFullYear()} Soluciones Online S. A. C.
+      </Footer> */}
+    </div>
   </div>
 );
 
@@ -87,7 +53,7 @@ function App() {
             colorPrimary: primaryColor,
             borderRadius: 10,
             colorBgContainer: mainBackgroundColor,
-            fontFamily: "Jost",
+            fontFamily: "Rubik",
           },
           components: {
             Table: {

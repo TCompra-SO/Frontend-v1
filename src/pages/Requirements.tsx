@@ -1,4 +1,4 @@
-import { Col, Flex, Row } from "antd";
+import { Col, Row } from "antd";
 import InputContainer from "../components/containers/InputContainer";
 import ModalContainer from "../components/containers/ModalContainer";
 import {
@@ -11,16 +11,8 @@ import {
   UserTable,
   TableTypes,
 } from "../utilities/types";
-import Title from "antd/es/typography/Title";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPeopleCarryBox } from "@fortawesome/free-solid-svg-icons";
-import { primaryColor, lightColor, rowColor } from "../utilities/colors";
 import { SearchOutlined } from "@ant-design/icons";
-import {
-  OfferListItem,
-  RequirementTableItem,
-  TableRecordType,
-} from "../models/MainInterfaces";
+import { OfferListItem, RequirementTableItem } from "../models/MainInterfaces";
 import { useState } from "react";
 import { ModalContent, TableTypeRequirement } from "../models/Interfaces";
 import RateModalTitleContainer from "../components/containers/RateModalTitleContainer";
@@ -912,48 +904,33 @@ export default function Requirements() {
         }}
       />
       <ContentHeader title={t("myRequirements")} />
-      <div className="table-container-page card-white">
-        <Flex
-          vertical
-          justify="center"
-          align="center"
-          className="table-container"
-          gap="30px"
+      <div className="card-white">
+        <Row
+          style={{
+            width: "100%",
+            alignItems: "center",
+            marginBottom: "20px",
+          }}
+          gutter={[10, 10]}
         >
-          <Row style={{ width: "100%" }} gutter={[10, 18]}>
-            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <Flex align="center">
-                <FontAwesomeIcon
-                  color={primaryColor}
-                  style={{
-                    borderRadius: "20px",
-                    backgroundColor: lightColor,
-                    padding: "10px",
-                    marginRight: "8px",
-                    fontSize: "1.2em",
-                  }}
-                  icon={faPeopleCarryBox}
-                ></FontAwesomeIcon>
-                <Title level={3} style={{ margin: "0" }}>
-                  {`${t("listOf")} ${t("goods")}`}
-                  {/* r3v */}
-                </Title>
-              </Flex>
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <InputContainer
-                placeholder={`${t("search")}...`}
-                prefix={<SearchOutlined />}
-                style={{
-                  background: rowColor,
-                  border: "0",
-                }}
-              />
-            </Col>
-          </Row>
-
+          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+            <div className="sub-titulo">
+              <i className="fa-light fa-person-dolly sub-icon"></i>{" "}
+              {`${t("listOf")} ${t("goods")}`}
+            </div>
+            {/* r3v */}
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+            <InputContainer
+              placeholder={`${t("search")}...`}
+              prefix={<SearchOutlined />}
+              className="form-control"
+            />
+          </Col>
+        </Row>
+        <div className="table-responsive">
           <GeneralTable content={tableContent} />
-        </Flex>
+        </div>
       </div>
     </>
   );

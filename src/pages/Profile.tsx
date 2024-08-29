@@ -20,8 +20,6 @@ import { setIsLoading } from "../redux/loadingSlice";
 import ButtonContainer from "../components/containers/ButtonContainer";
 // import DatePickerContainer from "../components/containers/DatePickerContainer";
 import InputContainer from "../components/containers/InputContainer";
-import { Lengths } from "../utilities/lengths";
-import { validateNumber } from "../utilities/globalFunctions";
 import SelectContainer from "../components/containers/SelectContainer";
 import useApi from "../hooks/useApi";
 import { countriesService } from "../services/utilService";
@@ -29,79 +27,11 @@ import { profileService, sendCodeService } from "../services/authService";
 import { useTranslation } from "react-i18next";
 import { CountriesRequestType, DocType } from "../utilities/types";
 import ImageContainer from "../components/containers/ImageContainer";
-import { useNoBlankSpacesValidator } from "../hooks/validators";
-
-// const rulesBirthdate = [
-//   {
-//     required: true,
-//   },
-// ];
-
-const rulesAddress = [
-  {
-    required: true,
-  },
-  {
-    min: Lengths.address.min,
-  },
-  {
-    max: Lengths.address.max,
-  },
-  {
-    // validator: useNoBlankSpacesValidator(),
-  },
-];
-
-const rulesPhone = [
-  {
-    required: true,
-  },
-  {
-    min: Lengths.phone.min,
-  },
-  {
-    max: Lengths.phone.max,
-  },
-  {
-    validator: validateNumber,
-  },
-];
-
-const rulesCountry = [
-  {
-    required: true,
-  },
-];
-
-const rulesCity = [
-  {
-    required: true,
-  },
-];
-
-const rulesCategory = [
-  {
-    required: true,
-  },
-];
-
-const rulesTenure = [
-  {
-    required: true,
-  },
-];
-
-const rulesSpecialty = [
-  {
-    required: true,
-  },
-  {
-    min: Lengths.specialty.min,
-  },
-  {
-    max: Lengths.specialty.max,
-  },
-];
+import {
+  useAddressRules,
+  usePhoneRules,
+  useSpecialtyRules,
+} from "../hooks/validators";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -136,6 +66,10 @@ export default function Profile() {
     method: apiParams.method,
     dataToSend: apiParams.dataToSend,
   });
+
+  const { addressRules } = useAddressRules(true);
+  const { phoneRules } = usePhoneRules(true);
+  const { specialtyRules } = useSpecialtyRules(true);
 
   useEffect(() => {
     if (apiParams.service == profileService) dispatch(setIsLoading(loading));
@@ -300,7 +234,7 @@ export default function Profile() {
                   onChange={handleChangeImage}
                 />
               </Form.Item>
-              <Form.Item label={t("phone")} name="phone" rules={rulesPhone}>
+              <Form.Item label={t("phone")} name="phone" rules={phoneRules}>
                 <Space.Compact>
                   <InputContainer
                     style={{ width: "20%" }}
@@ -314,7 +248,7 @@ export default function Profile() {
               <Form.Item
                 label={t("address")}
                 name="address"
-                rules={rulesAddress}
+                rules={addressRules}
               >
                 <InputContainer />
               </Form.Item>
@@ -322,7 +256,11 @@ export default function Profile() {
               <Form.Item
                 label={t("country")}
                 name="country"
-                rules={rulesCountry}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
               >
                 <SelectContainer
                   placeholder={t("select")}
@@ -332,7 +270,15 @@ export default function Profile() {
                   })}
                 />
               </Form.Item>
-              <Form.Item label={t("city")} name="city" rules={rulesCity}>
+              <Form.Item
+                label={t("city")}
+                name="city"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
                 <SelectContainer
                   placeholder={t("select")}
                   options={cities.map((city) => {
@@ -346,14 +292,18 @@ export default function Profile() {
                   <Form.Item
                     name="tenure"
                     label={t("tenure")}
-                    rules={rulesTenure}
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
                   >
                     <SelectContainer placeholder={t("select")} />
                   </Form.Item>
                   <Form.Item
                     label={t("specialty")}
                     name="specialty"
-                    rules={rulesSpecialty}
+                    rules={specialtyRules}
                   >
                     <InputContainer />
                   </Form.Item>
@@ -368,7 +318,11 @@ export default function Profile() {
                 name="category1"
                 label={t("category")}
                 labelCol={{ span: 0 }}
-                rules={rulesCategory}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
               >
                 <SelectContainer placeholder={t("select")} />
               </Form.Item>
@@ -377,7 +331,11 @@ export default function Profile() {
                 name="category2"
                 label={t("category")}
                 labelCol={{ span: 0 }}
-                rules={rulesCategory}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
               >
                 <SelectContainer placeholder={t("select")} />
               </Form.Item>
@@ -386,7 +344,11 @@ export default function Profile() {
                 name="category3"
                 label={t("category")}
                 labelCol={{ span: 0 }}
-                rules={rulesCategory}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
               >
                 <SelectContainer placeholder={t("select")} />
               </Form.Item>

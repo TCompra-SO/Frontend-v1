@@ -6,3 +6,11 @@ export const commonModalWidth: number = 850;
 export const mediumModalWidth: number = 350;
 export const smallModalWidth: number = 250;
 export const columnWidth: number = 100;
+
+/* Window size (>=) */
+export const windowSize = {
+  sm: 576,
+  md: 768,
+  lg: 992,
+  xl: 1200,
+};

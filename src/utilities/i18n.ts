@@ -143,6 +143,7 @@ const resources = {
       purchaseOrder: "Purchase Order",
       // Validation 
       noBlankSpaces: "Enter a valid value",
+      validNumber: "Enter a valid number",
       // Other
       yes: "Yes",
       no: "No",
@@ -325,9 +326,10 @@ const resources = {
       certificates: "Certificados",
       finishedPurchaseOrders: "Órdenes Culminadas",
       statistics: "Estadísticas",
-      purchaseOrder: "Órden de compra",
+      purchaseOrder: "Orden de compra",
       // Validation 
       noBlankSpaces: "Ingrese un valor válido",
+      validNumber: "Ingrese un número válido",
       // Other
       yes: "Sí",
       no: "No",
