@@ -4,7 +4,7 @@ import moment from "moment";
 import { dateFormat } from "../utilities/globals";
 import { useDispatch, useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import showNotification from "../utilities/notification/showNotification";
 import ValidateCode from "../components/section/profile/ValidateCode";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -32,12 +32,14 @@ import {
   usePhoneRules,
   useSpecialtyRules,
 } from "../hooks/validators";
+import { ListsContext } from "../contexts/ListsContext";
 
 export default function Profile() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const context = useContext(ListsContext);
-  // const { countryList } = context;
+  const context = useContext(ListsContext);
+  const { countryList } = context;
+  console.log("..........", countryList);
   // const { state } = useLocation();
   // const { email, type } = state;
   const email = "aall@gmail.com";
@@ -139,12 +141,23 @@ export default function Profile() {
   async function HandleSubmit(values: any) {
     console.log(values);
     const data: ProfileRequest = {
-      uid: uid,
-      birthdate: moment(values.birthdate).format(dateFormat),
+      // uid: uid,
+      // birthdate: moment(values.birthdate).format(dateFormat),
+      // country: values.country,
+      // city: values.city,
+      // phone: values.phone,
+      uid,
+      phone: values.phone.trim(),
+      address: values.address.trim(),
       country: values.country,
       city: values.city,
-      phone: values.phone,
+      categories: [],
+      plan: "planId1", // r3v
     };
+
+    if (values.specialty) data.specialty = values.specialty.trim();
+    if (values.aboutMe) data.aboutMe = values.aboutMe.trim();
+
     setApiParams({
       service: profileService,
       method: "post",

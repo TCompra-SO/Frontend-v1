@@ -5,7 +5,7 @@ import video from "../assets/videos/video-login.webm";
 import { App, Form, Tabs } from "antd";
 import Email from "../components/section/login/Email";
 import Password from "../components/section/login/Password";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Dni from "../components/section/login/Dni";
 import { TabsProps } from "antd/lib";
 import { LoginRequest, RegisterRequest } from "../models/Requests";
@@ -19,9 +19,10 @@ import { linkColor } from "../utilities/colors";
 import useApi from "../hooks/useApi";
 import { loginService, registerService } from "../services/authService";
 import { useApiParams } from "../models/Interfaces";
-import { TLDsService } from "../services/utilService";
+
 import { useTranslation } from "react-i18next";
 import { pageRoutes } from "../utilities/routes";
+import { ListsContext } from "../contexts/ListsContext";
 
 const LoginType = {
   LOGIN: "login",
@@ -44,29 +45,28 @@ export default function Login() {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { notification } = App.useApp();
+  const context = useContext(ListsContext);
+  const { tlds } = context;
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
   const [docType, setDocType] = useState(DocType.DNI);
-  const [tlds, setTlds] = useState([]);
   const [form] = Form.useForm();
   const [apiParams, setApiParams] = useState<
-    useApiParams<LoginRequest | RegisterRequest>
+    useApiParams<RegisterRequest | LoginRequest>
   >({
-    service: TLDsService,
+    service: null,
     method: "get",
-    // dataToSend: null,
   });
-  const { loading, responseData, error, errorMsg, fetchData } =
-    useApi<RegisterRequest>({
-      service: apiParams.service,
-      method: apiParams.method,
-      dataToSend: apiParams.dataToSend,
-    });
+  const { loading, responseData, error, errorMsg, fetchData } = useApi<
+    RegisterRequest | LoginRequest
+  >({
+    service: apiParams.service,
+    method: apiParams.method,
+    dataToSend: apiParams.dataToSend,
+  });
 
   useEffect(() => {
     if (responseData) {
-      if (apiParams.service == TLDsService)
-        setTlds(responseData.split("\n").slice(1, -1));
-      else if (
+      if (
         apiParams.service == loginService ||
         apiParams.service == registerService
       )

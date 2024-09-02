@@ -14,7 +14,6 @@ import {
 import esEs from "antd/locale/es_ES";
 import enUs from "antd/locale/en_US";
 import i18n from "./utilities/i18n.ts";
-import { Footer } from "antd/es/layout/layout";
 import { pageRoutes } from "./utilities/routes.ts";
 import Sidebar from "./components/section/sidebar/Sidebar.tsx";
 import MainHeader from "./components/section/header/header/MainHeader.tsx";

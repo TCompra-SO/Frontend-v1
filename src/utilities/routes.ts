@@ -16,8 +16,8 @@ export const ApiRoutes = {
 
 export const pageRoutes = {
   login: "",
-  profile: "profile",
-  search: "search",
+  profile: "perfil",
+  search: "busqueda",
   myRequirements: "mis-requerimientos",
   myOffers: "mis-ofertas",
 };

@@ -52,11 +52,6 @@ export interface PurchaseOrder {
   type: RequirementType;
 }
 
-export type TableRecordType =
-  | OfferListItem
-  | RequirementTableItem
-  | PurchaseOrder;
-
 export interface User {
   uid: string;
   name: string;

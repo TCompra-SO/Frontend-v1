@@ -63,6 +63,9 @@ export function usePhoneRules(required: boolean) {
     {
       validator: useNumberValidator(),
     },
+    {
+      validator: useNoBlankSpacesValidator(),
+    },
   ]);
   return { phoneRules };
 }
@@ -77,6 +80,9 @@ export function useSpecialtyRules(required: boolean) {
     },
     {
       max: Lengths.specialty.max,
+    },
+    {
+      validator: useNoBlankSpacesValidator(),
     },
   ]);
   return { specialtyRules };
