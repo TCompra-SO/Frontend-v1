@@ -143,6 +143,18 @@ export interface CountryObj {
   cities?: string[];
 }
 
+export interface IdValueObj {
+  id: string;
+  value: string;
+}
+
+export interface CountryData {
+  value: string;
+  cities: IdValueObj[];
+}
+
+export type CountryCities = Record<string, CountryData>;
+
 export interface CountriesRequest {
   verify: CountriesRequestType;
 }

@@ -1,7 +1,6 @@
 import { App, Col, Flex, Form, Input, Row, Space } from "antd";
 import { ProfileRequest, SendCodeRequest } from "../models/Requests";
-import moment from "moment";
-import { dateFormat } from "../utilities/globals";
+import { defaultCountry } from "../utilities/globals";
 import { useDispatch, useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { useContext, useEffect, useState } from "react";
@@ -11,21 +10,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 import backgroundImage from "../assets/images/silder-tc-04.jpg";
 import Title from "antd/es/typography/Title";
 
-import {
-  CountriesRequest,
-  CountryObj,
-  useApiParams,
-} from "../models/Interfaces";
+import { IdValueObj, useApiParams } from "../models/Interfaces";
 import { setIsLoading } from "../redux/loadingSlice";
 import ButtonContainer from "../components/containers/ButtonContainer";
 // import DatePickerContainer from "../components/containers/DatePickerContainer";
 import InputContainer from "../components/containers/InputContainer";
 import SelectContainer from "../components/containers/SelectContainer";
 import useApi from "../hooks/useApi";
-import { countriesService } from "../services/utilService";
 import { profileService, sendCodeService } from "../services/authService";
 import { useTranslation } from "react-i18next";
-import { CountriesRequestType, DocType } from "../utilities/types";
+import { DocType } from "../utilities/types";
 import ImageContainer from "../components/containers/ImageContainer";
 import {
   useAddressRules,
@@ -33,13 +27,13 @@ import {
   useSpecialtyRules,
 } from "../hooks/validators";
 import { ListsContext } from "../contexts/ListsContext";
+import { DefaultOptionType } from "antd/es/select";
 
 export default function Profile() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const context = useContext(ListsContext);
-  const { countryList } = context;
-  console.log("..........", countryList);
+  const { countryList, countryData } = context;
   // const { state } = useLocation();
   // const { email, type } = state;
   const email = "aall@gmail.com";
@@ -51,18 +45,16 @@ export default function Profile() {
   const [isCodeModalOpen, setIsCodeModalVisible] = useState(false);
   const [imageSrc, setImageSrc] = useState("");
   const [profileSuccess, setProfileSuccess] = useState(false);
-  const [countries, setCountries] = useState<string[]>([]);
-  const [cities, setCities] = useState<string[]>([]);
-  const [countryObj, setCountryObj] = useState<{ [key: string]: string[] }>({});
+  const [countries, setCountries] = useState<IdValueObj[]>([]);
+  const [cities, setCities] = useState<IdValueObj[]>([]);
   const [apiParams, setApiParams] = useState<
-    useApiParams<CountriesRequest | ProfileRequest | SendCodeRequest>
+    useApiParams<ProfileRequest | SendCodeRequest>
   >({
-    service: countriesService,
-    method: "post",
-    dataToSend: { verify: CountriesRequestType.COUNTRY_CITY },
+    service: null,
+    method: "get",
   });
   const { loading, responseData, error, errorMsg, fetchData } = useApi<
-    CountriesRequest | ProfileRequest | SendCodeRequest
+    ProfileRequest | SendCodeRequest
   >({
     service: apiParams.service,
     method: apiParams.method,
@@ -84,10 +76,14 @@ export default function Profile() {
   }, [apiParams]);
 
   useEffect(() => {
+    if (Object.keys(countryData).length > 0 && countryList.length > 0)
+      SetCountriesAndCities();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [countryData, countryList]);
+
+  useEffect(() => {
     if (responseData) {
-      if (apiParams.service == countriesService) {
-        SetCountriesAndCities();
-      } else if (apiParams.service == profileService) {
+      if (apiParams.service == profileService) {
         showNotification(notification, "success", t("createProfileSuccess"));
         setProfileSuccess(true);
       } else if (apiParams.service == sendCodeService) {
@@ -106,25 +102,14 @@ export default function Profile() {
   }, [responseData, error]);
 
   function SetCountriesAndCities() {
-    let cityList: string[] = [];
-
-    const countryList: string[] = responseData.map(
-      (country: CountryObj, i: number) => {
-        setCountryObj((prevCountryObj) => ({
-          ...prevCountryObj,
-          [country.country]: country.cities!,
-        }));
-        if (i == 0) cityList = country.cities!;
-        return country.country;
-      }
-    );
     setCountries(countryList);
-    setCities(cityList);
-    if (countryList.length) form.setFieldValue("country", countryList[0]);
+    setCities(countryData[defaultCountry].cities);
+    if (countryList.length)
+      form.setFieldValue("country", countryData[defaultCountry]);
   }
 
-  function handleCountryChange(newCountry: string) {
-    setCities(countryObj[newCountry]);
+  function handleCountryChange(value: string, object: DefaultOptionType) {
+    setCities(countryData[object.id].cities);
     form.setFieldsValue({ city: null });
   }
 
@@ -278,9 +263,7 @@ export default function Profile() {
                 <SelectContainer
                   placeholder={t("select")}
                   onChange={handleCountryChange}
-                  options={countries.map((country) => {
-                    return { label: country, value: country };
-                  })}
+                  options={countries}
                 />
               </Form.Item>
               <Form.Item
@@ -292,12 +275,7 @@ export default function Profile() {
                   },
                 ]}
               >
-                <SelectContainer
-                  placeholder={t("select")}
-                  options={cities.map((city) => {
-                    return { label: city, value: city, key: city };
-                  })}
-                />
+                <SelectContainer placeholder={t("select")} options={cities} />
               </Form.Item>
 
               {type == DocType.RUC && (

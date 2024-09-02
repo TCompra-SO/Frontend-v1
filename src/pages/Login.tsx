@@ -29,17 +29,6 @@ const LoginType = {
   REGISTER: "register",
 };
 
-const tabItems: TabsProps["items"] = [
-  {
-    key: LoginType.LOGIN,
-    label: "Inicia sesión",
-  },
-  {
-    key: LoginType.REGISTER,
-    label: "Regístrate",
-  },
-];
-
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -63,6 +52,17 @@ export default function Login() {
     method: apiParams.method,
     dataToSend: apiParams.dataToSend,
   });
+
+  const tabItems: TabsProps["items"] = [
+    {
+      key: LoginType.LOGIN,
+      label: t("login"),
+    },
+    {
+      key: LoginType.REGISTER,
+      label: t("register"),
+    },
+  ];
 
   useEffect(() => {
     if (responseData) {
