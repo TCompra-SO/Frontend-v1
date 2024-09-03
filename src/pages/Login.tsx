@@ -1,13 +1,5 @@
-import { LoginFormPage } from "@ant-design/pro-components";
-import backgroundImage from "../assets/images/silder-tc-04.jpg";
-import logo from "../assets/images/logo_vertical.svg";
-import video from "../assets/videos/video-login.webm";
-import { App, Form, Tabs } from "antd";
-import Email from "../components/section/login/Email";
-import Password from "../components/section/login/Password";
+import { App, Form } from "antd";
 import { useContext, useEffect, useState } from "react";
-import Dni from "../components/section/login/Dni";
-import { TabsProps } from "antd/lib";
 import { LoginRequest, RegisterRequest } from "../models/Requests";
 import { useDispatch } from "react-redux";
 import { setUser, setUid } from "../redux/userSlice";
@@ -15,7 +7,6 @@ import { DocType } from "../utilities/types";
 import { useNavigate } from "react-router-dom";
 import showNotification from "../utilities/notification/showNotification";
 import { setIsLoading } from "../redux/loadingSlice";
-import { linkColor } from "../utilities/colors";
 import useApi from "../hooks/useApi";
 import { loginService, registerService } from "../services/authService";
 import { useApiParams } from "../models/Interfaces";
@@ -23,6 +14,15 @@ import { useApiParams } from "../models/Interfaces";
 import { useTranslation } from "react-i18next";
 import { pageRoutes } from "../utilities/routes";
 import { ListsContext } from "../contexts/ListsContext";
+import {
+  useDniRules,
+  useEmailRules,
+  usePasswordRules,
+  useRucRules,
+} from "../hooks/validators";
+import InputContainer from "../components/containers/InputContainer";
+import SelectContainer from "../components/containers/SelectContainer";
+import ButtonContainer from "../components/containers/ButtonContainer";
 
 const LoginType = {
   LOGIN: "login",
@@ -36,6 +36,10 @@ export default function Login() {
   const { notification } = App.useApp();
   const context = useContext(ListsContext);
   const { tlds } = context;
+  const { emailRules } = useEmailRules(true, tlds);
+  const { passwordRules } = usePasswordRules(true);
+  const { dniRules } = useDniRules(true);
+  const { rucRules } = useRucRules(true);
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
   const [docType, setDocType] = useState(DocType.DNI);
   const [form] = Form.useForm();
@@ -52,17 +56,6 @@ export default function Login() {
     method: apiParams.method,
     dataToSend: apiParams.dataToSend,
   });
-
-  const tabItems: TabsProps["items"] = [
-    {
-      key: LoginType.LOGIN,
-      label: t("login"),
-    },
-    {
-      key: LoginType.REGISTER,
-      label: t("register"),
-    },
-  ];
 
   useEffect(() => {
     if (responseData) {
@@ -146,69 +139,126 @@ export default function Login() {
   return (
     <>
       <div
-        style={{
-          backgroundColor: "white",
-          height: "100vh",
-        }}
+        // style={{
+        //   backgroundColor: "white",
+        //   height: "100vh",
+        // }}
+        className="modal-login"
       >
-        <LoginFormPage
-          form={form}
-          onFinish={HandleSubmit}
-          backgroundImageUrl={backgroundImage}
-          backgroundVideoUrl={video}
-          logo={logo}
-          title="TCompra"
-          subTitle="Tu mejor proveedor"
-          containerStyle={{
-            backgroundColor: "rgba(255, 255, 255, 0.2)",
-            backdropFilter: "blur(10px)",
-            borderRadius: "10px",
-          }}
-          submitter={{
-            searchConfig: {
-              submitText: changeLabel(loginType),
-              resetText: changeLabel(loginType),
-            },
-            submitButtonProps: {
-              style: {
-                width: "100%",
-              },
-            },
-          }}
-        >
-          <Tabs
-            centered
-            activeKey={loginType}
-            onChange={(pressedKey) => {
-              setLoginType(pressedKey);
-              resetFields();
-            }}
-            items={tabItems}
+        <div className="login-box text-center">
+          <img
+            src="/src/assets/images/logo-black.svg"
+            alt=""
+            style={{ padding: "0 70px", marginBottom: "15px" }}
           />
-          {loginType == LoginType.LOGIN && (
-            <>
-              <Email tlds={tlds}></Email>
-              <Password></Password>
+          <p>{t("loginText")}</p>
+          <div className="t-flex" style={{ gap: "10px", marginBottom: "15px" }}>
+            <ButtonContainer
+              common
+              className="btn btn-border active"
+              style={{ width: "50%" }}
+              onClick={() => {
+                setLoginType(LoginType.LOGIN);
+                resetFields();
+              }}
+            >
+              {t("login")}
+            </ButtonContainer>
+            <ButtonContainer
+              common
+              className="btn btn-border"
+              style={{ width: "50%" }}
+              onClick={() => {
+                setLoginType(LoginType.REGISTER);
+                resetFields();
+              }}
+            >
+              {t("register")}
+            </ButtonContainer>
+          </div>
+
+          <Form form={form} onFinish={HandleSubmit}>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "15px" }}
+            >
+              {loginType == LoginType.REGISTER && (
+                <>
+                  <Form.Item>
+                    <SelectContainer
+                      className="form-control"
+                      defaultValue={DocType.DNI}
+                      style={{ height: 39 }}
+                      onChange={handleChangeTypeDoc}
+                      options={[
+                        { label: DocType.DNI, value: DocType.DNI },
+                        { label: DocType.RUC, value: DocType.RUC },
+                      ]}
+                    ></SelectContainer>
+                  </Form.Item>
+                  <div className="t-flex">
+                    <Form.Item
+                      name="document"
+                      label={docType}
+                      labelCol={{ span: 0 }}
+                      style={{ width: "100%" }}
+                      rules={docType == DocType.DNI ? dniRules : rucRules}
+                    >
+                      <InputContainer
+                        type="text"
+                        className="form-control"
+                        placeholder={docType}
+                        style={{ flexGrow: 1 }}
+                      />
+                    </Form.Item>
+                  </div>
+                </>
+              )}
+              <div className="t-flex">
+                <Form.Item
+                  name="email"
+                  label={t("email")}
+                  rules={emailRules}
+                  labelCol={{ span: 0 }}
+                  style={{ width: "100%" }}
+                >
+                  <InputContainer
+                    type="email"
+                    className="form-control"
+                    placeholder="example@email.com"
+                    style={{ flexGrow: 1 }}
+                  />
+                </Form.Item>
+              </div>
+              <div className="t-flex">
+                <Form.Item
+                  name="password"
+                  label={t("password")}
+                  labelCol={{ span: 0 }}
+                  style={{ width: "100%" }}
+                  rules={passwordRules}
+                >
+                  <InputContainer
+                    password={true}
+                    className="form-control"
+                    placeholder="•••••••••"
+                    style={{ flexGrow: 1 }}
+                  />
+                </Form.Item>
+              </div>
               <a
-                style={{
-                  float: "right",
-                  marginBottom: "24px",
-                  fontWeight: "bold",
-                  color: linkColor,
-                }}
+                href="#"
+                className="forgot-password text-right"
+                style={{ width: "100%" }}
               >
                 {t("forgotPassword")}
               </a>
-            </>
-          )}
-          {loginType == LoginType.REGISTER && (
-            <>
-              <Dni onChangeTypeDoc={handleChangeTypeDoc}></Dni>
-              <Email tlds={tlds}></Email>
-              <Password></Password>
-            </>
-          )}
-        </LoginFormPage>
+              <button className="btn btn-default wd-100">
+                {changeLabel(loginType)}
+              </button>
+            </div>
+          </Form>
+        </div>
+        <div className="image-box"></div>
       </div>
     </>
   );

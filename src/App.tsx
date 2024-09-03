@@ -19,6 +19,7 @@ import Sidebar from "./components/section/sidebar/Sidebar.tsx";
 import MainHeader from "./components/section/header/header/MainHeader.tsx";
 import { ListsProvider } from "./contexts/ListsContext.tsx";
 
+const Home = lazy(() => import("./pages/Home.tsx"));
 const Login = lazy(() => import("./pages/Login.tsx"));
 const Profile = lazy(() => import("./pages/Profile.tsx"));
 const Search = lazy(() => import("./pages/Search.tsx"));
@@ -50,7 +51,7 @@ function App() {
           algorithm: theme.defaultAlgorithm,
           token: {
             colorPrimary: primaryColor,
-            borderRadius: 10,
+            // borderRadius: 16,
             colorBgContainer: mainBackgroundColor,
             fontFamily: "Rubik",
           },
@@ -75,6 +76,14 @@ function App() {
           <AntdApp>
             <LoadingCond></LoadingCond>
             <Routes>
+              <Route
+                path={`/${pageRoutes.home}`}
+                element={
+                  <Suspense fallback={<LoadingPage />}>
+                    <Home></Home>
+                  </Suspense>
+                }
+              />
               <Route
                 path={`/${pageRoutes.login}`}
                 element={

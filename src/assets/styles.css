@@ -153,10 +153,10 @@ body {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.form-control:focus-within {
-  border-color: #86b7fe !important;
-  outline: 0 !important;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
+.form-control:focus {
+  border-color: #bc1373;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(188, 19, 115, 0.25);
 }
 
 .form-control::placeholder {
@@ -401,7 +401,7 @@ body {
 
 .image-box {
   width: 60%;
-  background-image: url("img/login.jpg");
+  background-image: url("images/login.jpg");
   background-size: cover;
   background-position: center;
 }
@@ -416,7 +416,51 @@ body {
   }
 }
 
-/*******************************************************************/
+/********** Antd's select **************************/
+
+.form-control .ant-select-selector {
+  border: 1px solid transparent !important;
+  background: transparent !important;
+}
+
+.ant-select.ant-select-in-form-item {
+  padding: 0;
+}
+
+.ant-select-focused .ant-select-selector {
+  border-color: none !important;
+  outline: 0 !important;
+  box-shadow: 0 0 0 0.25rem rgba(188, 19, 115, 0.25) !important;
+}
+
+.ant-select-single .ant-select-selector {
+  font-weight: 400;
+  color: #92acbf;
+  font-size: 1rem;
+}
+
+/************** Antd general ********************/
+
+/* No espacio entre elementos de formulario */
+.ant-form-item {
+  margin-bottom: 0px;
+}
+
+/* Modales */
+.ant-modal .ant-modal-content {
+  background: transparent;
+  padding: 0;
+  border-radius: 1rem;
+}
+
+/* Focus en Input password */
+.ant-input-outlined:focus-within {
+  border-color: none !important;
+  outline: 0 !important;
+  box-shadow: 0 0 0 0.25rem rgba(188, 19, 115, 0.25) !important;
+}
+
+/*****************************/
 
 /* Muestra sólo el primer error de validación */
 form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {

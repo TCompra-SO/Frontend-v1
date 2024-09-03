@@ -186,6 +186,7 @@ const resources = {
       address: "Address",
       specialty: "Specialty",
       aboutMe: "About me",
+      loginText: 'Join us and discover how you can transform your ideas'
     },
   },
   es: {
@@ -372,6 +373,7 @@ const resources = {
       address: "Dirección",
       specialty: "Especialidad",
       aboutMe: "Sobre mí",
+      loginText: 'Únete a nosotros y descubre cómo puedes transformar tus ideas'
     },
   },
 };

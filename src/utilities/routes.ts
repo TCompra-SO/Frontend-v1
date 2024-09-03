@@ -15,7 +15,8 @@ export const ApiRoutes = {
 };
 
 export const pageRoutes = {
-  login: "",
+  home: "",
+  login: "login",
   profile: "perfil",
   search: "busqueda",
   myRequirements: "mis-requerimientos",
