@@ -1,5 +1,6 @@
 export const ApiMainRoutes = {
-  auth: "/v1/auth/",
+  auth: "auth/",
+  util: "util/",
 };
 
 export const ApiRoutes = {
@@ -9,8 +10,14 @@ export const ApiRoutes = {
     register: "register",
     sendCode: "validation-code",
     validateCode: "validate-code",
-
+  },
+  util: {
     countries: "countries",
+    categories: "categories",
+    tenure: "tenure",
+  },
+  root: {
+    getName: "getName",
   },
 };
 

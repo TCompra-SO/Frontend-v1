@@ -2,9 +2,11 @@ import { useState } from "react";
 import ButtonContainer from "../components/containers/ButtonContainer";
 import Login from "./Login";
 import NoContentModalContainer from "../components/containers/NoContentModalContainer";
+import Profile from "./Profile";
 
 export default function Home() {
   const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
+  const [showLogin, setShowLogin] = useState(true);
 
   function handleOpenLoginModal() {
     setIsOpenLoginModal(true);
@@ -14,19 +16,27 @@ export default function Home() {
     setIsOpenLoginModal(false);
   }
 
+  function handleOpenModal(login: boolean) {
+    setShowLogin(login);
+    handleOpenLoginModal();
+  }
+
   return (
     <>
       <NoContentModalContainer
         open={isOpenLoginModal}
         onClose={handleCloseLoginModal}
-        width={850}
-        className="no-padding-modal"
-        // style={{ maxHeight: "75vh", padding: 0 }}
+        width={showLogin ? 850 : 1300}
         style={{ background: "transparent" }}
       >
-        <Login />
+        {showLogin ? <Login /> : <Profile />}
       </NoContentModalContainer>
-      <ButtonContainer onClick={handleOpenLoginModal}>Login</ButtonContainer>
+      <ButtonContainer onClick={() => handleOpenModal(true)}>
+        Login
+      </ButtonContainer>
+      <ButtonContainer onClick={() => handleOpenModal(false)}>
+        Profile
+      </ButtonContainer>
     </>
   );
 }

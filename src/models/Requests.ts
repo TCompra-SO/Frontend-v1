@@ -45,3 +45,8 @@ export interface SendCodeRequest {
   email: string;
   type: "repassword" | "identity_verified";
 }
+
+export interface GetNameReniecRequest {
+  dni?: string;
+  ruc?: string;
+}

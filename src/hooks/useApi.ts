@@ -33,6 +33,7 @@ export default function useApi<T = any>({
           //   "Content-Type": "application/json",
           // },
         };
+        console.log(config);
         const result: AxiosResponse = await axios(config);
         console.log("http request");
         setResponseData(result.data);

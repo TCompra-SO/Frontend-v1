@@ -1,115 +1,27 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
-import {
-  CountriesRequest,
-  CountryCities,
-  CountryObj,
-  IdValueObj,
-} from "../models/Interfaces";
+import { CountryCities, IdValueObj } from "../models/Interfaces";
 import useApi from "../hooks/useApi";
 import {
+  categoriesService,
   countriesService,
-  dummyService,
+  tenureService,
   TLDsService,
 } from "../services/utilService";
-import { CountriesRequestType } from "../utilities/types";
-
-const cities = [
-  {
-    country: {
-      id: "PER",
-      value: "Perú",
-    },
-    cities: [
-      { id: "Lima", value: "Lima" },
-      { id: "Cusco", value: "Cusco" },
-      { id: "Arequipa", value: "Arequipa" },
-      { id: "Trujillo", value: "Trujillo" },
-      { id: "Iquitos", value: "Iquitos" },
-      { id: "Chiclayo", value: "Chiclayo" },
-      { id: "Piura", value: "Piura" },
-      { id: "Tacna", value: "Tacna" },
-      { id: "Puno", value: "Puno" },
-      { id: "Huancayo", value: "Huancayo" },
-      { id: "Ayacucho", value: "Ayacucho" },
-      { id: "Huaraz", value: "Huaraz" },
-      { id: "Juliaca", value: "Juliaca" },
-      { id: "Moquegua", value: "Moquegua" },
-      { id: "Tumbes", value: "Tumbes" },
-      { id: "Tarapoto", value: "Tarapoto" },
-      { id: "Ica", value: "Ica" },
-      { id: "Chimbote", value: "Chimbote" },
-      { id: "Cajamarca", value: "Cajamarca" },
-      { id: "Huánuco", value: "Huánuco" },
-    ],
-  },
-  {
-    country: {
-      id: "Chile",
-      value: "Chile",
-    },
-    cities: [
-      { id: "Santiago", value: "Santiago" },
-      { id: "Valparaíso", value: "Valparaíso" },
-      { id: "Concepción", value: "Concepción" },
-      { id: "La Serena", value: "La Serena" },
-      { id: "Antofagasta", value: "Antofagasta" },
-      { id: "Temuco", value: "Temuco" },
-      { id: "Rancagua", value: "Rancagua" },
-      { id: "Iquique", value: "Iquique" },
-      { id: "Puerto Montt", value: "Puerto Montt" },
-      { id: "Talca", value: "Talca" },
-      { id: "Arica", value: "Arica" },
-      { id: "Chillán", value: "Chillán" },
-      { id: "Osorno", value: "Osorno" },
-      { id: "Punta Arenas", value: "Punta Arenas" },
-      { id: "Copiapó", value: "Copiapó" },
-      { id: "Curicó", value: "Curicó" },
-      { id: "Quilpué", value: "Quilpué" },
-      { id: "San Antonio", value: "San Antonio" },
-      { id: "Calama", value: "Calama" },
-      { id: "Ovalle", value: "Ovalle" },
-    ],
-  },
-  {
-    country: {
-      id: "Colombia",
-      value: "Colombia",
-    },
-    cities: [
-      { id: "Bogotá", value: "Bogotá" },
-      { id: "Medellín", value: "Medellín" },
-      { id: "Cali", value: "Cali" },
-      { id: "Cartagena", value: "Cartagena" },
-      { id: "Barranquilla", value: "Barranquilla" },
-      { id: "Bucaramanga", value: "Bucaramanga" },
-      { id: "Pereira", value: "Pereira" },
-      { id: "Santa Marta", value: "Santa Marta" },
-      { id: "Cúcuta", value: "Cúcuta" },
-      { id: "Ibagué", value: "Ibagué" },
-      { id: "Manizales", value: "Manizales" },
-      { id: "Pasto", value: "Pasto" },
-      { id: "Neiva", value: "Neiva" },
-      { id: "Montería", value: "Montería" },
-      { id: "Villavicencio", value: "Villavicencio" },
-      { id: "Armenia", value: "Armenia" },
-      { id: "Sincelejo", value: "Sincelejo" },
-      { id: "Tunja", value: "Tunja" },
-      { id: "Riohacha", value: "Riohacha" },
-      { id: "Florencia", value: "Florencia" },
-    ],
-  },
-];
 
 interface ListsContextType {
+  tlds: string[];
   countryList: IdValueObj[];
   countryData: CountryCities;
-  tlds: string[];
+  categoryList: IdValueObj[];
+  tenureList: IdValueObj[];
 }
 
 export const ListsContext = createContext<ListsContextType>({
   countryList: [],
   countryData: {},
   tlds: [],
+  categoryList: [],
+  tenureList: [],
 });
 
 interface ListsProviderProps {
@@ -119,20 +31,10 @@ interface ListsProviderProps {
 export function ListsProvider({ children }: ListsProviderProps) {
   const [countryList, setCountryList] = useState<IdValueObj[]>([]);
   const [countryData, setCountryData] = useState<CountryCities>({});
-  const {
-    responseData: countryResponseData,
-    error: countryError,
-    fetchData: countryFetchData,
-  } =
-    // useApi<CountriesRequest>({
-    //   service: countriesService,
-    //   method: "post",
-    //   dataToSend: { verify: CountriesRequestType.COUNTRY_CITY },
-    // });
-    useApi<any>({
-      service: dummyService,
-      method: "post",
-      dataToSend: { name: "morpheus", job: "leader" },
+  const { responseData: countryResponseData, fetchData: countryFetchData } =
+    useApi({
+      service: countriesService,
+      method: "get",
     });
 
   const [tlds, setTlds] = useState<string[]>([]);
@@ -142,27 +44,42 @@ export function ListsProvider({ children }: ListsProviderProps) {
       method: "get",
     });
 
+  const [categoryList, setCategoryList] = useState<IdValueObj[]>([]);
+  const { responseData: categoryResponseData, fetchData: categoryFetchData } =
+    useApi<any>({
+      service: categoriesService,
+      method: "get",
+    });
+
+  const [tenureList, setTenureList] = useState<IdValueObj[]>([]);
+  const { responseData: tenureResponseData, fetchData: tenureFetchData } =
+    useApi<any>({
+      service: tenureService,
+      method: "get",
+    });
+
   useEffect(() => {
     countryFetchData();
     tldsFetchData();
+    categoryFetchData();
+    tenureFetchData();
   }, []);
 
   useEffect(() => {
     if (countryResponseData) {
-      // console.log(countryResponseData);
       const countryData: CountryCities = {};
       const countryList: IdValueObj[] = [];
-      cities.forEach((item) => {
-        countryData[item.country.id] = {
-          value: item.country.value,
+      countryResponseData.forEach((item: any) => {
+        countryData[item.id] = {
+          value: item.value,
           cities: item.cities,
         };
-        countryList.push({ id: item.country.id, value: item.country.value });
+        countryList.push({ id: item.id, value: item.value });
       });
       setCountryData(countryData);
       setCountryList(countryList);
     }
-  }, [countryResponseData, countryError]);
+  }, [countryResponseData]);
 
   useEffect(() => {
     if (tldsResponseData) {
@@ -170,8 +87,25 @@ export function ListsProvider({ children }: ListsProviderProps) {
     }
   }, [tldsResponseData]);
 
+  useEffect(() => {
+    if (categoryResponseData) {
+      setCategoryList(categoryResponseData);
+    }
+  }, [categoryResponseData]);
+
+  useEffect(() => {
+    // if (tenureResponseData) {
+    setTenureList([
+      { id: 1, value: "tenure1" },
+      { id: 2, value: "tenure2" },
+    ]);
+    // }
+  }, []);
+
   return (
-    <ListsContext.Provider value={{ countryList, countryData, tlds }}>
+    <ListsContext.Provider
+      value={{ countryList, countryData, tlds, categoryList, tenureList }}
+    >
       {children}
     </ListsContext.Provider>
   );

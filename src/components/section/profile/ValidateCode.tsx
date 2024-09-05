@@ -16,6 +16,7 @@ import {
   validateCodeService,
 } from "../../../services/authService";
 import OTPInputContainer from "../../containers/OTPInputContainer";
+import { equalServices } from "../../../utilities/globalFunctions";
 
 interface ValidateCodeProps {
   isOpen: boolean;
@@ -107,17 +108,17 @@ export default function ValidateCode({
 
   useEffect(() => {
     if (responseData) {
-      if (apiParams.service == sendCodeService) {
+      if (equalServices(apiParams.service, sendCodeService)) {
         beginTimer();
         showNotification(notification, "success", t("sentValidationCode"));
-      } else if (apiParams.service == validateCodeService) {
+      } else if (equalServices(apiParams.service, validateCodeService)) {
         setValidationSuccess(true);
         next();
         form.resetFields();
       }
     } else if (error) {
       showNotification(notification, "error", errorMsg);
-      if (apiParams.service == validateCodeService) {
+      if (equalServices(apiParams.service, validateCodeService)) {
         setValidationSuccess(false);
         form.resetFields();
       }

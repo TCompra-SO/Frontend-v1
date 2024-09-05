@@ -160,7 +160,7 @@ body {
 }
 
 .form-control::placeholder {
-  color: #92acbf;
+  /* color: #92acbf; */
 }
 
 /* Containers y Tamaños */
@@ -412,7 +412,7 @@ body {
   }
 
   .login-box {
-    width: 100%;
+    width: 100% !important;
   }
 }
 
@@ -437,6 +437,16 @@ body {
   font-weight: 400;
   color: #92acbf;
   font-size: 1rem;
+}
+
+/* Tamaño de select */
+.ant-form-item-control-input-content > .ant-select {
+  height: 39px !important;
+}
+
+/* Left aligned */
+.form-control > .ant-select-selector {
+  text-align: left;
 }
 
 /************** Antd general ********************/

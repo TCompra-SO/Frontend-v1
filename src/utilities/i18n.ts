@@ -80,13 +80,15 @@ const resources = {
       generateCodeFirst: "Generate a validation code first",
       expiredCode: "The code has expired; please generate a new one",
       incorrectCode: "The code entered is incorrect",
+      noDNIorRUCprovided: "Neither DNI nor RUC was provided",
       // Profile
       sentValidationCode: "Code was sent successfully",
       timerResendValidationCode: "You can resend the code in ",
       resendValidationCode: "Resend code",
       createProfileSuccess: "Profile created successfully",
       sendCodeSuccess: "Code sent successfully",
-      createYourProfile: "Create your profile",
+      createYourProfile: "Create your profile 👋",
+      subtitleProfile: 'All your data is important',
       sendValidationCode: "Send validation code",
       // Requirement
       submitRating: "Submit rating",
@@ -144,6 +146,9 @@ const resources = {
       // Validation 
       noBlankSpaces: "Enter a valid value",
       validNumber: "Enter a valid number",
+      // Messages
+      invalidImage: "Select a valid image",
+      invalidImageSize: "Image must be lees than ",      
       // Other
       yes: "Yes",
       no: "No",
@@ -186,7 +191,9 @@ const resources = {
       address: "Address",
       specialty: "Specialty",
       aboutMe: "About me",
-      loginText: 'Join us and discover how you can transform your ideas'
+      name: "Name",
+      loginText: 'Join us and discover how you can transform your ideas',
+
     },
   },
   es: {
@@ -265,13 +272,15 @@ const resources = {
       generateCodeFirst: "Genere un código de validación primero",
       expiredCode: "El código ha expirado, genere otro nuevamente",
       incorrectCode: "El código ingresado es incorrecto",
+      noDNIorRUCprovided: "No se proporcionó DNI o RUC",
       // Profile
       sentValidationCode: "Se envió el código con éxito",
       timerResendValidationCode: "Podrá reenviar el código en ",
       resendValidationCode: "Reenviar código",
       createProfileSuccess: "Perfil creado con éxito",
       sendCodeSuccess: "Se envió el código con éxito",
-      createYourProfile: "Crea tu perfil",
+      createYourProfile: "Crea tu Perfil 👋",
+      subtitleProfile: 'Todos los datos son importantes',
       sendValidationCode: "Enviar código de validación",
       // Requirement
       submitRating: "Enviar calificación",
@@ -331,6 +340,9 @@ const resources = {
       // Validation 
       noBlankSpaces: "Ingrese un valor válido",
       validNumber: "Ingrese un número válido",
+      // Messages
+      invalidImage: "Seleccione una imagen válida",
+      invalidImageSize: "La imagen debe ser menor a ",
       // Other
       yes: "Sí",
       no: "No",
@@ -373,7 +385,9 @@ const resources = {
       address: "Dirección",
       specialty: "Especialidad",
       aboutMe: "Sobre mí",
-      loginText: 'Únete a nosotros y descubre cómo puedes transformar tus ideas'
+      name: "Nombre",
+      loginText: 'Únete a nosotros y descubre cómo puedes transformar tus ideas',
+
     },
   },
 };

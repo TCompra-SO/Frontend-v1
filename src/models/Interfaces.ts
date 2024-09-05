@@ -144,7 +144,7 @@ export interface CountryObj {
 }
 
 export interface IdValueObj {
-  id: string;
+  id: string | number;
   value: string;
 }
 

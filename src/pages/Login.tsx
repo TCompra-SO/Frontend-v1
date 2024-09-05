@@ -1,6 +1,10 @@
 import { App, Form } from "antd";
 import { useContext, useEffect, useState } from "react";
-import { LoginRequest, RegisterRequest } from "../models/Requests";
+import {
+  GetNameReniecRequest,
+  LoginRequest,
+  RegisterRequest,
+} from "../models/Requests";
 import { useDispatch } from "react-redux";
 import { setUser, setUid } from "../redux/userSlice";
 import { DocType } from "../utilities/types";
@@ -23,6 +27,8 @@ import {
 import InputContainer from "../components/containers/InputContainer";
 import SelectContainer from "../components/containers/SelectContainer";
 import ButtonContainer from "../components/containers/ButtonContainer";
+import { getNameReniecService } from "../services/utilService";
+import { equalServices } from "../utilities/globalFunctions";
 
 const LoginType = {
   LOGIN: "login",
@@ -44,13 +50,13 @@ export default function Login() {
   const [docType, setDocType] = useState(DocType.DNI);
   const [form] = Form.useForm();
   const [apiParams, setApiParams] = useState<
-    useApiParams<RegisterRequest | LoginRequest>
+    useApiParams<RegisterRequest | LoginRequest | GetNameReniecRequest>
   >({
     service: null,
     method: "get",
   });
   const { loading, responseData, error, errorMsg, fetchData } = useApi<
-    RegisterRequest | LoginRequest
+    RegisterRequest | LoginRequest | GetNameReniecRequest
   >({
     service: apiParams.service,
     method: apiParams.method,
@@ -60,10 +66,13 @@ export default function Login() {
   useEffect(() => {
     if (responseData) {
       if (
-        apiParams.service == loginService ||
-        apiParams.service == registerService
+        equalServices(apiParams.service, loginService) ||
+        equalServices(apiParams.service, registerService)
       )
         afterSubmit();
+      else if (equalServices(apiParams.service, getNameReniecService)) {
+        form.setFieldValue("name", responseData.data);
+      }
     } else if (error) {
       showNotification(notification, "error", errorMsg);
     }
@@ -93,12 +102,26 @@ export default function Login() {
     setDocType(type);
   }
 
+  async function getUserName() {
+    form
+      .validateFields(["document"])
+      .then((value) => {
+        setApiParams({
+          service: getNameReniecService,
+          method: "get",
+          dataToSend: { dni: value["document"] },
+        });
+      })
+      .catch((e) => {});
+  }
+
   function HandleSubmit(values: any) {
     if (loginType == LoginType.LOGIN) {
       const data: LoginRequest = {
         email: values.email,
         password: values.password,
       };
+      console.log(data);
       setApiParams({
         service: loginService,
         method: "post",
@@ -113,6 +136,7 @@ export default function Login() {
       };
       if (docType == DocType.DNI) data.dni = values.document;
       else data.ruc = values.document;
+      console.log(data);
       setApiParams({
         service: registerService,
         method: "post",
@@ -138,13 +162,7 @@ export default function Login() {
 
   return (
     <>
-      <div
-        // style={{
-        //   backgroundColor: "white",
-        //   height: "100vh",
-        // }}
-        className="modal-login"
-      >
+      <div className="modal-login">
         <div className="login-box text-center">
           <img
             src="/src/assets/images/logo-black.svg"
@@ -187,7 +205,6 @@ export default function Login() {
                     <SelectContainer
                       className="form-control"
                       defaultValue={DocType.DNI}
-                      style={{ height: 39 }}
                       onChange={handleChangeTypeDoc}
                       options={[
                         { label: DocType.DNI, value: DocType.DNI },
@@ -195,6 +212,7 @@ export default function Login() {
                       ]}
                     ></SelectContainer>
                   </Form.Item>
+
                   <div className="t-flex">
                     <Form.Item
                       name="document"
@@ -206,7 +224,18 @@ export default function Login() {
                       <InputContainer
                         type="text"
                         className="form-control"
+                        style={{ flexGrow: 1 }}
                         placeholder={docType}
+                        onBlur={getUserName}
+                      />
+                    </Form.Item>
+                  </div>
+                  <div className="t-flex">
+                    <Form.Item name="name" style={{ width: "100%" }}>
+                      <InputContainer
+                        disabled
+                        className="form-control"
+                        placeholder={t("name")}
                         style={{ flexGrow: 1 }}
                       />
                     </Form.Item>
@@ -252,9 +281,9 @@ export default function Login() {
               >
                 {t("forgotPassword")}
               </a>
-              <button className="btn btn-default wd-100">
+              <ButtonContainer common className="btn btn-default wd-100">
                 {changeLabel(loginType)}
-              </button>
+              </ButtonContainer>
             </div>
           </Form>
         </div>
