@@ -21,7 +21,7 @@ export interface ProfileRequest {
   city: string;
   categories: number[];
   avatar?: string;
-  plan: number;
+  planID: number;
   age?: number;
   specialtyID?: string;
   aboutMe?: string;

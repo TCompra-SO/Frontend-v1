@@ -154,7 +154,7 @@ export default function Profile(props: ProfileProps) {
       country: values.country,
       city: values.city,
       categories: [values.category1, values.category2, values.category3],
-      plan: 1, // r3v
+      planID: 1, // r3v
     };
 
     if (props.docType == DocType.RUC) {
@@ -163,14 +163,14 @@ export default function Profile(props: ProfileProps) {
       if (values.aboutMe) data.aboutMe = values.aboutMe.trim();
     }
     console.log(values, data);
-    // setApiParams({
-    //   service:
-    //     props.docType == DocType.RUC
-    //       ? profileCompanyService()
-    //       : profileUserService(),
-    //   method: "post",
-    //   dataToSend: data,
-    // });
+    setApiParams({
+      service:
+        props.docType == DocType.RUC
+          ? profileCompanyService()
+          : profileUserService(),
+      method: "post",
+      dataToSend: data,
+    });
   }
 
   async function SendValidationCode() {
