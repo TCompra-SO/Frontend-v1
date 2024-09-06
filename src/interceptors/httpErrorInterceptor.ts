@@ -1,6 +1,7 @@
 import {
   loginService,
-  profileService,
+  profileCompanyService,
+  profileUserService,
   registerService,
   sendCodeService,
   validateCodeService,
@@ -12,7 +13,7 @@ export default function httpErrorInterceptor(error: any, type: string): string {
   const code = error.response?.status;
 
   switch (type) {
-    case loginService.type:
+    case loginService().type:
       switch (code) {
         case 400:
         case 401:
@@ -20,14 +21,21 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
       }
       break;
-    case profileService.type:
+    case profileUserService().type:
       switch (code) {
         case 409:
           erroMsg = "existingProfile";
           break;
       }
       break;
-    case registerService.type:
+    case profileCompanyService().type:
+      switch (code) {
+        case 409:
+          erroMsg = "existingProfile";
+          break;
+      }
+      break;
+    case registerService().type:
       switch (code) {
         case 422:
           erroMsg = "invalidDocNumber";
@@ -40,7 +48,7 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
       }
       break;
-    case sendCodeService.type:
+    case sendCodeService().type:
       switch (code) {
         case 403:
           erroMsg = "completeProfile";
@@ -53,7 +61,7 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
       }
       break;
-    case validateCodeService.type:
+    case validateCodeService().type:
       switch (code) {
         case 400:
           erroMsg = "generateCodeFirst";
@@ -66,7 +74,7 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
       }
       break;
-    case getNameReniecService.type:
+    case getNameReniecService("").type:
       switch (code) {
         case 400:
           erroMsg = "noDNIorRUCprovided";

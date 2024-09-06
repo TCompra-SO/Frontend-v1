@@ -1,3 +1,5 @@
+import { RegisterTypeId } from "../utilities/types";
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -6,20 +8,9 @@ export interface LoginRequest {
 export interface RegisterRequest {
   email: string;
   password: string;
-  profileType?: string;
-  userType?: string;
+  typeID: RegisterTypeId;
   dni?: string;
   ruc?: string;
-}
-
-export interface ProfileRequest2 {
-  uid: string;
-  gender?: string;
-  birthdate: string;
-  phone: string;
-  country: string;
-  city: string;
-  type_learning?: string;
 }
 
 export interface ProfileRequest {
@@ -28,10 +19,11 @@ export interface ProfileRequest {
   address: string;
   country: string;
   city: string;
-  categories: string[];
+  categories: number[];
   avatar?: string;
-  plan: string;
-  specialty?: string;
+  plan: number;
+  age?: number;
+  specialtyID?: string;
   aboutMe?: string;
 }
 

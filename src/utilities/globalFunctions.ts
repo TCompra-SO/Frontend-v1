@@ -26,8 +26,7 @@ export function equalServices(
   serv1: HttpService | null,
   serv2: HttpService | null
 ) {
-  if (serv1 && serv2)
-    return serv1.type === serv2.type && serv1.url === serv2.url;
+  if (serv1 && serv2) return serv1.type === serv2.type;
   if (!serv1 && !serv2) return true;
   return false;
 }

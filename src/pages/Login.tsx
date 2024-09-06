@@ -6,8 +6,8 @@ import {
   RegisterRequest,
 } from "../models/Requests";
 import { useDispatch } from "react-redux";
-import { setUser, setUid } from "../redux/userSlice";
-import { DocType } from "../utilities/types";
+import { setUid, setUser } from "../redux/userSlice";
+import { DocType, RegisterTypeId } from "../utilities/types";
 import { useNavigate } from "react-router-dom";
 import showNotification from "../utilities/notification/showNotification";
 import { setIsLoading } from "../redux/loadingSlice";
@@ -35,7 +35,11 @@ const LoginType = {
   REGISTER: "register",
 };
 
-export default function Login() {
+interface LoginProps {
+  onRegisterSuccess: (email: string, docType: string) => void;
+}
+
+export default function Login(props: LoginProps) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -66,11 +70,11 @@ export default function Login() {
   useEffect(() => {
     if (responseData) {
       if (
-        equalServices(apiParams.service, loginService) ||
-        equalServices(apiParams.service, registerService)
+        equalServices(apiParams.service, loginService()) ||
+        equalServices(apiParams.service, registerService())
       )
         afterSubmit();
-      else if (equalServices(apiParams.service, getNameReniecService)) {
+      else if (equalServices(apiParams.service, getNameReniecService(""))) {
         form.setFieldValue("name", responseData.data);
       }
     } else if (error) {
@@ -107,15 +111,16 @@ export default function Login() {
       .validateFields(["document"])
       .then((value) => {
         setApiParams({
-          service: getNameReniecService,
+          service: getNameReniecService(value["document"]),
           method: "get",
-          dataToSend: { dni: value["document"] },
         });
       })
-      .catch((e) => {});
+      .catch(() => {});
   }
 
   function HandleSubmit(values: any) {
+    // afterSubmit();
+    // return;
     if (loginType == LoginType.LOGIN) {
       const data: LoginRequest = {
         email: values.email,
@@ -123,7 +128,7 @@ export default function Login() {
       };
       console.log(data);
       setApiParams({
-        service: loginService,
+        service: loginService(),
         method: "post",
         dataToSend: data,
       });
@@ -131,14 +136,13 @@ export default function Login() {
       const data: RegisterRequest = {
         email: values.email,
         password: values.password,
-        profileType: "Premium",
-        userType: "admin",
+        typeID: RegisterTypeId.PRINC,
       };
       if (docType == DocType.DNI) data.dni = values.document;
       else data.ruc = values.document;
       console.log(data);
       setApiParams({
-        service: registerService,
+        service: registerService(),
         method: "post",
         dataToSend: data,
       });
@@ -149,9 +153,7 @@ export default function Login() {
     if (loginType == LoginType.REGISTER) {
       dispatch(setUid(responseData));
       showNotification(notification, "success", t("registerUserSuccess"));
-      navigate(`/${pageRoutes.profile}`, {
-        state: { email: form.getFieldValue("email"), type: docType },
-      });
+      props.onRegisterSuccess(form.getFieldValue("email"), docType);
     } else {
       dispatch(setUser(responseData));
       showNotification(notification, "success", t("welcome"));

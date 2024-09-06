@@ -263,3 +263,7 @@ export enum CountriesRequestType {
   COUNTRY = 1,
   COUNTRY_CITY = 2,
 }
+
+export enum RegisterTypeId {
+  PRINC = 1,
+}

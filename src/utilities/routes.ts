@@ -5,19 +5,20 @@ export const ApiMainRoutes = {
 
 export const ApiRoutes = {
   auth: {
-    login: "login",
-    profile: "profile",
-    register: "register",
-    sendCode: "validation-code",
-    validateCode: "validate-code",
+    login: "login/",
+    profileCompany: "profileCompany/",
+    profileUser: "profileUser/",
+    register: "register/",
+    sendCode: "validation-code/",
+    validateCode: "validate-code/",
   },
   util: {
-    countries: "countries",
-    categories: "categories",
-    tenure: "tenure",
+    countries: "countries/",
+    categories: "categories/",
+    tenure: "tenure/",
   },
   root: {
-    getName: "getName",
+    getName: "getName/",
   },
 };
 

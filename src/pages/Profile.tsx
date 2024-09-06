@@ -7,15 +7,17 @@ import { useContext, useEffect, useState } from "react";
 import showNotification from "../utilities/notification/showNotification";
 import ValidateCode from "../components/section/profile/ValidateCode";
 import { useNavigate } from "react-router-dom";
-
 import { IdValueObj, useApiParams } from "../models/Interfaces";
 import { setIsLoading } from "../redux/loadingSlice";
 import ButtonContainer from "../components/containers/ButtonContainer";
-// import DatePickerContainer from "../components/containers/DatePickerContainer";
 import InputContainer from "../components/containers/InputContainer";
 import SelectContainer from "../components/containers/SelectContainer";
 import useApi from "../hooks/useApi";
-import { profileService, sendCodeService } from "../services/authService";
+import {
+  profileCompanyService,
+  profileUserService,
+  sendCodeService,
+} from "../services/authService";
 import { useTranslation } from "react-i18next";
 import { DocType } from "../utilities/types";
 import {
@@ -27,16 +29,18 @@ import { ListsContext } from "../contexts/ListsContext";
 import { DefaultOptionType } from "antd/es/select";
 import React from "react";
 import { checkImage, equalServices } from "../utilities/globalFunctions";
+import InputNumberContainer from "../components/containers/InputNumberContainer";
 
-export default function Profile() {
+interface ProfileProps {
+  email: string;
+  docType: string;
+}
+
+export default function Profile(props: ProfileProps) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const context = useContext(ListsContext);
-  const { countryList, countryData, categoryList, tenureList } = context;
-  // const { state } = useLocation();
-  // const { email, type } = state;
-  const email = "aall@gmail.com";
-  const type = DocType.RUC;
+  const { countryList, countryData, categoryList } = context;
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const [form] = Form.useForm();
@@ -65,7 +69,10 @@ export default function Profile() {
   const { specialtyRules } = useSpecialtyRules(true);
 
   useEffect(() => {
-    if (equalServices(apiParams.service, profileService))
+    if (
+      equalServices(apiParams.service, profileUserService()) ||
+      equalServices(apiParams.service, profileCompanyService())
+    )
       dispatch(setIsLoading(loading));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
@@ -83,19 +90,26 @@ export default function Profile() {
 
   useEffect(() => {
     if (responseData) {
-      if (equalServices(apiParams.service, profileService)) {
+      if (
+        equalServices(apiParams.service, profileUserService()) ||
+        equalServices(apiParams.service, profileCompanyService())
+      ) {
         showNotification(notification, "success", t("createProfileSuccess"));
         setProfileSuccess(true);
-      } else if (equalServices(apiParams.service, sendCodeService)) {
+      } else if (equalServices(apiParams.service, sendCodeService())) {
         showNotification(notification, "success", t("sendCodeSuccess"));
       }
     } else if (error) {
       if (
-        equalServices(apiParams.service, profileService) ||
-        equalServices(apiParams.service, sendCodeService)
+        equalServices(apiParams.service, profileUserService()) ||
+        equalServices(apiParams.service, profileCompanyService()) ||
+        equalServices(apiParams.service, sendCodeService())
       ) {
         showNotification(notification, "error", errorMsg);
-        if (equalServices(apiParams.service, profileService))
+        if (
+          equalServices(apiParams.service, profileUserService()) ||
+          equalServices(apiParams.service, profileCompanyService())
+        )
           setProfileSuccess(false);
       }
     }
@@ -108,8 +122,7 @@ export default function Profile() {
       : Object.keys(countryData)[0];
     if (countryData[showCountry]) {
       setCities(countryData[showCountry].cities);
-      if (countryList.length)
-        form.setFieldValue("country", countryData[showCountry]);
+      if (countryList.length) form.setFieldValue("country", showCountry); //countryData[showCountry]);
     }
   }
 
@@ -129,7 +142,6 @@ export default function Profile() {
   }
 
   async function HandleSubmit(values: any) {
-    console.log(values);
     const data: ProfileRequest = {
       // uid: uid,
       // birthdate: moment(values.birthdate).format(dateFormat),
@@ -141,27 +153,33 @@ export default function Profile() {
       address: values.address.trim(),
       country: values.country,
       city: values.city,
-      categories: [],
-      plan: "planId1", // r3v
+      categories: [values.category1, values.category2, values.category3],
+      plan: 1, // r3v
     };
 
-    if (values.specialty) data.specialty = values.specialty.trim();
-    if (values.aboutMe) data.aboutMe = values.aboutMe.trim();
-
-    setApiParams({
-      service: profileService,
-      method: "post",
-      dataToSend: data,
-    });
+    if (props.docType == DocType.RUC) {
+      data.specialtyID = values.specialty.trim();
+      data.age = values.tenure;
+      if (values.aboutMe) data.aboutMe = values.aboutMe.trim();
+    }
+    console.log(values, data);
+    // setApiParams({
+    //   service:
+    //     props.docType == DocType.RUC
+    //       ? profileCompanyService()
+    //       : profileUserService(),
+    //   method: "post",
+    //   dataToSend: data,
+    // });
   }
 
   async function SendValidationCode() {
     const data: SendCodeRequest = {
-      email: email,
+      email: props.email,
       type: "identity_verified",
     };
     setApiParams({
-      service: sendCodeService,
+      service: sendCodeService(),
       method: "post",
       dataToSend: data,
     });
@@ -333,7 +351,7 @@ export default function Profile() {
                 </Col>
               </Row>
 
-              {type == DocType.RUC && (
+              {props.docType == DocType.RUC && (
                 <>
                   <Row gutter={[15, 15]}>
                     <Col xs={24} sm={24} md={12} lg={12} xl={12}>
@@ -347,12 +365,16 @@ export default function Profile() {
                           },
                         ]}
                       >
-                        <SelectContainer
+                        {/* <SelectContainer
                           placeholder={t("tenure")}
                           className="form-control"
                           options={tenureList.map((t: IdValueObj) => {
                             return { id: t.id, label: t.value, value: t.id };
                           })}
+                        /> */}
+                        <InputNumberContainer
+                          className="form-control"
+                          placeholder={t("tenure") + ` (${t("years")})`}
                         />
                       </Form.Item>
                     </Col>
@@ -481,7 +503,7 @@ export default function Profile() {
       <ValidateCode
         isOpen={isCodeModalOpen}
         onClose={handleCloseModal}
-        email={email}
+        email={props.email}
       />
     </>
   );

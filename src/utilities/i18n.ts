@@ -193,7 +193,7 @@ const resources = {
       aboutMe: "About me",
       name: "Name",
       loginText: 'Join us and discover how you can transform your ideas',
-
+      years: "years"
     },
   },
   es: {
@@ -387,7 +387,7 @@ const resources = {
       aboutMe: "Sobre mí",
       name: "Nombre",
       loginText: 'Únete a nosotros y descubre cómo puedes transformar tus ideas',
-
+      years: "años"
     },
   },
 };

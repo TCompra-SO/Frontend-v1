@@ -108,17 +108,17 @@ export default function ValidateCode({
 
   useEffect(() => {
     if (responseData) {
-      if (equalServices(apiParams.service, sendCodeService)) {
+      if (equalServices(apiParams.service, sendCodeService())) {
         beginTimer();
         showNotification(notification, "success", t("sentValidationCode"));
-      } else if (equalServices(apiParams.service, validateCodeService)) {
+      } else if (equalServices(apiParams.service, validateCodeService())) {
         setValidationSuccess(true);
         next();
         form.resetFields();
       }
     } else if (error) {
       showNotification(notification, "error", errorMsg);
-      if (equalServices(apiParams.service, validateCodeService)) {
+      if (equalServices(apiParams.service, validateCodeService())) {
         setValidationSuccess(false);
         form.resetFields();
       }
@@ -150,7 +150,7 @@ export default function ValidateCode({
       code: code,
     };
     setApiParams({
-      service: validateCodeService,
+      service: validateCodeService(),
       method: "post",
       dataToSend: data,
     });
@@ -163,7 +163,7 @@ export default function ValidateCode({
       type: "identity_verified",
     };
     setApiParams({
-      service: sendCodeService,
+      service: sendCodeService(),
       method: "post",
       dataToSend: data,
     });

@@ -7,6 +7,8 @@ import Profile from "./Profile";
 export default function Home() {
   const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
+  const [email, setEmail] = useState("");
+  const [docType, setDocType] = useState("");
 
   function handleOpenLoginModal() {
     setIsOpenLoginModal(true);
@@ -21,6 +23,12 @@ export default function Home() {
     handleOpenLoginModal();
   }
 
+  function handleRegisterSuccess(email: string, docType: string) {
+    setEmail(email);
+    setDocType(docType);
+    handleOpenModal(false);
+  }
+
   return (
     <>
       <NoContentModalContainer
@@ -29,7 +37,11 @@ export default function Home() {
         width={showLogin ? 850 : 1300}
         style={{ background: "transparent" }}
       >
-        {showLogin ? <Login /> : <Profile />}
+        {showLogin ? (
+          <Login onRegisterSuccess={handleRegisterSuccess} />
+        ) : (
+          <Profile email={email} docType={docType} />
+        )}
       </NoContentModalContainer>
       <ButtonContainer onClick={() => handleOpenModal(true)}>
         Login
