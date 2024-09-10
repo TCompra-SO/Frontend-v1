@@ -19,6 +19,12 @@ export default function httpErrorInterceptor(error: any, type: string): string {
         case 401:
           erroMsg = "incorrectEmailPassword";
           break;
+        case 403:
+          erroMsg = "userNoValidated";
+          break;
+        case 409:
+          erroMsg = "userIncompleteProfile";
+          break;
       }
       break;
     case profileUserService().type:

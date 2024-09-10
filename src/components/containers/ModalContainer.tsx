@@ -10,6 +10,7 @@ import RatingCanceledModal from "../common/RatingCanceledModal";
 import CancelPurchaseOrderModal from "../common/CancelPurchaseOrderModal";
 import RatingModal from "../common/RatingModal";
 import ConfirmationModal from "../common/ConfirmationModal";
+import InputEmailModal from "../common/InputEmailModal";
 
 interface ModalContainerProps extends ModalProps {
   content: ModalContent;
@@ -90,6 +91,16 @@ export default function ModalContainer(props: ModalContainerProps) {
             onClose={props.onClose}
             onAnswer={props.content.data.onAnswer}
             icon={props.content.data.icon}
+          />
+        );
+      }
+
+      case ModalTypes.INPUT_EMAIL: {
+        return (
+          <InputEmailModal
+            text={props.content.data.text}
+            onClose={props.onClose}
+            onAnswer={props.content.data.onAnswer}
           />
         );
       }

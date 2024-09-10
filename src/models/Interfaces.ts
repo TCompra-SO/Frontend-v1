@@ -76,6 +76,14 @@ export interface ModalConfirmation {
   };
 }
 
+export interface ModalInputEmail {
+  type: ModalTypes.INPUT_EMAIL;
+  data: {
+    text?: string;
+    onAnswer: (email: string) => void;
+  };
+}
+
 export interface ModalNone {
   type: ModalTypes.NONE;
   data: Record<string, never>;
@@ -91,6 +99,7 @@ export type ModalContent =
   | ModalDetailedRequirement
   | ModalCancelPurchaseOrder
   | ModalConfirmation
+  | ModalInputEmail
   | ModalNone;
 
 /********** Tables *************/

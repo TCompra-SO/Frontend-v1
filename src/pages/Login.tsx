@@ -4,15 +4,20 @@ import {
   GetNameReniecRequest,
   LoginRequest,
   RegisterRequest,
+  SendCodeRequest,
 } from "../models/Requests";
 import { useDispatch } from "react-redux";
 import { setUid, setUser } from "../redux/userSlice";
-import { DocType, RegisterTypeId } from "../utilities/types";
+import { DocType, ModalTypes, RegisterTypeId } from "../utilities/types";
 import { useNavigate } from "react-router-dom";
 import showNotification from "../utilities/notification/showNotification";
 import { setIsLoading } from "../redux/loadingSlice";
 import useApi from "../hooks/useApi";
-import { loginService, registerService } from "../services/authService";
+import {
+  loginService,
+  registerService,
+  sendCodeService,
+} from "../services/authService";
 import { useApiParams } from "../models/Interfaces";
 
 import { useTranslation } from "react-i18next";
@@ -29,6 +34,9 @@ import SelectContainer from "../components/containers/SelectContainer";
 import ButtonContainer from "../components/containers/ButtonContainer";
 import { getNameReniecService } from "../services/utilService";
 import { equalServices } from "../utilities/globalFunctions";
+import ModalContainer from "../components/containers/ModalContainer";
+import ValidateCode from "../components/section/profile/ValidateCode";
+import { AxiosError } from "axios";
 
 const LoginType = {
   LOGIN: "login",
@@ -50,17 +58,22 @@ export default function Login(props: LoginProps) {
   const { passwordRules } = usePasswordRules(true);
   const { dniRules } = useDniRules(true);
   const { rucRules } = useRucRules(true);
+  const [email, setEmail] = useState("");
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isOpenCodeModal, setIsOpenCodeModal] = useState(false);
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
   const [docType, setDocType] = useState(DocType.DNI);
   const [form] = Form.useForm();
   const [apiParams, setApiParams] = useState<
-    useApiParams<RegisterRequest | LoginRequest | GetNameReniecRequest>
+    useApiParams<
+      RegisterRequest | LoginRequest | GetNameReniecRequest | SendCodeRequest
+    >
   >({
     service: null,
     method: "get",
   });
   const { loading, responseData, error, errorMsg, fetchData } = useApi<
-    RegisterRequest | LoginRequest | GetNameReniecRequest
+    RegisterRequest | LoginRequest | GetNameReniecRequest | SendCodeRequest
   >({
     service: apiParams.service,
     method: apiParams.method,
@@ -76,9 +89,18 @@ export default function Login(props: LoginProps) {
         afterSubmit();
       else if (equalServices(apiParams.service, getNameReniecService(""))) {
         form.setFieldValue("name", responseData.data);
+      } else if (equalServices(apiParams.service, sendCodeService())) {
+        showNotification(notification, "success", t("sendCodeSuccess"));
+        setIsOpenCodeModal(true);
       }
     } else if (error) {
       showNotification(notification, "error", errorMsg);
+
+      if (equalServices(apiParams.service, sendCodeService())) {
+        setEmail("");
+      } else if (equalServices(apiParams.service, loginService())) {
+        checkToOpenCreateProfileModal(error);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -92,6 +114,21 @@ export default function Login(props: LoginProps) {
     if (apiParams.service) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
+
+  function checkToOpenCreateProfileModal(error: AxiosError<any, any>) {
+    if (
+      error.response?.status == 409 &&
+      error.response?.data &&
+      error.response?.data.uid &&
+      error.response?.data.entity
+    ) {
+      dispatch(setUid(error.response?.data.uid));
+      props.onRegisterSuccess(
+        email,
+        error.response?.data.entity == "User" ? DocType.DNI : DocType.RUC
+      );
+    }
+  }
 
   function changeLabel(loginType: string) {
     return loginType == LoginType.LOGIN ? t("login") : t("register");
@@ -151,7 +188,7 @@ export default function Login(props: LoginProps) {
 
   function afterSubmit() {
     if (loginType == LoginType.REGISTER) {
-      dispatch(setUid(responseData));
+      dispatch(setUid(responseData.res.uid));
       showNotification(notification, "success", t("registerUserSuccess"));
       props.onRegisterSuccess(form.getFieldValue("email"), docType);
     } else {
@@ -162,8 +199,55 @@ export default function Login(props: LoginProps) {
     }
   }
 
+  async function SendValidationCode(email: string) {
+    handleCloseModal();
+    setEmail(email);
+    const data: SendCodeRequest = {
+      email,
+      type: "identity_verified",
+    };
+    setApiParams({
+      service: sendCodeService(),
+      method: "post",
+      dataToSend: data,
+    });
+  }
+
+  function handleOpenModal() {
+    setIsOpenModal(true);
+  }
+
+  function handleCloseModal() {
+    setIsOpenModal(false);
+  }
+
+  function handleCloseCodeModal() {
+    setIsOpenCodeModal(false);
+  }
+
   return (
     <>
+      <ModalContainer
+        className=""
+        title={t("inputYourEmail")}
+        content={{
+          type: ModalTypes.INPUT_EMAIL,
+          data: {
+            onAnswer: (email: string) => {
+              SendValidationCode(email);
+            },
+          },
+        }}
+        isOpen={isOpenModal}
+        onClose={handleCloseModal}
+      />
+
+      <ValidateCode
+        isOpen={isOpenCodeModal}
+        onClose={handleCloseCodeModal}
+        email={email}
+      />
+
       <div className="modal-login">
         <div className="login-box text-center">
           <img
@@ -282,6 +366,13 @@ export default function Login(props: LoginProps) {
                 style={{ width: "100%" }}
               >
                 {t("forgotPassword")}
+              </a>
+              <a
+                onClick={handleOpenModal}
+                className="forgot-password text-right"
+                style={{ width: "100%" }}
+              >
+                {t("sendValidationCodeLogin")}
               </a>
               <ButtonContainer common className="btn btn-default wd-100">
                 {changeLabel(loginType)}

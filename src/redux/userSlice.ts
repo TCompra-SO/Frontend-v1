@@ -17,7 +17,8 @@ export const userSlice = createSlice({
       state.type = type;
     },
     setUid: (state, action) => {
-      state.uid = action.payload.res.uid;
+      // state.uid = action.payload.res.uid;
+      state.uid = action.payload;
     },
   },
 });

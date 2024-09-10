@@ -81,6 +81,8 @@ const resources = {
       expiredCode: "The code has expired; please generate a new one",
       incorrectCode: "The code entered is incorrect",
       noDNIorRUCprovided: "Neither DNI nor RUC was provided",
+      userNoValidated: "Validate your account first",
+      userIncompleteProfile: "Create your profile first",
       // Profile
       sentValidationCode: "Code was sent successfully",
       timerResendValidationCode: "You can resend the code in ",
@@ -109,10 +111,6 @@ const resources = {
       selectDate: "Select a date",
       winnigOfferDetail: "Winning offer details",
       deleteRequirementConfirmation: "Are sure about deleting the requirement?",
-      // Login
-      registerUserSuccess: "User registered successfully",
-      welcome: "Welcome",
-      forgotPassword: "Forgot password?",
       // Action
       showOffers: "Show offers",
       delete: "Delete",
@@ -147,8 +145,14 @@ const resources = {
       noBlankSpaces: "Enter a valid value",
       validNumber: "Enter a valid number",
       // Messages
+      registerUserSuccess: "User registered successfully",
+      welcome: "Welcome",
+      forgotPassword: "Forgot password?",
       invalidImage: "Select a valid image",
-      invalidImageSize: "Image must be lees than ",      
+      invalidImageSize: "Image must be less than ",  
+      sendValidationCodeLogin: "Didn’t receive the verification code?",
+      completeProfileLogin: "Complete your profile?",    
+      inputYourEmail: "Input your email",
       // Other
       yes: "Yes",
       no: "No",
@@ -266,13 +270,15 @@ const resources = {
       invalidDocNumber: "Número de documento inválido",
       existingEmail: "Este email ya ha sido registrado",
       existingDocNumber: "Este número de documento ya ha sido registrado",
-      completeProfile: "Complete du perfil antes de validar du cuenta",
+      completeProfile: "Complete su perfil antes de validar su cuenta",
       generateCodeAgain: "Genere el código nuevamente",
       userAlreadyValidated: "Este usuario ya está validado",
       generateCodeFirst: "Genere un código de validación primero",
       expiredCode: "El código ha expirado, genere otro nuevamente",
       incorrectCode: "El código ingresado es incorrecto",
       noDNIorRUCprovided: "No se proporcionó DNI o RUC",
+      userNoValidated: "Valide su cuenta primero",
+      userIncompleteProfile: "Cree su perfil primero",
       // Profile
       sentValidationCode: "Se envió el código con éxito",
       timerResendValidationCode: "Podrá reenviar el código en ",
@@ -303,10 +309,6 @@ const resources = {
       winnigOfferDetail: "Winning offer details",
       deleteRequirementConfirmation:
         "¿Está seguro de eliminar el requerimiento?",
-      // Login
-      registerUserSuccess: "Usuario registrado exitosamente",
-      welcome: "Bienvenido",
-      forgotPassword: "¿Olvidó su contraseña?",
       // Action
       showOffers: "Ver ofertas",
       delete: "Eliminar",
@@ -341,8 +343,14 @@ const resources = {
       noBlankSpaces: "Ingrese un valor válido",
       validNumber: "Ingrese un número válido",
       // Messages
+      registerUserSuccess: "Usuario registrado exitosamente",
+      welcome: "Bienvenido",
+      forgotPassword: "¿Olvidó su contraseña?",
       invalidImage: "Seleccione una imagen válida",
       invalidImageSize: "La imagen debe ser menor a ",
+      sendValidationCodeLogin: "¿No le llegó el código de verificación?",
+      completeProfileLogin: "¿Desea completar su perfil?",
+      inputYourEmail: "Ingrese su correo",
       // Other
       yes: "Sí",
       no: "No",

@@ -9,7 +9,7 @@ export const ApiRoutes = {
     profileCompany: "profileCompany/",
     profileUser: "profileUser/",
     register: "register/",
-    sendCode: "send-code/",
+    sendCode: "sendCode/",
     validateCode: "validate-code/",
   },
   util: {

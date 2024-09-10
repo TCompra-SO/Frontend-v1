@@ -4,6 +4,7 @@ import { App as AntdApp, ConfigProvider, theme } from "antd";
 import LoadingCond from "./pages/utils/LoadingCond.tsx";
 import LoadingPage from "./pages/utils/LoadingPage.tsx";
 import "./assets/styles.css";
+import "./assets/responsive.css";
 import {
   darkColor,
   mainBackgroundColor,

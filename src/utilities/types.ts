@@ -72,6 +72,7 @@ export enum ModalTypes {
   RATE_CANCELED = 7,
   RATE_USER = 8,
   CONFIRM = 9,
+  INPUT_EMAIL = 10,
 }
 
 export const ModalWidth: {
@@ -87,6 +88,7 @@ export const ModalWidth: {
   [ModalTypes.RATE_CANCELED]: mediumModalWidth,
   [ModalTypes.RATE_USER]: mediumModalWidth,
   [ModalTypes.CONFIRM]: mediumModalWidth,
+  [ModalTypes.INPUT_EMAIL]: smallModalWidth,
 };
 
 /***** Acciones *****/

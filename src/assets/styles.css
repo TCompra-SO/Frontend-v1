@@ -416,6 +416,111 @@ body {
   }
 }
 
+/* Modal Agregar Requerimiento */
+.modal-card {
+  background: #fff;
+  padding: 40px;
+  border-radius: 35px;
+}
+.img-bg {
+  /* width: 800px; */
+  /* width: 100%; */
+  background-image: url(img/back-modal.svg);
+  background-size: 20%;
+  background-repeat: no-repeat;
+  background-position: top right;
+}
+.mr-sub {
+  margin-bottom: 20px;
+  gap: 15px;
+}
+.form-tc {
+  row-gap: 15px;
+  flex-direction: column;
+}
+.gap-15 {
+  gap: 15px;
+}
+.row-gap-15 {
+  row-gap: 15px;
+}
+.img-prod {
+  border-radius: 0.9rem;
+}
+.subir-img {
+  background: #bc1373;
+  color: #ffffff;
+  height: 30px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  position: absolute;
+  margin-left: 117px;
+  margin-top: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.req-col {
+  flex-direction: column;
+  flex-grow: 1;
+}
+.titulo-input {
+  color: #3b4c56;
+  font-weight: 600;
+  font-size: 16px;
+}
+.multimedia-subir {
+  background: #ffe9f7;
+  color: #bc1373;
+  font-weight: 600;
+  text-align: center;
+  padding: 30px;
+  border-radius: 0.9rem;
+  cursor: pointer;
+}
+.galeria-min {
+  gap: 10px;
+  margin-top: 15px;
+}
+.img-min {
+  height: 55px !important;
+  width: 55px !important;
+  border-radius: 0.6rem;
+  display: flex;
+  object-fit: cover;
+}
+.img-trash {
+  color: #bc1373;
+  background: #fff;
+  position: absolute;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  margin-left: 40px;
+  margin-top: -60px;
+}
+.file-min {
+  background: #ffe9f7;
+  color: #bc1373;
+  height: 55px !important;
+  width: 55px !important;
+  border-radius: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+}
+.up-footer {
+  align-items: center;
+  justify-content: space-between;
+}
+.footer-text {
+  color: #a4b2ba;
+  font-weight: 500;
+}
+
 /********** Antd's select **************************/
 
 .form-control .ant-select-selector {
