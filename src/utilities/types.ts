@@ -269,3 +269,15 @@ export enum CountriesRequestType {
 export enum RegisterTypeId {
   PRINC = 1,
 }
+
+export enum CanOfferType {
+  ALL = 0,
+  PREMIUM = 1,
+  CERTIFIED_COMPANY = 2,
+}
+
+export enum TimeMeasurement {
+  DAYS = 0,
+  MONTHS = 1,
+  YEARS = 2,
+}

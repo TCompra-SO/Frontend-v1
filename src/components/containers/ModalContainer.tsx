@@ -120,6 +120,7 @@ export default function ModalContainer(props: ModalContainerProps) {
           props.maskClosable !== undefined ? props.maskClosable : true
         }
         onCancel={props.onClose}
+        className="modal-card"
       >
         {getContent()}
       </Modal>
@@ -138,6 +139,7 @@ export default function ModalContainer(props: ModalContainerProps) {
           props.maskClosable !== undefined ? props.maskClosable : true
         }
         onCancel={props.onClose}
+        className="modal-card"
       >
         {getContent()}
       </Modal>

@@ -21,8 +21,7 @@ import MainHeader from "./components/section/header/header/MainHeader.tsx";
 import { ListsProvider } from "./contexts/ListsContext.tsx";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
-const Login = lazy(() => import("./pages/Login.tsx"));
-const Profile = lazy(() => import("./pages/Profile.tsx"));
+
 const Search = lazy(() => import("./pages/Search.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
 const Offers = lazy(() => import("./pages/Offers.tsx"));
@@ -85,22 +84,7 @@ function App() {
                   </Suspense>
                 }
               />
-              <Route
-                path={`/${pageRoutes.login}`}
-                element={
-                  <Suspense fallback={<LoadingPage />}>
-                    <Login></Login>
-                  </Suspense>
-                }
-              />
-              <Route
-                path={`/${pageRoutes.profile}`}
-                element={
-                  <Suspense fallback={<LoadingPage />}>
-                    <Profile></Profile>
-                  </Suspense>
-                }
-              />
+
               <Route
                 path="/*"
                 element={

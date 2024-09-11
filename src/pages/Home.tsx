@@ -1,8 +1,14 @@
-import { useState } from "react";
+import { lazy, useState } from "react";
 import ButtonContainer from "../components/containers/ButtonContainer";
-import Login from "./Login";
+
 import NoContentModalContainer from "../components/containers/NoContentModalContainer";
-import Profile from "./Profile";
+// import Profile from "./Profile.tsx";
+
+const Login = lazy(() => import("./Login.tsx"));
+const Profile = lazy(() => import("./Profile.tsx"));
+const CreateRequirement = lazy(
+  () => import("../components/section/create-requirement/CreateRequirement.tsx")
+);
 
 export default function Home() {
   const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
@@ -40,7 +46,8 @@ export default function Home() {
         {showLogin ? (
           <Login onRegisterSuccess={handleRegisterSuccess} />
         ) : (
-          <Profile email={email} docType={docType} />
+          // <Profile email={email} docType={"RUC"} />
+          <CreateRequirement />
         )}
       </NoContentModalContainer>
       <ButtonContainer onClick={() => handleOpenModal(true)}>

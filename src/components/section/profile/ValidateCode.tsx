@@ -87,8 +87,12 @@ export default function ValidateCode({
     method: apiParams.method,
     dataToSend: apiParams.dataToSend,
   });
-  let intervalId: number = 0;
-  let intervalIdValidate: number = 0;
+  let intervalId: any = 0;
+  let intervalIdValidate: any = 0;
+
+  // useEffect(() => {
+  //   beginTimer();
+  // }, [])
 
   useEffect(() => {
     if (isOpen) {
@@ -170,6 +174,7 @@ export default function ValidateCode({
   }
 
   function beginTimer() {
+    clearInterval(intervalId);
     intervalId = setInterval(() => {
       setTimer((prevTimer) => {
         if (prevTimer - 1 === 0) {

@@ -374,7 +374,11 @@ export default function Login(props: LoginProps) {
               >
                 {t("sendValidationCodeLogin")}
               </a>
-              <ButtonContainer common className="btn btn-default wd-100">
+              <ButtonContainer
+                htmlType="submit"
+                loading={loading}
+                className="btn btn-default wd-100"
+              >
                 {changeLabel(loginType)}
               </ButtonContainer>
             </div>

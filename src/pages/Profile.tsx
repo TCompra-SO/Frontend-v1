@@ -142,12 +142,11 @@ export default function Profile(props: ProfileProps) {
   }
 
   async function HandleSubmit(values: any) {
+    if (!checkDifferentCategories(values)) {
+      showNotification(notification, "error", t("selectDifferentCategories"));
+      return;
+    }
     const data: ProfileRequest = {
-      // uid: uid,
-      // birthdate: moment(values.birthdate).format(dateFormat),
-      // country: values.country,
-      // city: values.city,
-      // phone: values.phone,
       uid,
       phone: values.phone.trim(),
       address: values.address.trim(),
@@ -206,6 +205,14 @@ export default function Profile(props: ProfileProps) {
     if (fileInputRef.current) {
       fileInputRef.current.input!.click();
     }
+  }
+
+  function checkDifferentCategories(values: any) {
+    return (
+      values.category1 !== values.category2 &&
+      values.category1 !== values.category3 &&
+      values.category2 !== values.category3
+    );
   }
 
   return (
@@ -373,6 +380,8 @@ export default function Profile(props: ProfileProps) {
                           })}
                         /> */}
                         <InputNumberContainer
+                          min={0}
+                          parser={(value) => parseInt(value || "0", 10)}
                           className="form-control"
                           placeholder={t("tenure") + ` (${t("years")})`}
                         />
@@ -479,14 +488,13 @@ export default function Profile(props: ProfileProps) {
               <Form.Item style={{}} wrapperCol={{ span: "24" }}>
                 {!profileSuccess && (
                   <ButtonContainer
-                    common
+                    htmlType="submit"
                     children={t("saveButton")}
                     className="btn btn-default wd-100"
                   />
                 )}
                 {profileSuccess && (
                   <ButtonContainer
-                    common
                     onClick={handleOpenModal}
                     disabled={false}
                     children={t("sendValidationCode")}
