@@ -157,6 +157,10 @@ export interface IdValueObj {
   value: string;
 }
 
+export interface IdValueAliasObj extends IdValueObj {
+  alias: string;
+}
+
 export interface CountryData {
   value: string;
   cities: IdValueObj[];

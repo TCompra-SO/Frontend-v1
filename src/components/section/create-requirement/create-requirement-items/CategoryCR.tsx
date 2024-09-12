@@ -13,7 +13,12 @@ export default function CategoryCR() {
   return (
     <>
       <div className="titulo-input">{t("category")}</div>
-      <Form.Item label={t("category")} name="category" labelCol={{ span: 0 }}>
+      <Form.Item
+        label={t("category")}
+        name="category"
+        labelCol={{ span: 0 }}
+        rules={[{ required: true }]}
+      >
         <SelectContainer
           placeholder={t("select")}
           className="form-control"

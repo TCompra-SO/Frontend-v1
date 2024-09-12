@@ -9,7 +9,12 @@ export default function WarrantyTimeCR() {
   return (
     <>
       <div className="titulo-input">{t("duration")}</div>
-      <Form.Item label={t("duration")} name="duration" labelCol={{ span: 0 }}>
+      <Form.Item
+        label={t("duration")}
+        name="duration"
+        labelCol={{ span: 0 }}
+        rules={[{ required: true }]}
+      >
         <SelectContainer
           placeholder={t("select")}
           className="form-control"

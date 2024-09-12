@@ -1,10 +1,19 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { CountryCities, IdValueObj } from "../models/Interfaces";
+import {
+  CountryCities,
+  IdValueAliasObj,
+  IdValueObj,
+} from "../models/Interfaces";
 import useApi from "../hooks/useApi";
 import {
   categoriesService,
   countriesService,
+  currencyService,
+  deliveryTimeService,
+  paymentMethodService,
+  planTypeService,
   TLDsService,
+  whoCanOfferService,
 } from "../services/utilService";
 
 interface ListsContextType {
@@ -12,7 +21,11 @@ interface ListsContextType {
   countryList: IdValueObj[];
   countryData: CountryCities;
   categoryList: IdValueObj[];
-  // tenureList: IdValueObj[];
+  currencyList: IdValueAliasObj[];
+  paymentMethodList: IdValueObj[];
+  deliveryTimeList: IdValueObj[];
+  whoCanOfferList: IdValueObj[];
+  planTypeList: IdValueObj[];
 }
 
 export const ListsContext = createContext<ListsContextType>({
@@ -20,7 +33,11 @@ export const ListsContext = createContext<ListsContextType>({
   countryData: {},
   tlds: [],
   categoryList: [],
-  // tenureList: [],
+  currencyList: [],
+  paymentMethodList: [],
+  deliveryTimeList: [],
+  whoCanOfferList: [],
+  planTypeList: [],
 });
 
 interface ListsProviderProps {
@@ -50,18 +67,56 @@ export function ListsProvider({ children }: ListsProviderProps) {
       method: "get",
     });
 
-  // const [tenureList, setTenureList] = useState<IdValueObj[]>([]);
-  // const { responseData: tenureResponseData, fetchData: tenureFetchData } =
-  //   useApi<any>({
-  //     service: tenureService(),
-  //     method: "get",
-  //   });
+  const [currencyList, setCurrencyList] = useState<IdValueAliasObj[]>([]);
+  const { responseData: currencyResponseData, fetchData: currencyFetchData } =
+    useApi<any>({
+      service: currencyService(),
+      method: "get",
+    });
+
+  const [paymentMethodList, setPaymentMethodList] = useState<IdValueObj[]>([]);
+  const {
+    responseData: paymentMethodResponseData,
+    fetchData: paymentMethodFetchData,
+  } = useApi<any>({
+    service: paymentMethodService(),
+    method: "get",
+  });
+
+  const [deliveryTimeList, setDeliveryTimeList] = useState<IdValueObj[]>([]);
+  const {
+    responseData: deliveryTimeResponseData,
+    fetchData: deliveryTimeFetchData,
+  } = useApi<any>({
+    service: deliveryTimeService(),
+    method: "get",
+  });
+
+  const [whoCanOfferList, setWhoCanOfferList] = useState<IdValueObj[]>([]);
+  const {
+    responseData: whoCanOfferResponseData,
+    fetchData: whoCanOfferFetchData,
+  } = useApi<any>({
+    service: whoCanOfferService(),
+    method: "get",
+  });
+
+  const [planTypeList, setPlanTypeList] = useState<IdValueObj[]>([]);
+  const { responseData: planTypeResponseData, fetchData: planTypeFetchData } =
+    useApi<any>({
+      service: planTypeService(),
+      method: "get",
+    });
 
   useEffect(() => {
     countryFetchData();
     tldsFetchData();
     categoryFetchData();
-    // tenureFetchData();
+    currencyFetchData();
+    paymentMethodFetchData();
+    deliveryTimeFetchData();
+    whoCanOfferFetchData();
+    planTypeFetchData();
   }, []);
 
   useEffect(() => {
@@ -92,16 +147,60 @@ export function ListsProvider({ children }: ListsProviderProps) {
     }
   }, [categoryResponseData]);
 
-  // useEffect(() => {
-  //   setTenureList([
-  //     { id: 1, value: "tenure1" },
-  //     { id: 2, value: "tenure2" },
-  //   ]);
-  // }, []);
+  useEffect(() => {
+    if (currencyResponseData) {
+      if (currencyResponseData.currencies) {
+        const temp: IdValueAliasObj[] = currencyResponseData.currencies.filter(
+          (it: IdValueAliasObj) => {
+            if (it.alias != "COP") return true;
+          }
+        );
+        setCurrencyList(temp);
+      }
+    }
+  }, [currencyResponseData]);
+
+  useEffect(() => {
+    if (paymentMethodResponseData) {
+      if (paymentMethodResponseData.methods)
+        setPaymentMethodList(paymentMethodResponseData.methods);
+    }
+  }, [paymentMethodResponseData]);
+
+  useEffect(() => {
+    if (deliveryTimeResponseData) {
+      if (deliveryTimeResponseData.times)
+        setDeliveryTimeList(deliveryTimeResponseData.times);
+    }
+  }, [deliveryTimeResponseData]);
+
+  useEffect(() => {
+    if (whoCanOfferResponseData) {
+      if (whoCanOfferResponseData.bidders)
+        setWhoCanOfferList(whoCanOfferResponseData.bidders);
+    }
+  }, [whoCanOfferResponseData]);
+
+  useEffect(() => {
+    if (planTypeResponseData) {
+      if (planTypeResponseData.plans)
+        setPlanTypeList(planTypeResponseData.plans);
+    }
+  }, [planTypeResponseData]);
 
   return (
     <ListsContext.Provider
-      value={{ countryList, countryData, tlds, categoryList }}
+      value={{
+        countryList,
+        countryData,
+        tlds,
+        categoryList,
+        currencyList,
+        paymentMethodList,
+        deliveryTimeList,
+        whoCanOfferList,
+        planTypeList,
+      }}
     >
       {children}
     </ListsContext.Provider>

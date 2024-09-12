@@ -6,6 +6,7 @@ export const defaultCountry: string = "01";
 
 export const maxImageSizeMb: number = 1;
 export const maxImagesQuantity: number = 5;
+export const maxDocsQuantity: number = 1;
 export const maxDocSizeMb: number = 2;
 
 export const commonModalWidth: number = 850;

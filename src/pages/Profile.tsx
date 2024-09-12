@@ -21,6 +21,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { DocType } from "../utilities/types";
 import {
+  useAboutMeRules,
   useAddressRules,
   usePhoneRules,
   useSpecialtyRules,
@@ -67,6 +68,7 @@ export default function Profile(props: ProfileProps) {
   const { addressRules } = useAddressRules(true);
   const { phoneRules } = usePhoneRules(true);
   const { specialtyRules } = useSpecialtyRules(true);
+  const { aboutMeRules } = useAboutMeRules(false);
 
   useEffect(() => {
     if (
@@ -403,9 +405,10 @@ export default function Profile(props: ProfileProps) {
                   </Row>
 
                   <Form.Item
-                    label={t("aboutMe")}
+                    label={t("field")}
                     labelCol={{ span: 0 }}
                     name="aboutMe"
+                    rules={aboutMeRules}
                   >
                     <InputContainer
                       className="form-control"

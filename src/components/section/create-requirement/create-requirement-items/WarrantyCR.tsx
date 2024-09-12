@@ -8,7 +8,12 @@ export default function WarrantyCR() {
   return (
     <>
       <div className="titulo-input">{t("warranty")}</div>
-      <Form.Item label={t("warranty")} name="warranty" labelCol={{ span: 0 }}>
+      <Form.Item
+        label={t("warranty")}
+        name="warranty"
+        labelCol={{ span: 0 }}
+        rules={[{ required: true }]}
+      >
         <InputNumberContainer
           min={0}
           parser={(value) => parseInt(value || "0", 10)}

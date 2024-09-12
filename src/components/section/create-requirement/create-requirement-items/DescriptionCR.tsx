@@ -1,9 +1,11 @@
 import { useTranslation } from "react-i18next";
 import TextAreaContainer from "../../../containers/TextAreaContainer";
 import { Form } from "antd";
+import { useDescriptionCRRules } from "../../../../hooks/validators";
 
 export default function DescriptionCR() {
   const { t } = useTranslation();
+  const { descriptionCRRules } = useDescriptionCRRules(true);
 
   return (
     <>
@@ -13,6 +15,7 @@ export default function DescriptionCR() {
         label={t("description")}
         name="description"
         labelCol={{ span: 0 }}
+        rules={descriptionCRRules}
       >
         <TextAreaContainer className="form-control" />
       </Form.Item>

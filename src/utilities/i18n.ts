@@ -150,10 +150,16 @@ const resources = {
       welcome: "Welcome",
       forgotPassword: "Forgot password?",
       invalidImage: "Select a valid image",
-      invalidImageSize: "Image must be less than ",  
+      invalidImageSize: "Image must be less than ",
+      invalidImages: "Only valid images are accepted",
+      invalidImagesSize: "Each image must be less than ",  
+      nameInvalidImage: " is not a valid image",
+      nameInvalidImageSize: " must be less than ",
       sendValidationCodeLogin: "Didn’t receive the verification code?",
       completeProfileLogin: "Complete your profile?",    
       inputYourEmail: "Input your email",
+      allDataIsImportant: "All data is important",
+      dateBeforeToday: "Date cannot be earlier than today",
       // Other
       yes: "Yes",
       no: "No",
@@ -213,7 +219,10 @@ const resources = {
       expirationDate: "Expiration date",
       months: 'Months',
       days: 'Days',
-      documentListCertif: "Documents for certification"
+      documentListCertif: "Documents for certification",
+      addImages: 'Upload images',
+      addDocument: 'Upload document',
+      field: "Field"
     },
   },
   es: {
@@ -364,10 +373,16 @@ const resources = {
       welcome: "Bienvenido",
       forgotPassword: "¿Olvidó su contraseña?",
       invalidImage: "Seleccione una imagen válida",
+      invalidImages: "Sólo son aceptadas imagenes válidas",
       invalidImageSize: "La imagen debe ser menor a ",
+      invalidImagesSize: "Cada imagen debe ser menor a ",
+      nameInvalidImage: " no es una imagen válida",
+      nameInvalidImageSize: " debe ser menor a ",
       sendValidationCodeLogin: "¿No le llegó el código de verificación?",
       completeProfileLogin: "¿Desea completar su perfil?",
       inputYourEmail: "Ingrese su correo",
+      allDataIsImportant: "Todos los datos son importantes",
+      dateBeforeToday: "Fecha no puede ser menor a hoy",
       // Other
       yes: "Sí",
       no: "No",
@@ -428,7 +443,10 @@ const resources = {
       duration: 'Duración',
       months: 'Meses',
       days: 'Días',
-      documentListCertif: "Lista de documentos a certificar"
+      documentListCertif: "Lista de documentos a certificar",
+      addImages: 'Agregar imágenes',
+      addDocument: 'Agregar documento',
+      field: "Campo"
     },
   },
 };

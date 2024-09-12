@@ -15,7 +15,17 @@ export const ApiRoutes = {
   util: {
     countries: "countries/",
     categories: "categories/",
-    tenure: "tenure/",
+    utilData: {
+      name: "utilData/",
+      items: {
+        tenure: "tenure/",
+        currency: "currency/",
+        methodPayment: "method_payment/",
+        deliveryTime: "delivery_time/",
+        typeBidders: "type_bidders/",
+        typesPlans: "types_plans/",
+      },
+    },
   },
   root: {
     getName: "getName/",
@@ -24,8 +34,6 @@ export const ApiRoutes = {
 
 export const pageRoutes = {
   home: "",
-  login: "login",
-  profile: "perfil",
   search: "busqueda",
   myRequirements: "mis-requerimientos",
   myOffers: "mis-ofertas",

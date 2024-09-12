@@ -1,9 +1,14 @@
 import { useTranslation } from "react-i18next";
 import SelectContainer from "../../../containers/SelectContainer";
 import { Form } from "antd";
+import { useContext } from "react";
+import { ListsContext } from "../../../../contexts/ListsContext";
+import { IdValueObj } from "../../../../models/Interfaces";
 
 export default function DeliveryTimeCR() {
   const { t } = useTranslation();
+  const context = useContext(ListsContext);
+  const { deliveryTimeList } = context;
 
   return (
     <>
@@ -12,13 +17,14 @@ export default function DeliveryTimeCR() {
         label={t("deliveryTime")}
         name="deliveryTime"
         labelCol={{ span: 0 }}
+        rules={[{ required: true }]}
       >
         <SelectContainer
           placeholder={t("select")}
           className="form-control"
-          // options={categoryList.map((cat: IdValueObj) => {
-          //   return { id: cat.id, label: cat.value, value: cat.id };
-          // })}
+          options={deliveryTimeList.map((item: IdValueObj) => {
+            return { label: item.value, value: item.id };
+          })}
         />
       </Form.Item>
     </>

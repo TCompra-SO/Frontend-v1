@@ -32,15 +32,27 @@ export const Lengths = {
     max: 30,
   },
   city: {
-    min: 4,
-    max: 45,
+    min: 3,
+    max: 30,
   },
   address: {
-    min: 4,
+    min: 3,
     max: 255,
   },
   specialty: {
     min: 3,
     max: 255,
+  },
+  aboutMe: {
+    min: 1,
+    max: 255,
+  },
+  title: {
+    min: 5,
+    max: 255,
+  },
+  descriptionCR: {
+    min: 5,
+    max: 150,
   },
 };

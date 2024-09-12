@@ -8,9 +8,15 @@ export default function BudgetCR() {
   return (
     <>
       <div className="titulo-input">{t("budget")}</div>
-      <Form.Item label={t("budget")} name="budget" labelCol={{ span: 0 }}>
+      <Form.Item
+        label={t("budget")}
+        name="budget"
+        labelCol={{ span: 0 }}
+        rules={[{ required: true }]}
+      >
         <InputNumberContainer
           min={0}
+          max={99999}
           step={0.1}
           precision={1}
           className="form-control"

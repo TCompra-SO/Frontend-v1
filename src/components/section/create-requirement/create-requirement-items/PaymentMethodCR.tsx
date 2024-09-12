@@ -1,9 +1,14 @@
 import { Form } from "antd";
 import SelectContainer from "../../../containers/SelectContainer";
 import { useTranslation } from "react-i18next";
+import { ListsContext } from "../../../../contexts/ListsContext";
+import { useContext } from "react";
+import { IdValueObj } from "../../../../models/Interfaces";
 
 export default function PaymentMethodCR() {
   const { t } = useTranslation();
+  const context = useContext(ListsContext);
+  const { paymentMethodList } = context;
 
   return (
     <>
@@ -12,13 +17,14 @@ export default function PaymentMethodCR() {
         label={t("paymentMethod")}
         name="paymentMethod"
         labelCol={{ span: 0 }}
+        rules={[{ required: true }]}
       >
         <SelectContainer
           placeholder={t("select")}
           className="form-control"
-          // options={categoryList.map((cat: IdValueObj) => {
-          //   return { id: cat.id, label: cat.value, value: cat.id };
-          // })}
+          options={paymentMethodList.map((item: IdValueObj) => {
+            return { label: item.value, value: item.id };
+          })}
         />
       </Form.Item>
     </>

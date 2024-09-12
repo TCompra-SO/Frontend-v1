@@ -18,7 +18,12 @@ export default function LocationCR() {
   return (
     <>
       <div className="titulo-input">{t("location")}</div>
-      <Form.Item label={t("location")} name="location" labelCol={{ span: 0 }}>
+      <Form.Item
+        label={t("location")}
+        name="location"
+        labelCol={{ span: 0 }}
+        rules={[{ required: true }]}
+      >
         <SelectContainer
           placeholder={t("select")}
           options={countryData[showCountry].cities.map((cit: IdValueObj) => {

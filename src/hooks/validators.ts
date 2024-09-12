@@ -46,6 +46,23 @@ export function useEmailDomainValidator(tlds: string[]) {
   return validateEmailDomain;
 }
 
+export function useDateOnwardValidator(tlds: string[]) {
+  const { t } = useTranslation();
+
+  function validateDateOnward(_: RuleObject, value: string) {
+    if (value && tlds.length > 0) {
+      const lastDotIndex: number = value.lastIndexOf(".");
+      if (lastDotIndex !== -1) {
+        const segment = value.substring(lastDotIndex + 1).toUpperCase();
+        if (!tlds.includes(segment))
+          return Promise.reject(new Error(t("dateBeforeToday")));
+      }
+    }
+    return Promise.resolve();
+  }
+  return validateDateOnward;
+}
+
 /** Rules */
 
 export function useAddressRules(required: boolean) {
@@ -169,4 +186,55 @@ export function usePasswordRules(required: boolean) {
     },
   ]);
   return { passwordRules };
+}
+
+export function useTitleRules(required: boolean) {
+  const [titleRules] = useState<Rule[]>([
+    {
+      required,
+    },
+    {
+      min: Lengths.title.min,
+    },
+    {
+      max: Lengths.title.max,
+    },
+    {
+      validator: useNoBlankSpacesValidator(),
+    },
+  ]);
+  return { titleRules };
+}
+
+export function useAboutMeRules(required: boolean) {
+  const [aboutMeRules] = useState<Rule[]>([
+    {
+      required,
+    },
+    {
+      min: Lengths.aboutMe.min,
+    },
+    {
+      max: Lengths.aboutMe.max,
+    },
+  ]);
+  return { aboutMeRules };
+}
+
+export function useDescriptionCRRules(required: boolean) {
+  const [descriptionCRRules] = useState<Rule[]>([
+    {
+      required,
+    },
+    {
+      min: Lengths.descriptionCR.min,
+    },
+    {
+      max: Lengths.descriptionCR.max,
+    },
+    {
+      validator: useNoBlankSpacesValidator(),
+    },
+  ]);
+  return { descriptionCRRules };
 }
