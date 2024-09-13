@@ -26,9 +26,13 @@ export default function LocationCR() {
       >
         <SelectContainer
           placeholder={t("select")}
-          options={countryData[showCountry].cities.map((cit: IdValueObj) => {
-            return { label: cit.value, value: cit.id };
-          })}
+          options={
+            Object.keys(countryData).length > 0
+              ? countryData[showCountry].cities.map((cit: IdValueObj) => {
+                  return { label: cit.value, value: cit.id };
+                })
+              : []
+          }
           className="form-control"
         />
       </Form.Item>
