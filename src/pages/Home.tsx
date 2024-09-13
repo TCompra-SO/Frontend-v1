@@ -12,7 +12,7 @@ const CreateRequirement = lazy(
 
 export default function Home() {
   const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
-  const [showLogin, setShowLogin] = useState(true);
+  const [showLogin, setShowLogin] = useState(0);
   const [email, setEmail] = useState("");
   const [docType, setDocType] = useState("");
 
@@ -24,7 +24,7 @@ export default function Home() {
     setIsOpenLoginModal(false);
   }
 
-  function handleOpenModal(login: boolean) {
+  function handleOpenModal(login: number) {
     setShowLogin(login);
     handleOpenLoginModal();
   }
@@ -32,7 +32,7 @@ export default function Home() {
   function handleRegisterSuccess(email: string, docType: string) {
     setEmail(email);
     setDocType(docType);
-    handleOpenModal(false);
+    handleOpenModal(1);
   }
 
   return (
@@ -43,18 +43,19 @@ export default function Home() {
         width={showLogin ? 850 : 1300}
         style={{ background: "transparent" }}
       >
-        {showLogin ? (
+        {showLogin == 0 ? (
           <Login onRegisterSuccess={handleRegisterSuccess} />
+        ) : showLogin == 1 ? (
+          <Profile email={email} docType={docType} />
         ) : (
-          // <Profile email={email} docType={"RUC"} />
           <CreateRequirement />
         )}
       </NoContentModalContainer>
-      <ButtonContainer onClick={() => handleOpenModal(true)}>
+      <ButtonContainer onClick={() => handleOpenModal(0)}>
         Login
       </ButtonContainer>
-      <ButtonContainer onClick={() => handleOpenModal(false)}>
-        Profile
+      <ButtonContainer onClick={() => handleOpenModal(2)}>
+        Crear
       </ButtonContainer>
     </>
   );

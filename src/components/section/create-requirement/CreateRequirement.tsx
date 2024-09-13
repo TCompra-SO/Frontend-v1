@@ -17,8 +17,6 @@ import DocumentsCertifCR from "./create-requirement-items/DocumentsCertifCR";
 import AddImagesRC from "./create-requirement-items/AddImagesRC";
 import AddDocument from "./create-requirement-items/AddDocument";
 import ButtonContainer from "../../containers/ButtonContainer";
-import { ListsContext } from "../../../contexts/ListsContext";
-import { useContext } from "react";
 
 export default function CreateRequirement() {
   const { t } = useTranslation();
