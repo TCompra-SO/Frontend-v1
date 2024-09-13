@@ -2,8 +2,8 @@ import { useTranslation } from "react-i18next";
 import SelectContainer from "../../../containers/SelectContainer";
 import { Form } from "antd";
 import { useContext } from "react";
-import { ListsContext } from "../../../../contexts/ListsContext";
 import { IdValueObj } from "../../../../models/Interfaces";
+import { ListsContext } from "../../../../contexts/listsContext";
 
 export default function DeliveryTimeCR() {
   const { t } = useTranslation();

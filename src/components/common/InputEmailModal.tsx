@@ -2,9 +2,9 @@ import { Flex, Form } from "antd";
 import ButtonContainer from "../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import InputContainer from "../containers/InputContainer";
-import { ChangeEvent, useContext, useState } from "react";
+import { useContext } from "react";
 import { useEmailRules } from "../../hooks/validators";
-import { ListsContext } from "../../contexts/ListsContext";
+import { ListsContext } from "../../contexts/listsContext";
 
 interface InputEmailModalProps {
   text?: React.ReactNode;

@@ -22,7 +22,6 @@ import { useApiParams } from "../models/Interfaces";
 
 import { useTranslation } from "react-i18next";
 import { pageRoutes } from "../utilities/routes";
-import { ListsContext } from "../contexts/ListsContext";
 import {
   useDniRules,
   useEmailRules,
@@ -37,6 +36,7 @@ import { equalServices } from "../utilities/globalFunctions";
 import ModalContainer from "../components/containers/ModalContainer";
 import ValidateCode from "../components/section/profile/ValidateCode";
 import { AxiosError } from "axios";
+import { ListsContext } from "../contexts/listsContext";
 
 const LoginType = {
   LOGIN: "login",

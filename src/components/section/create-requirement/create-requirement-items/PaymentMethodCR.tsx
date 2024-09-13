@@ -1,9 +1,9 @@
 import { Form } from "antd";
 import SelectContainer from "../../../containers/SelectContainer";
 import { useTranslation } from "react-i18next";
-import { ListsContext } from "../../../../contexts/ListsContext";
 import { useContext } from "react";
 import { IdValueObj } from "../../../../models/Interfaces";
+import { ListsContext } from "../../../../contexts/listsContext";
 
 export default function PaymentMethodCR() {
   const { t } = useTranslation();
