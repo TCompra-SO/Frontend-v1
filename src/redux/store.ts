@@ -7,5 +7,4 @@ export default configureStore({
     user: userReducer,
     loading: loadingReducer,
   },
-  devTools: process.env.NODE_ENV !== "production",
 });

@@ -289,12 +289,12 @@ const offerList: OfferListItem[] = [
 export default function Offers() {
   const { t } = useTranslation();
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState<React.ReactNode>("");
-  const [dataModal, setDataModal] = useState<ModalContent>({
+  const [modalTitle] = useState<React.ReactNode>("");
+  const [dataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
   });
-  const [tableContent, setTableContent] = useState<TableTypeOffer>({
+  const [tableContent] = useState<TableTypeOffer>({
     type: TableTypes.OFFER,
     data: offerList,
     hiddenColumns: [],
@@ -306,7 +306,7 @@ export default function Offers() {
     setIsOpenModal(false);
   }
 
-  function handleOnButtonClick(action: Action, offer: OfferListItem) {
+  function handleOnButtonClick(_: Action, offer: OfferListItem) {
     console.log(offer);
   }
 

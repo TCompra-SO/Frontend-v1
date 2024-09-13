@@ -129,10 +129,10 @@ export default function GeneralTable(props: RequirementsTableProps) {
     return columns;
   }
 
-  function getPurchaseOrderColumns() {
-    columns = [RequirementColumn(true, visibility[TableColumns.NAME])];
-    return columns;
-  }
+  // function getPurchaseOrderColumns() {
+  //   columns = [RequirementColumn(true, visibility[TableColumns.NAME])];
+  //   return columns;
+  // }
 
   // return (
   //   <Table

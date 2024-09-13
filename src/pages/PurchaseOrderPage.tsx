@@ -68,7 +68,7 @@ const purchaseOrderList: PurchaseOrder[] = [
 ];
 export default function PurchaseOrderPage() {
   const { t } = useTranslation();
-  const [tableContent, setTableContent] = useState<TableTypePurchaseOrder>({
+  const [tableContent] = useState<TableTypePurchaseOrder>({
     type: TableTypes.PURCHASE_ORDER,
     data: purchaseOrderList,
     hiddenColumns: [],
@@ -76,7 +76,7 @@ export default function PurchaseOrderPage() {
     onButtonClick: handleOnButtonClick,
   });
 
-  function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
+  function handleOnButtonClick(_: Action, purchaseOrder: PurchaseOrder) {
     console.log(purchaseOrder);
   }
 

@@ -1,6 +1,6 @@
-import { App, Form, Upload, UploadFile } from "antd";
-import { RcFile, UploadChangeParam } from "antd/lib/upload";
-import { useRef, useState } from "react";
+import { App, Form, Upload } from "antd";
+import { RcFile } from "antd/lib/upload";
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { maxDocSizeMb } from "../../../../utilities/globals";
 import { checkDoc } from "../../../../utilities/globalFunctions";
@@ -10,17 +10,12 @@ export default function AddDocument() {
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const fileInputRef = useRef<HTMLDivElement>(null);
-  const [file, setFile] = useState<UploadFile>();
 
   function handleClick() {
     // Trigger the file input click event
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
-  }
-
-  function handleChange(info: UploadChangeParam<UploadFile<any>>) {
-    setFile(info.file);
   }
 
   function checkImageBeforeUpload(file: RcFile) {
@@ -48,7 +43,7 @@ export default function AddDocument() {
         <Form.Item name="doc">
           <Upload
             multiple={false}
-            onChange={handleChange}
+            // onChange={handleChange}
             listType="picture-card"
             style={{ display: "none" }}
             beforeUpload={checkImageBeforeUpload}

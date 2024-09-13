@@ -798,7 +798,7 @@ export default function Requirements() {
     type: ModalTypes.NONE,
     data: {},
   });
-  const [tableContent, setTableContent] = useState<TableTypeRequirement>({
+  const [tableContent] = useState<TableTypeRequirement>({
     type: TableTypes.REQUIREMENT,
     data: requirements,
     subType: RequirementType.GOOD,

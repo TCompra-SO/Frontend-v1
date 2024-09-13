@@ -26,11 +26,11 @@ import {
   usePhoneRules,
   useSpecialtyRules,
 } from "../hooks/validators";
-import { ListsContext } from "../contexts/ListsContext";
 import { DefaultOptionType } from "antd/es/select";
 import React from "react";
 import { checkImage, equalServices } from "../utilities/globalFunctions";
 import InputNumberContainer from "../components/containers/InputNumberContainer";
+import { ListsContext } from "../contexts/listsContext";
 
 interface ProfileProps {
   email: string;
@@ -128,7 +128,7 @@ export default function Profile(props: ProfileProps) {
     }
   }
 
-  function handleCountryChange(value: string, object: DefaultOptionType) {
+  function handleCountryChange(_: string, object: DefaultOptionType) {
     setCities(countryData[object.id].cities);
     form.setFieldsValue({ city: null });
   }
