@@ -18,7 +18,7 @@ import { Content, Footer, Header } from "antd/es/layout/layout";
 import { pageRoutes } from "./utilities/routes.ts";
 import Sidebar from "./components/section/sidebar/Sidebar.tsx";
 import MainHeader from "./components/section/header/header/MainHeader.tsx";
-import { ListsProvider } from "./contexts/ListsContext.tsx";
+import { ListsProvider } from "./contexts/listsContext.tsx";
 
 const Login = lazy(() => import("./pages/Login.tsx"));
 const Profile = lazy(() => import("./pages/Profile.tsx"));
