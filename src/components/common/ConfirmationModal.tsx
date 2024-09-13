@@ -4,7 +4,7 @@ import { ExclamationCircleFilled } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 
 interface ConfirmationModalProps {
-  text: string;
+  text: React.ReactNode;
   icon?: React.ReactNode;
   onClose: (e: React.SyntheticEvent<Element, Event>) => any;
   onAnswer: (ok: boolean) => any;

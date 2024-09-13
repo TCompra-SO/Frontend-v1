@@ -5,6 +5,7 @@ import loadingReducer from "./loadingSlice";
 export default configureStore({
   reducer: {
     user: userReducer,
-    loading: loadingReducer
-  }
-})
+    loading: loadingReducer,
+  },
+  devTools: process.env.NODE_ENV !== "production",
+});

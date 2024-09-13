@@ -1,4 +1,4 @@
-import { Col, Flex, Row } from "antd";
+import { Col, Row } from "antd";
 import InputContainer from "../components/containers/InputContainer";
 import ModalContainer from "../components/containers/ModalContainer";
 import {
@@ -11,21 +11,14 @@ import {
   UserTable,
   TableTypes,
 } from "../utilities/types";
-import Title from "antd/es/typography/Title";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPeopleCarryBox } from "@fortawesome/free-solid-svg-icons";
-import { primaryColor, lightColor, rowColor } from "../utilities/colors";
 import { SearchOutlined } from "@ant-design/icons";
-import {
-  OfferListItem,
-  RequirementTableItem,
-  TableRecordType,
-} from "../models/MainInterfaces";
+import { OfferListItem, RequirementTableItem } from "../models/MainInterfaces";
 import { useState } from "react";
 import { ModalContent, TableTypeRequirement } from "../models/Interfaces";
 import RateModalTitleContainer from "../components/containers/RateModalTitleContainer";
 import { useTranslation } from "react-i18next";
 import GeneralTable from "../components/common/GeneralTable/GeneralTable";
+import ContentHeader from "../components/common/ContentHeader";
 
 const requirements: RequirementTableItem[] = [
   {
@@ -533,6 +526,8 @@ const offerList: OfferListItem[] = [
     key: "1",
     title: "Gaming Laptop",
     description: "High-performance gaming laptop with RGB keyboard",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "$",
     price: 150089.56,
     warranty: "1 year",
@@ -568,6 +563,8 @@ const offerList: OfferListItem[] = [
     key: "2",
     title:
       "Smartphone Latest model smartphone with dual cameras Latest model smartphone with dual cameras",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     description:
       "Latest model smartphone with dual cameras, Waterproof fitness tracker with heart rate monitor",
     coin: "$",
@@ -595,6 +592,8 @@ const offerList: OfferListItem[] = [
     key: "3",
     title: "Fitness Tracker",
     description: "",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "s/.",
     price: 100,
     warranty: "6 months",
@@ -618,6 +617,8 @@ const offerList: OfferListItem[] = [
     key: "4",
     title: "Wireless Headphones",
     description: "Noise-cancelling wireless headphones with Bluetooth",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "S/.",
     price: 120,
     warranty: "1 year",
@@ -641,6 +642,8 @@ const offerList: OfferListItem[] = [
     key: "5",
     title: "Coffee Machine",
     description: "Espresso coffee machine with milk frother",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "$",
     price: 200,
     warranty: "2 years",
@@ -664,6 +667,8 @@ const offerList: OfferListItem[] = [
     key: "6",
     title: "Portable Speaker",
     description: "Portable Bluetooth speaker with waterproof design",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "$",
     price: 80,
     warranty: "1 year",
@@ -687,6 +692,8 @@ const offerList: OfferListItem[] = [
     key: "7",
     title: "Smartwatch",
     description: "Fitness-focused smartwatch with GPS and heart rate monitor",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "S/.",
     price: 300,
     warranty: "2 years",
@@ -710,6 +717,8 @@ const offerList: OfferListItem[] = [
     key: "8",
     title: "Desktop Computer",
     description: "High-end desktop computer for gaming and professional use",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "$",
     price: 2500,
     warranty: "3 years",
@@ -733,6 +742,8 @@ const offerList: OfferListItem[] = [
     key: "9",
     title: "Camera Kit",
     description: "Professional camera kit with multiple lenses and accessories",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "$",
     price: 1800,
     warranty: "1 year",
@@ -756,6 +767,8 @@ const offerList: OfferListItem[] = [
     key: "10",
     title: "Electric Scooter",
     description: "Foldable electric scooter with long battery life",
+    requirementTitle:
+      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "S/.",
     price: 600,
     warranty: "2 years",
@@ -890,49 +903,34 @@ export default function Requirements() {
           paddingBottom: "0",
         }}
       />
-
-      <div className="table-container-page">
-        <Flex
-          vertical
-          justify="center"
-          align="center"
-          className="table-container"
-          gap="30px"
+      <ContentHeader title={t("myRequirements")} />
+      <div className="card-white">
+        <Row
+          style={{
+            width: "100%",
+            alignItems: "center",
+            marginBottom: "20px",
+          }}
+          gutter={[10, 10]}
         >
-          <Row style={{ width: "100%" }} gutter={[10, 18]}>
-            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <Flex align="center">
-                <FontAwesomeIcon
-                  color={primaryColor}
-                  style={{
-                    borderRadius: "20px",
-                    backgroundColor: lightColor,
-                    padding: "10px",
-                    marginRight: "8px",
-                    fontSize: "1.2em",
-                  }}
-                  icon={faPeopleCarryBox}
-                ></FontAwesomeIcon>
-                <Title level={3} style={{ margin: "0" }}>
-                  {`${t("listOf")} ${t("goods")}`}
-                  {/* r3v */}
-                </Title>
-              </Flex>
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <InputContainer
-                placeholder={`${t("search")}...`}
-                prefix={<SearchOutlined />}
-                style={{
-                  background: rowColor,
-                  border: "0",
-                }}
-              />
-            </Col>
-          </Row>
-
+          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+            <div className="sub-titulo">
+              <i className="fa-light fa-person-dolly sub-icon"></i>{" "}
+              {`${t("listOf")} ${t("goods")}`}
+            </div>
+            {/* r3v */}
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+            <InputContainer
+              placeholder={`${t("search")}...`}
+              prefix={<SearchOutlined />}
+              className="form-control"
+            />
+          </Col>
+        </Row>
+        <div className="table-responsive">
           <GeneralTable content={tableContent} />
-        </Flex>
+        </div>
       </div>
     </>
   );

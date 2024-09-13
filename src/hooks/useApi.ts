@@ -13,7 +13,7 @@ export default function useApi<T = any>({
   const [loading, setLoading] = useState(false);
   const [responseData, setResponseData] = useState<any | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [error, setError] = useState<AxiosError | null>(null);
+  const [error, setError] = useState<AxiosError<any, any> | null>(null);
 
   async function fetchData() {
     setResponseData(null);
@@ -33,6 +33,7 @@ export default function useApi<T = any>({
           //   "Content-Type": "application/json",
           // },
         };
+        console.log(config);
         const result: AxiosResponse = await axios(config);
         console.log("http request");
         setResponseData(result.data);

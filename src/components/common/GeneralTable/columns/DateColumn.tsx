@@ -24,7 +24,7 @@ export default function DateColumn(type: TableTypes, hidden: boolean = false) {
     align: "center",
     showSorterTooltip: false,
     ellipsis: true,
-    width: "100px",
+    width: "110px",
     hidden,
   };
   return col;

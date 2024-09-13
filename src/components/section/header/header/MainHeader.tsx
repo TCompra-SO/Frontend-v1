@@ -1,5 +1,4 @@
-import { Dropdown, Flex, Menu, MenuProps } from "antd";
-import "./Header.css";
+import { Dropdown, Space } from "antd";
 import Premium from "../items/Premium";
 import Notification from "../items/Notification";
 import Chat from "../items/Chat";
@@ -7,110 +6,125 @@ import UserName from "../items/UserName";
 import Logout from "../items/Logout";
 import { useEffect, useState } from "react";
 import ProfileMenu from "../items/ProfileMenu";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretDown } from "@fortawesome/free-solid-svg-icons/faCaretDown";
-
-const menuItems = [
-  {
-    key: "notification",
-    label: <Notification />,
-  },
-  {
-    key: "chat",
-    label: <Chat />,
-  },
-  {
-    key: "profile",
-    label: <ProfileMenu />,
-  },
-  {
-    key: "logout",
-    label: <Logout />,
-  },
-];
-
-const navBarItems: MenuProps["items"] = [
-  {
-    key: "notification",
-    label: <Notification />,
-  },
-  {
-    key: "chat",
-    label: <Chat />,
-  },
-  {
-    key: "premium",
-    label: <Premium />,
-  },
-  {
-    key: "userName",
-    label: <UserName />,
-  },
-];
+import useWindowSize from "../../../../hooks/useWindowSize";
+import { windowSize } from "../../../../utilities/globals";
+import { useTranslation } from "react-i18next";
 
 function MainHeader() {
+  const { t } = useTranslation();
+  const { width } = useWindowSize();
   const [dropdownItems, setDropdownItems] = useState({
     items: [
       {
         key: "profile",
-        label: <ProfileMenu />,
+        label: (
+          <Space style={{ margin: "-10px 0" }}>
+            <ProfileMenu />
+            {t("myProfile")}
+          </Space>
+        ),
       },
       {
         key: "logout",
-        label: <Logout />,
+        label: (
+          <Space style={{ margin: "-10px 0" }}>
+            <Logout /> {t("logout")}
+          </Space>
+        ),
       },
     ],
   });
 
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 600) {
-        setDropdownItems({
-          items: menuItems,
-        });
-      } else {
-        setDropdownItems({
-          items: [
-            {
-              key: "profile",
-              label: <ProfileMenu />,
-            },
-            {
-              key: "logout",
-              label: <Logout />,
-            },
-          ],
-        });
-      }
-    };
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+    if (width > windowSize.md) {
+      setDropdownItems({
+        items: [
+          {
+            key: "profile",
+            label: (
+              <Space style={{ margin: "-10px 0" }}>
+                <ProfileMenu />
+                {t("myProfile")}
+              </Space>
+            ),
+          },
+          {
+            key: "logout",
+            label: (
+              <Space style={{ margin: "-10px 0" }}>
+                <Logout />
+                {t("logout")}
+              </Space>
+            ),
+          },
+        ],
+      });
+    } else {
+      setDropdownItems({
+        items: [
+          {
+            key: "notification",
+            label: (
+              <Space style={{ margin: "-10px 0" }} size={16}>
+                <Notification />
+                {t("notifications")}
+              </Space>
+            ),
+          },
+          {
+            key: "chat",
+            label: (
+              <Space style={{ margin: "-10px 0" }}>
+                <Chat />
+                {t("chat")}
+              </Space>
+            ),
+          },
+          {
+            key: "profile",
+            label: (
+              <Space style={{ margin: "-10px 0" }} size={16}>
+                <ProfileMenu />
+                {t("myProfile")}
+              </Space>
+            ),
+          },
+          {
+            key: "logout",
+            label: (
+              <Space style={{ margin: "-10px 0" }}>
+                <Logout />
+                {t("logout")}
+              </Space>
+            ),
+          },
+        ],
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [width]);
 
   return (
-    <Flex justify="space-between" align="center" style={{ padding: "0 10px" }}>
-      <Flex justify="flex-end" align="center" style={{ flex: "auto" }}>
-        <Menu
-          mode="horizontal"
-          className="main-menu"
-          items={navBarItems}
-          style={{ minWidth: 0, flex: "auto" }}
-        />
+    <div className="t-flex header-tc">
+      <i className="fa-solid fa-bars-progress i-menu"></i>
+      <div className="t-flex options-tc">
+        {width > windowSize.md && (
+          <>
+            <Premium />
+            <Chat />
+            <Notification />
+          </>
+        )}
+        <UserName />
         <Dropdown
           menu={dropdownItems}
           trigger={["click"]}
           placement="bottomRight"
         >
-          <FontAwesomeIcon icon={faCaretDown} />
+          <i className="fa-regular fa-caret-down"></i>
         </Dropdown>
-      </Flex>
-    </Flex>
+      </div>
+    </div>
   );
 }
 
