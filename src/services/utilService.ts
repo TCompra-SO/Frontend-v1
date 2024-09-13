@@ -1,19 +1,90 @@
 import { HttpService } from "../models/Interfaces";
 import { ApiMainRoutes, ApiRoutes } from "../utilities/routes";
 
-export const TLDsService: HttpService = {
-  url: "https://data.iana.org/TLD/tlds-alpha-by-domain.txt",
-  type: "",
-};
+export function TLDsService(): HttpService {
+  return {
+    url: "https://data.iana.org/TLD/tlds-alpha-by-domain.txt",
+    type: "",
+  };
+}
 
-export const countriesService: HttpService = {
-  url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
-    ApiRoutes.auth.countries
-  }`,
-  type: ApiRoutes.auth.countries,
-};
+export function countriesService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.util}${
+      ApiRoutes.util.countries
+    }`,
+    type: ApiRoutes.util.countries,
+  };
+}
 
-export const dummyService: HttpService = {
-  url: "https://reqres.in/api/users",
-  type: "",
-};
+export function categoriesService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.util}${
+      ApiRoutes.util.categories
+    }`,
+    type: ApiRoutes.util.categories,
+  };
+}
+
+export function tenureService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.util}${
+      ApiRoutes.util.utilData.name
+    }${ApiRoutes.util.utilData.items.tenure}`,
+    type: ApiRoutes.util.utilData.items.tenure,
+  };
+}
+
+export function currencyService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.util}${
+      ApiRoutes.util.utilData.name
+    }${ApiRoutes.util.utilData.items.currency}`,
+    type: ApiRoutes.util.utilData.items.currency,
+  };
+}
+
+export function paymentMethodService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.util}${
+      ApiRoutes.util.utilData.name
+    }${ApiRoutes.util.utilData.items.methodPayment}`,
+    type: ApiRoutes.util.utilData.items.methodPayment,
+  };
+}
+
+export function deliveryTimeService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.util}${
+      ApiRoutes.util.utilData.name
+    }${ApiRoutes.util.utilData.items.deliveryTime}`,
+    type: ApiRoutes.util.utilData.items.deliveryTime,
+  };
+}
+
+export function whoCanOfferService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.util}${
+      ApiRoutes.util.utilData.name
+    }${ApiRoutes.util.utilData.items.typeBidders}`,
+    type: ApiRoutes.util.utilData.items.typeBidders,
+  };
+}
+
+export function planTypeService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.util}${
+      ApiRoutes.util.utilData.name
+    }${ApiRoutes.util.utilData.items.typesPlans}`,
+    type: ApiRoutes.util.utilData.items.typesPlans,
+  };
+}
+
+export function getNameReniecService(doc: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+      ApiRoutes.root.getName
+    }${doc}`,
+    type: ApiRoutes.root.getName,
+  };
+}

@@ -1,16 +1,11 @@
-import { CrownFilled } from "@ant-design/icons";
-import TagContainer from "../../../containers/TagContainer";
+import { useTranslation } from "react-i18next";
 
 export default function Premium() {
+  const { t } = useTranslation();
+
   return (
-    <TagContainer
-      text={
-        <>
-          <CrownFilled /> Premium
-        </>
-      }
-      color="#ffbf00"
-      style={{ fontWeight: "bold" }}
-    />
+    <div className="user-premium">
+      <i className="fa-regular fa-crown"></i> {t("premium")}
+    </div>
   );
 }

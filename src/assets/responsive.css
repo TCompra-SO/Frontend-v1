@@ -1,0 +1,14 @@
+/* Estilos para pantallas pequeñas (móviles) */
+@media (max-width: 576px) {
+}
+
+/* Estilos para pantallas medianas (tablets) */
+@media (max-width: 768px) {
+  .req-btn-info {
+    display: none;
+  }
+}
+
+/* Estilos para pantallas grandes (escritorios) */
+@media (min-width: 769px) {
+}

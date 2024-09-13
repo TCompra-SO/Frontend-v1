@@ -1,23 +1,40 @@
 export const ApiMainRoutes = {
-  auth: "/v1/auth/",
+  auth: "auth/",
+  util: "util/",
 };
 
 export const ApiRoutes = {
   auth: {
-    login: "login",
-    profile: "profile",
-    register: "register",
-    sendCode: "validation-code",
-    validateCode: "validate-code",
-
-    countries: "countries",
+    login: "login/",
+    profileCompany: "profileCompany/",
+    profileUser: "profileUser/",
+    register: "register/",
+    sendCode: "sendCode/",
+    validateCode: "validate-code/",
+  },
+  util: {
+    countries: "countries/",
+    categories: "categories/",
+    utilData: {
+      name: "utilData/",
+      items: {
+        tenure: "tenure/",
+        currency: "currency/",
+        methodPayment: "method_payment/",
+        deliveryTime: "delivery_time/",
+        typeBidders: "type_bidders/",
+        typesPlans: "types_plans/",
+      },
+    },
+  },
+  root: {
+    getName: "getName/",
   },
 };
 
 export const pageRoutes = {
-  login: "",
-  profile: "profile",
-  search: "search",
+  home: "",
+  search: "busqueda",
   myRequirements: "mis-requerimientos",
   myOffers: "mis-ofertas",
 };

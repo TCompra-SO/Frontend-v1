@@ -12,56 +12,8 @@ import {
   OfferListItem,
   PurchaseOrder,
   RequirementTableItem,
-  TableRecordType,
   User,
 } from "./MainInterfaces";
-
-export interface HttpObject {
-  data: any | null;
-  loading: boolean;
-  error: string | null;
-}
-
-export interface useApiParams<T = any> {
-  service: HttpService | null;
-  method: "get" | "post" | "put" | "delete";
-  dataToSend?: T;
-}
-
-export interface CountryObj {
-  country: string;
-  cities?: string[];
-}
-
-export interface CountriesRequest {
-  verify: CountriesRequestType;
-}
-
-export interface StepsItemContent {
-  key: string;
-  title: string;
-  status: "finish" | "wait" | "process" | "error" | undefined;
-  icon: any;
-  text: string;
-  showInput: boolean;
-}
-
-export interface Category {
-  id: string;
-  name: string;
-}
-
-export interface RequirementSearchItem {
-  id: string;
-  title: string;
-}
-
-export interface OfferFilters {
-  price: PriceFilter;
-  deliveryTime: string;
-  location: string;
-  warranty: WarrantyFilter;
-}
 
 /******** Modals *******/
 
@@ -124,6 +76,14 @@ export interface ModalConfirmation {
   };
 }
 
+export interface ModalInputEmail {
+  type: ModalTypes.INPUT_EMAIL;
+  data: {
+    text?: string;
+    onAnswer: (email: string) => void;
+  };
+}
+
 export interface ModalNone {
   type: ModalTypes.NONE;
   data: Record<string, never>;
@@ -139,14 +99,8 @@ export type ModalContent =
   | ModalDetailedRequirement
   | ModalCancelPurchaseOrder
   | ModalConfirmation
+  | ModalInputEmail
   | ModalNone;
-
-/************************/
-
-export interface HttpService {
-  url: string;
-  type: string;
-}
 
 /********** Tables *************/
 
@@ -179,3 +133,72 @@ export type TableType =
   | TableTypeRequirement
   | TableTypeOffer
   | TableTypePurchaseOrder;
+
+/********************* */
+
+export interface HttpService {
+  url: string;
+  type: string;
+}
+
+export interface useApiParams<T = any> {
+  service: HttpService | null;
+  method: "get" | "post" | "put" | "delete";
+  dataToSend?: T;
+}
+
+export interface CountryObj {
+  country: string;
+  cities?: string[];
+}
+
+export interface IdValueObj {
+  id: string | number;
+  value: string;
+}
+
+export interface IdValueAliasObj extends IdValueObj {
+  alias: string;
+}
+
+export interface CountryData {
+  value: string;
+  cities: IdValueObj[];
+}
+
+export type CountryCities = Record<string, CountryData>;
+
+export interface CountriesRequest {
+  verify: CountriesRequestType;
+}
+
+export interface StepsItemContent {
+  key: string;
+  title: string;
+  status: "finish" | "wait" | "process" | "error" | undefined;
+  icon: any;
+  text: string;
+  showInput: boolean;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+}
+
+export interface RequirementSearchItem {
+  id: string;
+  title: string;
+}
+
+export interface OfferFilters {
+  price: PriceFilter;
+  deliveryTime: string;
+  location: string;
+  warranty: WarrantyFilter;
+}
+
+export interface ListItem {
+  key: string;
+  value: string;
+}

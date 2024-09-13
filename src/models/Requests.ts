@@ -1,34 +1,44 @@
+import { RegisterTypeId } from "../utilities/types";
+
 export interface LoginRequest {
-  email: string,
-  password: string
+  email: string;
+  password: string;
 }
 
 export interface RegisterRequest {
-  email: string,
-  password: string,
-  profileType?: string,
-  userType?: string,
-  dni?: string,
-  ruc?: string
+  email: string;
+  password: string;
+  typeID: RegisterTypeId;
+  dni?: string;
+  ruc?: string;
 }
 
 export interface ProfileRequest {
-  uid: string,
-  gender?: string,
-  birthdate: string,
-  phone: string,
-  country: string,
-  city: string,
-  type_learning?: string
+  uid: string;
+  phone: string;
+  address: string;
+  country: string;
+  city: string;
+  categories: number[];
+  avatar?: string;
+  planID: number;
+  age?: number;
+  specialtyID?: string;
+  aboutMe?: string;
 }
 
 export interface ValidateCodeRequest {
-  email: string,
-  code: string,
-  type: "repassword" | "identity_verified"
+  email: string;
+  code: string;
+  type: "repassword" | "identity_verified";
 }
 
 export interface SendCodeRequest {
-  email: string,
-  type: "repassword" | "identity_verified"
+  email: string;
+  type: "repassword" | "identity_verified";
+}
+
+export interface GetNameReniecRequest {
+  dni?: string;
+  ruc?: string;
 }

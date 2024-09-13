@@ -33,6 +33,7 @@
     "react-router-dom": "^6.23.1"
   },
   "devDependencies": {
+    "@types/node": "^22.5.4",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@types/react-lottie": "^1.2.10",

@@ -1,8 +1,7 @@
-interface ImageContainerProps {
-  alt?: string;
-  src: string;
-  style?: React.CSSProperties;
-}
+import { ImageProps } from "antd";
+import { Image } from "antd";
+
+interface ImageContainerProps extends ImageProps {}
 export default function ImageContainer(props: ImageContainerProps) {
-  return <img alt={props.alt} src={props.src} style={props.style} />;
+  return <Image {...props} />;
 }
