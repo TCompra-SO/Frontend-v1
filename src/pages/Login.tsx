@@ -259,7 +259,9 @@ export default function Login(props: LoginProps) {
           <div className="t-flex" style={{ gap: "10px", marginBottom: "15px" }}>
             <ButtonContainer
               common
-              className="btn btn-border active"
+              className={`btn btn-border ${
+                loginType == LoginType.LOGIN ? "active" : ""
+              }`}
               style={{ width: "50%" }}
               onClick={() => {
                 setLoginType(LoginType.LOGIN);
@@ -270,7 +272,9 @@ export default function Login(props: LoginProps) {
             </ButtonContainer>
             <ButtonContainer
               common
-              className="btn btn-border"
+              className={`btn btn-border ${
+                loginType == LoginType.REGISTER ? "active" : ""
+              }`}
               style={{ width: "50%" }}
               onClick={() => {
                 setLoginType(LoginType.REGISTER);

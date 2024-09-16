@@ -2,7 +2,11 @@ import { useTranslation } from "react-i18next";
 import InputNumberContainer from "../../../containers/InputNumberContainer";
 import { Form } from "antd";
 
-export default function WarrantyCR() {
+interface WarrantyCRProps {
+  required: boolean;
+}
+
+export default function WarrantyCR(props: WarrantyCRProps) {
   const { t } = useTranslation();
 
   return (
@@ -12,7 +16,7 @@ export default function WarrantyCR() {
         label={t("warranty")}
         name="warranty"
         labelCol={{ span: 0 }}
-        rules={[{ required: true }]}
+        rules={[{ required: props.required }]}
       >
         <InputNumberContainer
           min={0}

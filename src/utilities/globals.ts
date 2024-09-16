@@ -14,6 +14,8 @@ export const mediumModalWidth: number = 350;
 export const smallModalWidth: number = 250;
 export const columnWidth: number = 100;
 
+export const certifiedCompaniesOpt: number = 3;
+
 /* Window size (>=) */
 export const windowSize = {
   sm: 576,

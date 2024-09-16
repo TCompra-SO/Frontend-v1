@@ -17,10 +17,29 @@ import DocumentsCertifCR from "./create-requirement-items/DocumentsCertifCR";
 import AddImagesRC from "./create-requirement-items/AddImagesRC";
 import AddDocument from "./create-requirement-items/AddDocument";
 import ButtonContainer from "../../containers/ButtonContainer";
+import { RequirementType } from "../../../utilities/types";
+import { useState } from "react";
+import ItemCondition from "./create-requirement-items/ItemCondition";
+import { certifiedCompaniesOpt } from "../../../utilities/globals";
 
 export default function CreateRequirement() {
   const { t } = useTranslation();
   const [form] = Form.useForm();
+  const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
+  const [isPremium] = useState<boolean>(true);
+
+  function changeTab(newtype: RequirementType) {
+    if (newtype != type) {
+      setType(newtype);
+      form.resetFields();
+    }
+  }
+
+  function getDocListCertification(val: number | string) {
+    if (val == certifiedCompaniesOpt)
+      form.setFieldsValue({ docList: "Lista de documentos" });
+    else form.setFieldsValue({ docList: null });
+  }
 
   function createRequirement(values: any) {
     console.log(values);
@@ -41,22 +60,54 @@ export default function CreateRequirement() {
         </div>
       </div>
       <div className="t-flex mr-sub">
-        <ButtonContainer common className="btn btn-grey wd-25">
+        <ButtonContainer
+          common
+          className={`btn btn-grey wd-33 ${
+            type == RequirementType.GOOD ? "active" : ""
+          }`}
+          onClick={() => {
+            changeTab(RequirementType.GOOD);
+          }}
+        >
           <i className="fa-regular fa-dolly"></i>{" "}
           <span className="req-btn-info">{t("goods")}</span>
         </ButtonContainer>
-        <ButtonContainer common className="btn btn-grey wd-25">
+        <ButtonContainer
+          common
+          className={`btn btn-grey wd-33 ${
+            type == RequirementType.SERVICE ? "active" : ""
+          }`}
+          onClick={() => {
+            changeTab(RequirementType.SERVICE);
+          }}
+        >
           <i className="fa-regular fa-hand-holding-magic"></i>{" "}
           <span className="req-btn-info">{t("services")}</span>
         </ButtonContainer>
-        <ButtonContainer common className="btn btn-grey wd-25">
+        <ButtonContainer
+          common
+          className={`btn btn-grey wd-33 ${
+            type == RequirementType.SALE ? "active" : ""
+          }`}
+          onClick={() => {
+            changeTab(RequirementType.SALE);
+          }}
+        >
           <i className="fa-regular fa-basket-shopping"></i>{" "}
           <span className="req-btn-info">{t("sales")}</span>
         </ButtonContainer>
-        <ButtonContainer common className="btn btn-grey wd-25">
+        {/* <ButtonContainer
+          common
+          className={`btn btn-grey wd-25 ${
+            type == RequirementType.JOB ? "active" : ""
+          }`}
+          onClick={() => {
+            changeTab(RequirementType.JOB);
+          }}
+        >
           <i className="fa-regular fa-user-tie"></i>{" "}
           <span className="req-btn-info">{t("rrhh")}</span>
-        </ButtonContainer>
+        </ButtonContainer> */}
       </div>
 
       <Form
@@ -72,12 +123,19 @@ export default function CreateRequirement() {
           <div>
             <DescriptionCR />
           </div>
-          <div>
-            <CanOfferCR />
-          </div>
-          <div>
-            <DocumentsCertifCR />
-          </div>
+          {isPremium && (
+            <>
+              <div>
+                <CanOfferCR
+                  type={type}
+                  handleOptionChange={getDocListCertification}
+                />
+              </div>
+              <div>
+                <DocumentsCertifCR />
+              </div>
+            </>
+          )}
           <Row gutter={[15, 15]}>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
               <CategoryCR></CategoryCR>
@@ -109,12 +167,22 @@ export default function CreateRequirement() {
             <Col xs={24} sm={24} md={6} lg={6} xl={6}>
               <DeliveryTimeCR />
             </Col>
-            <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-              <WarrantyCR />
-            </Col>
-            <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-              <WarrantyTimeCR />
-            </Col>
+            {(type == RequirementType.GOOD ||
+              type == RequirementType.SERVICE) && (
+              <>
+                <Col xs={24} sm={24} md={6} lg={6} xl={6}>
+                  <WarrantyCR required={type == RequirementType.GOOD} />
+                </Col>
+                <Col xs={24} sm={24} md={6} lg={6} xl={6}>
+                  <WarrantyTimeCR required={type == RequirementType.GOOD} />
+                </Col>
+              </>
+            )}
+            {type == RequirementType.SALE && (
+              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                <ItemCondition />
+              </Col>
+            )}
           </Row>
 
           <Row gutter={[15, 15]}>

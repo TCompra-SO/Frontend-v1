@@ -281,3 +281,8 @@ export enum TimeMeasurement {
   MONTHS = 1,
   YEARS = 2,
 }
+
+export enum Usage {
+  NEW = 0,
+  USED = 1,
+}

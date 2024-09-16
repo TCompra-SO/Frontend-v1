@@ -221,7 +221,10 @@ const resources = {
       documentListCertif: "Documents for certification",
       addImages: 'Upload images',
       addDocument: 'Upload document',
-      field: "Field"
+      field: "Field",
+      itemCondition: "Item condition",
+      new: "New",
+      used: "Used"
     },
   },
   es: {
@@ -444,7 +447,10 @@ const resources = {
       documentListCertif: "Lista de documentos a certificar",
       addImages: 'Agregar imágenes',
       addDocument: 'Agregar documento',
-      field: "Campo"
+      field: "Campo",
+      itemCondition: "Estado del artículo",
+      new: "Nuevo",
+      used: "Usado"
     },
   },
 };
