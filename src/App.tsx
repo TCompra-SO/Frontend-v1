@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { App as AntdApp, ConfigProvider, theme } from "antd";
+import { App as AntdApp, ConfigProvider, FloatButton, theme } from "antd";
 import LoadingCond from "./pages/utils/LoadingCond.tsx";
 import LoadingPage from "./pages/utils/LoadingPage.tsx";
 import "./assets/styles.css";
@@ -19,6 +19,8 @@ import { pageRoutes } from "./utilities/routes.ts";
 import Sidebar from "./components/section/sidebar/Sidebar.tsx";
 import MainHeader from "./components/section/header/header/MainHeader.tsx";
 import { ListsProvider } from "./contexts/listsContext.tsx";
+import { useTranslation } from "react-i18next";
+import CreateRequirementFloatButton from "./components/section/create-requirement/CreateRequirementFloatButton.tsx";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 
@@ -74,6 +76,7 @@ function App() {
       >
         <ListsProvider>
           <AntdApp>
+            <CreateRequirementFloatButton />
             <LoadingCond></LoadingCond>
             <Routes>
               <Route

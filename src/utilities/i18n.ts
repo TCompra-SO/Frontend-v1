@@ -224,7 +224,8 @@ const resources = {
       field: "Field",
       itemCondition: "Item condition",
       new: "New",
-      used: "Used"
+      used: "Used",
+      createRequirement: "Crear requerimiento"
     },
   },
   es: {
@@ -450,7 +451,8 @@ const resources = {
       field: "Campo",
       itemCondition: "Estado del artículo",
       new: "Nuevo",
-      used: "Usado"
+      used: "Usado",
+      createRequirement: "Crear requerimiento"
     },
   },
 };

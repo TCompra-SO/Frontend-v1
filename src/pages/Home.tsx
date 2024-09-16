@@ -6,13 +6,10 @@ import NoContentModalContainer from "../components/containers/NoContentModalCont
 
 const Login = lazy(() => import("./Login.tsx"));
 const Profile = lazy(() => import("./Profile.tsx"));
-const CreateRequirement = lazy(
-  () => import("../components/section/create-requirement/CreateRequirement.tsx")
-);
 
 export default function Home() {
   const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
-  const [showLogin, setShowLogin] = useState(0);
+  const [showLogin, setShowLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [docType, setDocType] = useState("");
 
@@ -24,7 +21,7 @@ export default function Home() {
     setIsOpenLoginModal(false);
   }
 
-  function handleOpenModal(login: number) {
+  function handleOpenModal(login: boolean) {
     setShowLogin(login);
     handleOpenLoginModal();
   }
@@ -32,7 +29,7 @@ export default function Home() {
   function handleRegisterSuccess(email: string, docType: string) {
     setEmail(email);
     setDocType(docType);
-    handleOpenModal(1);
+    handleOpenModal(false);
   }
 
   return (
@@ -40,21 +37,19 @@ export default function Home() {
       <NoContentModalContainer
         open={isOpenLoginModal}
         onClose={handleCloseLoginModal}
-        width={showLogin ? 850 : 1300}
+        width={showLogin ? 800 : 1300}
         style={{ background: "transparent" }}
       >
-        {showLogin == 0 ? (
+        {showLogin ? (
           <Login onRegisterSuccess={handleRegisterSuccess} />
-        ) : showLogin == 1 ? (
-          <Profile email={email} docType={docType} />
         ) : (
-          <CreateRequirement />
+          <Profile email={email} docType={docType} />
         )}
       </NoContentModalContainer>
-      <ButtonContainer onClick={() => handleOpenModal(0)}>
+      <ButtonContainer onClick={() => handleOpenModal(true)}>
         Login
       </ButtonContainer>
-      <ButtonContainer onClick={() => handleOpenModal(2)}>
+      <ButtonContainer onClick={() => handleOpenModal(false)}>
         Crear
       </ButtonContainer>
     </>
