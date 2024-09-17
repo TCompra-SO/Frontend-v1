@@ -57,13 +57,16 @@ export default function httpErrorInterceptor(error: any, type: string): string {
     case sendCodeService().type:
       switch (code) {
         case 403:
-          erroMsg = "completeProfile";
+          erroMsg = "userAlreadyValidated";
+          break;
+        case 404:
+          erroMsg = "userNotFound";
           break;
         case 409:
           erroMsg = "generateCodeAgain";
           break;
         case 410:
-          erroMsg = "userAlreadyValidated";
+          erroMsg = "completeProfile";
           break;
       }
       break;

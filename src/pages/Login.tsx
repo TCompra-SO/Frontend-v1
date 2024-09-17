@@ -4,7 +4,6 @@ import {
   GetNameReniecRequest,
   LoginRequest,
   RegisterRequest,
-  SendCodeRequest,
 } from "../models/Requests";
 import { useDispatch } from "react-redux";
 import { setUid, setUser } from "../redux/userSlice";
@@ -13,11 +12,7 @@ import { useNavigate } from "react-router-dom";
 import showNotification from "../utilities/notification/showNotification";
 import { setIsLoading } from "../redux/loadingSlice";
 import useApi from "../hooks/useApi";
-import {
-  loginService,
-  registerService,
-  sendCodeService,
-} from "../services/authService";
+import { loginService, registerService } from "../services/authService";
 import { useApiParams } from "../models/Interfaces";
 
 import { useTranslation } from "react-i18next";
@@ -64,16 +59,15 @@ export default function Login(props: LoginProps) {
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
   const [docType, setDocType] = useState(DocType.DNI);
   const [form] = Form.useForm();
+  const [isForgotPassword, setIsForgotPassword] = useState(true);
   const [apiParams, setApiParams] = useState<
-    useApiParams<
-      RegisterRequest | LoginRequest | GetNameReniecRequest | SendCodeRequest
-    >
+    useApiParams<RegisterRequest | LoginRequest | GetNameReniecRequest>
   >({
     service: null,
     method: "get",
   });
   const { loading, responseData, error, errorMsg, fetchData } = useApi<
-    RegisterRequest | LoginRequest | GetNameReniecRequest | SendCodeRequest
+    RegisterRequest | LoginRequest | GetNameReniecRequest
   >({
     service: apiParams.service,
     method: apiParams.method,
@@ -89,16 +83,11 @@ export default function Login(props: LoginProps) {
         afterSubmit();
       else if (equalServices(apiParams.service, getNameReniecService(""))) {
         form.setFieldValue("name", responseData.data);
-      } else if (equalServices(apiParams.service, sendCodeService())) {
-        showNotification(notification, "success", t("sendCodeSuccess"));
-        setIsOpenCodeModal(true);
       }
     } else if (error) {
       showNotification(notification, "error", errorMsg);
 
-      if (equalServices(apiParams.service, sendCodeService())) {
-        setEmail("");
-      } else if (equalServices(apiParams.service, loginService())) {
+      if (equalServices(apiParams.service, loginService())) {
         checkToOpenCreateProfileModal(error);
       }
     }
@@ -163,7 +152,6 @@ export default function Login(props: LoginProps) {
         email: values.email,
         password: values.password,
       };
-      console.log(data);
       setApiParams({
         service: loginService(),
         method: "post",
@@ -202,18 +190,11 @@ export default function Login(props: LoginProps) {
   async function SendValidationCode(email: string) {
     handleCloseModal();
     setEmail(email);
-    const data: SendCodeRequest = {
-      email,
-      type: "identity_verified",
-    };
-    setApiParams({
-      service: sendCodeService(),
-      method: "post",
-      dataToSend: data,
-    });
+    setIsOpenCodeModal(true);
   }
 
-  function handleOpenModal() {
+  function handleOpenModal(fromForgotPassword: boolean) {
+    setIsForgotPassword(fromForgotPassword);
     setIsOpenModal(true);
   }
 
@@ -229,14 +210,15 @@ export default function Login(props: LoginProps) {
     <>
       <ModalContainer
         className=""
-        title={t("inputYourEmail")}
         content={{
           type: ModalTypes.INPUT_EMAIL,
           data: {
             onAnswer: (email: string) => {
               SendValidationCode(email);
             },
+            buttonText: t("acceptButton"),
           },
+          title: t("inputYourEmail"),
         }}
         isOpen={isOpenModal}
         onClose={handleCloseModal}
@@ -246,6 +228,7 @@ export default function Login(props: LoginProps) {
         isOpen={isOpenCodeModal}
         onClose={handleCloseCodeModal}
         email={email}
+        isForgotPassword={isForgotPassword}
       />
 
       <div className="modal-login">
@@ -365,14 +348,14 @@ export default function Login(props: LoginProps) {
                 </Form.Item>
               </div>
               <a
-                href="#"
+                onClick={() => handleOpenModal(true)}
                 className="forgot-password text-right"
                 style={{ width: "100%" }}
               >
                 {t("forgotPassword")}
               </a>
               <a
-                onClick={handleOpenModal}
+                onClick={() => handleOpenModal(false)}
                 className="forgot-password text-right"
                 style={{ width: "100%" }}
               >

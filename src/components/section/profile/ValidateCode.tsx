@@ -1,70 +1,96 @@
 import {
   CheckCircleOutlined,
+  EditOutlined,
   SendOutlined,
   SolutionOutlined,
 } from "@ant-design/icons";
-import { App, Divider, Flex, Form, Modal, Steps, StepsProps } from "antd";
+import { App, Divider, Flex, Form, Steps, StepsProps } from "antd";
 import { useEffect, useState } from "react";
-import { SendCodeRequest, ValidateCodeRequest } from "../../../models/Requests";
+import {
+  RecoverPasswordRequest,
+  SendCodeRecoveryRequest,
+  SendCodeRequest,
+  ValidateCodeRequest,
+} from "../../../models/Requests";
 import showNotification from "../../../utilities/notification/showNotification";
 import { StepsItemContent, useApiParams } from "../../../models/Interfaces";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import useApi from "../../../hooks/useApi";
 import {
+  recoverPasswordService,
+  sendCodeRecoveryService,
   sendCodeService,
   validateCodeService,
 } from "../../../services/authService";
 import OTPInputContainer from "../../containers/OTPInputContainer";
 import { equalServices } from "../../../utilities/globalFunctions";
+import NoContentModalContainer from "../../containers/NoContentModalContainer";
+import { commonModalWidth, mediumModalWidth } from "../../../utilities/globals";
+
+const stepsIni: StepsItemContent[] = [
+  {
+    key: "sent",
+    title: "sending",
+    status: "wait",
+    icon: <SendOutlined />,
+    text: "willSendVerificationCode",
+    showInput: false,
+  },
+  {
+    key: "val",
+    title: "validation",
+    status: "wait",
+    icon: <SolutionOutlined />,
+    text: "inputVerificationCode",
+    showInput: true,
+  },
+  {
+    key: "done",
+    title: "end",
+    status: "wait",
+    icon: <CheckCircleOutlined />,
+    text: "accountHasBeenValidated",
+    showInput: false,
+  },
+];
+
+const stepsForgotPass: StepsItemContent[] = [
+  stepsIni[0],
+  stepsIni[1],
+  {
+    key: "val",
+    title: "password",
+    status: "wait",
+    icon: <EditOutlined />,
+    text: "inputNewPassword",
+    showInput: true,
+  },
+  {
+    key: "done",
+    title: "end",
+    status: "wait",
+    icon: <CheckCircleOutlined />,
+    text: "passwordHasBeenUpdated",
+    showInput: false,
+  },
+];
+
+const expireInSeconds = 60;
+const timeoutToValidate = 5;
 
 interface ValidateCodeProps {
   isOpen: boolean;
   onClose: (validationSuccess: boolean) => void;
   email: string;
+  isForgotPassword: boolean;
 }
-
-const stepsIni: StepsItemContent[] = [
-  {
-    key: "sent",
-    title: "Envío",
-    status: "finish",
-    icon: <SendOutlined />,
-    text: "Se ha enviado un código de verificación a ",
-    showInput: false,
-  },
-  {
-    key: "val",
-    title: "Validación",
-    status: "wait",
-    icon: <SolutionOutlined />,
-    text: "Ingrese el código de verificación:",
-    showInput: true,
-  },
-  {
-    key: "done",
-    title: "Fin",
-    status: "wait",
-    icon: <CheckCircleOutlined />,
-    text: "Su cuenta ha sido validada",
-    showInput: false,
-  },
-];
-
-const steps: StepsProps["items"] = stepsIni.map((item) => ({
-  key: item.key,
-  title: item.title,
-  icon: item.icon,
-  status: item.status,
-}));
-
-const expireInSeconds = 60;
-const timeoutToValidate = 5;
 
 export default function ValidateCode({
   isOpen,
   onClose,
   email,
+  isForgotPassword,
 }: ValidateCodeProps) {
   const { t } = useTranslation();
   const { notification } = App.useApp();
@@ -75,13 +101,21 @@ export default function ValidateCode({
   const [timerToValidate, setTimerToValidate] = useState(timeoutToValidate);
   const [validationSuccess, setValidationSuccess] = useState(false);
   const [apiParams, setApiParams] = useState<
-    useApiParams<SendCodeRequest | ValidateCodeRequest>
+    useApiParams<
+      | SendCodeRequest
+      | ValidateCodeRequest
+      | SendCodeRecoveryRequest
+      | RecoverPasswordRequest
+    >
   >({
     service: null,
     method: "get",
   });
-  const { responseData, error, errorMsg, fetchData } = useApi<
-    ValidateCodeRequest | SendCodeRequest
+  const { responseData, error, errorMsg, fetchData, loading } = useApi<
+    | ValidateCodeRequest
+    | SendCodeRequest
+    | SendCodeRecoveryRequest
+    | RecoverPasswordRequest
   >({
     service: apiParams.service,
     method: apiParams.method,
@@ -89,10 +123,13 @@ export default function ValidateCode({
   });
   let intervalId: any = 0;
   let intervalIdValidate: any = 0;
+  let steps: StepsProps["items"] = [];
 
-  // useEffect(() => {
-  //   beginTimer();
-  // }, [])
+  steps = (isForgotPassword ? stepsForgotPass : stepsIni).map((item) => ({
+    key: item.key,
+    title: t(item.title),
+    icon: item.icon,
+  }));
 
   useEffect(() => {
     if (isOpen) {
@@ -112,19 +149,34 @@ export default function ValidateCode({
 
   useEffect(() => {
     if (responseData) {
-      if (equalServices(apiParams.service, sendCodeService())) {
+      if (
+        equalServices(apiParams.service, sendCodeService()) ||
+        equalServices(apiParams.service, sendCodeRecoveryService())
+      ) {
         beginTimer();
         showNotification(notification, "success", t("sentValidationCode"));
-      } else if (equalServices(apiParams.service, validateCodeService())) {
+        if (current == 0) next();
+      } else if (
+        equalServices(apiParams.service, validateCodeService()) ||
+        equalServices(apiParams.service, recoverPasswordService())
+      ) {
         setValidationSuccess(true);
         next();
         form.resetFields();
       }
     } else if (error) {
       showNotification(notification, "error", errorMsg);
-      if (equalServices(apiParams.service, validateCodeService())) {
+      if (
+        equalServices(apiParams.service, validateCodeService()) ||
+        equalServices(apiParams.service, recoverPasswordService())
+      ) {
         setValidationSuccess(false);
         form.resetFields();
+      } else if (
+        equalServices(apiParams.service, sendCodeService()) ||
+        equalServices(apiParams.service, sendCodeRecoveryService())
+      ) {
+        handleClose();
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -133,7 +185,7 @@ export default function ValidateCode({
   function next() {
     setCurrent((current) => {
       const next: number = current + 1;
-      steps![next].status = "finish";
+
       return next;
     });
   }
@@ -144,7 +196,6 @@ export default function ValidateCode({
 
   function ValidateCode() {
     const code = form.getFieldValue("code");
-    console.log(code);
     if (!code) return;
     beginTimerToValidate();
 
@@ -162,15 +213,26 @@ export default function ValidateCode({
 
   function ResendCode() {
     setWaiting(true);
-    const data: SendCodeRequest = {
-      email: email,
-      type: "identity_verified",
-    };
-    setApiParams({
-      service: sendCodeService(),
-      method: "post",
-      dataToSend: data,
-    });
+    if (isForgotPassword) {
+      const data: SendCodeRecoveryRequest = {
+        email: email,
+      };
+      setApiParams({
+        service: sendCodeRecoveryService(),
+        method: "post",
+        dataToSend: data,
+      });
+    } else {
+      const data: SendCodeRequest = {
+        email: email,
+        type: "identity_verified",
+      };
+      setApiParams({
+        service: sendCodeService(),
+        method: "post",
+        dataToSend: data,
+      });
+    }
   }
 
   function beginTimer() {
@@ -200,78 +262,89 @@ export default function ValidateCode({
   }
 
   return (
-    <Modal
+    <NoContentModalContainer
       centered
       open={isOpen}
       closable={false}
-      footer={[
-        <ButtonContainer
-          key="back"
-          onClick={handleClose}
-          children={t("cancelButton")}
-        />,
-        <ButtonContainer
-          key="submit"
-          type="primary"
-          onClick={
-            stepsIni[current].key == "val"
-              ? ValidateCode
-              : stepsIni[current].key == "done"
-              ? handleClose
-              : next
-          }
-          disabled={
-            stepsIni[current].key != "val"
-              ? false
-              : timerToValidate != timeoutToValidate
-          }
-          children={
-            stepsIni[current].key == "val"
-              ? `${t("validate")}${
-                  timerToValidate != timeoutToValidate
-                    ? ` (${timerToValidate.toFixed(0)})`
-                    : ""
-                }`
-              : stepsIni[current].key == "done"
-              ? t("acceptButton")
-              : t("next")
-          }
-        />,
-      ]}
+      showFooter={false}
+      width={isForgotPassword ? commonModalWidth : mediumModalWidth}
     >
-      <Flex gap="middle" align="center" justify="space-around" vertical>
-        <Steps current={current} items={steps} />
-        <Divider style={{ margin: "0" }} />
-        <div style={{ padding: "12px" }}>
-          {stepsIni[current].key == "sent"
-            ? stepsIni[current].text + email
-            : stepsIni[current].text}
-        </div>
+      <div className="modal-card">
+        <Flex gap="middle" align="center" justify="space-around" vertical>
+          <Steps items={steps} current={current} />
+          <Divider style={{ margin: "0" }} />
+          <div style={{ padding: "12px" }}>
+            {stepsIni[current].key == "sent"
+              ? t(stepsIni[current].text) + email
+              : t(stepsIni[current].text)}
+          </div>
 
-        {stepsIni[current].showInput && (
-          <>
-            <Form form={form}>
-              <Form.Item name="code">
-                <OTPInputContainer length={6} />
-              </Form.Item>
-            </Form>
+          {stepsIni[current].showInput && (
+            <>
+              <Form form={form}>
+                <Form.Item name="code">
+                  <OTPInputContainer length={6} />
+                </Form.Item>
+              </Form>
 
-            <a
-              style={{
-                float: "right",
-                marginBottom: "24px",
-                pointerEvents: waiting ? "none" : "all",
-                cursor: waiting ? "not-allowed" : "",
-              }}
-              onClick={ResendCode}
-            >
-              {waiting
-                ? `${t("timerResendValidationCode")}(${timer}) ${t("seconds")}`
-                : t("resendValidationCode")}
-            </a>
-          </>
-        )}
-      </Flex>
-    </Modal>
+              <a
+                style={{
+                  float: "right",
+                  marginBottom: "24px",
+                  pointerEvents: waiting ? "none" : "all",
+                  cursor: waiting ? "not-allowed" : "",
+                }}
+                onClick={ResendCode}
+              >
+                {waiting
+                  ? `${t("timerResendValidationCode")}(${timer}) ${t(
+                      "seconds"
+                    )}`
+                  : t("resendValidationCode")}
+              </a>
+            </>
+          )}
+
+          <div className="t-flex wd-100">
+            <ButtonContainer
+              key="back"
+              className="btn btn-default"
+              onClick={handleClose}
+              children={t("cancelButton")}
+              style={{ flex: 1, marginRight: "5px" }}
+            />
+            <ButtonContainer
+              key="submit"
+              loading={loading}
+              className="btn btn-default"
+              style={{ flex: 1, marginLeft: "5px" }}
+              onClick={
+                stepsIni[current].key == "val"
+                  ? ValidateCode
+                  : stepsIni[current].key == "done"
+                  ? handleClose
+                  : ResendCode
+              }
+              disabled={
+                stepsIni[current].key != "val"
+                  ? false
+                  : timerToValidate != timeoutToValidate
+              }
+              children={
+                stepsIni[current].key == "val"
+                  ? `${t("validate")}${
+                      timerToValidate != timeoutToValidate
+                        ? ` (${timerToValidate.toFixed(0)})`
+                        : ""
+                    }`
+                  : stepsIni[current].key == "done"
+                  ? t("acceptButton")
+                  : t("next")
+              }
+            />
+          </div>
+        </Flex>
+      </div>
+    </NoContentModalContainer>
   );
 }

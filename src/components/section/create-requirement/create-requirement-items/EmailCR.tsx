@@ -1,21 +1,17 @@
 import { useTranslation } from "react-i18next";
 import InputContainer from "../../../containers/InputContainer";
+import { useSelector } from "react-redux";
+import { MainState } from "../../../../models/Redux";
+import { useState } from "react";
 
-interface EmailCRProps {
-  email: string;
-}
-
-export default function EmailCR(props: EmailCRProps) {
+export default function EmailCR() {
   const { t } = useTranslation();
+  const [email] = useState(useSelector((state: MainState) => state.user.email));
 
   return (
     <>
       <div className="titulo-input">{t("email")}</div>
-      <InputContainer
-        className="form-control"
-        defaultValue={props.email}
-        disabled
-      />
+      <InputContainer className="form-control" defaultValue={email} disabled />
     </>
   );
 }

@@ -677,6 +677,12 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
   display: none;
 }
 
+/* Cambiar hover de button */
+.ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+  background: #990057;
+  color: #ffffff;
+}
+
 /*****************************/
 
 /* Truncar texto */

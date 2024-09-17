@@ -515,6 +515,7 @@ export default function Profile(props: ProfileProps) {
         isOpen={isCodeModalOpen}
         onClose={handleCloseModal}
         email={props.email}
+        isForgotPassword={false}
       />
     </>
   );

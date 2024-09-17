@@ -10,8 +10,8 @@ export const maxDocsQuantity: number = 1;
 export const maxDocSizeMb: number = 2;
 
 export const commonModalWidth: number = 850;
-export const mediumModalWidth: number = 350;
-export const smallModalWidth: number = 250;
+export const mediumModalWidth: number = 450;
+export const smallModalWidth: number = 350;
 export const columnWidth: number = 100;
 
 export const certifiedCompaniesOpt: number = 3;

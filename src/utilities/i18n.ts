@@ -160,6 +160,12 @@ const resources = {
       inputYourEmail: "Input your email",
       allDataIsImportant: "All data is important",
       dateBeforeToday: "Date cannot be earlier than today",
+      userNotFound: "User not found",
+      willSendVerificationCode: "A verification code will be sent to: ",
+      inputVerificationCode: "Enter verification code:",
+      accountHasBeenValidated: "Your account has been validated",
+      passwordHasBeenUpdated: "Your password has been updated",
+      inputNewPassword: "Enter new password:",
       // Other
       yes: "Yes",
       no: "No",
@@ -225,7 +231,10 @@ const resources = {
       itemCondition: "Item condition",
       new: "New",
       used: "Used",
-      createRequirement: "Crear requerimiento"
+      createRequirement: "Crear requerimiento",
+      sending: "Sending",
+      validation: "Validation",
+      end: "Finish",
     },
   },
   es: {
@@ -386,6 +395,12 @@ const resources = {
       inputYourEmail: "Ingrese su correo",
       allDataIsImportant: "Todos los datos son importantes",
       dateBeforeToday: "Fecha no puede ser menor a hoy",
+      userNotFound: "Usuario no encontrado",
+      willSendVerificationCode: "Se enviará un código de verificación a: ",
+      inputVerificationCode: "Ingrese el código de verificación:",
+      accountHasBeenValidated: "Su cuenta ha sido validada",
+      passwordHasBeenUpdated: "Su contraseña ha sido actualizada",
+      inputNewPassword: "Ingrese su nueva contraseña:",
       // Other
       yes: "Sí",
       no: "No",
@@ -452,7 +467,10 @@ const resources = {
       itemCondition: "Estado del artículo",
       new: "Nuevo",
       used: "Usado",
-      createRequirement: "Crear requerimiento"
+      createRequirement: "Crear requerimiento",
+      sending: "Envío",
+      validation: "Validación",
+      end: "Fin",
     },
   },
 };

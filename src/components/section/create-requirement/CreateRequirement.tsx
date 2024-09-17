@@ -141,7 +141,7 @@ export default function CreateRequirement() {
               <CategoryCR></CategoryCR>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <EmailCR email={"aaaaa"} />
+              <EmailCR />
             </Col>
           </Row>
 

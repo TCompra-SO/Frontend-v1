@@ -11,6 +11,8 @@ export const ApiRoutes = {
     register: "register/",
     sendCode: "sendCode/",
     validateCode: "validate-code/",
+    sendCodeRecovery: "sendCodeRecovery/",
+    recoverPassword: "recoveryPassword/",
   },
   util: {
     countries: "countries/",

@@ -38,6 +38,16 @@ export interface SendCodeRequest {
   type: "repassword" | "identity_verified";
 }
 
+export interface SendCodeRecoveryRequest {
+  email: string;
+}
+
+export interface RecoverPasswordRequest {
+  email: string;
+  password: string;
+  code: string;
+}
+
 export interface GetNameReniecRequest {
   dni?: string;
   ruc?: string;
