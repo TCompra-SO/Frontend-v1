@@ -1,12 +1,10 @@
 import { App, Col, Form, Input, InputRef, Row, Space } from "antd";
-import { ProfileRequest, SendCodeRequest } from "../models/Requests";
+import { ProfileRequest } from "../models/Requests";
 import { defaultCountry, maxImageSizeMb } from "../utilities/globals";
 import { useDispatch, useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { useContext, useEffect, useState } from "react";
 import showNotification from "../utilities/notification/showNotification";
-import ValidateCode from "../components/section/profile/ValidateCode";
-import { useNavigate } from "react-router-dom";
 import { IdValueObj, useApiParams } from "../models/Interfaces";
 import { setIsLoading } from "../redux/loadingSlice";
 import ButtonContainer from "../components/containers/ButtonContainer";
@@ -16,7 +14,6 @@ import useApi from "../hooks/useApi";
 import {
   profileCompanyService,
   profileUserService,
-  sendCodeService,
 } from "../services/authService";
 import { useTranslation } from "react-i18next";
 import { DocType } from "../utilities/types";
@@ -33,12 +30,12 @@ import InputNumberContainer from "../components/containers/InputNumberContainer"
 import { ListsContext } from "../contexts/listsContext";
 
 interface ProfileProps {
-  email: string;
   docType: string;
+  openValidateCodeModal: () => void;
+  closeProfileModal: () => void;
 }
 
 export default function Profile(props: ProfileProps) {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const context = useContext(ListsContext);
   const { countryList, countryData, categoryList } = context;
@@ -47,23 +44,19 @@ export default function Profile(props: ProfileProps) {
   const [form] = Form.useForm();
   const fileInputRef = React.useRef<InputRef>(null);
   const uid = useSelector((state: MainState) => state.user.uid);
-  const [isCodeModalOpen, setIsCodeModalVisible] = useState(false);
   const [imageSrc, setImageSrc] = useState("https://placehold.co/100x100");
   const [profileSuccess, setProfileSuccess] = useState(false);
   const [cities, setCities] = useState<IdValueObj[]>([]);
-  const [apiParams, setApiParams] = useState<
-    useApiParams<ProfileRequest | SendCodeRequest>
-  >({
+  const [apiParams, setApiParams] = useState<useApiParams<ProfileRequest>>({
     service: null,
     method: "get",
   });
-  const { loading, responseData, error, errorMsg, fetchData } = useApi<
-    ProfileRequest | SendCodeRequest
-  >({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi<ProfileRequest>({
+      service: apiParams.service,
+      method: apiParams.method,
+      dataToSend: apiParams.dataToSend,
+    });
 
   const { addressRules } = useAddressRules(true);
   const { phoneRules } = usePhoneRules(true);
@@ -98,14 +91,11 @@ export default function Profile(props: ProfileProps) {
       ) {
         showNotification(notification, "success", t("createProfileSuccess"));
         setProfileSuccess(true);
-      } else if (equalServices(apiParams.service, sendCodeService())) {
-        showNotification(notification, "success", t("sendCodeSuccess"));
       }
     } else if (error) {
       if (
         equalServices(apiParams.service, profileUserService()) ||
-        equalServices(apiParams.service, profileCompanyService()) ||
-        equalServices(apiParams.service, sendCodeService())
+        equalServices(apiParams.service, profileCompanyService())
       ) {
         showNotification(notification, "error", errorMsg);
         if (
@@ -133,16 +123,6 @@ export default function Profile(props: ProfileProps) {
     form.setFieldsValue({ city: null });
   }
 
-  function handleOpenModal() {
-    setIsCodeModalVisible(true);
-    SendValidationCode();
-  }
-
-  function handleCloseModal(validationSuccess: boolean) {
-    setIsCodeModalVisible(false);
-    if (validationSuccess) navigate("/");
-  }
-
   async function HandleSubmit(values: any) {
     if (!checkDifferentCategories(values)) {
       showNotification(notification, "error", t("selectDifferentCategories"));
@@ -152,8 +132,8 @@ export default function Profile(props: ProfileProps) {
       uid,
       phone: values.phone.trim(),
       address: values.address.trim(),
-      country: values.country,
-      city: values.city,
+      countryID: values.country,
+      cityID: values.city,
       categories: [values.category1, values.category2, values.category3],
       planID: 1, // r3v
     };
@@ -169,18 +149,6 @@ export default function Profile(props: ProfileProps) {
         props.docType == DocType.RUC
           ? profileCompanyService()
           : profileUserService(),
-      method: "post",
-      dataToSend: data,
-    });
-  }
-
-  async function SendValidationCode() {
-    const data: SendCodeRequest = {
-      email: props.email,
-      type: "identity_verified",
-    };
-    setApiParams({
-      service: sendCodeService(),
       method: "post",
       dataToSend: data,
     });
@@ -498,7 +466,10 @@ export default function Profile(props: ProfileProps) {
                 )}
                 {profileSuccess && (
                   <ButtonContainer
-                    onClick={handleOpenModal}
+                    onClick={() => {
+                      props.openValidateCodeModal();
+                      props.closeProfileModal();
+                    }}
                     disabled={false}
                     children={t("sendValidationCode")}
                     className="btn btn-default wd-100"
@@ -511,12 +482,6 @@ export default function Profile(props: ProfileProps) {
 
         <div className="image-box wd-50"></div>
       </div>
-      <ValidateCode
-        isOpen={isCodeModalOpen}
-        onClose={handleCloseModal}
-        email={props.email}
-        isForgotPassword={false}
-      />
     </>
   );
 }

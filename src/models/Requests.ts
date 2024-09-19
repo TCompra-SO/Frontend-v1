@@ -17,8 +17,8 @@ export interface ProfileRequest {
   uid: string;
   phone: string;
   address: string;
-  country: string;
-  city: string;
+  countryID: string;
+  cityID: string;
   categories: number[];
   avatar?: string;
   planID: number;

@@ -33,8 +33,11 @@ export const userSlice = createSlice({
     setUid: (state, action) => {
       state.uid = action.payload;
     },
+    setEmail: (state, action) => {
+      state.email = action.payload;
+    },
   },
 });
 
-export const { setUser, setUid } = userSlice.actions;
+export const { setUser, setUid, setEmail } = userSlice.actions;
 export default userSlice.reducer;

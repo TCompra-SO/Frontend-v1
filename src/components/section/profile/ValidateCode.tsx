@@ -26,7 +26,10 @@ import {
 import OTPInputContainer from "../../containers/OTPInputContainer";
 import { equalServices } from "../../../utilities/globalFunctions";
 import NoContentModalContainer from "../../containers/NoContentModalContainer";
-import { commonModalWidth, mediumModalWidth } from "../../../utilities/globals";
+import InputContainer from "../../containers/InputContainer";
+import { usePasswordRules } from "../../../hooks/validators";
+import { useSelector } from "react-redux";
+import { MainState } from "../../../models/Redux";
 
 const stepsIni: StepsItemContent[] = [
   {
@@ -57,7 +60,6 @@ const stepsIni: StepsItemContent[] = [
 
 const stepsForgotPass: StepsItemContent[] = [
   stepsIni[0],
-  stepsIni[1],
   {
     key: "val",
     title: "password",
@@ -82,14 +84,14 @@ const timeoutToValidate = 5;
 interface ValidateCodeProps {
   isOpen: boolean;
   onClose: (validationSuccess: boolean) => void;
-  email: string;
+
   isForgotPassword: boolean;
 }
 
 export default function ValidateCode({
   isOpen,
   onClose,
-  email,
+
   isForgotPassword,
 }: ValidateCodeProps) {
   const { t } = useTranslation();
@@ -100,6 +102,9 @@ export default function ValidateCode({
   const [timer, setTimer] = useState(expireInSeconds);
   const [timerToValidate, setTimerToValidate] = useState(timeoutToValidate);
   const [validationSuccess, setValidationSuccess] = useState(false);
+  const { passwordRules } = usePasswordRules(true);
+  const email = useSelector((state: MainState) => state.user.email);
+
   const [apiParams, setApiParams] = useState<
     useApiParams<
       | SendCodeRequest
@@ -123,9 +128,8 @@ export default function ValidateCode({
   });
   let intervalId: any = 0;
   let intervalIdValidate: any = 0;
-  let steps: StepsProps["items"] = [];
-
-  steps = (isForgotPassword ? stepsForgotPass : stepsIni).map((item) => ({
+  const mainSteps = isForgotPassword ? stepsForgotPass : stepsIni;
+  const steps: StepsProps["items"] = mainSteps.map((item) => ({
     key: item.key,
     title: t(item.title),
     icon: item.icon,
@@ -171,7 +175,9 @@ export default function ValidateCode({
         equalServices(apiParams.service, recoverPasswordService())
       ) {
         setValidationSuccess(false);
-        form.resetFields();
+        if (equalServices(apiParams.service, recoverPasswordService()))
+          form.resetFields(["code"]);
+        else form.resetFields();
       } else if (
         equalServices(apiParams.service, sendCodeService()) ||
         equalServices(apiParams.service, sendCodeRecoveryService())
@@ -191,27 +197,47 @@ export default function ValidateCode({
   }
 
   function handleClose() {
+    form.resetFields();
     onClose(validationSuccess);
   }
 
-  function ValidateCode() {
-    const code = form.getFieldValue("code");
-    if (!code) return;
-    beginTimerToValidate();
-
-    const data: ValidateCodeRequest = {
-      email: email,
-      type: "identity_verified",
-      code: code,
-    };
-    setApiParams({
-      service: validateCodeService(),
-      method: "post",
-      dataToSend: data,
-    });
+  async function sendData() {
+    try {
+      const values = await form.validateFields();
+      beginTimerToValidate();
+      if (isForgotPassword) {
+        if (values.password1 !== values.password2) {
+          showNotification(notification, "error", t("passwordsMusMatch"));
+          return;
+        }
+        const data: RecoverPasswordRequest = {
+          email: email,
+          code: values.code,
+          password: values.password1,
+        };
+        setApiParams({
+          service: recoverPasswordService(),
+          method: "post",
+          dataToSend: data,
+        });
+      } else {
+        const data: ValidateCodeRequest = {
+          email: email,
+          type: "identity_verified",
+          code: values.code,
+        };
+        setApiParams({
+          service: validateCodeService(),
+          method: "post",
+          dataToSend: data,
+        });
+      }
+    } catch (e) {
+      return;
+    }
   }
 
-  function ResendCode() {
+  function resendCode() {
     setWaiting(true);
     if (isForgotPassword) {
       const data: SendCodeRecoveryRequest = {
@@ -264,27 +290,71 @@ export default function ValidateCode({
   return (
     <NoContentModalContainer
       centered
+      destroyOnClose
       open={isOpen}
       closable={false}
       showFooter={false}
-      width={isForgotPassword ? commonModalWidth : mediumModalWidth}
+      width={600}
     >
       <div className="modal-card">
         <Flex gap="middle" align="center" justify="space-around" vertical>
           <Steps items={steps} current={current} />
           <Divider style={{ margin: "0" }} />
-          <div style={{ padding: "12px" }}>
-            {stepsIni[current].key == "sent"
-              ? t(stepsIni[current].text) + email
-              : t(stepsIni[current].text)}
+          <div className="titulo-input">
+            {mainSteps[current].key == "sent"
+              ? t(mainSteps[current].text) + email
+              : t(mainSteps[current].text)}
           </div>
 
-          {stepsIni[current].showInput && (
+          {mainSteps[current].showInput && (
             <>
               <Form form={form}>
-                <Form.Item name="code">
+                <Form.Item
+                  name="code"
+                  label={t("validationCode")}
+                  labelCol={{ span: 0 }}
+                  rules={[{ required: true }]}
+                >
                   <OTPInputContainer length={6} />
                 </Form.Item>
+                {isForgotPassword && (
+                  <>
+                    <div className="titulo-input" style={{ marginTop: "10px" }}>
+                      Nueva contraseña
+                    </div>
+                    <Form.Item
+                      name="password1"
+                      label={t("password")}
+                      labelCol={{ span: 0 }}
+                      style={{ width: "100%" }}
+                      rules={passwordRules}
+                    >
+                      <InputContainer
+                        password={true}
+                        className="form-control"
+                        placeholder="•••••••••"
+                        // style={{ flexGrow: 1 }}
+                      />
+                    </Form.Item>
+                    <div className="titulo-input" style={{ marginTop: "10px" }}>
+                      Confirme su contraseña
+                    </div>
+                    <Form.Item
+                      name="password2"
+                      label={t("password")}
+                      labelCol={{ span: 0 }}
+                      style={{ width: "100%" }}
+                      rules={passwordRules}
+                    >
+                      <InputContainer
+                        password={true}
+                        className="form-control"
+                        placeholder="•••••••••"
+                        // style={{ flexGrow: 1 }}
+                      />
+                    </Form.Item>
+                  </>
+                )}
               </Form>
 
               <a
@@ -294,7 +364,7 @@ export default function ValidateCode({
                   pointerEvents: waiting ? "none" : "all",
                   cursor: waiting ? "not-allowed" : "",
                 }}
-                onClick={ResendCode}
+                onClick={resendCode}
               >
                 {waiting
                   ? `${t("timerResendValidationCode")}(${timer}) ${t(
@@ -319,25 +389,25 @@ export default function ValidateCode({
               className="btn btn-default"
               style={{ flex: 1, marginLeft: "5px" }}
               onClick={
-                stepsIni[current].key == "val"
-                  ? ValidateCode
-                  : stepsIni[current].key == "done"
+                mainSteps[current].key == "val"
+                  ? sendData
+                  : mainSteps[current].key == "done"
                   ? handleClose
-                  : ResendCode
+                  : resendCode
               }
               disabled={
-                stepsIni[current].key != "val"
+                mainSteps[current].key != "val"
                   ? false
                   : timerToValidate != timeoutToValidate
               }
               children={
-                stepsIni[current].key == "val"
-                  ? `${t("validate")}${
+                mainSteps[current].key == "val"
+                  ? `${t(isForgotPassword ? "saveButton" : "validate")}${
                       timerToValidate != timeoutToValidate
                         ? ` (${timerToValidate.toFixed(0)})`
                         : ""
                     }`
-                  : stepsIni[current].key == "done"
+                  : mainSteps[current].key == "done"
                   ? t("acceptButton")
                   : t("next")
               }

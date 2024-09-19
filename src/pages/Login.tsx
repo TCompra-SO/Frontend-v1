@@ -6,7 +6,7 @@ import {
   RegisterRequest,
 } from "../models/Requests";
 import { useDispatch } from "react-redux";
-import { setUid, setUser } from "../redux/userSlice";
+import { setUid, setUser, setEmail } from "../redux/userSlice";
 import { DocType, ModalTypes, RegisterTypeId } from "../utilities/types";
 import { useNavigate } from "react-router-dom";
 import showNotification from "../utilities/notification/showNotification";
@@ -29,7 +29,6 @@ import ButtonContainer from "../components/containers/ButtonContainer";
 import { getNameReniecService } from "../services/utilService";
 import { equalServices } from "../utilities/globalFunctions";
 import ModalContainer from "../components/containers/ModalContainer";
-import ValidateCode from "../components/section/profile/ValidateCode";
 import { AxiosError } from "axios";
 import { ListsContext } from "../contexts/listsContext";
 
@@ -39,7 +38,10 @@ const LoginType = {
 };
 
 interface LoginProps {
-  onRegisterSuccess: (email: string, docType: string) => void;
+  onRegisterSuccess: (docType: string) => void;
+  changeIsFromForgotPassword: (type: boolean) => void;
+  openValidateCodeModal: () => void;
+  closeLoginModal: () => void;
 }
 
 export default function Login(props: LoginProps) {
@@ -53,13 +55,11 @@ export default function Login(props: LoginProps) {
   const { passwordRules } = usePasswordRules(true);
   const { dniRules } = useDniRules(true);
   const { rucRules } = useRucRules(true);
-  const [email, setEmail] = useState("");
+  const [validDoc, setValidDoc] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [isOpenCodeModal, setIsOpenCodeModal] = useState(false);
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
   const [docType, setDocType] = useState(DocType.DNI);
   const [form] = Form.useForm();
-  const [isForgotPassword, setIsForgotPassword] = useState(true);
   const [apiParams, setApiParams] = useState<
     useApiParams<RegisterRequest | LoginRequest | GetNameReniecRequest>
   >({
@@ -83,9 +83,14 @@ export default function Login(props: LoginProps) {
         afterSubmit();
       else if (equalServices(apiParams.service, getNameReniecService(""))) {
         form.setFieldValue("name", responseData.data);
+        setValidDoc(true);
       }
     } else if (error) {
       showNotification(notification, "error", errorMsg);
+
+      if (equalServices(apiParams.service, getNameReniecService(""))) {
+        setValidDoc(false);
+      }
 
       if (equalServices(apiParams.service, loginService())) {
         checkToOpenCreateProfileModal(error);
@@ -112,10 +117,11 @@ export default function Login(props: LoginProps) {
       error.response?.data.entity
     ) {
       dispatch(setUid(error.response?.data.uid));
+      dispatch(setEmail(form.getFieldValue("email")));
       props.onRegisterSuccess(
-        email,
         error.response?.data.entity == "User" ? DocType.DNI : DocType.RUC
       );
+      props.changeIsFromForgotPassword(false);
     }
   }
 
@@ -123,16 +129,17 @@ export default function Login(props: LoginProps) {
     return loginType == LoginType.LOGIN ? t("login") : t("register");
   }
 
-  function resetFields() {
-    form.resetFields();
+  function resetFields(fields?: string[]) {
+    if (fields) form.resetFields(fields);
+    else form.resetFields();
   }
 
   function handleChangeTypeDoc(type: string) {
-    form.setFieldsValue({ document: "" });
+    form.resetFields(["document", "name"]);
     setDocType(type);
   }
 
-  async function getUserName() {
+  function getUserName() {
     form
       .validateFields(["document"])
       .then((value) => {
@@ -158,6 +165,11 @@ export default function Login(props: LoginProps) {
         dataToSend: data,
       });
     } else {
+      if (!validDoc) {
+        showNotification(notification, "error", t("mustProvideValidDoc"));
+        return;
+      }
+
       const data: RegisterRequest = {
         email: values.email,
         password: values.password,
@@ -178,7 +190,8 @@ export default function Login(props: LoginProps) {
     if (loginType == LoginType.REGISTER) {
       dispatch(setUid(responseData.res.uid));
       showNotification(notification, "success", t("registerUserSuccess"));
-      props.onRegisterSuccess(form.getFieldValue("email"), docType);
+      dispatch(setEmail(form.getFieldValue("email")));
+      props.onRegisterSuccess(docType);
     } else {
       dispatch(setUser(responseData));
       showNotification(notification, "success", t("welcome"));
@@ -189,21 +202,18 @@ export default function Login(props: LoginProps) {
 
   async function SendValidationCode(email: string) {
     handleCloseModal();
-    setEmail(email);
-    setIsOpenCodeModal(true);
+    dispatch(setEmail(email));
+    props.closeLoginModal();
+    props.openValidateCodeModal();
   }
 
   function handleOpenModal(fromForgotPassword: boolean) {
-    setIsForgotPassword(fromForgotPassword);
+    props.changeIsFromForgotPassword(fromForgotPassword);
     setIsOpenModal(true);
   }
 
   function handleCloseModal() {
     setIsOpenModal(false);
-  }
-
-  function handleCloseCodeModal() {
-    setIsOpenCodeModal(false);
   }
 
   return (
@@ -222,13 +232,6 @@ export default function Login(props: LoginProps) {
         }}
         isOpen={isOpenModal}
         onClose={handleCloseModal}
-      />
-
-      <ValidateCode
-        isOpen={isOpenCodeModal}
-        onClose={handleCloseCodeModal}
-        email={email}
-        isForgotPassword={isForgotPassword}
       />
 
       <div className="modal-login">
@@ -286,7 +289,7 @@ export default function Login(props: LoginProps) {
                     ></SelectContainer>
                   </Form.Item>
 
-                  <div className="t-flex">
+                  <div className="t-flex" style={{ alignItems: "center" }}>
                     <Form.Item
                       name="document"
                       label={docType}
@@ -299,12 +302,25 @@ export default function Login(props: LoginProps) {
                         className="form-control"
                         style={{ flexGrow: 1 }}
                         placeholder={docType}
-                        onBlur={getUserName}
+                        onChange={() => resetFields(["name"])}
                       />
                     </Form.Item>
+                    <i
+                      className="fas fa-search"
+                      style={{ marginLeft: "7px", cursor: "pointer" }}
+                      onClick={getUserName}
+                    ></i>
                   </div>
                   <div className="t-flex">
-                    <Form.Item name="name" style={{ width: "100%" }}>
+                    <Form.Item
+                      name="name"
+                      style={{ width: "100%" }}
+                      label={t("name")}
+                      labelCol={{ span: 0 }}
+                      rules={[
+                        { required: true, message: t("clickOnSearchIcon") },
+                      ]}
+                    >
                       <InputContainer
                         disabled
                         className="form-control"

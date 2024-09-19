@@ -41,6 +41,7 @@ export default function useApi<T = any>({
         console.log("HTTP error:", err);
         setError(err as AxiosError);
         const errorMsg_ = t(httpErrorInterceptor(err, service.type));
+
         setErrorMsg(errorMsg_);
       } finally {
         setLoading(false);

@@ -2,6 +2,7 @@ import { lazy, useState } from "react";
 import ButtonContainer from "../components/containers/ButtonContainer";
 
 import NoContentModalContainer from "../components/containers/NoContentModalContainer";
+import ValidateCode from "../components/section/profile/ValidateCode.tsx";
 // import Profile from "./Profile.tsx";
 
 const Login = lazy(() => import("./Login.tsx"));
@@ -9,8 +10,10 @@ const Profile = lazy(() => import("./Profile.tsx"));
 
 export default function Home() {
   const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
+  const [isOpenValCodeModal, setIsOpenValCodeModal] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
-  const [email, setEmail] = useState("");
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
+
   const [docType, setDocType] = useState("");
 
   function handleOpenLoginModal() {
@@ -21,15 +24,27 @@ export default function Home() {
     setIsOpenLoginModal(false);
   }
 
+  function handleOpenValCodeModal(fromProfile: boolean = false) {
+    if (fromProfile) setIsForgotPassword(false);
+    setIsOpenValCodeModal(true);
+  }
+
+  function handleCloseValCodeModal() {
+    setIsOpenValCodeModal(false);
+  }
+
   function handleOpenModal(login: boolean) {
     setShowLogin(login);
     handleOpenLoginModal();
   }
 
-  function handleRegisterSuccess(email: string, docType: string) {
-    setEmail(email);
+  function handleRegisterSuccess(docType: string) {
     setDocType(docType);
     handleOpenModal(false);
+  }
+
+  function changeIsFromForgotPassword(type: boolean) {
+    setIsForgotPassword(type);
   }
 
   return (
@@ -41,11 +56,25 @@ export default function Home() {
         style={{ background: "transparent" }}
       >
         {showLogin ? (
-          <Login onRegisterSuccess={handleRegisterSuccess} />
+          <Login
+            onRegisterSuccess={handleRegisterSuccess}
+            changeIsFromForgotPassword={changeIsFromForgotPassword}
+            openValidateCodeModal={handleOpenValCodeModal}
+            closeLoginModal={handleCloseLoginModal}
+          />
         ) : (
-          <Profile email={email} docType={docType} />
+          <Profile
+            docType={docType}
+            openValidateCodeModal={() => handleOpenValCodeModal(true)}
+            closeProfileModal={handleCloseLoginModal}
+          />
         )}
       </NoContentModalContainer>
+      <ValidateCode
+        isOpen={isOpenValCodeModal}
+        onClose={handleCloseValCodeModal}
+        isForgotPassword={isForgotPassword}
+      />
       <ButtonContainer onClick={() => handleOpenModal(true)}>
         Login
       </ButtonContainer>
