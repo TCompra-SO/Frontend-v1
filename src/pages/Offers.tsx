@@ -9,7 +9,7 @@ import {
   UserTable,
 } from "../utilities/types";
 import ModalContainer from "../components/containers/ModalContainer";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { ModalContent, TableTypeOffer } from "../models/Interfaces";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 
@@ -316,6 +316,10 @@ export default function Offers() {
     console.log(offer);
   }
 
+  function handleSearch(e: ChangeEvent<HTMLInputElement>) {
+    console.log(e.target.value);
+  }
+
   return (
     <>
       <ModalContainer
@@ -337,6 +341,7 @@ export default function Offers() {
         subtitle={`${t("listOf")} ${t("goods")}`}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
+        onSearch={handleSearch}
       />
     </>
   );

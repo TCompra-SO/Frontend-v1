@@ -10,7 +10,7 @@ import {
   TableTypes,
 } from "../utilities/types";
 import { OfferListItem, RequirementTableItem } from "../models/MainInterfaces";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { ModalContent, TableTypeRequirement } from "../models/Interfaces";
 import RateModalTitleContainer from "../components/containers/RateModalTitleContainer";
 import { useTranslation } from "react-i18next";
@@ -894,6 +894,10 @@ export default function Requirements() {
     console.log("eliminarreq", requirementId);
   }
 
+  function handleSearch(e: ChangeEvent<HTMLInputElement>) {
+    console.log(e.target.value);
+  }
+
   return (
     <>
       <ModalContainer
@@ -915,6 +919,7 @@ export default function Requirements() {
         subtitle={`${t("listOf")} ${t("goods")}`}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
+        onSearch={handleSearch}
       />
     </>
   );

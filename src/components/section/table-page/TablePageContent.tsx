@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ChangeEvent, ReactNode } from "react";
 import ContentHeader from "../../common/ContentHeader";
 import { Col, Row } from "antd";
 import InputContainer from "../../containers/InputContainer";
@@ -13,6 +13,7 @@ interface TablePageContentProps {
   titleIcon: ReactNode;
   subtitleIcon?: ReactNode;
   table: TableType;
+  onSearch: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function TablePageContent(props: TablePageContentProps) {
@@ -40,6 +41,7 @@ export default function TablePageContent(props: TablePageContentProps) {
               placeholder={`${t("search")}...`}
               prefix={<SearchOutlined />}
               className="form-control"
+              onChange={props.onSearch}
             />
           </Col>
         </Row>

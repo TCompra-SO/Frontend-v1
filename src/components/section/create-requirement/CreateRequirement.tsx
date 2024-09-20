@@ -26,6 +26,7 @@ export default function CreateRequirement() {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
+  const [showDocListToCetificate, setShowDocListToCetificate] = useState(false);
   const [isPremium] = useState<boolean>(true);
 
   function changeTab(newtype: RequirementType) {
@@ -36,6 +37,7 @@ export default function CreateRequirement() {
   }
 
   function getDocListCertification(val: number | string) {
+    setShowDocListToCetificate(val == certifiedCompaniesOpt);
     if (val == certifiedCompaniesOpt)
       form.setFieldsValue({ docList: "Lista de documentos" });
     else form.setFieldsValue({ docList: null });
@@ -131,9 +133,11 @@ export default function CreateRequirement() {
                   handleOptionChange={getDocListCertification}
                 />
               </div>
-              <div>
-                <DocumentsCertifCR />
-              </div>
+              {showDocListToCetificate && (
+                <div>
+                  <DocumentsCertifCR />
+                </div>
+              )}
             </>
           )}
           <Row gutter={[15, 15]}>
