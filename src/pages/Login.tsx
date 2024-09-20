@@ -146,7 +146,7 @@ export default function Login(props: LoginProps) {
       .validateFields(["document"])
       .then((value) => {
         setApiParams({
-          service: getNameReniecService(value["document"]),
+          service: getNameReniecService(value["document"].trim()),
           method: "get",
         });
       })
@@ -186,8 +186,8 @@ export default function Login(props: LoginProps) {
         password: values.password,
         typeID: RegisterTypeId.PRINC,
       };
-      if (docType == DocType.DNI) data.dni = values.document;
-      else data.ruc = values.document;
+      if (docType == DocType.DNI) data.dni = values.document.trim();
+      else data.ruc = values.document.trim();
       console.log(data);
       setApiParams({
         service: registerService(),

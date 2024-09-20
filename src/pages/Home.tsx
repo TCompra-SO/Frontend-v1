@@ -3,7 +3,6 @@ import ButtonContainer from "../components/containers/ButtonContainer";
 
 import NoContentModalContainer from "../components/containers/NoContentModalContainer";
 import ValidateCode from "../components/section/profile/ValidateCode.tsx";
-// import Profile from "./Profile.tsx";
 
 const Login = lazy(() => import("./Login.tsx"));
 const Profile = lazy(() => import("./Profile.tsx"));
@@ -78,9 +77,9 @@ export default function Home() {
       <ButtonContainer onClick={() => handleOpenModal(true)}>
         Login
       </ButtonContainer>
-      <ButtonContainer onClick={() => handleOpenModal(false)}>
+      {/* <ButtonContainer onClick={() => handleOpenModal(false)}>
         Crear
-      </ButtonContainer>
+      </ButtonContainer> */}
     </>
   );
 }
