@@ -6,10 +6,11 @@ export default function ImageColumn(hidden: boolean = false) {
     dataIndex: "image",
     align: "center",
     hidden,
-    width: 40,
+    width: 60,
     render: (_, record) => (
       <AvatarContainer
-        src={record.image ?? "https://placehold.co/100x100"}
+        className="img-prod-table"
+        src={record.image ?? "/src/assets/images/img-prod.svg"}
       ></AvatarContainer>
     ),
   };

@@ -32,6 +32,7 @@ export enum PurchaseOrderState {
   CANCELED = 2,
   FINISHED = 3,
   DISPUTE = 4,
+  ELIMINATED = 7,
 }
 
 /**************/
@@ -200,6 +201,7 @@ export const ActionByStatePurchaseOrder: {
     Action.VIEW_SUPPLIER,
     Action.VIEW_HISTORY,
   ],
+  [PurchaseOrderState.ELIMINATED]: [],
 };
 
 /*********/

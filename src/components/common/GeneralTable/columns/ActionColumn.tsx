@@ -1,7 +1,6 @@
 import { ColumnType } from "antd/es/table";
 import { Dropdown } from "antd";
 import ButtonContainer from "../../../containers/ButtonContainer";
-import { CaretDownOutlined } from "@ant-design/icons";
 import {
   Action,
   ActionByStateOffer,
@@ -23,7 +22,7 @@ export default function ActionColumn(
     key: "action",
     align: "center",
     showSorterTooltip: false,
-    width: "115px",
+    width: "130px",
     hidden,
     render: (record) => {
       const ActionByState: { [key: number]: Action[] } =
@@ -44,20 +43,16 @@ export default function ActionColumn(
             }),
           }}
         >
-          <ButtonContainer
-            size="small"
-            type="primary"
-            ghost
-            children={t("select")}
-            upperCaseSmaller={true}
-            icon={<CaretDownOutlined />}
-            iconPosition="end"
-            style={{
-              paddingTop: "15px",
-              paddingBottom: "15px",
-              borderRadius: "10px",
-            }}
-          />
+          <div className="t-flex c-ofertas">
+            <ButtonContainer
+              className="btn btn-border-default btn-sm t-flex seleccionar-tb"
+              children={
+                <>
+                  {t("select")} <i className="fa-solid fa-chevron-down"></i>
+                </>
+              }
+            />
+          </div>
         </Dropdown>
       );
     },

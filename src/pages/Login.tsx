@@ -1,4 +1,4 @@
-import { App, Form } from "antd";
+import { App, Checkbox, Form } from "antd";
 import { useContext, useEffect, useState } from "react";
 import {
   GetNameReniecRequest,
@@ -31,6 +31,7 @@ import { equalServices } from "../utilities/globalFunctions";
 import ModalContainer from "../components/containers/ModalContainer";
 import { AxiosError } from "axios";
 import { ListsContext } from "../contexts/listsContext";
+import { CheckboxChangeEvent } from "antd/lib/checkbox";
 
 const LoginType = {
   LOGIN: "login",
@@ -55,6 +56,7 @@ export default function Login(props: LoginProps) {
   const { passwordRules } = usePasswordRules(true);
   const { dniRules } = useDniRules(true);
   const { rucRules } = useRucRules(true);
+  const [checkedTermsConditions, setCheckedTermsConditions] = useState(false);
   const [validDoc, setValidDoc] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
@@ -170,6 +172,15 @@ export default function Login(props: LoginProps) {
         return;
       }
 
+      if (!checkedTermsConditions) {
+        showNotification(
+          notification,
+          "error",
+          t("mustAgreeToTermsAndConditions")
+        );
+        return;
+      }
+
       const data: RegisterRequest = {
         email: values.email,
         password: values.password,
@@ -214,6 +225,10 @@ export default function Login(props: LoginProps) {
 
   function handleCloseModal() {
     setIsOpenModal(false);
+  }
+
+  function onChangeAgreeToTermsAndConditions(e: CheckboxChangeEvent) {
+    setCheckedTermsConditions(e.target.checked);
   }
 
   return (
@@ -273,7 +288,7 @@ export default function Login(props: LoginProps) {
 
           <Form form={form} onFinish={HandleSubmit}>
             <div
-              style={{ display: "flex", flexDirection: "column", gap: "15px" }}
+              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
             >
               {loginType == LoginType.REGISTER && (
                 <>
@@ -297,19 +312,28 @@ export default function Login(props: LoginProps) {
                       style={{ width: "100%" }}
                       rules={docType == DocType.DNI ? dniRules : rucRules}
                     >
-                      <InputContainer
-                        type="text"
-                        className="form-control"
-                        style={{ flexGrow: 1 }}
-                        placeholder={docType}
-                        onChange={() => resetFields(["name"])}
-                      />
+                      <div className="t-flex" style={{ alignItems: "center" }}>
+                        <InputContainer
+                          type="text"
+                          className="form-control"
+                          style={{ flexGrow: 1 }}
+                          placeholder={docType}
+                          onChange={() => resetFields(["name"])}
+                        />
+                        <i
+                          className="fas fa-search"
+                          style={{
+                            marginLeft: "7px",
+                            cursor: "pointer",
+                            background: "#ffe9f7",
+                            color: "#bc1373",
+                            padding: "13px",
+                            borderRadius: "0.6rem",
+                          }}
+                          onClick={getUserName}
+                        ></i>
+                      </div>
                     </Form.Item>
-                    <i
-                      className="fas fa-search"
-                      style={{ marginLeft: "7px", cursor: "pointer" }}
-                      onClick={getUserName}
-                    ></i>
                   </div>
                   <div className="t-flex">
                     <Form.Item
@@ -363,20 +387,37 @@ export default function Login(props: LoginProps) {
                   />
                 </Form.Item>
               </div>
-              <a
-                onClick={() => handleOpenModal(true)}
-                className="forgot-password text-right"
-                style={{ width: "100%" }}
-              >
-                {t("forgotPassword")}
-              </a>
-              <a
-                onClick={() => handleOpenModal(false)}
-                className="forgot-password text-right"
-                style={{ width: "100%" }}
-              >
-                {t("sendValidationCodeLogin")}
-              </a>
+              <div>
+                {loginType == LoginType.LOGIN && (
+                  <>
+                    <a
+                      onClick={() => handleOpenModal(true)}
+                      className="forgot-password text-right"
+                      style={{ width: "100%" }}
+                    >
+                      {t("forgotPassword")}
+                    </a>
+                    <a
+                      onClick={() => handleOpenModal(false)}
+                      className="forgot-password text-right"
+                      style={{ width: "100%" }}
+                    >
+                      {t("sendValidationCodeLogin")}
+                    </a>
+                  </>
+                )}
+                {loginType == LoginType.REGISTER && (
+                  <Checkbox onChange={onChangeAgreeToTermsAndConditions}>
+                    <a
+                      // onClick={() => handleOpenModal(false)}
+                      className="forgot-password text-left"
+                      style={{ width: "100%" }}
+                    >
+                      {t("agreeToTermsAndConditions")}
+                    </a>
+                  </Checkbox>
+                )}
+              </div>
               <ButtonContainer
                 htmlType="submit"
                 loading={loading}

@@ -1,4 +1,4 @@
-import { OfferState, RequirementState } from "./types";
+import { OfferState, PurchaseOrderState, RequirementState } from "./types";
 
 export const primaryColor = "#BC1373";
 export const mainBackgroundColor = "#ffffff";
@@ -16,79 +16,91 @@ export const darkerGray = "#6e6e6e";
 
 export const RequirementStateMeta: {
   [key in RequirementState]: {
-    color: string;
-    background: string;
     label: string;
+    class: string;
   };
 } = {
   [RequirementState.SELECTED]: {
-    color: "rgb(44,169,84)",
-    background: "rgb(203, 242, 214)",
     label: "selected",
+    class: "es-atendido",
   },
   [RequirementState.FINISHED]: {
-    color: "rgb(46,131,216)",
-    background: "rgb(206,232,255)",
     label: "finished",
+    class: "es-culminado",
   },
   [RequirementState.PUBLISHED]: {
-    color: "rgb(255, 201, 14)",
-    background: "rgb(250,242,207)",
     label: "published",
+    class: "es-publicado",
   },
   [RequirementState.EXPIRED]: {
-    color: "rgb(148,148,148)",
-    background: "rgb(231,231,231)",
     label: "expired",
+    class: "es-expirado",
   },
   [RequirementState.CANCELED]: {
-    color: "rgb(209,62,70)",
-    background: "rgb(255,210,215)",
     label: "canceled",
+    class: "es-cancelado",
   },
   [RequirementState.ELIMINATED]: {
-    color: "#e7ddbe",
-    background: "black",
     label: "eliminated",
+    class: "es-eliminado",
   },
   [RequirementState.DISPUTE]: {
-    color: "rgb(56, 162,177)",
-    background: "rgb(203,242, 245)",
     label: "dispute",
+    class: "es-disputa",
   },
 };
 
 export const OfferStateMeta: {
-  [key in OfferState]: { color: string; background: string; label: string };
+  [key in OfferState]: { class: string; label: string };
 } = {
   [OfferState.WINNER]: {
-    color: "rgb(44,169,84)",
-    background: "rgb(203, 242, 214)",
+    class: "es-atendido",
     label: "winner",
   },
   [OfferState.FINISHED]: {
-    color: "rgb(46,131,216)",
-    background: "rgb(206,232,255)",
+    class: "es-culminado",
     label: "finished",
   },
   [OfferState.ACTIVE]: {
-    color: "rgb(255, 201, 14)",
-    background: "rgb(250,242,207)",
+    class: "es-publicado",
     label: "active",
   },
   [OfferState.CANCELED]: {
-    color: "rgb(209,62,70)",
-    background: "rgb(255,210,215)",
+    class: "es-cancelado",
     label: "canceled",
   },
   [OfferState.ELIMINATED]: {
-    color: "#e7ddbe",
-    background: "black",
+    class: "es-eliminado",
     label: "eliminated",
   },
   [OfferState.DISPUTE]: {
-    color: "rgb(56, 162,177)",
-    background: "rgb(203,242, 245)",
+    class: "es-disputa",
     label: "dispute",
+  },
+};
+
+export const PurchaseOrderStateMeta: {
+  [key in PurchaseOrderState]: { class: string; label: string };
+} = {
+  [PurchaseOrderState.FINISHED]: {
+    class: "es-culminado",
+    label: "finished",
+  },
+
+  [PurchaseOrderState.CANCELED]: {
+    class: "es-cancelado",
+    label: "canceled",
+  },
+  [PurchaseOrderState.ELIMINATED]: {
+    class: "es-eliminado",
+    label: "eliminated",
+  },
+  [PurchaseOrderState.DISPUTE]: {
+    class: "es-disputa",
+    label: "dispute",
+  },
+  [PurchaseOrderState.PENDING]: {
+    class: "es-atendido",
+    label: "pending",
   },
 };

@@ -3,8 +3,6 @@ import {
   OfferListItem,
   RequirementTableItem,
 } from "../../../../models/MainInterfaces";
-import { Flex } from "antd";
-import { tableHeaderTextColor } from "../../../../utilities/colors";
 import { TableTypes } from "../../../../utilities/types";
 
 export default function NameColumn(
@@ -22,19 +20,21 @@ export default function NameColumn(
     showSorterTooltip: false,
     render: (_, record) => (
       <>
-        <Flex vertical>
-          <div className="text-truncate" style={{ textAlign: "left" }}>
+        {/* <Flex vertical> */}
+        <div className="datos-prod">
+          <div className="text-truncate info-req" style={{ textAlign: "left" }}>
             {record.title}
           </div>
           {type == TableTypes.REQUIREMENT && (
             <div
-              className="text-truncate"
-              style={{ textAlign: "left", color: tableHeaderTextColor }}
+              className="text-truncate info-categoria"
+              style={{ textAlign: "left" }}
             >
               {(record as RequirementTableItem).category}
             </div>
           )}
-        </Flex>
+        </div>
+        {/* </Flex> */}
       </>
     ),
   };

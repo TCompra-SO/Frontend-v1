@@ -26,6 +26,7 @@ const offerList: OfferListItem[] = [
       "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "$",
     price: 150089.56,
+    publishDate: new Date(),
     warranty: "1 year",
     deliveryTime: "2-3 weeks",
     location: "Madre de dios",
@@ -66,6 +67,7 @@ const offerList: OfferListItem[] = [
     coin: "$",
     price: 800,
     warranty: "2 years",
+    publishDate: new Date(),
     deliveryTime: "1-2 weeks",
     location: "Madre de dios",
     selectionDate: new Date(),
@@ -94,6 +96,7 @@ const offerList: OfferListItem[] = [
     price: 100,
     warranty: "6 months",
     deliveryTime: "1 week",
+    publishDate: new Date(),
     location: "Loreto",
     state: OfferState.DISPUTE,
     type: RequirementType.GOOD,
@@ -119,6 +122,7 @@ const offerList: OfferListItem[] = [
     price: 120,
     warranty: "1 year",
     deliveryTime: "3-4 weeks",
+    publishDate: new Date(),
     location: "Loreto",
     state: OfferState.FINISHED,
     type: RequirementType.GOOD,
@@ -144,6 +148,7 @@ const offerList: OfferListItem[] = [
     price: 200,
     warranty: "2 years",
     deliveryTime: "2-3 weeks",
+    publishDate: new Date(),
     location: "Loreto",
     state: OfferState.WINNER,
     type: RequirementType.GOOD,
@@ -169,6 +174,7 @@ const offerList: OfferListItem[] = [
     price: 80,
     warranty: "1 year",
     deliveryTime: "1-2 weeks",
+    publishDate: new Date(),
     location: "Arequipa",
     state: OfferState.ACTIVE,
     type: RequirementType.GOOD,
@@ -196,6 +202,7 @@ const offerList: OfferListItem[] = [
     deliveryTime: "2-3 weeks",
     location: "Arequipa",
     state: OfferState.CANCELED,
+    publishDate: new Date(),
     type: RequirementType.GOOD,
     user: {
       uid: "user7",
@@ -216,6 +223,7 @@ const offerList: OfferListItem[] = [
     requirementTitle:
       "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     coin: "$",
+    publishDate: new Date(),
     price: 2500,
     warranty: "3 years",
     deliveryTime: "3-4 weeks",
@@ -243,6 +251,7 @@ const offerList: OfferListItem[] = [
     coin: "$",
     price: 1800,
     warranty: "1 year",
+    publishDate: new Date(),
     deliveryTime: "2-3 weeks",
     location: "Lima",
     state: OfferState.FINISHED,
@@ -269,6 +278,7 @@ const offerList: OfferListItem[] = [
     price: 600,
     warranty: "2 years",
     deliveryTime: "2-3 weeks",
+    publishDate: new Date(),
     location: "Lima",
     state: OfferState.WINNER,
     type: RequirementType.GOOD,
@@ -335,14 +345,14 @@ export default function Offers() {
           }}
           gutter={[10, 10]}
         >
-          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          <Col xs={24} sm={24} md={16} lg={16} xl={16}>
             <div className="sub-titulo">
               <i className="fa-light fa-person-dolly sub-icon"></i>{" "}
               {`${t("listOf")} ${t("goods")}`}
             </div>
             {/* r3v */}
           </Col>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          <Col xs={24} sm={24} md={8} lg={8} xl={8}>
             <InputContainer
               placeholder={`${t("search")}...`}
               prefix={<SearchOutlined />}

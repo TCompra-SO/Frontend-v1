@@ -12,7 +12,7 @@ export interface RequirementTableItem {
   description: string;
   category: string;
   location: string;
-  date: string;
+  date: Date;
   coin: string;
   price: number;
   numberOffers: number;
@@ -38,6 +38,7 @@ export interface OfferListItem {
   document?: string;
   subUser?: User;
   selectionDate?: Date;
+  publishDate: Date;
   state: OfferState;
   type: RequirementType;
   igv?: boolean;

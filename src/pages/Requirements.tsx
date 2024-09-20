@@ -31,7 +31,7 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.CANCELED,
     type: RequirementType.GOOD,
     location: "Arequipa",
-    date: "23-04-2023",
+    date: new Date(),
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam lobortis convallis metus a faucibus. Phasellus tristique nec lorem a vulputate. Morbi varius volutpat orci, in viverra risus venenatis sit amet. Duis convallis nisi nec ligula luctus, in elementum orci ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec quam ante, aliquam rhoncus sollicitudin a, lacinia vitae odio. Aenean quis facilisis augue. Donec iaculis aliquam odio, nec fermentum lectus eleifend ac. Sed fermentum nisl eu aliquet pulvinar. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar elit ac volutpat elementum. Donec interdum id turpis ac ultrices. Vivamus et nunc iaculis, suscipit libero nec, lobortis ex. Vestibulum vitae gravida tortor, eleifend placerat mi. Integer mauris nunc, elementum et dui non, posuere malesuada erat. Aliquam semper aliquet interdum.",
     image:
@@ -71,7 +71,7 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.EXPIRED,
     type: RequirementType.GOOD,
     location: "Lima",
-    date: "23-04-2023",
+    date: new Date(),
     description: "Desription",
     user: {
       uid: "user1",
@@ -97,7 +97,7 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.DISPUTE,
     type: RequirementType.GOOD,
     location: "Madre de Dios",
-    date: "23-04-2023",
+    date: new Date(),
     description: "Desription",
     user: {
       uid: "user1",
@@ -122,7 +122,7 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.FINISHED,
     type: RequirementType.GOOD,
     location: "Loreto",
-    date: "23-04-2023",
+    date: new Date(),
     description: "Desription",
     user: {
       uid: "user1",
@@ -147,7 +147,7 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.PUBLISHED,
     type: RequirementType.GOOD,
     location: "Huancavelica",
-    date: "23-04-2023",
+    date: new Date(),
     description: "Desription",
     user: {
       uid: "user2",
@@ -172,7 +172,7 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.SELECTED,
     type: RequirementType.GOOD,
     location: "Arequipa",
-    date: "03-12-2023",
+    date: new Date(),
     description: "Desription",
     user: {
       uid: "user2",
@@ -197,7 +197,7 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.CANCELED,
     type: RequirementType.GOOD,
     location: "Arequipa",
-    date: "23-04-2023",
+    date: new Date(),
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam lobortis convallis metus a faucibus. Phasellus tristique nec lorem a vulputate. Morbi varius volutpat orci, in viverra risus venenatis sit amet. Duis convallis nisi nec ligula luctus, in elementum orci ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec quam ante, aliquam rhoncus sollicitudin a, lacinia vitae odio. Aenean quis facilisis augue. Donec iaculis aliquam odio, nec fermentum lectus eleifend ac. Sed fermentum nisl eu aliquet pulvinar. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar elit ac volutpat elementum. Donec interdum id turpis ac ultrices. Vivamus et nunc iaculis, suscipit libero nec, lobortis ex. Vestibulum vitae gravida tortor, eleifend placerat mi. Integer mauris nunc, elementum et dui non, posuere malesuada erat. Aliquam semper aliquet interdum.",
     image:
@@ -237,7 +237,7 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.EXPIRED,
     type: RequirementType.GOOD,
     location: "Lima",
-    date: "23-04-2023",
+    date: new Date(),
     description: "Desription",
     user: {
       uid: "user1",
@@ -263,7 +263,7 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.DISPUTE,
     type: RequirementType.GOOD,
     location: "Madre de Dios",
-    date: "23-04-2023",
+    date: new Date(),
     description: "Desription",
     user: {
       uid: "user1",
@@ -288,7 +288,7 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.FINISHED,
     type: RequirementType.GOOD,
     location: "Loreto",
-    date: "23-04-2023",
+    date: new Date(),
     description: "Desription",
     user: {
       uid: "user1",
@@ -313,7 +313,7 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.PUBLISHED,
     type: RequirementType.GOOD,
     location: "Huancavelica",
-    date: "23-04-2023",
+    date: new Date(),
     description: "Desription",
     user: {
       uid: "user2",
@@ -338,7 +338,7 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.SELECTED,
     type: RequirementType.GOOD,
     location: "Arequipa",
-    date: "03-12-2023",
+    date: new Date(),
     description: "Desription",
     user: {
       uid: "user2",
@@ -363,7 +363,7 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.CANCELED,
     type: RequirementType.GOOD,
     location: "Arequipa",
-    date: "23-04-2023",
+    date: new Date(),
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam lobortis convallis metus a faucibus. Phasellus tristique nec lorem a vulputate. Morbi varius volutpat orci, in viverra risus venenatis sit amet. Duis convallis nisi nec ligula luctus, in elementum orci ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec quam ante, aliquam rhoncus sollicitudin a, lacinia vitae odio. Aenean quis facilisis augue. Donec iaculis aliquam odio, nec fermentum lectus eleifend ac. Sed fermentum nisl eu aliquet pulvinar. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar elit ac volutpat elementum. Donec interdum id turpis ac ultrices. Vivamus et nunc iaculis, suscipit libero nec, lobortis ex. Vestibulum vitae gravida tortor, eleifend placerat mi. Integer mauris nunc, elementum et dui non, posuere malesuada erat. Aliquam semper aliquet interdum.",
     image:
@@ -403,7 +403,7 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.EXPIRED,
     type: RequirementType.GOOD,
     location: "Lima",
-    date: "23-04-2023",
+    date: new Date(),
     description: "Desription",
     user: {
       uid: "user1",
@@ -429,7 +429,7 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.DISPUTE,
     type: RequirementType.GOOD,
     location: "Madre de Dios",
-    date: "23-04-2023",
+    date: new Date(),
     description: "Desription",
     user: {
       uid: "user1",
@@ -454,7 +454,7 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.FINISHED,
     type: RequirementType.GOOD,
     location: "Loreto",
-    date: "23-04-2023",
+    date: new Date(),
     description: "Desription",
     user: {
       uid: "user1",
@@ -479,7 +479,7 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.PUBLISHED,
     type: RequirementType.GOOD,
     location: "Huancavelica",
-    date: "23-04-2023",
+    date: new Date(),
     description: "Desription",
     user: {
       uid: "user2",
@@ -504,7 +504,7 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.SELECTED,
     type: RequirementType.GOOD,
     location: "Arequipa",
-    date: "03-12-2023",
+    date: new Date(),
     description: "Desription",
     user: {
       uid: "user2",
@@ -534,6 +534,7 @@ const offerList: OfferListItem[] = [
     deliveryTime: "2-3 weeks",
     location: "Madre de dios",
     state: OfferState.ACTIVE,
+    publishDate: new Date(),
     type: RequirementType.GOOD,
     user: {
       uid: "user1",
@@ -573,6 +574,7 @@ const offerList: OfferListItem[] = [
     deliveryTime: "1-2 weeks",
     location: "Madre de dios",
     selectionDate: new Date(),
+    publishDate: new Date(),
     state: OfferState.CANCELED,
     type: RequirementType.GOOD,
     user: {
@@ -598,6 +600,7 @@ const offerList: OfferListItem[] = [
     price: 100,
     warranty: "6 months",
     deliveryTime: "1 week",
+    publishDate: new Date(),
     location: "Loreto",
     state: OfferState.DISPUTE,
     type: RequirementType.GOOD,
@@ -623,6 +626,7 @@ const offerList: OfferListItem[] = [
     price: 120,
     warranty: "1 year",
     deliveryTime: "3-4 weeks",
+    publishDate: new Date(),
     location: "Loreto",
     state: OfferState.FINISHED,
     type: RequirementType.GOOD,
@@ -649,6 +653,7 @@ const offerList: OfferListItem[] = [
     warranty: "2 years",
     deliveryTime: "2-3 weeks",
     location: "Loreto",
+    publishDate: new Date(),
     state: OfferState.WINNER,
     type: RequirementType.GOOD,
     user: {
@@ -673,6 +678,7 @@ const offerList: OfferListItem[] = [
     price: 80,
     warranty: "1 year",
     deliveryTime: "1-2 weeks",
+    publishDate: new Date(),
     location: "Arequipa",
     state: OfferState.ACTIVE,
     type: RequirementType.GOOD,
@@ -697,6 +703,7 @@ const offerList: OfferListItem[] = [
     coin: "S/.",
     price: 300,
     warranty: "2 years",
+    publishDate: new Date(),
     deliveryTime: "2-3 weeks",
     location: "Arequipa",
     state: OfferState.CANCELED,
@@ -724,6 +731,7 @@ const offerList: OfferListItem[] = [
     warranty: "3 years",
     deliveryTime: "3-4 weeks",
     location: "Arequipa",
+    publishDate: new Date(),
     state: OfferState.DISPUTE,
     type: RequirementType.GOOD,
     user: {
@@ -749,6 +757,7 @@ const offerList: OfferListItem[] = [
     warranty: "1 year",
     deliveryTime: "2-3 weeks",
     location: "Lima",
+    publishDate: new Date(),
     state: OfferState.FINISHED,
     type: RequirementType.GOOD,
     user: {
@@ -773,6 +782,7 @@ const offerList: OfferListItem[] = [
     price: 600,
     warranty: "2 years",
     deliveryTime: "2-3 weeks",
+    publishDate: new Date(),
     location: "Lima",
     state: OfferState.WINNER,
     type: RequirementType.GOOD,
@@ -913,14 +923,14 @@ export default function Requirements() {
           }}
           gutter={[10, 10]}
         >
-          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          <Col xs={24} sm={24} md={16} lg={16} xl={16}>
             <div className="sub-titulo">
               <i className="fa-light fa-person-dolly sub-icon"></i>{" "}
               {`${t("listOf")} ${t("goods")}`}
             </div>
             {/* r3v */}
           </Col>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          <Col xs={24} sm={24} md={8} lg={8} xl={8}>
             <InputContainer
               placeholder={`${t("search")}...`}
               prefix={<SearchOutlined />}

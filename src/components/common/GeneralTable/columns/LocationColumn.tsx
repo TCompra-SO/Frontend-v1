@@ -15,10 +15,12 @@ export default function LocationColumn(hidden: boolean = false) {
     align: "center",
     sorter: (a, b) => a.location.localeCompare(b.location),
     showSorterTooltip: false,
-    width: "115px",
+    width: "130px",
     hidden,
     render: (_, { location }) => (
-      <div style={{ textAlign: "left" }}>{location}</div>
+      <div style={{ textAlign: "left" }} className="t-flex dato-table">
+        {location}
+      </div>
     ),
   };
   return col;

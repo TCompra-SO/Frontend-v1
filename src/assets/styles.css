@@ -437,7 +437,7 @@ body {
 }
 
 .forgot-password {
-  color: #510839;
+  color: #92acbf;
   text-decoration: none;
   display: inline-block;
   font-weight: 500;
@@ -565,6 +565,107 @@ body {
   font-weight: 500;
 }
 
+/* Tabla */
+.tx-thead {
+  color: rgb(59 76 86 / 80%);
+}
+.td-left {
+  border-bottom-left-radius: 25px;
+  border-top-left-radius: 25px;
+  background: #f3f7fa;
+}
+.td-back {
+  background: #f3f7fa;
+}
+.td-righ {
+  border-bottom-right-radius: 25px;
+  border-top-right-radius: 25px;
+  background: #f3f7fa;
+}
+.dato-table {
+  /* padding: 5px; */
+  align-items: center;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.c-ofertas {
+  /* padding: 5px 10px; */
+  align-items: center;
+  justify-content: center;
+}
+.img-prod-table {
+  height: 45px;
+  width: 45px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.datos-prod {
+  line-height: 1.2;
+}
+.info-req {
+  font-weight: 600;
+  /* width: 300px; */
+}
+.info-categoria {
+  font-weight: 600;
+  font-size: 15px;
+  color: rgb(59 76 86 / 80%);
+}
+.c-estados {
+  /* padding: 10px; */
+  align-items: center;
+  justify-content: center;
+  width: 95px;
+}
+.oferta-cant {
+  background: #ffdef2;
+  color: #bc1373;
+  padding: 2px 8px;
+  border-radius: 15px;
+  font-weight: 600;
+}
+.seleccionar-tb {
+  align-items: center;
+  gap: 5px;
+}
+.cont-estado {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 10px;
+  border-radius: 0.6rem;
+  line-height: 1;
+}
+.es-atendido {
+  background: #c9f2d6;
+  color: #01b43e;
+}
+.es-culminado {
+  background: #cfe8ff;
+  color: #007aff;
+}
+.es-cancelado {
+  background: #ffd2d2;
+  color: #d80000;
+}
+.es-disputa {
+  background: #cbf2f4;
+  color: #17a2b8;
+}
+.es-expirado {
+  background: #e6e6e6;
+  color: #808080;
+}
+.es-publicado {
+  /* background: rgb(250, 242, 207);
+  color: rgb(255, 201, 14); */
+  background: #ffdef2;
+  color: #bc1373;
+}
+.es-eliminado {
+  background: #000000;
+  color: #e7ddbe;
+}
 /********** Antd's select **************************/
 
 .form-control .ant-select-selector {
@@ -683,6 +784,11 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
   color: #ffffff;
 }
 
+/* Tamaño de fuente en tabla */
+.ant-table-wrapper .ant-table {
+  font-size: 16px;
+}
+
 /*****************************/
 
 /* Truncar texto */
@@ -707,19 +813,19 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
 /* Tablas */
 
 .card-white .ant-table-wrapper .ant-table-tbody > tr > td {
-  background: #f3f7fa; /* rowColor */
+  background: #f3f7fa;
   border-bottom: 5px solid white;
-  padding: 10px;
+  padding: 5px 10px;
 }
 
 .card-white td:first-child {
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
 }
 
 .card-white td:last-child {
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
 }
 
 /* Scrollbar */

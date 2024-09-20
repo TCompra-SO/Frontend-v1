@@ -174,6 +174,8 @@ const resources = {
       clickOnSearchIcon: "Please click on 🔍 to search",
       passwordsMusMatch:  "Passwords must match",
       noRecoveryCodeForUser: "User has no recovery code",
+      agreeToTermsAndConditions: "I agree to Terms and Conditions",
+      mustAgreeToTermsAndConditions: "Must agree to Terms and Conditions",
       // Other
       yes: "Yes",
       no: "No",
@@ -243,7 +245,8 @@ const resources = {
       sending: "Sending",
       validation: "Validation",
       end: "Finish",
-      validationCode: "Validation code"
+      validationCode: "Validation code",
+      pending: "Pending"
     },
   },
   es: {
@@ -418,7 +421,8 @@ const resources = {
       clickOnSearchIcon: "Haga click on 🔍 para buscar",
       passwordsMusMatch:  "Las contraseñas deben ser iguales",
       noRecoveryCodeForUser: "Este usuario no tiene código de recuperación",
-      
+      agreeToTermsAndConditions: "Acepto los Términos y Condiciones",
+      mustAgreeToTermsAndConditions: "Debe aceptar los Términos y Condiciones",
       // Other
       yes: "Sí",
       no: "No",
@@ -489,7 +493,8 @@ const resources = {
       sending: "Envío",
       validation: "Validación",
       end: "Fin",
-      validationCode: "Código de validación"
+      validationCode: "Código de validación",
+      pending: "Pendiente"
     },
   },
 };
