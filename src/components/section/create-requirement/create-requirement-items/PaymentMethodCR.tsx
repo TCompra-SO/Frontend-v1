@@ -3,6 +3,7 @@ import SelectContainer from "../../../containers/SelectContainer";
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { ListsContext } from "../../../../contexts/listsContext";
+import { getListForSelectIdValueMap } from "../../../../utilities/globalFunctions";
 
 export default function PaymentMethodCR() {
   const { t } = useTranslation();
@@ -21,10 +22,7 @@ export default function PaymentMethodCR() {
         <SelectContainer
           placeholder={t("select")}
           className="form-control"
-          options={Object.entries(paymentMethodList).map(([id, { value }]) => ({
-            label: value,
-            value: Number(id),
-          }))}
+          options={getListForSelectIdValueMap(paymentMethodList)}
         />
       </Form.Item>
     </>

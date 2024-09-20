@@ -3,6 +3,7 @@ import SelectContainer from "../../../containers/SelectContainer";
 import { Form } from "antd";
 import { useContext } from "react";
 import { ListsContext } from "../../../../contexts/listsContext";
+import { getListForSelectIdValueMap } from "../../../../utilities/globalFunctions";
 
 export default function CurrencyCR() {
   const { t } = useTranslation();
@@ -21,10 +22,7 @@ export default function CurrencyCR() {
         <SelectContainer
           placeholder={t("select")}
           className="form-control"
-          options={Object.entries(currencyList).map(([id, { value }]) => ({
-            label: value,
-            value: Number(id),
-          }))}
+          options={getListForSelectIdValueMap(currencyList)}
         />
       </Form.Item>
     </>

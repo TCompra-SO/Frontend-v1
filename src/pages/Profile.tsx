@@ -25,7 +25,11 @@ import {
 } from "../hooks/validators";
 import { DefaultOptionType } from "antd/es/select";
 import React from "react";
-import { checkImage, equalServices } from "../utilities/globalFunctions";
+import {
+  checkImage,
+  equalServices,
+  getListForSelectIdValueMap,
+} from "../utilities/globalFunctions";
 import InputNumberContainer from "../components/containers/InputNumberContainer";
 import { ListsContext } from "../contexts/listsContext";
 
@@ -408,12 +412,7 @@ export default function Profile(props: ProfileProps) {
                     <SelectContainer
                       placeholder={t("select")}
                       className="form-control"
-                      options={Object.entries(categoryList).map(
-                        ([id, { value }]) => ({
-                          label: value,
-                          value: Number(id),
-                        })
-                      )}
+                      options={getListForSelectIdValueMap(categoryList)}
                     />
                   </Form.Item>
                 </Col>
@@ -431,12 +430,7 @@ export default function Profile(props: ProfileProps) {
                     <SelectContainer
                       placeholder={t("select")}
                       className="form-control"
-                      options={Object.entries(categoryList).map(
-                        ([id, { value }]) => ({
-                          label: value,
-                          value: Number(id),
-                        })
-                      )}
+                      options={getListForSelectIdValueMap(categoryList)}
                     />
                   </Form.Item>
                 </Col>
@@ -454,12 +448,7 @@ export default function Profile(props: ProfileProps) {
                     <SelectContainer
                       placeholder={t("select")}
                       className="form-control"
-                      options={Object.entries(categoryList).map(
-                        ([id, { value }]) => ({
-                          label: value,
-                          value: Number(id),
-                        })
-                      )}
+                      options={getListForSelectIdValueMap(categoryList)}
                     />
                   </Form.Item>
                 </Col>
