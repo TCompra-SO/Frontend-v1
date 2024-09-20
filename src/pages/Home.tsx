@@ -78,7 +78,7 @@ export default function Home() {
         Login
       </ButtonContainer>
       {/* <ButtonContainer onClick={() => handleOpenModal(false)}>
-        Crear
+        Crear .
       </ButtonContainer> */}
     </>
   );
