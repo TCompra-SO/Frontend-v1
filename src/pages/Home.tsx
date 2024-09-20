@@ -2,18 +2,17 @@ import { lazy, useState } from "react";
 import ButtonContainer from "../components/containers/ButtonContainer";
 
 import NoContentModalContainer from "../components/containers/NoContentModalContainer";
-// import Profile from "./Profile.tsx";
+import ValidateCode from "../components/section/profile/ValidateCode.tsx";
 
 const Login = lazy(() => import("./Login.tsx"));
 const Profile = lazy(() => import("./Profile.tsx"));
-const CreateRequirement = lazy(
-  () => import("../components/section/create-requirement/CreateRequirement.tsx")
-);
 
 export default function Home() {
   const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
-  const [showLogin, setShowLogin] = useState(0);
-  const [email, setEmail] = useState("");
+  const [isOpenValCodeModal, setIsOpenValCodeModal] = useState(false);
+  const [showLogin, setShowLogin] = useState(true);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
+
   const [docType, setDocType] = useState("");
 
   function handleOpenLoginModal() {
@@ -24,15 +23,27 @@ export default function Home() {
     setIsOpenLoginModal(false);
   }
 
-  function handleOpenModal(login: number) {
+  function handleOpenValCodeModal(fromProfile: boolean = false) {
+    if (fromProfile) setIsForgotPassword(false);
+    setIsOpenValCodeModal(true);
+  }
+
+  function handleCloseValCodeModal() {
+    setIsOpenValCodeModal(false);
+  }
+
+  function handleOpenModal(login: boolean) {
     setShowLogin(login);
     handleOpenLoginModal();
   }
 
-  function handleRegisterSuccess(email: string, docType: string) {
-    setEmail(email);
+  function handleRegisterSuccess(docType: string) {
     setDocType(docType);
-    handleOpenModal(1);
+    handleOpenModal(false);
+  }
+
+  function changeIsFromForgotPassword(type: boolean) {
+    setIsForgotPassword(type);
   }
 
   return (
@@ -40,23 +51,35 @@ export default function Home() {
       <NoContentModalContainer
         open={isOpenLoginModal}
         onClose={handleCloseLoginModal}
-        width={showLogin ? 850 : 1300}
+        width={showLogin ? 800 : 1300}
         style={{ background: "transparent" }}
       >
-        {showLogin == 0 ? (
-          <Login onRegisterSuccess={handleRegisterSuccess} />
-        ) : showLogin == 1 ? (
-          <Profile email={email} docType={docType} />
+        {showLogin ? (
+          <Login
+            onRegisterSuccess={handleRegisterSuccess}
+            changeIsFromForgotPassword={changeIsFromForgotPassword}
+            openValidateCodeModal={handleOpenValCodeModal}
+            closeLoginModal={handleCloseLoginModal}
+          />
         ) : (
-          <CreateRequirement />
+          <Profile
+            docType={docType}
+            openValidateCodeModal={() => handleOpenValCodeModal(true)}
+            closeProfileModal={handleCloseLoginModal}
+          />
         )}
       </NoContentModalContainer>
-      <ButtonContainer onClick={() => handleOpenModal(0)}>
+      <ValidateCode
+        isOpen={isOpenValCodeModal}
+        onClose={handleCloseValCodeModal}
+        isForgotPassword={isForgotPassword}
+      />
+      <ButtonContainer onClick={() => handleOpenModal(true)}>
         Login
       </ButtonContainer>
-      <ButtonContainer onClick={() => handleOpenModal(2)}>
-        Crear
-      </ButtonContainer>
+      {/* <ButtonContainer onClick={() => handleOpenModal(false)}>
+        Crear .
+      </ButtonContainer> */}
     </>
   );
 }

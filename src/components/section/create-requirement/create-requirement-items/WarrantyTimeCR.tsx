@@ -3,7 +3,11 @@ import SelectContainer from "../../../containers/SelectContainer";
 import { TimeMeasurement } from "../../../../utilities/types";
 import { Form } from "antd";
 
-export default function WarrantyTimeCR() {
+interface WarrantyTimeCRProps {
+  required: boolean;
+}
+
+export default function WarrantyTimeCR(props: WarrantyTimeCRProps) {
   const { t } = useTranslation();
 
   return (
@@ -13,7 +17,7 @@ export default function WarrantyTimeCR() {
         label={t("duration")}
         name="duration"
         labelCol={{ span: 0 }}
-        rules={[{ required: true }]}
+        rules={[{ required: props.required }]}
       >
         <SelectContainer
           placeholder={t("select")}

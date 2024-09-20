@@ -1,8 +1,6 @@
 import { ColumnType } from "antd/es/table";
 import { RequirementTableItem } from "../../../../models/MainInterfaces";
-import ButtonContainer from "../../../containers/ButtonContainer";
 import { Action, TableTypes } from "../../../../utilities/types";
-import { lightColor, primaryColor } from "../../../../utilities/colors";
 import { useTranslation } from "react-i18next";
 
 export default function OffersColumn(
@@ -24,22 +22,15 @@ export default function OffersColumn(
     render: (_, record) => {
       if (type == TableTypes.REQUIREMENT)
         return (
-          <ButtonContainer
-            size="small"
-            type="default"
-            shape="round"
-            children={record.numberOffers}
-            onClick={() => onButtonClick(Action.SHOW_OFFERS, record)}
-            style={{
-              height: "32px",
-              textAlign: "center",
-              fontSize: "15px",
-              fontWeight: "500",
-              color: primaryColor,
-              background: lightColor,
-              border: "0",
-            }}
-          />
+          <div className="t-flex c-ofertas">
+            <div
+              className="oferta-cant"
+              style={{ cursor: "pointer" }}
+              onClick={() => onButtonClick(Action.SHOW_OFFERS, record)}
+            >
+              {record.numberOffers}
+            </div>
+          </div>
         );
       else return null;
     },

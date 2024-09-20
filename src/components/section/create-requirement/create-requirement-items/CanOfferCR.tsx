@@ -2,10 +2,16 @@ import { useTranslation } from "react-i18next";
 import SelectContainer from "../../../containers/SelectContainer";
 import { Form } from "antd";
 import { useContext } from "react";
-import { IdValueObj } from "../../../../models/Interfaces";
 import { ListsContext } from "../../../../contexts/listsContext";
+import { RequirementType } from "../../../../utilities/types";
+import { certifiedCompaniesOpt } from "../../../../utilities/globals";
 
-export default function CanOfferCR() {
+interface CanOfferCRProps {
+  type: RequirementType;
+  handleOptionChange: (value: any) => void;
+}
+
+export default function CanOfferCR(props: CanOfferCRProps) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { whoCanOfferList } = context;
@@ -22,18 +28,23 @@ export default function CanOfferCR() {
         <SelectContainer
           placeholder={t("select")}
           className="form-control"
+          onChange={props.handleOptionChange}
           style={{ width: "100%" }}
-          // options={[
-          //   { label: t("anyUser"), value: CanOfferType.ALL },
-          //   { label: t("premiumUsers"), value: CanOfferType.PREMIUM },
-          //   {
-          //     label: t("certifiedCompanies"),
-          //     value: CanOfferType.CERTIFIED_COMPANY,
-          //   },
-          // ]}
-          options={whoCanOfferList.map((item: IdValueObj) => {
-            return { label: item.value, value: item.id };
-          })}
+          options={
+            props.type == RequirementType.SALE
+              ? Object.entries(whoCanOfferList)
+                  .map(([id, { value }]) => ({
+                    label: value,
+                    value: Number(id),
+                  }))
+                  .filter((item) => {
+                    if (item.value != certifiedCompaniesOpt) return item;
+                  })
+              : Object.entries(whoCanOfferList).map(([id, { value }]) => ({
+                  label: value,
+                  value: Number(id),
+                }))
+          }
         />
       </Form.Item>
     </>

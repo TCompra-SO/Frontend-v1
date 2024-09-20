@@ -72,67 +72,23 @@ body {
 
 .btn-sm {
   padding: 0.25rem 0.5rem;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   line-height: 1.5;
-  border-radius: 0.2rem;
+  border-radius: 0.6rem;
 }
 
 .btn-default {
-  color: #fff !important;
-  background: #bc1373 !important;
+  color: #fff;
+  background: #bc1373;
 }
 
 .btn-default:hover {
-  background: #990057 !important;
+  background: #990057;
 }
 
 .btn-default.focus,
 .btn-default:focus {
-  background: #990057 !important;
-}
-
-.btn-white {
-  color: #000 !important;
-  background-color: #fff !important;
-}
-
-.btn-white:hover {
-  background: #e9e9e9 !important;
-}
-
-.btn-white.focus,
-.btn-white:focus {
-  background: #e9e9e9 !important;
-}
-
-.btn-transparent {
-  color: #fff !important;
-  background: transparent !important;
-}
-
-.btn-transparent:hover {
-  background: rgb(0 0 0 / 20%) !important;
-}
-
-.btn-transparent.focus,
-.btn-transparent:focus {
-  background: rgb(0 0 0 / 20%) !important;
-}
-
-.btn-border {
-  color: #510839 !important;
-  border: 2px solid #510839 !important;
-}
-
-.btn-border:hover {
-  color: #fff !important;
-  background: #510839 !important;
-}
-
-.btn-border.focus,
-.btn-border:focus {
-  color: #fff !important;
-  background: #510839 !important;
+  background: #990057;
 }
 
 .btn-grey {
@@ -141,6 +97,84 @@ body {
 }
 
 .btn-grey:hover {
+  color: #fff;
+  background: #bc1373;
+}
+
+.btn-grey.focus,
+.btn-grey:focus {
+  color: #fff;
+  background: #bc1373;
+}
+
+.btn-grey.active,
+.btn-grey:active {
+  color: #fff;
+  background: #bc1373;
+}
+
+.btn-white {
+  color: #000;
+  background-color: #fff;
+}
+
+.btn-white:hover {
+  background: #e9e9e9;
+}
+
+.btn-white.focus,
+.btn-white:focus {
+  background: #e9e9e9;
+}
+
+.btn-transparent {
+  color: #fff;
+  background: transparent;
+}
+
+.btn-transparent:hover {
+  background: rgb(0 0 0 / 20%);
+}
+
+.btn-transparent.focus,
+.btn-transparent:focus {
+  background: rgb(0 0 0 / 20%);
+}
+
+.btn-border {
+  color: #510839;
+  border: 2px solid #510839;
+}
+
+.btn-border:hover {
+  color: #fff;
+  background: #510839;
+}
+
+.btn-border.focus,
+.btn-border:focus {
+  color: #fff;
+  background: #510839;
+}
+
+.btn-border.active,
+.btn-border:active {
+  color: #fff;
+  background: #510839;
+}
+
+.btn-border-default {
+  color: #bc1373;
+  border: 2px solid #bc1373;
+}
+
+.btn-border-default:hover {
+  color: #fff;
+  background: #bc1373;
+}
+
+.btn-border-default.focus,
+.btn-border-default:focus {
   color: #fff;
   background: #bc1373;
 }
@@ -190,6 +224,10 @@ body {
 }
 .wd-10 {
   width: 10% !important;
+}
+
+.wd-33 {
+  width: 33.3% !important;
 }
 
 .col-menu {
@@ -350,7 +388,7 @@ body {
 }
 
 .sub-titulo {
-  font-size: 20px;
+  font-size: 26px;
   font-weight: 600;
 }
 
@@ -399,7 +437,7 @@ body {
 }
 
 .forgot-password {
-  color: #510839;
+  color: #92acbf;
   text-decoration: none;
   display: inline-block;
   font-weight: 500;
@@ -527,6 +565,107 @@ body {
   font-weight: 500;
 }
 
+/* Tabla */
+.tx-thead {
+  color: rgb(59 76 86 / 80%);
+}
+.td-left {
+  border-bottom-left-radius: 25px;
+  border-top-left-radius: 25px;
+  background: #f3f7fa;
+}
+.td-back {
+  background: #f3f7fa;
+}
+.td-righ {
+  border-bottom-right-radius: 25px;
+  border-top-right-radius: 25px;
+  background: #f3f7fa;
+}
+.dato-table {
+  /* padding: 5px; */
+  align-items: center;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.c-ofertas {
+  /* padding: 5px 10px; */
+  align-items: center;
+  justify-content: center;
+}
+.img-prod-table {
+  height: 40px;
+  width: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.datos-prod {
+  line-height: 1.2;
+}
+.info-req {
+  font-weight: 600;
+  /* width: 300px; */
+}
+.info-categoria {
+  font-weight: 600;
+  font-size: 15px;
+  color: rgb(59 76 86 / 80%);
+}
+.c-estados {
+  /* padding: 10px; */
+  align-items: center;
+  justify-content: center;
+  width: 95px;
+}
+.oferta-cant {
+  background: #ffdef2;
+  color: #bc1373;
+  padding: 2px 8px;
+  border-radius: 15px;
+  font-weight: 600;
+}
+.seleccionar-tb {
+  align-items: center;
+  gap: 5px;
+}
+.cont-estado {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 10px;
+  border-radius: 0.6rem;
+  line-height: 1;
+}
+.es-atendido {
+  background: #c9f2d6;
+  color: #01b43e;
+}
+.es-culminado {
+  background: #cfe8ff;
+  color: #007aff;
+}
+.es-cancelado {
+  background: #ffd2d2;
+  color: #d80000;
+}
+.es-disputa {
+  background: #cbf2f4;
+  color: #17a2b8;
+}
+.es-expirado {
+  background: #e6e6e6;
+  color: #808080;
+}
+.es-publicado {
+  /* background: rgb(250, 242, 207);
+  color: rgb(255, 201, 14); */
+  background: #ffdef2;
+  color: #bc1373;
+}
+.es-eliminado {
+  background: #000000;
+  color: #e7ddbe;
+}
 /********** Antd's select **************************/
 
 .form-control .ant-select-selector {
@@ -629,12 +768,28 @@ body {
   height: 70px !important;
 }
 
-/*****************************/
+/* No mostrar nada cuando Form.Item no tiene contenido */
+.ant-form-item .ant-form-item-control-input {
+  min-height: 0;
+}
 
 /* Muestra sólo el primer error de validación */
 form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
   display: none;
 }
+
+/* Cambiar hover de button */
+.ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+  background: #990057;
+  color: #ffffff;
+}
+
+/* Tamaño de fuente en tabla */
+.ant-table-wrapper .ant-table {
+  font-size: 16px;
+}
+
+/*****************************/
 
 /* Truncar texto */
 .text-truncate {
@@ -658,9 +813,9 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
 /* Tablas */
 
 .card-white .ant-table-wrapper .ant-table-tbody > tr > td {
-  background: #f3f7fa; /* rowColor */
+  background: #f3f7fa;
   border-bottom: 5px solid white;
-  padding: 10px;
+  padding: 5px 10px;
 }
 
 .card-white td:first-child {

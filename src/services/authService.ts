@@ -54,3 +54,21 @@ export function validateCodeService(): HttpService {
     type: ApiRoutes.auth.validateCode,
   };
 }
+
+export function sendCodeRecoveryService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+      ApiRoutes.auth.sendCodeRecovery
+    }`,
+    type: ApiRoutes.auth.sendCodeRecovery,
+  };
+}
+
+export function recoverPasswordService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+      ApiRoutes.auth.recoverPassword
+    }`,
+    type: ApiRoutes.auth.recoverPassword,
+  };
+}

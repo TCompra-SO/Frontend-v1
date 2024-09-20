@@ -17,8 +17,8 @@ export interface ProfileRequest {
   uid: string;
   phone: string;
   address: string;
-  country: string;
-  city: string;
+  countryID: string;
+  cityID: string;
   categories: number[];
   avatar?: string;
   planID: number;
@@ -36,6 +36,16 @@ export interface ValidateCodeRequest {
 export interface SendCodeRequest {
   email: string;
   type: "repassword" | "identity_verified";
+}
+
+export interface SendCodeRecoveryRequest {
+  email: string;
+}
+
+export interface RecoverPasswordRequest {
+  email: string;
+  password: string;
+  code: string;
 }
 
 export interface GetNameReniecRequest {

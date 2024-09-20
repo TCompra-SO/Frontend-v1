@@ -2,7 +2,6 @@ import { useTranslation } from "react-i18next";
 import SelectContainer from "../../../containers/SelectContainer";
 import { Form } from "antd";
 import { useContext } from "react";
-import { IdValueObj } from "../../../../models/Interfaces";
 import { ListsContext } from "../../../../contexts/listsContext";
 
 export default function DeliveryTimeCR() {
@@ -22,9 +21,10 @@ export default function DeliveryTimeCR() {
         <SelectContainer
           placeholder={t("select")}
           className="form-control"
-          options={deliveryTimeList.map((item: IdValueObj) => {
-            return { label: item.value, value: item.id };
-          })}
+          options={Object.entries(deliveryTimeList).map(([id, { value }]) => ({
+            label: value,
+            value: Number(id),
+          }))}
         />
       </Form.Item>
     </>

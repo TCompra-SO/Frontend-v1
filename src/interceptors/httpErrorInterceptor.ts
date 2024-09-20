@@ -2,7 +2,9 @@ import {
   loginService,
   profileCompanyService,
   profileUserService,
+  recoverPasswordService,
   registerService,
+  sendCodeRecoveryService,
   sendCodeService,
   validateCodeService,
 } from "../services/authService";
@@ -57,13 +59,26 @@ export default function httpErrorInterceptor(error: any, type: string): string {
     case sendCodeService().type:
       switch (code) {
         case 403:
-          erroMsg = "completeProfile";
+          erroMsg = "userAlreadyValidated";
+          break;
+        case 404:
+          erroMsg = "userNotFound";
           break;
         case 409:
-          erroMsg = "generateCodeAgain";
+          erroMsg = "generateCodeAgainInAFewSeconds";
           break;
         case 410:
-          erroMsg = "userAlreadyValidated";
+          erroMsg = "completeProfile";
+          break;
+      }
+      break;
+    case sendCodeRecoveryService().type:
+      switch (code) {
+        case 404:
+          erroMsg = "userNotFound";
+          break;
+        case 409:
+          erroMsg = "generateCodeAgainInAFewSeconds";
           break;
       }
       break;
@@ -82,11 +97,30 @@ export default function httpErrorInterceptor(error: any, type: string): string {
       break;
     case getNameReniecService("").type:
       switch (code) {
+        // case 400:
+        //   erroMsg = "noDNIorRUCprovided";
+        //   break;
         case 400:
-          erroMsg = "noDNIorRUCprovided";
-          break;
-        case 422:
           erroMsg = "invalidDocNumber";
+          break;
+        case 404:
+          erroMsg = "docNumberNotFound";
+          break;
+      }
+      break;
+    case recoverPasswordService().type:
+      switch (code) {
+        case 404:
+          erroMsg = "userNotFound";
+          break;
+        case 400:
+          erroMsg = "noRecoveryCodeForUser";
+          break;
+        case 410:
+          erroMsg = "expiredCode";
+          break;
+        case 401:
+          erroMsg = "incorrectCode";
           break;
       }
       break;

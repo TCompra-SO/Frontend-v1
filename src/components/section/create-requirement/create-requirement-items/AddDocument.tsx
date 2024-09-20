@@ -9,12 +9,12 @@ import showNotification from "../../../../utilities/notification/showNotificatio
 export default function AddDocument() {
   const { t } = useTranslation();
   const { notification } = App.useApp();
-  const fileInputRef = useRef<HTMLDivElement>(null);
+  const fileInputRefDoc = useRef<HTMLDivElement>(null);
 
   function handleClick() {
     // Trigger the file input click event
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
+    if (fileInputRefDoc.current) {
+      fileInputRefDoc.current.click();
     }
   }
 
@@ -48,7 +48,7 @@ export default function AddDocument() {
             style={{ display: "none" }}
             beforeUpload={checkImageBeforeUpload}
           >
-            <div style={{ display: "none" }} ref={fileInputRef} />
+            <div style={{ display: "none" }} ref={fileInputRefDoc} />
           </Upload>
         </Form.Item>
       </div>

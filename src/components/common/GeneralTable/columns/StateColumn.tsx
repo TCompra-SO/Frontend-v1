@@ -4,7 +4,6 @@ import {
   PurchaseOrder,
   RequirementTableItem,
 } from "../../../../models/MainInterfaces";
-import TagContainer from "../../../containers/TagContainer";
 import {
   OfferStateMeta,
   RequirementStateMeta,
@@ -22,39 +21,39 @@ export default function StateColumn(type: TableTypes, hidden: boolean = false) {
       align: "center",
       dataIndex: "state",
       showSorterTooltip: false,
-      width: "100px",
+      width: "113px",
       hidden,
       render: (_, record) => {
-        let background: string = "";
         let label: string = "";
-        let color: string = background;
+        let className: string = "";
+
         if (type == TableTypes.REQUIREMENT) {
           const state = (record as RequirementTableItem).state;
-          background = RequirementStateMeta[state].background;
           label = t(RequirementStateMeta[state].label);
-          color = RequirementStateMeta[state].color;
+          className = `cont-estado ${RequirementStateMeta[state].class}`;
         } else if (type == TableTypes.OFFER) {
           const state = (record as OfferListItem).state;
-          background = OfferStateMeta[state].background;
           label = t(OfferStateMeta[state].label);
-          color = OfferStateMeta[state].color;
+          className = `cont-estado ${OfferStateMeta[state].class}`;
         } else if (type == TableTypes.PURCHASE_ORDER) {
           const state = (record as PurchaseOrder).state;
-          background = OfferStateMeta[state].background;
           label = t(OfferStateMeta[state].label);
-          color = OfferStateMeta[state].color;
+          className = `cont-estado ${OfferStateMeta[state].class}`;
         }
         return (
-          <TagContainer
-            color={background}
-            text={label}
-            style={{
-              width: "77px",
-              textAlign: "center",
-              marginInlineEnd: "0",
-              color: color,
-            }}
-          />
+          <div className="t-flex c-estados">
+            <div className={className}>{label}</div>
+          </div>
+          // <TagContainer
+          //   color={background}
+          //   text={label}
+          //   style={{
+          //     width: "77px",
+          //     textAlign: "center",
+          //     marginInlineEnd: "0",
+          //     color: color,
+          //   }}
+          // />
         );
       },
     };

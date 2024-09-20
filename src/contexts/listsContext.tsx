@@ -1,7 +1,9 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import {
   CountryCities,
+  IdValueAliasMap,
   IdValueAliasObj,
+  IdValueMap,
   IdValueObj,
 } from "../models/Interfaces";
 import useApi from "../hooks/useApi";
@@ -20,24 +22,24 @@ interface ListsContextType {
   tlds: string[];
   countryList: IdValueObj[];
   countryData: CountryCities;
-  categoryList: IdValueObj[];
-  currencyList: IdValueAliasObj[];
-  paymentMethodList: IdValueObj[];
-  deliveryTimeList: IdValueObj[];
-  whoCanOfferList: IdValueObj[];
-  planTypeList: IdValueObj[];
+  categoryList: IdValueMap;
+  currencyList: IdValueAliasMap;
+  paymentMethodList: IdValueMap;
+  deliveryTimeList: IdValueMap;
+  whoCanOfferList: IdValueMap;
+  planTypeList: IdValueMap;
 }
 
 export const ListsContext = createContext<ListsContextType>({
   countryList: [],
   countryData: {},
   tlds: [],
-  categoryList: [],
-  currencyList: [],
-  paymentMethodList: [],
-  deliveryTimeList: [],
-  whoCanOfferList: [],
-  planTypeList: [],
+  categoryList: {},
+  currencyList: {},
+  paymentMethodList: {},
+  deliveryTimeList: {},
+  whoCanOfferList: {},
+  planTypeList: {},
 });
 
 interface ListsProviderProps {
@@ -60,21 +62,21 @@ export function ListsProvider({ children }: ListsProviderProps) {
       method: "get",
     });
 
-  const [categoryList, setCategoryList] = useState<IdValueObj[]>([]);
+  const [categoryList, setCategoryList] = useState<IdValueMap>({});
   const { responseData: categoryResponseData, fetchData: categoryFetchData } =
     useApi<any>({
       service: categoriesService(),
       method: "get",
     });
 
-  const [currencyList, setCurrencyList] = useState<IdValueAliasObj[]>([]);
+  const [currencyList, setCurrencyList] = useState<IdValueAliasMap>({});
   const { responseData: currencyResponseData, fetchData: currencyFetchData } =
     useApi<any>({
       service: currencyService(),
       method: "get",
     });
 
-  const [paymentMethodList, setPaymentMethodList] = useState<IdValueObj[]>([]);
+  const [paymentMethodList, setPaymentMethodList] = useState<IdValueMap>({});
   const {
     responseData: paymentMethodResponseData,
     fetchData: paymentMethodFetchData,
@@ -83,7 +85,7 @@ export function ListsProvider({ children }: ListsProviderProps) {
     method: "get",
   });
 
-  const [deliveryTimeList, setDeliveryTimeList] = useState<IdValueObj[]>([]);
+  const [deliveryTimeList, setDeliveryTimeList] = useState<IdValueMap>({});
   const {
     responseData: deliveryTimeResponseData,
     fetchData: deliveryTimeFetchData,
@@ -92,7 +94,7 @@ export function ListsProvider({ children }: ListsProviderProps) {
     method: "get",
   });
 
-  const [whoCanOfferList, setWhoCanOfferList] = useState<IdValueObj[]>([]);
+  const [whoCanOfferList, setWhoCanOfferList] = useState<IdValueMap>({});
   const {
     responseData: whoCanOfferResponseData,
     fetchData: whoCanOfferFetchData,
@@ -101,7 +103,7 @@ export function ListsProvider({ children }: ListsProviderProps) {
     method: "get",
   });
 
-  const [planTypeList, setPlanTypeList] = useState<IdValueObj[]>([]);
+  const [planTypeList, setPlanTypeList] = useState<IdValueMap>({});
   const { responseData: planTypeResponseData, fetchData: planTypeFetchData } =
     useApi<any>({
       service: planTypeService(),
@@ -143,7 +145,15 @@ export function ListsProvider({ children }: ListsProviderProps) {
 
   useEffect(() => {
     if (categoryResponseData) {
-      setCategoryList(categoryResponseData);
+      setCategoryList(
+        categoryResponseData.reduce(
+          (acc: IdValueMap, { id, value }: IdValueObj) => {
+            acc[id] = { value };
+            return acc;
+          },
+          {}
+        )
+      );
     }
   }, [categoryResponseData]);
 
@@ -155,7 +165,15 @@ export function ListsProvider({ children }: ListsProviderProps) {
             if (it.alias != "COP") return true;
           }
         );
-        setCurrencyList(temp);
+        setCurrencyList(
+          temp.reduce(
+            (acc: IdValueAliasMap, { id, value, alias }: IdValueAliasObj) => {
+              acc[id] = { value, alias };
+              return acc;
+            },
+            {}
+          )
+        );
       }
     }
   }, [currencyResponseData]);
@@ -163,28 +181,60 @@ export function ListsProvider({ children }: ListsProviderProps) {
   useEffect(() => {
     if (paymentMethodResponseData) {
       if (paymentMethodResponseData.methods)
-        setPaymentMethodList(paymentMethodResponseData.methods);
+        setPaymentMethodList(
+          paymentMethodResponseData.methods.reduce(
+            (acc: IdValueMap, { id, value }: IdValueObj) => {
+              acc[id] = { value };
+              return acc;
+            },
+            {}
+          )
+        );
     }
   }, [paymentMethodResponseData]);
 
   useEffect(() => {
     if (deliveryTimeResponseData) {
       if (deliveryTimeResponseData.times)
-        setDeliveryTimeList(deliveryTimeResponseData.times);
+        setDeliveryTimeList(
+          deliveryTimeResponseData.times.reduce(
+            (acc: IdValueMap, { id, value }: IdValueObj) => {
+              acc[id] = { value };
+              return acc;
+            },
+            {}
+          )
+        );
     }
   }, [deliveryTimeResponseData]);
 
   useEffect(() => {
     if (whoCanOfferResponseData) {
       if (whoCanOfferResponseData.bidders)
-        setWhoCanOfferList(whoCanOfferResponseData.bidders);
+        setWhoCanOfferList(
+          whoCanOfferResponseData.bidders.reduce(
+            (acc: IdValueMap, { id, value }: IdValueObj) => {
+              acc[id] = { value };
+              return acc;
+            },
+            {}
+          )
+        );
     }
   }, [whoCanOfferResponseData]);
 
   useEffect(() => {
     if (planTypeResponseData) {
       if (planTypeResponseData.plans)
-        setPlanTypeList(planTypeResponseData.plans);
+        setPlanTypeList(
+          planTypeResponseData.plans.reduce(
+            (acc: IdValueMap, { id, value }: IdValueObj) => {
+              acc[id] = { value };
+              return acc;
+            },
+            {}
+          )
+        );
     }
   }, [planTypeResponseData]);
 

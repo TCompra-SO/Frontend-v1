@@ -1,3 +1,4 @@
+import React, { ReactNode } from "react";
 import {
   Action,
   CountriesRequestType,
@@ -17,22 +18,27 @@ import {
 
 /******** Modals *******/
 
-export interface ModalCancelPurchaseOrder {
+export interface CommonModalType {
+  title?: React.ReactNode;
+  type: ModalTypes;
+}
+
+export interface ModalCancelPurchaseOrder extends CommonModalType {
   type: ModalTypes.CANCEL_PURCHASE_ORDER;
   data: { offerId: string; requirementId: string };
 }
 
-export interface ModalDetailedRequirement {
+export interface ModalDetailedRequirement extends CommonModalType {
   type: ModalTypes.DETAILED_REQUIREMENT;
   data: { offerList: OfferListItem[]; requirement: RequirementTableItem };
 }
 
-export interface ModalOfferSummary {
+export interface ModalOfferSummary extends CommonModalType {
   type: ModalTypes.OFFER_SUMMARY;
   data: { offer: OfferListItem };
 }
 
-export interface ModalRateCanceled {
+export interface ModalRateCanceled extends CommonModalType {
   type: ModalTypes.RATE_CANCELED;
   data: {
     user: User;
@@ -42,7 +48,7 @@ export interface ModalRateCanceled {
   };
 }
 
-export interface ModalRateUser {
+export interface ModalRateUser extends CommonModalType {
   type: ModalTypes.RATE_USER;
   data: {
     user: User;
@@ -52,39 +58,40 @@ export interface ModalRateUser {
   };
 }
 
-export interface ModalRepublishRequirement {
+export interface ModalRepublishRequirement extends CommonModalType {
   type: ModalTypes.REPUBLISH_REQUIREMENT;
   data: { requirementId: string };
 }
 
-export interface ModalSelectOffer {
+export interface ModalSelectOffer extends CommonModalType {
   type: ModalTypes.SELECT_OFFER;
   data: { offer: OfferListItem; requirement: RequirementTableItem };
 }
 
-export interface ModalValidateCode {
+export interface ModalValidateCode extends CommonModalType {
   type: ModalTypes.VALIDATE_CODE;
   data: Record<string, never>;
 }
 
-export interface ModalConfirmation {
+export interface ModalConfirmation extends CommonModalType {
   type: ModalTypes.CONFIRM;
   data: {
     text: string;
-    icon?: React.ReactNode;
+    icon?: ReactNode;
     onAnswer: (ok: boolean) => void;
   };
 }
 
-export interface ModalInputEmail {
+export interface ModalInputEmail extends CommonModalType {
   type: ModalTypes.INPUT_EMAIL;
   data: {
-    text?: string;
+    text?: ReactNode;
     onAnswer: (email: string) => void;
+    buttonText?: ReactNode;
   };
 }
 
-export interface ModalNone {
+export interface ModalNone extends CommonModalType {
   type: ModalTypes.NONE;
   data: Record<string, never>;
 }
@@ -153,12 +160,25 @@ export interface CountryObj {
 }
 
 export interface IdValueObj {
-  id: string | number;
+  id: number;
   value: string;
 }
 
 export interface IdValueAliasObj extends IdValueObj {
   alias: string;
+}
+
+export interface IdValueMap {
+  [id: number]: {
+    value: string;
+  };
+}
+
+export interface IdValueAliasMap {
+  [id: number]: {
+    value: string;
+    alias: string;
+  };
 }
 
 export interface CountryData {

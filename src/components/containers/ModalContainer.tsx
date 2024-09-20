@@ -1,4 +1,3 @@
-import { Modal } from "antd";
 import { ModalTypes, ModalWidth } from "../../utilities/types";
 import RequirementDetail from "../section/requirements/requirementDetail/RequirementDetail";
 import RequirementModalOfferSelected from "../section/requirements/RequirementModalOfferSelected";
@@ -11,6 +10,7 @@ import CancelPurchaseOrderModal from "../common/CancelPurchaseOrderModal";
 import RatingModal from "../common/RatingModal";
 import ConfirmationModal from "../common/ConfirmationModal";
 import InputEmailModal from "../common/InputEmailModal";
+import NoContentModalContainer from "./NoContentModalContainer";
 
 interface ModalContainerProps extends ModalProps {
   content: ModalContent;
@@ -101,47 +101,21 @@ export default function ModalContainer(props: ModalContainerProps) {
             text={props.content.data.text}
             onClose={props.onClose}
             onAnswer={props.content.data.onAnswer}
+            title={props.content.title}
           />
         );
       }
     }
   }
 
-  if (props.showFooter)
-    return (
-      <Modal
-        {...props}
-        width={ModalWidth[props.content.type]}
-        destroyOnClose
-        closable={false}
-        centered
-        open={props.isOpen}
-        maskClosable={
-          props.maskClosable !== undefined ? props.maskClosable : true
-        }
-        onCancel={props.onClose}
-        className="modal-card"
-      >
-        {getContent()}
-      </Modal>
-    );
-  else
-    return (
-      <Modal
-        {...props}
-        width={ModalWidth[props.content.type]}
-        destroyOnClose
-        centered
-        closable={false}
-        open={props.isOpen}
-        footer={null}
-        maskClosable={
-          props.maskClosable !== undefined ? props.maskClosable : true
-        }
-        onCancel={props.onClose}
-        className="modal-card"
-      >
-        {getContent()}
-      </Modal>
-    );
+  return (
+    <NoContentModalContainer
+      {...props}
+      width={ModalWidth[props.content.type]}
+      open={props.isOpen}
+      showFooter={props.showFooter}
+    >
+      {getContent()}
+    </NoContentModalContainer>
+  );
 }
