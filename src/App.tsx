@@ -19,13 +19,17 @@ import { pageRoutes } from "./utilities/routes.ts";
 import Sidebar from "./components/section/sidebar/Sidebar.tsx";
 import MainHeader from "./components/section/header/header/MainHeader.tsx";
 import { ListsProvider } from "./contexts/listsContext.tsx";
-import CreateRequirementFloatButton from "./components/section/create-requirement/CreateRequirementFloatButton.tsx";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
-
 const Search = lazy(() => import("./pages/Search.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
 const Offers = lazy(() => import("./pages/Offers.tsx"));
+const CreateRequirementFloatButton = lazy(
+  () =>
+    import(
+      "./components/section/create-requirement/CreateRequirementFloatButton.tsx"
+    )
+);
 const currentLanguage = i18n.language;
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => (

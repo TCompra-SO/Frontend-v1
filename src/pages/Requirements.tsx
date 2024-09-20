@@ -1,5 +1,3 @@
-import { Col, Row } from "antd";
-import InputContainer from "../components/containers/InputContainer";
 import ModalContainer from "../components/containers/ModalContainer";
 import {
   Action,
@@ -11,14 +9,12 @@ import {
   UserTable,
   TableTypes,
 } from "../utilities/types";
-import { SearchOutlined } from "@ant-design/icons";
 import { OfferListItem, RequirementTableItem } from "../models/MainInterfaces";
 import { useState } from "react";
 import { ModalContent, TableTypeRequirement } from "../models/Interfaces";
 import RateModalTitleContainer from "../components/containers/RateModalTitleContainer";
 import { useTranslation } from "react-i18next";
-import GeneralTable from "../components/common/GeneralTable/GeneralTable";
-import ContentHeader from "../components/common/ContentHeader";
+import TablePageContent from "../components/section/table-page/TablePageContent";
 
 const requirements: RequirementTableItem[] = [
   {
@@ -913,35 +909,13 @@ export default function Requirements() {
           paddingBottom: "0",
         }}
       />
-      <ContentHeader title={t("myRequirements")} />
-      <div className="card-white">
-        <Row
-          style={{
-            width: "100%",
-            alignItems: "center",
-            marginBottom: "20px",
-          }}
-          gutter={[10, 10]}
-        >
-          <Col xs={24} sm={24} md={16} lg={16} xl={16}>
-            <div className="sub-titulo">
-              <i className="fa-light fa-person-dolly sub-icon"></i>{" "}
-              {`${t("listOf")} ${t("goods")}`}
-            </div>
-            {/* r3v */}
-          </Col>
-          <Col xs={24} sm={24} md={8} lg={8} xl={8}>
-            <InputContainer
-              placeholder={`${t("search")}...`}
-              prefix={<SearchOutlined />}
-              className="form-control"
-            />
-          </Col>
-        </Row>
-        <div className="table-responsive">
-          <GeneralTable content={tableContent} />
-        </div>
-      </div>
+      <TablePageContent
+        title={t("myRequirements")}
+        titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
+        subtitle={`${t("listOf")} ${t("goods")}`}
+        subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
+        table={tableContent}
+      />
     </>
   );
 }

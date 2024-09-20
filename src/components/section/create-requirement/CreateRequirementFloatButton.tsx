@@ -23,6 +23,8 @@ export default function CreateRequirementFloatButton() {
         open={isOpenModal}
         onClose={() => setIsOpenModal(false)}
         width={850}
+        closable={true}
+        maskClosable={false}
         // style={{ background: "transparent" }}
       >
         <CreateRequirement />

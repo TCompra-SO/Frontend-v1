@@ -2,9 +2,14 @@ import { useState } from "react";
 import ButtonContainer from "../../containers/ButtonContainer";
 import ImageContainer from "../../containers/ImageContainer";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { pageRoutes } from "../../../utilities/routes";
 
 export default function Sidebar() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [menuReq] = useState("menuReq");
+  const [menuOff] = useState("menuOff");
   const [menuVisibility, setMenuVisibility] = useState<{
     [key: string]: boolean;
   }>({});
@@ -17,6 +22,11 @@ export default function Sidebar() {
     }));
   }
 
+  function redirectTo(route: string) {
+    console.log(route);
+    navigate(route);
+  }
+
   return (
     <div className="col-menu t-flex">
       <div>
@@ -24,6 +34,7 @@ export default function Sidebar() {
           src="/src/assets/images/logo-white.svg"
           style={{ width: "100%" }}
           preview={false}
+          onClick={() => redirectTo(`/`)}
         ></ImageContainer>
       </div>
       <div className="menu-tc-1 t-flex scroll-y">
@@ -47,15 +58,16 @@ export default function Sidebar() {
           }
           common
           className={buttonClass}
-          onClick={() => toggleMenu("menu1")}
+          onClick={() => toggleMenu(menuReq)}
         />
         <div
           className="sub-menu t-flex"
-          style={{ display: menuVisibility["menu1"] ? "block" : "none" }}
+          style={{ display: menuVisibility[menuReq] ? "block" : "none" }}
         >
           <ButtonContainer
             className="btn btn-transparent wd-100 text-left"
             common
+            onClick={() => redirectTo(`/${pageRoutes.myRequirements}`)}
           >
             <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
             {t("goods")}
@@ -85,7 +97,35 @@ export default function Sidebar() {
           }
           common
           className={buttonClass}
+          onClick={() => toggleMenu(menuOff)}
         />
+        <div
+          className="sub-menu t-flex"
+          style={{ display: menuVisibility[menuOff] ? "block" : "none" }}
+        >
+          <ButtonContainer
+            className="btn btn-transparent wd-100 text-left"
+            common
+            onClick={() => redirectTo(`/${pageRoutes.myOffers}`)}
+          >
+            <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
+            {t("goods")}
+          </ButtonContainer>
+          <ButtonContainer
+            className="btn btn-transparent wd-100 text-left"
+            common
+          >
+            <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
+            {t("services")}
+          </ButtonContainer>
+          <ButtonContainer
+            className="btn btn-transparent wd-100 text-left"
+            common
+          >
+            <i className="fa-regular fa-basket-shopping text-center i-btn"></i>{" "}
+            {t("sales")}
+          </ButtonContainer>
+        </div>
         <ButtonContainer
           children={
             <>

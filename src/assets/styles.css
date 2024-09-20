@@ -388,7 +388,7 @@ body {
 }
 
 .sub-titulo {
-  font-size: 20px;
+  font-size: 26px;
   font-weight: 600;
 }
 
@@ -594,8 +594,8 @@ body {
   justify-content: center;
 }
 .img-prod-table {
-  height: 45px;
-  width: 45px;
+  height: 40px;
+  width: 40px;
   object-fit: cover;
   border-radius: 50%;
   margin-right: 10px;
@@ -819,13 +819,13 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
 }
 
 .card-white td:first-child {
-  border-top-left-radius: 25px;
-  border-bottom-left-radius: 25px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
 }
 
 .card-white td:last-child {
-  border-top-right-radius: 25px;
-  border-bottom-right-radius: 25px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 
 /* Scrollbar */

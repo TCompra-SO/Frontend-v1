@@ -43,7 +43,7 @@ export default function ActionColumn(
             }),
           }}
         >
-          <div className="t-flex c-ofertas">
+          <div className="t-flex c-ofertas" style={{ padding: "7px 0" }}>
             <ButtonContainer
               className="btn btn-border-default btn-sm t-flex seleccionar-tb"
               children={

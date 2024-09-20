@@ -1,11 +1,73 @@
 /* Estilos para pantallas pequeñas (móviles) */
 @media (max-width: 576px) {
+  .card-red,
+  .card-gray-m,
+  .card-green {
+    font-size: 17px;
+  }
+  .card-red,
+  .card-gray-m,
+  .card-green {
+    width: 100% !important;
+  }
+  .estado-oferta {
+    flex-wrap: wrap;
+  }
+  .alert-boton {
+    padding: 0.6rem 1.3rem !important;
+  }
 }
 
 /* Estilos para pantallas medianas (tablets) */
 @media (max-width: 768px) {
   .req-btn-info {
     display: none;
+  }
+
+  .requerimiento-o {
+    flex-direction: column;
+    align-items: center;
+  }
+  .portada-detalle {
+    width: 100% !important;
+  }
+  .titulo-req {
+    font-size: 1.1rem !important;
+  }
+  .info-req {
+    -webkit-line-clamp: 2 !important;
+  }
+  .precio-req {
+    font-size: 26px !important;
+  }
+  .badge-grey-border {
+    font-size: 14px !important;
+    padding: 7px !important;
+    border-radius: 0.8rem !important;
+  }
+  .badge-default-border {
+    font-size: 14px !important;
+    padding: 7px !important;
+    border-radius: 0.8rem !important;
+  }
+  .body-ofertas {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .multimedia-oferta {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: end;
+    gap: 8px !important;
+  }
+  .portada-oferta {
+    width: 100% !important;
+  }
+
+  .card-red,
+  .card-gray-m,
+  .card-green {
+    font-size: 21px;
   }
 }
 
