@@ -21,7 +21,10 @@ export default function PriceColumn(hidden: boolean = false) {
     hidden,
     render: (_, record) => (
       <div style={{ textAlign: "left" }} className="t-flex dato-table">
-        {Coins[currencyList[record.coin]?.alias]} {record.price}
+        {currencyList && currencyList[record.coin]
+          ? Coins[currencyList[record.coin].alias]
+          : null}{" "}
+        {record.price}
       </div>
     ),
     sorter: (a, b) => a.price - b.price,

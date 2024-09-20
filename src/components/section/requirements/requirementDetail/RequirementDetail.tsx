@@ -47,30 +47,34 @@ export default function RequirementDetail(props: RequirementDetailProps) {
     <requirementDetailContext.Provider
       value={{ filters: offerFilters, updateFilters }}
     >
-      <Divider style={{ margin: "10px 0" }} />
-      <RequirementInfo requirement={props.requirement}></RequirementInfo>
-      <div
-        style={{
-          textAlign: "center",
-          margin: "15px 0",
-          padding: "10px",
-          boxShadow: "0 2px 18px rgba(0, 0, 0, 0.1)",
-          borderRadius: "10px",
-        }}
-      >
-        <b>{t("searchFilters")}: </b> {t("searchFiltersDesc")}
+      <div className="modal-card">
+        <div className="detalle-oferta">
+          <Divider style={{ margin: "10px 0" }} />
+          <RequirementInfo requirement={props.requirement}></RequirementInfo>
+          <div
+            style={{
+              textAlign: "center",
+              margin: "15px 0",
+              padding: "10px",
+              boxShadow: "0 2px 18px rgba(0, 0, 0, 0.1)",
+              borderRadius: "10px",
+            }}
+          >
+            <b>{t("searchFilters")}: </b> {t("searchFiltersDesc")}
+          </div>
+          <RequirementOfferFilters
+            onFilterChange={HandleonFilterChange}
+          ></RequirementOfferFilters>
+          <Divider style={{ margin: "15px 0" }} />
+          <Title style={{ textAlign: "center", marginTop: "0" }} level={4}>
+            {t("receivedOffers")}
+          </Title>
+          <RequirementOfferList
+            offers={props.offerList}
+            requirement={props.requirement}
+          />
+        </div>
       </div>
-      <RequirementOfferFilters
-        onFilterChange={HandleonFilterChange}
-      ></RequirementOfferFilters>
-      <Divider style={{ margin: "15px 0" }} />
-      <Title style={{ textAlign: "center", marginTop: "0" }} level={4}>
-        {t("receivedOffers")}
-      </Title>
-      <RequirementOfferList
-        offers={props.offerList}
-        requirement={props.requirement}
-      />
     </requirementDetailContext.Provider>
   );
 }

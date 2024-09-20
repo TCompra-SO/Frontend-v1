@@ -34,7 +34,9 @@ export default function NameColumn(
               className="text-truncate info-categoria"
               style={{ textAlign: "left" }}
             >
-              {categoryList[(record as RequirementTableItem).category]?.value}
+              {categoryList
+                ? categoryList[(record as RequirementTableItem).category]?.value
+                : null}
             </div>
           )}
         </div>

@@ -14,13 +14,15 @@ export default function LocationColumn(hidden: boolean = false) {
   const context = useContext(ListsContext);
   const { countryData } = context;
   const [cities] = useState(
-    countryData[defaultCountry]?.cities.reduce(
-      (acc: IdValueMap, { id, value }: IdValueObj) => {
-        acc[id] = { value };
-        return acc;
-      },
-      {}
-    )
+    countryData && countryData[defaultCountry]
+      ? countryData[defaultCountry]?.cities.reduce(
+          (acc: IdValueMap, { id, value }: IdValueObj) => {
+            acc[id] = { value };
+            return acc;
+          },
+          {}
+        )
+      : {}
   ); /* r3v */
 
   const col: ColumnType<RequirementTableItem | OfferListItem> = {
@@ -35,7 +37,7 @@ export default function LocationColumn(hidden: boolean = false) {
     hidden,
     render: (_, { location }) => (
       <div style={{ textAlign: "left" }} className="t-flex dato-table">
-        {cities[location]?.value}
+        {cities ? cities[location]?.value : null}
       </div>
     ),
   };
