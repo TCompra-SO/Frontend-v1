@@ -160,12 +160,25 @@ export interface CountryObj {
 }
 
 export interface IdValueObj {
-  id: string | number;
+  id: number;
   value: string;
 }
 
 export interface IdValueAliasObj extends IdValueObj {
   alias: string;
+}
+
+export interface IdValueMap {
+  [id: number]: {
+    value: string;
+  };
+}
+
+export interface IdValueAliasMap {
+  [id: number]: {
+    value: string;
+    alias: string;
+  };
 }
 
 export interface CountryData {

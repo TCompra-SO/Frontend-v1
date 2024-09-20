@@ -288,3 +288,9 @@ export enum Usage {
   NEW = 0,
   USED = 1,
 }
+
+export const Coins: { [key: string]: string } = {
+  PEN: "s/.",
+  USD: "$",
+  COP: "$",
+};

@@ -408,9 +408,12 @@ export default function Profile(props: ProfileProps) {
                     <SelectContainer
                       placeholder={t("select")}
                       className="form-control"
-                      options={categoryList.map((cat: IdValueObj) => {
-                        return { id: cat.id, label: cat.value, value: cat.id };
-                      })}
+                      options={Object.entries(categoryList).map(
+                        ([id, { value }]) => ({
+                          label: value,
+                          value: Number(id),
+                        })
+                      )}
                     />
                   </Form.Item>
                 </Col>
@@ -428,9 +431,12 @@ export default function Profile(props: ProfileProps) {
                     <SelectContainer
                       placeholder={t("select")}
                       className="form-control"
-                      options={categoryList.map((cat: IdValueObj) => {
-                        return { id: cat.id, label: cat.value, value: cat.id };
-                      })}
+                      options={Object.entries(categoryList).map(
+                        ([id, { value }]) => ({
+                          label: value,
+                          value: Number(id),
+                        })
+                      )}
                     />
                   </Form.Item>
                 </Col>
@@ -448,9 +454,12 @@ export default function Profile(props: ProfileProps) {
                     <SelectContainer
                       placeholder={t("select")}
                       className="form-control"
-                      options={categoryList.map((cat: IdValueObj) => {
-                        return { id: cat.id, label: cat.value, value: cat.id };
-                      })}
+                      options={Object.entries(categoryList).map(
+                        ([id, { value }]) => ({
+                          label: value,
+                          value: Number(id),
+                        })
+                      )}
                     />
                   </Form.Item>
                 </Col>

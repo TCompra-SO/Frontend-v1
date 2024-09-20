@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import SelectContainer from "../../../containers/SelectContainer";
 import { useContext } from "react";
-import { IdValueObj } from "../../../../models/Interfaces";
+
 import { Form } from "antd";
 import { ListsContext } from "../../../../contexts/listsContext";
 
@@ -22,9 +22,10 @@ export default function CategoryCR() {
         <SelectContainer
           placeholder={t("select")}
           className="form-control"
-          options={categoryList.map((cat: IdValueObj) => {
-            return { id: cat.id, label: cat.value, value: cat.id };
-          })}
+          options={Object.entries(categoryList).map(([id, { value }]) => ({
+            label: value,
+            value: Number(id),
+          }))}
         />
       </Form.Item>
     </>
