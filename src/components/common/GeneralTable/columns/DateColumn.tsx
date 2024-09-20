@@ -14,7 +14,7 @@ export default function DateColumn(type: TableTypes, hidden: boolean = false) {
   let dataIndex = "date";
   switch (type) {
     case TableTypes.REQUIREMENT:
-      dataIndex = "date";
+      dataIndex = "publishDate";
       break;
     case TableTypes.OFFER:
       dataIndex = "date";
@@ -39,7 +39,7 @@ export default function DateColumn(type: TableTypes, hidden: boolean = false) {
         let value: Date;
         switch (type) {
           case TableTypes.REQUIREMENT:
-            value = (record as RequirementTableItem).date;
+            value = (record as RequirementTableItem).publishDate;
             break;
           case TableTypes.OFFER:
             value = (record as OfferListItem).publishDate;

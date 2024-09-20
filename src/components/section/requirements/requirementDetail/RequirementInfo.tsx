@@ -25,7 +25,11 @@ export default function RequirementInfo(props: RequirementInfoProps) {
     <Row gutter={[10, 10]}>
       <Col xs={24} sm={24} md={6} lg={6} xl={6}>
         <ImageContainer
-          src={props.requirement.image ?? "https://placehold.co/300x300"}
+          src={
+            props.requirement.image && props.requirement.image.length > 0
+              ? props.requirement.image[1]
+              : "https://placehold.co/300x300"
+          }
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
       </Col>

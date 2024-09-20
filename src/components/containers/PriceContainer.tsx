@@ -2,7 +2,7 @@ import { primaryColor } from "../../utilities/colors";
 
 interface PriceContainerProps {
   price: number;
-  coin: string;
+  coin: number;
 }
 
 export default function PriceContainer(props: PriceContainerProps) {

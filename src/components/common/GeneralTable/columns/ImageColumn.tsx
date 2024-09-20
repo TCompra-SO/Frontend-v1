@@ -10,7 +10,11 @@ export default function ImageColumn(hidden: boolean = false) {
     render: (_, record) => (
       <AvatarContainer
         className="img-prod-table"
-        src={record.image ?? "/src/assets/images/img-prod.svg"}
+        src={
+          record.image && record.image.length > 0
+            ? record.image[1]
+            : "/src/assets/images/img-prod.svg"
+        }
       ></AvatarContainer>
     ),
   };

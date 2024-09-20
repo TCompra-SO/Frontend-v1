@@ -49,10 +49,10 @@ export const Lengths = {
   },
   title: {
     min: 5,
-    max: 255,
+    max: 180,
   },
   descriptionCR: {
     min: 5,
-    max: 150,
+    max: 240,
   },
 };

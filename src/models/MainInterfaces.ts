@@ -3,6 +3,8 @@ import {
   PurchaseOrderState,
   RequirementState,
   RequirementType,
+  TimeMeasurement,
+  Usage,
   UserTable,
 } from "../utilities/types";
 
@@ -10,32 +12,38 @@ export interface RequirementTableItem {
   key: string;
   title: string;
   description: string;
-  category: string;
-  location: string;
-  date: Date;
-  coin: string;
+  category: number;
+  location: number;
+  publishDate: Date;
+  coin: number;
   price: number;
   numberOffers: number;
   state: RequirementState;
   type: RequirementType;
-  image?: string;
+  image?: string[];
+  document?: string[];
   user: User;
   subUser?: User;
+  warranty?: number;
+  warrantyTime?: TimeMeasurement;
+  usage?: Usage;
 }
 
 export interface OfferListItem {
   key: string;
   title: string;
   requirementTitle: string;
+  requirementId: string;
   description: string;
-  coin: string;
+  coin: number;
   price: number;
   warranty: string;
+  warrantyTime: TimeMeasurement;
   deliveryTime: string;
   user: User;
-  location: string;
-  image?: string;
-  document?: string;
+  location: number;
+  image?: string[];
+  document?: string[];
   subUser?: User;
   selectionDate?: Date;
   publishDate: Date;
@@ -57,14 +65,12 @@ export interface User {
   uid: string;
   name: string;
   email: string;
-  password: string;
-  profileType?: string;
-  userType?: string;
+  userType: number;
   document: string;
-  tenure?: string;
+  tenure?: number;
   userTable: UserTable;
   customerScore: number;
   sellerScore: number;
   address: string;
-  phone?: string;
+  phone: string;
 }
