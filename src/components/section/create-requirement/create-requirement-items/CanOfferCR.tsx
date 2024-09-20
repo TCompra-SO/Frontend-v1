@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { ListsContext } from "../../../../contexts/listsContext";
 import { RequirementType } from "../../../../utilities/types";
 import { certifiedCompaniesOpt } from "../../../../utilities/globals";
+import { getListForSelectIdValueMap } from "../../../../utilities/globalFunctions";
 
 interface CanOfferCRProps {
   type: RequirementType;
@@ -32,18 +33,10 @@ export default function CanOfferCR(props: CanOfferCRProps) {
           style={{ width: "100%" }}
           options={
             props.type == RequirementType.SALE
-              ? Object.entries(whoCanOfferList)
-                  .map(([id, { value }]) => ({
-                    label: value,
-                    value: Number(id),
-                  }))
-                  .filter((item) => {
-                    if (item.value != certifiedCompaniesOpt) return item;
-                  })
-              : Object.entries(whoCanOfferList).map(([id, { value }]) => ({
-                  label: value,
-                  value: Number(id),
-                }))
+              ? getListForSelectIdValueMap(whoCanOfferList).filter((item) => {
+                  if (item.value != certifiedCompaniesOpt) return item;
+                })
+              : getListForSelectIdValueMap(whoCanOfferList)
           }
         />
       </Form.Item>

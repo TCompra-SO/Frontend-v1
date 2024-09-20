@@ -4,6 +4,7 @@ import { useContext } from "react";
 
 import { Form } from "antd";
 import { ListsContext } from "../../../../contexts/listsContext";
+import { getListForSelectIdValueMap } from "../../../../utilities/globalFunctions";
 
 export default function CategoryCR() {
   const { t } = useTranslation();
@@ -22,10 +23,7 @@ export default function CategoryCR() {
         <SelectContainer
           placeholder={t("select")}
           className="form-control"
-          options={Object.entries(categoryList).map(([id, { value }]) => ({
-            label: value,
-            value: Number(id),
-          }))}
+          options={getListForSelectIdValueMap(categoryList)}
         />
       </Form.Item>
     </>

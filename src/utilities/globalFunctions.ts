@@ -1,5 +1,5 @@
 import moment from "moment";
-import { HttpService } from "../models/Interfaces";
+import { HttpService, IdValueMap } from "../models/Interfaces";
 import { maxDocSizeMb, maxImageSizeMb } from "./globals";
 import { RequirementType, UserClass } from "./types";
 
@@ -43,4 +43,11 @@ export function equalServices(
 // Verifica si fecha es menor a hoy
 export function isDateEarlierThanToday(current: any) {
   return current && current < moment().startOf("day");
+}
+
+export function getListForSelectIdValueMap(data: IdValueMap) {
+  return Object.entries(data).map(([id, { value }]) => ({
+    label: value,
+    value: Number(id),
+  }));
 }

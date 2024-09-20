@@ -35,7 +35,7 @@ export default function LocationColumn(hidden: boolean = false) {
     hidden,
     render: (_, { location }) => (
       <div style={{ textAlign: "left" }} className="t-flex dato-table">
-        {cities[location].value}
+        {cities[location]?.value}
       </div>
     ),
   };
