@@ -29,6 +29,8 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 2,
     publishDate: new Date(),
+    expirationDate: new Date(),
+    deliveryTime: 1,
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam lobortis convallis metus a faucibus. Phasellus tristique nec lorem a vulputate. Morbi varius volutpat orci, in viverra risus venenatis sit amet. Duis convallis nisi nec ligula luctus, in elementum orci ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec quam ante, aliquam rhoncus sollicitudin a, lacinia vitae odio. Aenean quis facilisis augue. Donec iaculis aliquam odio, nec fermentum lectus eleifend ac. Sed fermentum nisl eu aliquet pulvinar. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar elit ac volutpat elementum. Donec interdum id turpis ac ultrices. Vivamus et nunc iaculis, suscipit libero nec, lobortis ex. Vestibulum vitae gravida tortor, eleifend placerat mi. Integer mauris nunc, elementum et dui non, posuere malesuada erat. Aliquam semper aliquet interdum.",
     image: [
@@ -73,7 +75,9 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 4,
     publishDate: new Date(),
+    expirationDate: new Date(),
     description: "Desription",
+    deliveryTime: 2,
     user: {
       uid: "user1",
       name: "Soluciones Online  S. A. C.",
@@ -100,7 +104,9 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 6,
     publishDate: new Date(),
+    expirationDate: new Date(),
     description: "Desription",
+    deliveryTime: 3,
     user: {
       uid: "user1",
       name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
@@ -126,7 +132,9 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 10,
     publishDate: new Date(),
+    expirationDate: new Date(),
     description: "Desription",
+    deliveryTime: 4,
     user: {
       uid: "user1",
       name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
@@ -152,7 +160,9 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 7,
     publishDate: new Date(),
+    expirationDate: new Date(),
     description: "Desription",
+    deliveryTime: 5,
     user: {
       uid: "user2",
       name: "Jane Smith",
@@ -178,7 +188,9 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 5,
     publishDate: new Date(),
+    expirationDate: new Date(),
     description: "Desription",
+    deliveryTime: 6,
     user: {
       uid: "user2",
       name: "Jane Smith",
@@ -204,6 +216,8 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 11,
     publishDate: new Date(),
+    expirationDate: new Date(),
+    deliveryTime: 6,
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam lobortis convallis metus a faucibus. Phasellus tristique nec lorem a vulputate. Morbi varius volutpat orci, in viverra risus venenatis sit amet. Duis convallis nisi nec ligula luctus, in elementum orci ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec quam ante, aliquam rhoncus sollicitudin a, lacinia vitae odio. Aenean quis facilisis augue. Donec iaculis aliquam odio, nec fermentum lectus eleifend ac. Sed fermentum nisl eu aliquet pulvinar. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar elit ac volutpat elementum. Donec interdum id turpis ac ultrices. Vivamus et nunc iaculis, suscipit libero nec, lobortis ex. Vestibulum vitae gravida tortor, eleifend placerat mi. Integer mauris nunc, elementum et dui non, posuere malesuada erat. Aliquam semper aliquet interdum.",
     image: [
@@ -247,7 +261,9 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 12,
     publishDate: new Date(),
+    expirationDate: new Date(),
     description: "Desription",
+    deliveryTime: 6,
     user: {
       uid: "user1",
       name: "Soluciones Online  S. A. C.",
@@ -274,7 +290,9 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 2,
     publishDate: new Date(),
+    expirationDate: new Date(),
     description: "Desription",
+    deliveryTime: 5,
     user: {
       uid: "user1",
       name: "Soluciones Online  S. A. C.",
@@ -300,7 +318,9 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 13,
     publishDate: new Date(),
+    expirationDate: new Date(),
     description: "Desription",
+    deliveryTime: 4,
     user: {
       uid: "user1",
       name: "Soluciones Online  S. A. C.",
@@ -326,7 +346,9 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 7,
     publishDate: new Date(),
+    expirationDate: new Date(),
     description: "Desription",
+    deliveryTime: 3,
     user: {
       uid: "user1",
       name: "Soluciones Online  S. A. C.",
@@ -352,7 +374,9 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 8,
     publishDate: new Date(),
+    expirationDate: new Date(),
     description: "Desription",
+    deliveryTime: 2,
     user: {
       uid: "user1",
       name: "Soluciones Online  S. A. C.",
@@ -378,6 +402,8 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 2,
     publishDate: new Date(),
+    expirationDate: new Date(),
+    deliveryTime: 1,
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam lobortis convallis metus a faucibus. Phasellus tristique nec lorem a vulputate. Morbi varius volutpat orci, in viverra risus venenatis sit amet. Duis convallis nisi nec ligula luctus, in elementum orci ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec quam ante, aliquam rhoncus sollicitudin a, lacinia vitae odio. Aenean quis facilisis augue. Donec iaculis aliquam odio, nec fermentum lectus eleifend ac. Sed fermentum nisl eu aliquet pulvinar. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar elit ac volutpat elementum. Donec interdum id turpis ac ultrices. Vivamus et nunc iaculis, suscipit libero nec, lobortis ex. Vestibulum vitae gravida tortor, eleifend placerat mi. Integer mauris nunc, elementum et dui non, posuere malesuada erat. Aliquam semper aliquet interdum.",
     image: [
@@ -421,7 +447,9 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 12,
     publishDate: new Date(),
+    expirationDate: new Date(),
     description: "Desription",
+    deliveryTime: 2,
     user: {
       uid: "user1",
       name: "Soluciones Online  S. A. C.",
@@ -448,7 +476,9 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 8,
     publishDate: new Date(),
+    expirationDate: new Date(),
     description: "Desription",
+    deliveryTime: 3,
     user: {
       uid: "user1",
       name: "Soluciones Online  S. A. C.",
@@ -474,6 +504,8 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 9,
     publishDate: new Date(),
+    expirationDate: new Date(),
+    deliveryTime: 6,
     description: "Desription",
     user: {
       uid: "user1",
@@ -500,6 +532,8 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 10,
     publishDate: new Date(),
+    expirationDate: new Date(),
+    deliveryTime: 6,
     description: "Desription",
     user: {
       uid: "user1",
@@ -526,7 +560,9 @@ const requirements: RequirementTableItem[] = [
     type: RequirementType.GOOD,
     location: 1,
     publishDate: new Date(),
+    expirationDate: new Date(),
     description: "Desription",
+    deliveryTime: 1,
     user: {
       uid: "user1",
       name: "Soluciones Online  S. A. C.",
@@ -892,7 +928,7 @@ export default function Requirements() {
           data: { offerList, requirement: requirement },
         });
         setIsOpenModal(true);
-        setModalTitle(requirement.title);
+        setModalTitle(null);
         break;
       }
       case Action.SHOW_SUMMARY: {

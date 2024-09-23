@@ -182,7 +182,8 @@ const resources = {
       select: "Select",
       reason: "Reason",
       rate: "Rate",
-      paragraphSymbol: "More",
+      paragraphSymbolMore: "Show more",
+      paragraphSymbolLess: "Show less",
       finish: "Finalize",
       chat: "Chat",
       logout: "Log out",
@@ -246,7 +247,8 @@ const resources = {
       validation: "Validation",
       end: "Finish",
       validationCode: "Validation code",
-      pending: "Pending"
+      pending: "Pending",
+      expires: "Expires",
     },
   },
   es: {
@@ -429,7 +431,8 @@ const resources = {
       select: "Seleccione",
       reason: "Motivo",
       rate: "Calificar",
-      paragraphSymbol: "Ver más",
+      paragraphSymbolMore: "Ver más",
+      paragraphSymbolLess: "Ver menos",
       finish: "Culminar",
       chat: "Chat",
       logout: "Salir",
@@ -494,7 +497,8 @@ const resources = {
       validation: "Validación",
       end: "Fin",
       validationCode: "Código de validación",
-      pending: "Pendiente"
+      pending: "Pendiente",
+      expires: "Expira",
     },
   },
 };

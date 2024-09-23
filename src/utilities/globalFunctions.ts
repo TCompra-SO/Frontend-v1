@@ -45,9 +45,27 @@ export function isDateEarlierThanToday(current: any) {
   return current && current < moment().startOf("day");
 }
 
+// Transforma objeto de datos de lista en lista para select de Antd
 export function getListForSelectIdValueMap(data: IdValueMap) {
   return Object.entries(data).map(([id, { value }]) => ({
     label: value,
     value: Number(id),
   }));
+}
+
+// Retorna la llave del nombre del tipo de requerimiento
+export function getLabelFromRequirementType(
+  type: RequirementType,
+  plural: boolean = true
+) {
+  switch (type) {
+    case RequirementType.GOOD:
+      return plural ? "goods" : "good";
+    case RequirementType.SERVICE:
+      return plural ? "services" : "service";
+    case RequirementType.SALE:
+      return plural ? "sale" : "sales";
+    case RequirementType.JOB:
+      return plural ? "job" : "jobs";
+  }
 }

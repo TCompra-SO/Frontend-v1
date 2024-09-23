@@ -49,7 +49,6 @@ export default function RequirementDetail(props: RequirementDetailProps) {
     >
       <div className="modal-card">
         <div className="detalle-oferta">
-          <Divider style={{ margin: "10px 0" }} />
           <RequirementInfo requirement={props.requirement}></RequirementInfo>
           <div
             style={{

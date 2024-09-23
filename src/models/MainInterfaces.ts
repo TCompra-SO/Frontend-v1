@@ -15,6 +15,7 @@ export interface RequirementTableItem {
   category: number;
   location: number;
   publishDate: Date;
+  expirationDate: Date;
   coin: number;
   price: number;
   numberOffers: number;
@@ -27,6 +28,7 @@ export interface RequirementTableItem {
   warranty?: number;
   warrantyTime?: TimeMeasurement;
   usage?: Usage;
+  deliveryTime: number;
 }
 
 export interface OfferListItem {

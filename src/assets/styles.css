@@ -603,10 +603,7 @@ body {
 .datos-prod {
   line-height: 1.2;
 }
-.info-req {
-  font-weight: 600;
-  /* width: 300px; */
-}
+
 .info-categoria {
   font-weight: 600;
   font-size: 15px;
@@ -688,6 +685,10 @@ body {
   font-size: 1.5rem;
   text-align: justify;
   line-height: 1.08;
+  -webkit-line-clamp: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .tags-req {
   gap: 8px;
@@ -743,6 +744,13 @@ body {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.info-req-no-clamp {
+  color: #3b4c56;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: justify;
 }
 .precio-req {
   color: #bc1373;
@@ -1209,6 +1217,14 @@ body {
 }
 
 /* Modales */
+.ant-modal {
+  line-height: inherit !important;
+}
+
+.ant-modal .ant-modal-body {
+  line-height: inherit !important;
+}
+
 .ant-modal .ant-modal-content {
   background: transparent;
   padding: 0;
@@ -1291,6 +1307,11 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
 /* Tamaño de fuente en tabla */
 .ant-table-wrapper .ant-table {
   font-size: 16px;
+}
+
+/* No margin bottom al usar Typography  */
+.ant-typography {
+  margin-bottom: 0 !important;
 }
 
 /*****************************/

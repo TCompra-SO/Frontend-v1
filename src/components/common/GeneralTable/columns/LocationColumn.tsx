@@ -4,7 +4,7 @@ import {
   RequirementTableItem,
 } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ListsContext } from "../../../../contexts/listsContext";
 import { defaultCountry } from "../../../../utilities/globals";
 import { IdValueMap, IdValueObj } from "../../../../models/Interfaces";
@@ -13,17 +13,20 @@ export default function LocationColumn(hidden: boolean = false) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { countryData } = context;
-  const [cities] = useState(
-    countryData && countryData[defaultCountry]
-      ? countryData[defaultCountry]?.cities.reduce(
-          (acc: IdValueMap, { id, value }: IdValueObj) => {
-            acc[id] = { value };
-            return acc;
-          },
-          {}
-        )
-      : {}
-  ); /* r3v */
+  const [cities, setCities] = useState<IdValueMap>({});
+
+  useEffect(() => {
+    if (countryData && countryData[defaultCountry]) {
+      const loadedCities = countryData[defaultCountry].cities.reduce(
+        (acc: IdValueMap, { id, value }: IdValueObj) => {
+          acc[id] = { value };
+          return acc;
+        },
+        {}
+      );
+      setCities(loadedCities);
+    }
+  }, [countryData]);
 
   const col: ColumnType<RequirementTableItem | OfferListItem> = {
     title: t("locationColumn"),
@@ -37,7 +40,7 @@ export default function LocationColumn(hidden: boolean = false) {
     hidden,
     render: (_, { location }) => (
       <div style={{ textAlign: "left" }} className="t-flex dato-table">
-        {cities ? cities[location]?.value : null}
+        {cities[location]?.value ?? null}
       </div>
     ),
   };

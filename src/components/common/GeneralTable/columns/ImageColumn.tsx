@@ -1,8 +1,9 @@
 import { ColumnType } from "antd/es/table";
 import AvatarContainer from "../../../containers/AvatarContainer";
+import { RequirementTableItem } from "../../../../models/MainInterfaces";
 
 export default function ImageColumn(hidden: boolean = false) {
-  const col: ColumnType<any> = {
+  const col: ColumnType<RequirementTableItem> = {
     dataIndex: "image",
     align: "center",
     hidden,
@@ -12,7 +13,7 @@ export default function ImageColumn(hidden: boolean = false) {
         className="img-prod-table"
         src={
           record.image && record.image.length > 0
-            ? record.image[1]
+            ? record.image[0]
             : "/src/assets/images/img-prod.svg"
         }
       ></AvatarContainer>
