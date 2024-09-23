@@ -39,9 +39,9 @@ export interface OfferListItem {
   description: string;
   coin: number;
   price: number;
-  warranty: string;
+  warranty: number;
   warrantyTime: TimeMeasurement;
-  deliveryTime: string;
+  deliveryTime: number;
   user: User;
   location: number;
   image?: string[];
@@ -75,4 +75,5 @@ export interface User {
   sellerScore: number;
   address: string;
   phone: string;
+  image?: string;
 }

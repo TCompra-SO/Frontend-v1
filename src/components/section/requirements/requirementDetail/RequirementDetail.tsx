@@ -1,8 +1,7 @@
-import { Divider } from "antd";
 import RequirementInfo from "./RequirementInfo";
 import RequirementOfferFilters from "./RequirementOfferFilters";
 import RequirementOfferList from "./RequirementOfferList";
-import Title from "antd/es/typography/Title";
+
 import {
   OfferListItem,
   RequirementTableItem,
@@ -64,10 +63,7 @@ export default function RequirementDetail(props: RequirementDetailProps) {
           <RequirementOfferFilters
             onFilterChange={HandleonFilterChange}
           ></RequirementOfferFilters>
-          <Divider style={{ margin: "15px 0" }} />
-          <Title style={{ textAlign: "center", marginTop: "0" }} level={4}>
-            {t("receivedOffers")}
-          </Title>
+
           <RequirementOfferList
             offers={props.offerList}
             requirement={props.requirement}

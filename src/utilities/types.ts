@@ -290,7 +290,7 @@ export enum Usage {
 }
 
 export const Coins: { [key: string]: string } = {
-  PEN: "s/.",
+  PEN: "S/.",
   USD: "$",
   COP: "$",
 };

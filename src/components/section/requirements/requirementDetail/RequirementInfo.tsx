@@ -3,7 +3,10 @@ import { Tooltip } from "antd";
 import { Coins, RequirementType } from "../../../../utilities/types";
 import { RequirementTableItem } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
-import { getLabelFromRequirementType } from "../../../../utilities/globalFunctions";
+import {
+  getLabelFromRequirementType,
+  getScore,
+} from "../../../../utilities/globalFunctions";
 import { ListsContext } from "../../../../contexts/listsContext";
 import { useContext, useState } from "react";
 import dayjs from "dayjs";
@@ -50,9 +53,11 @@ export default function RequirementInfo(props: RequirementInfoProps) {
           <div className="puntuacion">
             <i className="fa-solid fa-star p-start"></i>
             <div className="valor-start">
-              {props.requirement.type == RequirementType.SALE
-                ? props.requirement.user.sellerScore
-                : props.requirement.user.customerScore}
+              {getScore(
+                props.requirement.type == RequirementType.SALE
+                  ? props.requirement.user.sellerScore
+                  : props.requirement.user.customerScore
+              )}
             </div>
             <b className="p-cantidad">(41.5k)</b>
           </div>
@@ -74,7 +79,6 @@ export default function RequirementInfo(props: RequirementInfoProps) {
           {props.requirement.description}
         </ParagraphContainer>
 
-        {/* <div className="info-req">{props.requirement.description}</div> */}
         <div className="t-flex tags-req t-wrap">
           <b className="precio-req">
             {currencyList && currencyList[props.requirement.coin]

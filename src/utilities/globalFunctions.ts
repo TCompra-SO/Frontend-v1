@@ -69,3 +69,8 @@ export function getLabelFromRequirementType(
       return plural ? "job" : "jobs";
   }
 }
+
+// Retorna el puntaje
+export function getScore(score: number) {
+  return score.toFixed(0);
+}

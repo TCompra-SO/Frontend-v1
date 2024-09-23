@@ -16,11 +16,7 @@ export default function RequirementOfferSummary(
       <Divider style={{ margin: "15px 0" }} />
       <RequirementOfferSummaryUser offer={props.offer} />
       <RequirementOfferSummaryUserData offer={props.offer} />
-      <RequirementOfferListItemHeader
-        offer={props.offer}
-        showOfferState={false}
-        showUserData={false}
-      />
+      <RequirementOfferListItemHeader offer={props.offer} />
     </>
   );
 }

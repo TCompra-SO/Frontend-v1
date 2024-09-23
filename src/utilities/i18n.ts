@@ -249,6 +249,9 @@ const resources = {
       validationCode: "Validation code",
       pending: "Pending",
       expires: "Expires",
+      delivery: "Delivery",
+      filter: "Filter",
+      igv: "I.G.V."
     },
   },
   es: {
@@ -499,6 +502,9 @@ const resources = {
       validationCode: "Código de validación",
       pending: "Pendiente",
       expires: "Expira",
+      delivery: "Entrega",
+      filter: "Filtro",
+      igv: "I.G.V."
     },
   },
 };
