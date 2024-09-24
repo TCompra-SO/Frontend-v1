@@ -2,6 +2,7 @@ import {
   allSelect,
   commonModalWidth,
   mediumModalWidth,
+  mediumPlusModalWidth,
   smallModalWidth,
 } from "./globals";
 
@@ -88,7 +89,7 @@ export const ModalWidth: {
   [ModalTypes.REPUBLISH_REQUIREMENT]: smallModalWidth,
   [ModalTypes.RATE_CANCELED]: mediumModalWidth,
   [ModalTypes.RATE_USER]: mediumModalWidth,
-  [ModalTypes.CONFIRM]: mediumModalWidth,
+  [ModalTypes.CONFIRM]: mediumPlusModalWidth,
   [ModalTypes.INPUT_EMAIL]: smallModalWidth,
 };
 

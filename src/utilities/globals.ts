@@ -10,6 +10,7 @@ export const maxDocsQuantity: number = 1;
 export const maxDocSizeMb: number = 2;
 
 export const commonModalWidth: number = 900;
+export const mediumPlusModalWidth: number = 630;
 export const mediumModalWidth: number = 450;
 export const smallModalWidth: number = 350;
 export const columnWidth: number = 100;

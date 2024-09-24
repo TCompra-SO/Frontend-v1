@@ -995,7 +995,7 @@ export default function Requirements() {
             text: t("deleteRequirementConfirmation"),
           },
         });
-        setModalTitle("");
+        setModalTitle(null);
         setIsOpenModal(true);
         break;
       }
