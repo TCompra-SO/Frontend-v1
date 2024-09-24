@@ -944,9 +944,10 @@ export default function Requirements() {
         break;
       }
       case Action.SHOW_SUMMARY: {
+        console.log(requirement);
         setDataModal({
           type: ModalTypes.OFFER_SUMMARY,
-          data: { offer: offerList[0] },
+          data: { offer: offerList[0], requirement: requirement },
         });
         setIsOpenModal(true);
         setModalTitle(
@@ -964,7 +965,7 @@ export default function Requirements() {
           data: { requirementId: requirement.key },
         });
         setIsOpenModal(true);
-        setModalTitle(t("republish"));
+        setModalTitle(null);
         break;
       }
       case Action.FINISH: {

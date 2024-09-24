@@ -1,11 +1,15 @@
 import { Divider } from "antd";
-import { OfferListItem } from "../../../../models/MainInterfaces";
+import {
+  OfferListItem,
+  RequirementTableItem,
+} from "../../../../models/MainInterfaces";
 import RequirementOfferSummaryUserData from "./RequirementOfferSummaryUserData";
 import RequirementOfferSummaryUser from "./RequirementOfferSummaryUser";
 import RequirementOfferListItemHeader from "../requirementDetail/RequirementOfferListItemHeader";
 
 interface RequirementOfferSummaryProps {
   offer: OfferListItem;
+  requirement: RequirementTableItem;
 }
 
 export default function RequirementOfferSummary(
@@ -16,7 +20,10 @@ export default function RequirementOfferSummary(
       <Divider style={{ margin: "15px 0" }} />
       <RequirementOfferSummaryUser offer={props.offer} />
       <RequirementOfferSummaryUserData offer={props.offer} />
-      <RequirementOfferListItemHeader offer={props.offer} />
+      <RequirementOfferListItemHeader
+        offer={props.offer}
+        requirement={props.requirement}
+      />
     </>
   );
 }

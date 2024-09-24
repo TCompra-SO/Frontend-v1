@@ -35,7 +35,7 @@ export interface ModalDetailedRequirement extends CommonModalType {
 
 export interface ModalOfferSummary extends CommonModalType {
   type: ModalTypes.OFFER_SUMMARY;
-  data: { offer: OfferListItem };
+  data: { offer: OfferListItem; requirement: RequirementTableItem };
 }
 
 export interface ModalRateCanceled extends CommonModalType {

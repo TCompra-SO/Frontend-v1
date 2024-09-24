@@ -4,6 +4,7 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
+import { isDateEarlierThanToday } from "../../../utilities/globalFunctions";
 
 interface RequirementModalRepublishProps {
   requirementId: string;
@@ -27,22 +28,30 @@ export default function RequirementModalRepublish(
 
   return (
     <>
-      <Divider style={{ margin: "10px 0" }} />
-      <Flex vertical align="center" gap="small">
-        <b>{t("selectDate")}:</b>
-        <DatePickerContainer
-          value={newDate}
-          onChange={handleDateChange}
-          style={{ width: "100%" }}
-        />
-        <ButtonContainer
-          children={t("acceptButton")}
-          block
-          type="primary"
-          style={{ marginTop: "9px" }}
-          onClick={republishRequirement}
-        />
-      </Flex>
+      <div className="modal-card">
+        <div className="t-flex t-wrap mr-sub">
+          <div className="sub-titulo">
+            <i className="fa-regular fa-calendar sub-icon"></i> {t("republish")}
+          </div>
+        </div>
+        <div className="t-flex req-col gap-15">
+          <div className="t-flex" style={{ flexDirection: "column" }}>
+            <div className="titulo-input">{t("selectDate")}</div>
+            <DatePickerContainer
+              value={newDate}
+              onChange={handleDateChange}
+              style={{ width: "100%" }}
+              className="form-control"
+              disabledDate={isDateEarlierThanToday}
+            />
+          </div>
+          <ButtonContainer
+            children={t("saveButton")}
+            onClick={republishRequirement}
+            className="btn btn-default wd-100"
+          />
+        </div>
+      </div>
     </>
   );
 }

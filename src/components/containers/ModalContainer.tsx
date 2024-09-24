@@ -52,7 +52,12 @@ export default function ModalContainer(props: ModalContainerProps) {
         );
       }
       case ModalTypes.OFFER_SUMMARY: {
-        return <RequirementOfferSummary offer={props.content.data.offer} />;
+        return (
+          <RequirementOfferSummary
+            offer={props.content.data.offer}
+            requirement={props.content.data.requirement}
+          />
+        );
       }
       case ModalTypes.REPUBLISH_REQUIREMENT: {
         return (
