@@ -82,7 +82,7 @@ export default function RequirementOfferListItemHeader({
         break;
       case Action.SELECT_OFFER:
         setIsOpenModal(true);
-        setModalTitle("Aviso");
+
         setDataModal({
           type: ModalTypes.SELECT_OFFER,
           data: {
@@ -116,7 +116,6 @@ export default function RequirementOfferListItemHeader({
         content={dataModal}
         isOpen={isOpenModal}
         onClose={handleOnCloseModal}
-        title={modalTitle}
       />
       <div className="t-flex head-oferta">
         <div className="t-flex oferta-titulo">

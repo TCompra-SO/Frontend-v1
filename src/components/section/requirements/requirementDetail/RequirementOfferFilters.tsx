@@ -6,7 +6,7 @@ import {
   commonModalWidth,
   defaultCountry,
 } from "../../../../utilities/globals";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   OfferFilterTypes,
   PriceFilter,
@@ -26,7 +26,7 @@ export default function RequirementOfferFilters(
   props: RequirementOfferFiltersProps
 ) {
   const { t } = useTranslation();
-  const { updateFilters } = useContext(requirementDetailContext);
+  const { updateFilters, filterNames } = useContext(requirementDetailContext);
   const [form] = Form.useForm<OfferFilters>();
   const context = useContext(ListsContext);
   const { countryData, deliveryTimeList } = context;
@@ -41,17 +41,31 @@ export default function RequirementOfferFilters(
     ? defaultCountry
     : Object.keys(countryData)[0];
 
+  // useEffect(() => {
+  //   updateFilters(initialValues, {
+  //     location: t("all"),
+  //     deliveryTime: t("all"),
+  //   });
+  // }, []);
+
   function onChangeFilters(changedValues: any, allValues: OfferFilters) {
-    console.log(allValues);
-    updateFilters(allValues);
+    let location: string = filterNames.location;
+    let deliveryTime: string = filterNames.deliveryTime;
+
     if (changedValues.price) {
       console.log("change price");
       props.onFilterChange(OfferFilterTypes.PRICE, changedValues.price);
     } else if (changedValues.location) {
       console.log("change location");
+      location =
+        countryData[showCountry].cities.find(
+          (city) => city.id == changedValues.location
+        )?.value ?? t("all");
       props.onFilterChange(OfferFilterTypes.LOCATION, changedValues.location);
     } else if (changedValues.deliveryTime) {
       console.log("change deliveryTime");
+      deliveryTime =
+        deliveryTimeList[changedValues.deliveryTime]?.value ?? t("all");
       props.onFilterChange(
         OfferFilterTypes.DELIVERY,
         changedValues.deliveryTime
@@ -59,6 +73,11 @@ export default function RequirementOfferFilters(
     } else if (changedValues.warranty) {
       props.onFilterChange(OfferFilterTypes.WARRANTY, changedValues.warranty);
     }
+
+    updateFilters(allValues, {
+      location,
+      deliveryTime,
+    });
   }
 
   return (
@@ -76,10 +95,11 @@ export default function RequirementOfferFilters(
             <Row
               gutter={[10, 10]}
               style={{
-                maxWidth: commonModalWidth * 0.9,
+                maxWidth: commonModalWidth * 0.85,
+                width: "85vw",
               }}
             >
-              <Col xs={12} sm={12} md={12} lg={12} xl={6}>
+              <Col xs={12} sm={12} md={6} lg={6} xl={6}>
                 <Flex vertical align="center">
                   <b>{t("priceColumn")}</b>
                   <Form.Item
@@ -99,7 +119,7 @@ export default function RequirementOfferFilters(
                 </Flex>
               </Col>
 
-              <Col xs={12} sm={12} md={12} lg={12} xl={6}>
+              <Col xs={12} sm={12} md={6} lg={6} xl={6}>
                 <Flex vertical align="center">
                   <b>{t("locationColumn")}</b>
                   <Form.Item
@@ -113,7 +133,7 @@ export default function RequirementOfferFilters(
                       // ]}
                       // style={{ marginTop: "5px" }}
 
-                      options={
+                      options={[{ label: t("all"), value: allSelect }].concat(
                         Object.keys(countryData).length > 0
                           ? countryData[showCountry].cities.map(
                               (cit: IdValueObj) => {
@@ -121,7 +141,7 @@ export default function RequirementOfferFilters(
                               }
                             )
                           : []
-                      }
+                      )}
                       className="form-control"
                       style={{ marginTop: "5px" }}
                     />
@@ -129,7 +149,7 @@ export default function RequirementOfferFilters(
                 </Flex>
               </Col>
 
-              <Col xs={12} sm={12} md={12} lg={12} xl={6}>
+              <Col xs={12} sm={12} md={6} lg={6} xl={6}>
                 <Flex vertical align="center">
                   <b>{t("delivery")}</b>
                   <Form.Item
@@ -137,11 +157,9 @@ export default function RequirementOfferFilters(
                     style={{ width: "100%", marginBottom: "10px" }}
                   >
                     <SelectContainer
-                      // options={[
-                      //   { value: allSelect, label: t("all") },
-                      //   { value: "2", label: "Ascendente" },
-                      // ]}
-                      options={getListForSelectIdValueMap(deliveryTimeList)}
+                      options={[{ label: t("all"), value: allSelect }].concat(
+                        getListForSelectIdValueMap(deliveryTimeList)
+                      )}
                       style={{ marginTop: "5px" }}
                       className="form-control"
                     />
@@ -149,7 +167,7 @@ export default function RequirementOfferFilters(
                 </Flex>
               </Col>
 
-              <Col xs={12} sm={12} md={12} lg={12} xl={6}>
+              <Col xs={12} sm={12} md={6} lg={6} xl={6}>
                 <Flex vertical align="center">
                   <b>{t("warranty")}</b>
                   <Form.Item

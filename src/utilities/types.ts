@@ -209,8 +209,8 @@ export const ActionByStatePurchaseOrder: {
 
 export enum PriceFilter {
   ALL = allSelect,
-  ASC = "1",
-  DESC = "2",
+  ASC = 1,
+  DESC = 2,
 }
 
 export const DeliveryTimeFilter = {
@@ -223,8 +223,8 @@ export const LocationFilter = {
 
 export enum WarrantyFilter {
   ALL = allSelect,
-  ASC = "1",
-  DESC = "2",
+  ASC = 1,
+  DESC = 2,
 }
 
 export enum OfferFilterTypes {

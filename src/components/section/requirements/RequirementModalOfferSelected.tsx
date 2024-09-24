@@ -1,6 +1,5 @@
-import { ExclamationCircleFilled } from "@ant-design/icons";
 import TextAreaContainer from "../../containers/TextAreaContainer";
-import { Col, Flex, Row, Space } from "antd";
+import { Col, Flex, Row } from "antd";
 import {
   OfferListItem,
   RequirementTableItem,
@@ -9,6 +8,7 @@ import { SyntheticEvent, useContext } from "react";
 import { requirementDetailContext } from "../../../contexts/requirementDetailContext";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
+import { PriceFilter, WarrantyFilter } from "../../../utilities/types";
 
 interface RequirementModalOfferSelectedProps {
   offer: OfferListItem;
@@ -20,7 +20,7 @@ export default function RequirementModalOfferSelected(
   props: RequirementModalOfferSelectedProps
 ) {
   const { t } = useTranslation();
-  const { filters } = useContext(requirementDetailContext);
+  const { filters, filterNames } = useContext(requirementDetailContext);
 
   function selectOffer(e: SyntheticEvent<Element, Event>) {
     console.log(props.offer.key, props.requirement.key);
@@ -29,47 +29,68 @@ export default function RequirementModalOfferSelected(
   }
 
   return (
-    <>
-      <Space>
-        <ExclamationCircleFilled />
-        <b>{t("selectOfferConfirmation")}</b>
-      </Space>
-      <Row gutter={8}>
-        <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          <Flex>
-            {t("sortedBy")} {t("priceColumn")}: {filters.price}
-          </Flex>
-          <Flex>
-            {t("sortedBy")} {t("deliveryTime")}: {filters.deliveryTime}
-          </Flex>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          <Flex>
-            {t("sortedBy")} {t("locationColumn")}: {filters.location}
-          </Flex>
-          <Flex>
-            {t("sortedBy")} {t("warranty")}: {filters.warranty}
-          </Flex>
-        </Col>
-      </Row>
-      <TextAreaContainer
-        rows={4}
-        placeholder={t("notes")}
-        maxLength={255}
-        style={{ marginTop: "8px", marginBottom: "10px" }}
-      />
-      <Flex gap="small" justify="flex-end">
-        <ButtonContainer
-          children={t("acceptButton")}
-          type="primary"
-          onClick={selectOffer}
-        />
-        <ButtonContainer
-          children={t("cancelButton")}
-          type="primary"
-          onClick={props.onClose}
-        />
-      </Flex>
-    </>
+    <div className="modal-card">
+      <div className="t-flex alert-base">
+        <i className="fa-regular fa-circle-exclamation sub-icon"></i>
+        <div className="alert-info">{t("selectOfferConfirmation")}</div>
+        <Row gutter={8} style={{ width: "100%" }}>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+            <Flex>
+              <div className="titulo-input">
+                {t("sortedBy")} {t("priceColumn")}:
+              </div>{" "}
+              {filters.price == PriceFilter.ALL
+                ? t("all")
+                : filters.price == PriceFilter.ASC
+                ? t("ascending")
+                : t("descending")}
+            </Flex>
+            <Flex>
+              <div className="titulo-input">
+                {t("sortedBy")} {t("deliveryTime")}: {filterNames.deliveryTime}
+              </div>
+            </Flex>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+            <Flex>
+              <div className="titulo-input">
+                {t("sortedBy")} {t("locationColumn")}:
+              </div>{" "}
+              {filterNames.location}
+            </Flex>
+            <Flex>
+              <div className="titulo-input">
+                {t("sortedBy")} {t("warranty")}:
+              </div>{" "}
+              {filters.warranty == WarrantyFilter.ALL
+                ? t("all")
+                : filters.warranty == WarrantyFilter.ASC
+                ? t("ascending")
+                : t("descending")}
+            </Flex>
+          </Col>
+        </Row>
+        <div className="t-flex wd-100">
+          <TextAreaContainer
+            className="form-control wd-100"
+            rows={4}
+            placeholder={t("notes")}
+            maxLength={255}
+          />
+        </div>
+        <div className="t-flex gap-15 wd-100 alert-btn">
+          <ButtonContainer
+            children={t("acceptButton")}
+            className="btn btn-default alert-boton"
+            onClick={selectOffer}
+          />
+          <ButtonContainer
+            children={t("cancelButton")}
+            className="btn btn-second alert-boton"
+            onClick={props.onClose}
+          />
+        </div>
+      </div>
+    </div>
   );
 }

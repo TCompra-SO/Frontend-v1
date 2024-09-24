@@ -1,7 +1,7 @@
 export const dateFormat: string = "DD-MM-YYYY";
 export const TCompra: string = "TCompra";
 export const pageSizeOptionsSt: string[] = ["10", "20", "50", "100"];
-export const allSelect: any = "0";
+export const allSelect: number = 999;
 export const defaultCountry: string = "01";
 
 export const maxImageSizeMb: number = 1;

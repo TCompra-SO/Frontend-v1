@@ -213,8 +213,8 @@ export interface RequirementSearchItem {
 
 export interface OfferFilters {
   price: PriceFilter;
-  deliveryTime: string;
-  location: string;
+  deliveryTime: number;
+  location: number;
   warranty: WarrantyFilter;
 }
 

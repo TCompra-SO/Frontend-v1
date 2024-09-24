@@ -6,16 +6,9 @@ import {
   OfferListItem,
   RequirementTableItem,
 } from "../../../../models/MainInterfaces";
-import { SyntheticEvent, useState } from "react";
-import { OfferFilters } from "../../../../models/Interfaces";
-import {
-  DeliveryTimeFilter,
-  LocationFilter,
-  OfferFilterTypes,
-  PriceFilter,
-  WarrantyFilter,
-} from "../../../../utilities/types";
-import { requirementDetailContext } from "../../../../contexts/requirementDetailContext";
+import { SyntheticEvent } from "react";
+import { OfferFilterTypes } from "../../../../utilities/types";
+import { RequirementDetailProvider } from "../../../../contexts/requirementDetailContext";
 import { useTranslation } from "react-i18next";
 
 interface RequirementDetailProps {
@@ -26,26 +19,13 @@ interface RequirementDetailProps {
 
 export default function RequirementDetail(props: RequirementDetailProps) {
   const { t } = useTranslation();
-  const [offerFilters, setOfferFilters] = useState<OfferFilters>({
-    price: PriceFilter.ALL,
-    deliveryTime: DeliveryTimeFilter.ALL,
-    location: LocationFilter.ALL,
-    warranty: WarrantyFilter.ALL,
-  });
-
-  function updateFilters(newFilters: OfferFilters) {
-    console.log("updateFilters");
-    setOfferFilters(newFilters);
-  }
 
   function HandleonFilterChange(filterType: OfferFilterTypes, value: any) {
     console.log("Cambio en filtro", filterType, value);
   }
 
   return (
-    <requirementDetailContext.Provider
-      value={{ filters: offerFilters, updateFilters }}
-    >
+    <RequirementDetailProvider>
       <div className="modal-card">
         <div className="detalle-oferta">
           <RequirementInfo requirement={props.requirement}></RequirementInfo>
@@ -70,6 +50,6 @@ export default function RequirementDetail(props: RequirementDetailProps) {
           />
         </div>
       </div>
-    </requirementDetailContext.Provider>
+    </RequirementDetailProvider>
   );
 }

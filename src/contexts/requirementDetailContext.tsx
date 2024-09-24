@@ -1,11 +1,20 @@
-import { createContext } from "react";
+import { ReactNode, createContext, useState } from "react";
 import { PriceFilter, WarrantyFilter } from "../utilities/types";
 import { allSelect } from "../utilities/globals";
 import { OfferFilters } from "../models/Interfaces";
+import { useTranslation } from "react-i18next";
+
+interface RequirementDetailProps {
+  children: ReactNode;
+}
 
 export const requirementDetailContext = createContext<{
   filters: OfferFilters;
-  updateFilters: (newFilters: OfferFilters) => void;
+  updateFilters: (
+    newFilters: OfferFilters,
+    newNames: { location: string; deliveryTime: string }
+  ) => void;
+  filterNames: { location: string; deliveryTime: string };
 }>({
   filters: {
     price: PriceFilter.ALL,
@@ -14,4 +23,45 @@ export const requirementDetailContext = createContext<{
     warranty: WarrantyFilter.ALL,
   },
   updateFilters: () => {},
+  filterNames: {
+    location: "",
+    deliveryTime: "",
+  },
 });
+
+export function RequirementDetailProvider({
+  children,
+}: RequirementDetailProps) {
+  const { t } = useTranslation();
+  const [filters, setFilters] = useState({
+    price: PriceFilter.ALL,
+    location: allSelect,
+    deliveryTime: allSelect,
+    warranty: WarrantyFilter.ALL,
+  });
+
+  const [filterNames, setFilterNames] = useState({
+    location: t("all"),
+    deliveryTime: t("all"),
+  });
+
+  function updateFilters(
+    newFilters: OfferFilters,
+    newNames: { location: string; deliveryTime: string }
+  ) {
+    setFilters(newFilters);
+    setFilterNames(newNames);
+  }
+
+  return (
+    <requirementDetailContext.Provider
+      value={{
+        filters,
+        updateFilters,
+        filterNames,
+      }}
+    >
+      {children}
+    </requirementDetailContext.Provider>
+  );
+}
