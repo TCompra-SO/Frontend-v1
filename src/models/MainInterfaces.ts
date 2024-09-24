@@ -36,7 +36,7 @@ export interface OfferListItem {
   title: string;
   requirementTitle: string;
   requirementId: string;
-  description: string;
+  description?: string;
   coin: number;
   price: number;
   warranty: number;

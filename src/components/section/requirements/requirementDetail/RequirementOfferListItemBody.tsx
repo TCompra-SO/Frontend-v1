@@ -36,6 +36,16 @@ export default function RequirementOfferListItemBody(
     }
   }, [countryData]);
 
+  function showDocument() {
+    props.offer.document?.forEach((documentUrl) => {
+      window.open(
+        documentUrl,
+        "_blank",
+        "width=800,height=600,top=100,left=100,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes"
+      );
+    });
+  }
+
   return (
     <div className="t-flex body-ofertas">
       <div className="t-flex t-wrap tags-oferta">
@@ -98,7 +108,13 @@ export default function RequirementOfferListItemBody(
             </div>
           </div>
           <div className="t-flex">
-            <i className="fa-regular fa-file-lines multi-datos"></i>
+            <i
+              className="fa-regular fa-file-lines multi-datos"
+              onClick={() => {
+                if (props.offer.document && props.offer.document.length > 0)
+                  showDocument();
+              }}
+            ></i>
             <div className="multi-back"></div>
             <div className="multi-cantidad">
               {props.offer.document ? props.offer.document.length : 0}

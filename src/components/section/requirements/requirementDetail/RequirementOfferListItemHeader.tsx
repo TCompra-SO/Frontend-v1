@@ -126,11 +126,19 @@ export default function RequirementOfferListItemHeader({
           />
           <div className="oferta-usuario">
             <div className="oferta-datos t-wrap">
-              <div className="usuario-name text-truncate">
-                {props.offer.user.name}
-              </div>
+              <Tooltip
+                title={props.offer.user.name}
+                trigger={["click", "hover"]}
+              >
+                <div className="usuario-name text-truncate">
+                  {props.offer.user.name}
+                </div>
+              </Tooltip>
               {props.offer.subUser && props.offer.subUser.name.length > 0 && (
-                <Tooltip title={props.offer.subUser.name}>
+                <Tooltip
+                  title={props.offer.subUser.name}
+                  trigger={["click", "hover"]}
+                >
                   <div className="user-empresa-2">
                     {props.offer.subUser.name[0].toLocaleUpperCase()}
                   </div>
@@ -159,7 +167,15 @@ export default function RequirementOfferListItemHeader({
               </div>
               <Popover
                 trigger="click"
-                title={props.offer.title}
+                title={
+                  <div
+                    style={{
+                      marginBottom: props.offer.description ? "0" : "-8px",
+                    }}
+                  >
+                    {props.offer.title}
+                  </div>
+                }
                 content={props.offer.description}
               >
                 <i className="fa-solid fa-ellipsis mas-detalle"></i>

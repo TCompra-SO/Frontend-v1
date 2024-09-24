@@ -624,6 +624,10 @@ const offerList: OfferListItem[] = [
     image: [
       "https://img.freepik.com/foto-gratis/belleza-otonal-abstracta-patron-venas-hoja-multicolor-generado-ia_188544-9871.jpg",
     ],
+    document: [
+      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+      "https://filesamples.com/samples/document/docx/sample2.docx",
+    ],
   },
   {
     key: "2",
@@ -1015,7 +1019,7 @@ export default function Requirements() {
         onClose={handleCloseModal}
         className="custom-scroll"
         style={{
-          maxHeight: "75vh",
+          maxHeight: "90vh",
           overflowY: "scroll",
           paddingBottom: "0",
         }}
