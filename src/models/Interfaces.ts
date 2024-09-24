@@ -25,7 +25,11 @@ export interface CommonModalType {
 
 export interface ModalCancelPurchaseOrder extends CommonModalType {
   type: ModalTypes.CANCEL_PURCHASE_ORDER;
-  data: { offerId: string; requirementId: string };
+  data: {
+    offerId: string;
+    requirementId: string;
+    fromRequirementTable: boolean;
+  };
 }
 
 export interface ModalDetailedRequirement extends CommonModalType {

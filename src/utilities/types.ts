@@ -87,8 +87,8 @@ export const ModalWidth: {
   [ModalTypes.SELECT_OFFER]: commonModalWidth,
   [ModalTypes.OFFER_SUMMARY]: commonModalWidth,
   [ModalTypes.REPUBLISH_REQUIREMENT]: smallModalWidth,
-  [ModalTypes.RATE_CANCELED]: mediumModalWidth,
-  [ModalTypes.RATE_USER]: mediumModalWidth,
+  [ModalTypes.RATE_CANCELED]: mediumPlusModalWidth,
+  [ModalTypes.RATE_USER]: mediumPlusModalWidth,
   [ModalTypes.CONFIRM]: mediumPlusModalWidth,
   [ModalTypes.INPUT_EMAIL]: smallModalWidth,
 };

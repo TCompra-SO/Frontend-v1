@@ -39,6 +39,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             onClose={props.onClose}
             offerId={props.content.data.offerId}
             requirementId={props.content.data.requirementId}
+            fromRequirementTable={props.content.data.fromRequirementTable}
           />
         );
       }

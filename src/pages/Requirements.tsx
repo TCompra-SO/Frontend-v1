@@ -932,7 +932,7 @@ export default function Requirements() {
     action: Action,
     requirement: RequirementTableItem
   ) {
-    // const requirement = prevRequirement as RequirementTableItem;
+    console.log(action);
     switch (action) {
       case Action.SHOW_OFFERS: {
         setDataModal({
@@ -996,6 +996,19 @@ export default function Requirements() {
           },
         });
         setModalTitle(null);
+        setIsOpenModal(true);
+        break;
+      }
+      case Action.CANCEL_REQUIREMENT: {
+        //r3v get offerId
+        setDataModal({
+          type: ModalTypes.CANCEL_PURCHASE_ORDER,
+          data: {
+            offerId: "",
+            requirementId: "",
+            fromRequirementTable: true,
+          },
+        });
         setIsOpenModal(true);
         break;
       }

@@ -728,7 +728,7 @@ body {
   gap: 5px;
 }
 .p-start {
-  color: #f9a825;
+  color: #f9a825 !important;
   font-size: 22px;
 }
 .p-cantidad {
@@ -1330,9 +1330,8 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
 }
 
 /* Rate stars */
-.custom-rate-star .ant-rate-star {
-  /* margin-right: 20px;  */
-  font-size: 18px;
+.ant-rate .ant-rate-star:not(:last-child) {
+  margin-inline-end: 3px;
 }
 
 /* Tablas */

@@ -11,6 +11,7 @@ interface CancelPurchaseOrderModalProps {
   onClose: (e: SyntheticEvent<Element, Event>) => any;
   offerId: string;
   requirementId: string;
+  fromRequirementTable: boolean;
 }
 
 export default function CancelPurchaseOrderModal(
@@ -42,7 +43,11 @@ export default function CancelPurchaseOrderModal(
       <div className="t-flex alert-base">
         <i className="fa-regular fa-circle-exclamation sub-icon"></i>
         <div className="text-center">
-          <div className="alert-info">Cancelar orden de compra</div>
+          <div className="alert-info">
+            {props.fromRequirementTable
+              ? t("cancelRequirement")
+              : t("cancelPurchaseOrder")}
+          </div>
           <div
             className="alert-info"
             style={{ fontSize: "18px", color: "rgb(59 76 86 / 80%)" }}

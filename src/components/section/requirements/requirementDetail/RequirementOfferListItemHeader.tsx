@@ -77,6 +77,7 @@ export default function RequirementOfferListItemHeader({
           data: {
             offerId: props.offer.key,
             requirementId: props.requirement.key,
+            fromRequirementTable: false,
           },
         });
         break;
