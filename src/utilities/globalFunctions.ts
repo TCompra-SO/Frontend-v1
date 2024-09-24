@@ -4,6 +4,7 @@ import { maxDocSizeMb, maxImageSizeMb } from "./globals";
 import { RequirementType, UserClass } from "./types";
 
 // Determina  si el usuario es proveedor o cliente
+// isOffer indica si a quien se califica es creador de una oferta o no
 export function getUserClass(isOffer: boolean, type: RequirementType) {
   const userClass: UserClass =
     (isOffer && type == RequirementType.SALE) ||

@@ -1,11 +1,11 @@
-import { ExclamationCircleFilled } from "@ant-design/icons";
-import { App, Flex, Space } from "antd";
+import { App } from "antd";
 import TextAreaContainer from "../containers/TextAreaContainer";
 import { SyntheticEvent, useState } from "react";
 import ButtonContainer from "../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import { Lengths } from "../../utilities/lengths";
 import showNotification from "../../utilities/notification/showNotification";
+import { Action, ActionLabel } from "../../utilities/types";
 
 interface CancelPurchaseOrderModalProps {
   onClose: (e: SyntheticEvent<Element, Event>) => any;
@@ -45,8 +45,8 @@ export default function CancelPurchaseOrderModal(
         <div className="text-center">
           <div className="alert-info">
             {props.fromRequirementTable
-              ? t("cancelRequirement")
-              : t("cancelPurchaseOrder")}
+              ? t(ActionLabel[Action.CANCEL_REQUIREMENT])
+              : t(ActionLabel[Action.CANCEL_PURCHASE_ORDER])}
           </div>
           <div
             className="alert-info"

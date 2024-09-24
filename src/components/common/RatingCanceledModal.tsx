@@ -1,4 +1,4 @@
-import { Flex, Tooltip } from "antd";
+import { Tooltip } from "antd";
 import { User } from "../../models/MainInterfaces";
 import {
   Action,
@@ -6,7 +6,6 @@ import {
   RequirementType,
   UserClass,
 } from "../../utilities/types";
-import { rowColor } from "../../utilities/colors";
 import RatingContainer from "../containers/RatingContainer";
 import { useState } from "react";
 import ButtonContainer from "../containers/ButtonContainer";

@@ -29,7 +29,6 @@ export default function RequirementOfferListItemHeader({
 }: RequirementOfferListItemProps) {
   const { t } = useTranslation();
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState<React.ReactNode>("");
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
@@ -71,7 +70,6 @@ export default function RequirementOfferListItemHeader({
     switch (action) {
       case Action.CANCEL_PURCHASE_ORDER:
         setIsOpenModal(true);
-        setModalTitle(t(ActionLabel[action]));
         setDataModal({
           type: ModalTypes.CANCEL_PURCHASE_ORDER,
           data: {
@@ -94,14 +92,13 @@ export default function RequirementOfferListItemHeader({
         break;
       case Action.RATE_CANCELED:
         setIsOpenModal(true);
-        setModalTitle(t(ActionLabel[action]));
         setDataModal({
           type: ModalTypes.RATE_CANCELED,
           data: {
             user: props.offer.user,
             requirementOffertitle: props.requirement.title,
             type: props.requirement.type,
-            isOffer: false, //r3v
+            isOffer: true,
           },
         });
     }

@@ -13,7 +13,6 @@ import {
 import { OfferListItem, RequirementTableItem } from "../models/MainInterfaces";
 import { ChangeEvent, useState } from "react";
 import { ModalContent, TableTypeRequirement } from "../models/Interfaces";
-import RateModalTitleContainer from "../components/containers/RateModalTitleContainer";
 import { useTranslation } from "react-i18next";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 
@@ -910,7 +909,6 @@ const offerList: OfferListItem[] = [
 export default function Requirements() {
   const { t } = useTranslation();
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState<React.ReactNode>("");
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
@@ -940,7 +938,7 @@ export default function Requirements() {
           data: { offerList, requirement: requirement },
         });
         setIsOpenModal(true);
-        setModalTitle(null);
+
         break;
       }
       case Action.SHOW_SUMMARY: {
@@ -950,13 +948,13 @@ export default function Requirements() {
           data: { offer: offerList[0], requirement: requirement },
         });
         setIsOpenModal(true);
-        setModalTitle(
-          <>
-            {t("summary")}
-            <br />
-            <div style={{ fontWeight: "normal" }}>{t("winnigOfferDetail")}</div>
-          </>
-        );
+        // setModalTitle(
+        //   <>
+        //     {t("summary")}
+        //     <br />
+        //     <div style={{ fontWeight: "normal" }}>{t("winnigOfferDetail")}</div>
+        //   </>
+        // );
         break;
       }
       case Action.REPUBLISH: {
@@ -965,7 +963,7 @@ export default function Requirements() {
           data: { requirementId: requirement.key },
         });
         setIsOpenModal(true);
-        setModalTitle(null);
+
         break;
       }
       case Action.FINISH: {
@@ -974,14 +972,12 @@ export default function Requirements() {
           data: {
             user: requirement.user,
             type: requirement.type,
-            isOffer: false, //r3v
-            requirementOffertitle: requirement.title,
+            isOffer: true,
+            requirementOffertitle: requirement.title, // r3v obtener datos de oferta ganadora
           },
         });
         setIsOpenModal(true);
-        setModalTitle(
-          <RateModalTitleContainer isOffer={false} type={requirement.type} /> //r3v
-        );
+
         break;
       }
       case Action.DELETE: {
@@ -995,7 +991,6 @@ export default function Requirements() {
             text: t("deleteRequirementConfirmation"),
           },
         });
-        setModalTitle(null);
         setIsOpenModal(true);
         break;
       }
@@ -1027,7 +1022,6 @@ export default function Requirements() {
     <>
       <ModalContainer
         destroyOnClose
-        title={modalTitle}
         content={dataModal}
         isOpen={isOpenModal}
         onClose={handleCloseModal}
