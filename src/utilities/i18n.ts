@@ -85,6 +85,7 @@ const resources = {
       userNoValidated: "Validate your account first",
       userIncompleteProfile: "Create your profile first",
       selectDifferentCategories: 'Categories must be different',
+      mustIndicateReasonCancellation: "Please provide a reason for the cancellation",
       // Profile
       sentValidationCode: "Code was sent successfully",
       timerResendValidationCode: "You can resend the code in ",
@@ -176,6 +177,7 @@ const resources = {
       noRecoveryCodeForUser: "User has no recovery code",
       agreeToTermsAndConditions: "I agree to Terms and Conditions",
       mustAgreeToTermsAndConditions: "Must agree to Terms and Conditions",
+      indicateReasonCancellation: "Please indicate the reason for the cancellation",
       // Other
       yes: "Yes",
       no: "No",
@@ -335,6 +337,7 @@ const resources = {
       userNoValidated: "Valide su cuenta primero",
       userIncompleteProfile: "Cree su perfil primero",
       selectDifferentCategories: 'Los rubros deben ser diferentes',
+      mustIndicateReasonCancellation: "Debe indicar el motivo de la cancelación",
       // Profile
       sentValidationCode: "Se envió el código con éxito",
       timerResendValidationCode: "Podrá reenviar el código en ",
@@ -428,6 +431,7 @@ const resources = {
       noRecoveryCodeForUser: "Este usuario no tiene código de recuperación",
       agreeToTermsAndConditions: "Acepto los Términos y Condiciones",
       mustAgreeToTermsAndConditions: "Debe aceptar los Términos y Condiciones",
+      indicateReasonCancellation: "Indique el motivo de la cancelación",
       // Other
       yes: "Sí",
       no: "No",

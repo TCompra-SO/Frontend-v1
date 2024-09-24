@@ -55,4 +55,12 @@ export const Lengths = {
     min: 5,
     max: 240,
   },
+  selectOfferObs: {
+    min: 0,
+    max: 255,
+  },
+  reasonCancellation: {
+    min: 1,
+    max: 255,
+  },
 };

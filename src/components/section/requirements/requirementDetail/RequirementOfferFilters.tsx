@@ -6,7 +6,7 @@ import {
   commonModalWidth,
   defaultCountry,
 } from "../../../../utilities/globals";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import {
   OfferFilterTypes,
   PriceFilter,
@@ -40,13 +40,6 @@ export default function RequirementOfferFilters(
   const showCountry = countryData[defaultCountry]
     ? defaultCountry
     : Object.keys(countryData)[0];
-
-  // useEffect(() => {
-  //   updateFilters(initialValues, {
-  //     location: t("all"),
-  //     deliveryTime: t("all"),
-  //   });
-  // }, []);
 
   function onChangeFilters(changedValues: any, allValues: OfferFilters) {
     let location: string = filterNames.location;

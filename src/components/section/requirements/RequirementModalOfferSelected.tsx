@@ -9,6 +9,7 @@ import { requirementDetailContext } from "../../../contexts/requirementDetailCon
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import { PriceFilter, WarrantyFilter } from "../../../utilities/types";
+import { Lengths } from "../../../utilities/lengths";
 
 interface RequirementModalOfferSelectedProps {
   offer: OfferListItem;
@@ -37,13 +38,13 @@ export default function RequirementModalOfferSelected(
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
             <Flex>
               <div className="titulo-input">
-                {t("sortedBy")} {t("priceColumn")}:
-              </div>{" "}
-              {filters.price == PriceFilter.ALL
-                ? t("all")
-                : filters.price == PriceFilter.ASC
-                ? t("ascending")
-                : t("descending")}
+                {t("sortedBy")} {t("priceColumn")}:{" "}
+                {filters.price == PriceFilter.ALL
+                  ? t("all")
+                  : filters.price == PriceFilter.ASC
+                  ? t("ascending")
+                  : t("descending")}
+              </div>
             </Flex>
             <Flex>
               <div className="titulo-input">
@@ -54,19 +55,18 @@ export default function RequirementModalOfferSelected(
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
             <Flex>
               <div className="titulo-input">
-                {t("sortedBy")} {t("locationColumn")}:
-              </div>{" "}
-              {filterNames.location}
+                {t("sortedBy")} {t("locationColumn")}: {filterNames.location}
+              </div>
             </Flex>
             <Flex>
               <div className="titulo-input">
-                {t("sortedBy")} {t("warranty")}:
-              </div>{" "}
-              {filters.warranty == WarrantyFilter.ALL
-                ? t("all")
-                : filters.warranty == WarrantyFilter.ASC
-                ? t("ascending")
-                : t("descending")}
+                {t("sortedBy")} {t("warranty")}:{" "}
+                {filters.warranty == WarrantyFilter.ALL
+                  ? t("all")
+                  : filters.warranty == WarrantyFilter.ASC
+                  ? t("ascending")
+                  : t("descending")}
+              </div>
             </Flex>
           </Col>
         </Row>
@@ -75,7 +75,7 @@ export default function RequirementModalOfferSelected(
             className="form-control wd-100"
             rows={4}
             placeholder={t("notes")}
-            maxLength={255}
+            maxLength={Lengths.selectOfferObs.max}
           />
         </div>
         <div className="t-flex gap-15 wd-100 alert-btn">

@@ -1,6 +1,4 @@
-import { Flex, Space } from "antd";
 import ButtonContainer from "../containers/ButtonContainer";
-import { ExclamationCircleFilled } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 
 interface ConfirmationModalProps {

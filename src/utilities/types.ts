@@ -83,7 +83,7 @@ export const ModalWidth: {
   [ModalTypes.NONE]: 0,
   [ModalTypes.DETAILED_REQUIREMENT]: commonModalWidth,
   [ModalTypes.VALIDATE_CODE]: mediumModalWidth,
-  [ModalTypes.CANCEL_PURCHASE_ORDER]: mediumModalWidth,
+  [ModalTypes.CANCEL_PURCHASE_ORDER]: mediumPlusModalWidth,
   [ModalTypes.SELECT_OFFER]: commonModalWidth,
   [ModalTypes.OFFER_SUMMARY]: commonModalWidth,
   [ModalTypes.REPUBLISH_REQUIREMENT]: smallModalWidth,
