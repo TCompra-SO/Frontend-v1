@@ -1,4 +1,4 @@
-import { Tooltip } from "antd";
+import { App, Tooltip } from "antd";
 import { User } from "../../models/MainInterfaces";
 import {
   Action,
@@ -13,6 +13,7 @@ import { getUserClass } from "../../utilities/globalFunctions";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { MainState } from "../../models/Redux";
+import showNotification from "../../utilities/notification/showNotification";
 
 interface RatingCanceledModalProps {
   user: User;
@@ -25,6 +26,7 @@ interface RatingCanceledModalProps {
 export default function RatingCanceledModal(props: RatingCanceledModalProps) {
   const { t } = useTranslation();
   const [score, setScore] = useState(0);
+  const { notification } = App.useApp();
   const uid = useSelector((state: MainState) => state.user.uid);
 
   const userClass: UserClass = getUserClass(props.isOffer, props.type);
@@ -34,6 +36,10 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
   }
 
   function saveScore(e: React.SyntheticEvent<Element, Event>) {
+    if (score == 0) {
+      showNotification(notification, "info", t("mustAnswerQuestion"));
+      return;
+    }
     console.log(score, props.user.uid, "uid", uid);
     props.onClose(e);
   }

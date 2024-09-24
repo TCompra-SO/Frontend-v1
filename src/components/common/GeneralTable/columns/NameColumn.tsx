@@ -26,7 +26,10 @@ export default function NameColumn(
     render: (_, record) => (
       <>
         <div className="datos-prod">
-          <div className="text-truncate info-req" style={{ textAlign: "left" }}>
+          <div
+            className="text-truncate info-req-no-clamp"
+            style={{ textAlign: "left" }}
+          >
             {record.title}
           </div>
           {type == TableTypes.REQUIREMENT && (

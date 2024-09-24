@@ -71,7 +71,11 @@ export default function RequirementOfferListItemBody(
             ? t("months")
             : t("years")}
         </div>
-        <div className="tag-gray">{props.offer.user.email}</div>
+        <div className="tag-gray">
+          {props.offer.subUser
+            ? props.offer.subUser.email
+            : props.offer.user.email}
+        </div>
         <div className="tag-gray-2">
           {t("igv")}: {props.offer.igv ? t("yes") : t("no")}
         </div>

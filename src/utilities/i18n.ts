@@ -179,6 +179,7 @@ const resources = {
       mustAgreeToTermsAndConditions: "Must agree to Terms and Conditions",
       indicateReasonCancellation: "Please indicate the reason for the cancellation",
       mustAnswerAllQuestions: "Please answer all questions",
+      mustAnswerQuestion: "Please answer the question",
       // Other
       yes: "Yes",
       no: "No",
@@ -433,7 +434,8 @@ const resources = {
       agreeToTermsAndConditions: "Acepto los Términos y Condiciones",
       mustAgreeToTermsAndConditions: "Debe aceptar los Términos y Condiciones",
       indicateReasonCancellation: "Indique el motivo de la cancelación",
-      mustAnswerAllQuestions: "Debe constestar todas las preguntas",
+      mustAnswerAllQuestions: "Por favor, consteste todas las preguntas",
+      mustAnswerQuestion: "Por favor, conteste la pregunta",
       // Other
       yes: "Sí",
       no: "No",
