@@ -3,11 +3,10 @@ import {
   Action,
   CountriesRequestType,
   ModalTypes,
-  PriceFilter,
   RequirementType,
   TableColumns,
   TableTypes,
-  WarrantyFilter,
+  CommonFilter,
 } from "../utilities/types";
 import {
   OfferListItem,
@@ -95,6 +94,13 @@ export interface ModalInputEmail extends CommonModalType {
   };
 }
 
+export interface ModalOfferDetail extends CommonModalType {
+  type: ModalTypes.OFFER_DETAIL;
+  data: {
+    offer: OfferListItem;
+  };
+}
+
 export interface ModalNone extends CommonModalType {
   type: ModalTypes.NONE;
   data: Record<string, never>;
@@ -111,6 +117,7 @@ export type ModalContent =
   | ModalCancelPurchaseOrder
   | ModalConfirmation
   | ModalInputEmail
+  | ModalOfferDetail
   | ModalNone;
 
 /********** Tables *************/
@@ -216,10 +223,10 @@ export interface RequirementSearchItem {
 }
 
 export interface OfferFilters {
-  price: PriceFilter;
+  price: CommonFilter;
   deliveryTime: number;
   location: number;
-  warranty: WarrantyFilter;
+  warranty: CommonFilter;
 }
 
 export interface ListItem {

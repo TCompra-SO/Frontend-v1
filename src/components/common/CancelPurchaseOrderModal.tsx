@@ -57,11 +57,13 @@ export default function CancelPurchaseOrderModal(
         </div>
         <div className="t-flex wd-100">
           <TextAreaContainer
-            rows={4}
+            // rows={4}
+
             placeholder={t("reason")}
             maxLength={Lengths.reasonCancellation.max}
             onChange={handleTextChange}
             className="form-control wd-100"
+            autoSize
           />
         </div>
         <div className="t-flex gap-15 wd-100 alert-btn">

@@ -8,10 +8,11 @@ import {
   getScore,
 } from "../../../../utilities/globalFunctions";
 import { ListsContext } from "../../../../contexts/listsContext";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import dayjs from "dayjs";
 import { dateFormat } from "../../../../utilities/globals";
-import ParagraphContainer from "../../../containers/ParagraphContainer";
+import SubUserName from "../../../common/SubUserName";
+import DescriptionParagraph from "../../../common/DescriptionParagraph";
 
 interface RequirementInfoProps {
   requirement: RequirementTableItem;
@@ -21,7 +22,6 @@ export default function RequirementInfo(props: RequirementInfoProps) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { currencyList, deliveryTimeList } = context;
-  const [expanded, setExpanded] = useState(false);
 
   return (
     <div className="t-flex gap-15 requerimiento-o">
@@ -39,14 +39,7 @@ export default function RequirementInfo(props: RequirementInfoProps) {
         </Tooltip>
         <div className="t-flex tags-req">
           <div className="badge-default">{props.requirement.user.name}</div>
-          {props.requirement.subUser &&
-            props.requirement.subUser.name.length > 0 && (
-              <Tooltip title={props.requirement.subUser.name}>
-                <div className="user-empresa">
-                  {props.requirement.subUser.name[0].toLocaleUpperCase()}
-                </div>
-              </Tooltip>
-            )}
+          <SubUserName subUser={props.requirement.subUser} />
           <div className="badge-second">
             {t(getLabelFromRequirementType(props.requirement.type))}
           </div>
@@ -62,22 +55,8 @@ export default function RequirementInfo(props: RequirementInfoProps) {
             <b className="p-cantidad">(41.5k)</b>
           </div>
         </div>
-        <ParagraphContainer
-          className="info-req-no-clamp"
-          ellipsis={{
-            rows: 3,
-            expandable: "collapsible",
-            expanded,
-            onExpand: (_, info) => setExpanded(info.expanded),
-            symbol: (expanded: boolean) => {
-              return expanded
-                ? t("paragraphSymbolLess")
-                : t("paragraphSymbolMore");
-            },
-          }}
-        >
-          {props.requirement.description}
-        </ParagraphContainer>
+
+        <DescriptionParagraph text={props.requirement.description} />
 
         <div className="t-flex tags-req t-wrap">
           <b className="precio-req">

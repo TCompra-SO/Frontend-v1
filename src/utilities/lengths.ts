@@ -63,4 +63,8 @@ export const Lengths = {
     min: 1,
     max: 255,
   },
+  offerDescription: {
+    min: 0,
+    max: 150,
+  },
 };

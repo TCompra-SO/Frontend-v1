@@ -8,8 +8,9 @@ import { SyntheticEvent, useContext } from "react";
 import { requirementDetailContext } from "../../../contexts/requirementDetailContext";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
-import { PriceFilter, WarrantyFilter } from "../../../utilities/types";
 import { Lengths } from "../../../utilities/lengths";
+import SelectContainer from "../../containers/SelectContainer";
+import { filterLabels } from "../../../utilities/colors";
 
 interface RequirementModalOfferSelectedProps {
   offer: OfferListItem;
@@ -35,45 +36,82 @@ export default function RequirementModalOfferSelected(
         <i className="fa-regular fa-circle-exclamation sub-icon"></i>
         <div className="alert-info">{t("selectOfferConfirmation")}</div>
         <Row gutter={8} style={{ width: "100%" }}>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-            <Flex>
-              <div className="titulo-input">
-                {t("sortedBy")} {t("priceColumn")}:{" "}
-                {filters.price == PriceFilter.ALL
-                  ? t("all")
-                  : filters.price == PriceFilter.ASC
-                  ? t("ascending")
-                  : t("descending")}
-              </div>
-            </Flex>
-            <Flex>
-              <div className="titulo-input">
-                {t("sortedBy")} {t("deliveryTime")}: {filterNames.deliveryTime}
-              </div>
+          <Col xs={12} sm={12} md={6} lg={6} xl={6}>
+            <Flex vertical align="center">
+              <b style={{ color: "#92acbf" }}>{t("priceColumn")}</b>
+              <SelectContainer
+                options={[
+                  {
+                    value: filters.price,
+                    label: t(filterLabels[filters.price]),
+                  },
+                ]}
+                style={{ width: "100%" }}
+                className="form-control"
+                defaultValue={filters.price}
+                disabled
+              />
             </Flex>
           </Col>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-            <Flex>
-              <div className="titulo-input">
-                {t("sortedBy")} {t("locationColumn")}: {filterNames.location}
-              </div>
+
+          <Col xs={12} sm={12} md={6} lg={6} xl={6}>
+            <Flex vertical align="center">
+              <b style={{ color: "#92acbf" }}>{t("locationColumn")}</b>
+              <SelectContainer
+                options={[
+                  {
+                    value: filters.location,
+                    label: filterNames.location,
+                  },
+                ]}
+                style={{ width: "100%" }}
+                className="form-control"
+                defaultValue={filters.location}
+                disabled
+              />
             </Flex>
-            <Flex>
-              <div className="titulo-input">
-                {t("sortedBy")} {t("warranty")}:{" "}
-                {filters.warranty == WarrantyFilter.ALL
-                  ? t("all")
-                  : filters.warranty == WarrantyFilter.ASC
-                  ? t("ascending")
-                  : t("descending")}
-              </div>
+          </Col>
+
+          <Col xs={12} sm={12} md={6} lg={6} xl={6}>
+            <Flex vertical align="center">
+              <b style={{ color: "#92acbf" }}>{t("delivery")}</b>
+              <SelectContainer
+                options={[
+                  {
+                    value: filters.deliveryTime,
+                    label: filterNames.deliveryTime,
+                  },
+                ]}
+                style={{ width: "100%" }}
+                className="form-control"
+                defaultValue={filters.deliveryTime}
+                disabled
+              />
+            </Flex>
+          </Col>
+
+          <Col xs={12} sm={12} md={6} lg={6} xl={6}>
+            <Flex vertical align="center">
+              <b style={{ color: "#92acbf" }}>{t("warranty")}</b>
+              <SelectContainer
+                options={[
+                  {
+                    value: filters.warranty,
+                    label: t(filterLabels[filters.warranty]),
+                  },
+                ]}
+                style={{ width: "100%" }}
+                className="form-control"
+                defaultValue={filters.warranty}
+                disabled
+              />
             </Flex>
           </Col>
         </Row>
         <div className="t-flex wd-100">
           <TextAreaContainer
             className="form-control wd-100"
-            rows={4}
+            autoSize
             placeholder={t("notes")}
             maxLength={Lengths.selectOfferObs.max}
           />

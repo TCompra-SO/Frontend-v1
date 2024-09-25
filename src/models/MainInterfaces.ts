@@ -8,9 +8,13 @@ import {
   UserTable,
 } from "../utilities/types";
 
-export interface RequirementTableItem {
+export interface BaseRequirementOffer {
   key: string;
   title: string;
+  type: RequirementType;
+}
+
+export interface RequirementTableItem extends BaseRequirementOffer {
   description: string;
   category: number;
   location: number;
@@ -20,7 +24,6 @@ export interface RequirementTableItem {
   price: number;
   numberOffers: number;
   state: RequirementState;
-  type: RequirementType;
   image?: string[];
   document?: string[];
   user: User;
@@ -31,9 +34,7 @@ export interface RequirementTableItem {
   deliveryTime: number;
 }
 
-export interface OfferListItem {
-  key: string;
-  title: string;
+export interface OfferListItem extends BaseRequirementOffer {
   requirementTitle: string;
   requirementId: string;
   description?: string;
@@ -55,6 +56,7 @@ export interface OfferListItem {
 }
 
 export interface PurchaseOrder {
+  key: string;
   requirementTitle: string;
   purchaseDate: Date;
   state: PurchaseOrderState;
@@ -63,9 +65,7 @@ export interface PurchaseOrder {
   type: RequirementType;
 }
 
-export interface User {
-  uid: string;
-  name: string;
+export interface User extends BaseUser {
   email: string;
   userType: number;
   document: string;
@@ -75,5 +75,10 @@ export interface User {
   sellerScore: number;
   address: string;
   phone: string;
+}
+
+export interface BaseUser {
+  uid: string;
+  name: string;
   image?: string;
 }

@@ -22,6 +22,7 @@ interface RequirementOfferListItemProps {
   offer: OfferListItem;
   requirement: RequirementTableItem;
   style?: React.CSSProperties;
+  showStateAndActions: boolean;
 }
 
 export default function RequirementOfferListItemHeader({
@@ -180,27 +181,29 @@ export default function RequirementOfferListItemHeader({
             </div>
           </div>
         </div>
-        <div className="oferta-acciones">
-          {props.offer.state == OfferState.WINNER && (
-            <div className="badge-green">
-              <i className="fa-regular fa-circle-check"></i>{" "}
-              <span className="req-btn-info">{t("selectedOffer")}</span>
-            </div>
-          )}
-          {props.offer.state == OfferState.CANCELED && (
-            <div className="badge-warning">
-              <i className="fa-regular fa-ban"></i>{" "}
-              <span className="req-btn-info">{t("canceledOffer")}</span>
-            </div>
-          )}
-          <Dropdown
-            trigger={["click"]}
-            menu={{ items }}
-            placement="bottomRight"
-          >
-            <i className="fa-solid fa-ellipsis-vertical mas-acciones"></i>
-          </Dropdown>
-        </div>
+        {props.showStateAndActions && (
+          <div className="oferta-acciones">
+            {props.offer.state == OfferState.WINNER && (
+              <div className="badge-green">
+                <i className="fa-regular fa-circle-check"></i>{" "}
+                <span className="req-btn-info">{t("selectedOffer")}</span>
+              </div>
+            )}
+            {props.offer.state == OfferState.CANCELED && (
+              <div className="badge-warning">
+                <i className="fa-regular fa-ban"></i>{" "}
+                <span className="req-btn-info">{t("canceledOffer")}</span>
+              </div>
+            )}
+            <Dropdown
+              trigger={["click"]}
+              menu={{ items }}
+              placement="bottomRight"
+            >
+              <i className="fa-solid fa-ellipsis-vertical mas-acciones"></i>
+            </Dropdown>
+          </div>
+        )}
       </div>
     </>
   );

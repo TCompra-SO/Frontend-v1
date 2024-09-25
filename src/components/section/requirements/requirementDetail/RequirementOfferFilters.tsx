@@ -7,16 +7,13 @@ import {
   defaultCountry,
 } from "../../../../utilities/globals";
 import { useContext, useState } from "react";
-import {
-  OfferFilterTypes,
-  PriceFilter,
-  WarrantyFilter,
-} from "../../../../utilities/types";
+import { OfferFilterTypes, CommonFilter } from "../../../../utilities/types";
 import { IdValueObj, OfferFilters } from "../../../../models/Interfaces";
 import { requirementDetailContext } from "../../../../contexts/requirementDetailContext";
 import { useTranslation } from "react-i18next";
 import { ListsContext } from "../../../../contexts/listsContext";
 import { getListForSelectIdValueMap } from "../../../../utilities/globalFunctions";
+import { filterLabels } from "../../../../utilities/colors";
 
 interface RequirementOfferFiltersProps {
   onFilterChange: (filterType: OfferFilterTypes, value: any) => void;
@@ -30,6 +27,16 @@ export default function RequirementOfferFilters(
   const [form] = Form.useForm<OfferFilters>();
   const context = useContext(ListsContext);
   const { countryData, deliveryTimeList } = context;
+  const [commonList] = useState(
+    Object.keys(CommonFilter)
+      .filter((key) => isNaN(Number(key)))
+      .map((enumKey) => ({
+        value: CommonFilter[enumKey as keyof typeof CommonFilter],
+        label: t(
+          filterLabels[CommonFilter[enumKey as keyof typeof CommonFilter]]
+        ),
+      }))
+  );
   const [initialValues] = useState({
     price: allSelect,
     location: allSelect,
@@ -94,17 +101,15 @@ export default function RequirementOfferFilters(
             >
               <Col xs={12} sm={12} md={6} lg={6} xl={6}>
                 <Flex vertical align="center">
-                  <b>{t("priceColumn")}</b>
+                  <b style={{ color: "#92acbf" }}>{t("priceColumn")}</b>
                   <Form.Item
                     name="price"
-                    style={{ width: "100%", marginBottom: "10px" }}
+                    style={{
+                      width: "100%",
+                    }}
                   >
                     <SelectContainer
-                      options={[
-                        { value: allSelect, label: t("all") },
-                        { value: PriceFilter.ASC, label: t("ascending") },
-                        { value: PriceFilter.DESC, label: t("descending") },
-                      ]}
+                      options={commonList}
                       style={{ marginTop: "5px" }}
                       className="form-control"
                     />
@@ -114,11 +119,8 @@ export default function RequirementOfferFilters(
 
               <Col xs={12} sm={12} md={6} lg={6} xl={6}>
                 <Flex vertical align="center">
-                  <b>{t("locationColumn")}</b>
-                  <Form.Item
-                    name="location"
-                    style={{ width: "100%", marginBottom: "10px" }}
-                  >
+                  <b style={{ color: "#92acbf" }}>{t("locationColumn")}</b>
+                  <Form.Item name="location" style={{ width: "100%" }}>
                     <SelectContainer
                       // options={[
                       //   { value: allSelect, label: t("all") },
@@ -144,11 +146,8 @@ export default function RequirementOfferFilters(
 
               <Col xs={12} sm={12} md={6} lg={6} xl={6}>
                 <Flex vertical align="center">
-                  <b>{t("delivery")}</b>
-                  <Form.Item
-                    name="deliveryTime"
-                    style={{ width: "100%", marginBottom: "10px" }}
-                  >
+                  <b style={{ color: "#92acbf" }}>{t("delivery")}</b>
+                  <Form.Item name="deliveryTime" style={{ width: "100%" }}>
                     <SelectContainer
                       options={[{ label: t("all"), value: allSelect }].concat(
                         getListForSelectIdValueMap(deliveryTimeList)
@@ -162,17 +161,10 @@ export default function RequirementOfferFilters(
 
               <Col xs={12} sm={12} md={6} lg={6} xl={6}>
                 <Flex vertical align="center">
-                  <b>{t("warranty")}</b>
-                  <Form.Item
-                    name="warranty"
-                    style={{ width: "100%", marginBottom: "10px" }}
-                  >
+                  <b style={{ color: "#92acbf" }}>{t("warranty")}</b>
+                  <Form.Item name="warranty" style={{ width: "100%" }}>
                     <SelectContainer
-                      options={[
-                        { value: allSelect, label: t("all") },
-                        { value: WarrantyFilter.ASC, label: t("ascending") },
-                        { value: WarrantyFilter.DESC, label: t("descending") },
-                      ]}
+                      options={commonList}
                       style={{ marginTop: "5px" }}
                       className="form-control"
                     />

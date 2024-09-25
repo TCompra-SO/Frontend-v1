@@ -19,6 +19,7 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
             <RequirementOfferListItemHeader
               offer={offer}
               requirement={props.requirement}
+              showStateAndActions={true}
             />
             <RequirementOfferListItemBody offer={offer} />
           </div>

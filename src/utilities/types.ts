@@ -75,6 +75,7 @@ export enum ModalTypes {
   RATE_USER = 8,
   CONFIRM = 9,
   INPUT_EMAIL = 10,
+  OFFER_DETAIL = 11,
 }
 
 export const ModalWidth: {
@@ -91,6 +92,7 @@ export const ModalWidth: {
   [ModalTypes.RATE_USER]: mediumPlusModalWidth,
   [ModalTypes.CONFIRM]: mediumPlusModalWidth,
   [ModalTypes.INPUT_EMAIL]: smallModalWidth,
+  [ModalTypes.OFFER_DETAIL]: commonModalWidth,
 };
 
 /***** Acciones *****/
@@ -118,6 +120,7 @@ export enum Action {
   VIEW_DOCUMENT = 20,
   DOCS_STATE = 21,
   CANCEL = 22,
+  OFFER_DETAIL = 23,
 }
 
 export const ActionLabel: {
@@ -145,6 +148,7 @@ export const ActionLabel: {
   [Action.VIEW_DOCUMENT]: "viewDocument",
   [Action.DOCS_STATE]: "docsState",
   [Action.CANCEL]: "cancel",
+  [Action.OFFER_DETAIL]: "offerDetail",
 };
 
 export const ActionByStateRequirement: {
@@ -160,18 +164,18 @@ export const ActionByStateRequirement: {
 };
 
 export const ActionByStateOffer: { [key in OfferState]: Array<Action> } = {
-  [OfferState.ACTIVE]: [Action.DELETE, Action.SHOW_SUMMARY, Action.CHAT],
+  [OfferState.ACTIVE]: [Action.DELETE, Action.OFFER_DETAIL, Action.CHAT],
   [OfferState.CANCELED]: [
     Action.RATE_CANCELED,
-    Action.SHOW_SUMMARY,
+    Action.OFFER_DETAIL,
     Action.CHAT,
   ],
-  [OfferState.DISPUTE]: [Action.SHOW_SUMMARY, Action.CHAT],
-  [OfferState.FINISHED]: [Action.SHOW_SUMMARY, Action.CHAT],
+  [OfferState.DISPUTE]: [Action.OFFER_DETAIL, Action.CHAT],
+  [OfferState.FINISHED]: [Action.OFFER_DETAIL, Action.CHAT],
   [OfferState.WINNER]: [
     Action.CANCEL_OFFER,
     Action.FINISH,
-    Action.SHOW_SUMMARY,
+    Action.OFFER_DETAIL,
     Action.CHAT,
   ],
   [OfferState.ELIMINATED]: [],
@@ -207,7 +211,7 @@ export const ActionByStatePurchaseOrder: {
 
 /*********/
 
-export enum PriceFilter {
+export enum CommonFilter {
   ALL = allSelect,
   ASC = 1,
   DESC = 2,
@@ -220,12 +224,6 @@ export const DeliveryTimeFilter = {
 export const LocationFilter = {
   ALL: allSelect,
 };
-
-export enum WarrantyFilter {
-  ALL = allSelect,
-  ASC = 1,
-  DESC = 2,
-}
 
 export enum OfferFilterTypes {
   PRICE = 1,

@@ -592,7 +592,7 @@ const offerList: OfferListItem[] = [
     deliveryTime: 1,
     location: 12,
     warrantyTime: TimeMeasurement.MONTHS,
-    state: OfferState.ACTIVE,
+    state: OfferState.WINNER,
     publishDate: new Date(),
     type: RequirementType.GOOD,
     user: {
@@ -680,7 +680,7 @@ const offerList: OfferListItem[] = [
     publishDate: new Date(),
     location: 5,
     warrantyTime: TimeMeasurement.YEARS,
-    state: OfferState.DISPUTE,
+    state: OfferState.ACTIVE,
     type: RequirementType.GOOD,
     user: {
       uid: "user1",

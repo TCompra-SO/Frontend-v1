@@ -134,6 +134,7 @@ const resources = {
       viewDocument: "View document",
       docsState: "Document state",
       cancel: "Cancel",
+      offerDetail: "Offer detail",
       // Sections
       myProfile: "My profile",
       myRequirements: "My Requirements",
@@ -255,7 +256,8 @@ const resources = {
       expires: "Expires",
       delivery: "Delivery",
       filter: "Filter",
-      igv: "I.G.V."
+      igv: "I.G.V.",
+      winningOffer: "Winning offer"
     },
   },
   es: {
@@ -390,6 +392,7 @@ const resources = {
       viewDocument: "Ver documento",
       docsState: "Estado de documentos",
       cancel: "Cancelar",
+      offerDetail: "Detalle de oferta",
       // Sections
       myProfile: "Mi Perfil",
       myRequirements: "Mis Requerimientos",
@@ -512,7 +515,8 @@ const resources = {
       expires: "Expira",
       delivery: "Entrega",
       filter: "Filtro",
-      igv: "I.G.V."
+      igv: "I.G.V.",
+      winningOffer: "Oferta ganadora"
     },
   },
 };

@@ -18,7 +18,8 @@ const offerList: OfferListItem[] = [
   {
     key: "1",
     title: "Gaming Laptop",
-    description: "High-performance gaming laptop with RGB keyboard",
+    description:
+      "Se requiere comprar muebles start para la sala de espera empresarialSe requiere comprar muebles start para la sala de esperamuebles start para la sala de ",
     requirementTitle:
       "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     requirementId: "1",
@@ -340,8 +341,8 @@ const offerList: OfferListItem[] = [
 export default function Offers() {
   const { t } = useTranslation();
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [modalTitle] = useState<React.ReactNode>("");
-  const [dataModal] = useState<ModalContent>({
+
+  const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
   });
@@ -357,8 +358,19 @@ export default function Offers() {
     setIsOpenModal(false);
   }
 
-  function handleOnButtonClick(_: Action, offer: OfferListItem) {
+  function handleOnButtonClick(action: Action, offer: OfferListItem) {
     console.log(offer);
+    switch (action) {
+      case Action.OFFER_DETAIL:
+        setDataModal({
+          type: ModalTypes.OFFER_DETAIL,
+          data: {
+            offer,
+          },
+        });
+        setIsOpenModal(true);
+        break;
+    }
   }
 
   function handleSearch(e: ChangeEvent<HTMLInputElement>) {
@@ -369,7 +381,6 @@ export default function Offers() {
     <>
       <ModalContainer
         destroyOnClose
-        title={modalTitle}
         content={dataModal}
         isOpen={isOpenModal}
         onClose={handleCloseModal}

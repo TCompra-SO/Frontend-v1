@@ -1,4 +1,9 @@
-import { OfferState, PurchaseOrderState, RequirementState } from "./types";
+import {
+  CommonFilter,
+  OfferState,
+  PurchaseOrderState,
+  RequirementState,
+} from "./types";
 
 export const primaryColor = "#BC1373";
 export const mainBackgroundColor = "#ffffff";
@@ -103,4 +108,12 @@ export const PurchaseOrderStateMeta: {
     class: "es-atendido",
     label: "pending",
   },
+};
+
+export const filterLabels: {
+  [key in CommonFilter]: string;
+} = {
+  [CommonFilter.ALL]: "all",
+  [CommonFilter.ASC]: "ascending",
+  [CommonFilter.DESC]: "descending",
 };

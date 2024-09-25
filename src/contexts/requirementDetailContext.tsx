@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useState } from "react";
-import { PriceFilter, WarrantyFilter } from "../utilities/types";
+import { CommonFilter } from "../utilities/types";
 import { allSelect } from "../utilities/globals";
 import { OfferFilters } from "../models/Interfaces";
 import { useTranslation } from "react-i18next";
@@ -17,10 +17,10 @@ export const requirementDetailContext = createContext<{
   filterNames: { location: string; deliveryTime: string };
 }>({
   filters: {
-    price: PriceFilter.ALL,
+    price: CommonFilter.ALL,
     location: allSelect,
     deliveryTime: allSelect,
-    warranty: WarrantyFilter.ALL,
+    warranty: CommonFilter.ALL,
   },
   updateFilters: () => {},
   filterNames: {
@@ -34,10 +34,10 @@ export function RequirementDetailProvider({
 }: RequirementDetailProps) {
   const { t } = useTranslation();
   const [filters, setFilters] = useState({
-    price: PriceFilter.ALL,
+    price: CommonFilter.ALL,
     location: allSelect,
     deliveryTime: allSelect,
-    warranty: WarrantyFilter.ALL,
+    warranty: CommonFilter.ALL,
   });
 
   const [filterNames, setFilterNames] = useState({

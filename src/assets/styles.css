@@ -1314,6 +1314,11 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
   margin-bottom: 0 !important;
 }
 
+/* Border radius de Popover */
+.ant-popover .ant-popover-inner {
+  border-radius: 0.7rem;
+}
+
 /*****************************/
 
 /* Truncar texto */
