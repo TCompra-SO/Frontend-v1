@@ -2,7 +2,7 @@ import { Tooltip } from "antd";
 import { BaseUser } from "../../models/MainInterfaces";
 
 interface SubUserNameProps {
-  subUser?: BaseUser;
+  subUser: BaseUser | undefined;
 }
 
 export default function SubUserName(props: SubUserNameProps) {

@@ -582,7 +582,8 @@ const offerList: OfferListItem[] = [
   {
     key: "1",
     title: "Gaming Laptop",
-    description: "High-performance gaming laptop with RGB keyboard",
+    description:
+      "High-performance gaming laptop with RGB keyboard High-performance gaming laptop with RGB keyboard High-performance gaming laptop with RGB keyboard High-performance gaming laptop with RGB keyboard High-performance gaming laptop with RGB keyboard",
     requirementTitle:
       "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     requirementId: "1",
@@ -594,6 +595,7 @@ const offerList: OfferListItem[] = [
     warrantyTime: TimeMeasurement.MONTHS,
     state: OfferState.WINNER,
     publishDate: new Date(),
+    selectionDate: new Date(),
     type: RequirementType.GOOD,
     user: {
       uid: "user1",

@@ -11,6 +11,7 @@ import { Image } from "antd";
 
 interface RequirementOfferListItemBodyProps {
   offer: OfferListItem;
+  showUserData: boolean;
 }
 
 export default function RequirementOfferListItemBody(
@@ -52,11 +53,12 @@ export default function RequirementOfferListItemBody(
         <div className="tag-gray">
           {cities[props.offer.location]?.value ?? null}
         </div>
-        {props.offer.user.userTable == UserTable.COMPANY && (
-          <div className="tag-gray">
-            {t("tenure")}: {props.offer.user.tenure} {t("years")}
-          </div>
-        )}
+        {props.showUserData &&
+          props.offer.user.userTable == UserTable.COMPANY && (
+            <div className="tag-gray">
+              {t("tenure")}: {props.offer.user.tenure} {t("years")}
+            </div>
+          )}
         <div className="tag-gray">
           {t("delivery")}:{" "}
           {deliveryTimeList && deliveryTimeList[props.offer.deliveryTime]
@@ -71,11 +73,13 @@ export default function RequirementOfferListItemBody(
             ? t("months")
             : t("years")}
         </div>
-        <div className="tag-gray">
-          {props.offer.subUser
-            ? props.offer.subUser.email
-            : props.offer.user.email}
-        </div>
+        {props.showUserData && (
+          <div className="tag-gray">
+            {props.offer.subUser
+              ? props.offer.subUser.email
+              : props.offer.user.email}
+          </div>
+        )}
         <div className="tag-gray-2">
           {t("igv")}: {props.offer.igv ? t("yes") : t("no")}
         </div>

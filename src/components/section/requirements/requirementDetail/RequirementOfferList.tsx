@@ -18,10 +18,12 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
           <div key={offer.key} className="card-ofertas">
             <RequirementOfferListItemHeader
               offer={offer}
-              requirement={props.requirement}
-              showStateAndActions={true}
+              showStateAndActions={{
+                show: true,
+                requirement: props.requirement,
+              }}
             />
-            <RequirementOfferListItemBody offer={offer} />
+            <RequirementOfferListItemBody offer={offer} showUserData={true} />
           </div>
         );
       })}

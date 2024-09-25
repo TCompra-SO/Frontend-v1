@@ -1,17 +1,12 @@
-import { Divider } from "antd";
-import {
-  OfferListItem,
-  RequirementTableItem,
-} from "../../../../models/MainInterfaces";
-import RequirementOfferSummaryUserData from "./RequirementOfferSummaryUserData";
-import RequirementOfferSummaryUser from "./RequirementOfferSummaryUser";
-import RequirementOfferListItemHeader from "../requirementDetail/RequirementOfferListItemHeader";
+import { OfferListItem } from "../../../../models/MainInterfaces";
 import RequirementOfferListItemBody from "../requirementDetail/RequirementOfferListItemBody";
 import { useTranslation } from "react-i18next";
+import FrontImage from "../../../common/FrontImage";
+import RequirementInfoNoTags from "../requirementDetail/RequirementInfoNoTags";
+import { DocType, UserTable } from "../../../../utilities/types";
 
 interface RequirementOfferSummaryProps {
   offer: OfferListItem;
-  requirement: RequirementTableItem;
 }
 
 export default function RequirementOfferSummary(
@@ -22,20 +17,44 @@ export default function RequirementOfferSummary(
   return (
     <div className="modal-card">
       <div className="detalle-oferta">
-        <Divider style={{ margin: "15px 0" }} />
-        <RequirementOfferSummaryUser offer={props.offer} />
-        <RequirementOfferSummaryUserData offer={props.offer} />
-        <div className="card-gray">
-          <div className="ofertas-recib">{t("winningOffer")}</div>
+        <div className="t-flex gap-15 requerimiento-o">
+          <FrontImage image={props.offer.user.image} isUser={true} />
+          <div className="t-flex detalle-req">
+            <RequirementInfoNoTags
+              title={props.offer.title}
+              user={props.offer.user}
+              type={props.offer.type}
+              subUser={props.offer.subUser}
+              description={props.offer.description}
+            />
+            <div className="t-flex tags-req t-wrap">
+              <div className="badge-grey-border">
+                {DocType.RUC}: 23568745214
+              </div>
+              {/* r3v dni ruc */}
+              {props.offer.user.userTable == UserTable.COMPANY && (
+                <div className="badge-grey-border">
+                  {t("tenure")}: {props.offer.user.tenure} {t("years")}
+                </div>
+              )}
+              <div className="badge-grey-border">
+                {t("phone")}: {props.offer.user.phone}
+              </div>
+              <div className="badge-grey-border">
+                {t("email")}:{" "}
+                {props.offer.subUser
+                  ? props.offer.subUser.email
+                  : props.offer.user.email}
+              </div>
+            </div>
+          </div>
         </div>
         <div className="t-flex gap-15" style={{ flexDirection: "column" }}>
           <div className="card-ofertas">
-            <RequirementOfferListItemHeader
+            <RequirementOfferListItemBody
               offer={props.offer}
-              requirement={props.requirement}
-              showStateAndActions={false}
+              showUserData={false}
             />
-            <RequirementOfferListItemBody offer={props.offer} />
           </div>
         </div>
       </div>

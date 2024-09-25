@@ -1,18 +1,12 @@
-import { Tooltip } from "antd";
-
-import { Coins, RequirementType } from "../../../../utilities/types";
+import { Coins } from "../../../../utilities/types";
 import { RequirementTableItem } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
-import {
-  getLabelFromRequirementType,
-  getScore,
-} from "../../../../utilities/globalFunctions";
 import { ListsContext } from "../../../../contexts/listsContext";
 import { useContext } from "react";
 import dayjs from "dayjs";
 import { dateFormat } from "../../../../utilities/globals";
-import SubUserName from "../../../common/SubUserName";
-import DescriptionParagraph from "../../../common/DescriptionParagraph";
+import RequirementInfoNoTags from "./RequirementInfoNoTags";
+import FrontImage from "../../../common/FrontImage";
 
 interface RequirementInfoProps {
   requirement: RequirementTableItem;
@@ -25,38 +19,15 @@ export default function RequirementInfo(props: RequirementInfoProps) {
 
   return (
     <div className="t-flex gap-15 requerimiento-o">
-      <img
-        src={
-          props.requirement.image && props.requirement.image.length > 0
-            ? props.requirement.image[0]
-            : "/src/assets/images/img-prod.svg"
-        }
-        className="portada-detalle"
-      />
+      <FrontImage image={props.requirement.image} isUser={false} />
       <div className="t-flex detalle-req">
-        <Tooltip title={props.requirement.title}>
-          <h2 className="titulo-req">{props.requirement.title}</h2>
-        </Tooltip>
-        <div className="t-flex tags-req">
-          <div className="badge-default">{props.requirement.user.name}</div>
-          <SubUserName subUser={props.requirement.subUser} />
-          <div className="badge-second">
-            {t(getLabelFromRequirementType(props.requirement.type))}
-          </div>
-          <div className="puntuacion">
-            <i className="fa-solid fa-star p-start"></i>
-            <div className="valor-start">
-              {getScore(
-                props.requirement.type == RequirementType.SALE
-                  ? props.requirement.user.sellerScore
-                  : props.requirement.user.customerScore
-              )}
-            </div>
-            <b className="p-cantidad">(41.5k)</b>
-          </div>
-        </div>
-
-        <DescriptionParagraph text={props.requirement.description} />
+        <RequirementInfoNoTags
+          title={props.requirement.title}
+          user={props.requirement.user}
+          type={props.requirement.type}
+          subUser={props.requirement.subUser}
+          description={props.requirement.description}
+        />
 
         <div className="t-flex tags-req t-wrap">
           <b className="precio-req">

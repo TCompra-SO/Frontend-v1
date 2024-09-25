@@ -3,7 +3,7 @@ import ParagraphContainer from "../containers/ParagraphContainer";
 import { useTranslation } from "react-i18next";
 
 interface DescriptionParagraphProps {
-  text?: string;
+  text: string | undefined;
 }
 
 export default function DescriptionParagraph(props: DescriptionParagraphProps) {

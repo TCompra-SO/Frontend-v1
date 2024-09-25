@@ -20,9 +20,10 @@ import ModalContainer from "../../../containers/ModalContainer";
 
 interface RequirementOfferListItemProps {
   offer: OfferListItem;
-  requirement: RequirementTableItem;
   style?: React.CSSProperties;
-  showStateAndActions: boolean;
+  showStateAndActions:
+    | { show: true; requirement: RequirementTableItem }
+    | { show: false };
 }
 
 export default function RequirementOfferListItemHeader({
@@ -44,64 +45,69 @@ export default function RequirementOfferListItemHeader({
     },
   ];
 
-  if (props.offer.state == OfferState.WINNER)
-    items.push({
-      label: t(ActionLabel[Action.CANCEL_PURCHASE_ORDER]),
-      key: Action.CANCEL_PURCHASE_ORDER,
-      onClick: () => onOpenModal(Action.CANCEL_PURCHASE_ORDER),
-    });
-  if (
-    props.offer.state == OfferState.ACTIVE &&
-    props.requirement.state == RequirementState.PUBLISHED
-  )
-    items.push({
-      label: t(ActionLabel[Action.SELECT_OFFER]),
-      key: Action.SELECT_OFFER,
-      onClick: () => onOpenModal(Action.SELECT_OFFER),
-    });
-  if (props.offer.state == OfferState.CANCELED)
-    // r3v creador de ofera canceló la oferta)
-    items.push({
-      label: t(ActionLabel[Action.RATE_CANCELED]),
-      key: Action.RATE_CANCELED,
-      onClick: () => onOpenModal(Action.RATE_CANCELED),
-    });
+  if (props.showStateAndActions.show) {
+    if (props.offer.state == OfferState.WINNER)
+      items.push({
+        label: t(ActionLabel[Action.CANCEL_PURCHASE_ORDER]),
+        key: Action.CANCEL_PURCHASE_ORDER,
+        onClick: () => onOpenModal(Action.CANCEL_PURCHASE_ORDER),
+      });
+    if (
+      props.offer.state == OfferState.ACTIVE &&
+      props.showStateAndActions.requirement.state == RequirementState.PUBLISHED
+    )
+      items.push({
+        label: t(ActionLabel[Action.SELECT_OFFER]),
+        key: Action.SELECT_OFFER,
+        onClick: () => onOpenModal(Action.SELECT_OFFER),
+      });
+    if (props.offer.state == OfferState.CANCELED)
+      // r3v creador de ofera canceló la oferta)
+      items.push({
+        label: t(ActionLabel[Action.RATE_CANCELED]),
+        key: Action.RATE_CANCELED,
+        onClick: () => onOpenModal(Action.RATE_CANCELED),
+      });
+  }
 
   function onOpenModal(action: Action) {
-    switch (action) {
-      case Action.CANCEL_PURCHASE_ORDER:
-        setIsOpenModal(true);
-        setDataModal({
-          type: ModalTypes.CANCEL_PURCHASE_ORDER,
-          data: {
-            offerId: props.offer.key,
-            requirementId: props.requirement.key,
-            fromRequirementTable: false,
-          },
-        });
-        break;
-      case Action.SELECT_OFFER:
-        setIsOpenModal(true);
+    if (props.showStateAndActions.show) {
+      switch (action) {
+        case Action.CANCEL_PURCHASE_ORDER:
+          setIsOpenModal(true);
+          setDataModal({
+            type: ModalTypes.CANCEL_PURCHASE_ORDER,
+            data: {
+              offerId: props.offer.key,
+              requirementId: props.showStateAndActions.requirement.key,
+              fromRequirementTable: false,
+            },
+          });
+          break;
+        case Action.SELECT_OFFER:
+          setIsOpenModal(true);
 
-        setDataModal({
-          type: ModalTypes.SELECT_OFFER,
-          data: {
-            offer: props.offer,
-            requirement: props.requirement,
-          },
-        });
-        break;
-      case Action.RATE_CANCELED:
-        setIsOpenModal(true);
-        setDataModal({
-          type: ModalTypes.RATE_CANCELED,
-          data: {
-            user: props.offer.user,
-            requirementOffertitle: props.requirement.title,
-            type: props.requirement.type,
-            isOffer: true,
-          },
-        });
+          setDataModal({
+            type: ModalTypes.SELECT_OFFER,
+            data: {
+              offer: props.offer,
+              requirement: props.showStateAndActions.requirement,
+            },
+          });
+          break;
+        case Action.RATE_CANCELED:
+          setIsOpenModal(true);
+          setDataModal({
+            type: ModalTypes.RATE_CANCELED,
+            data: {
+              user: props.offer.user,
+              requirementOffertitle:
+                props.showStateAndActions.requirement.title,
+              type: props.showStateAndActions.requirement.type,
+              isOffer: true,
+            },
+          });
+      }
     }
   }
 

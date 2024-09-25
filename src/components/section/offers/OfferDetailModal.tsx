@@ -3,6 +3,7 @@ import { getLabelFromRequirementType } from "../../../utilities/globalFunctions"
 import { useTranslation } from "react-i18next";
 import SubUserName from "../../common/SubUserName";
 import DescriptionParagraph from "../../common/DescriptionParagraph";
+import FrontImage from "../../common/FrontImage";
 
 interface OfferDetailModalProps {
   offer: OfferListItem;
@@ -15,14 +16,7 @@ export default function OfferDetailModal(props: OfferDetailModalProps) {
     <div className="modal-card">
       <div className="detalle-oferta">
         <div className="t-flex gap-15 requerimiento-o">
-          <img
-            src={
-              props.offer.image && props.offer.image.length > 0
-                ? props.offer.image[0]
-                : "/src/assets/images/img-prod.svg"
-            }
-            className="portada-detalle"
-          />
+          <FrontImage image={props.offer.image} isUser={false} />
           <div className="t-flex detalle-req">
             <h2 className="titulo-req">{props.offer.title}</h2>
             <div className="t-flex tags-req">
