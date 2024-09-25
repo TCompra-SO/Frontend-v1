@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { MainState } from "../../models/Redux";
 import showNotification from "../../utilities/notification/showNotification";
+import FrontImage from "./FrontImage";
 
 interface RatingCanceledModalProps {
   user: User;
@@ -56,21 +57,18 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
         <div className="card-ofertas">
           <div className="t-flex">
             <div className="t-flex oferta-titulo">
-              <img
-                src={props.user.image ?? "/src/assets/images/img-prod.svg"}
-                className="img-oferta"
-              />
+              <FrontImage small image={props.user.image} isUser={true} />
               <div className="oferta-usuario">
                 <div className="oferta-datos t-wrap m-0">
                   <div className="usuario-name">{props.user.name}</div>
                   {/* <div className="user-empresa-2">U</div> */}
                 </div>
                 <div className="t-flex oferta-descripcion">
-                  <Tooltip title={props.requirementOffertitle}>
-                    <div className="text-truncate detalles-oferta">
+                  <div className="text-truncate detalles-oferta">
+                    <Tooltip title={props.requirementOffertitle}>
                       {props.requirementOffertitle}
-                    </div>
-                  </Tooltip>
+                    </Tooltip>
+                  </div>
                 </div>
               </div>
             </div>

@@ -1,6 +1,7 @@
 interface FrontImageProps {
   image: string | string[] | undefined;
   isUser: boolean;
+  small?: boolean;
 }
 
 export default function FrontImage(props: FrontImageProps) {
@@ -11,5 +12,7 @@ export default function FrontImage(props: FrontImageProps) {
     if (typeof props.image === "string") src = props.image;
     else if (props.image.length > 0) src = props.image[0];
 
-  return <img src={src} className="portada-detalle" />;
+  return (
+    <img src={src} className={props.small ? "img-oferta" : "portada-detalle"} />
+  );
 }

@@ -11,7 +11,7 @@ import RatingModal from "../common/RatingModal";
 import ConfirmationModal from "../common/ConfirmationModal";
 import InputEmailModal from "../common/InputEmailModal";
 import NoContentModalContainer from "./NoContentModalContainer";
-import OfferDetailModal from "../section/offers/OfferDetailModal";
+import OfferDetailModal from "../section/offers/offerDetail/OfferDetailModal";
 
 interface ModalContainerProps extends ModalProps {
   content: ModalContent;

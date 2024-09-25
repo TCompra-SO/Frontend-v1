@@ -2,12 +2,13 @@ import { OfferListItem } from "../../../../models/MainInterfaces";
 import { dateFormat, defaultCountry } from "../../../../utilities/globals";
 
 import { useTranslation } from "react-i18next";
-import { Coins, TimeMeasurement, UserTable } from "../../../../utilities/types";
+import { TimeMeasurement, UserTable } from "../../../../utilities/types";
 import { ListsContext } from "../../../../contexts/listsContext";
 import { useContext, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { IdValueMap, IdValueObj } from "../../../../models/Interfaces";
 import { Image } from "antd";
+import PriceInHeader from "../../../common/PriceInHeader";
 
 interface RequirementOfferListItemBodyProps {
   offer: OfferListItem;
@@ -21,7 +22,7 @@ export default function RequirementOfferListItemBody(
   const [previewOpen, setPreviewOpen] = useState(false);
 
   const context = useContext(ListsContext);
-  const { currencyList, deliveryTimeList, countryData } = context;
+  const { deliveryTimeList, countryData } = context;
   const [cities, setCities] = useState<IdValueMap>({});
 
   useEffect(() => {
@@ -50,21 +51,21 @@ export default function RequirementOfferListItemBody(
   return (
     <div className="t-flex body-ofertas">
       <div className="t-flex t-wrap tags-oferta">
-        <div className="tag-gray">
-          {cities[props.offer.location]?.value ?? null}
-        </div>
+        {cities[props.offer.location] && (
+          <div className="tag-gray">{cities[props.offer.location].value}</div>
+        )}
         {props.showUserData &&
           props.offer.user.userTable == UserTable.COMPANY && (
             <div className="tag-gray">
               {t("tenure")}: {props.offer.user.tenure} {t("years")}
             </div>
           )}
-        <div className="tag-gray">
-          {t("delivery")}:{" "}
-          {deliveryTimeList && deliveryTimeList[props.offer.deliveryTime]
-            ? deliveryTimeList[props.offer.deliveryTime].value
-            : null}
-        </div>
+        {deliveryTimeList && deliveryTimeList[props.offer.deliveryTime] && (
+          <div className="tag-gray">
+            {t("delivery")}: {deliveryTimeList[props.offer.deliveryTime].value}
+          </div>
+        )}
+
         <div className="tag-gray">
           {t("warranty")}: {props.offer.warranty}{" "}
           {props.offer.warrantyTime == TimeMeasurement.DAYS
@@ -129,12 +130,11 @@ export default function RequirementOfferListItemBody(
             </div>
           </div>
         </div>
-        <b className="precio-oferta">
-          {currencyList && currencyList[props.offer.coin]
-            ? Coins[currencyList[props.offer.coin].alias]
-            : null}{" "}
-          {props.offer.price}
-        </b>
+        <PriceInHeader
+          coin={props.offer.coin}
+          price={props.offer.price}
+          useOfferClass={true}
+        />
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-import { Coins } from "../../../../utilities/types";
 import { RequirementTableItem } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
 import { ListsContext } from "../../../../contexts/listsContext";
@@ -7,6 +6,7 @@ import dayjs from "dayjs";
 import { dateFormat } from "../../../../utilities/globals";
 import RequirementInfoNoTags from "./RequirementInfoNoTags";
 import FrontImage from "../../../common/FrontImage";
+import PriceInHeader from "../../../common/PriceInHeader";
 
 interface RequirementInfoProps {
   requirement: RequirementTableItem;
@@ -15,7 +15,7 @@ interface RequirementInfoProps {
 export default function RequirementInfo(props: RequirementInfoProps) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
-  const { currencyList, deliveryTimeList } = context;
+  const { deliveryTimeList } = context;
 
   return (
     <div className="t-flex gap-15 requerimiento-o">
@@ -30,12 +30,11 @@ export default function RequirementInfo(props: RequirementInfoProps) {
         />
 
         <div className="t-flex tags-req t-wrap">
-          <b className="precio-req">
-            {currencyList && currencyList[props.requirement.coin]
-              ? Coins[currencyList[props.requirement.coin].alias]
-              : null}
-            {props.requirement.price}
-          </b>
+          <PriceInHeader
+            coin={props.requirement.coin}
+            price={props.requirement.price}
+            useOfferClass={false}
+          />
           <div className="badge-grey-border">
             {t("deliveryTime")}:{" "}
             {deliveryTimeList &&

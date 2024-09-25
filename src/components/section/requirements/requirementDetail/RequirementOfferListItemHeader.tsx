@@ -17,6 +17,7 @@ import { getScore } from "../../../../utilities/globalFunctions";
 import { useState } from "react";
 import { ModalContent } from "../../../../models/Interfaces";
 import ModalContainer from "../../../containers/ModalContainer";
+import FrontImage from "../../../common/FrontImage";
 
 interface RequirementOfferListItemProps {
   offer: OfferListItem;
@@ -124,29 +125,27 @@ export default function RequirementOfferListItemHeader({
       />
       <div className="t-flex head-oferta">
         <div className="t-flex oferta-titulo">
-          <img
-            src={props.offer.user.image ?? "/src/assets/images/img-prod.svg"}
-            className="img-oferta"
-          />
+          <FrontImage small image={props.offer.user.image} isUser={true} />
           <div className="oferta-usuario">
             <div className="oferta-datos t-wrap">
-              <Tooltip
-                title={props.offer.user.name}
-                trigger={["click", "hover"]}
-              >
-                <div className="usuario-name text-truncate">
-                  {props.offer.user.name}
-                </div>
-              </Tooltip>
-              {props.offer.subUser && props.offer.subUser.name.length > 0 && (
+              <div className="usuario-name text-truncate">
                 <Tooltip
-                  title={props.offer.subUser.name}
+                  title={props.offer.user.name}
                   trigger={["click", "hover"]}
                 >
-                  <div className="user-empresa-2">
-                    {props.offer.subUser.name[0].toLocaleUpperCase()}
-                  </div>
+                  {props.offer.user.name}
                 </Tooltip>
+              </div>
+
+              {props.offer.subUser && props.offer.subUser.name.length > 0 && (
+                <div className="user-empresa-2">
+                  <Tooltip
+                    title={props.offer.subUser.name}
+                    trigger={["click", "hover"]}
+                  >
+                    {props.offer.subUser.name[0].toLocaleUpperCase()}
+                  </Tooltip>
+                </div>
               )}
               <div className="usuario-badge">
                 {props.offer.user.userTable == UserTable.COMPANY

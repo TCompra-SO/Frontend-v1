@@ -932,7 +932,6 @@ export default function Requirements() {
     action: Action,
     requirement: RequirementTableItem
   ) {
-    console.log(action);
     switch (action) {
       case Action.SHOW_OFFERS: {
         setDataModal({
@@ -950,13 +949,6 @@ export default function Requirements() {
           data: { offer: offerList[0], requirement: requirement },
         });
         setIsOpenModal(true);
-        // setModalTitle(
-        //   <>
-        //     {t("summary")}
-        //     <br />
-        //     <div style={{ fontWeight: "normal" }}>{t("winnigOfferDetail")}</div>
-        //   </>
-        // );
         break;
       }
       case Action.REPUBLISH: {

@@ -114,6 +114,8 @@ const resources = {
       selectDate: "Select a date",
       winnigOfferDetail: "Winning offer details",
       deleteRequirementConfirmation: "Are sure about deleting the requirement?",
+      deleteOfferConfirmation:
+        "Are sure about deleting the offer?",
       // Action
       showOffers: "Show offers",
       delete: "Delete",
@@ -257,7 +259,8 @@ const resources = {
       delivery: "Delivery",
       filter: "Filter",
       igv: "I.G.V.",
-      winningOffer: "Winning offer"
+      winningOffer: "Winning offer",
+      deliveryDate: "Delivery date",
     },
   },
   es: {
@@ -372,6 +375,8 @@ const resources = {
       winnigOfferDetail: "Winning offer details",
       deleteRequirementConfirmation:
         "¿Está seguro de eliminar el requerimiento?",
+      deleteOfferConfirmation:
+        "¿Está seguro de eliminar la oferta?",
       // Action
       showOffers: "Ver ofertas",
       delete: "Eliminar",
@@ -516,7 +521,8 @@ const resources = {
       delivery: "Entrega",
       filter: "Filtro",
       igv: "I.G.V.",
-      winningOffer: "Oferta ganadora"
+      winningOffer: "Oferta ganadora",
+      deliveryDate: "Fecha de entrega",
     },
   },
 };

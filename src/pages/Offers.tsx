@@ -28,6 +28,7 @@ const offerList: OfferListItem[] = [
     publishDate: new Date(),
     warranty: 3,
     deliveryTime: 1,
+    deliveryDate: new Date(),
     location: 12,
     warrantyTime: TimeMeasurement.MONTHS,
     state: OfferState.ACTIVE,
@@ -358,8 +359,12 @@ export default function Offers() {
     setIsOpenModal(false);
   }
 
+  function deleteOffer(offerId: string) {
+    console.log("deleteOffer", offerId);
+  }
+
   function handleOnButtonClick(action: Action, offer: OfferListItem) {
-    console.log(offer);
+    console.log(action);
     switch (action) {
       case Action.OFFER_DETAIL:
         setDataModal({
@@ -370,6 +375,21 @@ export default function Offers() {
         });
         setIsOpenModal(true);
         break;
+
+      case Action.DELETE: {
+        setDataModal({
+          type: ModalTypes.CONFIRM,
+          data: {
+            onAnswer: (ok: boolean) => {
+              if (!ok) return;
+              deleteOffer(offer.key);
+            },
+            text: t("deleteOfferConfirmation"),
+          },
+        });
+        setIsOpenModal(true);
+        break;
+      }
     }
   }
 
