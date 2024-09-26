@@ -168,6 +168,7 @@ export default function Sidebar() {
           }
           common
           className={buttonClass}
+          onClick={() => redirectTo(`/${pageRoutes.users}`)}
         />
         <ButtonContainer
           children={

@@ -150,10 +150,16 @@ export interface TableTypePurchaseOrder extends TableHiddenColumns {
   // onButtonClick: (action: Action, data: PurchaseOrder) => void;
 }
 
+export interface TableTypeUsers extends TableHiddenColumns {
+  type: TableTypes.USERS;
+  data: User[];
+}
+
 export type TableType =
   | TableTypeRequirement
   | TableTypeOffer
-  | TableTypePurchaseOrder;
+  | TableTypePurchaseOrder
+  | TableTypeUsers;
 
 /********************* */
 

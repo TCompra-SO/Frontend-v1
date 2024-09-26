@@ -1,3 +1,5 @@
+import React from "react";
+
 export const dateFormat: string = "DD-MM-YYYY";
 export const TCompra: string = "TCompra";
 export const pageSizeOptionsSt: string[] = ["10", "20", "50", "100"];
@@ -16,6 +18,7 @@ export const smallModalWidth: number = 350;
 export const columnWidth: number = 100;
 
 export const certifiedCompaniesOpt: number = 3;
+export const phoneCode: string = "+51";
 
 /* Window size (>=) */
 export const windowSize = {
@@ -23,4 +26,9 @@ export const windowSize = {
   md: 768,
   lg: 992,
   xl: 1200,
+};
+
+export const mainModalScrollStyle: React.CSSProperties = {
+  maxHeight: "95vh",
+  overflowY: "scroll",
 };

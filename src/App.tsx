@@ -24,6 +24,7 @@ const Home = lazy(() => import("./pages/Home.tsx"));
 const Search = lazy(() => import("./pages/Search.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
 const Offers = lazy(() => import("./pages/Offers.tsx"));
+const Users = lazy(() => import("./pages/Users.tsx"));
 const CreateRequirementFloatButton = lazy(
   () =>
     import(
@@ -108,6 +109,10 @@ function App() {
                         <Route
                           path={`/${pageRoutes.myOffers}`}
                           element={<Offers />}
+                        />
+                        <Route
+                          path={`/${pageRoutes.users}`}
+                          element={<Users />}
                         />
                         <Route path="*" element={<Navigate to="/" replace />} />
                       </Routes>

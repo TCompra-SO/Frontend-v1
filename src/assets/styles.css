@@ -1214,6 +1214,12 @@ body {
   font-size: 18px;
 }
 
+/* Modal Agregar Trabajador */
+.ad-user {
+  flex: 1;
+  flex-direction: column;
+}
+
 /********** Antd's select **************************/
 
 .form-control .ant-select-selector {

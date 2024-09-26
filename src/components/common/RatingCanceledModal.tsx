@@ -89,7 +89,7 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
         <div className="t-flex gap-15">
           <ButtonContainer
             onClick={saveScore}
-            children={t("submitRating")}
+            children={t("submit")}
             className="btn btn-default wd-100"
           />
           <ButtonContainer

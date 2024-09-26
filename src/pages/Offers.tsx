@@ -13,6 +13,7 @@ import ModalContainer from "../components/containers/ModalContainer";
 import { ChangeEvent, useState } from "react";
 import { ModalContent, TableTypeOffer } from "../models/Interfaces";
 import TablePageContent from "../components/section/table-page/TablePageContent";
+import { mainModalScrollStyle } from "../utilities/globals";
 
 const offerList: OfferListItem[] = [
   {
@@ -477,12 +478,7 @@ export default function Offers() {
         content={dataModal}
         isOpen={isOpenModal}
         onClose={handleCloseModal}
-        className="custom-scroll"
-        style={{
-          maxHeight: "75vh",
-          overflowY: "scroll",
-          paddingBottom: "0",
-        }}
+        style={mainModalScrollStyle}
       />
       <TablePageContent
         title={t("myOffers")}

@@ -1,18 +1,19 @@
-import { useTranslation } from "react-i18next";
-import SelectContainer from "../../../containers/SelectContainer";
-import { useContext } from "react";
 import { Form } from "antd";
+import SelectContainer from "../../../containers/SelectContainer";
+import { useTranslation } from "react-i18next";
+import { useContext } from "react";
 import { ListsContext } from "../../../../contexts/listsContext";
 import { getCityListForSelect } from "../../../../utilities/globalFunctions";
 
-export default function LocationCR() {
+export default function LocationAU() {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { countryData } = context;
 
   return (
-    <>
+    <div className="t-flex ad-user">
       <div className="titulo-input">{t("location")}</div>
+
       <Form.Item
         label={t("location")}
         name="location"
@@ -25,6 +26,6 @@ export default function LocationCR() {
           className="form-control"
         />
       </Form.Item>
-    </>
+    </div>
   );
 }

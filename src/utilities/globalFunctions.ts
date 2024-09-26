@@ -1,7 +1,15 @@
 import moment from "moment";
-import { HttpService, IdValueMap } from "../models/Interfaces";
-import { maxDocSizeMb, maxImageSizeMb } from "./globals";
+import {
+  CountryCities,
+  HttpService,
+  IdValueMap,
+  IdValueObj,
+} from "../models/Interfaces";
+import { defaultCountry, maxDocSizeMb, maxImageSizeMb } from "./globals";
 import { RequirementType, UserClass } from "./types";
+import { FormItemProps } from "antd";
+import { ReactNode } from "react";
+import { Rule } from "antd/es/form";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -52,6 +60,19 @@ export function getListForSelectIdValueMap(data: IdValueMap) {
     label: value,
     value: Number(id),
   }));
+}
+
+// Retorna la lista de ciudades para select de Antd
+export function getCityListForSelect(countryData: CountryCities) {
+  const showCountry = countryData[defaultCountry]
+    ? defaultCountry
+    : Object.keys(countryData)[0];
+
+  return Object.keys(countryData).length > 0
+    ? countryData[showCountry].cities.map((cit: IdValueObj) => {
+        return { label: cit.value, value: cit.id };
+      })
+    : [];
 }
 
 // Retorna la llave del nombre del tipo de requerimiento

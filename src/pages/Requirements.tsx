@@ -15,6 +15,7 @@ import { ChangeEvent, useState } from "react";
 import { ModalContent, TableTypeRequirement } from "../models/Interfaces";
 import { useTranslation } from "react-i18next";
 import TablePageContent from "../components/section/table-page/TablePageContent";
+import { mainModalScrollStyle } from "../utilities/globals";
 
 const requirements: RequirementTableItem[] = [
   {
@@ -1063,12 +1064,7 @@ export default function Requirements() {
         content={dataModal}
         isOpen={isOpenModal}
         onClose={handleCloseModal}
-        className="custom-scroll"
-        style={{
-          maxHeight: "90vh",
-          overflowY: "scroll",
-          paddingBottom: "0",
-        }}
+        style={mainModalScrollStyle}
       />
       <TablePageContent
         title={t("myRequirements")}

@@ -187,7 +187,7 @@ export default function RatingModal(props: RatingModalProps) {
         </div>
         <div className="t-flex gap-15">
           <ButtonContainer
-            children={t("submitRating")}
+            children={t("submit")}
             className="btn btn-default wd-100"
             onClick={rateUser}
           />

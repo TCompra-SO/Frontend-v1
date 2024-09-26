@@ -1,6 +1,10 @@
 import { App, Col, Form, Input, InputRef, Row, Space } from "antd";
 import { ProfileRequest } from "../models/Requests";
-import { defaultCountry, maxImageSizeMb } from "../utilities/globals";
+import {
+  defaultCountry,
+  maxImageSizeMb,
+  phoneCode,
+} from "../utilities/globals";
 import { useDispatch, useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { useContext, useEffect, useState } from "react";
@@ -262,7 +266,7 @@ export default function Profile(props: ProfileProps) {
                       <InputContainer
                         style={{ width: "25%" }}
                         readOnly={true}
-                        defaultValue="+51"
+                        defaultValue={phoneCode}
                         className="form-control"
                       />
                       <InputContainer

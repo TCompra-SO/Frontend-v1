@@ -54,6 +54,7 @@ export enum TableTypes {
   REQUIREMENT = 1,
   OFFER = 2,
   PURCHASE_ORDER = 3,
+  USERS = 4,
 }
 
 export enum UserTable {
