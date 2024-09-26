@@ -54,6 +54,7 @@ export interface OfferListItem extends BaseRequirementOffer {
   type: RequirementType;
   igv?: boolean;
   deliveryDate?: Date;
+  delivered?: boolean;
 }
 
 export interface PurchaseOrder {

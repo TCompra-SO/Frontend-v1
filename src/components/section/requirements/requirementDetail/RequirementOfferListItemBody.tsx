@@ -7,8 +7,8 @@ import { ListsContext } from "../../../../contexts/listsContext";
 import { useContext, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { IdValueMap, IdValueObj } from "../../../../models/Interfaces";
-import { Image } from "antd";
 import PriceInHeader from "../../../common/PriceInHeader";
+import ImagesAndDocs from "../../../common/ImagesAndDocs";
 
 interface RequirementOfferListItemBodyProps {
   offer: OfferListItem;
@@ -19,7 +19,6 @@ export default function RequirementOfferListItemBody(
   props: RequirementOfferListItemBodyProps
 ) {
   const { t } = useTranslation();
-  const [previewOpen, setPreviewOpen] = useState(false);
 
   const context = useContext(ListsContext);
   const { deliveryTimeList, countryData } = context;
@@ -37,16 +36,6 @@ export default function RequirementOfferListItemBody(
       setCities(loadedCities);
     }
   }, [countryData]);
-
-  function showDocument() {
-    props.offer.document?.forEach((documentUrl) => {
-      window.open(
-        documentUrl,
-        "_blank",
-        "width=800,height=600,top=100,left=100,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes"
-      );
-    });
-  }
 
   return (
     <div className="t-flex body-ofertas">
@@ -93,43 +82,10 @@ export default function RequirementOfferListItemBody(
       </div>
 
       <div className="multimedia-oferta">
-        <div className="t-flex multimedia">
-          {props.offer.image && props.offer.image.length > 0 && (
-            <Image.PreviewGroup
-              items={props.offer.image}
-              preview={{
-                visible: previewOpen,
-                onVisibleChange: (visible) => setPreviewOpen(visible),
-              }}
-            />
-          )}
-          <div className="t-flex">
-            <i
-              className="fa-regular fa-images multi-datos"
-              onClick={() => {
-                if (props.offer.image && props.offer.image.length > 0)
-                  setPreviewOpen(true);
-              }}
-            ></i>
-            <div className="multi-back"></div>
-            <div className="multi-cantidad">
-              {props.offer.image ? props.offer.image.length : 0}
-            </div>
-          </div>
-          <div className="t-flex">
-            <i
-              className="fa-regular fa-file-lines multi-datos"
-              onClick={() => {
-                if (props.offer.document && props.offer.document.length > 0)
-                  showDocument();
-              }}
-            ></i>
-            <div className="multi-back"></div>
-            <div className="multi-cantidad">
-              {props.offer.document ? props.offer.document.length : 0}
-            </div>
-          </div>
-        </div>
+        <ImagesAndDocs
+          image={props.offer.image}
+          document={props.offer.document}
+        />
         <PriceInHeader
           coin={props.offer.coin}
           price={props.offer.price}

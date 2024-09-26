@@ -62,6 +62,13 @@ const offerList: OfferListItem[] = [
       phone: "998989898",
       userType: 0,
     },
+    image: [
+      "https://img.freepik.com/foto-gratis/belleza-otonal-abstracta-patron-venas-hoja-multicolor-generado-ia_188544-9871.jpg",
+      "https://img.freepik.com/foto-gratis/belleza-otonal-abstracta-patron-venas-hoja-multicolor-generado-ia_188544-9871.jpg",
+    ],
+    document: [
+      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    ],
   },
   {
     key: "2",

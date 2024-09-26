@@ -26,10 +26,10 @@ const purchaseOrderList: PurchaseOrder[] = [
       uid: "user1",
       name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
       email: "john.doejohn.doejohn.doejohn.doe@example.com",
-      password: "password123",
+
       document: "123456789",
       userTable: UserTable.COMPANY,
-      tenure: "Más de 10 años",
+      tenure: 1,
       customerScore: 3.5,
       sellerScore: 1.5,
       address: "Calle San Agustin 107 - Cercado - Arequipa",
@@ -82,7 +82,7 @@ export default function PurchaseOrderPage() {
 
   return (
     <>
-      <ContentHeader title={t("myRequirements")} />
+      <ContentHeader title={t("myRequirements")} icon={null} />
       <div className="card-white">
         <Row
           style={{

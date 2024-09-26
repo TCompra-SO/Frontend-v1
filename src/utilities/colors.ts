@@ -110,6 +110,41 @@ export const PurchaseOrderStateMeta: {
   },
 };
 
+export const CardByStateOffer: {
+  [key in OfferState]: { label: string; class: string; icon: string };
+} = {
+  [OfferState.ACTIVE]: {
+    label: "activeOffer",
+    class: "card-pink",
+    icon: "fa-circle-check",
+  },
+  [OfferState.WINNER]: {
+    label: "winningOffer",
+    class: "card-green",
+    icon: "fa-circle-check",
+  },
+  [OfferState.FINISHED]: {
+    label: "finishedOffer",
+    class: "card-blue",
+    icon: "fa-circle-check",
+  },
+  [OfferState.DISPUTE]: {
+    label: "disputeOffer",
+    class: "card-teal",
+    icon: "fa-ban",
+  },
+  [OfferState.CANCELED]: {
+    label: "canceledOffer",
+    class: "card-red",
+    icon: "fa-ban",
+  },
+  [OfferState.ELIMINATED]: {
+    label: "eliminatedOffer",
+    class: "card-black",
+    icon: "fa-ban",
+  },
+};
+
 export const filterLabels: {
   [key in CommonFilter]: string;
 } = {

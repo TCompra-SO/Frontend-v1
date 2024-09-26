@@ -1082,6 +1082,42 @@ body {
   border-radius: 1.2rem;
   text-align: center;
 }
+.card-pink {
+  background: #ffdef2;
+  color: #bc1373;
+  font-weight: 600;
+  font-size: 26px;
+  padding: 15px;
+  border-radius: 1.2rem;
+  text-align: center;
+}
+.card-teal {
+  background: #cbf2f4;
+  color: #17a2b8;
+  font-weight: 600;
+  font-size: 26px;
+  padding: 15px;
+  border-radius: 1.2rem;
+  text-align: center;
+}
+.card-blue {
+  background: #cfe8ff;
+  color: #007aff;
+  font-weight: 600;
+  font-size: 26px;
+  padding: 15px;
+  border-radius: 1.2rem;
+  text-align: center;
+}
+.card-black {
+  background: #8e8e8e;
+  color: #171515;
+  font-weight: 600;
+  font-size: 26px;
+  padding: 15px;
+  border-radius: 1.2rem;
+  text-align: center;
+}
 .card-gray-m {
   background: #f3f7fa;
   color: #92acbf;

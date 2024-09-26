@@ -1,11 +1,19 @@
 /* Estilos para pantallas pequeñas (móviles) */
 @media (max-width: 576px) {
   .card-red,
+  .card-pink,
+  .card-blue,
+  .card-teal,
+  .card-black,
   .card-gray-m,
   .card-green {
     font-size: 17px;
   }
   .card-red,
+  .card-pink,
+  .card-blue,
+  .card-teal,
+  .card-black,
   .card-gray-m,
   .card-green {
     width: 100% !important;
@@ -65,6 +73,10 @@
   }
 
   .card-red,
+  .card-pink,
+  .card-blue,
+  .card-teal,
+  .card-black,
   .card-gray-m,
   .card-green {
     font-size: 21px;

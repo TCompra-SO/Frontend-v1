@@ -9,6 +9,8 @@ import { dateFormat, defaultCountry } from "../../../../utilities/globals";
 import dayjs from "dayjs";
 import PriceInHeader from "../../../common/PriceInHeader";
 import OfferDetailRequirementData from "./OfferDetailRequirementData";
+import ImagesAndDocs from "../../../common/ImagesAndDocs";
+import { CardByStateOffer } from "../../../../utilities/colors";
 
 interface OfferDetailModalProps {
   offer: OfferListItem;
@@ -82,39 +84,40 @@ export default function OfferDetailModal(props: OfferDetailModalProps) {
         <div className="t-flex gap-15" style={{ flexDirection: "column" }}>
           <div className="card-ofertas">
             <div className="t-flex" style={{ alignItems: "center" }}>
-              <OfferDetailRequirementData />
+              <OfferDetailRequirementData
+                requirementTitle={props.offer.requirementTitle}
+                user={props.offer.user}
+                subUser={props.offer.subUser}
+                type={props.offer.type}
+                isOffer={false}
+              />
               <div className="multimedia-oferta">
-                <div className="t-flex multimedia">
-                  <div className="t-flex">
-                    <i className="fa-regular fa-images multi-datos"></i>
-                    <div className="multi-back"></div>
-                    <div className="multi-cantidad">10</div>
-                  </div>
-                  <div className="t-flex">
-                    <i className="fa-regular fa-file-lines multi-datos"></i>
-                  </div>
-                  <div className="t-flex">
-                    <i className="fa-regular fa-comment multi-chat"></i>
-                  </div>
-                </div>
+                <ImagesAndDocs
+                  image={props.offer.image}
+                  document={props.offer.document}
+                  showChat
+                  goToChat={() => console.log("go to chat")}
+                />
               </div>
             </div>
           </div>
         </div>
         <div className="t-flex gap-15 estado-oferta">
-          <div className="card-red wd-50">
-            <i className="fa-solid fa-ban"></i> Oferta Cancelada
+          <div className={`${CardByStateOffer[props.offer.state].class} wd-50`}>
+            <i
+              className={`fa-solid ${CardByStateOffer[props.offer.state].icon}`}
+            ></i>{" "}
+            {t(CardByStateOffer[props.offer.state].label)}
           </div>
           <div className="card-gray-m wd-50">
-            <i className="fa-regular fa-person-dolly-empty"></i> No Entregado
-          </div>
-        </div>
-        <div className="t-flex gap-15 estado-oferta">
-          <div className="card-green wd-50">
-            <i className="fa-regular fa-circle-check"></i> Oferta Elegida
-          </div>
-          <div className="card-gray-m wd-50">
-            <i className="fa-regular fa-person-dolly"></i> Entregado
+            <i
+              className={`fa-regular ${
+                props.offer.delivered
+                  ? "fa-person-dolly"
+                  : "fa-person-dolly-empty"
+              }`}
+            ></i>{" "}
+            {t(props.offer.delivered ? "delivered" : "notDelivered")}
           </div>
         </div>
       </div>
