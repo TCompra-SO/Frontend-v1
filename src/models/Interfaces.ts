@@ -9,6 +9,7 @@ import {
   CommonFilter,
 } from "../utilities/types";
 import {
+  BaseUser,
   OfferListItem,
   PurchaseOrder,
   RequirementTableItem,
@@ -44,7 +45,8 @@ export interface ModalOfferSummary extends CommonModalType {
 export interface ModalRateCanceled extends CommonModalType {
   type: ModalTypes.RATE_CANCELED;
   data: {
-    user: User;
+    user: BaseUser;
+    subUser: BaseUser | undefined;
     requirementOffertitle: string;
     type: RequirementType;
     isOffer: boolean;
@@ -55,6 +57,7 @@ export interface ModalRateUser extends CommonModalType {
   type: ModalTypes.RATE_USER;
   data: {
     user: User;
+    subUser: BaseUser | undefined;
     requirementOffertitle: string;
     type: RequirementType;
     isOffer: boolean;

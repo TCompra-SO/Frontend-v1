@@ -175,6 +175,18 @@ const requirements: RequirementTableItem[] = [
       userType: 0,
       phone: "543434242",
     },
+    subUser: {
+      uid: "subuser1",
+      name: "Javier Req Solís Calcina Javier Alberto Solís Calcina",
+      email: "javiersolis@example.com",
+      document: "123456789",
+      userTable: UserTable.COMPANY,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
+      phone: "998989898",
+      userType: 0,
+    },
   },
   {
     key: "6",
@@ -202,6 +214,18 @@ const requirements: RequirementTableItem[] = [
       address: "Calle San Agustin 107 - Cercado - Arequipa",
       userType: 0,
       phone: "1233133213",
+    },
+    subUser: {
+      uid: "subuser1",
+      name: "Javier Req Solís Calcina Javier Alberto Solís Calcina",
+      email: "javiersolis@example.com",
+      document: "123456789",
+      userTable: UserTable.COMPANY,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
+      phone: "998989898",
+      userType: 0,
     },
   },
   {
@@ -651,13 +675,25 @@ const offerList: OfferListItem[] = [
     type: RequirementType.GOOD,
     user: {
       uid: "user1",
-      name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
+      name: "Aaaaaa bbbbbbbbb ccccccccc ddddddddddd S. A. C.",
       email: "john.doejohn.doejohn.doejohn.doe@example.com",
       document: "123456789",
       userTable: UserTable.COMPANY,
       tenure: 2,
       customerScore: 3.5,
       sellerScore: 1.5,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
+      userType: 0,
+      phone: "90909090",
+    },
+    subUser: {
+      uid: "user1",
+      name: "Silvia Solís Calcina",
+      email: "javiersolis@example.com",
+      document: "123456789",
+      userTable: UserTable.COMPANY,
+      customerScore: 0,
+      sellerScore: 0,
       address: "Calle San Agustin 107 - Cercado - Arequipa",
       userType: 0,
       phone: "90909090",
@@ -967,7 +1003,8 @@ export default function Requirements() {
             user: requirement.user,
             type: requirement.type,
             isOffer: true,
-            requirementOffertitle: requirement.title, // r3v obtener datos de oferta ganadora
+            requirementOffertitle: requirement.title, // r3v obtener datos title user subuser de oferta ganadora
+            subUser: requirement.subUser,
           },
         });
         setIsOpenModal(true);
@@ -989,16 +1026,19 @@ export default function Requirements() {
         break;
       }
       case Action.CANCEL_REQUIREMENT: {
-        //r3v get offerId
-        setDataModal({
-          type: ModalTypes.CANCEL_PURCHASE_ORDER,
-          data: {
-            offerId: "",
-            requirementId: "",
-            fromRequirementTable: true,
-          },
-        });
-        setIsOpenModal(true);
+        if (requirement.state == RequirementState.SELECTED) {
+          //r3v get offerId
+          setDataModal({
+            type: ModalTypes.CANCEL_PURCHASE_ORDER,
+            data: {
+              offerId: "",
+              requirementId: "",
+              fromRequirementTable: true,
+            },
+          });
+          setIsOpenModal(true);
+        } else if (requirement.state == RequirementState.PUBLISHED)
+          cancelRequirement(requirement.key);
         break;
       }
     }
@@ -1010,6 +1050,10 @@ export default function Requirements() {
 
   function handleSearch(e: ChangeEvent<HTMLInputElement>) {
     console.log(e.target.value);
+  }
+
+  function cancelRequirement(requirementId: string) {
+    console.log("cancelRequirement", requirementId);
   }
 
   return (

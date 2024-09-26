@@ -68,6 +68,7 @@ export default function ModalContainer(props: ModalContainerProps) {
         return (
           <RatingCanceledModal
             user={props.content.data.user}
+            subUser={props.content.data.subUser}
             requirementOffertitle={props.content.data.requirementOffertitle}
             type={props.content.data.type}
             isOffer={props.content.data.isOffer}
@@ -80,6 +81,7 @@ export default function ModalContainer(props: ModalContainerProps) {
           <RatingModal
             onClose={props.onClose}
             user={props.content.data.user}
+            subUser={props.content.data.subUser}
             requirementOffertitle={props.content.data.requirementOffertitle}
             type={props.content.data.type}
             isOffer={props.content.data.isOffer}

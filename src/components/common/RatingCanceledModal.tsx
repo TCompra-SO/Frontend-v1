@@ -1,5 +1,5 @@
 import { App, Tooltip } from "antd";
-import { User } from "../../models/MainInterfaces";
+import { BaseUser } from "../../models/MainInterfaces";
 import {
   Action,
   ActionLabel,
@@ -15,9 +15,11 @@ import { useSelector } from "react-redux";
 import { MainState } from "../../models/Redux";
 import showNotification from "../../utilities/notification/showNotification";
 import FrontImage from "./FrontImage";
+import SubUserName from "./SubUserName";
 
 interface RatingCanceledModalProps {
-  user: User;
+  user: BaseUser;
+  subUser: BaseUser | undefined;
   requirementOffertitle: string;
   type: RequirementType;
   isOffer: boolean;
@@ -61,14 +63,14 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
               <div className="oferta-usuario">
                 <div className="oferta-datos t-wrap m-0">
                   <div className="usuario-name">{props.user.name}</div>
-                  {/* <div className="user-empresa-2">U</div> */}
+                  <SubUserName small subUser={props.subUser} />
                 </div>
                 <div className="t-flex oferta-descripcion">
-                  <div className="text-truncate detalles-oferta">
-                    <Tooltip title={props.requirementOffertitle}>
+                  <Tooltip title={props.requirementOffertitle}>
+                    <div className="text-truncate detalles-oferta">
                       {props.requirementOffertitle}
-                    </Tooltip>
-                  </div>
+                    </div>
+                  </Tooltip>
                 </div>
               </div>
             </div>
@@ -79,7 +81,7 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
             t("rateCanceledQuestion") +
             (userClass == UserClass.CUSTOMER
               ? t("customer").toLowerCase()
-              : t("supplier").toLowerCase()) +
+              : t("seller").toLowerCase()) +
             "?"
           }`}</div>
           <RatingContainer score={0} onChange={onScoreChange} />
@@ -102,7 +104,7 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
           {`${
             userClass == UserClass.CUSTOMER
               ? `${t("customer").toUpperCase()}:`
-              : `${t("supplier").toUpperCase()}:`
+              : `${t("seller").toUpperCase()}:`
           } ${props.user.name}`}
         </b>
       </Flex>

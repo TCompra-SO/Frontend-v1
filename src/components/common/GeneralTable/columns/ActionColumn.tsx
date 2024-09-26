@@ -28,7 +28,7 @@ export default function ActionColumn(
       const ActionByState: { [key: number]: Action[] } =
         type == TableTypes.REQUIREMENT
           ? ActionByStateRequirement
-          : ActionByStateOffer;
+          : ActionByStateOffer; // r3v determinar si se debe mostrar calificar en oferta cancelada
 
       return (
         <Dropdown

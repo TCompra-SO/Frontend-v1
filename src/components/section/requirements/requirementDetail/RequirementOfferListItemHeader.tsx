@@ -97,17 +97,17 @@ export default function RequirementOfferListItemHeader({
           });
           break;
         case Action.RATE_CANCELED:
-          setIsOpenModal(true);
           setDataModal({
             type: ModalTypes.RATE_CANCELED,
             data: {
               user: props.offer.user,
-              requirementOffertitle:
-                props.showStateAndActions.requirement.title,
-              type: props.showStateAndActions.requirement.type,
+              subUser: props.offer.subUser,
+              requirementOffertitle: props.offer.title,
+              type: props.offer.type,
               isOffer: true,
             },
           });
+          setIsOpenModal(true);
       }
     }
   }

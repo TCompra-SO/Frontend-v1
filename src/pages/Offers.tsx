@@ -102,6 +102,18 @@ const offerList: OfferListItem[] = [
       phone: "998989898",
       userType: 0,
     },
+    subUser: {
+      uid: "subuser1",
+      name: "Javier Req Solís Calcina Javier Alberto Solís Calcina",
+      email: "javiersolis@example.com",
+      document: "123456789",
+      userTable: UserTable.COMPANY,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
+      phone: "998989898",
+      userType: 0,
+    },
   },
   {
     key: "3",
@@ -370,6 +382,10 @@ export default function Offers() {
     console.log("deleteOffer", offerId);
   }
 
+  function goToChat(offer: OfferListItem) {
+    console.log("goToChat", offer.key, offer.requirementId);
+  }
+
   function handleOnButtonClick(action: Action, offer: OfferListItem) {
     console.log(action);
     switch (action) {
@@ -392,6 +408,56 @@ export default function Offers() {
               deleteOffer(offer.key);
             },
             text: t("deleteOfferConfirmation"),
+          },
+        });
+        setIsOpenModal(true);
+        break;
+      }
+
+      case Action.CHAT: {
+        goToChat(offer);
+        break;
+      }
+
+      case Action.RATE_CANCELED: {
+        /* r3v get user subuser from requirement */
+        setDataModal({
+          type: ModalTypes.RATE_CANCELED,
+          data: {
+            user: offer.user,
+            subUser: offer.subUser,
+            requirementOffertitle: offer.requirementTitle,
+            type: offer.type,
+            isOffer: false,
+          },
+        });
+        setIsOpenModal(true);
+        break;
+      }
+
+      case Action.CANCEL_OFFER: {
+        setDataModal({
+          type: ModalTypes.CANCEL_PURCHASE_ORDER,
+          data: {
+            offerId: offer.key,
+            requirementId: offer.requirementId,
+            fromRequirementTable: false,
+          },
+        });
+        setIsOpenModal(true);
+        break;
+      }
+
+      case Action.FINISH: {
+        /* r3v get user subuser from requirement */
+        setDataModal({
+          type: ModalTypes.RATE_USER,
+          data: {
+            user: offer.user,
+            subUser: offer.subUser,
+            type: offer.type,
+            isOffer: false,
+            requirementOffertitle: offer.requirementTitle,
           },
         });
         setIsOpenModal(true);

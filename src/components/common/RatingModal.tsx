@@ -1,8 +1,8 @@
-import { App } from "antd";
+import { App, Tooltip } from "antd";
 import { RequirementType, YesNo, UserClass } from "../../utilities/types";
 import SelectContainer from "../containers/SelectContainer";
 import RatingContainer from "../containers/RatingContainer";
-import { User } from "../../models/MainInterfaces";
+import { BaseUser } from "../../models/MainInterfaces";
 import { getUserClass } from "../../utilities/globalFunctions";
 import ButtonContainer from "../containers/ButtonContainer";
 import { useState } from "react";
@@ -11,9 +11,11 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { MainState } from "../../models/Redux";
 import FrontImage from "./FrontImage";
+import SubUserName from "./SubUserName";
 
 interface RatingModalProps {
-  user: User;
+  user: BaseUser;
+  subUser: BaseUser | undefined;
   requirementOffertitle: string;
   type: RequirementType;
   isOffer: boolean;
@@ -29,7 +31,7 @@ export default function RatingModal(props: RatingModalProps) {
   const userClass: UserClass = getUserClass(props.isOffer, props.type);
 
   const questions = {
-    [UserClass.CUSTOMER]: [
+    [UserClass.SELLER]: [
       {
         [RequirementType.GOOD]: t("receivedGoodQuestion"),
         [RequirementType.SALE]: t("receivedGoodQuestion"),
@@ -55,7 +57,7 @@ export default function RatingModal(props: RatingModalProps) {
         [RequirementType.JOB]: t("deliverySpeedQuestion"),
       },
     ],
-    [UserClass.SELLER]: [
+    [UserClass.CUSTOMER]: [
       {
         [RequirementType.SALE]: t("sendGoodQuestion"),
         [RequirementType.GOOD]: t("sendGoodQuestion"),
@@ -114,7 +116,7 @@ export default function RatingModal(props: RatingModalProps) {
           <div>{t("finish")}</div>
           <div className="calificar-detalle">
             {t("rateYour")}
-            {userClass == UserClass.CUSTOMER ? t("customer") : t("supplier")}
+            {userClass == UserClass.CUSTOMER ? t("customer") : t("seller")}
           </div>
         </div>
       </div>
@@ -126,12 +128,14 @@ export default function RatingModal(props: RatingModalProps) {
               <div className="oferta-usuario">
                 <div className="oferta-datos t-wrap m-0">
                   <div className="usuario-name">{props.user.name}</div>
-                  {/* <div className="user-empresa-2">U</div> */}
+                  <SubUserName small subUser={props.subUser} />
                 </div>
                 <div className="t-flex oferta-descripcion">
-                  <div className="text-truncate detalles-oferta">
-                    {props.requirementOffertitle}
-                  </div>
+                  <Tooltip title={props.requirementOffertitle}>
+                    <div className="text-truncate detalles-oferta">
+                      {props.requirementOffertitle}
+                    </div>
+                  </Tooltip>
                 </div>
               </div>
             </div>
