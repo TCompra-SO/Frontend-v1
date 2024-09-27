@@ -1,7 +1,8 @@
 import { Rule, RuleObject } from "antd/lib/form";
 import { useTranslation } from "react-i18next";
 import { Lengths } from "../utilities/lengths";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { ListsContext } from "../contexts/listsContext";
 
 export function useNumberValidator() {
   const { t } = useTranslation();
@@ -152,7 +153,9 @@ export function useRucRules(required: boolean) {
   return { rucRules };
 }
 
-export function useEmailRules(required: boolean, tlds: string[]) {
+export function useEmailRules(required: boolean) {
+  const context = useContext(ListsContext);
+  const { tlds } = context;
   const [emailRules] = useState<Rule[]>([
     {
       required,

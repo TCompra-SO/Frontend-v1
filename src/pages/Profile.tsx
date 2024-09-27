@@ -138,7 +138,7 @@ export default function Profile(props: ProfileProps) {
     }
     const data: ProfileRequest = {
       uid,
-      phone: values.phone.trim(),
+      phone: phoneCode + values.phone.trim(),
       address: values.address.trim(),
       countryID: values.country,
       cityID: values.city,

@@ -36,7 +36,7 @@ export default function Users() {
     <>
       <NoContentModalContainer
         open={isOpenModal}
-        width={700}
+        width={800}
         style={mainModalScrollStyle}
         onClose={handleCloseModal}
       >

@@ -88,3 +88,12 @@ export function getNameReniecService(doc: string): HttpService {
     type: ApiRoutes.root.getName,
   };
 }
+
+export function userRolesService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.util}${
+      ApiRoutes.util.utilData.name
+    }${ApiRoutes.util.utilData.items.userRoles}`,
+    type: ApiRoutes.util.utilData.items.userRoles,
+  };
+}

@@ -2,9 +2,8 @@ import { Flex, Form } from "antd";
 import ButtonContainer from "../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import InputContainer from "../containers/InputContainer";
-import { ReactNode, useContext } from "react";
+import { ReactNode } from "react";
 import { useEmailRules } from "../../hooks/validators";
-import { ListsContext } from "../../contexts/listsContext";
 
 interface InputEmailModalProps {
   title?: React.ReactNode;
@@ -17,9 +16,7 @@ interface InputEmailModalProps {
 export default function InputEmailModal(props: InputEmailModalProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const context = useContext(ListsContext);
-  const { tlds } = context;
-  const { emailRules } = useEmailRules(true, tlds);
+  const { emailRules } = useEmailRules(true);
 
   function handleSubmit(values: any) {
     props.onAnswer(values.email);

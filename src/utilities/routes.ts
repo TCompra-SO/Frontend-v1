@@ -26,6 +26,7 @@ export const ApiRoutes = {
         deliveryTime: "delivery_time/",
         typeBidders: "type_bidders/",
         typesPlans: "types_plans/",
+        userRoles: "userRoles/",
       },
     },
   },

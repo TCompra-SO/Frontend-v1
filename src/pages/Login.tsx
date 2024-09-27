@@ -1,5 +1,5 @@
 import { App, Checkbox, Form } from "antd";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   GetNameReniecRequest,
   LoginRequest,
@@ -30,7 +30,6 @@ import { getNameReniecService } from "../services/utilService";
 import { equalServices } from "../utilities/globalFunctions";
 import ModalContainer from "../components/containers/ModalContainer";
 import { AxiosError } from "axios";
-import { ListsContext } from "../contexts/listsContext";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 
 const LoginType = {
@@ -50,9 +49,7 @@ export default function Login(props: LoginProps) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { notification } = App.useApp();
-  const context = useContext(ListsContext);
-  const { tlds } = context;
-  const { emailRules } = useEmailRules(true, tlds);
+  const { emailRules } = useEmailRules(true);
   const { passwordRules } = usePasswordRules(true);
   const { dniRules } = useDniRules(true);
   const { rucRules } = useRucRules(true);

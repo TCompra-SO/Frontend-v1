@@ -30,7 +30,6 @@ export default function PhoneAU() {
             placeholder={t("phone")}
           />
         </Space.Compact>
-        {/* <InputContainer type="text" className="form-control" /> */}
       </Form.Item>
     </div>
   );

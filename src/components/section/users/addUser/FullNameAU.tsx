@@ -7,14 +7,14 @@ export default function FullNameAU() {
 
   return (
     <div className="t-flex ad-user">
-      <div className="titulo-input">{t("fullName")}</div>
+      <div className="titulo-input">{t("fullname")}</div>
       <Form.Item
-        label={t("fullName")}
+        label={t("fullname")}
         name="fullname"
         labelCol={{ span: 0 }}
-        // rules={titleRules}
+        rules={[{ required: true, message: t("clickOnSearchIcon") }]}
       >
-        <InputContainer type="text" className="form-control" />
+        <InputContainer disabled type="text" className="form-control" />
       </Form.Item>
     </div>
   );
