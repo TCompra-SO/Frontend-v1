@@ -11,11 +11,18 @@ import {
   TimeMeasurement,
 } from "../utilities/types";
 import { OfferListItem, RequirementTableItem } from "../models/MainInterfaces";
-import { ChangeEvent, useState } from "react";
-import { ModalContent, TableTypeRequirement } from "../models/Interfaces";
+import { ChangeEvent, useEffect, useState } from "react";
+import {
+  ModalContent,
+  TableTypeRequirement,
+  useApiParams,
+} from "../models/Interfaces";
 import { useTranslation } from "react-i18next";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import { mainModalScrollStyle } from "../utilities/globals";
+import useApi from "../hooks/useApi";
+import { getRequirementsService } from "../services/requirementService";
+import { transformDataToRequirement } from "../utilities/globalFunctions";
 
 const requirements: RequirementTableItem[] = [
   {
@@ -952,14 +959,49 @@ export default function Requirements() {
     type: ModalTypes.NONE,
     data: {},
   });
-  const [tableContent] = useState<TableTypeRequirement>({
+  const [tableContent, setTableContent] = useState<TableTypeRequirement>({
     type: TableTypes.REQUIREMENT,
-    data: requirements,
+    data: [], //requirements,
     subType: RequirementType.GOOD,
     hiddenColumns: [TableColumns.CATEGORY],
     nameColumnHeader: t("goods"),
     onButtonClick: handleOnButtonClick,
   });
+
+  /*********************** */
+
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: getRequirementsService(),
+    method: "get",
+  });
+
+  const { loading, responseData, error, errorMsg, fetchData } = useApi({
+    service: apiParams.service,
+    method: apiParams.method,
+    dataToSend: apiParams.dataToSend,
+  });
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (responseData) {
+      setTableContent({
+        type: TableTypes.REQUIREMENT,
+        // data: [transformDataToRequirement(responseData.data[9])],
+        data: responseData.data.map((e: any) => transformDataToRequirement(e)),
+        subType: RequirementType.GOOD,
+        hiddenColumns: [TableColumns.CATEGORY],
+        nameColumnHeader: t("goods"),
+        onButtonClick: handleOnButtonClick,
+      });
+    } else if (error) {
+      console.log(error);
+    }
+  }, [responseData, error]);
+
+  /*********************** */
 
   function handleCloseModal() {
     setIsOpenModal(false);

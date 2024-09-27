@@ -53,7 +53,7 @@ export interface GetNameReniecRequest {
   ruc?: string;
 }
 
-export interface RegisterSubuserRequest {
+export interface RegisterSubUserRequest {
   dni: string;
   phone: string;
   address: string;

@@ -193,6 +193,9 @@ const resources = {
         "Please indicate the reason for the cancellation",
       mustAnswerAllQuestions: "Please answer all questions",
       mustAnswerQuestion: "Please answer the question",
+      noCompanyFoundForSubUser: "No company found for user",
+      emailDocAlreadyRegistered: "Document or email already registered",
+      subUserPasswordIsDocument: "User's password is their document",
       // Other
       yes: "Yes",
       no: "No",
@@ -468,6 +471,9 @@ const resources = {
       indicateReasonCancellation: "Indique el motivo de la cancelación",
       mustAnswerAllQuestions: "Por favor, consteste todas las preguntas",
       mustAnswerQuestion: "Por favor, conteste la pregunta",
+      noCompanyFoundForSubUser: "No se encontró la empresa para el usuario",
+      emailDocAlreadyRegistered: "Documento o email ya registrado",
+      subUserPasswordIsDocument: "La contraseña del usuario es su documento",
       // Other
       yes: "Sí",
       no: "No",

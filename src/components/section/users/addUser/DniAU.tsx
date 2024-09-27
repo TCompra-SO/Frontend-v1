@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 
 interface DniAUProps {
   getUserName: () => void;
+  resetFields: (fields?: string[]) => void;
 }
 
 export default function DniAU(props: DniAUProps) {
@@ -22,8 +23,13 @@ export default function DniAU(props: DniAUProps) {
         rules={dniRules}
       >
         <div className="t-flex" style={{ alignItems: "center" }}>
-          <InputContainer type="text" className="form-control" />
+          <InputContainer
+            type="text"
+            className="form-control"
+            onChange={() => props.resetFields(["fullname"])}
+          />
           <i
+            onClick={props.getUserName}
             className="fas fa-search"
             style={{
               marginLeft: "7px",
@@ -33,7 +39,6 @@ export default function DniAU(props: DniAUProps) {
               padding: "13px",
               borderRadius: "0.6rem",
             }}
-            onClick={props.getUserName}
           ></i>
         </div>
       </Form.Item>

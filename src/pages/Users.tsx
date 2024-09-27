@@ -40,7 +40,7 @@ export default function Users() {
         style={mainModalScrollStyle}
         onClose={handleCloseModal}
       >
-        <AddUserModal />
+        <AddUserModal onClose={handleCloseModal} />
       </NoContentModalContainer>
       <TablePageContent
         title={t("users")}

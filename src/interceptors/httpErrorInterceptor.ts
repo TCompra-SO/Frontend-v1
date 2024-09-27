@@ -8,6 +8,7 @@ import {
   sendCodeService,
   validateCodeService,
 } from "../services/authService";
+import { registerSubUserService } from "../services/subUserService";
 import { getNameReniecService } from "../services/utilService";
 
 export default function httpErrorInterceptor(error: any, type: string): string {
@@ -121,6 +122,16 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
         case 401:
           erroMsg = "incorrectCode";
+          break;
+      }
+      break;
+    case registerSubUserService().type:
+      switch (code) {
+        case 404:
+          erroMsg = "noCompanyFoundForSubUser";
+          break;
+        case 403:
+          erroMsg = "emailDocAlreadyRegistered";
           break;
       }
       break;

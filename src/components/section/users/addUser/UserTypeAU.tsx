@@ -9,7 +9,6 @@ export default function UserTypeAU() {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { userRolesData } = context;
-  console.log(userRolesData);
 
   return (
     <div className="t-flex ad-user">

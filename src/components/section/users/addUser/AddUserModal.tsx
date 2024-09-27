@@ -10,28 +10,42 @@ import EmailAU from "./EmailAU";
 import UserTypeAU from "./UserTypeAU";
 import { getNameReniecService } from "../../../../services/utilService";
 import { useEffect, useState } from "react";
-import { GetNameReniecRequest } from "../../../../models/Requests";
+import {
+  GetNameReniecRequest,
+  RegisterSubUserRequest,
+} from "../../../../models/Requests";
 import { useApiParams } from "../../../../models/Interfaces";
 import useApi from "../../../../hooks/useApi";
 import showNotification from "../../../../utilities/notification/showNotification";
+import { registerSubUserService } from "../../../../services/subUserService";
+import { useSelector } from "react-redux";
+import { MainState } from "../../../../models/Redux";
+import { equalServices } from "../../../../utilities/globalFunctions";
 
-export default function AddUserModal() {
+interface AddUserModalProps {
+  onClose: () => void;
+}
+
+export default function AddUserModal(props: AddUserModalProps) {
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const [form] = Form.useForm();
   const [validDoc, setValidDoc] = useState(false);
+  const uid = useSelector((state: MainState) => state.user.uid);
+  const [loadingRegisterUser, setLoadingRegisterUser] = useState(false);
   const [apiParams, setApiParams] = useState<
-    useApiParams<GetNameReniecRequest>
+    useApiParams<GetNameReniecRequest | RegisterSubUserRequest>
   >({
     service: null,
     method: "get",
   });
-  const { responseData, error, errorMsg, fetchData } =
-    useApi<GetNameReniecRequest>({
-      service: apiParams.service,
-      method: apiParams.method,
-      dataToSend: apiParams.dataToSend,
-    });
+  const { loading, responseData, error, errorMsg, fetchData } = useApi<
+    GetNameReniecRequest | RegisterSubUserRequest
+  >({
+    service: apiParams.service,
+    method: apiParams.method,
+    dataToSend: apiParams.dataToSend,
+  });
 
   useEffect(() => {
     if (apiParams.service) fetchData();
@@ -39,16 +53,37 @@ export default function AddUserModal() {
   }, [apiParams]);
 
   useEffect(() => {
+    if (equalServices(apiParams.service, registerSubUserService())) {
+      setLoadingRegisterUser(loading);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
+
+  useEffect(() => {
     if (responseData) {
-      form.setFieldValue("fullname", responseData.data);
-      setValidDoc(true);
+      if (equalServices(apiParams.service, getNameReniecService(""))) {
+        form.setFieldValue("fullname", responseData.data);
+        setValidDoc(true);
+      } else if (equalServices(apiParams.service, registerSubUserService())) {
+        showNotification(
+          notification,
+          "success",
+          `${t("registerUserSuccess")}. ${t("subUserPasswordIsDocument")}`
+        );
+        props.onClose();
+      }
     } else if (error) {
       showNotification(notification, "error", errorMsg);
-
-      setValidDoc(false);
+      if (equalServices(apiParams.service, getNameReniecService("")))
+        setValidDoc(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
+
+  function resetFields(fields?: string[]) {
+    if (fields) form.resetFields(fields);
+    else form.resetFields();
+  }
 
   function getUserName() {
     form
@@ -63,11 +98,26 @@ export default function AddUserModal() {
   }
 
   function createUser(values: any) {
-    console.log(values);
     if (!validDoc) {
       showNotification(notification, "error", t("mustProvideValidDoc"));
       return;
     }
+
+    const subUser: RegisterSubUserRequest = {
+      dni: values.document,
+      phone: values.phone,
+      address: values.address,
+      cityID: values.location,
+      email: values.email,
+      typeID: values.userType,
+      uid,
+    };
+
+    setApiParams({
+      service: registerSubUserService(),
+      method: "post",
+      dataToSend: subUser,
+    });
   }
 
   return (
@@ -86,7 +136,7 @@ export default function AddUserModal() {
         <div className="t-flex form-tc">
           <Row gutter={[15, 15]}>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <DniAU getUserName={getUserName} />
+              <DniAU getUserName={getUserName} resetFields={resetFields} />
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
               <FullNameAU />
@@ -117,6 +167,7 @@ export default function AddUserModal() {
               <ButtonContainer
                 className="btn btn-default wd-100"
                 htmlType="submit"
+                loading={loadingRegisterUser}
               >
                 {t("saveButton")}
               </ButtonContainer>
