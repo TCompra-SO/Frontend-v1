@@ -1,4 +1,4 @@
-import { RegisterTypeId } from "../utilities/types";
+import { RegisterTypeId, UserRoles } from "../utilities/types";
 
 export interface LoginRequest {
   email: string;
@@ -51,4 +51,14 @@ export interface RecoverPasswordRequest {
 export interface GetNameReniecRequest {
   dni?: string;
   ruc?: string;
+}
+
+export interface RegisterSubuserRequest {
+  dni: string;
+  phone: string;
+  address: string;
+  cityID: number;
+  email: string;
+  typeID: UserRoles;
+  uid: string;
 }

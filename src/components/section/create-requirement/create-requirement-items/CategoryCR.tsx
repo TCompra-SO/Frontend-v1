@@ -9,7 +9,7 @@ import { getListForSelectIdValueMap } from "../../../../utilities/globalFunction
 export default function CategoryCR() {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
-  const { categoryList } = context;
+  const { categoryData } = context;
 
   return (
     <>
@@ -23,7 +23,7 @@ export default function CategoryCR() {
         <SelectContainer
           placeholder={t("select")}
           className="form-control"
-          options={getListForSelectIdValueMap(categoryList)}
+          options={getListForSelectIdValueMap(categoryData)}
         />
       </Form.Item>
     </>

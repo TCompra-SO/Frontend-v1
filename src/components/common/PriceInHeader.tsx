@@ -10,12 +10,12 @@ interface PriceInHeaderProps {
 
 export default function PriceInHeader(props: PriceInHeaderProps) {
   const context = useContext(ListsContext);
-  const { currencyList } = context;
+  const { currencyData } = context;
 
   return (
     <b className={props.useOfferClass ? "precio-oferta" : "precio-req"}>
-      {currencyList && currencyList[props.coin]
-        ? Coins[currencyList[props.coin].alias]
+      {currencyData && currencyData[props.coin]
+        ? Coins[currencyData[props.coin].alias]
         : null}
       {props.price}
     </b>

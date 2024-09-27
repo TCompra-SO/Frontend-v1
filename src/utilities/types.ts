@@ -294,3 +294,11 @@ export const Coins: { [key: string]: string } = {
   USD: "$",
   COP: "$",
 };
+
+export enum UserRoles {
+  ADMIN = 1,
+  SELLER_BUYER = 2,
+  SELLER = 3,
+  BUYER = 4,
+  LEGAL = 5,
+}

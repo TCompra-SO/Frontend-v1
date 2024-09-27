@@ -19,7 +19,7 @@ interface OfferDetailModalProps {
 export default function OfferDetailModal(props: OfferDetailModalProps) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
-  const { countryData, deliveryTimeList } = context;
+  const { countryData, deliveryTimeData } = context;
   const [cities, setCities] = useState<IdValueMap>({});
 
   useEffect(() => {
@@ -58,11 +58,11 @@ export default function OfferDetailModal(props: OfferDetailModalProps) {
                 {t("published")}:{" "}
                 {dayjs(props.offer.publishDate).format(dateFormat)}
               </div>
-              {deliveryTimeList &&
-                deliveryTimeList[props.offer.deliveryTime] && (
+              {deliveryTimeData &&
+                deliveryTimeData[props.offer.deliveryTime] && (
                   <div className="badge-grey-border">
                     {t("deliveryTime")}:{" "}
-                    {deliveryTimeList[props.offer.deliveryTime].value}
+                    {deliveryTimeData[props.offer.deliveryTime].value}
                   </div>
                 )}
             </div>

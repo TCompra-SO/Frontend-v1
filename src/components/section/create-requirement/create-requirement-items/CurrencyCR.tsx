@@ -8,7 +8,7 @@ import { getListForSelectIdValueMap } from "../../../../utilities/globalFunction
 export default function CurrencyCR() {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
-  const { currencyList } = context;
+  const { currencyData } = context;
 
   return (
     <>
@@ -22,7 +22,7 @@ export default function CurrencyCR() {
         <SelectContainer
           placeholder={t("select")}
           className="form-control"
-          options={getListForSelectIdValueMap(currencyList)}
+          options={getListForSelectIdValueMap(currencyData)}
         />
       </Form.Item>
     </>

@@ -46,7 +46,7 @@ interface ProfileProps {
 export default function Profile(props: ProfileProps) {
   const dispatch = useDispatch();
   const context = useContext(ListsContext);
-  const { countryList, countryData, categoryList } = context;
+  const { countryList, countryData, categoryData } = context;
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const [form] = Form.useForm();
@@ -416,7 +416,7 @@ export default function Profile(props: ProfileProps) {
                     <SelectContainer
                       placeholder={t("select")}
                       className="form-control"
-                      options={getListForSelectIdValueMap(categoryList)}
+                      options={getListForSelectIdValueMap(categoryData)}
                     />
                   </Form.Item>
                 </Col>
@@ -434,7 +434,7 @@ export default function Profile(props: ProfileProps) {
                     <SelectContainer
                       placeholder={t("select")}
                       className="form-control"
-                      options={getListForSelectIdValueMap(categoryList)}
+                      options={getListForSelectIdValueMap(categoryData)}
                     />
                   </Form.Item>
                 </Col>
@@ -452,7 +452,7 @@ export default function Profile(props: ProfileProps) {
                     <SelectContainer
                       placeholder={t("select")}
                       className="form-control"
-                      options={getListForSelectIdValueMap(categoryList)}
+                      options={getListForSelectIdValueMap(categoryData)}
                     />
                   </Form.Item>
                 </Col>

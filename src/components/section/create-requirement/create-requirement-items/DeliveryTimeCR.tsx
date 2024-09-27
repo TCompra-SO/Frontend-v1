@@ -8,7 +8,7 @@ import { getListForSelectIdValueMap } from "../../../../utilities/globalFunction
 export default function DeliveryTimeCR() {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
-  const { deliveryTimeList } = context;
+  const { deliveryTimeData } = context;
 
   return (
     <>
@@ -22,7 +22,7 @@ export default function DeliveryTimeCR() {
         <SelectContainer
           placeholder={t("select")}
           className="form-control"
-          options={getListForSelectIdValueMap(deliveryTimeList)}
+          options={getListForSelectIdValueMap(deliveryTimeData)}
         />
       </Form.Item>
     </>

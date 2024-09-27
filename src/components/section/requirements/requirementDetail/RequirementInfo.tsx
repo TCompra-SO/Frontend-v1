@@ -15,7 +15,7 @@ interface RequirementInfoProps {
 export default function RequirementInfo(props: RequirementInfoProps) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
-  const { deliveryTimeList } = context;
+  const { deliveryTimeData } = context;
 
   return (
     <div className="t-flex gap-15 requerimiento-o">
@@ -37,9 +37,9 @@ export default function RequirementInfo(props: RequirementInfoProps) {
           />
           <div className="badge-grey-border">
             {t("deliveryTime")}:{" "}
-            {deliveryTimeList &&
-            deliveryTimeList[props.requirement.deliveryTime]
-              ? deliveryTimeList[props.requirement.deliveryTime].value
+            {deliveryTimeData &&
+            deliveryTimeData[props.requirement.deliveryTime]
+              ? deliveryTimeData[props.requirement.deliveryTime].value
               : null}
           </div>
           <div className="badge-default-border">

@@ -82,5 +82,5 @@ export interface User extends BaseUser {
 export interface BaseUser {
   uid: string;
   name: string;
-  image?: string;
+  image?: string; // scores //  teunre /email
 }

@@ -21,7 +21,7 @@ export default function RequirementOfferListItemBody(
   const { t } = useTranslation();
 
   const context = useContext(ListsContext);
-  const { deliveryTimeList, countryData } = context;
+  const { deliveryTimeData, countryData } = context;
   const [cities, setCities] = useState<IdValueMap>({});
 
   useEffect(() => {
@@ -49,9 +49,9 @@ export default function RequirementOfferListItemBody(
               {t("tenure")}: {props.offer.user.tenure} {t("years")}
             </div>
           )}
-        {deliveryTimeList && deliveryTimeList[props.offer.deliveryTime] && (
+        {deliveryTimeData && deliveryTimeData[props.offer.deliveryTime] && (
           <div className="tag-gray">
-            {t("delivery")}: {deliveryTimeList[props.offer.deliveryTime].value}
+            {t("delivery")}: {deliveryTimeData[props.offer.deliveryTime].value}
           </div>
         )}
 

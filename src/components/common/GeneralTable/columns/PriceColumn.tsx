@@ -11,7 +11,7 @@ import { Coins } from "../../../../utilities/types";
 export default function PriceColumn(hidden: boolean = false) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
-  const { currencyList } = context;
+  const { currencyData } = context;
 
   const col: ColumnType<RequirementTableItem | OfferListItem> = {
     title: t("priceColumn"),
@@ -21,8 +21,8 @@ export default function PriceColumn(hidden: boolean = false) {
     hidden,
     render: (_, record) => (
       <div style={{ textAlign: "left" }} className="t-flex dato-table">
-        {currencyList && currencyList[record.coin]
-          ? Coins[currencyList[record.coin].alias]
+        {currencyData && currencyData[record.coin]
+          ? Coins[currencyData[record.coin].alias]
           : null}{" "}
         {record.price}
       </div>

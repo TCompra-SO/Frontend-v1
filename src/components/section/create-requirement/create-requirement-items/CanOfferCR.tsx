@@ -15,7 +15,7 @@ interface CanOfferCRProps {
 export default function CanOfferCR(props: CanOfferCRProps) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
-  const { whoCanOfferList } = context;
+  const { whoCanOfferData } = context;
 
   return (
     <>
@@ -33,10 +33,10 @@ export default function CanOfferCR(props: CanOfferCRProps) {
           style={{ width: "100%" }}
           options={
             props.type == RequirementType.SALE
-              ? getListForSelectIdValueMap(whoCanOfferList).filter((item) => {
+              ? getListForSelectIdValueMap(whoCanOfferData).filter((item) => {
                   if (item.value != certifiedCompaniesOpt) return item;
                 })
-              : getListForSelectIdValueMap(whoCanOfferList)
+              : getListForSelectIdValueMap(whoCanOfferData)
           }
         />
       </Form.Item>

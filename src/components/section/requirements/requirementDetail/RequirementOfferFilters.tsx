@@ -26,7 +26,7 @@ export default function RequirementOfferFilters(
   const { updateFilters, filterNames } = useContext(requirementDetailContext);
   const [form] = Form.useForm<OfferFilters>();
   const context = useContext(ListsContext);
-  const { countryData, deliveryTimeList } = context;
+  const { countryData, deliveryTimeData } = context;
   const [commonList] = useState(
     Object.keys(CommonFilter)
       .filter((key) => isNaN(Number(key)))
@@ -65,7 +65,7 @@ export default function RequirementOfferFilters(
     } else if (changedValues.deliveryTime) {
       console.log("change deliveryTime");
       deliveryTime =
-        deliveryTimeList[changedValues.deliveryTime]?.value ?? t("all");
+        deliveryTimeData[changedValues.deliveryTime]?.value ?? t("all");
       props.onFilterChange(
         OfferFilterTypes.DELIVERY,
         changedValues.deliveryTime
@@ -150,7 +150,7 @@ export default function RequirementOfferFilters(
                   <Form.Item name="deliveryTime" style={{ width: "100%" }}>
                     <SelectContainer
                       options={[{ label: t("all"), value: allSelect }].concat(
-                        getListForSelectIdValueMap(deliveryTimeList)
+                        getListForSelectIdValueMap(deliveryTimeData)
                       )}
                       style={{ marginTop: "5px" }}
                       className="form-control"

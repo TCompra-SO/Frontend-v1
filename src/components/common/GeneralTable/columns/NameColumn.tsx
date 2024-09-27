@@ -13,7 +13,7 @@ export default function NameColumn(
   hidden: boolean = false
 ) {
   const context = useContext(ListsContext);
-  const { categoryList } = context;
+  const { categoryData } = context;
 
   const col: ColumnType<RequirementTableItem | OfferListItem> = {
     title: nameColumnHeader,
@@ -37,8 +37,8 @@ export default function NameColumn(
               className="text-truncate info-categoria"
               style={{ textAlign: "left" }}
             >
-              {categoryList
-                ? categoryList[(record as RequirementTableItem).category]?.value
+              {categoryData
+                ? categoryData[(record as RequirementTableItem).category]?.value
                 : null}
             </div>
           )}

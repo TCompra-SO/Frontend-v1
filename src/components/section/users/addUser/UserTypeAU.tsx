@@ -8,7 +8,8 @@ import { getListForSelectIdValueMap } from "../../../../utilities/globalFunction
 export default function UserTypeAU() {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
-  const { whoCanOfferList } = context;
+  const { userRolesData } = context;
+  console.log(userRolesData);
 
   return (
     <div className="t-flex ad-user">
@@ -22,7 +23,7 @@ export default function UserTypeAU() {
       >
         <SelectContainer
           placeholder={t("select")}
-          options={getListForSelectIdValueMap(whoCanOfferList)}
+          options={getListForSelectIdValueMap(userRolesData)}
           className="form-control"
         />
       </Form.Item>

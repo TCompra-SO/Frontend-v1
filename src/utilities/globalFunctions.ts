@@ -7,9 +7,6 @@ import {
 } from "../models/Interfaces";
 import { defaultCountry, maxDocSizeMb, maxImageSizeMb } from "./globals";
 import { RequirementType, UserClass } from "./types";
-import { FormItemProps } from "antd";
-import { ReactNode } from "react";
-import { Rule } from "antd/es/form";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
