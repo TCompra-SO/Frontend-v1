@@ -9,3 +9,12 @@ export function registerSubUserService(): HttpService {
     type: "SU-REG",
   };
 }
+
+export function getSubUserService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.subUser}${
+      ApiRoutes.subUser.root
+    }`,
+    type: "SU-GET",
+  };
+}

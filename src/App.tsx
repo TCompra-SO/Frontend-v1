@@ -133,9 +133,9 @@ function App() {
                         <Route
                           path={`${pageRoutes.users}`}
                           element={
-                            <AuthRoleGuard allowedRoles={RolesForSection.users}>
-                              <Users />
-                            </AuthRoleGuard>
+                            // <AuthRoleGuard allowedRoles={RolesForSection.users}>
+                            <Users />
+                            // </AuthRoleGuard>
                           }
                         />
                         <Route

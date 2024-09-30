@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 interface DniAUProps {
   getUserName: () => void;
   resetFields: (fields?: string[]) => void;
+  disabled?: boolean;
 }
 
 export default function DniAU(props: DniAUProps) {
@@ -27,6 +28,7 @@ export default function DniAU(props: DniAUProps) {
             type="text"
             className="form-control"
             onChange={() => props.resetFields(["fullname"])}
+            disabled={props.disabled}
           />
           <i
             onClick={props.getUserName}

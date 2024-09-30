@@ -36,7 +36,7 @@ export default function DateColumn(type: TableTypes, hidden: boolean = false) {
       hidden,
 
       render: (_, record) => {
-        let value: Date;
+        let value: Date = new Date();
         switch (type) {
           case TableTypes.REQUIREMENT:
             value = (record as RequirementTableItem).publishDate;

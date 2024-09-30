@@ -16,6 +16,7 @@ import {
   OfferListItem,
   PurchaseOrder,
   RequirementTableItem,
+  User,
 } from "../../../models/MainInterfaces";
 import { ColumnType } from "antd/es/table";
 
@@ -29,9 +30,13 @@ export default function GeneralTable(props: RequirementsTableProps) {
     | ColumnType<OfferListItem>
     | ColumnType<RequirementTableItem>
     | ColumnType<PurchaseOrder>
+    | ColumnType<User>
     | ColumnType<OfferListItem | RequirementTableItem>
     | ColumnType<OfferListItem | PurchaseOrder>
     | ColumnType<OfferListItem | PurchaseOrder | RequirementTableItem>
+    | ColumnType<OfferListItem | RequirementTableItem | User>
+    | ColumnType<OfferListItem | PurchaseOrder | User>
+    | ColumnType<OfferListItem | PurchaseOrder | RequirementTableItem | User>
   > = [];
 
   // Hacer visibles todas las columnas inicialmente
@@ -76,6 +81,15 @@ export default function GeneralTable(props: RequirementsTableProps) {
         <Table
           dataSource={props.content.data}
           columns={columns as Array<ColumnType<OfferListItem>>}
+          {...tableProps}
+        ></Table>
+      );
+    case TableTypes.USERS:
+      getUsersTableColumns();
+      return (
+        <Table
+          dataSource={props.content.data}
+          columns={columns as Array<ColumnType<User>>}
           {...tableProps}
         ></Table>
       );
@@ -125,6 +139,27 @@ export default function GeneralTable(props: RequirementsTableProps) {
         props.content.onButtonClick,
         visibility[TableColumns.ACTION]
       ),
+    ];
+    return columns;
+  }
+
+  function getUsersTableColumns() {
+    columns = [
+      NameColumn(
+        props.content.type,
+        props.content.nameColumnHeader,
+        visibility[TableColumns.NAME]
+      ),
+      // RequirementColumn(true, visibility[TableColumns.REQUIREMENT]),
+      // LocationColumn(visibility[TableColumns.LOCATION]),
+      // DateColumn(props.content.type, visibility[TableColumns.DATE]),
+      // PriceColumn(visibility[TableColumns.PRICE]),
+      // StateColumn(props.content.type, visibility[TableColumns.STATE]),
+      // ActionColumn(
+      //   props.content.type,
+      //   props.content.onButtonClick,
+      //   visibility[TableColumns.ACTION]
+      // ),
     ];
     return columns;
   }

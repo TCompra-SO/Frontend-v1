@@ -36,6 +36,7 @@ export const ApiRoutes = {
     getName: "getName/",
   },
   subUser: {
+    root: "/",
     register: "register/",
   },
   requirements: {

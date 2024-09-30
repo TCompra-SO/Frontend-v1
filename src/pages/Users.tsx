@@ -3,18 +3,73 @@ import NoContentModalContainer from "../components/containers/NoContentModalCont
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import AddUserModal from "../components/section/users/addUser/AddUserModal";
 import { useTranslation } from "react-i18next";
-import { Action, TableTypes } from "../utilities/types";
+import { Action, TableTypes, UserTable } from "../utilities/types";
 import { TableTypeUsers } from "../models/Interfaces";
 import { User } from "../models/MainInterfaces";
 import { mainModalScrollStyle } from "../utilities/globals";
 import ButtonContainer from "../components/containers/ButtonContainer";
+
+const users: User[] = [
+  {
+    uid: "user1",
+    name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
+    email: "john.doejohn.doejohn.doejohn.doe@example.com",
+    document: "123456789",
+    userTable: UserTable.COMPANY,
+    tenure: 2,
+    customerScore: 3.5,
+    sellerScore: 1.5,
+    address: "Calle San Agustin 107 - Cercado - Arequipa",
+    userType: 0,
+    phone: "90909090",
+  },
+  {
+    uid: "user2",
+    name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
+    email: "john.doejohn.doejohn.doejohn.doe@example.com",
+    document: "123456789",
+    userTable: UserTable.COMPANY,
+    tenure: 2,
+    customerScore: 3.5,
+    sellerScore: 1.5,
+    address: "Calle San Agustin 107 - Cercado - Arequipa",
+    userType: 0,
+    phone: "90909090",
+  },
+  {
+    uid: "user3",
+    name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
+    email: "john.doejohn.doejohn.doejohn.doe@example.com",
+    document: "123456789",
+    userTable: UserTable.COMPANY,
+    tenure: 2,
+    customerScore: 3.5,
+    sellerScore: 1.5,
+    address: "Calle San Agustin 107 - Cercado - Arequipa",
+    userType: 0,
+    phone: "90909090",
+  },
+  {
+    uid: "user4",
+    name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
+    email: "john.doejohn.doejohn.doejohn.doe@example.com",
+    document: "123456789",
+    userTable: UserTable.COMPANY,
+    tenure: 2,
+    customerScore: 3.5,
+    sellerScore: 1.5,
+    address: "Calle San Agustin 107 - Cercado - Arequipa",
+    userType: 0,
+    phone: "90909090",
+  },
+];
 
 export default function Users() {
   const { t } = useTranslation();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [tableContent] = useState<TableTypeUsers>({
     type: TableTypes.USERS,
-    data: [],
+    data: users,
     hiddenColumns: [],
     nameColumnHeader: t("user"),
     onButtonClick: handleOnActionClick,
@@ -40,7 +95,7 @@ export default function Users() {
         style={mainModalScrollStyle}
         onClose={handleCloseModal}
       >
-        <AddUserModal onClose={handleCloseModal} />
+        <AddUserModal onClose={handleCloseModal} edit={true} />
       </NoContentModalContainer>
       <TablePageContent
         title={t("users")}

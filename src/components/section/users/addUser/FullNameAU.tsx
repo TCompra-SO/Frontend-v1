@@ -2,7 +2,11 @@ import { Form } from "antd";
 import { useTranslation } from "react-i18next";
 import InputContainer from "../../../containers/InputContainer";
 
-export default function FullNameAU() {
+interface FullNameAUProps {
+  disabled?: boolean;
+}
+
+export default function FullNameAU(props: FullNameAUProps) {
   const { t } = useTranslation();
 
   return (
@@ -14,7 +18,11 @@ export default function FullNameAU() {
         labelCol={{ span: 0 }}
         rules={[{ required: true, message: t("clickOnSearchIcon") }]}
       >
-        <InputContainer disabled type="text" className="form-control" />
+        <InputContainer
+          disabled={props.disabled}
+          type="text"
+          className="form-control"
+        />
       </Form.Item>
     </div>
   );

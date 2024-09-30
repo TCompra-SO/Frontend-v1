@@ -320,7 +320,7 @@ export default function ValidateCode({
                 {isForgotPassword && (
                   <>
                     <div className="titulo-input" style={{ marginTop: "10px" }}>
-                      Nueva contraseña
+                      {t("newPassword")}
                     </div>
                     <Form.Item
                       name="password1"
@@ -333,11 +333,10 @@ export default function ValidateCode({
                         password={true}
                         className="form-control"
                         placeholder="•••••••••"
-                        // style={{ flexGrow: 1 }}
                       />
                     </Form.Item>
                     <div className="titulo-input" style={{ marginTop: "10px" }}>
-                      Confirme su contraseña
+                      {t("confirmPassword")}
                     </div>
                     <Form.Item
                       name="password2"
@@ -350,7 +349,6 @@ export default function ValidateCode({
                         password={true}
                         className="form-control"
                         placeholder="•••••••••"
-                        // style={{ flexGrow: 1 }}
                       />
                     </Form.Item>
                   </>

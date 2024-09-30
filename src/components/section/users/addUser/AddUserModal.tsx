@@ -21,9 +21,12 @@ import { registerSubUserService } from "../../../../services/subUserService";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../../models/Redux";
 import { equalServices } from "../../../../utilities/globalFunctions";
+import PasswordAU from "./PasswordAU";
 
 interface AddUserModalProps {
   onClose: () => void;
+  edit: boolean;
+  // data?:
 }
 
 export default function AddUserModal(props: AddUserModalProps) {
@@ -124,7 +127,8 @@ export default function AddUserModal(props: AddUserModalProps) {
     <div className="modal-card img-bg">
       <div className="t-flex t-wrap mr-sub">
         <div className="sub-titulo">
-          <i className="fa-regular fa-users sub-icon"></i> {t("newEmployee")}
+          <i className="fa-regular fa-users sub-icon"></i>{" "}
+          {t(props.edit ? "editEmployee" : "newEmployee")}
         </div>
       </div>
       <Form
@@ -136,10 +140,14 @@ export default function AddUserModal(props: AddUserModalProps) {
         <div className="t-flex form-tc">
           <Row gutter={[15, 15]}>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <DniAU getUserName={getUserName} resetFields={resetFields} />
+              <DniAU
+                getUserName={getUserName}
+                resetFields={resetFields}
+                disabled={props.edit}
+              />
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <FullNameAU />
+              <FullNameAU disabled={props.edit} />
             </Col>
           </Row>
           <Row gutter={[15, 15]}>
@@ -147,7 +155,7 @@ export default function AddUserModal(props: AddUserModalProps) {
               <AddressAU />
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <EmailAU />
+              <EmailAU disabled={props.edit} />
             </Col>
           </Row>
           <Row gutter={[15, 15]}>
@@ -161,6 +169,16 @@ export default function AddUserModal(props: AddUserModalProps) {
               <UserTypeAU />
             </Col>
           </Row>
+          {props.edit && (
+            <Row gutter={[15, 15]}>
+              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                <PasswordAU name={"password1"} />
+              </Col>
+              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                <PasswordAU name={"password2"} confirmPassword />
+              </Col>
+            </Row>
+          )}
           <div className="t-flex t-wrap up-footer">
             <div className="footer-text">{t("allDataIsImportant")}</div>
             <div className="wd-25">
