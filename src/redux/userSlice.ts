@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { UserState } from "../models/Redux";
+import { UserRoles } from "../utilities/types";
 
 const initialState: UserState = {
   token: "",
@@ -7,7 +8,7 @@ const initialState: UserState = {
   uid: "",
   name: "",
   email: "",
-  typeID: 0,
+  typeID: UserRoles.NONE,
   planID: 0,
 };
 

@@ -19,6 +19,8 @@ import { pageRoutes } from "./utilities/routes.ts";
 import Sidebar from "./components/section/sidebar/Sidebar.tsx";
 import MainHeader from "./components/section/header/header/MainHeader.tsx";
 import { ListsProvider } from "./contexts/listsContext.tsx";
+import AuthRoleGuard from "./components/guards/AuthRoleGuard.tsx";
+import { RolesForSection } from "./utilities/roles.ts";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Search = lazy(() => import("./pages/Search.tsx"));
@@ -84,7 +86,7 @@ function App() {
             <LoadingCond></LoadingCond>
             <Routes>
               <Route
-                path={`/${pageRoutes.home}`}
+                path={`${pageRoutes.home}`}
                 element={
                   <Suspense fallback={<LoadingPage />}>
                     <Home></Home>
@@ -93,28 +95,55 @@ function App() {
               />
 
               <Route
-                path="/*"
+                path="*"
                 element={
                   <MainLayout>
                     <Suspense fallback={<LoadingPage />}>
                       <Routes>
                         <Route
-                          path={`/${pageRoutes.search}`}
-                          element={<Search />}
+                          path={`${pageRoutes.search}`}
+                          element={
+                            <AuthRoleGuard
+                              allowedRoles={RolesForSection.search}
+                            >
+                              <Search />
+                            </AuthRoleGuard>
+                          }
                         />
                         <Route
-                          path={`/${pageRoutes.myRequirements}`}
-                          element={<Requirements />}
+                          path={`${pageRoutes.myRequirements}`}
+                          element={
+                            <AuthRoleGuard
+                              allowedRoles={RolesForSection.myRequirements}
+                            >
+                              <Requirements />
+                            </AuthRoleGuard>
+                          }
                         />
                         <Route
-                          path={`/${pageRoutes.myOffers}`}
-                          element={<Offers />}
+                          path={`${pageRoutes.myOffers}`}
+                          element={
+                            <AuthRoleGuard
+                              allowedRoles={RolesForSection.myOffers}
+                            >
+                              <Offers />
+                            </AuthRoleGuard>
+                          }
                         />
                         <Route
-                          path={`/${pageRoutes.users}`}
-                          element={<Users />}
+                          path={`${pageRoutes.users}`}
+                          element={
+                            <AuthRoleGuard allowedRoles={RolesForSection.users}>
+                              <Users />
+                            </AuthRoleGuard>
+                          }
                         />
-                        <Route path="*" element={<Navigate to="/" replace />} />
+                        <Route
+                          path="*"
+                          element={
+                            <Navigate to={`${pageRoutes.home}`} replace />
+                          }
+                        />
                       </Routes>
                     </Suspense>
                   </MainLayout>

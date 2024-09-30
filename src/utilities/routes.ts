@@ -44,9 +44,9 @@ export const ApiRoutes = {
 };
 
 export const pageRoutes = {
-  home: "",
-  search: "busqueda",
-  myRequirements: "mis-requerimientos",
-  myOffers: "mis-ofertas",
-  users: "usuarios",
+  home: "/",
+  search: "/busqueda",
+  myRequirements: "/mis-requerimientos",
+  myOffers: "/mis-ofertas",
+  users: "/usuarios",
 };

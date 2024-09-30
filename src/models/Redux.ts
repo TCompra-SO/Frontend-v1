@@ -1,10 +1,12 @@
+import { UserRoles } from "../utilities/types";
+
 export interface UserState {
   token: string;
   type: string;
   uid: string;
   name: string;
   email: string;
-  typeID: number;
+  typeID: UserRoles;
   planID: number;
 }
 

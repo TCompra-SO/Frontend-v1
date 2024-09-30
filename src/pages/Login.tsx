@@ -204,7 +204,7 @@ export default function Login(props: LoginProps) {
       dispatch(setUser(responseData));
       showNotification(notification, "success", t("welcome"));
       localStorage.setItem("token", responseData.token);
-      navigate(`/${pageRoutes.myRequirements}`);
+      navigate(`${pageRoutes.myRequirements}`);
     }
   }
 

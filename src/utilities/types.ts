@@ -296,6 +296,7 @@ export const Coins: { [key: string]: string } = {
 };
 
 export enum UserRoles {
+  NONE = 0,
   ADMIN = 1,
   SELLER_BUYER = 2,
   SELLER = 3,
