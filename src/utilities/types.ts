@@ -4,6 +4,7 @@ import {
   mediumModalWidth,
   mediumPlusModalWidth,
   smallModalWidth,
+  allItems,
 } from "./globals";
 
 /**** Estados ***/
@@ -208,6 +209,16 @@ export const ActionByStatePurchaseOrder: {
     Action.VIEW_HISTORY,
   ],
   [PurchaseOrderState.ELIMINATED]: [],
+};
+
+export const ActionSubUsers: {
+  [key: number]: Array<Action>;
+} = {
+  [allItems]: [
+    Action.VIEW_REQUIREMENTS,
+    Action.VIEW_OFFERS,
+    Action.VIEW_PURCHASE_ORDERS,
+  ],
 };
 
 /*********/

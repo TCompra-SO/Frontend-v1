@@ -1,23 +1,15 @@
 import { ColumnType } from "antd/es/table";
-import AvatarContainer from "../../../containers/AvatarContainer";
 import { RequirementTableItem } from "../../../../models/MainInterfaces";
+import AvatarImage from "../../AvatarImage";
+import { SubUserProfile } from "../../../../models/Responses";
 
-export default function ImageColumn(hidden: boolean = false) {
-  const col: ColumnType<RequirementTableItem> = {
+export default function ImageColumn(isUser: boolean, hidden: boolean = false) {
+  const col: ColumnType<RequirementTableItem | SubUserProfile> = {
     dataIndex: "image",
     align: "center",
     hidden,
     width: 60,
-    render: (_, record) => (
-      <AvatarContainer
-        className="img-prod-table"
-        src={
-          record.image && record.image.length > 0
-            ? record.image[0]
-            : "/src/assets/images/img-prod.svg"
-        }
-      ></AvatarContainer>
-    ),
+    render: (_, record) => <AvatarImage image={record.image} isUser={isUser} />,
   };
   return col;
 }

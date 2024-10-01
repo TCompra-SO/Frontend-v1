@@ -23,7 +23,10 @@ export default function RequirementColumn(
     render: (_, record) => (
       <>
         <Flex vertical>
-          <div className="text-truncate" style={{ textAlign: "left" }}>
+          <div
+            className="text-truncate dato-table"
+            style={{ textAlign: "left" }}
+          >
             {record.requirementTitle}
           </div>
         </Flex>

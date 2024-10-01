@@ -78,7 +78,7 @@ export default function AddUserModal(props: AddUserModalProps) {
   useEffect(() => {
     if (
       equalServices(apiParams.service, registerSubUserService()) ||
-      equalServices(apiParams.service, changePasswordSubUserService()) ||
+      equalServices(apiParams.service, changePasswordSubUserService("")) ||
       equalServices(apiParams.service, changeRoleSubUserService()) ||
       equalServices(apiParams.service, updateProfileSubUserService())
     ) {

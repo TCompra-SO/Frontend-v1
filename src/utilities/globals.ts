@@ -20,6 +20,8 @@ export const columnWidth: number = 100;
 export const certifiedCompaniesOpt: number = 3;
 export const phoneCode: string = "+51";
 
+export const allItems: number = 0;
+
 /* Window size (>=) */
 export const windowSize = {
   sm: 576,

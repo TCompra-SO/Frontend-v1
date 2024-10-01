@@ -6,9 +6,11 @@ import {
   ActionByStateOffer,
   ActionByStateRequirement,
   ActionLabel,
+  ActionSubUsers,
   TableTypes,
 } from "../../../../utilities/types";
 import { useTranslation } from "react-i18next";
+import { allItems } from "../../../../utilities/globals";
 
 export default function ActionColumn(
   type: TableTypes,
@@ -25,16 +27,27 @@ export default function ActionColumn(
     width: "130px",
     hidden,
     render: (record) => {
-      const ActionByState: { [key: number]: Action[] } =
-        type == TableTypes.REQUIREMENT
-          ? ActionByStateRequirement
-          : ActionByStateOffer; // r3v determinar si se debe mostrar calificar en oferta cancelada
+      let ActionByState: { [key: number]: Action[] } = {};
+      let key: number = 0;
+      switch (type) {
+        case TableTypes.REQUIREMENT:
+          ActionByState = ActionByStateRequirement;
+          key = record.state;
+          break;
+        case TableTypes.OFFER:
+          ActionByState = ActionByStateOffer; // r3v determinar si se debe mostrar calificar en oferta cancelada
+          key = record.state;
+          break;
+        case TableTypes.USERS:
+          ActionByState = ActionSubUsers;
+          key = allItems;
+      }
 
       return (
         <Dropdown
           trigger={["click"]}
           menu={{
-            items: ActionByState[record.state].map((action: Action) => {
+            items: ActionByState[key].map((action: Action) => {
               return {
                 key: action,
                 label: t(ActionLabel[action]),

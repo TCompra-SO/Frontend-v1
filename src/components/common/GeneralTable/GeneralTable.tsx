@@ -16,27 +16,34 @@ import {
   OfferListItem,
   PurchaseOrder,
   RequirementTableItem,
-  User,
 } from "../../../models/MainInterfaces";
 import { ColumnType } from "antd/es/table";
+import { useTranslation } from "react-i18next";
+import { SubUserProfile } from "../../../models/Responses";
+import GeneralColumnString from "./columns/GeneralColumnString";
+import GeneralColumnNumber from "./columns/GeneralColumnNumber";
 
 interface RequirementsTableProps {
   content: TableType;
 }
 
 export default function GeneralTable(props: RequirementsTableProps) {
+  const { t } = useTranslation();
   const pageSizeOptions = pageSizeOptionsSt;
   let columns: Array<
     | ColumnType<OfferListItem>
     | ColumnType<RequirementTableItem>
     | ColumnType<PurchaseOrder>
-    | ColumnType<User>
+    | ColumnType<SubUserProfile>
+    | ColumnType<SubUserProfile | RequirementTableItem>
     | ColumnType<OfferListItem | RequirementTableItem>
     | ColumnType<OfferListItem | PurchaseOrder>
     | ColumnType<OfferListItem | PurchaseOrder | RequirementTableItem>
-    | ColumnType<OfferListItem | RequirementTableItem | User>
-    | ColumnType<OfferListItem | PurchaseOrder | User>
-    | ColumnType<OfferListItem | PurchaseOrder | RequirementTableItem | User>
+    | ColumnType<OfferListItem | RequirementTableItem | SubUserProfile>
+    | ColumnType<OfferListItem | PurchaseOrder | SubUserProfile>
+    | ColumnType<
+        OfferListItem | PurchaseOrder | RequirementTableItem | SubUserProfile
+      >
   > = [];
 
   // Hacer visibles todas las columnas inicialmente
@@ -89,7 +96,7 @@ export default function GeneralTable(props: RequirementsTableProps) {
       return (
         <Table
           dataSource={props.content.data}
-          columns={columns as Array<ColumnType<User>>}
+          columns={columns as Array<ColumnType<SubUserProfile>>}
           {...tableProps}
         ></Table>
       );
@@ -97,7 +104,7 @@ export default function GeneralTable(props: RequirementsTableProps) {
 
   function getRequirementTableColumns() {
     columns = [
-      ImageColumn(visibility[TableColumns.IMAGE]),
+      ImageColumn(false, visibility[TableColumns.IMAGE]),
       NameColumn(
         props.content.type,
         props.content.nameColumnHeader,
@@ -145,21 +152,22 @@ export default function GeneralTable(props: RequirementsTableProps) {
 
   function getUsersTableColumns() {
     columns = [
+      ImageColumn(true, visibility[TableColumns.IMAGE]),
       NameColumn(
         props.content.type,
         props.content.nameColumnHeader,
         visibility[TableColumns.NAME]
       ),
-      // RequirementColumn(true, visibility[TableColumns.REQUIREMENT]),
-      // LocationColumn(visibility[TableColumns.LOCATION]),
-      // DateColumn(props.content.type, visibility[TableColumns.DATE]),
-      // PriceColumn(visibility[TableColumns.PRICE]),
-      // StateColumn(props.content.type, visibility[TableColumns.STATE]),
-      // ActionColumn(
-      //   props.content.type,
-      //   props.content.onButtonClick,
-      //   visibility[TableColumns.ACTION]
-      // ),
+      GeneralColumnString(t("email"), "email", true, 130),
+      DateColumn(props.content.type, visibility[TableColumns.DATE]),
+      GeneralColumnNumber(t("goods"), "numGoods"),
+      GeneralColumnNumber(t("services"), "numServices"),
+      GeneralColumnNumber(t("sales"), "numSales"),
+      ActionColumn(
+        props.content.type,
+        props.content.onButtonClick,
+        visibility[TableColumns.ACTION]
+      ),
     ];
     return columns;
   }

@@ -961,7 +961,7 @@ export default function Requirements() {
   });
   const [tableContent, setTableContent] = useState<TableTypeRequirement>({
     type: TableTypes.REQUIREMENT,
-    data: [], //requirements,
+    data: requirements, //[]
     subType: RequirementType.GOOD,
     hiddenColumns: [TableColumns.CATEGORY],
     nameColumnHeader: t("goods"),
@@ -981,9 +981,9 @@ export default function Requirements() {
     dataToSend: apiParams.dataToSend,
   });
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   useEffect(() => {
     if (responseData) {
