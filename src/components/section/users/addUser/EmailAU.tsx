@@ -4,7 +4,8 @@ import InputContainer from "../../../containers/InputContainer";
 import { useEmailRules } from "../../../../hooks/validators";
 
 interface EmailAUProps {
-  disabled?: boolean;
+  edit?: boolean;
+  value?: string;
 }
 
 export default function EmailAU(props: EmailAUProps) {
@@ -19,11 +20,12 @@ export default function EmailAU(props: EmailAUProps) {
         name="email"
         labelCol={{ span: 0 }}
         rules={emailRules}
+        initialValue={props.value}
       >
         <InputContainer
           type="text"
           className="form-control"
-          disabled={props.disabled}
+          disabled={props.edit}
         />
       </Form.Item>
     </div>

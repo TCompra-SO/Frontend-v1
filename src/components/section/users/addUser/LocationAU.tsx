@@ -5,7 +5,12 @@ import { useContext } from "react";
 import { ListsContext } from "../../../../contexts/listsContext";
 import { getCityListForSelect } from "../../../../utilities/globalFunctions";
 
-export default function LocationAU() {
+interface LocationAUProps {
+  value?: number;
+  edit?: boolean;
+}
+
+export default function LocationAU(props: LocationAUProps) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { countryData } = context;
@@ -19,6 +24,7 @@ export default function LocationAU() {
         name="location"
         labelCol={{ span: 0 }}
         rules={[{ required: true }]}
+        initialValue={props.value}
       >
         <SelectContainer
           placeholder={t("select")}

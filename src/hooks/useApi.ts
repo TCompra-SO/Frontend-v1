@@ -8,6 +8,7 @@ export default function useApi<T = any>({
   service,
   method,
   dataToSend,
+  token,
 }: useApiParams<T>) {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
@@ -22,16 +23,15 @@ export default function useApi<T = any>({
     if (service) {
       setLoading(true);
       try {
+        console.log(token);
         const config: AxiosRequestConfig = {
           method: method,
           url: service.url,
           data: dataToSend,
-          // headers: {
-          //   Authorization: service.bearerToken
-          //     ? `Bearer ${service.bearerToken}`
-          //     : undefined,
-          //   "Content-Type": "application/json",
-          // },
+          headers: {
+            Authorization: token ? `Bearer ${token}` : undefined,
+            "Content-Type": "application/json",
+          },
         };
         console.log(config);
         const result: AxiosResponse = await axios(config);

@@ -2,6 +2,7 @@ export const ApiMainRoutes = {
   auth: "auth/",
   util: "util/",
   subUser: "subUser/",
+  user: "user/",
   requirements: "requeriments/",
 };
 
@@ -36,8 +37,14 @@ export const ApiRoutes = {
     getName: "getName/",
   },
   subUser: {
-    root: "/",
+    root: "",
     register: "register/",
+    update: "update/",
+    changeRole: "changeRole/",
+    changeStatus: "changeStatus/",
+  },
+  user: {
+    changePassword: "change-password/",
   },
   requirements: {
     getRequeriments: "getRequeriments/",

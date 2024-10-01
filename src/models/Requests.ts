@@ -62,3 +62,19 @@ export interface RegisterSubUserRequest {
   typeID: UserRoles;
   uid: string;
 }
+
+export interface UpdateProfileSubUserRequest {
+  uid: string;
+  phone: string;
+  address: string;
+  cityID: number;
+}
+
+export interface ChangeRoleSubUserRequest {
+  uid: string;
+  typeID: UserRoles;
+}
+
+export interface ChangePasswordSubUserRequest {
+  password: string;
+}

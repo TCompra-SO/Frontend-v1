@@ -3,7 +3,12 @@ import { useTranslation } from "react-i18next";
 import InputContainer from "../../../containers/InputContainer";
 import { useAddressRules } from "../../../../hooks/validators";
 
-export default function AddressAU() {
+interface AddressAUProps {
+  value?: string;
+  edit?: boolean;
+}
+
+export default function AddressAU(props: AddressAUProps) {
   const { t } = useTranslation();
   const { addressRules } = useAddressRules(true);
 
@@ -15,6 +20,7 @@ export default function AddressAU() {
         name="address"
         labelCol={{ span: 0 }}
         rules={addressRules}
+        initialValue={props.value}
       >
         <InputContainer type="text" className="form-control" />
       </Form.Item>

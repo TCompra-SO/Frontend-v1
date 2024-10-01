@@ -10,11 +10,38 @@ export function registerSubUserService(): HttpService {
   };
 }
 
-export function getSubUserService(): HttpService {
+export function getSubUserService(uid: String): HttpService {
   return {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.subUser}${
       ApiRoutes.subUser.root
-    }`,
+    }${uid}`,
     type: "SU-GET",
+  };
+}
+
+export function changePasswordSubUserService(email: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.user}${
+      ApiRoutes.user.changePassword
+    }${email}`,
+    type: "SU-CH-PA",
+  };
+}
+
+export function changeRoleSubUserService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.subUser}${
+      ApiRoutes.subUser.changeRole
+    }`,
+    type: "SU-CH-RO",
+  };
+}
+
+export function updateProfileSubUserService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.subUser}${
+      ApiRoutes.subUser.update
+    }`,
+    type: "SU-UP-PR",
   };
 }

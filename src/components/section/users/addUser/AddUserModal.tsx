@@ -11,22 +11,31 @@ import UserTypeAU from "./UserTypeAU";
 import { getNameReniecService } from "../../../../services/utilService";
 import { useEffect, useState } from "react";
 import {
+  ChangePasswordSubUserRequest,
+  ChangeRoleSubUserRequest,
   GetNameReniecRequest,
   RegisterSubUserRequest,
+  UpdateProfileSubUserRequest,
 } from "../../../../models/Requests";
 import { useApiParams } from "../../../../models/Interfaces";
 import useApi from "../../../../hooks/useApi";
 import showNotification from "../../../../utilities/notification/showNotification";
-import { registerSubUserService } from "../../../../services/subUserService";
+import {
+  changePasswordSubUserService,
+  changeRoleSubUserService,
+  registerSubUserService,
+  updateProfileSubUserService,
+} from "../../../../services/subUserService";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../../models/Redux";
 import { equalServices } from "../../../../utilities/globalFunctions";
 import PasswordAU from "./PasswordAU";
+import { SubUserProfile } from "../../../../models/Responses";
 
 interface AddUserModalProps {
   onClose: () => void;
   edit: boolean;
-  // data?:
+  userData: SubUserProfile | null;
 }
 
 export default function AddUserModal(props: AddUserModalProps) {
@@ -35,15 +44,26 @@ export default function AddUserModal(props: AddUserModalProps) {
   const [form] = Form.useForm();
   const [validDoc, setValidDoc] = useState(false);
   const uid = useSelector((state: MainState) => state.user.uid);
+
   const [loadingRegisterUser, setLoadingRegisterUser] = useState(false);
   const [apiParams, setApiParams] = useState<
-    useApiParams<GetNameReniecRequest | RegisterSubUserRequest>
+    useApiParams<
+      | GetNameReniecRequest
+      | RegisterSubUserRequest
+      | ChangePasswordSubUserRequest
+      | ChangeRoleSubUserRequest
+      | UpdateProfileSubUserRequest
+    >
   >({
     service: null,
     method: "get",
   });
   const { loading, responseData, error, errorMsg, fetchData } = useApi<
-    GetNameReniecRequest | RegisterSubUserRequest
+    | GetNameReniecRequest
+    | RegisterSubUserRequest
+    | ChangePasswordSubUserRequest
+    | ChangeRoleSubUserRequest
+    | UpdateProfileSubUserRequest
   >({
     service: apiParams.service,
     method: apiParams.method,
@@ -56,7 +76,12 @@ export default function AddUserModal(props: AddUserModalProps) {
   }, [apiParams]);
 
   useEffect(() => {
-    if (equalServices(apiParams.service, registerSubUserService())) {
+    if (
+      equalServices(apiParams.service, registerSubUserService()) ||
+      equalServices(apiParams.service, changePasswordSubUserService()) ||
+      equalServices(apiParams.service, changeRoleSubUserService()) ||
+      equalServices(apiParams.service, updateProfileSubUserService())
+    ) {
       setLoadingRegisterUser(loading);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,15 +90,13 @@ export default function AddUserModal(props: AddUserModalProps) {
   useEffect(() => {
     if (responseData) {
       if (equalServices(apiParams.service, getNameReniecService(""))) {
-        form.setFieldValue("fullname", responseData.data);
-        setValidDoc(true);
+        getNameReniecSuccess();
       } else if (equalServices(apiParams.service, registerSubUserService())) {
-        showNotification(
-          notification,
-          "success",
-          `${t("registerUserSuccess")}. ${t("subUserPasswordIsDocument")}`
-        );
-        props.onClose();
+        registerSubUserSuccess();
+      } else if (
+        equalServices(apiParams.service, updateProfileSubUserService())
+      ) {
+        updateSubUserSuccess();
       }
     } else if (error) {
       showNotification(notification, "error", errorMsg);
@@ -82,6 +105,30 @@ export default function AddUserModal(props: AddUserModalProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
+
+  function getNameReniecSuccess() {
+    form.setFieldValue("fullname", responseData.data);
+    setValidDoc(true);
+  }
+
+  function registerSubUserSuccess() {
+    showNotification(
+      notification,
+      "success",
+      `${t("registerUserSuccess")}. ${t("subUserPasswordIsDocument")}`
+    );
+    props.onClose();
+  }
+
+  function updateSubUserSuccess() {
+    return;
+    showNotification(
+      notification,
+      "success",
+      `${t("userUpdatedSuccessfully")}`
+    );
+    props.onClose();
+  }
 
   function resetFields(fields?: string[]) {
     if (fields) form.resetFields(fields);
@@ -98,6 +145,11 @@ export default function AddUserModal(props: AddUserModalProps) {
         });
       })
       .catch(() => {});
+  }
+
+  function submitData(values: any) {
+    if (props.edit) editUser(values);
+    else createUser(values);
   }
 
   function createUser(values: any) {
@@ -123,6 +175,44 @@ export default function AddUserModal(props: AddUserModalProps) {
     });
   }
 
+  function editUser(values: any) {
+    if (values.password1 !== values.password2) {
+      showNotification(notification, "error", t("passwordsMusMatch"));
+      return;
+    }
+    if (props.userData && props.edit) {
+      const profile: UpdateProfileSubUserRequest = {
+        uid: props.userData.uid,
+        phone: values.phone,
+        address: values.address,
+        cityID: values.location,
+      };
+      // setApiParams({
+      //   service: updateProfileSubUserService(),
+      //   method: "post",
+      //   dataToSend: profile,
+      // });
+      const role: ChangeRoleSubUserRequest = {
+        uid: props.userData.uid,
+        typeID: values.userType,
+      };
+      // setApiParams({
+      //   service: changeRoleSubUserService(),
+      //   method: "post",
+      //   dataToSend: role,
+      // });
+      const password: ChangePasswordSubUserRequest = {
+        password: values.password1,
+      };
+      // setApiParams({
+      //   service: changePasswordSubUserService(),
+      //   method: "post",
+      //   dataToSend: password,
+      // });
+      console.log(profile, password, role);
+    }
+  }
+
   return (
     <div className="modal-card img-bg">
       <div className="t-flex t-wrap mr-sub">
@@ -135,7 +225,7 @@ export default function AddUserModal(props: AddUserModalProps) {
         form={form}
         colon={false}
         requiredMark={false}
-        onFinish={createUser}
+        onFinish={submitData}
       >
         <div className="t-flex form-tc">
           <Row gutter={[15, 15]}>
@@ -143,30 +233,31 @@ export default function AddUserModal(props: AddUserModalProps) {
               <DniAU
                 getUserName={getUserName}
                 resetFields={resetFields}
-                disabled={props.edit}
+                edit={props.edit}
+                value={props.userData?.document}
               />
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <FullNameAU disabled={props.edit} />
+              <FullNameAU edit={props.edit} value={props.userData?.name} />
             </Col>
           </Row>
           <Row gutter={[15, 15]}>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <AddressAU />
+              <AddressAU edit={props.edit} value={props.userData?.address} />
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <EmailAU disabled={props.edit} />
+              <EmailAU edit={false} value={props.userData?.email} />
             </Col>
           </Row>
           <Row gutter={[15, 15]}>
             <Col xs={24} sm={24} md={8} lg={8} xl={8}>
-              <LocationAU />
+              <LocationAU edit={props.edit} value={props.userData?.cityID} />
             </Col>
             <Col xs={24} sm={24} md={8} lg={8} xl={8}>
-              <PhoneAU />
+              <PhoneAU edit={props.edit} value={props.userData?.phone} />
             </Col>
             <Col xs={24} sm={24} md={8} lg={8} xl={8}>
-              <UserTypeAU />
+              <UserTypeAU edit={props.edit} value={props.userData?.typeID} />
             </Col>
           </Row>
           {props.edit && (

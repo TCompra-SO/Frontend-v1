@@ -6,6 +6,6 @@ export function getRequirementsService(): HttpService {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.getRequeriments}`,
-    type: "SU-REG",
+    type: "RE-REG",
   };
 }

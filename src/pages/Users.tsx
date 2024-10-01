@@ -1,13 +1,21 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import NoContentModalContainer from "../components/containers/NoContentModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import AddUserModal from "../components/section/users/addUser/AddUserModal";
 import { useTranslation } from "react-i18next";
 import { Action, TableTypes, UserTable } from "../utilities/types";
-import { TableTypeUsers } from "../models/Interfaces";
+import { TableTypeUsers, useApiParams } from "../models/Interfaces";
 import { User } from "../models/MainInterfaces";
 import { mainModalScrollStyle } from "../utilities/globals";
 import ButtonContainer from "../components/containers/ButtonContainer";
+import useApi from "../hooks/useApi";
+import { getSubUserService } from "../services/subUserService";
+import { MainState } from "../models/Redux";
+import { useSelector } from "react-redux";
+import { equalServices } from "../utilities/globalFunctions";
+import showNotification from "../utilities/notification/showNotification";
+import { App } from "antd";
+import { SubUserProfile } from "../models/Responses";
 
 const users: User[] = [
   {
@@ -66,7 +74,10 @@ const users: User[] = [
 
 export default function Users() {
   const { t } = useTranslation();
+  const { notification } = App.useApp();
+  const token = useSelector((state: MainState) => state.user.token);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [userData, setUserData] = useState<SubUserProfile | null>(null);
   const [tableContent] = useState<TableTypeUsers>({
     type: TableTypes.USERS,
     data: users,
@@ -74,9 +85,48 @@ export default function Users() {
     nameColumnHeader: t("user"),
     onButtonClick: handleOnActionClick,
   });
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: null,
+    method: "get",
+    // token,
+  });
+  const { responseData, error, errorMsg, fetchData, loading } = useApi({
+    service: apiParams.service,
+    method: apiParams.method,
+    token: apiParams.token,
+  });
+
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      if (equalServices(apiParams.service, getSubUserService(""))) {
+        setUserData(responseData.res.profile);
+        console.log(responseData, userData);
+        setIsOpenModal(true);
+      }
+    } else if (error) {
+      showNotification(notification, "error", errorMsg);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
 
   function handleCloseModal() {
     setIsOpenModal(false);
+  }
+
+  function handleOpenModal() {
+    // setIsOpenModal(true);
+
+    setApiParams({
+      service: getSubUserService("kMHAU9G3GFpDreBIZz67"),
+      method: "get",
+      token,
+    });
   }
 
   function handleSearch(e: ChangeEvent<HTMLInputElement>) {
@@ -95,7 +145,11 @@ export default function Users() {
         style={mainModalScrollStyle}
         onClose={handleCloseModal}
       >
-        <AddUserModal onClose={handleCloseModal} edit={true} />
+        <AddUserModal
+          onClose={handleCloseModal}
+          edit={true}
+          userData={userData}
+        />
       </NoContentModalContainer>
       <TablePageContent
         title={t("users")}
@@ -107,7 +161,7 @@ export default function Users() {
             <ButtonContainer
               common
               className="btn btn-default"
-              onClick={() => setIsOpenModal(true)}
+              onClick={handleOpenModal}
             >
               <i className="fa-regular fa-user-plus"></i> {t("addUser")}
             </ButtonContainer>

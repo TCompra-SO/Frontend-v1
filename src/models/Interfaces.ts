@@ -172,6 +172,7 @@ export interface useApiParams<T = any> {
   service: HttpService | null;
   method: "get" | "post" | "put" | "delete";
   dataToSend?: T;
+  token?: string;
 }
 
 export interface CountryObj {

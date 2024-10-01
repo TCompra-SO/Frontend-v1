@@ -196,6 +196,10 @@ const resources = {
       noCompanyFoundForSubUser: "No company found for user",
       emailDocAlreadyRegistered: "Document or email already registered",
       subUserPasswordIsDocument: "User's password is their document",
+      cantAssignAdmintoSubUser: "Can't assign Admin role to subuser",
+      subUserNotFoundInAnyCompany: "Subuser not found in any company",
+      profileDoesNotExist: "Perfil doesn't exist",
+      userUpdatedSuccessfully: "User updated successfully",
       // Other
       yes: "Yes",
       no: "No",
@@ -475,6 +479,10 @@ const resources = {
       noCompanyFoundForSubUser: "No se encontró la empresa para el usuario",
       emailDocAlreadyRegistered: "Documento o email ya registrado",
       subUserPasswordIsDocument: "La contraseña del usuario es su documento",
+      cantAssignAdmintoSubUser: "No se puede asignar rol de administrador a subusuario",
+      subUserNotFoundInAnyCompany: "Subusuario no encontrado en ninguna empresa",
+      profileDoesNotExist: "Perfil no existe",
+      userUpdatedSuccessfully: "Usuario actualizado exitosamente",
       // Other
       yes: "Sí",
       no: "No",
