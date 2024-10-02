@@ -1,8 +1,8 @@
 import { Form, Space } from "antd";
 import { useTranslation } from "react-i18next";
-import InputContainer from "../../../containers/InputContainer";
-import { usePhoneRules } from "../../../../hooks/validators";
-import { phoneCode } from "../../../../utilities/globals";
+import InputContainer from "../../../../containers/InputContainer";
+import { usePhoneRules } from "../../../../../hooks/validators";
+import { phoneCode } from "../../../../../utilities/globals";
 
 interface PhoneAUProps {
   edit?: boolean;

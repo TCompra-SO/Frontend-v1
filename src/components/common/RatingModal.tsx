@@ -126,8 +126,12 @@ export default function RatingModal(props: RatingModalProps) {
             <div className="t-flex oferta-titulo">
               <FrontImage small image={props.user.image} isUser={true} />
               <div className="oferta-usuario">
-                <div className="oferta-datos t-wrap m-0">
-                  <div className="usuario-name">{props.user.name}</div>
+                <div className="oferta-datos  m-0">
+                  <Tooltip title={props.user.name}>
+                    <div className="usuario-name text-truncate">
+                      {props.user.name}
+                    </div>
+                  </Tooltip>
                   <SubUserName small subUser={props.subUser} />
                 </div>
                 <div className="t-flex oferta-descripcion">

@@ -1,6 +1,6 @@
 import { Form } from "antd";
 import { useTranslation } from "react-i18next";
-import InputContainer from "../../../containers/InputContainer";
+import InputContainer from "../../../../containers/InputContainer";
 import { useState } from "react";
 
 interface FullNameAUProps {

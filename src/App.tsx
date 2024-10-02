@@ -113,21 +113,21 @@ function App() {
                         <Route
                           path={`${pageRoutes.myRequirements}`}
                           element={
-                            <AuthRoleGuard
-                              allowedRoles={RolesForSection.myRequirements}
-                            >
-                              <Requirements />
-                            </AuthRoleGuard>
+                            // <AuthRoleGuard
+                            //   allowedRoles={RolesForSection.myRequirements}
+                            // >
+                            <Requirements />
+                            // </AuthRoleGuard>
                           }
                         />
                         <Route
                           path={`${pageRoutes.myOffers}`}
                           element={
-                            <AuthRoleGuard
-                              allowedRoles={RolesForSection.myOffers}
-                            >
-                              <Offers />
-                            </AuthRoleGuard>
+                            // <AuthRoleGuard
+                            //   allowedRoles={RolesForSection.myOffers}
+                            // >
+                            <Offers />
+                            // </AuthRoleGuard>
                           }
                         />
                         <Route

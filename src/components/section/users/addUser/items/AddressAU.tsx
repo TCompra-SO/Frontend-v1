@@ -1,7 +1,7 @@
 import { Form } from "antd";
 import { useTranslation } from "react-i18next";
-import InputContainer from "../../../containers/InputContainer";
-import { useAddressRules } from "../../../../hooks/validators";
+import InputContainer from "../../../../containers/InputContainer";
+import { useAddressRules } from "../../../../../hooks/validators";
 
 interface AddressAUProps {
   value?: string;

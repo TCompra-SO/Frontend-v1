@@ -13,4 +13,6 @@ export interface SubUserProfile extends BaseUser {
   numGoods: number;
   numServices: number;
   numSales: number;
+  numOffers: number;
+  numPurchaseOrders: number;
 }

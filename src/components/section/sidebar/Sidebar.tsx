@@ -33,6 +33,7 @@ export default function Sidebar() {
 
   return (
     <div className="col-menu t-flex">
+      <i className="fa-solid fa-circle-xmark btn-close"></i>
       <div>
         <ImageContainer
           src="/src/assets/images/logo-white.svg"

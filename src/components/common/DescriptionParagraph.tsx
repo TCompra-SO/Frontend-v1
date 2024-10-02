@@ -17,7 +17,7 @@ export default function DescriptionParagraph(props: DescriptionParagraphProps) {
           children={props.text}
           className="info-req-no-clamp"
           ellipsis={{
-            rows: 2,
+            rows: 3,
             expandable: "collapsible",
             expanded,
             onExpand: (_, info) => setExpanded(info.expanded),

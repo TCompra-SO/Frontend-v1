@@ -1,7 +1,7 @@
-import { useDniRules } from "../../../../hooks/validators";
-import { DocType } from "../../../../utilities/types";
+import { useDniRules } from "../../../../../hooks/validators";
+import { DocType } from "../../../../../utilities/types";
 import { Form } from "antd";
-import InputContainer from "../../../containers/InputContainer";
+import InputContainer from "../../../../containers/InputContainer";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 

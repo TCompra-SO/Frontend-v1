@@ -1,10 +1,10 @@
 import { Form } from "antd";
-import SelectContainer from "../../../containers/SelectContainer";
+import SelectContainer from "../../../../containers/SelectContainer";
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
-import { ListsContext } from "../../../../contexts/listsContext";
-import { getListForSelectIdValueMap } from "../../../../utilities/globalFunctions";
-import { UserRoles } from "../../../../utilities/types";
+import { ListsContext } from "../../../../../contexts/listsContext";
+import { getListForSelectIdValueMap } from "../../../../../utilities/globalFunctions";
+import { UserRoles } from "../../../../../utilities/types";
 
 interface UserTypeAUProps {
   edit?: boolean;

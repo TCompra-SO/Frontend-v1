@@ -29,7 +29,9 @@ export default function RequirementInfoNoTags(
       </h2>
 
       <div className="t-flex tags-req">
-        <div className="badge-default">{props.user.name}</div>
+        <Tooltip title={props.user.name}>
+          <div className="badge-default text-truncate">{props.user.name}</div>
+        </Tooltip>
         <SubUserName subUser={props.subUser} />
         <div className="badge-second">
           {t(getLabelFromRequirementType(props.type))}

@@ -5,7 +5,6 @@ import AddUserModal from "../components/section/users/addUser/AddUserModal";
 import { useTranslation } from "react-i18next";
 import { Action, TableTypes } from "../utilities/types";
 import { TableTypeUsers, useApiParams } from "../models/Interfaces";
-import { User } from "../models/MainInterfaces";
 import { mainModalScrollStyle } from "../utilities/globals";
 import ButtonContainer from "../components/containers/ButtonContainer";
 import useApi from "../hooks/useApi";
@@ -16,6 +15,7 @@ import { equalServices } from "../utilities/globalFunctions";
 import showNotification from "../utilities/notification/showNotification";
 import { App } from "antd";
 import { SubUserProfile } from "../models/Responses";
+import SubUserTableModal from "../components/section/users/subUserTables/SubUserTableModal";
 
 const users: SubUserProfile[] = [
   {
@@ -36,6 +36,8 @@ const users: SubUserProfile[] = [
     numGoods: 10,
     numServices: 2,
     numSales: 5,
+    numOffers: 0,
+    numPurchaseOrders: 0,
   },
   {
     uid: "user2",
@@ -55,6 +57,8 @@ const users: SubUserProfile[] = [
     numGoods: 23,
     numServices: 90,
     numSales: 235,
+    numOffers: 0,
+    numPurchaseOrders: 0,
   },
   {
     uid: "user3",
@@ -74,6 +78,8 @@ const users: SubUserProfile[] = [
     numGoods: 1,
     numServices: 0,
     numSales: 8,
+    numOffers: 0,
+    numPurchaseOrders: 0,
   },
   {
     uid: "user4",
@@ -93,6 +99,8 @@ const users: SubUserProfile[] = [
     numGoods: 100,
     numServices: 35,
     numSales: 84,
+    numOffers: 0,
+    numPurchaseOrders: 0,
   },
 ];
 
@@ -103,6 +111,7 @@ export default function Users() {
   const [action, setAction] = useState<Action>(Action.ADD_USER);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [userData, setUserData] = useState<SubUserProfile | null>(null);
+
   const [tableContent] = useState<TableTypeUsers>({
     type: TableTypes.USERS,
     data: users,
@@ -115,7 +124,7 @@ export default function Users() {
     method: "get",
     // token,
   });
-  const { responseData, error, errorMsg, fetchData, loading } = useApi({
+  const { responseData, error, errorMsg, fetchData } = useApi({
     service: apiParams.service,
     method: apiParams.method,
     token: apiParams.token,
@@ -169,6 +178,7 @@ export default function Users() {
         });
         break;
       case Action.VIEW_REQUIREMENTS:
+        handleOpenModal();
         break;
       case Action.VIEW_OFFERS:
         break;
@@ -180,19 +190,20 @@ export default function Users() {
   function getContent() {
     switch (action) {
       case Action.ADD_USER:
-        return (
-          <AddUserModal
-            onClose={handleCloseModal}
-            edit={false}
-            userData={null}
-          />
-        );
+        return <AddUserModal onClose={handleCloseModal} edit={false} />;
       case Action.EDIT_USER:
         return (
           <AddUserModal
             onClose={handleCloseModal}
             edit={true}
             userData={userData}
+          />
+        );
+      case Action.VIEW_REQUIREMENTS:
+        return (
+          <SubUserTableModal
+            tableType={TableTypes.REQUIREMENT}
+            user={userData}
           />
         );
     }

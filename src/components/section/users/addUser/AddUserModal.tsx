@@ -1,13 +1,13 @@
 import { useTranslation } from "react-i18next";
 import ButtonContainer from "../../../containers/ButtonContainer";
 import { App, Col, Form, Row } from "antd";
-import DniAU from "./DniAU";
-import LocationAU from "./LocationAU";
-import AddressAU from "./AddressAU";
-import FullNameAU from "./FullNameAU";
-import PhoneAU from "./PhoneAU";
-import EmailAU from "./EmailAU";
-import UserTypeAU from "./UserTypeAU";
+import DniAU from "./items/DniAU";
+import LocationAU from "./items/LocationAU";
+import AddressAU from "./items/AddressAU";
+import FullNameAU from "./items/FullNameAU";
+import PhoneAU from "./items/PhoneAU";
+import EmailAU from "./items/EmailAU";
+import UserTypeAU from "./items/UserTypeAU";
 import { getNameReniecService } from "../../../../services/utilService";
 import { useEffect, useState } from "react";
 import {
@@ -29,13 +29,13 @@ import {
 import { useSelector } from "react-redux";
 import { MainState } from "../../../../models/Redux";
 import { equalServices } from "../../../../utilities/globalFunctions";
-import PasswordAU from "./PasswordAU";
+import PasswordAU from "./items/PasswordAU";
 import { SubUserProfile } from "../../../../models/Responses";
 
 interface AddUserModalProps {
   onClose: () => void;
   edit: boolean;
-  userData: SubUserProfile | null;
+  userData?: SubUserProfile | null;
 }
 
 export default function AddUserModal(props: AddUserModalProps) {

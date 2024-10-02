@@ -1,9 +1,9 @@
 import { Form } from "antd";
-import SelectContainer from "../../../containers/SelectContainer";
+import SelectContainer from "../../../../containers/SelectContainer";
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
-import { ListsContext } from "../../../../contexts/listsContext";
-import { getCityListForSelect } from "../../../../utilities/globalFunctions";
+import { ListsContext } from "../../../../../contexts/listsContext";
+import { getCityListForSelect } from "../../../../../utilities/globalFunctions";
 
 interface LocationAUProps {
   value?: number;

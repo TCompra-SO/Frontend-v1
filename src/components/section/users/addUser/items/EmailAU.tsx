@@ -1,7 +1,7 @@
 import { Form } from "antd";
 import { useTranslation } from "react-i18next";
-import InputContainer from "../../../containers/InputContainer";
-import { useEmailRules } from "../../../../hooks/validators";
+import InputContainer from "../../../../containers/InputContainer";
+import { useEmailRules } from "../../../../../hooks/validators";
 
 interface EmailAUProps {
   edit?: boolean;
