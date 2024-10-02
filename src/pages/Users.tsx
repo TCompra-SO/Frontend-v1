@@ -3,7 +3,7 @@ import NoContentModalContainer from "../components/containers/NoContentModalCont
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import AddUserModal from "../components/section/users/addUser/AddUserModal";
 import { useTranslation } from "react-i18next";
-import { Action, TableTypes, UserTable } from "../utilities/types";
+import { Action, TableTypes } from "../utilities/types";
 import { TableTypeUsers, useApiParams } from "../models/Interfaces";
 import { User } from "../models/MainInterfaces";
 import { mainModalScrollStyle } from "../utilities/globals";
@@ -32,7 +32,7 @@ const users: SubUserProfile[] = [
     phone: "90909090",
     cityID: 1,
     companyID: "xxxxxxxxxxxxx",
-    createdAt: "2024-09-12T20:36:45.673Z",
+    createdAt: "2024-10-12T16:36:45.673Z",
     numGoods: 10,
     numServices: 2,
     numSales: 5,
@@ -51,7 +51,7 @@ const users: SubUserProfile[] = [
     phone: "90909090",
     cityID: 1,
     companyID: "xxxxxxxxxxxxx",
-    createdAt: "2024-10-12T20:36:45.673Z",
+    createdAt: "2024-10-12T09:36:45.673Z",
     numGoods: 23,
     numServices: 90,
     numSales: 235,
@@ -100,6 +100,7 @@ export default function Users() {
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const token = useSelector((state: MainState) => state.user.token);
+  const [action, setAction] = useState<Action>(Action.ADD_USER);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [userData, setUserData] = useState<SubUserProfile | null>(null);
   const [tableContent] = useState<TableTypeUsers>({
@@ -130,7 +131,7 @@ export default function Users() {
       if (equalServices(apiParams.service, getSubUserService(""))) {
         setUserData(responseData.res.profile);
         console.log(responseData, userData);
-        setIsOpenModal(true);
+        handleOpenModal();
       }
     } else if (error) {
       showNotification(notification, "error", errorMsg);
@@ -139,26 +140,62 @@ export default function Users() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
+  function openModalAddUser() {
+    setAction(Action.ADD_USER);
+    handleOpenModal();
+  }
+
   function handleCloseModal() {
     setIsOpenModal(false);
   }
 
   function handleOpenModal() {
-    // setIsOpenModal(true);
-
-    setApiParams({
-      service: getSubUserService("kMHAU9G3GFpDreBIZz67"),
-      method: "get",
-      token,
-    });
+    setIsOpenModal(true);
   }
 
   function handleSearch(e: ChangeEvent<HTMLInputElement>) {
     console.log(e.target.value);
   }
 
-  function handleOnActionClick(action: Action, user: User) {
+  function handleOnActionClick(action: Action, user: SubUserProfile) {
     console.log(action, user);
+    setAction(action);
+    switch (action) {
+      case Action.EDIT_USER:
+        setApiParams({
+          service: getSubUserService("kMHAU9G3GFpDreBIZz67"), // r3v user.uid
+          method: "get",
+          token,
+        });
+        break;
+      case Action.VIEW_REQUIREMENTS:
+        break;
+      case Action.VIEW_OFFERS:
+        break;
+      case Action.VIEW_PURCHASE_ORDERS:
+        break;
+    }
+  }
+
+  function getContent() {
+    switch (action) {
+      case Action.ADD_USER:
+        return (
+          <AddUserModal
+            onClose={handleCloseModal}
+            edit={false}
+            userData={null}
+          />
+        );
+      case Action.EDIT_USER:
+        return (
+          <AddUserModal
+            onClose={handleCloseModal}
+            edit={true}
+            userData={userData}
+          />
+        );
+    }
   }
 
   return (
@@ -169,15 +206,13 @@ export default function Users() {
         style={mainModalScrollStyle}
         onClose={handleCloseModal}
       >
-        <AddUserModal
-          onClose={handleCloseModal}
-          edit={true}
-          userData={userData}
-        />
+        {getContent()}
       </NoContentModalContainer>
       <TablePageContent
         title={t("users")}
         titleIcon={<i className="fa-regular fa-users c-default"></i>}
+        subtitle={`${t("listOf")} ${t("users")}`}
+        subtitleIcon={<i className="fa-regular fa-user-group sub-icon"></i>}
         table={tableContent}
         onSearch={handleSearch}
         additionalContentHeader={
@@ -185,7 +220,7 @@ export default function Users() {
             <ButtonContainer
               common
               className="btn btn-default"
-              onClick={handleOpenModal}
+              onClick={openModalAddUser}
             >
               <i className="fa-regular fa-user-plus"></i> {t("addUser")}
             </ButtonContainer>

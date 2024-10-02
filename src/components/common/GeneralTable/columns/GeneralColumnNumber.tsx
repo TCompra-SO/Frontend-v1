@@ -1,15 +1,11 @@
 import { ColumnType } from "antd/es/table";
-import { RequirementTableItem } from "../../../../models/MainInterfaces";
-import { Action, TableTypes } from "../../../../utilities/types";
-import { useTranslation } from "react-i18next";
 
 export default function GeneralColumnNumber(
   nameColumn: string,
   dataIndex: string,
-  hidden: boolean = false
+  hidden: boolean = false,
+  width?: number
 ) {
-  const { t } = useTranslation();
-
   const col: ColumnType<any> = {
     title: nameColumn,
     dataIndex,
@@ -17,7 +13,7 @@ export default function GeneralColumnNumber(
     align: "center",
     sorter: (a, b) => a[dataIndex] - b[dataIndex],
     showSorterTooltip: false,
-    width: "75px",
+    width: width ?? 75,
     hidden,
     render: (_, record) => {
       return (

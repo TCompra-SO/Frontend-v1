@@ -18,8 +18,8 @@ export interface RequirementTableItem extends BaseRequirementOffer {
   description: string;
   category: number;
   location: number;
-  publishDate: Date;
-  expirationDate: Date;
+  publishDate: string;
+  expirationDate: string;
   coin: number;
   price: number;
   numberOffers: number;
@@ -48,19 +48,19 @@ export interface OfferListItem extends BaseRequirementOffer {
   image?: string[];
   document?: string[];
   subUser?: User;
-  selectionDate?: Date;
-  publishDate: Date;
+  selectionDate?: string;
+  publishDate: string;
   state: OfferState;
   type: RequirementType;
   igv?: boolean;
-  deliveryDate?: Date;
+  deliveryDate?: string;
   delivered?: boolean;
 }
 
 export interface PurchaseOrder {
   key: string;
   requirementTitle: string;
-  purchaseDate: Date;
+  purchaseDate: string;
   state: PurchaseOrderState;
   user: User;
   subUser?: User;

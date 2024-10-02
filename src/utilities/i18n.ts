@@ -23,7 +23,9 @@ const resources = {
       job: "Job",
       goods: "Goods",
       services: "Services",
+      serviceAbbrev: "Serv.",
       sales: "Sales",
+      saleAbbrev: "Sales",
       jobs: "Jobs",
       offer: "Offer",
       offers: "Offers",
@@ -285,6 +287,7 @@ const resources = {
       userType: "User type",
       submit:  "Submit",
       document: "Document",
+      user: "User"
     },
   },
   es: {
@@ -306,7 +309,9 @@ const resources = {
       job: "Puesto de trabajo",
       goods: "Bienes",
       services: "Servicios",
+      serviceAbbrev: "Serv.",
       sales: "Liquidaciones",
+      saleAbbrev: "Liq.",
       jobs: "Puestos de trabajo",
       offer: "Oferta",
       offers: "Ofertas",
@@ -570,6 +575,7 @@ const resources = {
       userType: "Tipo de usuario",
       submit:  "Enviar",
       document: "Documento",
+      user: "Usuario"
     },
   },
 };

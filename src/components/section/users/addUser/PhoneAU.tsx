@@ -17,9 +17,9 @@ export default function PhoneAU(props: PhoneAUProps) {
     <div className="t-flex ad-user">
       <div className="titulo-input">{t("phone")}</div>
 
-      <Space.Compact style={{ width: "100%" }}>
+      <Space.Compact>
         <InputContainer
-          style={{ width: "25%" }}
+          style={{ width: "30%" }}
           readOnly={true}
           defaultValue={phoneCode}
           className="form-control"
@@ -30,12 +30,9 @@ export default function PhoneAU(props: PhoneAUProps) {
           labelCol={{ span: 0 }}
           rules={phoneRules}
           initialValue={props.value}
+          style={{ width: "100%" }}
         >
-          <InputContainer
-            className="form-control"
-            style={{ width: "75%" }}
-            placeholder={t("phone")}
-          />
+          <InputContainer className="form-control" placeholder={t("phone")} />
         </Form.Item>
       </Space.Compact>
     </div>

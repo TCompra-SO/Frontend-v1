@@ -4,7 +4,7 @@ import { pageSizeOptionsSt } from "../../../utilities/globals";
 import ImageColumn from "./columns/ImageColumn";
 import NameColumn from "./columns/NameColumn";
 import LocationColumn from "./columns/LocationColumn";
-import DateColumn from "./columns/DateColumn";
+import GeneralDateColumn from "./columns/GeneralDateColumn";
 import PriceColumn from "./columns/PriceColumn";
 import OffersColumn from "./columns/OffersColumn";
 import StateColumn from "./columns/StateColumn";
@@ -112,7 +112,11 @@ export default function GeneralTable(props: RequirementsTableProps) {
       ),
       CategoryColumn(props.content.type, visibility[TableColumns.CATEGORY]),
       LocationColumn(visibility[TableColumns.LOCATION]),
-      DateColumn(props.content.type, visibility[TableColumns.DATE]),
+      GeneralDateColumn(
+        t("dateColumn"),
+        "publishDate",
+        visibility[TableColumns.DATE]
+      ),
       PriceColumn(visibility[TableColumns.PRICE]),
       OffersColumn(
         props.content.type,
@@ -138,7 +142,11 @@ export default function GeneralTable(props: RequirementsTableProps) {
       ),
       RequirementColumn(true, visibility[TableColumns.REQUIREMENT]),
       LocationColumn(visibility[TableColumns.LOCATION]),
-      DateColumn(props.content.type, visibility[TableColumns.DATE]),
+      GeneralDateColumn(
+        t("dateColumn"),
+        "publishDate",
+        visibility[TableColumns.DATE]
+      ),
       PriceColumn(visibility[TableColumns.PRICE]),
       StateColumn(props.content.type, visibility[TableColumns.STATE]),
       ActionColumn(
@@ -159,10 +167,14 @@ export default function GeneralTable(props: RequirementsTableProps) {
         visibility[TableColumns.NAME]
       ),
       GeneralColumnString(t("email"), "email", true, 130),
-      DateColumn(props.content.type, visibility[TableColumns.DATE]),
-      GeneralColumnNumber(t("goods"), "numGoods"),
-      GeneralColumnNumber(t("services"), "numServices"),
-      GeneralColumnNumber(t("sales"), "numSales"),
+      GeneralDateColumn(
+        t("dateColumn"),
+        "createdAt",
+        visibility[TableColumns.DATE]
+      ),
+      GeneralColumnNumber(t("goods"), "numGoods", false, 85),
+      GeneralColumnNumber(t("serviceAbbrev"), "numServices", false, 85),
+      GeneralColumnNumber(t("saleAbbrev"), "numSales", false, 85),
       ActionColumn(
         props.content.type,
         props.content.onButtonClick,

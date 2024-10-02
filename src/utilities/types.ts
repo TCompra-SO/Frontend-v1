@@ -123,6 +123,7 @@ export enum Action {
   DOCS_STATE = 21,
   CANCEL = 22,
   OFFER_DETAIL = 23,
+  ADD_USER = 24,
 }
 
 export const ActionLabel: {
@@ -151,6 +152,7 @@ export const ActionLabel: {
   [Action.DOCS_STATE]: "docsState",
   [Action.CANCEL]: "cancel",
   [Action.OFFER_DETAIL]: "offerDetail",
+  [Action.ADD_USER]: "addUser",
 };
 
 export const ActionByStateRequirement: {
@@ -218,6 +220,7 @@ export const ActionSubUsers: {
     Action.VIEW_REQUIREMENTS,
     Action.VIEW_OFFERS,
     Action.VIEW_PURCHASE_ORDERS,
+    Action.EDIT_USER,
   ],
 };
 

@@ -106,7 +106,7 @@ export function transformDataToRequirement(data: any) {
     category: data.category,
     location: data.location,
     publishDate: data.publishDate,
-    expirationDate: new Date(data.completion_date),
+    expirationDate: data.completion_date,
     coin: data.coin,
     price: data.price,
     numberOffers: data.numberOffers,
