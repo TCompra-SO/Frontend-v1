@@ -10,7 +10,7 @@ interface PasswordAUProps {
 
 export default function PasswordAU(props: PasswordAUProps) {
   const { t } = useTranslation();
-  const { passwordRules } = usePasswordRules(true);
+  const { passwordRules } = usePasswordRules(false);
 
   return (
     <div className="t-flex ad-user">

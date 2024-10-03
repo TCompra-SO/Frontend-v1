@@ -270,6 +270,7 @@ export enum TableColumns {
   VIEW = 16,
   EXPIRATION_DATE = 17,
   CREATION_DATE = 18,
+  SELECTION_DATE = 19,
 }
 
 export enum UserClass {

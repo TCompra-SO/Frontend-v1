@@ -291,6 +291,7 @@ const resources = {
       quantity: "Quantity",
       publishDateAbbrev: "Publish D.",
       expirationDateAbbrev: "Expiration D.",
+      selectionDateAbbrev: "Selection D.",
       type: "Type",
       view: "View"
     },
@@ -584,6 +585,7 @@ const resources = {
       quantity: "Cantidad",
       publishDateAbbrev: "F. Publicación",
       expirationDateAbbrev: "F. Expiración",
+      selectionDateAbbrev: "F. Selección",
       type: "Tipo",
       view: "Ver"
     },

@@ -13,7 +13,7 @@ export function registerSubUserService(): HttpService {
 export function getSubUserService(uid: String): HttpService {
   return {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.subUser}${
-      ApiRoutes.subUser.root
+      ApiRoutes.subUser.getUser
     }${uid}`,
     type: "SU-GET",
   };

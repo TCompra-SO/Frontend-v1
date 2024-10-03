@@ -42,6 +42,7 @@ export const ApiRoutes = {
     update: "update/",
     changeRole: "changeRole/",
     changeStatus: "changeStatus/",
+    getUser: "getUser/",
   },
   requirements: {
     getRequeriments: "getRequeriments/",

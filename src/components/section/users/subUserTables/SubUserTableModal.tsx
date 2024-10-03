@@ -1,13 +1,28 @@
 import { useTranslation } from "react-i18next";
 import { Action, TableTypes } from "../../../../utilities/types";
 import { SubUserProfile } from "../../../../models/Responses";
-import { RequirementItemSubUser } from "../../../../models/MainInterfaces";
+import {
+  OfferItemSubUser,
+  PurchaseOrderItemSubUser,
+  RequirementItemSubUser,
+} from "../../../../models/MainInterfaces";
 import GeneralTable from "../../../common/GeneralTable/GeneralTable";
 
 interface SubUserTableModalProps {
-  tableType: TableTypes;
   user: SubUserProfile | null;
-  tableContent: RequirementItemSubUser[];
+  content:
+    | {
+        tableType: TableTypes.REQUIREMENT_SUBUSER;
+        tableContent: RequirementItemSubUser[];
+      }
+    | {
+        tableType: TableTypes.OFFER_SUBUSER;
+        tableContent: OfferItemSubUser[];
+      }
+    | {
+        tableType: TableTypes.PURCHASE_ORDER_SUBUSER;
+        tableContent: PurchaseOrderItemSubUser[];
+      };
 }
 
 export default function SubUserTableModal(props: SubUserTableModalProps) {
@@ -23,11 +38,13 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
         <i className="fa-regular fa-dolly sub-icon m-0"></i>
         <div className="sub-titulo sub-calificar">
           <div>
-            {props.tableType == TableTypes.REQUIREMENT && (
+            {props.content.tableType == TableTypes.REQUIREMENT_SUBUSER && (
               <>{t("requirements")}</>
             )}
-            {props.tableType == TableTypes.OFFER && <>{t("offers")}</>}
-            {props.tableType == TableTypes.PURCHASE_ORDER && (
+            {props.content.tableType == TableTypes.OFFER_SUBUSER && (
+              <>{t("offers")}</>
+            )}
+            {props.content.tableType == TableTypes.PURCHASE_ORDER_SUBUSER && (
               <>{t("purchaseOrders")}</>
             )}
           </div>
@@ -38,15 +55,39 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
         </div>
       </div>
       <div className="detalle-oferta">
-        <GeneralTable
-          content={{
-            type: TableTypes.REQUIREMENT_SUBUSER,
-            data: props.tableContent,
-            hiddenColumns: [],
-            nameColumnHeader: t("requirements"),
-            onButtonClick: handleOnButtonClick,
-          }}
-        />
+        {props.content.tableType == TableTypes.REQUIREMENT_SUBUSER && (
+          <GeneralTable
+            content={{
+              type: props.content.tableType,
+              data: props.content.tableContent,
+              hiddenColumns: [],
+              nameColumnHeader: t("requirements"),
+              onButtonClick: handleOnButtonClick,
+            }}
+          />
+        )}
+        {props.content.tableType == TableTypes.OFFER_SUBUSER && (
+          <GeneralTable
+            content={{
+              type: props.content.tableType,
+              data: props.content.tableContent,
+              hiddenColumns: [],
+              nameColumnHeader: t("offers"),
+              onButtonClick: handleOnButtonClick,
+            }}
+          />
+        )}
+        {props.content.tableType == TableTypes.PURCHASE_ORDER_SUBUSER && (
+          <GeneralTable
+            content={{
+              type: props.content.tableType,
+              data: props.content.tableContent,
+              hiddenColumns: [],
+              nameColumnHeader: t("purchaseOrders"),
+              onButtonClick: handleOnButtonClick,
+            }}
+          />
+        )}
       </div>
     </div>
   );

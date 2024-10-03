@@ -13,8 +13,10 @@ import CategoryColumn from "./columns/CategoryColumn";
 import { TableType } from "../../../models/Interfaces";
 import RequirementColumn from "./columns/RequirementColumn";
 import {
+  OfferItemSubUser,
   OfferListItem,
   PurchaseOrder,
+  PurchaseOrderItemSubUser,
   RequirementItemSubUser,
   RequirementTableItem,
 } from "../../../models/MainInterfaces";
@@ -54,6 +56,9 @@ export default function GeneralTable(props: RequirementsTableProps) {
         | OfferListItem
         | PurchaseOrder
         | RequirementItemSubUser
+      >
+    | ColumnType<
+        RequirementItemSubUser | OfferItemSubUser | PurchaseOrderItemSubUser
       >
   > = [];
 
@@ -124,6 +129,15 @@ export default function GeneralTable(props: RequirementsTableProps) {
         <Table
           dataSource={props.content.data}
           columns={columns as Array<ColumnType<RequirementItemSubUser>>}
+          {...tableProps}
+        ></Table>
+      );
+    case TableTypes.OFFER_SUBUSER:
+      getOfferSubUserColumns();
+      return (
+        <Table
+          dataSource={props.content.data}
+          columns={columns as Array<ColumnType<OfferItemSubUser>>}
           {...tableProps}
         ></Table>
       );
@@ -264,6 +278,44 @@ export default function GeneralTable(props: RequirementsTableProps) {
       ),
       ViewColumn(
         TableTypes.REQUIREMENT_SUBUSER,
+        props.content.onButtonClick,
+        visibility[TableColumns.VIEW]
+      ),
+    ];
+    return columns;
+  }
+
+  function getOfferSubUserColumns() {
+    columns = [
+      GeneralColumnString(
+        t("title"),
+        "title",
+        true,
+        130,
+        visibility[TableColumns.NAME]
+      ),
+      GeneralColumnString(
+        t("requirement"),
+        "requirementTitle",
+        true,
+        130,
+        visibility[TableColumns.REQUIREMENT]
+      ),
+      PriceColumn(visibility[TableColumns.PRICE]),
+      GeneralDateColumn(
+        t("selectionDateAbbrev"),
+        "selectionDate",
+        visibility[TableColumns.SELECTION_DATE]
+      ),
+      TypeColumn(visibility[TableColumns.TYPE]),
+      GeneralColumnNumber(
+        t("offers"),
+        "numberOffers",
+        visibility[TableColumns.OFFERS]
+      ),
+      StateColumn(TableTypes.OFFER_SUBUSER, visibility[TableColumns.STATE]),
+      ViewColumn(
+        TableTypes.OFFER_SUBUSER,
         props.content.onButtonClick,
         visibility[TableColumns.VIEW]
       ),

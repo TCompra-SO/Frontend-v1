@@ -5,6 +5,8 @@ import AddUserModal from "../components/section/users/addUser/AddUserModal";
 import { useTranslation } from "react-i18next";
 import {
   Action,
+  OfferState,
+  PurchaseOrderState,
   RequirementState,
   RequirementType,
   TableTypes,
@@ -21,7 +23,11 @@ import showNotification from "../utilities/notification/showNotification";
 import { App } from "antd";
 import { SubUserProfile } from "../models/Responses";
 import SubUserTableModal from "../components/section/users/subUserTables/SubUserTableModal";
-import { RequirementItemSubUser } from "../models/MainInterfaces";
+import {
+  OfferItemSubUser,
+  PurchaseOrderItemSubUser,
+  RequirementItemSubUser,
+} from "../models/MainInterfaces";
 
 const users: SubUserProfile[] = [
   {
@@ -190,6 +196,92 @@ const reqs: RequirementItemSubUser[] = [
   },
 ];
 
+const offers: OfferItemSubUser[] = [
+  {
+    requirementTitle: "Requirement title fdskfhjkshf js hfjksfh sjffhjs jsf",
+    price: 23,
+    publishDate: "2024-10-12T16:36:45.673Z",
+    state: OfferState.ACTIVE,
+    coin: 2,
+    key: "1",
+    title: "Offer title fjdfh jfhsjhf js",
+    type: RequirementType.GOOD,
+  },
+  {
+    requirementTitle: "Requirement title fdskfhjkshf js hfjksfh sjffhjs jsf",
+    price: 23,
+    publishDate: "2024-10-12T16:36:45.673Z",
+    state: OfferState.ACTIVE,
+    coin: 2,
+    key: "1",
+    title: "Offer title fjdfh jfhsjhf js",
+    type: RequirementType.SALE,
+  },
+  {
+    requirementTitle: "Requirement title fdskfhjkshf js hfjksfh sjffhjs jsf",
+    price: 23,
+    publishDate: "2024-10-12T16:36:45.673Z",
+    state: OfferState.ACTIVE,
+    coin: 2,
+    key: "1",
+    title: "Offer title fjdfh jfhsjhf js",
+    type: RequirementType.GOOD,
+  },
+  {
+    requirementTitle: "Requirement title fdskfhjkshf js hfjksfh sjffhjs jsf",
+    price: 434343,
+    publishDate: "2024-10-12T16:36:45.673Z",
+    state: OfferState.ACTIVE,
+    coin: 2,
+    key: "1",
+    title: "Offer title fjdfh jfhsjhf js",
+    type: RequirementType.GOOD,
+  },
+];
+
+const purc: PurchaseOrderItemSubUser[] = [
+  {
+    requirementTitle: "req title fdfsf fs f sf sf sfs",
+    offerTitle: "Offer title fkjsfjsjk fjkfsfsfds",
+    selectionDate: "2024-10-12T16:36:45.673Z",
+    state: PurchaseOrderState.PENDING,
+    key: "1",
+    type: RequirementType.SERVICE,
+  },
+  {
+    requirementTitle: "req title fdfsf fs f sf sf sfs",
+    offerTitle: "Offer title fkjsfjsjk fjkfsfsfds",
+    selectionDate: "2024-10-12T16:36:45.673Z",
+    state: PurchaseOrderState.PENDING,
+    key: "1",
+    type: RequirementType.SERVICE,
+  },
+  {
+    requirementTitle: "req title fdfsf fs f sf sf sfs",
+    offerTitle: "Offer title fkjsfjsjk fjkfsfsfds",
+    selectionDate: "2024-10-12T16:36:45.673Z",
+    state: PurchaseOrderState.PENDING,
+    key: "1",
+    type: RequirementType.SERVICE,
+  },
+  {
+    requirementTitle: "req title fdfsf fs f sf sf sfs",
+    offerTitle: "Offer title fkjsfjsjk fjkfsfsfds",
+    selectionDate: "2024-10-12T16:36:45.673Z",
+    state: PurchaseOrderState.PENDING,
+    key: "1",
+    type: RequirementType.GOOD,
+  },
+  {
+    requirementTitle: "req title fdfsf fs f sf sf sfs",
+    offerTitle: "Offer title fkjsfjsjk fjkfsfsfds",
+    selectionDate: "2024-10-12T16:36:45.673Z",
+    state: PurchaseOrderState.PENDING,
+    key: "1",
+    type: RequirementType.SALE,
+  },
+];
+
 export default function Users() {
   const { t } = useTranslation();
   const { notification } = App.useApp();
@@ -224,7 +316,7 @@ export default function Users() {
   useEffect(() => {
     if (responseData) {
       if (equalServices(apiParams.service, getSubUserService(""))) {
-        setUserData(responseData.res.profile);
+        setUserData(responseData);
         console.log(responseData, userData);
         handleOpenModal();
       }
@@ -268,8 +360,12 @@ export default function Users() {
         handleOpenModal();
         break;
       case Action.VIEW_OFFERS:
+        setUserData(user);
+        handleOpenModal();
         break;
       case Action.VIEW_PURCHASE_ORDERS:
+        setUserData(user);
+        handleOpenModal();
         break;
     }
   }
@@ -289,9 +385,31 @@ export default function Users() {
       case Action.VIEW_REQUIREMENTS:
         return (
           <SubUserTableModal
-            tableType={TableTypes.REQUIREMENT}
+            content={{
+              tableType: TableTypes.REQUIREMENT_SUBUSER,
+              tableContent: reqs,
+            }}
             user={userData}
-            tableContent={reqs}
+          />
+        );
+      case Action.VIEW_OFFERS:
+        return (
+          <SubUserTableModal
+            content={{
+              tableType: TableTypes.OFFER_SUBUSER,
+              tableContent: offers,
+            }}
+            user={userData}
+          />
+        );
+      case Action.VIEW_PURCHASE_ORDERS:
+        return (
+          <SubUserTableModal
+            content={{
+              tableType: TableTypes.PURCHASE_ORDER_SUBUSER,
+              tableContent: purc,
+            }}
+            user={userData}
           />
         );
     }
@@ -301,7 +419,13 @@ export default function Users() {
     <>
       <NoContentModalContainer
         open={isOpenModal}
-        width={action == Action.VIEW_REQUIREMENTS ? 1000 : 800}
+        width={
+          action == Action.VIEW_REQUIREMENTS ||
+          action == Action.VIEW_OFFERS ||
+          action == Action.VIEW_PURCHASE_ORDERS
+            ? 1000
+            : 800
+        }
         style={mainModalScrollStyle}
         onClose={handleCloseModal}
       >

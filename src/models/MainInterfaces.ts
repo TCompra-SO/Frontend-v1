@@ -95,19 +95,18 @@ export interface RequirementItemSubUser extends BaseRequirementOffer {
 }
 
 export interface OfferItemSubUser extends BaseRequirementOffer {
+  requirementTitle: string;
   price: number;
   publishDate: string;
-  expirationDate: string;
-  numberOffers: number;
-  state: RequirementState;
+  state: OfferState;
   coin: number;
 }
 
-export interface PurchaseOrderItemSubUser extends BaseRequirementOffer {
-  price: number;
-  publishDate: string;
-  expirationDate: string;
-  numberOffers: number;
-  state: RequirementState;
-  coin: number;
+export interface PurchaseOrderItemSubUser {
+  key: string;
+  type: RequirementType;
+  requirementTitle: string;
+  offerTitle: string;
+  selectionDate: string;
+  state: PurchaseOrderState;
 }

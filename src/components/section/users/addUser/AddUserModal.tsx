@@ -42,7 +42,14 @@ export default function AddUserModal(props: AddUserModalProps) {
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const [form] = Form.useForm();
-  const token = useSelector((state: MainState) => state.user.token);
+  // const [passSuccess, setPassSuccess] = useState(false);
+  // const [roleSuccess, setRoleSuccess] = useState(false);
+  // const [profileSuccess, setProfileSuccess] = useState(false);
+  let passSuccess: boolean = false;
+  let roleSuccess: boolean = false;
+  let profileSuccess: boolean = false;
+  let changePassword: boolean = false;
+  const [token] = useState(useSelector((state: MainState) => state.user.token));
   const [validDoc, setValidDoc] = useState(false);
   const uid = useSelector((state: MainState) => state.user.uid);
 
@@ -51,42 +58,88 @@ export default function AddUserModal(props: AddUserModalProps) {
     useApiParams<
       | GetNameReniecRequest
       | RegisterSubUserRequest
-      | NewPasswordRequest
-      | ChangeRoleSubUserRequest
       | UpdateProfileSubUserRequest
     >
   >({
     service: null,
     method: "get",
   });
+  const [apiParamsNewPass, setApiParamsNewPass] = useState<
+    useApiParams<NewPasswordRequest>
+  >({
+    service: null,
+    method: "get",
+    token,
+  });
+  const [apiParamsChangeRole, setApiParamsChangeRole] = useState<
+    useApiParams<ChangeRoleSubUserRequest>
+  >({
+    service: null,
+    method: "get",
+  });
   const { loading, responseData, error, errorMsg, fetchData } = useApi<
-    | GetNameReniecRequest
-    | RegisterSubUserRequest
-    | NewPasswordRequest
-    | ChangeRoleSubUserRequest
-    | UpdateProfileSubUserRequest
+    GetNameReniecRequest | RegisterSubUserRequest | UpdateProfileSubUserRequest
   >({
     service: apiParams.service,
     method: apiParams.method,
     dataToSend: apiParams.dataToSend,
   });
 
+  const {
+    loading: loadingNewPass,
+    responseData: responseDataNewPass,
+    error: errorNewPass,
+    errorMsg: errorMsgNewPass,
+    fetchData: fetchDataNewPass,
+  } = useApi<NewPasswordRequest>({
+    service: apiParamsNewPass.service,
+    method: apiParamsNewPass.method,
+    dataToSend: apiParamsNewPass.dataToSend,
+  });
+
+  const {
+    loading: loadingChangeRole,
+    responseData: responseDataChangeRole,
+    error: errorChangeRole,
+    errorMsg: errorMsgChangeRole,
+    fetchData: fetchDataChangeRole,
+  } = useApi<ChangeRoleSubUserRequest>({
+    service: apiParamsChangeRole.service,
+    method: apiParamsChangeRole.method,
+    dataToSend: apiParamsChangeRole.dataToSend,
+  });
+
   useEffect(() => {
     if (apiParams.service) fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
 
   useEffect(() => {
-    if (
-      equalServices(apiParams.service, registerSubUserService()) ||
-      equalServices(apiParams.service, newPasswordService()) ||
-      equalServices(apiParams.service, changeRoleSubUserService()) ||
-      equalServices(apiParams.service, updateProfileSubUserService())
-    ) {
+    if (apiParamsChangeRole.service) fetchDataChangeRole();
+  }, [apiParamsChangeRole]);
+
+  useEffect(() => {
+    if (apiParamsNewPass.service) {
+      console.log(apiParamsNewPass);
+      fetchDataNewPass();
+    }
+  }, [apiParamsNewPass]);
+
+  useEffect(() => {
+    if (!equalServices(apiParams.service, getNameReniecService(""))) {
       setLoadingRegisterUser(loading);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
+
+  useEffect(() => {
+    setLoadingRegisterUser(loadingChangeRole);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingChangeRole]);
+
+  useEffect(() => {
+    setLoadingRegisterUser(loadingNewPass);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingNewPass]);
 
   useEffect(() => {
     if (responseData) {
@@ -97,7 +150,7 @@ export default function AddUserModal(props: AddUserModalProps) {
       } else if (
         equalServices(apiParams.service, updateProfileSubUserService())
       ) {
-        updateSubUserSuccess();
+        updateSubUserSuccess(1);
       }
     } else if (error) {
       showNotification(notification, "error", errorMsg);
@@ -106,6 +159,24 @@ export default function AddUserModal(props: AddUserModalProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
+
+  useEffect(() => {
+    if (responseDataNewPass) {
+      updateSubUserSuccess(3);
+    } else if (errorNewPass) {
+      showNotification(notification, "error", errorMsgNewPass);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataNewPass, errorNewPass]);
+
+  useEffect(() => {
+    if (responseDataChangeRole) {
+      updateSubUserSuccess(2);
+    } else if (errorChangeRole) {
+      showNotification(notification, "error", errorMsgChangeRole);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataChangeRole, errorChangeRole]);
 
   function getNameReniecSuccess() {
     form.setFieldValue("fullname", responseData.data);
@@ -121,14 +192,25 @@ export default function AddUserModal(props: AddUserModalProps) {
     props.onClose();
   }
 
-  function updateSubUserSuccess() {
-    return;
-    showNotification(
-      notification,
-      "success",
-      `${t("userUpdatedSuccessfully")}`
-    );
-    props.onClose();
+  function updateSubUserSuccess(type: number) {
+    if (type == 1) profileSuccess = true;
+    else if (type == 2) roleSuccess = true;
+    else if (type == 3) passSuccess = true;
+
+    console.log(changePassword, passSuccess);
+
+    if (
+      ((changePassword && passSuccess) || !changePassword) &&
+      roleSuccess &&
+      profileSuccess
+    ) {
+      showNotification(
+        notification,
+        "success",
+        `${t("userUpdatedSuccessfully")}`
+      );
+      props.onClose();
+    }
   }
 
   function resetFields(fields?: string[]) {
@@ -181,6 +263,27 @@ export default function AddUserModal(props: AddUserModalProps) {
       showNotification(notification, "error", t("passwordsMusMatch"));
       return;
     }
+
+    passSuccess = false;
+    roleSuccess = false;
+    profileSuccess = false;
+    changePassword = false;
+
+    const password: NewPasswordRequest = {
+      email: values.email,
+      password: values.password1,
+    };
+
+    if (values.password1) {
+      changePassword = true;
+      setApiParamsNewPass({
+        service: newPasswordService(),
+        method: "post",
+        dataToSend: password,
+        token: token,
+      });
+    }
+
     if (props.userData && props.edit) {
       const profile: UpdateProfileSubUserRequest = {
         uid: props.userData.uid,
@@ -188,30 +291,21 @@ export default function AddUserModal(props: AddUserModalProps) {
         address: values.address,
         cityID: values.location,
       };
-      // setApiParams({
-      //   service: updateProfileSubUserService(),
-      //   method: "post",
-      //   dataToSend: profile,
-      // });
+      setApiParams({
+        service: updateProfileSubUserService(),
+        method: "post",
+        dataToSend: profile,
+      });
       const role: ChangeRoleSubUserRequest = {
         uid: props.userData.uid,
         typeID: values.userType,
       };
-      // setApiParams({
-      //   service: changeRoleSubUserService(),
-      //   method: "post",
-      //   dataToSend: role,
-      // });
-      const password: NewPasswordRequest = {
-        email: values.email,
-        password: values.password1,
-      };
-      // setApiParams({
-      //   service: changePasswordSubUserService(),
-      //   method: "post",
-      //   dataToSend: password,
-      //   token: apiParams.token,
-      // });
+      setApiParamsChangeRole({
+        service: changeRoleSubUserService(),
+        method: "post",
+        dataToSend: role,
+      });
+
       console.log(profile, password, role);
     }
   }
@@ -249,7 +343,7 @@ export default function AddUserModal(props: AddUserModalProps) {
               <AddressAU edit={props.edit} value={props.userData?.address} />
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <EmailAU edit={false} value={props.userData?.email} />
+              <EmailAU edit={props.edit} value={props.userData?.email} />
             </Col>
           </Row>
           <Row gutter={[15, 15]}>
