@@ -371,7 +371,7 @@ export default function Offers() {
     type: TableTypes.OFFER,
     data: offerList,
     hiddenColumns: [],
-    nameColumnHeader: t("offer") + "s",
+    nameColumnHeader: t("offers"),
     onButtonClick: handleOnButtonClick,
   });
 

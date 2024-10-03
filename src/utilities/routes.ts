@@ -2,7 +2,6 @@ export const ApiMainRoutes = {
   auth: "auth/",
   util: "util/",
   subUser: "subUser/",
-  user: "user/",
   requirements: "requeriments/",
 };
 
@@ -16,6 +15,7 @@ export const ApiRoutes = {
     validateCode: "validate-code/",
     sendCodeRecovery: "sendCodeRecovery/",
     recoverPassword: "recoveryPassword/",
+    newPassword: "NewPassword/",
   },
   util: {
     countries: "countries/",
@@ -42,9 +42,6 @@ export const ApiRoutes = {
     update: "update/",
     changeRole: "changeRole/",
     changeStatus: "changeStatus/",
-  },
-  user: {
-    changePassword: "change-password/",
   },
   requirements: {
     getRequeriments: "getRequeriments/",

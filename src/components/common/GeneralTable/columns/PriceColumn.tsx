@@ -1,6 +1,7 @@
 import { ColumnType } from "antd/es/table";
 import {
   OfferListItem,
+  RequirementItemSubUser,
   RequirementTableItem,
 } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
@@ -13,7 +14,9 @@ export default function PriceColumn(hidden: boolean = false) {
   const context = useContext(ListsContext);
   const { currencyData } = context;
 
-  const col: ColumnType<RequirementTableItem | OfferListItem> = {
+  const col: ColumnType<
+    RequirementTableItem | OfferListItem | RequirementItemSubUser
+  > = {
     title: t("priceColumn"),
     dataIndex: "price",
     align: "center",

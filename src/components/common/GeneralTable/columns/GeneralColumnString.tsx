@@ -5,7 +5,7 @@ export default function GeneralColumnString(
   nameColumn: string,
   dataIndex: string,
   truncate: boolean,
-  width: number,
+  width: number = 130,
   hidden: boolean = false
 ) {
   const col: ColumnType<any> = {

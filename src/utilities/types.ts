@@ -56,6 +56,9 @@ export enum TableTypes {
   OFFER = 2,
   PURCHASE_ORDER = 3,
   USERS = 4,
+  REQUIREMENT_SUBUSER = 5,
+  OFFER_SUBUSER = 6,
+  PURCHASE_ORDER_SUBUSER = 7,
 }
 
 export enum UserTable {
@@ -251,7 +254,7 @@ export enum TableColumns {
   IMAGE = 0,
   ACTION = 1,
   CATEGORY = 2,
-  DATE = 3,
+  PUBLISH_DATE = 3,
   LOCATION = 4,
   NAME = 5,
   OFFERS = 6,
@@ -264,7 +267,9 @@ export enum TableColumns {
   SERVICES = 13,
   SALES = 14,
   DOCUMENT = 15,
-  OFFER = 16,
+  VIEW = 16,
+  EXPIRATION_DATE = 17,
+  CREATION_DATE = 18,
 }
 
 export enum UserClass {

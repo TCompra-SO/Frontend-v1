@@ -11,9 +11,9 @@ import UserTypeAU from "./items/UserTypeAU";
 import { getNameReniecService } from "../../../../services/utilService";
 import { useEffect, useState } from "react";
 import {
-  ChangePasswordSubUserRequest,
   ChangeRoleSubUserRequest,
   GetNameReniecRequest,
+  NewPasswordRequest,
   RegisterSubUserRequest,
   UpdateProfileSubUserRequest,
 } from "../../../../models/Requests";
@@ -21,7 +21,6 @@ import { useApiParams } from "../../../../models/Interfaces";
 import useApi from "../../../../hooks/useApi";
 import showNotification from "../../../../utilities/notification/showNotification";
 import {
-  changePasswordSubUserService,
   changeRoleSubUserService,
   registerSubUserService,
   updateProfileSubUserService,
@@ -31,6 +30,7 @@ import { MainState } from "../../../../models/Redux";
 import { equalServices } from "../../../../utilities/globalFunctions";
 import PasswordAU from "./items/PasswordAU";
 import { SubUserProfile } from "../../../../models/Responses";
+import { newPasswordService } from "../../../../services/authService";
 
 interface AddUserModalProps {
   onClose: () => void;
@@ -42,6 +42,7 @@ export default function AddUserModal(props: AddUserModalProps) {
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const [form] = Form.useForm();
+  const token = useSelector((state: MainState) => state.user.token);
   const [validDoc, setValidDoc] = useState(false);
   const uid = useSelector((state: MainState) => state.user.uid);
 
@@ -50,7 +51,7 @@ export default function AddUserModal(props: AddUserModalProps) {
     useApiParams<
       | GetNameReniecRequest
       | RegisterSubUserRequest
-      | ChangePasswordSubUserRequest
+      | NewPasswordRequest
       | ChangeRoleSubUserRequest
       | UpdateProfileSubUserRequest
     >
@@ -61,7 +62,7 @@ export default function AddUserModal(props: AddUserModalProps) {
   const { loading, responseData, error, errorMsg, fetchData } = useApi<
     | GetNameReniecRequest
     | RegisterSubUserRequest
-    | ChangePasswordSubUserRequest
+    | NewPasswordRequest
     | ChangeRoleSubUserRequest
     | UpdateProfileSubUserRequest
   >({
@@ -78,7 +79,7 @@ export default function AddUserModal(props: AddUserModalProps) {
   useEffect(() => {
     if (
       equalServices(apiParams.service, registerSubUserService()) ||
-      equalServices(apiParams.service, changePasswordSubUserService("")) ||
+      equalServices(apiParams.service, newPasswordService()) ||
       equalServices(apiParams.service, changeRoleSubUserService()) ||
       equalServices(apiParams.service, updateProfileSubUserService())
     ) {
@@ -201,13 +202,15 @@ export default function AddUserModal(props: AddUserModalProps) {
       //   method: "post",
       //   dataToSend: role,
       // });
-      const password: ChangePasswordSubUserRequest = {
+      const password: NewPasswordRequest = {
+        email: values.email,
         password: values.password1,
       };
       // setApiParams({
       //   service: changePasswordSubUserService(),
       //   method: "post",
       //   dataToSend: password,
+      //   token: apiParams.token,
       // });
       console.log(profile, password, role);
     }

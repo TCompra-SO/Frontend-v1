@@ -84,3 +84,30 @@ export interface BaseUser {
   name: string;
   image?: string; // customerScore: number; sellerScore: number;  //  tenure?: number /email: string
 }
+
+export interface RequirementItemSubUser extends BaseRequirementOffer {
+  price: number;
+  publishDate: string;
+  expirationDate: string;
+  numberOffers: number;
+  state: RequirementState;
+  coin: number;
+}
+
+export interface OfferItemSubUser extends BaseRequirementOffer {
+  price: number;
+  publishDate: string;
+  expirationDate: string;
+  numberOffers: number;
+  state: RequirementState;
+  coin: number;
+}
+
+export interface PurchaseOrderItemSubUser extends BaseRequirementOffer {
+  price: number;
+  publishDate: string;
+  expirationDate: string;
+  numberOffers: number;
+  state: RequirementState;
+  coin: number;
+}

@@ -75,6 +75,7 @@ export interface ChangeRoleSubUserRequest {
   typeID: UserRoles;
 }
 
-export interface ChangePasswordSubUserRequest {
+export interface NewPasswordRequest {
+  email: string;
   password: string;
 }

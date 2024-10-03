@@ -287,7 +287,12 @@ const resources = {
       userType: "User type",
       submit:  "Submit",
       document: "Document",
-      user: "User"
+      user: "User",
+      quantity: "Quantity",
+      publishDateAbbrev: "Publish D.",
+      expirationDateAbbrev: "Expiration D.",
+      type: "Type",
+      view: "View"
     },
   },
   es: {
@@ -575,7 +580,12 @@ const resources = {
       userType: "Tipo de usuario",
       submit:  "Enviar",
       document: "Documento",
-      user: "Usuario"
+      user: "Usuario",
+      quantity: "Cantidad",
+      publishDateAbbrev: "F. Publicación",
+      expirationDateAbbrev: "F. Expiración",
+      type: "Tipo",
+      view: "Ver"
     },
   },
 };

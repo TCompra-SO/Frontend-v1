@@ -72,3 +72,12 @@ export function recoverPasswordService(): HttpService {
     type: "AU-RE-PA",
   };
 }
+
+export function newPasswordService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+      ApiRoutes.auth.newPassword
+    }`,
+    type: "AU-NE-PA",
+  };
+}

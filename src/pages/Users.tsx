@@ -3,7 +3,12 @@ import NoContentModalContainer from "../components/containers/NoContentModalCont
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import AddUserModal from "../components/section/users/addUser/AddUserModal";
 import { useTranslation } from "react-i18next";
-import { Action, TableTypes } from "../utilities/types";
+import {
+  Action,
+  RequirementState,
+  RequirementType,
+  TableTypes,
+} from "../utilities/types";
 import { TableTypeUsers, useApiParams } from "../models/Interfaces";
 import { mainModalScrollStyle } from "../utilities/globals";
 import ButtonContainer from "../components/containers/ButtonContainer";
@@ -16,6 +21,7 @@ import showNotification from "../utilities/notification/showNotification";
 import { App } from "antd";
 import { SubUserProfile } from "../models/Responses";
 import SubUserTableModal from "../components/section/users/subUserTables/SubUserTableModal";
+import { RequirementItemSubUser } from "../models/MainInterfaces";
 
 const users: SubUserProfile[] = [
   {
@@ -104,6 +110,86 @@ const users: SubUserProfile[] = [
   },
 ];
 
+const reqs: RequirementItemSubUser[] = [
+  {
+    price: 0,
+    publishDate: "2024-10-12T16:36:45.673Z",
+    expirationDate: "2024-10-12T16:36:45.673Z",
+    numberOffers: 2,
+    state: RequirementState.PUBLISHED,
+    key: "1",
+    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
+    type: RequirementType.GOOD,
+    coin: 1,
+  },
+  {
+    price: 0,
+    publishDate: "2024-10-12T16:36:45.673Z",
+    expirationDate: "2024-10-12T16:36:45.673Z",
+    numberOffers: 2,
+    state: RequirementState.PUBLISHED,
+    key: "1",
+    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
+    type: RequirementType.GOOD,
+    coin: 1,
+  },
+  {
+    price: 0,
+    publishDate: "2024-10-12T16:36:45.673Z",
+    expirationDate: "2024-10-12T16:36:45.673Z",
+    numberOffers: 2,
+    state: RequirementState.PUBLISHED,
+    key: "1",
+    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
+    type: RequirementType.GOOD,
+    coin: 1,
+  },
+  {
+    price: 0,
+    publishDate: "2024-10-12T16:36:45.673Z",
+    expirationDate: "2024-10-12T16:36:45.673Z",
+    numberOffers: 2,
+    state: RequirementState.PUBLISHED,
+    key: "1",
+    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
+    type: RequirementType.GOOD,
+    coin: 1,
+  },
+  {
+    price: 0,
+    publishDate: "2024-10-12T16:36:45.673Z",
+    expirationDate: "2024-10-12T16:36:45.673Z",
+    numberOffers: 2,
+    state: RequirementState.PUBLISHED,
+    key: "1",
+    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
+    type: RequirementType.GOOD,
+    coin: 1,
+  },
+  {
+    price: 0,
+    publishDate: "2024-10-12T16:36:45.673Z",
+    expirationDate: "2024-10-12T16:36:45.673Z",
+    numberOffers: 2,
+    state: RequirementState.PUBLISHED,
+    key: "1",
+    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
+    type: RequirementType.GOOD,
+    coin: 1,
+  },
+  {
+    price: 123,
+    publishDate: "2024-10-12T16:36:45.673Z",
+    expirationDate: "2024-10-12T16:36:45.673Z",
+    numberOffers: 2,
+    state: RequirementState.PUBLISHED,
+    key: "1",
+    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
+    type: RequirementType.GOOD,
+    coin: 1,
+  },
+];
+
 export default function Users() {
   const { t } = useTranslation();
   const { notification } = App.useApp();
@@ -178,6 +264,7 @@ export default function Users() {
         });
         break;
       case Action.VIEW_REQUIREMENTS:
+        setUserData(user);
         handleOpenModal();
         break;
       case Action.VIEW_OFFERS:
@@ -204,6 +291,7 @@ export default function Users() {
           <SubUserTableModal
             tableType={TableTypes.REQUIREMENT}
             user={userData}
+            tableContent={reqs}
           />
         );
     }
@@ -213,7 +301,7 @@ export default function Users() {
     <>
       <NoContentModalContainer
         open={isOpenModal}
-        width={800}
+        width={action == Action.VIEW_REQUIREMENTS ? 1000 : 800}
         style={mainModalScrollStyle}
         onClose={handleCloseModal}
       >

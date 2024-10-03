@@ -10,8 +10,11 @@ import {
 } from "../utilities/types";
 import {
   BaseUser,
+  OfferItemSubUser,
   OfferListItem,
   PurchaseOrder,
+  PurchaseOrderItemSubUser,
+  RequirementItemSubUser,
   RequirementTableItem,
   User,
 } from "./MainInterfaces";
@@ -156,11 +159,29 @@ export interface TableTypeUsers extends TableHiddenColumns {
   data: SubUserProfile[];
 }
 
+export interface TableTypeRequirementSubUser extends TableHiddenColumns {
+  type: TableTypes.REQUIREMENT_SUBUSER;
+  data: RequirementItemSubUser[];
+}
+
+export interface TableTypeOfferSubUser extends TableHiddenColumns {
+  type: TableTypes.OFFER_SUBUSER;
+  data: OfferItemSubUser[];
+}
+
+export interface TableTypePurchaseOrderSubUser extends TableHiddenColumns {
+  type: TableTypes.PURCHASE_ORDER_SUBUSER;
+  data: PurchaseOrderItemSubUser[];
+}
+
 export type TableType =
   | TableTypeRequirement
   | TableTypeOffer
   | TableTypePurchaseOrder
-  | TableTypeUsers;
+  | TableTypeUsers
+  | TableTypeRequirementSubUser
+  | TableTypeOfferSubUser
+  | TableTypePurchaseOrderSubUser;
 
 /********************* */
 
