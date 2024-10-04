@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { UserState } from "../models/Redux";
+import { UserRoles } from "../utilities/types";
 
 const initialState: UserState = {
   token: "",
@@ -7,7 +8,7 @@ const initialState: UserState = {
   uid: "",
   name: "",
   email: "",
-  typeID: 0,
+  typeID: UserRoles.NONE,
   planID: 0,
 };
 
@@ -20,7 +21,7 @@ export const userSlice = createSlice({
       if (action.payload.dataUser) {
         const { uid, name, email, type, typeID, planID } =
           action.payload.dataUser[0];
-        console.log(action.payload.dataUser);
+        console.log(action.payload);
         state.token = token;
         state.type = type;
         state.name = name;

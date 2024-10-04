@@ -3,18 +3,22 @@ import {
   Action,
   CountriesRequestType,
   ModalTypes,
-  PriceFilter,
   RequirementType,
   TableColumns,
   TableTypes,
-  WarrantyFilter,
+  CommonFilter,
 } from "../utilities/types";
 import {
-  OfferListItem,
+  BaseUser,
+  OfferItemSubUser,
+  Offer,
   PurchaseOrder,
-  RequirementTableItem,
+  PurchaseOrderItemSubUser,
+  RequirementItemSubUser,
+  Requirement,
   User,
 } from "./MainInterfaces";
+import { SubUserProfile } from "./Responses";
 
 /******** Modals *******/
 
@@ -25,23 +29,28 @@ export interface CommonModalType {
 
 export interface ModalCancelPurchaseOrder extends CommonModalType {
   type: ModalTypes.CANCEL_PURCHASE_ORDER;
-  data: { offerId: string; requirementId: string };
+  data: {
+    offerId: string;
+    requirementId: string;
+    fromRequirementTable: boolean;
+  };
 }
 
 export interface ModalDetailedRequirement extends CommonModalType {
   type: ModalTypes.DETAILED_REQUIREMENT;
-  data: { offerList: OfferListItem[]; requirement: RequirementTableItem };
+  data: { offerList: Offer[]; requirement: Requirement };
 }
 
 export interface ModalOfferSummary extends CommonModalType {
   type: ModalTypes.OFFER_SUMMARY;
-  data: { offer: OfferListItem };
+  data: { offer: Offer; requirement: Requirement };
 }
 
 export interface ModalRateCanceled extends CommonModalType {
   type: ModalTypes.RATE_CANCELED;
   data: {
-    user: User;
+    user: BaseUser;
+    subUser: BaseUser | undefined;
     requirementOffertitle: string;
     type: RequirementType;
     isOffer: boolean;
@@ -52,6 +61,7 @@ export interface ModalRateUser extends CommonModalType {
   type: ModalTypes.RATE_USER;
   data: {
     user: User;
+    subUser: BaseUser | undefined;
     requirementOffertitle: string;
     type: RequirementType;
     isOffer: boolean;
@@ -65,7 +75,7 @@ export interface ModalRepublishRequirement extends CommonModalType {
 
 export interface ModalSelectOffer extends CommonModalType {
   type: ModalTypes.SELECT_OFFER;
-  data: { offer: OfferListItem; requirement: RequirementTableItem };
+  data: { offer: Offer; requirement: Requirement };
 }
 
 export interface ModalValidateCode extends CommonModalType {
@@ -91,6 +101,13 @@ export interface ModalInputEmail extends CommonModalType {
   };
 }
 
+export interface ModalOfferDetail extends CommonModalType {
+  type: ModalTypes.OFFER_DETAIL;
+  data: {
+    offer: Offer;
+  };
+}
+
 export interface ModalNone extends CommonModalType {
   type: ModalTypes.NONE;
   data: Record<string, never>;
@@ -107,6 +124,7 @@ export type ModalContent =
   | ModalCancelPurchaseOrder
   | ModalConfirmation
   | ModalInputEmail
+  | ModalOfferDetail
   | ModalNone;
 
 /********** Tables *************/
@@ -120,14 +138,14 @@ export interface TableHiddenColumns {
 export interface TableTypeRequirement extends TableHiddenColumns {
   type: TableTypes.REQUIREMENT;
   subType: RequirementType;
-  data: RequirementTableItem[];
-  // onButtonClick: (action: Action, data: RequirementTableItem) => void;
+  data: Requirement[];
+  // onButtonClick: (action: Action, data: Requirement) => void;
 }
 
 export interface TableTypeOffer extends TableHiddenColumns {
   type: TableTypes.OFFER;
-  data: OfferListItem[];
-  // onButtonClick: (action: Action, data: OfferListItem) => void;
+  data: Offer[];
+  // onButtonClick: (action: Action, data: Offer) => void;
 }
 
 export interface TableTypePurchaseOrder extends TableHiddenColumns {
@@ -136,10 +154,34 @@ export interface TableTypePurchaseOrder extends TableHiddenColumns {
   // onButtonClick: (action: Action, data: PurchaseOrder) => void;
 }
 
+export interface TableTypeUsers extends TableHiddenColumns {
+  type: TableTypes.USERS;
+  data: SubUserProfile[];
+}
+
+export interface TableTypeRequirementSubUser extends TableHiddenColumns {
+  type: TableTypes.REQUIREMENT_SUBUSER;
+  data: RequirementItemSubUser[];
+}
+
+export interface TableTypeOfferSubUser extends TableHiddenColumns {
+  type: TableTypes.OFFER_SUBUSER;
+  data: OfferItemSubUser[];
+}
+
+export interface TableTypePurchaseOrderSubUser extends TableHiddenColumns {
+  type: TableTypes.PURCHASE_ORDER_SUBUSER;
+  data: PurchaseOrderItemSubUser[];
+}
+
 export type TableType =
   | TableTypeRequirement
   | TableTypeOffer
-  | TableTypePurchaseOrder;
+  | TableTypePurchaseOrder
+  | TableTypeUsers
+  | TableTypeRequirementSubUser
+  | TableTypeOfferSubUser
+  | TableTypePurchaseOrderSubUser;
 
 /********************* */
 
@@ -152,6 +194,7 @@ export interface useApiParams<T = any> {
   service: HttpService | null;
   method: "get" | "post" | "put" | "delete";
   dataToSend?: T;
+  token?: string;
 }
 
 export interface CountryObj {
@@ -212,10 +255,10 @@ export interface RequirementSearchItem {
 }
 
 export interface OfferFilters {
-  price: PriceFilter;
-  deliveryTime: string;
-  location: string;
-  warranty: WarrantyFilter;
+  price: CommonFilter;
+  deliveryTime: number;
+  location: number;
+  warranty: CommonFilter;
 }
 
 export interface ListItem {

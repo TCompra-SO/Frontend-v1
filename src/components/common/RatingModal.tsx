@@ -1,17 +1,21 @@
-import { App, Flex } from "antd";
+import { App, Tooltip } from "antd";
 import { RequirementType, YesNo, UserClass } from "../../utilities/types";
 import SelectContainer from "../containers/SelectContainer";
-import { rowColor } from "../../utilities/colors";
 import RatingContainer from "../containers/RatingContainer";
-import { User } from "../../models/MainInterfaces";
+import { BaseUser } from "../../models/MainInterfaces";
 import { getUserClass } from "../../utilities/globalFunctions";
 import ButtonContainer from "../containers/ButtonContainer";
 import { useState } from "react";
 import showNotification from "../../utilities/notification/showNotification";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { MainState } from "../../models/Redux";
+import FrontImage from "./FrontImage";
+import SubUserName from "./SubUserName";
 
 interface RatingModalProps {
-  user: User;
+  user: BaseUser;
+  subUser: BaseUser | undefined;
   requirementOffertitle: string;
   type: RequirementType;
   isOffer: boolean;
@@ -23,10 +27,11 @@ export default function RatingModal(props: RatingModalProps) {
   const [answer, setAnswer] = useState<YesNo | null>(null);
   const [scores, setScores] = useState([0, 0, 0]);
   const { notification } = App.useApp();
+  const uid = useSelector((state: MainState) => state.user.uid);
   const userClass: UserClass = getUserClass(props.isOffer, props.type);
 
   const questions = {
-    [UserClass.CUSTOMER]: [
+    [UserClass.SELLER]: [
       {
         [RequirementType.GOOD]: t("receivedGoodQuestion"),
         [RequirementType.SALE]: t("receivedGoodQuestion"),
@@ -52,7 +57,7 @@ export default function RatingModal(props: RatingModalProps) {
         [RequirementType.JOB]: t("deliverySpeedQuestion"),
       },
     ],
-    [UserClass.SELLER]: [
+    [UserClass.CUSTOMER]: [
       {
         [RequirementType.SALE]: t("sendGoodQuestion"),
         [RequirementType.GOOD]: t("sendGoodQuestion"),
@@ -95,72 +100,108 @@ export default function RatingModal(props: RatingModalProps) {
   }
 
   function rateUser(e: React.SyntheticEvent<Element, Event>) {
-    if (answer === null) {
-      showNotification(notification, "info", t("mustSelectAnswer"));
+    if (answer === null || scores[0] == 0 || scores[1] == 0 || scores[2] == 0) {
+      showNotification(notification, "info", t("mustAnswerAllQuestions"));
       return;
     }
-    console.log(props.user.uid, "id de usuario logeado", scores, answer); // r3v
+    console.log(props.user.uid, uid, scores, answer);
     props.onClose(e);
   }
 
   return (
-    <>
-      <Flex
-        vertical
-        style={{
-          background: rowColor,
-          borderRadius: "10px",
-          padding: "15px",
-          marginBottom: "15px",
-        }}
-        align="center"
-      >
-        <b>{questions[userClass][0][props.type]}</b>
-        <SelectContainer
-          style={{ width: "100%" }}
-          options={[
-            { label: t("yes"), value: YesNo.YES },
-            { label: t("no"), value: YesNo.NO },
-          ]}
-          placeholder={t("select")}
-          onChange={onAnswerChange}
-        />
-      </Flex>
-      <Flex align="center" justify="center">
-        <b style={{ fontSize: "1.2em" }}>{t("rate")}</b>
-      </Flex>
-      <Flex
-        align="center"
-        vertical
-        gap="small"
-        style={{
-          background: rowColor,
-          borderRadius: "10px",
-          padding: "15px",
-          marginBottom: "10px",
-          marginTop: "15px",
-        }}
-      >
-        <b>{questions[userClass][1][props.type]}</b>
-        <RatingContainer score={0} onChange={(val) => onScoreChange(0, val)} />
-        <b>{questions[userClass][2][props.type]}</b>
-        <RatingContainer score={0} onChange={(val) => onScoreChange(1, val)} />
-        <b>{questions[userClass][3][props.type]}</b>
-        <RatingContainer score={0} onChange={(val) => onScoreChange(2, val)} />
-      </Flex>
-      <ButtonContainer
-        children={t("submitRating")}
-        block
-        type="primary"
-        style={{ marginBottom: "10px" }}
-        onClick={rateUser}
-      />
-      <ButtonContainer
-        children={t("cancelButton")}
-        block
-        type="primary"
-        onClick={closeModal}
-      />
-    </>
+    <div className="modal-card">
+      <div className="t-flex t-wrap mr-sub-2">
+        <i className="fa-regular fa-stars sub-icon m-0"></i>
+        <div className="sub-titulo sub-calificar">
+          <div>{t("finish")}</div>
+          <div className="calificar-detalle">
+            {t("rateYour")}
+            {userClass == UserClass.CUSTOMER ? t("customer") : t("seller")}
+          </div>
+        </div>
+      </div>
+      <div className="t-flex gap-15 preguntas">
+        <div className="card-ofertas">
+          <div className="t-flex">
+            <div className="t-flex oferta-titulo">
+              <FrontImage small image={props.user.image} isUser={true} />
+              <div className="oferta-usuario">
+                <div className="oferta-datos  m-0">
+                  <Tooltip title={props.user.name}>
+                    <div className="usuario-name text-truncate">
+                      {props.user.name}
+                    </div>
+                  </Tooltip>
+                  <SubUserName small subUser={props.subUser} />
+                </div>
+                <div className="t-flex oferta-descripcion">
+                  <Tooltip title={props.requirementOffertitle}>
+                    <div className="text-truncate detalles-oferta">
+                      {props.requirementOffertitle}
+                    </div>
+                  </Tooltip>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="t-flex estado-envio">
+          <div className="wd-100 envio-info">
+            {questions[userClass][0][props.type]}
+          </div>
+          <div className="wd-100">
+            <SelectContainer
+              style={{ width: "100%" }}
+              options={[
+                { label: t("yes"), value: YesNo.YES },
+                { label: t("no"), value: YesNo.NO },
+              ]}
+              placeholder={t("select")}
+              onChange={onAnswerChange}
+              className="form-control"
+            />
+          </div>
+        </div>
+        <div className="card-ofertas text-center">
+          <div className="cuestion-p">
+            <b>{questions[userClass][1][props.type]}</b>
+          </div>
+          <RatingContainer
+            score={0}
+            onChange={(val) => onScoreChange(0, val)}
+          />
+        </div>
+        <div className="card-ofertas text-center">
+          <div className="cuestion-p">
+            <b>{questions[userClass][2][props.type]}</b>
+          </div>
+          <RatingContainer
+            score={0}
+            onChange={(val) => onScoreChange(1, val)}
+          />
+        </div>
+        <div className="card-ofertas text-center">
+          <div className="cuestion-p">
+            <b>{questions[userClass][3][props.type]}</b>
+          </div>
+          <RatingContainer
+            score={0}
+            onChange={(val) => onScoreChange(2, val)}
+          />
+        </div>
+        <div className="t-flex gap-15">
+          <ButtonContainer
+            children={t("submit")}
+            className="btn btn-default wd-100"
+            onClick={rateUser}
+          />
+          <ButtonContainer
+            children={t("cancelButton")}
+            className="btn btn-second wd-100"
+            onClick={closeModal}
+          />
+        </div>
+      </div>
+    </div>
   );
 }

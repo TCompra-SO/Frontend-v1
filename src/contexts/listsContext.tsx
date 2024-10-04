@@ -15,31 +15,35 @@ import {
   paymentMethodService,
   planTypeService,
   TLDsService,
+  userRolesService,
   whoCanOfferService,
 } from "../services/utilService";
+import { UserRoles } from "../utilities/types";
 
 interface ListsContextType {
   tlds: string[];
   countryList: IdValueObj[];
   countryData: CountryCities;
-  categoryList: IdValueMap;
-  currencyList: IdValueAliasMap;
-  paymentMethodList: IdValueMap;
-  deliveryTimeList: IdValueMap;
-  whoCanOfferList: IdValueMap;
-  planTypeList: IdValueMap;
+  categoryData: IdValueMap;
+  currencyData: IdValueAliasMap;
+  paymentMethodData: IdValueMap;
+  deliveryTimeData: IdValueMap;
+  whoCanOfferData: IdValueMap;
+  planTypeData: IdValueMap;
+  userRolesData: IdValueMap;
 }
 
 export const ListsContext = createContext<ListsContextType>({
   countryList: [],
   countryData: {},
   tlds: [],
-  categoryList: {},
-  currencyList: {},
-  paymentMethodList: {},
-  deliveryTimeList: {},
-  whoCanOfferList: {},
-  planTypeList: {},
+  categoryData: {},
+  currencyData: {},
+  paymentMethodData: {},
+  deliveryTimeData: {},
+  whoCanOfferData: {},
+  planTypeData: {},
+  userRolesData: {},
 });
 
 interface ListsProviderProps {
@@ -62,21 +66,21 @@ export function ListsProvider({ children }: ListsProviderProps) {
       method: "get",
     });
 
-  const [categoryList, setCategoryList] = useState<IdValueMap>({});
+  const [categoryData, setCategoryList] = useState<IdValueMap>({});
   const { responseData: categoryResponseData, fetchData: categoryFetchData } =
     useApi<any>({
       service: categoriesService(),
       method: "get",
     });
 
-  const [currencyList, setCurrencyList] = useState<IdValueAliasMap>({});
+  const [currencyData, setCurrencyList] = useState<IdValueAliasMap>({});
   const { responseData: currencyResponseData, fetchData: currencyFetchData } =
     useApi<any>({
       service: currencyService(),
       method: "get",
     });
 
-  const [paymentMethodList, setPaymentMethodList] = useState<IdValueMap>({});
+  const [paymentMethodData, setPaymentMethodList] = useState<IdValueMap>({});
   const {
     responseData: paymentMethodResponseData,
     fetchData: paymentMethodFetchData,
@@ -85,7 +89,7 @@ export function ListsProvider({ children }: ListsProviderProps) {
     method: "get",
   });
 
-  const [deliveryTimeList, setDeliveryTimeList] = useState<IdValueMap>({});
+  const [deliveryTimeData, setDeliveryTimeList] = useState<IdValueMap>({});
   const {
     responseData: deliveryTimeResponseData,
     fetchData: deliveryTimeFetchData,
@@ -94,7 +98,7 @@ export function ListsProvider({ children }: ListsProviderProps) {
     method: "get",
   });
 
-  const [whoCanOfferList, setWhoCanOfferList] = useState<IdValueMap>({});
+  const [whoCanOfferData, setWhoCanOfferList] = useState<IdValueMap>({});
   const {
     responseData: whoCanOfferResponseData,
     fetchData: whoCanOfferFetchData,
@@ -103,10 +107,17 @@ export function ListsProvider({ children }: ListsProviderProps) {
     method: "get",
   });
 
-  const [planTypeList, setPlanTypeList] = useState<IdValueMap>({});
+  const [planTypeData, setPlanTypeList] = useState<IdValueMap>({});
   const { responseData: planTypeResponseData, fetchData: planTypeFetchData } =
     useApi<any>({
       service: planTypeService(),
+      method: "get",
+    });
+
+  const [userRolesData, setUserRolesData] = useState<IdValueMap>({});
+  const { responseData: userRolesResponseData, fetchData: userRolesFetchData } =
+    useApi<any>({
+      service: userRolesService(),
       method: "get",
     });
 
@@ -119,6 +130,8 @@ export function ListsProvider({ children }: ListsProviderProps) {
     deliveryTimeFetchData();
     whoCanOfferFetchData();
     planTypeFetchData();
+    userRolesFetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -162,7 +175,7 @@ export function ListsProvider({ children }: ListsProviderProps) {
       if (currencyResponseData.currencies) {
         const temp: IdValueAliasObj[] = currencyResponseData.currencies.filter(
           (it: IdValueAliasObj) => {
-            if (it.alias != "COP") return true;
+            if (it.alias != "COP") return true; // Descartar COP temporalmente
           }
         );
         setCurrencyList(
@@ -238,18 +251,34 @@ export function ListsProvider({ children }: ListsProviderProps) {
     }
   }, [planTypeResponseData]);
 
+  useEffect(() => {
+    if (userRolesResponseData) {
+      setUserRolesData(
+        userRolesResponseData
+          .filter(({ id }: IdValueObj) => {
+            return id != UserRoles.ADMIN; // Descartar Admin,
+          })
+          .reduce((acc: IdValueMap, { id, value }: IdValueObj) => {
+            acc[id] = { value };
+            return acc;
+          }, {})
+      );
+    }
+  }, [userRolesResponseData]);
+
   return (
     <ListsContext.Provider
       value={{
         countryList,
         countryData,
         tlds,
-        categoryList,
-        currencyList,
-        paymentMethodList,
-        deliveryTimeList,
-        whoCanOfferList,
-        planTypeList,
+        categoryData,
+        currencyData,
+        paymentMethodData,
+        deliveryTimeData,
+        whoCanOfferData,
+        planTypeData,
+        userRolesData,
       }}
     >
       {children}

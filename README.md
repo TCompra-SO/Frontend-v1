@@ -10,12 +10,12 @@ Tabla para mostrar datos de requerimientos de diferentes tipos, incluyendo liqui
 
 _Props_
 
-| Nombre        | Tipo                                                   | Descripción                                                                  |
-| ------------- | ------------------------------------------------------ | ---------------------------------------------------------------------------- |
-| type          | `RequirementType`                                      | Tipo de requisito (`GOOD`, `SERVICE`, `SALE`, etc.).                         |
-| data          | `RequirementTableItem[]`                               | Arreglo de datos para mostrar en la tabla.                                   |
-| onButtonClick | `(action: Action, data: RequirementTableItem) => void` | Función de callback llamada al hacer clic en un botón de acción en la tabla. |
-| hiddenColumns | `TableColumns[]`                                       | Columnas de la tabla que se deben ocultar.                                   |
+| Nombre        | Tipo                                          | Descripción                                                                  |
+| ------------- | --------------------------------------------- | ---------------------------------------------------------------------------- |
+| type          | `RequirementType`                             | Tipo de requisito (`GOOD`, `SERVICE`, `SALE`, etc.).                         |
+| data          | `Requirement[]`                               | Arreglo de datos para mostrar en la tabla.                                   |
+| onButtonClick | `(action: Action, data: Requirement) => void` | Función de callback llamada al hacer clic en un botón de acción en la tabla. |
+| hiddenColumns | `TableColumns[]`                              | Columnas de la tabla que se deben ocultar.                                   |
 
 ##### columns
 
@@ -25,10 +25,10 @@ Genera una columna de acciones para una tabla, permitiendo realizar acciones bas
 
 _Parámetros_
 
-| Nombre        | Tipo                                                   | Descripción                                                                      |
-| ------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------- |
-| onButtonClick | `(action: Action, data: RequirementTableItem) => void` | Función de callback llamada al hacer clic en una opción de la lista desplegable. |
-| hidden        | `boolean`                                              | Indicador de si la columna debe estar oculta (por defecto es `false`).           |
+| Nombre        | Tipo                                          | Descripción                                                                      |
+| ------------- | --------------------------------------------- | -------------------------------------------------------------------------------- |
+| onButtonClick | `(action: Action, data: Requirement) => void` | Función de callback llamada al hacer clic en una opción de la lista desplegable. |
+| hidden        | `boolean`                                     | Indicador de si la columna debe estar oculta (por defecto es `false`).           |
 
 ###### CategoryColumn
 
@@ -86,10 +86,10 @@ Genera una columna que muestra el número de ofertas y un botón que abre un mod
 
 _Parámetros_
 
-| Nombre        | Tipo                                                   | Descripción                                                            |
-| ------------- | ------------------------------------------------------ | ---------------------------------------------------------------------- |
-| onButtonClick | `(action: Action, data: RequirementTableItem) => void` | Función de callback llamada al hacer clic en el botón de ofertas.      |
-| hidden        | `boolean`                                              | Indicador de si la columna debe estar oculta (por defecto es `false`). |
+| Nombre        | Tipo                                          | Descripción                                                            |
+| ------------- | --------------------------------------------- | ---------------------------------------------------------------------- |
+| onButtonClick | `(action: Action, data: Requirement) => void` | Función de callback llamada al hacer clic en el botón de ofertas.      |
+| hidden        | `boolean`                                     | Indicador de si la columna debe estar oculta (por defecto es `false`). |
 
 ###### PriceColumn
 

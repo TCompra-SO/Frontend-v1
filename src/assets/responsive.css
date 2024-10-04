@@ -1,10 +1,27 @@
 /* Estilos para pantallas pequeñas (móviles) */
+@media (max-width: 476px) {
+  .doc-botones {
+    flex-wrap: wrap;
+  }
+  .col-menu {
+    width: calc(100% - 60px) !important;
+  }
+}
+
 @media (max-width: 576px) {
+  .card-pink,
+  .card-blue,
+  .card-teal,
+  .card-black,
   .card-red,
   .card-gray-m,
   .card-green {
     font-size: 17px;
   }
+  .card-pink,
+  .card-blue,
+  .card-teal,
+  .card-black,
   .card-red,
   .card-gray-m,
   .card-green {
@@ -15,6 +32,18 @@
   }
   .alert-boton {
     padding: 0.6rem 1.3rem !important;
+  }
+  .datos-empresa {
+    flex-direction: column;
+  }
+  .card-d2 {
+    flex-direction: column;
+  }
+  .card-d3 {
+    flex-direction: column;
+  }
+  .datos-conacto {
+    flex-direction: column;
   }
 }
 
@@ -64,10 +93,39 @@
     width: 100% !important;
   }
 
+  .card-pink,
+  .card-blue,
+  .card-teal,
+  .card-black,
   .card-red,
   .card-gray-m,
   .card-green {
     font-size: 21px;
+  }
+  .detalle-req {
+    width: 100%;
+  }
+  .col-menu {
+    position: absolute;
+    z-index: 9;
+    width: 240px;
+    display: none;
+  }
+  .col-datos {
+    width: 100%;
+  }
+  .perfil-user {
+    flex-direction: column;
+    align-items: center;
+  }
+  .card-datos {
+    width: 100% !important;
+  }
+  .imagen-perfil {
+    /* width: 150px; */
+  }
+  .card-d4 {
+    flex-direction: column;
   }
 }
 

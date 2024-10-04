@@ -1,240 +1,212 @@
-import { Avatar, Badge, Col, Flex, Row, Space } from "antd";
-import { OfferListItem } from "../../../../models/MainInterfaces";
-import TagContainer from "../../../containers/TagContainer";
+import { Dropdown, Popover, Tooltip } from "antd";
+import { Offer, Requirement } from "../../../../models/MainInterfaces";
 import {
-  darkColor,
-  lightColor,
-  primaryColor,
-} from "../../../../utilities/colors";
-import DotContainer from "../../../containers/DotContainer";
-import {
+  Action,
+  ActionLabel,
+  ModalTypes,
   OfferState,
+  RequirementState,
   RequirementType,
   UserTable,
 } from "../../../../utilities/types";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUniversity } from "@fortawesome/free-solid-svg-icons/faUniversity";
-import RatingContainer from "../../../containers/RatingContainer";
-import {
-  faFile,
-  faImage,
-  faMapMarkerAlt,
-  faShieldAlt,
-  faStopwatch,
-} from "@fortawesome/free-solid-svg-icons";
-import PriceContainer from "../../../containers/PriceContainer";
-import { useState } from "react";
-import useScreenSize from "../../../../hooks/useScreenSize";
 import { useTranslation } from "react-i18next";
+import { getScore } from "../../../../utilities/globalFunctions";
+import { useState } from "react";
+import { ModalContent } from "../../../../models/Interfaces";
+import ModalContainer from "../../../containers/ModalContainer";
+import FrontImage from "../../../common/FrontImage";
 
 interface RequirementOfferListItemProps {
-  offer: OfferListItem;
+  offer: Offer;
   style?: React.CSSProperties;
-  showOfferState?: boolean;
-  showUserData?: boolean;
+  showStateAndActions:
+    | { show: true; requirement: Requirement }
+    | { show: false };
 }
 
 export default function RequirementOfferListItemHeader({
-  showOfferState = true,
-  showUserData = true,
   ...props
 }: RequirementOfferListItemProps) {
   const { t } = useTranslation();
-  const [isSmallScreen] = useState(useScreenSize());
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [dataModal, setDataModal] = useState<ModalContent>({
+    type: ModalTypes.NONE,
+    data: {},
+  });
+  const items = [
+    {
+      key: Action.CHAT,
+      label: t("chat"),
+      onClick: () => {
+        console.log("go to chat");
+      },
+    },
+  ];
+
+  if (props.showStateAndActions.show) {
+    if (props.offer.state == OfferState.WINNER)
+      items.push({
+        label: t(ActionLabel[Action.CANCEL_PURCHASE_ORDER]),
+        key: Action.CANCEL_PURCHASE_ORDER,
+        onClick: () => onOpenModal(Action.CANCEL_PURCHASE_ORDER),
+      });
+    if (
+      props.offer.state == OfferState.ACTIVE &&
+      props.showStateAndActions.requirement.state == RequirementState.PUBLISHED
+    )
+      items.push({
+        label: t(ActionLabel[Action.SELECT_OFFER]),
+        key: Action.SELECT_OFFER,
+        onClick: () => onOpenModal(Action.SELECT_OFFER),
+      });
+    if (props.offer.state == OfferState.CANCELED)
+      // r3v creador de ofera canceló la oferta)
+      items.push({
+        label: t(ActionLabel[Action.RATE_CANCELED]),
+        key: Action.RATE_CANCELED,
+        onClick: () => onOpenModal(Action.RATE_CANCELED),
+      });
+  }
+
+  function onOpenModal(action: Action) {
+    if (props.showStateAndActions.show) {
+      switch (action) {
+        case Action.CANCEL_PURCHASE_ORDER:
+          setIsOpenModal(true);
+          setDataModal({
+            type: ModalTypes.CANCEL_PURCHASE_ORDER,
+            data: {
+              offerId: props.offer.key,
+              requirementId: props.showStateAndActions.requirement.key,
+              fromRequirementTable: false,
+            },
+          });
+          break;
+        case Action.SELECT_OFFER:
+          setIsOpenModal(true);
+
+          setDataModal({
+            type: ModalTypes.SELECT_OFFER,
+            data: {
+              offer: props.offer,
+              requirement: props.showStateAndActions.requirement,
+            },
+          });
+          break;
+        case Action.RATE_CANCELED:
+          setDataModal({
+            type: ModalTypes.RATE_CANCELED,
+            data: {
+              user: props.offer.user,
+              subUser: props.offer.subUser,
+              requirementOffertitle: props.offer.title,
+              type: props.offer.type,
+              isOffer: true,
+            },
+          });
+          setIsOpenModal(true);
+      }
+    }
+  }
+
+  function handleOnCloseModal() {
+    setIsOpenModal(false);
+  }
 
   return (
     <>
-      <Row
-        style={{
-          ...props.style,
-          borderRadius:
-            props.offer.state == OfferState.WINNER ||
-            props.offer.state == OfferState.CANCELED
-              ? "10px 10px 0 0"
-              : "10px",
-          padding: "10px",
-          boxShadow: "0 2px 18px rgba(0, 0, 0, 0.1)",
-          fontWeight: "600",
-        }}
-      >
-        <Col xs={24} sm={24} md={16} lg={17} xl={17}>
-          <Space direction="vertical" size={4}>
-            {showUserData && (
-              <>
-                <Flex wrap align="center" gap="small">
-                  <TagContainer
-                    text={props.offer.user.name}
-                    color={lightColor}
-                    truncateText
-                    style={{ color: darkColor }}
-                  />
-                  {props.offer.subUser && (
-                    <>
-                      <DotContainer></DotContainer>
-                      <TagContainer
-                        text={props.offer.subUser.name}
-                        color={lightColor}
-                        truncateText
-                        style={{ color: darkColor }}
-                      />
-                    </>
-                  )}
-                  <DotContainer />
+      <ModalContainer
+        content={dataModal}
+        isOpen={isOpenModal}
+        onClose={handleOnCloseModal}
+      />
+      <div className="t-flex head-oferta">
+        <div className="t-flex oferta-titulo">
+          <FrontImage small image={props.offer.user.image} isUser={true} />
+          <div className="oferta-usuario">
+            <div className="oferta-datos t-wrap">
+              <div className="usuario-name text-truncate">
+                <Tooltip
+                  title={props.offer.user.name}
+                  trigger={["click", "hover"]}
+                >
+                  {props.offer.user.name}
+                </Tooltip>
+              </div>
 
-                  {props.offer.location}
-
-                  <DotContainer />
-                  {props.offer.user.userTable == UserTable.COMPANY
-                    ? t("company")
-                    : t("persona")}
-                </Flex>
-
-                {props.offer.user.userTable == UserTable.COMPANY && (
-                  <Space>
-                    <FontAwesomeIcon icon={faUniversity} color={primaryColor} />
-                    {`${t("tenure")}: ${props.offer.user.tenure}`}
-                  </Space>
-                )}
-              </>
-            )}
-            <div style={{ fontSize: "1.3em" }}>{props.offer.title}</div>
-
-            {props.offer.description ?? null}
-
-            <Flex wrap gap="3px 10px" align="center">
-              {!showUserData && (
-                <Space>
-                  <FontAwesomeIcon
-                    icon={faMapMarkerAlt}
-                    color={primaryColor}
-                  ></FontAwesomeIcon>
-                  {`${t("locationColumn")}: ${props.offer.location}`}
-                </Space>
+              {props.offer.subUser && props.offer.subUser.name.length > 0 && (
+                <div className="user-empresa-2">
+                  <Tooltip
+                    title={props.offer.subUser.name}
+                    trigger={["click", "hover"]}
+                  >
+                    {props.offer.subUser.name[0].toLocaleUpperCase()}
+                  </Tooltip>
+                </div>
               )}
-              <Space>
-                <FontAwesomeIcon
-                  icon={faStopwatch}
-                  color={primaryColor}
-                ></FontAwesomeIcon>
-                {`${t("deliveryTime")}: ${props.offer.deliveryTime}`}
-              </Space>
-              <Space>
-                <FontAwesomeIcon
-                  icon={faShieldAlt}
-                  color={primaryColor}
-                ></FontAwesomeIcon>
-                {`${t("warranty")}: ${props.offer.warranty}`}
-              </Space>
-            </Flex>
-          </Space>
-        </Col>
-        <Col xs={24} sm={24} md={8} lg={7} xl={7}>
-          {isSmallScreen && (
-            <Flex
-              justify="space-between"
-              align="center"
-              style={{ marginTop: "7px" }}
-            >
-              <Space direction="vertical" size={0}>
-                {showUserData && (
-                  <RatingContainer
-                    score={
-                      props.offer.type == RequirementType.SALE
-                        ? props.offer.user.customerScore
-                        : props.offer.user.sellerScore
-                    }
-                    readOnly
-                  />
-                )}
-                <Space size={0}>
-                  <PriceContainer
-                    price={props.offer.price}
-                    coin={props.offer.coin}
-                  />
-                  {props.offer.igv && "/ Con IGV"}
-                </Space>
-              </Space>
-              <Space
-                style={{ margin: showUserData ? "10px 5px 0 0" : "0 5px 0 0" }}
-              >
-                <Badge count={5} offset={[-5, 5]}>
-                  <Avatar
-                    shape="square"
-                    size="large"
-                    icon={<FontAwesomeIcon icon={faFile}></FontAwesomeIcon>}
-                  />
-                </Badge>
-                <Badge count={5} offset={[-5, 5]}>
-                  <Avatar
-                    shape="square"
-                    size="large"
-                    icon={<FontAwesomeIcon icon={faImage}></FontAwesomeIcon>}
-                  />
-                </Badge>
-              </Space>
-            </Flex>
-          )}
-          {!isSmallScreen && (
-            <Flex vertical align="flex-end">
-              {showUserData && (
-                <RatingContainer
-                  score={
+              <div className="usuario-badge">
+                {props.offer.user.userTable == UserTable.COMPANY
+                  ? t("company")
+                  : t("persona")}
+              </div>
+              <div className="usuario-puntuacion">
+                <i className="fa-solid fa-star user-start"></i>
+                <div className="valor-start-2">
+                  {getScore(
                     props.offer.type == RequirementType.SALE
                       ? props.offer.user.customerScore
                       : props.offer.user.sellerScore
-                  }
-                  readOnly
-                />
-              )}
-
-              <Space style={{ margin: "10px 5px 0 0" }}>
-                <Badge count={5} offset={[-5, 5]}>
-                  <Avatar
-                    shape="square"
-                    size="large"
-                    icon={<FontAwesomeIcon icon={faFile}></FontAwesomeIcon>}
-                  />
-                </Badge>
-                <Badge count={5} offset={[-5, 5]}>
-                  <Avatar
-                    shape="square"
-                    size="large"
-                    icon={<FontAwesomeIcon icon={faImage}></FontAwesomeIcon>}
-                  />
-                </Badge>
-              </Space>
-              <Space size={0}>
-                <PriceContainer
-                  price={props.offer.price}
-                  coin={props.offer.coin}
-                />
-                {props.offer.igv && "/ Con IGV"}
-              </Space>
-            </Flex>
-          )}
-        </Col>
-      </Row>
-      {showOfferState &&
-        (props.offer.state == OfferState.WINNER ||
-          props.offer.state == OfferState.CANCELED) && (
-          <Flex
-            justify="center"
-            style={{
-              borderRadius: "0 0 10px 10px",
-              background:
-                props.offer.state == OfferState.WINNER ? "green" : "red",
-              padding: "10px",
-              boxShadow: "0 2px 18px rgba(0, 0, 0, 0.1)",
-              fontWeight: "600",
-              color: "#ffffff",
-              fontSize: "1.2em",
-            }}
-          >
-            {props.offer.state == OfferState.WINNER
-              ? t("selectedOffer")
-              : t("canceledOffer")}
-          </Flex>
+                  )}
+                </div>
+                <b className="user-cantidad">(41.5k)</b>
+              </div>
+            </div>
+            <div className="t-flex oferta-descripcion">
+              <div className="text-truncate detalles-oferta">
+                {props.offer.title}
+              </div>
+              <Popover
+                trigger="click"
+                title={
+                  <div
+                    style={{
+                      marginBottom: props.offer.description ? "0" : "-8px",
+                    }}
+                  >
+                    {props.offer.title}
+                  </div>
+                }
+                content={props.offer.description}
+              >
+                <i className="fa-solid fa-ellipsis mas-detalle"></i>
+              </Popover>
+            </div>
+          </div>
+        </div>
+        {props.showStateAndActions && (
+          <div className="oferta-acciones">
+            {props.offer.state == OfferState.WINNER && (
+              <div className="badge-green">
+                <i className="fa-regular fa-circle-check"></i>{" "}
+                <span className="req-btn-info">{t("selectedOffer")}</span>
+              </div>
+            )}
+            {props.offer.state == OfferState.CANCELED && (
+              <div className="badge-warning">
+                <i className="fa-regular fa-ban"></i>{" "}
+                <span className="req-btn-info">{t("canceledOffer")}</span>
+              </div>
+            )}
+            <Dropdown
+              trigger={["click"]}
+              menu={{ items }}
+              placement="bottomRight"
+            >
+              <i className="fa-solid fa-ellipsis-vertical mas-acciones"></i>
+            </Dropdown>
+          </div>
         )}
+      </div>
     </>
   );
 }

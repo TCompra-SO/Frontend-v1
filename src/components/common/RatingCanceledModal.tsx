@@ -1,15 +1,25 @@
-import { Flex } from "antd";
-import { User } from "../../models/MainInterfaces";
-import { RequirementType, UserClass } from "../../utilities/types";
-import { rowColor } from "../../utilities/colors";
+import { App, Tooltip } from "antd";
+import { BaseUser } from "../../models/MainInterfaces";
+import {
+  Action,
+  ActionLabel,
+  RequirementType,
+  UserClass,
+} from "../../utilities/types";
 import RatingContainer from "../containers/RatingContainer";
 import { useState } from "react";
 import ButtonContainer from "../containers/ButtonContainer";
 import { getUserClass } from "../../utilities/globalFunctions";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { MainState } from "../../models/Redux";
+import showNotification from "../../utilities/notification/showNotification";
+import FrontImage from "./FrontImage";
+import SubUserName from "./SubUserName";
 
 interface RatingCanceledModalProps {
-  user: User;
+  user: BaseUser;
+  subUser: BaseUser | undefined;
   requirementOffertitle: string;
   type: RequirementType;
   isOffer: boolean;
@@ -19,13 +29,8 @@ interface RatingCanceledModalProps {
 export default function RatingCanceledModal(props: RatingCanceledModalProps) {
   const { t } = useTranslation();
   const [score, setScore] = useState(0);
-  const style: React.CSSProperties = {
-    padding: "15px",
-    borderRadius: "10px",
-    background: rowColor,
-    marginBottom: "10px",
-    textAlign: "center",
-  };
+  const { notification } = App.useApp();
+  const uid = useSelector((state: MainState) => state.user.uid);
 
   const userClass: UserClass = getUserClass(props.isOffer, props.type);
 
@@ -34,18 +39,76 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
   }
 
   function saveScore(e: React.SyntheticEvent<Element, Event>) {
-    console.log(score, props.user.uid, "uid de usuario logeado"); // r3v
+    if (score == 0) {
+      showNotification(notification, "info", t("mustAnswerQuestion"));
+      return;
+    }
+    console.log(score, props.user.uid, "uid", uid);
     props.onClose(e);
   }
 
   return (
-    <>
-      <Flex align="center" style={style} justify="center">
+    <div className="modal-card">
+      <div className="t-flex t-wrap mr-sub">
+        <div className="sub-titulo">
+          <i className="fa-regular fa-stars sub-icon"></i>{" "}
+          {t(ActionLabel[Action.RATE_CANCELED])}
+        </div>
+      </div>
+      <div className="t-flex gap-15 preguntas">
+        <div className="card-ofertas">
+          <div className="t-flex">
+            <div className="t-flex oferta-titulo">
+              <FrontImage small image={props.user.image} isUser={true} />
+              <div className="oferta-usuario">
+                <div className="oferta-datos m-0">
+                  <Tooltip title={props.user.name}>
+                    <div className="usuario-name text-truncate">
+                      {props.user.name}
+                    </div>
+                  </Tooltip>
+                  <SubUserName small subUser={props.subUser} />
+                </div>
+                <div className="t-flex oferta-descripcion">
+                  <Tooltip title={props.requirementOffertitle}>
+                    <div className="text-truncate detalles-oferta">
+                      {props.requirementOffertitle}
+                    </div>
+                  </Tooltip>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="card-ofertas text-center">
+          <div className="cuestion-p">{`${
+            t("rateCanceledQuestion") +
+            (userClass == UserClass.CUSTOMER
+              ? t("customer").toLowerCase()
+              : t("seller").toLowerCase()) +
+            "?"
+          }`}</div>
+          <RatingContainer score={0} onChange={onScoreChange} />
+        </div>
+        <div className="t-flex gap-15">
+          <ButtonContainer
+            onClick={saveScore}
+            children={t("submit")}
+            className="btn btn-default wd-100"
+          />
+          <ButtonContainer
+            onClick={props.onClose}
+            children={t("cancelButton")}
+            className="btn btn-second wd-100"
+          />
+        </div>
+      </div>
+      {/* <Flex align="center" style={style} justify="center">
         <b>
           {`${
             userClass == UserClass.CUSTOMER
               ? `${t("customer").toUpperCase()}:`
-              : `${t("supplier").toUpperCase()}:`
+              : `${t("seller").toUpperCase()}:`
           } ${props.user.name}`}
         </b>
       </Flex>
@@ -56,37 +119,7 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
           ? `${t("sale").toUpperCase()}: `
           : `${t("requirement").toUpperCase()}: `}
         {props.requirementOffertitle}
-      </Flex>
-      <Flex
-        vertical
-        align="center"
-        justify="center"
-        style={{ fontSize: "0.9em", ...style }}
-      >
-        {`${
-          t("rateCanceledQuestion") +
-          (userClass == UserClass.CUSTOMER
-            ? t("customer").toLowerCase()
-            : t("supplier").toLowerCase()) +
-          "?"
-        }`}
-        <RatingContainer score={0} onChange={onScoreChange} />
-      </Flex>
-      <Flex justify="center">
-        <ButtonContainer
-          onClick={saveScore}
-          children={t("submitRating")}
-          block
-          style={{ marginRight: "10px" }}
-          type="primary"
-        />
-        <ButtonContainer
-          onClick={props.onClose}
-          children={t("cancelButton")}
-          block
-          type="primary"
-        />
-      </Flex>
-    </>
+      </Flex> */}
+    </div>
   );
 }

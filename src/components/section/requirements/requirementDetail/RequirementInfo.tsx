@@ -1,94 +1,53 @@
-import { Col, Flex, Row } from "antd";
-import ImageContainer from "../../../containers/ImageContainer";
-import TagContainer from "../../../containers/TagContainer";
-import RatingContainer from "../../../containers/RatingContainer";
-import ParagraphContainer from "../../../containers/ParagraphContainer";
-import PriceContainer from "../../../containers/PriceContainer";
-import {
-  darkColor,
-  darkerGray,
-  gray,
-  lightColor,
-} from "../../../../utilities/colors";
-import { RequirementType } from "../../../../utilities/types";
-import { RequirementTableItem } from "../../../../models/MainInterfaces";
+import { Requirement } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
+import { ListsContext } from "../../../../contexts/listsContext";
+import { useContext } from "react";
+import dayjs from "dayjs";
+import { dateFormat } from "../../../../utilities/globals";
+import RequirementInfoNoTags from "./RequirementInfoNoTags";
+import FrontImage from "../../../common/FrontImage";
+import PriceInHeader from "../../../common/PriceInHeader";
 
 interface RequirementInfoProps {
-  requirement: RequirementTableItem;
+  requirement: Requirement;
 }
 
 export default function RequirementInfo(props: RequirementInfoProps) {
   const { t } = useTranslation();
+  const context = useContext(ListsContext);
+  const { deliveryTimeData } = context;
 
   return (
-    <Row gutter={[10, 10]}>
-      <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-        <ImageContainer
-          src={
-            props.requirement.image && props.requirement.image.length > 0
-              ? props.requirement.image[1]
-              : "https://placehold.co/300x300"
-          }
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+    <div className="t-flex gap-15 requerimiento-o">
+      <FrontImage image={props.requirement.image} isUser={false} />
+      <div className="t-flex detalle-req">
+        <RequirementInfoNoTags
+          title={props.requirement.title}
+          user={props.requirement.user}
+          type={props.requirement.type}
+          subUser={props.requirement.subUser}
+          description={props.requirement.description}
         />
-      </Col>
 
-      <Col xs={24} sm={24} md={18} lg={18} xl={18}>
-        <Flex justify="flex-start" align="center">
-          <TagContainer
-            isRequirementTag
-            type={props.requirement.type}
-          ></TagContainer>
-          <RatingContainer
-            readOnly={true}
-            score={
-              props.requirement.type == RequirementType.SALE
-                ? props.requirement.user.sellerScore
-                : props.requirement.user.customerScore
-            }
-            style={{ marginLeft: "8px" }}
-          ></RatingContainer>
-        </Flex>
-        <ParagraphContainer
-          text={props.requirement.description}
-          rows={3}
-          expandable
-          style={{ margin: "5px 0", textAlign: "justify" }}
-        />
-        <Flex wrap gap="small" align="center">
-          <PriceContainer
-            price={props.requirement.price}
+        <div className="t-flex tags-req t-wrap">
+          <PriceInHeader
             coin={props.requirement.coin}
+            price={props.requirement.price}
+            useOfferClass={false}
           />
-          <TagContainer
-            text={props.requirement.user.name}
-            color={lightColor}
-            truncateText
-            style={{ color: darkColor, fontWeight: "bold", height: "24px" }}
-          />
-          {props.requirement.subUser && (
-            <TagContainer
-              text={props.requirement.subUser.name}
-              color={lightColor}
-              truncateText
-              style={{ color: darkColor, fontWeight: "bold", height: "24px" }}
-            />
-          )}
-          <TagContainer
-            label={t("deliveryTime")}
-            text="2 días"
-            color={gray}
-            style={{ color: darkerGray, fontWeight: "bold", height: "24px" }}
-          />
-          <TagContainer
-            label={t("expirationDate")}
-            text="23-08-2024"
-            color={gray}
-            style={{ color: darkerGray, fontWeight: "bold", height: "24px" }}
-          />
-        </Flex>
-      </Col>
-    </Row>
+          <div className="badge-grey-border">
+            {t("deliveryTime")}:{" "}
+            {deliveryTimeData &&
+            deliveryTimeData[props.requirement.deliveryTime]
+              ? deliveryTimeData[props.requirement.deliveryTime].value
+              : null}
+          </div>
+          <div className="badge-default-border">
+            {t("expires")}:{" "}
+            {dayjs(props.requirement.expirationDate).format(dateFormat)}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

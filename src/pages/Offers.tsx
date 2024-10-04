@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { OfferListItem } from "../models/MainInterfaces";
+import { Offer } from "../models/MainInterfaces";
 import {
   Action,
   ModalTypes,
@@ -13,20 +13,23 @@ import ModalContainer from "../components/containers/ModalContainer";
 import { ChangeEvent, useState } from "react";
 import { ModalContent, TableTypeOffer } from "../models/Interfaces";
 import TablePageContent from "../components/section/table-page/TablePageContent";
+import { mainModalScrollStyle } from "../utilities/globals";
 
-const offerList: OfferListItem[] = [
+const offerList: Offer[] = [
   {
     key: "1",
     title: "Gaming Laptop",
-    description: "High-performance gaming laptop with RGB keyboard",
+    description:
+      "Se requiere comprar muebles start para la sala de espera empresarialSe requiere comprar muebles start para la sala de esperamuebles start para la sala de ",
     requirementTitle:
       "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     requirementId: "1",
     coin: 1,
     price: 150089.56,
-    publishDate: new Date(),
-    warranty: "1 year",
-    deliveryTime: "2-3 weeks",
+    publishDate: "2024-09-12T20:36:45.673Z",
+    warranty: 3,
+    deliveryTime: 1,
+    deliveryDate: "2024-09-12T20:36:45.673Z",
     location: 12,
     warrantyTime: TimeMeasurement.MONTHS,
     state: OfferState.ACTIVE,
@@ -60,6 +63,13 @@ const offerList: OfferListItem[] = [
       phone: "998989898",
       userType: 0,
     },
+    image: [
+      "https://img.freepik.com/foto-gratis/belleza-otonal-abstracta-patron-venas-hoja-multicolor-generado-ia_188544-9871.jpg",
+      "https://img.freepik.com/foto-gratis/belleza-otonal-abstracta-patron-venas-hoja-multicolor-generado-ia_188544-9871.jpg",
+    ],
+    document: [
+      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    ],
   },
   {
     key: "2",
@@ -72,12 +82,12 @@ const offerList: OfferListItem[] = [
     requirementId: "1",
     coin: 1,
     price: 800,
-    warranty: "2 years",
-    publishDate: new Date(),
-    deliveryTime: "1-2 weeks",
+    warranty: 3,
+    publishDate: "2024-09-12T20:36:45.673Z",
+    deliveryTime: 2,
     location: 11,
     warrantyTime: TimeMeasurement.MONTHS,
-    selectionDate: new Date(),
+    selectionDate: "2024-09-12T20:36:45.673Z",
     state: OfferState.CANCELED,
     type: RequirementType.GOOD,
     user: {
@@ -93,6 +103,18 @@ const offerList: OfferListItem[] = [
       phone: "998989898",
       userType: 0,
     },
+    subUser: {
+      uid: "subuser1",
+      name: "Javier Req Solís Calcina Javier Alberto Solís Calcina",
+      email: "javiersolis@example.com",
+      document: "123456789",
+      userTable: UserTable.COMPANY,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
+      phone: "998989898",
+      userType: 0,
+    },
   },
   {
     key: "3",
@@ -103,9 +125,9 @@ const offerList: OfferListItem[] = [
     requirementId: "1",
     coin: 1,
     price: 100,
-    warranty: "6 months",
-    deliveryTime: "1 week",
-    publishDate: new Date(),
+    warranty: 12,
+    deliveryTime: 3,
+    publishDate: "2024-09-12T20:36:45.673Z",
     location: 3,
     warrantyTime: TimeMeasurement.YEARS,
     state: OfferState.DISPUTE,
@@ -133,9 +155,9 @@ const offerList: OfferListItem[] = [
     requirementId: "1",
     coin: 2,
     price: 120,
-    warranty: "1 year",
-    deliveryTime: "3-4 weeks",
-    publishDate: new Date(),
+    warranty: 4,
+    deliveryTime: 4,
+    publishDate: "2024-09-12T20:36:45.673Z",
     location: 7,
     warrantyTime: TimeMeasurement.MONTHS,
     state: OfferState.FINISHED,
@@ -163,9 +185,9 @@ const offerList: OfferListItem[] = [
     requirementId: "1",
     coin: 2,
     price: 200,
-    warranty: "2 years",
-    deliveryTime: "2-3 weeks",
-    publishDate: new Date(),
+    warranty: 1.5,
+    deliveryTime: 5,
+    publishDate: "2024-09-12T20:36:45.673Z",
     location: 1,
     warrantyTime: TimeMeasurement.DAYS,
     state: OfferState.WINNER,
@@ -193,9 +215,9 @@ const offerList: OfferListItem[] = [
     requirementId: "1",
     coin: 2,
     price: 80,
-    warranty: "1 year",
-    deliveryTime: "1-2 weeks",
-    publishDate: new Date(),
+    warranty: 12,
+    deliveryTime: 6,
+    publishDate: "2024-09-12T20:36:45.673Z",
     location: 9,
     warrantyTime: TimeMeasurement.MONTHS,
     state: OfferState.ACTIVE,
@@ -224,12 +246,12 @@ const offerList: OfferListItem[] = [
     requirementId: "1",
     coin: 2,
     price: 300,
-    warranty: "2 years",
-    deliveryTime: "2-3 weeks",
+    warranty: 64,
+    deliveryTime: 6,
     location: 12,
     warrantyTime: TimeMeasurement.YEARS,
     state: OfferState.CANCELED,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
     type: RequirementType.GOOD,
     user: {
       uid: "user7",
@@ -253,10 +275,10 @@ const offerList: OfferListItem[] = [
       "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     requirementId: "1",
     coin: 2,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
     price: 2500,
-    warranty: "3 years",
-    deliveryTime: "3-4 weeks",
+    warranty: 43,
+    deliveryTime: 6,
     location: 7,
     warrantyTime: TimeMeasurement.YEARS,
     state: OfferState.DISPUTE,
@@ -284,9 +306,9 @@ const offerList: OfferListItem[] = [
     requirementId: "1",
     coin: 2,
     price: 1800,
-    warranty: "1 year",
-    publishDate: new Date(),
-    deliveryTime: "2-3 weeks",
+    warranty: 1,
+    publishDate: "2024-09-12T20:36:45.673Z",
+    deliveryTime: 1,
     location: 6,
     warrantyTime: TimeMeasurement.MONTHS,
     state: OfferState.FINISHED,
@@ -314,9 +336,9 @@ const offerList: OfferListItem[] = [
     requirementId: "1",
     coin: 2,
     price: 600,
-    warranty: "2 years",
-    deliveryTime: "2-3 weeks",
-    publishDate: new Date(),
+    warranty: 2,
+    deliveryTime: 2,
+    publishDate: "2024-09-12T20:36:45.673Z",
     location: 10,
     warrantyTime: TimeMeasurement.YEARS,
     state: OfferState.WINNER,
@@ -340,8 +362,8 @@ const offerList: OfferListItem[] = [
 export default function Offers() {
   const { t } = useTranslation();
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [modalTitle] = useState<React.ReactNode>("");
-  const [dataModal] = useState<ModalContent>({
+
+  const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
   });
@@ -349,7 +371,7 @@ export default function Offers() {
     type: TableTypes.OFFER,
     data: offerList,
     hiddenColumns: [],
-    nameColumnHeader: t("offer") + "s",
+    nameColumnHeader: t("offers"),
     onButtonClick: handleOnButtonClick,
   });
 
@@ -357,8 +379,92 @@ export default function Offers() {
     setIsOpenModal(false);
   }
 
-  function handleOnButtonClick(_: Action, offer: OfferListItem) {
-    console.log(offer);
+  function deleteOffer(offerId: string) {
+    console.log("deleteOffer", offerId);
+  }
+
+  function goToChat(offer: Offer) {
+    console.log("goToChat", offer.key, offer.requirementId);
+  }
+
+  function handleOnButtonClick(action: Action, offer: Offer) {
+    console.log(action);
+    switch (action) {
+      case Action.OFFER_DETAIL:
+        setDataModal({
+          type: ModalTypes.OFFER_DETAIL,
+          data: {
+            offer,
+          },
+        });
+        setIsOpenModal(true);
+        break;
+
+      case Action.DELETE: {
+        setDataModal({
+          type: ModalTypes.CONFIRM,
+          data: {
+            onAnswer: (ok: boolean) => {
+              if (!ok) return;
+              deleteOffer(offer.key);
+            },
+            text: t("deleteOfferConfirmation"),
+          },
+        });
+        setIsOpenModal(true);
+        break;
+      }
+
+      case Action.CHAT: {
+        goToChat(offer);
+        break;
+      }
+
+      case Action.RATE_CANCELED: {
+        /* r3v get user subuser from requirement */
+        setDataModal({
+          type: ModalTypes.RATE_CANCELED,
+          data: {
+            user: offer.user,
+            subUser: offer.subUser,
+            requirementOffertitle: offer.requirementTitle,
+            type: offer.type,
+            isOffer: false,
+          },
+        });
+        setIsOpenModal(true);
+        break;
+      }
+
+      case Action.CANCEL_OFFER: {
+        setDataModal({
+          type: ModalTypes.CANCEL_PURCHASE_ORDER,
+          data: {
+            offerId: offer.key,
+            requirementId: offer.requirementId,
+            fromRequirementTable: false,
+          },
+        });
+        setIsOpenModal(true);
+        break;
+      }
+
+      case Action.FINISH: {
+        /* r3v get user subuser from requirement */
+        setDataModal({
+          type: ModalTypes.RATE_USER,
+          data: {
+            user: offer.user,
+            subUser: offer.subUser,
+            type: offer.type,
+            isOffer: false,
+            requirementOffertitle: offer.requirementTitle,
+          },
+        });
+        setIsOpenModal(true);
+        break;
+      }
+    }
   }
 
   function handleSearch(e: ChangeEvent<HTMLInputElement>) {
@@ -369,16 +475,10 @@ export default function Offers() {
     <>
       <ModalContainer
         destroyOnClose
-        title={modalTitle}
         content={dataModal}
         isOpen={isOpenModal}
         onClose={handleCloseModal}
-        className="custom-scroll"
-        style={{
-          maxHeight: "75vh",
-          overflowY: "scroll",
-          paddingBottom: "0",
-        }}
+        style={mainModalScrollStyle}
       />
       <TablePageContent
         title={t("myOffers")}

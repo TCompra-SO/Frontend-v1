@@ -14,6 +14,7 @@ interface TablePageContentProps {
   subtitleIcon?: ReactNode;
   table: TableType;
   onSearch: (e: ChangeEvent<HTMLInputElement>) => void;
+  additionalContentHeader?: ReactNode;
 }
 
 export default function TablePageContent(props: TablePageContentProps) {
@@ -21,7 +22,11 @@ export default function TablePageContent(props: TablePageContentProps) {
 
   return (
     <>
-      <ContentHeader title={props.title} icon={props.titleIcon} />
+      <ContentHeader
+        title={props.title}
+        icon={props.titleIcon}
+        additionalContent={props.additionalContentHeader}
+      />
       <div className="card-white">
         <Row
           style={{

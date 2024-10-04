@@ -1,19 +1,14 @@
 import { useTranslation } from "react-i18next";
 import SelectContainer from "../../../containers/SelectContainer";
 import { useContext } from "react";
-import { IdValueObj } from "../../../../models/Interfaces";
 import { Form } from "antd";
-import { defaultCountry } from "../../../../utilities/globals";
 import { ListsContext } from "../../../../contexts/listsContext";
+import { getCityListForSelect } from "../../../../utilities/globalFunctions";
 
 export default function LocationCR() {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { countryData } = context;
-
-  const showCountry = countryData[defaultCountry]
-    ? defaultCountry
-    : Object.keys(countryData)[0];
 
   return (
     <>
@@ -26,13 +21,7 @@ export default function LocationCR() {
       >
         <SelectContainer
           placeholder={t("select")}
-          options={
-            Object.keys(countryData).length > 0
-              ? countryData[showCountry].cities.map((cit: IdValueObj) => {
-                  return { label: cit.value, value: cit.id };
-                })
-              : []
-          }
+          options={getCityListForSelect(countryData)}
           className="form-control"
         />
       </Form.Item>

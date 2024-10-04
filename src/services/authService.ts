@@ -6,7 +6,7 @@ export function loginService(): HttpService {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
       ApiRoutes.auth.login
     }`,
-    type: ApiRoutes.auth.login,
+    type: "AU-LOG",
   };
 }
 
@@ -15,7 +15,7 @@ export function profileCompanyService(): HttpService {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
       ApiRoutes.auth.profileCompany
     }`,
-    type: ApiRoutes.auth.profileCompany,
+    type: "AU-PR-CO",
   };
 }
 
@@ -24,7 +24,7 @@ export function profileUserService(): HttpService {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
       ApiRoutes.auth.profileUser
     }`,
-    type: ApiRoutes.auth.profileUser,
+    type: "AU-PR-US",
   };
 }
 
@@ -33,7 +33,7 @@ export function registerService(): HttpService {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
       ApiRoutes.auth.register
     }`,
-    type: ApiRoutes.auth.register,
+    type: "AU-REG",
   };
 }
 
@@ -42,7 +42,7 @@ export function sendCodeService(): HttpService {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
       ApiRoutes.auth.sendCode
     }`,
-    type: ApiRoutes.auth.sendCode,
+    type: "AU-SE-CO",
   };
 }
 
@@ -51,7 +51,7 @@ export function validateCodeService(): HttpService {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
       ApiRoutes.auth.validateCode
     }`,
-    type: ApiRoutes.auth.validateCode,
+    type: "AU-VA-CO",
   };
 }
 
@@ -60,7 +60,7 @@ export function sendCodeRecoveryService(): HttpService {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
       ApiRoutes.auth.sendCodeRecovery
     }`,
-    type: ApiRoutes.auth.sendCodeRecovery,
+    type: "AU-SE-CO-RE",
   };
 }
 
@@ -69,6 +69,24 @@ export function recoverPasswordService(): HttpService {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
       ApiRoutes.auth.recoverPassword
     }`,
-    type: ApiRoutes.auth.recoverPassword,
+    type: "AU-RE-PA",
+  };
+}
+
+export function newPasswordService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+      ApiRoutes.auth.newPassword
+    }`,
+    type: "AU-NE-PA",
+  };
+}
+
+export function getBaseDataUserService(uid: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+      ApiRoutes.auth.getBaseDataUser
+    }${uid}`,
+    type: "AU-GE-BD-US",
   };
 }

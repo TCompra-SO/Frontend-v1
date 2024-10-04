@@ -1,6 +1,4 @@
-import { Flex, Space } from "antd";
 import ButtonContainer from "../containers/ButtonContainer";
-import { ExclamationCircleFilled } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 
 interface ConfirmationModalProps {
@@ -18,23 +16,26 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
   const { t } = useTranslation();
 
   return (
-    <Flex vertical>
-      <Space align="start">
-        {props.icon ?? <ExclamationCircleFilled />}
-        {props.text}
-      </Space>
-      <Flex justify="end" gap="small" style={{ marginTop: "10px" }}>
-        <ButtonContainer
-          onClick={(e) => closeModal(e, true)}
-          type="primary"
-          children={t("acceptButton")}
-        />
-        <ButtonContainer
-          onClick={(e) => closeModal(e, false)}
-          children={t("cancelButton")}
-          type="primary"
-        />
-      </Flex>
-    </Flex>
+    <div className="modal-card">
+      <div className="t-flex alert-base">
+        {props.icon ?? (
+          <i className="fa-regular fa-circle-exclamation sub-icon"></i>
+        )}
+
+        <div className="alert-info text-center">{props.text}</div>
+        <div className="t-flex gap-15 wd-100 alert-btn">
+          <ButtonContainer
+            onClick={(e) => closeModal(e, true)}
+            children={t("acceptButton")}
+            className="btn btn-default alert-boton"
+          />
+          <ButtonContainer
+            onClick={(e) => closeModal(e, false)}
+            children={t("cancelButton")}
+            className="btn btn-second alert-boton"
+          />
+        </div>
+      </div>
+    </div>
   );
 }

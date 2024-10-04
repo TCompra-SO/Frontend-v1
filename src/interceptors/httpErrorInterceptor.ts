@@ -1,5 +1,6 @@
 import {
   loginService,
+  newPasswordService,
   profileCompanyService,
   profileUserService,
   recoverPasswordService,
@@ -8,6 +9,11 @@ import {
   sendCodeService,
   validateCodeService,
 } from "../services/authService";
+import {
+  changeRoleSubUserService,
+  registerSubUserService,
+  updateProfileSubUserService,
+} from "../services/subUserService";
 import { getNameReniecService } from "../services/utilService";
 
 export default function httpErrorInterceptor(error: any, type: string): string {
@@ -121,6 +127,40 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
         case 401:
           erroMsg = "incorrectCode";
+          break;
+      }
+      break;
+    case registerSubUserService().type:
+      switch (code) {
+        case 404:
+          erroMsg = "noCompanyFoundForSubUser";
+          break;
+        case 403:
+          erroMsg = "emailDocAlreadyRegistered";
+          break;
+      }
+      break;
+    case changeRoleSubUserService().type:
+      switch (code) {
+        case 401:
+          erroMsg = "cantAssignAdmintoSubUser";
+          break;
+        case 404:
+          erroMsg = "subUserNotFoundInAnyCompany";
+          break;
+      }
+      break;
+    case updateProfileSubUserService().type:
+      switch (code) {
+        case 409:
+          erroMsg = "profileDoesNotExist";
+          break;
+      }
+      break;
+    case newPasswordService().type:
+      switch (code) {
+        case 404:
+          erroMsg = "userNotFound";
           break;
       }
       break;

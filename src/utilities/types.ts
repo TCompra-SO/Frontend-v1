@@ -2,7 +2,9 @@ import {
   allSelect,
   commonModalWidth,
   mediumModalWidth,
+  mediumPlusModalWidth,
   smallModalWidth,
+  allItems,
 } from "./globals";
 
 /**** Estados ***/
@@ -53,6 +55,10 @@ export enum TableTypes {
   REQUIREMENT = 1,
   OFFER = 2,
   PURCHASE_ORDER = 3,
+  USERS = 4,
+  REQUIREMENT_SUBUSER = 5,
+  OFFER_SUBUSER = 6,
+  PURCHASE_ORDER_SUBUSER = 7,
 }
 
 export enum UserTable {
@@ -74,6 +80,7 @@ export enum ModalTypes {
   RATE_USER = 8,
   CONFIRM = 9,
   INPUT_EMAIL = 10,
+  OFFER_DETAIL = 11,
 }
 
 export const ModalWidth: {
@@ -82,14 +89,15 @@ export const ModalWidth: {
   [ModalTypes.NONE]: 0,
   [ModalTypes.DETAILED_REQUIREMENT]: commonModalWidth,
   [ModalTypes.VALIDATE_CODE]: mediumModalWidth,
-  [ModalTypes.CANCEL_PURCHASE_ORDER]: mediumModalWidth,
+  [ModalTypes.CANCEL_PURCHASE_ORDER]: mediumPlusModalWidth,
   [ModalTypes.SELECT_OFFER]: commonModalWidth,
   [ModalTypes.OFFER_SUMMARY]: commonModalWidth,
   [ModalTypes.REPUBLISH_REQUIREMENT]: smallModalWidth,
-  [ModalTypes.RATE_CANCELED]: mediumModalWidth,
-  [ModalTypes.RATE_USER]: mediumModalWidth,
-  [ModalTypes.CONFIRM]: mediumModalWidth,
+  [ModalTypes.RATE_CANCELED]: mediumPlusModalWidth,
+  [ModalTypes.RATE_USER]: mediumPlusModalWidth,
+  [ModalTypes.CONFIRM]: mediumPlusModalWidth,
   [ModalTypes.INPUT_EMAIL]: smallModalWidth,
+  [ModalTypes.OFFER_DETAIL]: commonModalWidth,
 };
 
 /***** Acciones *****/
@@ -117,6 +125,8 @@ export enum Action {
   VIEW_DOCUMENT = 20,
   DOCS_STATE = 21,
   CANCEL = 22,
+  OFFER_DETAIL = 23,
+  ADD_USER = 24,
 }
 
 export const ActionLabel: {
@@ -144,6 +154,8 @@ export const ActionLabel: {
   [Action.VIEW_DOCUMENT]: "viewDocument",
   [Action.DOCS_STATE]: "docsState",
   [Action.CANCEL]: "cancel",
+  [Action.OFFER_DETAIL]: "offerDetail",
+  [Action.ADD_USER]: "addUser",
 };
 
 export const ActionByStateRequirement: {
@@ -159,18 +171,18 @@ export const ActionByStateRequirement: {
 };
 
 export const ActionByStateOffer: { [key in OfferState]: Array<Action> } = {
-  [OfferState.ACTIVE]: [Action.DELETE, Action.SHOW_SUMMARY, Action.CHAT],
+  [OfferState.ACTIVE]: [Action.DELETE, Action.OFFER_DETAIL, Action.CHAT],
   [OfferState.CANCELED]: [
     Action.RATE_CANCELED,
-    Action.SHOW_SUMMARY,
+    Action.OFFER_DETAIL,
     Action.CHAT,
   ],
-  [OfferState.DISPUTE]: [Action.SHOW_SUMMARY, Action.CHAT],
-  [OfferState.FINISHED]: [Action.SHOW_SUMMARY, Action.CHAT],
+  [OfferState.DISPUTE]: [Action.OFFER_DETAIL, Action.CHAT],
+  [OfferState.FINISHED]: [Action.OFFER_DETAIL, Action.CHAT],
   [OfferState.WINNER]: [
     Action.CANCEL_OFFER,
     Action.FINISH,
-    Action.SHOW_SUMMARY,
+    Action.OFFER_DETAIL,
     Action.CHAT,
   ],
   [OfferState.ELIMINATED]: [],
@@ -204,12 +216,23 @@ export const ActionByStatePurchaseOrder: {
   [PurchaseOrderState.ELIMINATED]: [],
 };
 
+export const ActionSubUsers: {
+  [key: number]: Array<Action>;
+} = {
+  [allItems]: [
+    Action.VIEW_REQUIREMENTS,
+    Action.VIEW_OFFERS,
+    Action.VIEW_PURCHASE_ORDERS,
+    Action.EDIT_USER,
+  ],
+};
+
 /*********/
 
-export enum PriceFilter {
+export enum CommonFilter {
   ALL = allSelect,
-  ASC = "1",
-  DESC = "2",
+  ASC = 1,
+  DESC = 2,
 }
 
 export const DeliveryTimeFilter = {
@@ -219,12 +242,6 @@ export const DeliveryTimeFilter = {
 export const LocationFilter = {
   ALL: allSelect,
 };
-
-export enum WarrantyFilter {
-  ALL = allSelect,
-  ASC = "1",
-  DESC = "2",
-}
 
 export enum OfferFilterTypes {
   PRICE = 1,
@@ -237,7 +254,7 @@ export enum TableColumns {
   IMAGE = 0,
   ACTION = 1,
   CATEGORY = 2,
-  DATE = 3,
+  PUBLISH_DATE = 3,
   LOCATION = 4,
   NAME = 5,
   OFFERS = 6,
@@ -250,7 +267,12 @@ export enum TableColumns {
   SERVICES = 13,
   SALES = 14,
   DOCUMENT = 15,
-  OFFER = 16,
+  VIEW = 16,
+  EXPIRATION_DATE = 17,
+  CREATION_DATE = 18,
+  SELECTION_DATE = 19,
+  OFFER = 20,
+  USERNAME = 21,
 }
 
 export enum UserClass {
@@ -290,7 +312,16 @@ export enum Usage {
 }
 
 export const Coins: { [key: string]: string } = {
-  PEN: "s/.",
+  PEN: "S/.",
   USD: "$",
   COP: "$",
 };
+
+export enum UserRoles {
+  NONE = 0,
+  ADMIN = 1,
+  SELLER_BUYER = 2,
+  SELLER = 3,
+  BUYER = 4,
+  LEGAL = 5,
+}

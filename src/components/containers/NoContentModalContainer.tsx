@@ -12,7 +12,8 @@ export default function NoContentModalContainer(
       <Modal
         {...props}
         destroyOnClose
-        closable={props.closable !== undefined ? props.closable : false}
+        // closable={props.closable !== undefined ? props.closable : false}
+        closable={true}
         centered
         maskClosable={
           props.maskClosable !== undefined ? props.maskClosable : true
@@ -26,7 +27,8 @@ export default function NoContentModalContainer(
         {...props}
         destroyOnClose
         centered
-        closable={props.closable !== undefined ? props.closable : false}
+        // closable={props.closable !== undefined ? props.closable : false}
+        closable={true}
         footer={null}
         maskClosable={
           props.maskClosable !== undefined ? props.maskClosable : true

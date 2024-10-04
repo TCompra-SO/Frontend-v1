@@ -8,18 +8,22 @@ import {
   UserTable,
 } from "../utilities/types";
 
-export interface RequirementTableItem {
+export interface BaseRequirementOffer {
   key: string;
   title: string;
+  type: RequirementType;
+}
+
+export interface Requirement extends BaseRequirementOffer {
   description: string;
   category: number;
   location: number;
-  publishDate: Date;
+  publishDate: string;
+  expirationDate: string;
   coin: number;
   price: number;
   numberOffers: number;
   state: RequirementState;
-  type: RequirementType;
   image?: string[];
   document?: string[];
   user: User;
@@ -27,43 +31,43 @@ export interface RequirementTableItem {
   warranty?: number;
   warrantyTime?: TimeMeasurement;
   usage?: Usage;
+  deliveryTime: number;
 }
 
-export interface OfferListItem {
-  key: string;
-  title: string;
+export interface Offer extends BaseRequirementOffer {
   requirementTitle: string;
   requirementId: string;
-  description: string;
+  description?: string;
   coin: number;
   price: number;
-  warranty: string;
+  warranty: number;
   warrantyTime: TimeMeasurement;
-  deliveryTime: string;
+  deliveryTime: number;
   user: User;
   location: number;
   image?: string[];
   document?: string[];
   subUser?: User;
-  selectionDate?: Date;
-  publishDate: Date;
+  selectionDate?: string;
+  publishDate: string;
   state: OfferState;
   type: RequirementType;
   igv?: boolean;
+  deliveryDate?: string;
+  delivered?: boolean;
 }
 
 export interface PurchaseOrder {
+  key: string;
   requirementTitle: string;
-  purchaseDate: Date;
+  selectionDate: string;
   state: PurchaseOrderState;
   user: User;
   subUser?: User;
   type: RequirementType;
 }
 
-export interface User {
-  uid: string;
-  name: string;
+export interface User extends BaseUser {
   email: string;
   userType: number;
   document: string;
@@ -73,4 +77,36 @@ export interface User {
   sellerScore: number;
   address: string;
   phone: string;
+}
+
+export interface BaseUser {
+  uid: string;
+  name: string;
+  image?: string; // customerScore: number; sellerScore: number;  //  tenure?: number /email: string
+}
+
+export interface RequirementItemSubUser extends BaseRequirementOffer {
+  price: number;
+  publishDate: string;
+  expirationDate: string;
+  numberOffers: number;
+  state: RequirementState;
+  coin: number;
+}
+
+export interface OfferItemSubUser extends BaseRequirementOffer {
+  requirementTitle: string;
+  price: number;
+  publishDate: string;
+  state: OfferState;
+  coin: number;
+}
+
+export interface PurchaseOrderItemSubUser {
+  key: string;
+  type: RequirementType;
+  requirementTitle: string;
+  offerTitle: string;
+  selectionDate: string;
+  state: PurchaseOrderState;
 }

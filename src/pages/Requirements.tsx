@@ -10,14 +10,21 @@ import {
   TableTypes,
   TimeMeasurement,
 } from "../utilities/types";
-import { OfferListItem, RequirementTableItem } from "../models/MainInterfaces";
-import { ChangeEvent, useState } from "react";
-import { ModalContent, TableTypeRequirement } from "../models/Interfaces";
-import RateModalTitleContainer from "../components/containers/RateModalTitleContainer";
+import { Offer, Requirement } from "../models/MainInterfaces";
+import { ChangeEvent, useEffect, useState } from "react";
+import {
+  ModalContent,
+  TableTypeRequirement,
+  useApiParams,
+} from "../models/Interfaces";
 import { useTranslation } from "react-i18next";
 import TablePageContent from "../components/section/table-page/TablePageContent";
+import { mainModalScrollStyle } from "../utilities/globals";
+import useApi from "../hooks/useApi";
+import { getRequirementsService } from "../services/requirementService";
+import { transformDataToRequirement } from "../utilities/globalFunctions";
 
-const requirements: RequirementTableItem[] = [
+const requirements: Requirement[] = [
   {
     key: "1",
     title: "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
@@ -28,7 +35,9 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.CANCELED,
     type: RequirementType.GOOD,
     location: 2,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
+    expirationDate: "2024-09-12T20:36:45.673Z",
+    deliveryTime: 1,
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam lobortis convallis metus a faucibus. Phasellus tristique nec lorem a vulputate. Morbi varius volutpat orci, in viverra risus venenatis sit amet. Duis convallis nisi nec ligula luctus, in elementum orci ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec quam ante, aliquam rhoncus sollicitudin a, lacinia vitae odio. Aenean quis facilisis augue. Donec iaculis aliquam odio, nec fermentum lectus eleifend ac. Sed fermentum nisl eu aliquet pulvinar. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar elit ac volutpat elementum. Donec interdum id turpis ac ultrices. Vivamus et nunc iaculis, suscipit libero nec, lobortis ex. Vestibulum vitae gravida tortor, eleifend placerat mi. Integer mauris nunc, elementum et dui non, posuere malesuada erat. Aliquam semper aliquet interdum.",
     image: [
@@ -72,8 +81,10 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.EXPIRED,
     type: RequirementType.GOOD,
     location: 4,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
+    expirationDate: "2024-09-12T20:36:45.673Z",
     description: "Desription",
+    deliveryTime: 2,
     user: {
       uid: "user1",
       name: "Soluciones Online  S. A. C.",
@@ -99,8 +110,10 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.DISPUTE,
     type: RequirementType.GOOD,
     location: 6,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
+    expirationDate: "2024-09-12T20:36:45.673Z",
     description: "Desription",
+    deliveryTime: 3,
     user: {
       uid: "user1",
       name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
@@ -125,8 +138,10 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.FINISHED,
     type: RequirementType.GOOD,
     location: 10,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
+    expirationDate: "2024-09-12T20:36:45.673Z",
     description: "Desription",
+    deliveryTime: 4,
     user: {
       uid: "user1",
       name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
@@ -151,8 +166,10 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.PUBLISHED,
     type: RequirementType.GOOD,
     location: 7,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
+    expirationDate: "2024-09-12T20:36:45.673Z",
     description: "Desription",
+    deliveryTime: 5,
     user: {
       uid: "user2",
       name: "Jane Smith",
@@ -166,6 +183,18 @@ const requirements: RequirementTableItem[] = [
       userType: 0,
       phone: "543434242",
     },
+    subUser: {
+      uid: "subuser1",
+      name: "Javier Req Solís Calcina Javier Alberto Solís Calcina",
+      email: "javiersolis@example.com",
+      document: "123456789",
+      userTable: UserTable.COMPANY,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
+      phone: "998989898",
+      userType: 0,
+    },
   },
   {
     key: "6",
@@ -177,8 +206,10 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.SELECTED,
     type: RequirementType.GOOD,
     location: 5,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
+    expirationDate: "2024-09-12T20:36:45.673Z",
     description: "Desription",
+    deliveryTime: 6,
     user: {
       uid: "user2",
       name: "Jane Smith",
@@ -192,6 +223,18 @@ const requirements: RequirementTableItem[] = [
       userType: 0,
       phone: "1233133213",
     },
+    subUser: {
+      uid: "subuser1",
+      name: "Javier Req Solís Calcina Javier Alberto Solís Calcina",
+      email: "javiersolis@example.com",
+      document: "123456789",
+      userTable: UserTable.COMPANY,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
+      phone: "998989898",
+      userType: 0,
+    },
   },
   {
     key: "7",
@@ -203,7 +246,9 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.CANCELED,
     type: RequirementType.GOOD,
     location: 11,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
+    expirationDate: "2024-09-12T20:36:45.673Z",
+    deliveryTime: 6,
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam lobortis convallis metus a faucibus. Phasellus tristique nec lorem a vulputate. Morbi varius volutpat orci, in viverra risus venenatis sit amet. Duis convallis nisi nec ligula luctus, in elementum orci ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec quam ante, aliquam rhoncus sollicitudin a, lacinia vitae odio. Aenean quis facilisis augue. Donec iaculis aliquam odio, nec fermentum lectus eleifend ac. Sed fermentum nisl eu aliquet pulvinar. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar elit ac volutpat elementum. Donec interdum id turpis ac ultrices. Vivamus et nunc iaculis, suscipit libero nec, lobortis ex. Vestibulum vitae gravida tortor, eleifend placerat mi. Integer mauris nunc, elementum et dui non, posuere malesuada erat. Aliquam semper aliquet interdum.",
     image: [
@@ -246,8 +291,10 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.EXPIRED,
     type: RequirementType.GOOD,
     location: 12,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
+    expirationDate: "2024-09-12T20:36:45.673Z",
     description: "Desription",
+    deliveryTime: 6,
     user: {
       uid: "user1",
       name: "Soluciones Online  S. A. C.",
@@ -273,8 +320,10 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.DISPUTE,
     type: RequirementType.GOOD,
     location: 2,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
+    expirationDate: "2024-09-12T20:36:45.673Z",
     description: "Desription",
+    deliveryTime: 5,
     user: {
       uid: "user1",
       name: "Soluciones Online  S. A. C.",
@@ -299,8 +348,10 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.FINISHED,
     type: RequirementType.GOOD,
     location: 13,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
+    expirationDate: "2024-09-12T20:36:45.673Z",
     description: "Desription",
+    deliveryTime: 4,
     user: {
       uid: "user1",
       name: "Soluciones Online  S. A. C.",
@@ -325,8 +376,10 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.PUBLISHED,
     type: RequirementType.GOOD,
     location: 7,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
+    expirationDate: "2024-09-12T20:36:45.673Z",
     description: "Desription",
+    deliveryTime: 3,
     user: {
       uid: "user1",
       name: "Soluciones Online  S. A. C.",
@@ -351,8 +404,10 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.SELECTED,
     type: RequirementType.GOOD,
     location: 8,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
+    expirationDate: "2024-09-12T20:36:45.673Z",
     description: "Desription",
+    deliveryTime: 2,
     user: {
       uid: "user1",
       name: "Soluciones Online  S. A. C.",
@@ -377,7 +432,9 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.CANCELED,
     type: RequirementType.GOOD,
     location: 2,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
+    expirationDate: "2024-09-12T20:36:45.673Z",
+    deliveryTime: 1,
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam lobortis convallis metus a faucibus. Phasellus tristique nec lorem a vulputate. Morbi varius volutpat orci, in viverra risus venenatis sit amet. Duis convallis nisi nec ligula luctus, in elementum orci ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec quam ante, aliquam rhoncus sollicitudin a, lacinia vitae odio. Aenean quis facilisis augue. Donec iaculis aliquam odio, nec fermentum lectus eleifend ac. Sed fermentum nisl eu aliquet pulvinar. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar elit ac volutpat elementum. Donec interdum id turpis ac ultrices. Vivamus et nunc iaculis, suscipit libero nec, lobortis ex. Vestibulum vitae gravida tortor, eleifend placerat mi. Integer mauris nunc, elementum et dui non, posuere malesuada erat. Aliquam semper aliquet interdum.",
     image: [
@@ -420,8 +477,10 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.EXPIRED,
     type: RequirementType.GOOD,
     location: 12,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
+    expirationDate: "2024-09-12T20:36:45.673Z",
     description: "Desription",
+    deliveryTime: 2,
     user: {
       uid: "user1",
       name: "Soluciones Online  S. A. C.",
@@ -447,8 +506,10 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.DISPUTE,
     type: RequirementType.GOOD,
     location: 8,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
+    expirationDate: "2024-09-12T20:36:45.673Z",
     description: "Desription",
+    deliveryTime: 3,
     user: {
       uid: "user1",
       name: "Soluciones Online  S. A. C.",
@@ -473,7 +534,9 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.FINISHED,
     type: RequirementType.GOOD,
     location: 9,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
+    expirationDate: "2024-09-12T20:36:45.673Z",
+    deliveryTime: 6,
     description: "Desription",
     user: {
       uid: "user1",
@@ -499,7 +562,9 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.PUBLISHED,
     type: RequirementType.GOOD,
     location: 10,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
+    expirationDate: "2024-09-12T20:36:45.673Z",
+    deliveryTime: 6,
     description: "Desription",
     user: {
       uid: "user1",
@@ -525,8 +590,10 @@ const requirements: RequirementTableItem[] = [
     state: RequirementState.SELECTED,
     type: RequirementType.GOOD,
     location: 1,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
+    expirationDate: "2024-09-12T20:36:45.673Z",
     description: "Desription",
+    deliveryTime: 1,
     user: {
       uid: "user1",
       name: "Soluciones Online  S. A. C.",
@@ -543,22 +610,24 @@ const requirements: RequirementTableItem[] = [
   },
 ];
 
-const offerList: OfferListItem[] = [
+const offerList: Offer[] = [
   {
     key: "1",
     title: "Gaming Laptop",
-    description: "High-performance gaming laptop with RGB keyboard",
+    description:
+      "High-performance gaming laptop with RGB keyboard High-performance gaming laptop with RGB keyboard High-performance gaming laptop with RGB keyboard High-performance gaming laptop with RGB keyboard High-performance gaming laptop with RGB keyboard",
     requirementTitle:
       "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
     requirementId: "1",
     coin: 2,
     price: 150089.56,
-    warranty: "1 year",
-    deliveryTime: "2-3 weeks",
+    warranty: 1,
+    deliveryTime: 1,
     location: 12,
     warrantyTime: TimeMeasurement.MONTHS,
-    state: OfferState.ACTIVE,
-    publishDate: new Date(),
+    state: OfferState.WINNER,
+    publishDate: "2024-09-12T20:36:45.673Z",
+    selectionDate: "2024-09-12T20:36:45.673Z",
     type: RequirementType.GOOD,
     user: {
       uid: "user1",
@@ -585,6 +654,13 @@ const offerList: OfferListItem[] = [
       userType: 0,
       phone: "90909090",
     },
+    image: [
+      "https://img.freepik.com/foto-gratis/belleza-otonal-abstracta-patron-venas-hoja-multicolor-generado-ia_188544-9871.jpg",
+    ],
+    document: [
+      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+      "https://filesamples.com/samples/document/docx/sample2.docx",
+    ],
   },
   {
     key: "2",
@@ -597,17 +673,17 @@ const offerList: OfferListItem[] = [
     requirementId: "1",
     coin: 2,
     price: 800,
-    warranty: "2 years",
-    deliveryTime: "1-2 weeks",
+    warranty: 2,
+    deliveryTime: 2,
     location: 12,
     warrantyTime: TimeMeasurement.MONTHS,
-    selectionDate: new Date(),
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
+    selectionDate: "2024-09-12T20:36:45.673Z",
     state: OfferState.CANCELED,
     type: RequirementType.GOOD,
     user: {
       uid: "user1",
-      name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
+      name: "Aaaaaa bbbbbbbbb ccccccccc ddddddddddd S. A. C.",
       email: "john.doejohn.doejohn.doejohn.doe@example.com",
       document: "123456789",
       userTable: UserTable.COMPANY,
@@ -618,6 +694,23 @@ const offerList: OfferListItem[] = [
       userType: 0,
       phone: "90909090",
     },
+    subUser: {
+      uid: "user1",
+      name: "Silvia Solís Calcina",
+      email: "javiersolis@example.com",
+      document: "123456789",
+      userTable: UserTable.COMPANY,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
+      userType: 0,
+      phone: "90909090",
+    },
+    image: [
+      "https://img.freepik.com/foto-gratis/persona-que-sostiene-marco-concepto-paisaje-naturaleza-abierta_23-2150063228.jpg?t=st=1727120950~exp=1727124550~hmac=fde0521fde5a1669d826da23ef62b9f7804f51b67739b6d42ecb84eb7cab4b3f&w=826",
+      "https://img.freepik.com/premium-photo/hyperrealistic-rain-drops-leaf-hd-vibrant-colors_926796-9124.jpg",
+      "https://img.freepik.com/premium-photo/water-droplets-branch-tree-early-morning_867442-11940.jpg",
+    ],
   },
   {
     key: "3",
@@ -628,12 +721,12 @@ const offerList: OfferListItem[] = [
     requirementId: "1",
     coin: 2,
     price: 100,
-    warranty: "6 months",
-    deliveryTime: "1 week",
-    publishDate: new Date(),
+    warranty: 32,
+    deliveryTime: 3,
+    publishDate: "2024-09-12T20:36:45.673Z",
     location: 5,
     warrantyTime: TimeMeasurement.YEARS,
-    state: OfferState.DISPUTE,
+    state: OfferState.ACTIVE,
     type: RequirementType.GOOD,
     user: {
       uid: "user1",
@@ -658,9 +751,9 @@ const offerList: OfferListItem[] = [
     requirementId: "1",
     coin: 2,
     price: 120,
-    warranty: "1 year",
-    deliveryTime: "3-4 weeks",
-    publishDate: new Date(),
+    warranty: 7,
+    deliveryTime: 4,
+    publishDate: "2024-09-12T20:36:45.673Z",
     location: 5,
     warrantyTime: TimeMeasurement.YEARS,
     state: OfferState.FINISHED,
@@ -688,11 +781,11 @@ const offerList: OfferListItem[] = [
     requirementId: "1",
     coin: 1,
     price: 200,
-    warranty: "2 years",
-    deliveryTime: "2-3 weeks",
+    warranty: 8,
+    deliveryTime: 5,
     location: 5,
     warrantyTime: TimeMeasurement.YEARS,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
     state: OfferState.WINNER,
     type: RequirementType.GOOD,
     user: {
@@ -718,9 +811,9 @@ const offerList: OfferListItem[] = [
     requirementId: "1",
     coin: 1,
     price: 80,
-    warranty: "1 year",
-    deliveryTime: "1-2 weeks",
-    publishDate: new Date(),
+    warranty: 12,
+    deliveryTime: 6,
+    publishDate: "2024-09-12T20:36:45.673Z",
     location: 5,
     warrantyTime: TimeMeasurement.DAYS,
     state: OfferState.ACTIVE,
@@ -748,9 +841,9 @@ const offerList: OfferListItem[] = [
     requirementId: "1",
     coin: 1,
     price: 300,
-    warranty: "2 years",
-    publishDate: new Date(),
-    deliveryTime: "2-3 weeks",
+    warranty: 7,
+    publishDate: "2024-09-12T20:36:45.673Z",
+    deliveryTime: 1,
     location: 11,
     warrantyTime: TimeMeasurement.MONTHS,
     state: OfferState.CANCELED,
@@ -778,11 +871,11 @@ const offerList: OfferListItem[] = [
     requirementId: "1",
     coin: 1,
     price: 2500,
-    warranty: "3 years",
-    deliveryTime: "3-4 weeks",
+    warranty: 8,
+    deliveryTime: 2,
     location: 11,
     warrantyTime: TimeMeasurement.MONTHS,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
     state: OfferState.DISPUTE,
     type: RequirementType.GOOD,
     user: {
@@ -808,11 +901,11 @@ const offerList: OfferListItem[] = [
     requirementId: "1",
     coin: 1,
     price: 1800,
-    warranty: "1 year",
-    deliveryTime: "2-3 weeks",
+    warranty: 1,
+    deliveryTime: 3,
     location: 11,
     warrantyTime: TimeMeasurement.MONTHS,
-    publishDate: new Date(),
+    publishDate: "2024-09-12T20:36:45.673Z",
     state: OfferState.FINISHED,
     type: RequirementType.GOOD,
     user: {
@@ -837,9 +930,9 @@ const offerList: OfferListItem[] = [
     requirementId: "1",
     coin: 1,
     price: 600,
-    warranty: "2 years",
-    deliveryTime: "2-3 weeks",
-    publishDate: new Date(),
+    warranty: 3,
+    deliveryTime: 4,
+    publishDate: "2024-09-12T20:36:45.673Z",
     location: 11,
     warrantyTime: TimeMeasurement.MONTHS,
     state: OfferState.WINNER,
@@ -862,29 +955,59 @@ const offerList: OfferListItem[] = [
 export default function Requirements() {
   const { t } = useTranslation();
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState<React.ReactNode>("");
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
   });
-  const [tableContent] = useState<TableTypeRequirement>({
+  const [tableContent, setTableContent] = useState<TableTypeRequirement>({
     type: TableTypes.REQUIREMENT,
-    data: requirements,
+    data: requirements, //[]
     subType: RequirementType.GOOD,
     hiddenColumns: [TableColumns.CATEGORY],
     nameColumnHeader: t("goods"),
     onButtonClick: handleOnButtonClick,
   });
 
+  /*********************** */
+
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: getRequirementsService(),
+    method: "get",
+  });
+
+  const { loading, responseData, error, errorMsg, fetchData } = useApi({
+    service: apiParams.service,
+    method: apiParams.method,
+    dataToSend: apiParams.dataToSend,
+  });
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
+  useEffect(() => {
+    if (responseData) {
+      setTableContent({
+        type: TableTypes.REQUIREMENT,
+        // data: [transformDataToRequirement(responseData.data[9])],
+        data: responseData.data.map((e: any) => transformDataToRequirement(e)),
+        subType: RequirementType.GOOD,
+        hiddenColumns: [TableColumns.CATEGORY],
+        nameColumnHeader: t("goods"),
+        onButtonClick: handleOnButtonClick,
+      });
+    } else if (error) {
+      console.log(error);
+    }
+  }, [responseData, error]);
+
+  /*********************** */
+
   function handleCloseModal() {
     setIsOpenModal(false);
   }
 
-  function handleOnButtonClick(
-    action: Action,
-    requirement: RequirementTableItem
-  ) {
-    // const requirement = prevRequirement as RequirementTableItem;
+  function handleOnButtonClick(action: Action, requirement: Requirement) {
     switch (action) {
       case Action.SHOW_OFFERS: {
         setDataModal({
@@ -892,22 +1015,16 @@ export default function Requirements() {
           data: { offerList, requirement: requirement },
         });
         setIsOpenModal(true);
-        setModalTitle(requirement.title);
+
         break;
       }
       case Action.SHOW_SUMMARY: {
+        console.log(requirement);
         setDataModal({
           type: ModalTypes.OFFER_SUMMARY,
-          data: { offer: offerList[0] },
+          data: { offer: offerList[0], requirement: requirement },
         });
         setIsOpenModal(true);
-        setModalTitle(
-          <>
-            {t("summary")}
-            <br />
-            <div style={{ fontWeight: "normal" }}>{t("winnigOfferDetail")}</div>
-          </>
-        );
         break;
       }
       case Action.REPUBLISH: {
@@ -916,7 +1033,7 @@ export default function Requirements() {
           data: { requirementId: requirement.key },
         });
         setIsOpenModal(true);
-        setModalTitle(t("republish"));
+
         break;
       }
       case Action.FINISH: {
@@ -925,14 +1042,13 @@ export default function Requirements() {
           data: {
             user: requirement.user,
             type: requirement.type,
-            isOffer: false, //r3v
-            requirementOffertitle: requirement.title,
+            isOffer: true,
+            requirementOffertitle: requirement.title, // r3v obtener datos title user subuser de oferta ganadora
+            subUser: requirement.subUser,
           },
         });
         setIsOpenModal(true);
-        setModalTitle(
-          <RateModalTitleContainer isOffer={false} type={requirement.type} /> //r3v
-        );
+
         break;
       }
       case Action.DELETE: {
@@ -946,8 +1062,23 @@ export default function Requirements() {
             text: t("deleteRequirementConfirmation"),
           },
         });
-        setModalTitle("");
         setIsOpenModal(true);
+        break;
+      }
+      case Action.CANCEL_REQUIREMENT: {
+        if (requirement.state == RequirementState.SELECTED) {
+          //r3v get offerId
+          setDataModal({
+            type: ModalTypes.CANCEL_PURCHASE_ORDER,
+            data: {
+              offerId: "",
+              requirementId: "",
+              fromRequirementTable: true,
+            },
+          });
+          setIsOpenModal(true);
+        } else if (requirement.state == RequirementState.PUBLISHED)
+          cancelRequirement(requirement.key);
         break;
       }
     }
@@ -961,20 +1092,18 @@ export default function Requirements() {
     console.log(e.target.value);
   }
 
+  function cancelRequirement(requirementId: string) {
+    console.log("cancelRequirement", requirementId);
+  }
+
   return (
     <>
       <ModalContainer
         destroyOnClose
-        title={modalTitle}
         content={dataModal}
         isOpen={isOpenModal}
         onClose={handleCloseModal}
-        className="custom-scroll"
-        style={{
-          maxHeight: "75vh",
-          overflowY: "scroll",
-          paddingBottom: "0",
-        }}
+        style={mainModalScrollStyle}
       />
       <TablePageContent
         title={t("myRequirements")}

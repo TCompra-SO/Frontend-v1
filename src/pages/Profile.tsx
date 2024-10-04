@@ -1,6 +1,10 @@
 import { App, Col, Form, Input, InputRef, Row, Space } from "antd";
 import { ProfileRequest } from "../models/Requests";
-import { defaultCountry, maxImageSizeMb } from "../utilities/globals";
+import {
+  defaultCountry,
+  maxImageSizeMb,
+  phoneCode,
+} from "../utilities/globals";
 import { useDispatch, useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { useContext, useEffect, useState } from "react";
@@ -42,7 +46,7 @@ interface ProfileProps {
 export default function Profile(props: ProfileProps) {
   const dispatch = useDispatch();
   const context = useContext(ListsContext);
-  const { countryList, countryData, categoryList } = context;
+  const { countryList, countryData, categoryData } = context;
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const [form] = Form.useForm();
@@ -134,7 +138,7 @@ export default function Profile(props: ProfileProps) {
     }
     const data: ProfileRequest = {
       uid,
-      phone: values.phone.trim(),
+      phone: phoneCode + values.phone.trim(),
       address: values.address.trim(),
       countryID: values.country,
       cityID: values.city,
@@ -262,7 +266,7 @@ export default function Profile(props: ProfileProps) {
                       <InputContainer
                         style={{ width: "25%" }}
                         readOnly={true}
-                        defaultValue="+51"
+                        defaultValue={phoneCode}
                         className="form-control"
                       />
                       <InputContainer
@@ -412,7 +416,7 @@ export default function Profile(props: ProfileProps) {
                     <SelectContainer
                       placeholder={t("select")}
                       className="form-control"
-                      options={getListForSelectIdValueMap(categoryList)}
+                      options={getListForSelectIdValueMap(categoryData)}
                     />
                   </Form.Item>
                 </Col>
@@ -430,7 +434,7 @@ export default function Profile(props: ProfileProps) {
                     <SelectContainer
                       placeholder={t("select")}
                       className="form-control"
-                      options={getListForSelectIdValueMap(categoryList)}
+                      options={getListForSelectIdValueMap(categoryData)}
                     />
                   </Form.Item>
                 </Col>
@@ -448,7 +452,7 @@ export default function Profile(props: ProfileProps) {
                     <SelectContainer
                       placeholder={t("select")}
                       className="form-control"
-                      options={getListForSelectIdValueMap(categoryList)}
+                      options={getListForSelectIdValueMap(categoryData)}
                     />
                   </Form.Item>
                 </Col>

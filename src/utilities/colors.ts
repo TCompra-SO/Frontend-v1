@@ -1,4 +1,9 @@
-import { OfferState, PurchaseOrderState, RequirementState } from "./types";
+import {
+  CommonFilter,
+  OfferState,
+  PurchaseOrderState,
+  RequirementState,
+} from "./types";
 
 export const primaryColor = "#BC1373";
 export const mainBackgroundColor = "#ffffff";
@@ -103,4 +108,47 @@ export const PurchaseOrderStateMeta: {
     class: "es-atendido",
     label: "pending",
   },
+};
+
+export const CardByStateOffer: {
+  [key in OfferState]: { label: string; class: string; icon: string };
+} = {
+  [OfferState.ACTIVE]: {
+    label: "activeOffer",
+    class: "card-pink",
+    icon: "fa-circle-check",
+  },
+  [OfferState.WINNER]: {
+    label: "winningOffer",
+    class: "card-green",
+    icon: "fa-circle-check",
+  },
+  [OfferState.FINISHED]: {
+    label: "finishedOffer",
+    class: "card-blue",
+    icon: "fa-circle-check",
+  },
+  [OfferState.DISPUTE]: {
+    label: "disputeOffer",
+    class: "card-teal",
+    icon: "fa-ban",
+  },
+  [OfferState.CANCELED]: {
+    label: "canceledOffer",
+    class: "card-red",
+    icon: "fa-ban",
+  },
+  [OfferState.ELIMINATED]: {
+    label: "eliminatedOffer",
+    class: "card-black",
+    icon: "fa-ban",
+  },
+};
+
+export const filterLabels: {
+  [key in CommonFilter]: string;
+} = {
+  [CommonFilter.ALL]: "all",
+  [CommonFilter.ASC]: "ascending",
+  [CommonFilter.DESC]: "descending",
 };
