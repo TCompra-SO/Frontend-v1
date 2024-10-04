@@ -56,37 +56,49 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
       </div>
       <div className="detalle-oferta">
         {props.content.tableType == TableTypes.REQUIREMENT_SUBUSER && (
-          <GeneralTable
-            content={{
-              type: props.content.tableType,
-              data: props.content.tableContent,
-              hiddenColumns: [],
-              nameColumnHeader: t("requirements"),
-              onButtonClick: handleOnButtonClick,
-            }}
-          />
+          <div className="card-white" style={{ padding: 0 }}>
+            <div className="table-responsive">
+              <GeneralTable
+                content={{
+                  type: props.content.tableType,
+                  data: props.content.tableContent,
+                  hiddenColumns: [],
+                  nameColumnHeader: t("requirements"),
+                  onButtonClick: handleOnButtonClick,
+                }}
+              />
+            </div>
+          </div>
         )}
         {props.content.tableType == TableTypes.OFFER_SUBUSER && (
-          <GeneralTable
-            content={{
-              type: props.content.tableType,
-              data: props.content.tableContent,
-              hiddenColumns: [],
-              nameColumnHeader: t("offers"),
-              onButtonClick: handleOnButtonClick,
-            }}
-          />
+          <div className="card-white" style={{ padding: 0 }}>
+            <div className="table-responsive">
+              <GeneralTable
+                content={{
+                  type: props.content.tableType,
+                  data: props.content.tableContent,
+                  hiddenColumns: [],
+                  nameColumnHeader: t("offers"),
+                  onButtonClick: handleOnButtonClick,
+                }}
+              />
+            </div>
+          </div>
         )}
         {props.content.tableType == TableTypes.PURCHASE_ORDER_SUBUSER && (
-          <GeneralTable
-            content={{
-              type: props.content.tableType,
-              data: props.content.tableContent,
-              hiddenColumns: [],
-              nameColumnHeader: t("purchaseOrders"),
-              onButtonClick: handleOnButtonClick,
-            }}
-          />
+          <div className="card-white" style={{ padding: 0 }}>
+            <div className="table-responsive">
+              <GeneralTable
+                content={{
+                  type: props.content.tableType,
+                  data: props.content.tableContent,
+                  hiddenColumns: [],
+                  nameColumnHeader: t("purchaseOrders"),
+                  onButtonClick: handleOnButtonClick,
+                }}
+              />
+            </div>
+          </div>
         )}
       </div>
     </div>

@@ -16,6 +16,7 @@ export const ApiRoutes = {
     sendCodeRecovery: "sendCodeRecovery/",
     recoverPassword: "recoveryPassword/",
     newPassword: "NewPassword/",
+    getBaseDataUser: "getBaseDataUser/",
   },
   util: {
     countries: "countries/",

@@ -111,10 +111,12 @@ export default function AddUserModal(props: AddUserModalProps) {
 
   useEffect(() => {
     if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
 
   useEffect(() => {
     if (apiParamsChangeRole.service) fetchDataChangeRole();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParamsChangeRole]);
 
   useEffect(() => {
@@ -122,6 +124,7 @@ export default function AddUserModal(props: AddUserModalProps) {
       console.log(apiParamsNewPass);
       fetchDataNewPass();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParamsNewPass]);
 
   useEffect(() => {

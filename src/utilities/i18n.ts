@@ -158,6 +158,7 @@ const resources = {
       finishedPurchaseOrders: "Finished Orders",
       statistics: "Statistics",
       purchaseOrder: "Purchase Order",
+      purchaseOrders: "Purchase Orders",
       // Validation
       noBlankSpaces: "Enter a valid value",
       validNumber: "Enter a valid number",
@@ -451,6 +452,7 @@ const resources = {
       finishedPurchaseOrders: "Órdenes Culminadas",
       statistics: "Estadísticas",
       purchaseOrder: "Orden de compra",
+      purchaseOrder: "Órdenes de compra",
       // Validation
       noBlankSpaces: "Ingrese un valor válido",
       validNumber: "Ingrese un número válido",
@@ -587,7 +589,8 @@ const resources = {
       expirationDateAbbrev: "F. Expiración",
       selectionDateAbbrev: "F. Selección",
       type: "Tipo",
-      view: "Ver"
+      view: "Ver",
+
     },
   },
 };

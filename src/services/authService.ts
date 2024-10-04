@@ -81,3 +81,12 @@ export function newPasswordService(): HttpService {
     type: "AU-NE-PA",
   };
 }
+
+export function getBaseDataUserService(uid: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+      ApiRoutes.auth.getBaseDataUser
+    }${uid}`,
+    type: "AU-GE-BD-US",
+  };
+}
