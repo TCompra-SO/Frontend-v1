@@ -2,17 +2,14 @@ import RequirementInfo from "./RequirementInfo";
 import RequirementOfferFilters from "./RequirementOfferFilters";
 import RequirementOfferList from "./RequirementOfferList";
 
-import {
-  OfferListItem,
-  RequirementTableItem,
-} from "../../../../models/MainInterfaces";
+import { Offer, Requirement } from "../../../../models/MainInterfaces";
 import { SyntheticEvent } from "react";
 import { OfferFilterTypes } from "../../../../utilities/types";
 import { RequirementDetailProvider } from "../../../../contexts/requirementDetailContext";
 
 interface RequirementDetailProps {
-  offerList: OfferListItem[];
-  requirement: RequirementTableItem;
+  offerList: Offer[];
+  requirement: Requirement;
   onClose: (e: SyntheticEvent<Element, Event>) => any;
 }
 

@@ -1,4 +1,4 @@
-import { RequirementTableItem } from "../../../../models/MainInterfaces";
+import { Requirement } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
 import { ListsContext } from "../../../../contexts/listsContext";
 import { useContext } from "react";
@@ -9,7 +9,7 @@ import FrontImage from "../../../common/FrontImage";
 import PriceInHeader from "../../../common/PriceInHeader";
 
 interface RequirementInfoProps {
-  requirement: RequirementTableItem;
+  requirement: Requirement;
 }
 
 export default function RequirementInfo(props: RequirementInfoProps) {

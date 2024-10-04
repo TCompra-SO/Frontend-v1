@@ -272,6 +272,7 @@ export enum TableColumns {
   CREATION_DATE = 18,
   SELECTION_DATE = 19,
   OFFER = 20,
+  USERNAME = 21,
 }
 
 export enum UserClass {

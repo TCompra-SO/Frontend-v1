@@ -14,7 +14,7 @@ export interface BaseRequirementOffer {
   type: RequirementType;
 }
 
-export interface RequirementTableItem extends BaseRequirementOffer {
+export interface Requirement extends BaseRequirementOffer {
   description: string;
   category: number;
   location: number;
@@ -34,7 +34,7 @@ export interface RequirementTableItem extends BaseRequirementOffer {
   deliveryTime: number;
 }
 
-export interface OfferListItem extends BaseRequirementOffer {
+export interface Offer extends BaseRequirementOffer {
   requirementTitle: string;
   requirementId: string;
   description?: string;
@@ -60,7 +60,7 @@ export interface OfferListItem extends BaseRequirementOffer {
 export interface PurchaseOrder {
   key: string;
   requirementTitle: string;
-  purchaseDate: string;
+  selectionDate: string;
   state: PurchaseOrderState;
   user: User;
   subUser?: User;

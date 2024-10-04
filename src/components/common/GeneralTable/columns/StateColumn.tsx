@@ -1,11 +1,11 @@
 import { ColumnType } from "antd/es/table";
 import {
   OfferItemSubUser,
-  OfferListItem,
+  Offer,
   PurchaseOrder,
   PurchaseOrderItemSubUser,
   RequirementItemSubUser,
-  RequirementTableItem,
+  Requirement,
 } from "../../../../models/MainInterfaces";
 import {
   OfferStateMeta,
@@ -18,8 +18,8 @@ export default function StateColumn(type: TableTypes, hidden: boolean = false) {
   const { t } = useTranslation();
 
   const col: ColumnType<
-    | RequirementTableItem
-    | OfferListItem
+    | Requirement
+    | Offer
     | PurchaseOrder
     | RequirementItemSubUser
     | OfferItemSubUser
@@ -40,11 +40,11 @@ export default function StateColumn(type: TableTypes, hidden: boolean = false) {
         type == TableTypes.REQUIREMENT ||
         type == TableTypes.REQUIREMENT_SUBUSER
       ) {
-        const state = (record as RequirementTableItem).state;
+        const state = (record as Requirement).state;
         label = t(RequirementStateMeta[state].label);
         className = `cont-estado ${RequirementStateMeta[state].class}`;
       } else if (type == TableTypes.OFFER || type == TableTypes.OFFER_SUBUSER) {
-        const state = (record as OfferListItem).state;
+        const state = (record as Offer).state;
         label = t(OfferStateMeta[state].label);
         className = `cont-estado ${OfferStateMeta[state].class}`;
       } else if (

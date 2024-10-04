@@ -1,4 +1,4 @@
-import { OfferListItem } from "../../../../models/MainInterfaces";
+import { Offer } from "../../../../models/MainInterfaces";
 import { dateFormat, defaultCountry } from "../../../../utilities/globals";
 
 import { useTranslation } from "react-i18next";
@@ -11,7 +11,7 @@ import PriceInHeader from "../../../common/PriceInHeader";
 import ImagesAndDocs from "../../../common/ImagesAndDocs";
 
 interface RequirementOfferListItemBodyProps {
-  offer: OfferListItem;
+  offer: Offer;
   showUserData: boolean;
 }
 

@@ -1,7 +1,8 @@
 import { ColumnType } from "antd/es/table";
 import {
-  OfferListItem,
-  RequirementTableItem,
+  Offer,
+  PurchaseOrder,
+  Requirement,
 } from "../../../../models/MainInterfaces";
 import { TableTypes } from "../../../../utilities/types";
 import { useContext } from "react";
@@ -26,7 +27,7 @@ export default function NameColumn(
       break;
   }
 
-  const col: ColumnType<RequirementTableItem | OfferListItem | SubUserProfile> =
+  const col: ColumnType<Requirement | Offer | SubUserProfile | PurchaseOrder> =
     {
       title: nameColumnHeader,
       dataIndex,
@@ -35,12 +36,16 @@ export default function NameColumn(
       hidden,
       sorter: (a, b) => {
         if (type === TableTypes.REQUIREMENT || type === TableTypes.OFFER) {
-          const aTitle = (a as OfferListItem | RequirementTableItem).title;
-          const bTitle = (b as OfferListItem | RequirementTableItem).title;
+          const aTitle = (a as Offer | Requirement).title;
+          const bTitle = (b as Offer | Requirement).title;
           return aTitle.localeCompare(bTitle);
         } else if (type === TableTypes.USERS) {
           const aName = (a as SubUserProfile).name;
           const bName = (b as SubUserProfile).name;
+          return aName.localeCompare(bName);
+        } else if (type == TableTypes.PURCHASE_ORDER) {
+          const aName = (a as PurchaseOrder).user.name;
+          const bName = (b as PurchaseOrder).user.name;
           return aName.localeCompare(bName);
         }
         return 0;
@@ -54,8 +59,10 @@ export default function NameColumn(
               style={{ textAlign: "left" }}
             >
               {(type === TableTypes.REQUIREMENT || type === TableTypes.OFFER) &&
-                (record as OfferListItem | RequirementTableItem).title}
+                (record as Offer | Requirement).title}
               {type === TableTypes.USERS && (record as SubUserProfile).name}
+              {type === TableTypes.PURCHASE_ORDER &&
+                (record as PurchaseOrder).user.name}
             </div>
             {(type == TableTypes.REQUIREMENT || type == TableTypes.USERS) && (
               <div
@@ -63,10 +70,10 @@ export default function NameColumn(
                 style={{ textAlign: "left" }}
               >
                 {type == TableTypes.REQUIREMENT && categoryData
-                  ? categoryData[(record as RequirementTableItem).category]
-                      ?.value
+                  ? categoryData[(record as Requirement).category]?.value
                   : null}
                 {type == TableTypes.USERS && <>Vendedor</>}
+                {/** r3v*/}
               </div>
             )}
           </div>

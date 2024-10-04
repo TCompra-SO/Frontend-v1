@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { OfferListItem } from "../models/MainInterfaces";
+import { Offer } from "../models/MainInterfaces";
 import {
   Action,
   ModalTypes,
@@ -15,7 +15,7 @@ import { ModalContent, TableTypeOffer } from "../models/Interfaces";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import { mainModalScrollStyle } from "../utilities/globals";
 
-const offerList: OfferListItem[] = [
+const offerList: Offer[] = [
   {
     key: "1",
     title: "Gaming Laptop",
@@ -383,11 +383,11 @@ export default function Offers() {
     console.log("deleteOffer", offerId);
   }
 
-  function goToChat(offer: OfferListItem) {
+  function goToChat(offer: Offer) {
     console.log("goToChat", offer.key, offer.requirementId);
   }
 
-  function handleOnButtonClick(action: Action, offer: OfferListItem) {
+  function handleOnButtonClick(action: Action, offer: Offer) {
     console.log(action);
     switch (action) {
       case Action.OFFER_DETAIL:

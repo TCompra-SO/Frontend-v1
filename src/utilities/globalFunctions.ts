@@ -12,7 +12,7 @@ import {
   UserClass,
   UserTable,
 } from "./types";
-import { RequirementTableItem } from "../models/MainInterfaces";
+import { Requirement } from "../models/MainInterfaces";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -101,7 +101,7 @@ export function getScore(score: number) {
 }
 
 export function transformDataToRequirement(data: any) {
-  const req: RequirementTableItem = {
+  const req: Requirement = {
     description: data.description,
     category: data.category,
     location: data.location,

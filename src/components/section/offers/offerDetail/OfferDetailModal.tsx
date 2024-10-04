@@ -1,4 +1,4 @@
-import { OfferListItem } from "../../../../models/MainInterfaces";
+import { Offer } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
 import FrontImage from "../../../common/FrontImage";
 import RequirementInfoNoTags from "../../requirements/requirementDetail/RequirementInfoNoTags";
@@ -13,7 +13,7 @@ import ImagesAndDocs from "../../../common/ImagesAndDocs";
 import { CardByStateOffer } from "../../../../utilities/colors";
 
 interface OfferDetailModalProps {
-  offer: OfferListItem;
+  offer: Offer;
 }
 
 export default function OfferDetailModal(props: OfferDetailModalProps) {

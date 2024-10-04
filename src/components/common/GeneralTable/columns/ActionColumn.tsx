@@ -4,6 +4,7 @@ import ButtonContainer from "../../../containers/ButtonContainer";
 import {
   Action,
   ActionByStateOffer,
+  ActionByStatePurchaseOrder,
   ActionByStateRequirement,
   ActionLabel,
   ActionSubUsers,
@@ -41,6 +42,11 @@ export default function ActionColumn(
         case TableTypes.USERS:
           ActionByState = ActionSubUsers;
           key = allItems;
+          break;
+        case TableTypes.PURCHASE_ORDER:
+          ActionByState = ActionByStatePurchaseOrder;
+          key = record.state;
+          break;
       }
 
       return (

@@ -1,6 +1,7 @@
 import { ColumnType } from "antd/es/table";
 import {
   OfferItemSubUser,
+  PurchaseOrder,
   PurchaseOrderItemSubUser,
   RequirementItemSubUser,
 } from "../../../../models/MainInterfaces";
@@ -11,7 +12,10 @@ export default function TypeColumn(hidden: boolean = false) {
   const { t } = useTranslation();
 
   const col: ColumnType<
-    RequirementItemSubUser | OfferItemSubUser | PurchaseOrderItemSubUser
+    | RequirementItemSubUser
+    | OfferItemSubUser
+    | PurchaseOrderItemSubUser
+    | PurchaseOrder
   > = {
     title: t("type"),
     dataIndex: "type",
@@ -22,7 +26,7 @@ export default function TypeColumn(hidden: boolean = false) {
     render: (_, record) => (
       <>
         <div style={{ textAlign: "left" }} className={`t-flex dato-table`}>
-          {t(getLabelFromRequirementType(record.type))}
+          {t(getLabelFromRequirementType(record.type, false))}
         </div>
       </>
     ),

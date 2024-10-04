@@ -53,7 +53,15 @@ export const ApiRoutes = {
 export const pageRoutes = {
   home: "/",
   search: "/busqueda",
+  profile: "/perfil",
   myRequirements: "/mis-requerimientos",
   myOffers: "/mis-ofertas",
+  myPurchaseOrders: "/mis-ordenes-de-compra",
+  chat: "/chat",
   users: "/usuarios",
+  allRequirements: "/all-requerimientos",
+  allOffers: "/all-ofertas",
+  certificates: "/certificados",
+  allPurchaseOrders: "/all-ordenes-de-compra",
+  statistics: "/statistics",
 };

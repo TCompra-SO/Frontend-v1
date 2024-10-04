@@ -1,16 +1,16 @@
 import { ColumnType } from "antd/es/table";
-import { RequirementTableItem } from "../../../../models/MainInterfaces";
+import { Requirement } from "../../../../models/MainInterfaces";
 import { Action, TableTypes } from "../../../../utilities/types";
 import { useTranslation } from "react-i18next";
 
 export default function OffersColumn(
   type: TableTypes,
-  onButtonClick: (action: Action, data: RequirementTableItem) => void,
+  onButtonClick: (action: Action, data: Requirement) => void,
   hidden: boolean = false
 ) {
   const { t } = useTranslation();
 
-  const col: ColumnType<RequirementTableItem> = {
+  const col: ColumnType<Requirement> = {
     title: t("offersColumn"),
     dataIndex: "numberOffers",
     key: "offers",

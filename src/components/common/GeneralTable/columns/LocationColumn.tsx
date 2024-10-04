@@ -1,8 +1,5 @@
 import { ColumnType } from "antd/es/table";
-import {
-  OfferListItem,
-  RequirementTableItem,
-} from "../../../../models/MainInterfaces";
+import { Offer, Requirement } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
 import { useContext, useEffect, useState } from "react";
 import { ListsContext } from "../../../../contexts/listsContext";
@@ -28,7 +25,7 @@ export default function LocationColumn(hidden: boolean = false) {
     }
   }, [countryData]);
 
-  const col: ColumnType<RequirementTableItem | OfferListItem> = {
+  const col: ColumnType<Requirement | Offer> = {
     title: t("locationColumn"),
     dataIndex: "location",
     key: "location",

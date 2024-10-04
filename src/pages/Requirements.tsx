@@ -10,7 +10,7 @@ import {
   TableTypes,
   TimeMeasurement,
 } from "../utilities/types";
-import { OfferListItem, RequirementTableItem } from "../models/MainInterfaces";
+import { Offer, Requirement } from "../models/MainInterfaces";
 import { ChangeEvent, useEffect, useState } from "react";
 import {
   ModalContent,
@@ -24,7 +24,7 @@ import useApi from "../hooks/useApi";
 import { getRequirementsService } from "../services/requirementService";
 import { transformDataToRequirement } from "../utilities/globalFunctions";
 
-const requirements: RequirementTableItem[] = [
+const requirements: Requirement[] = [
   {
     key: "1",
     title: "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
@@ -610,7 +610,7 @@ const requirements: RequirementTableItem[] = [
   },
 ];
 
-const offerList: OfferListItem[] = [
+const offerList: Offer[] = [
   {
     key: "1",
     title: "Gaming Laptop",
@@ -1007,10 +1007,7 @@ export default function Requirements() {
     setIsOpenModal(false);
   }
 
-  function handleOnButtonClick(
-    action: Action,
-    requirement: RequirementTableItem
-  ) {
+  function handleOnButtonClick(action: Action, requirement: Requirement) {
     switch (action) {
       case Action.SHOW_OFFERS: {
         setDataModal({

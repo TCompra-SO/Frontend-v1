@@ -1,8 +1,5 @@
 import { Dropdown, Popover, Tooltip } from "antd";
-import {
-  OfferListItem,
-  RequirementTableItem,
-} from "../../../../models/MainInterfaces";
+import { Offer, Requirement } from "../../../../models/MainInterfaces";
 import {
   Action,
   ActionLabel,
@@ -20,10 +17,10 @@ import ModalContainer from "../../../containers/ModalContainer";
 import FrontImage from "../../../common/FrontImage";
 
 interface RequirementOfferListItemProps {
-  offer: OfferListItem;
+  offer: Offer;
   style?: React.CSSProperties;
   showStateAndActions:
-    | { show: true; requirement: RequirementTableItem }
+    | { show: true; requirement: Requirement }
     | { show: false };
 }
 

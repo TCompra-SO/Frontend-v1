@@ -14,11 +14,11 @@ import { TableType } from "../../../models/Interfaces";
 import RequirementColumn from "./columns/RequirementColumn";
 import {
   OfferItemSubUser,
-  OfferListItem,
+  Offer,
   PurchaseOrder,
   PurchaseOrderItemSubUser,
   RequirementItemSubUser,
-  RequirementTableItem,
+  Requirement,
 } from "../../../models/MainInterfaces";
 import { ColumnType } from "antd/es/table";
 import { useTranslation } from "react-i18next";
@@ -37,34 +37,27 @@ export default function GeneralTable(props: RequirementsTableProps) {
   const { t } = useTranslation();
   const pageSizeOptions = pageSizeOptionsSt;
   let columns: Array<
-    | ColumnType<OfferListItem>
-    | ColumnType<RequirementTableItem>
+    | ColumnType<Offer>
+    | ColumnType<Requirement>
     | ColumnType<PurchaseOrder>
     | ColumnType<SubUserProfile>
     | ColumnType<RequirementItemSubUser>
-    | ColumnType<SubUserProfile | RequirementTableItem>
-    | ColumnType<OfferListItem | RequirementTableItem>
-    | ColumnType<OfferListItem | PurchaseOrder>
+    | ColumnType<SubUserProfile | Requirement>
+    | ColumnType<Offer | Requirement>
+    | ColumnType<Offer | PurchaseOrder>
     | ColumnType<PurchaseOrderItemSubUser | PurchaseOrder>
-    | ColumnType<OfferListItem | PurchaseOrder | RequirementTableItem>
-    | ColumnType<OfferListItem | RequirementTableItem | SubUserProfile>
-    | ColumnType<OfferListItem | PurchaseOrder | SubUserProfile>
-    | ColumnType<
-        OfferListItem | PurchaseOrder | RequirementTableItem | SubUserProfile
-      >
-    | ColumnType<OfferListItem | RequirementTableItem | RequirementItemSubUser>
-    | ColumnType<
-        | RequirementTableItem
-        | OfferListItem
-        | PurchaseOrder
-        | RequirementItemSubUser
-      >
+    | ColumnType<Offer | PurchaseOrder | Requirement>
+    | ColumnType<Offer | Requirement | SubUserProfile>
+    | ColumnType<Offer | PurchaseOrder | SubUserProfile>
+    | ColumnType<Offer | PurchaseOrder | Requirement | SubUserProfile>
+    | ColumnType<Offer | Requirement | RequirementItemSubUser>
+    | ColumnType<Requirement | Offer | PurchaseOrder | RequirementItemSubUser>
     | ColumnType<
         RequirementItemSubUser | OfferItemSubUser | PurchaseOrderItemSubUser
       >
     | ColumnType<
-        | RequirementTableItem
-        | OfferListItem
+        | Requirement
+        | Offer
         | PurchaseOrder
         | RequirementItemSubUser
         | OfferItemSubUser
@@ -110,17 +103,25 @@ export default function GeneralTable(props: RequirementsTableProps) {
       return (
         <Table
           dataSource={props.content.data}
-          columns={columns as Array<ColumnType<RequirementTableItem>>}
+          columns={columns as Array<ColumnType<Requirement>>}
           {...tableProps}
         ></Table>
       );
-
     case TableTypes.OFFER:
       getOfferTableColumns();
       return (
         <Table
           dataSource={props.content.data}
-          columns={columns as Array<ColumnType<OfferListItem>>}
+          columns={columns as Array<ColumnType<Offer>>}
+          {...tableProps}
+        ></Table>
+      );
+    case TableTypes.PURCHASE_ORDER:
+      getPurchaseOrderColumns();
+      return (
+        <Table
+          dataSource={props.content.data}
+          columns={columns as Array<ColumnType<PurchaseOrder>>}
           {...tableProps}
         ></Table>
       );
@@ -251,7 +252,7 @@ export default function GeneralTable(props: RequirementsTableProps) {
         85
       ),
       GeneralColumnNumber(
-        t("saleAbbrev"),
+        t("salesAbbrev"),
         "numSales",
         visibility[TableColumns.SALES],
         85
@@ -378,22 +379,33 @@ export default function GeneralTable(props: RequirementsTableProps) {
     return columns;
   }
 
-  // function getPurchaseOrderColumns() {
-  //   columns = [RequirementColumn(true, visibility[TableColumns.NAME])];
-  //   return columns;
-  // }
-
-  // return (
-  //   <Table
-  //     dataSource={props.content.data}
-  //     columns={columns as Array<ColumnType<RequirementTableItem>>}
-  //     scroll={{ x: 1000 }}
-  //     style={{ width: "100%" }}
-  //     bordered={false}
-  //     pagination={{
-  //       pageSizeOptions,
-  //       showSizeChanger: true,
-  //     }}
-  //   ></Table>
-  // );
+  function getPurchaseOrderColumns() {
+    columns = [
+      NameColumn(
+        props.content.type,
+        props.content.nameColumnHeader,
+        visibility[TableColumns.NAME]
+      ),
+      GeneralColumnString(
+        t("requirement"),
+        "requirementTitle",
+        true,
+        130,
+        visibility[TableColumns.REQUIREMENT]
+      ),
+      GeneralDateColumn(
+        t("selectionDateAbbrev"),
+        "selectionDate",
+        visibility[TableColumns.SELECTION_DATE]
+      ),
+      TypeColumn(visibility[TableColumns.TYPE]),
+      StateColumn(props.content.type, visibility[TableColumns.STATE]),
+      ActionColumn(
+        props.content.type,
+        props.content.onButtonClick,
+        visibility[TableColumns.ACTION]
+      ),
+    ];
+    return columns;
+  }
 }

@@ -1,10 +1,10 @@
 import { ColumnType } from "antd/es/table";
-import { RequirementTableItem } from "../../../../models/MainInterfaces";
+import { Requirement } from "../../../../models/MainInterfaces";
 import AvatarImage from "../../AvatarImage";
 import { SubUserProfile } from "../../../../models/Responses";
 
 export default function ImageColumn(isUser: boolean, hidden: boolean = false) {
-  const col: ColumnType<RequirementTableItem | SubUserProfile> = {
+  const col: ColumnType<Requirement | SubUserProfile> = {
     dataIndex: "image",
     align: "center",
     hidden,

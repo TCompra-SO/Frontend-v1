@@ -1,9 +1,6 @@
 import TextAreaContainer from "../../containers/TextAreaContainer";
 import { Col, Flex, Row } from "antd";
-import {
-  OfferListItem,
-  RequirementTableItem,
-} from "../../../models/MainInterfaces";
+import { Offer, Requirement } from "../../../models/MainInterfaces";
 import { SyntheticEvent, useContext } from "react";
 import { requirementDetailContext } from "../../../contexts/requirementDetailContext";
 import ButtonContainer from "../../containers/ButtonContainer";
@@ -13,8 +10,8 @@ import SelectContainer from "../../containers/SelectContainer";
 import { filterLabels } from "../../../utilities/colors";
 
 interface RequirementModalOfferSelectedProps {
-  offer: OfferListItem;
-  requirement: RequirementTableItem;
+  offer: Offer;
+  requirement: Requirement;
   onClose: (e: SyntheticEvent<Element, Event>) => any;
 }
 

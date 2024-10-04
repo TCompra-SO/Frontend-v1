@@ -12,8 +12,14 @@ export default function Sidebar() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const typeID = useSelector((state: MainState) => state.user.typeID);
-  const [menuReq] = useState("menuReq");
-  const [menuOff] = useState("menuOff");
+  const menuReq: string = "menuReq";
+  const menuOff: string = "menuOff";
+  const menuPurch: string = "menuPurch";
+  const menuAllReq: string = "menuAllReq";
+  const menuAllOff: string = "menuAllOff";
+  const menuAllPurch: string = "menuAllPurch";
+  const menuCert: string = "menuCert";
+  const menuStat: string = "menuStat";
   const [menuVisibility, setMenuVisibility] = useState<{
     [key: string]: boolean;
   }>({});
@@ -37,22 +43,25 @@ export default function Sidebar() {
       <div>
         <ImageContainer
           src="/src/assets/images/logo-white.svg"
-          style={{ width: "100%" }}
+          style={{ width: "100%", cursor: "pointer" }}
           preview={false}
           onClick={() => redirectTo(pageRoutes.home)}
         ></ImageContainer>
       </div>
+
       <div className="menu-tc-1 t-flex scroll-y">
-        <ButtonContainer
-          children={
-            <>
-              <i className="fa-regular fa-user-pen text-center i-btn"></i>{" "}
-              {t("myProfile")}
-            </>
-          }
-          common
-          className={buttonClass}
-        />
+        {RolesForSection.profile[typeID] && (
+          <ButtonContainer
+            children={
+              <>
+                <i className="fa-regular fa-user-pen text-center i-btn"></i>{" "}
+                {t("myProfile")}
+              </>
+            }
+            common
+            className={buttonClass}
+          />
+        )}
         {RolesForSection.myRequirements[typeID] && (
           <>
             <ButtonContainer
@@ -139,46 +148,75 @@ export default function Sidebar() {
             </div>
           </>
         )}
-        {/* <ButtonContainer
-          children={
-            <>
-              <i className="fa-regular fa-user-tie text-center i-btn"></i>{" "}
-              {t("rrhh")}{" "}
-              <i className="fa-solid fa-chevron-down i-sub text-center"></i>
-            </>
-          }
-          common
-          className={buttonClass}
-        /> */}
-        <ButtonContainer
-          children={
-            <>
-              <i className="fa-regular fa-file-contract text-center i-btn"></i>{" "}
-              {t("purchaseOrder")}{" "}
-              <i className="fa-solid fa-chevron-down i-sub text-center"></i>
-            </>
-          }
-          common
-          className={buttonClass}
-        />
-        <ButtonContainer
-          children={
-            <>
-              <i className="fa-regular fa-comment text-center i-btn"></i>{" "}
-              {t("chat")} <div className="chat-notf">10</div>
-            </>
-          }
-          common
-          className={buttonClass}
-        />
-        {RolesForSection.myOffers[typeID] && (
+        {RolesForSection.myPurchaseOrders[typeID] && (
+          <>
+            <ButtonContainer
+              children={
+                <>
+                  <i className="fa-regular fa-file-contract text-center i-btn"></i>{" "}
+                  {t("purchaseOrder")}{" "}
+                  <i className="fa-solid fa-chevron-down i-sub text-center"></i>
+                </>
+              }
+              common
+              className={buttonClass}
+              onClick={() => toggleMenu(menuPurch)}
+            />
+            <div
+              className="sub-menu t-flex"
+              style={{ display: menuVisibility[menuPurch] ? "block" : "none" }}
+            >
+              <ButtonContainer
+                className="btn btn-transparent wd-100 text-left"
+                common
+                onClick={() => redirectTo(`${pageRoutes.myPurchaseOrders}`)}
+              >
+                <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
+                {t("issuedPl")}
+              </ButtonContainer>
+              <ButtonContainer
+                className="btn btn-transparent wd-100 text-left"
+                common
+              >
+                <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
+                {t("receivedPl")}
+              </ButtonContainer>
+              <ButtonContainer
+                className="btn btn-transparent wd-100 text-left"
+                common
+              >
+                <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
+                {`${t("issuedPl")} - ${t("salesAbbrev")}`}
+              </ButtonContainer>
+              <ButtonContainer
+                className="btn btn-transparent wd-100 text-left"
+                common
+              >
+                <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
+                {`${t("receivedPl")} - ${t("salesAbbrev")}`}
+              </ButtonContainer>
+            </div>
+          </>
+        )}
+        {RolesForSection.chat[typeID] && (
+          <ButtonContainer
+            children={
+              <>
+                <i className="fa-regular fa-comment text-center i-btn"></i>{" "}
+                {t("chat")} <div className="chat-notf">10</div>
+              </>
+            }
+            common
+            className={buttonClass}
+          />
+        )}
+        {RolesForSection.users[typeID] && (
           <>
             <ButtonContainer
               children={
                 <>
                   <i className="fa-regular fa-users text-center i-btn"></i>{" "}
-                  {t("createUsers")}{" "}
-                  <i className="fa-solid fa-chevron-down i-sub text-center"></i>
+                  {t("createUsers")}
                 </>
               }
               common
@@ -187,64 +225,201 @@ export default function Sidebar() {
             />
           </>
         )}
-        <ButtonContainer
-          children={
-            <>
-              <i className="fa-regular fa-paste text-center i-btn"></i>{" "}
-              {t("goods")}{" "}
-              <i className="fa-solid fa-chevron-down i-sub text-center"></i>
-            </>
-          }
-          common
-          className={buttonClass}
-        />
-        <ButtonContainer
-          children={
-            <>
-              <i className="fa-regular fa-ballot-check text-center i-btn"></i>{" "}
-              {t("offers")}{" "}
-              <i className="fa-solid fa-chevron-down i-sub text-center"></i>
-            </>
-          }
-          common
-          className={buttonClass}
-        />
-        <ButtonContainer
-          children={
-            <>
-              <i className="fa-regular fa-file-certificate text-center i-btn"></i>{" "}
-              {t("certificates")}{" "}
-              <i className="fa-solid fa-chevron-down i-sub text-center"></i>
-            </>
-          }
-          common
-          className={buttonClass}
-        />
-        <ButtonContainer
-          children={
-            <>
-              <i
-                className="fa-regular fa-money-check-pen text-center"
-                style={{ width: "25px;" }}
-              ></i>{" "}
-              {t("finishedPurchaseOrders")}{" "}
-              <i className="fa-solid fa-chevron-down i-sub text-center"></i>
-            </>
-          }
-          common
-          className={buttonClass}
-        />
-        <ButtonContainer
-          children={
-            <>
-              <i className="fa-regular fa-chart-line text-center i-btn"></i>{" "}
-              {t("statistics")}{" "}
-              <i className="fa-solid fa-chevron-down i-sub text-center"></i>
-            </>
-          }
-          common
-          className={buttonClass}
-        />
+        {RolesForSection.allRequirements[typeID] && (
+          <>
+            <ButtonContainer
+              children={
+                <>
+                  <i className="fa-regular fa-paste text-center i-btn"></i>{" "}
+                  {t("goods")}{" "}
+                  <i className="fa-solid fa-chevron-down i-sub text-center"></i>
+                </>
+              }
+              common
+              className={buttonClass}
+              onClick={() => toggleMenu(menuAllReq)}
+            />
+            <div
+              className="sub-menu t-flex"
+              style={{ display: menuVisibility[menuAllReq] ? "block" : "none" }}
+            >
+              <ButtonContainer
+                className="btn btn-transparent wd-100 text-left"
+                common
+                // onClick={() => redirectTo(`${pageRoutes.myRequirements}`)}
+              >
+                <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
+                {t("goods")}
+              </ButtonContainer>
+              <ButtonContainer
+                className="btn btn-transparent wd-100 text-left"
+                common
+              >
+                <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
+                {t("services")}
+              </ButtonContainer>
+              <ButtonContainer
+                className="btn btn-transparent wd-100 text-left"
+                common
+              >
+                <i className="fa-regular fa-basket-shopping text-center i-btn"></i>{" "}
+                {t("sales")}
+              </ButtonContainer>
+            </div>
+          </>
+        )}
+        {RolesForSection.allOffers[typeID] && (
+          <>
+            <ButtonContainer
+              children={
+                <>
+                  <i className="fa-regular fa-ballot-check text-center i-btn"></i>{" "}
+                  {t("offers")}{" "}
+                  <i className="fa-solid fa-chevron-down i-sub text-center"></i>
+                </>
+              }
+              common
+              className={buttonClass}
+              onClick={() => toggleMenu(menuAllOff)}
+            />
+            <div
+              className="sub-menu t-flex"
+              style={{ display: menuVisibility[menuAllOff] ? "block" : "none" }}
+            >
+              <ButtonContainer
+                className="btn btn-transparent wd-100 text-left"
+                common
+                // onClick={() => redirectTo(`${pageRoutes.myOffers}`)}
+              >
+                <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
+                {t("goods")}
+              </ButtonContainer>
+              <ButtonContainer
+                className="btn btn-transparent wd-100 text-left"
+                common
+              >
+                <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
+                {t("services")}
+              </ButtonContainer>
+              <ButtonContainer
+                className="btn btn-transparent wd-100 text-left"
+                common
+              >
+                <i className="fa-regular fa-basket-shopping text-center i-btn"></i>{" "}
+                {t("sales")}
+              </ButtonContainer>
+            </div>
+          </>
+        )}
+        {RolesForSection.certificates[typeID] && (
+          <>
+            <ButtonContainer
+              children={
+                <>
+                  <i className="fa-regular fa-file-certificate text-center i-btn"></i>{" "}
+                  {t("certificates")}{" "}
+                  <i className="fa-solid fa-chevron-down i-sub text-center"></i>
+                </>
+              }
+              common
+              className={buttonClass}
+              onClick={() => toggleMenu(menuCert)}
+            />
+            <div
+              className="sub-menu t-flex"
+              style={{ display: menuVisibility[menuCert] ? "block" : "none" }}
+            >
+              <ButtonContainer
+                className="btn btn-transparent wd-100 text-left"
+                common
+              >
+                <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
+                {t("myDocument")}
+              </ButtonContainer>
+              <ButtonContainer
+                className="btn btn-transparent wd-100 text-left"
+                common
+              >
+                <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
+                {t("sentPl")}
+              </ButtonContainer>
+              <ButtonContainer
+                className="btn btn-transparent wd-100 text-left"
+                common
+              >
+                <i className="fa-regular fa-basket-shopping text-center i-btn"></i>{" "}
+                {t("receivedPl")}
+              </ButtonContainer>
+            </div>
+          </>
+        )}
+        {RolesForSection.allPurchaseOrders[typeID] && (
+          <>
+            <ButtonContainer
+              children={
+                <>
+                  <i
+                    className="fa-regular fa-money-check-pen text-center"
+                    style={{ width: "25px;" }}
+                  ></i>{" "}
+                  {t("finishedPurchaseOrders")}{" "}
+                  <i className="fa-solid fa-chevron-down i-sub text-center"></i>
+                </>
+              }
+              common
+              className={buttonClass}
+              onClick={() => toggleMenu(menuAllPurch)}
+            />
+            <div
+              className="sub-menu t-flex"
+              style={{
+                display: menuVisibility[menuAllPurch] ? "block" : "none",
+              }}
+            >
+              <ButtonContainer
+                className="btn btn-transparent wd-100 text-left"
+                common
+              >
+                <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
+                {t("issuedPl")}
+              </ButtonContainer>
+              <ButtonContainer
+                className="btn btn-transparent wd-100 text-left"
+                common
+              >
+                <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
+                {t("receivedPl")}
+              </ButtonContainer>
+              <ButtonContainer
+                className="btn btn-transparent wd-100 text-left"
+                common
+              >
+                <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
+                {`${t("issuedPl")} - ${t("salesAbbrev")}`}
+              </ButtonContainer>
+              <ButtonContainer
+                className="btn btn-transparent wd-100 text-left"
+                common
+              >
+                <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
+                {`${t("receivedPl")} - ${t("salesAbbrev")}`}
+              </ButtonContainer>
+            </div>
+          </>
+        )}
+        {RolesForSection.statistics[typeID] && (
+          <ButtonContainer
+            children={
+              <>
+                <i className="fa-regular fa-chart-line text-center i-btn"></i>{" "}
+                {t("statistics")}
+              </>
+            }
+            common
+            className={buttonClass}
+            onClick={() => toggleMenu(menuStat)}
+          />
+        )}
       </div>
       <div className="menu-tc-2 t-flex">
         <ButtonContainer

@@ -1,4 +1,4 @@
-import { OfferListItem } from "../../../../models/MainInterfaces";
+import { Offer } from "../../../../models/MainInterfaces";
 import RequirementOfferListItemBody from "../requirementDetail/RequirementOfferListItemBody";
 import { useTranslation } from "react-i18next";
 import FrontImage from "../../../common/FrontImage";
@@ -6,7 +6,7 @@ import RequirementInfoNoTags from "../requirementDetail/RequirementInfoNoTags";
 import { DocType, UserTable } from "../../../../utilities/types";
 
 interface RequirementOfferSummaryProps {
-  offer: OfferListItem;
+  offer: Offer;
 }
 
 export default function RequirementOfferSummary(

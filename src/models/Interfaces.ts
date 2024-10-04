@@ -11,11 +11,11 @@ import {
 import {
   BaseUser,
   OfferItemSubUser,
-  OfferListItem,
+  Offer,
   PurchaseOrder,
   PurchaseOrderItemSubUser,
   RequirementItemSubUser,
-  RequirementTableItem,
+  Requirement,
   User,
 } from "./MainInterfaces";
 import { SubUserProfile } from "./Responses";
@@ -38,12 +38,12 @@ export interface ModalCancelPurchaseOrder extends CommonModalType {
 
 export interface ModalDetailedRequirement extends CommonModalType {
   type: ModalTypes.DETAILED_REQUIREMENT;
-  data: { offerList: OfferListItem[]; requirement: RequirementTableItem };
+  data: { offerList: Offer[]; requirement: Requirement };
 }
 
 export interface ModalOfferSummary extends CommonModalType {
   type: ModalTypes.OFFER_SUMMARY;
-  data: { offer: OfferListItem; requirement: RequirementTableItem };
+  data: { offer: Offer; requirement: Requirement };
 }
 
 export interface ModalRateCanceled extends CommonModalType {
@@ -75,7 +75,7 @@ export interface ModalRepublishRequirement extends CommonModalType {
 
 export interface ModalSelectOffer extends CommonModalType {
   type: ModalTypes.SELECT_OFFER;
-  data: { offer: OfferListItem; requirement: RequirementTableItem };
+  data: { offer: Offer; requirement: Requirement };
 }
 
 export interface ModalValidateCode extends CommonModalType {
@@ -104,7 +104,7 @@ export interface ModalInputEmail extends CommonModalType {
 export interface ModalOfferDetail extends CommonModalType {
   type: ModalTypes.OFFER_DETAIL;
   data: {
-    offer: OfferListItem;
+    offer: Offer;
   };
 }
 
@@ -138,14 +138,14 @@ export interface TableHiddenColumns {
 export interface TableTypeRequirement extends TableHiddenColumns {
   type: TableTypes.REQUIREMENT;
   subType: RequirementType;
-  data: RequirementTableItem[];
-  // onButtonClick: (action: Action, data: RequirementTableItem) => void;
+  data: Requirement[];
+  // onButtonClick: (action: Action, data: Requirement) => void;
 }
 
 export interface TableTypeOffer extends TableHiddenColumns {
   type: TableTypes.OFFER;
-  data: OfferListItem[];
-  // onButtonClick: (action: Action, data: OfferListItem) => void;
+  data: Offer[];
+  // onButtonClick: (action: Action, data: Offer) => void;
 }
 
 export interface TableTypePurchaseOrder extends TableHiddenColumns {
