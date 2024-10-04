@@ -21,7 +21,7 @@ export const userSlice = createSlice({
       if (action.payload.dataUser) {
         const { uid, name, email, type, typeID, planID } =
           action.payload.dataUser[0];
-        console.log(action.payload.dataUser);
+        console.log(action.payload);
         state.token = token;
         state.type = type;
         state.name = name;

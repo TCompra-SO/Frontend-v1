@@ -42,13 +42,10 @@ export default function AddUserModal(props: AddUserModalProps) {
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const [form] = Form.useForm();
-  // const [passSuccess, setPassSuccess] = useState(false);
-  // const [roleSuccess, setRoleSuccess] = useState(false);
-  // const [profileSuccess, setProfileSuccess] = useState(false);
-  let passSuccess: boolean = false;
-  let roleSuccess: boolean = false;
-  let profileSuccess: boolean = false;
-  let changePassword: boolean = false;
+  const [passSuccess, setPassSuccess] = useState(false);
+  const [roleSuccess, setRoleSuccess] = useState(false);
+  const [profileSuccess, setProfileSuccess] = useState(false);
+  const [changePassword, setChangePassword] = useState(false);
   const [token] = useState(useSelector((state: MainState) => state.user.token));
   const [validDoc, setValidDoc] = useState(false);
   const uid = useSelector((state: MainState) => state.user.uid);
@@ -95,6 +92,7 @@ export default function AddUserModal(props: AddUserModalProps) {
     service: apiParamsNewPass.service,
     method: apiParamsNewPass.method,
     dataToSend: apiParamsNewPass.dataToSend,
+    token: apiParamsNewPass.token,
   });
 
   const {
@@ -181,6 +179,11 @@ export default function AddUserModal(props: AddUserModalProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataChangeRole, errorChangeRole]);
 
+  useEffect(() => {
+    checkUpdates();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [passSuccess, roleSuccess, profileSuccess]);
+
   function getNameReniecSuccess() {
     form.setFieldValue("fullname", responseData.data);
     setValidDoc(true);
@@ -196,12 +199,13 @@ export default function AddUserModal(props: AddUserModalProps) {
   }
 
   function updateSubUserSuccess(type: number) {
-    if (type == 1) profileSuccess = true;
-    else if (type == 2) roleSuccess = true;
-    else if (type == 3) passSuccess = true;
+    if (type == 1) setProfileSuccess(true);
+    else if (type == 2) setRoleSuccess(true);
+    else if (type == 3) setPassSuccess(true);
+  }
 
+  function checkUpdates() {
     console.log(changePassword, passSuccess);
-
     if (
       ((changePassword && passSuccess) || !changePassword) &&
       roleSuccess &&
@@ -267,10 +271,10 @@ export default function AddUserModal(props: AddUserModalProps) {
       return;
     }
 
-    passSuccess = false;
-    roleSuccess = false;
-    profileSuccess = false;
-    changePassword = false;
+    setPassSuccess(false);
+    setRoleSuccess(false);
+    setProfileSuccess(false);
+    setChangePassword(false);
 
     const password: NewPasswordRequest = {
       email: values.email,
@@ -278,7 +282,7 @@ export default function AddUserModal(props: AddUserModalProps) {
     };
 
     if (values.password1) {
-      changePassword = true;
+      setChangePassword(true);
       setApiParamsNewPass({
         service: newPasswordService(),
         method: "post",

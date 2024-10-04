@@ -350,7 +350,7 @@ export default function Users() {
     switch (action) {
       case Action.EDIT_USER:
         setApiParams({
-          service: getSubUserService("kMHAU9G3GFpDreBIZz67"), // r3v user.uid
+          service: getSubUserService("WpIPS18MYqNWegvx5REP"), // r3v user.uid
           method: "get",
           token,
         });

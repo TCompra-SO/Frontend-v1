@@ -1,5 +1,6 @@
 import {
   loginService,
+  newPasswordService,
   profileCompanyService,
   profileUserService,
   recoverPasswordService,
@@ -153,6 +154,13 @@ export default function httpErrorInterceptor(error: any, type: string): string {
       switch (code) {
         case 409:
           erroMsg = "profileDoesNotExist";
+          break;
+      }
+      break;
+    case newPasswordService().type:
+      switch (code) {
+        case 404:
+          erroMsg = "userNotFound";
           break;
       }
       break;
