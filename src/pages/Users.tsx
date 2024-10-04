@@ -423,7 +423,7 @@ export default function Users() {
           action == Action.VIEW_REQUIREMENTS ||
           action == Action.VIEW_OFFERS ||
           action == Action.VIEW_PURCHASE_ORDERS
-            ? 1000
+            ? 1100
             : 800
         }
         style={mainModalScrollStyle}

@@ -1,7 +1,9 @@
 import { ColumnType } from "antd/es/table";
 import {
+  OfferItemSubUser,
   OfferListItem,
   PurchaseOrder,
+  PurchaseOrderItemSubUser,
   RequirementItemSubUser,
   RequirementTableItem,
 } from "../../../../models/MainInterfaces";
@@ -20,6 +22,8 @@ export default function StateColumn(type: TableTypes, hidden: boolean = false) {
     | OfferListItem
     | PurchaseOrder
     | RequirementItemSubUser
+    | OfferItemSubUser
+    | PurchaseOrderItemSubUser
   > = {
     title: t("stateColumn"),
     key: "state",
@@ -39,11 +43,14 @@ export default function StateColumn(type: TableTypes, hidden: boolean = false) {
         const state = (record as RequirementTableItem).state;
         label = t(RequirementStateMeta[state].label);
         className = `cont-estado ${RequirementStateMeta[state].class}`;
-      } else if (type == TableTypes.OFFER) {
+      } else if (type == TableTypes.OFFER || type == TableTypes.OFFER_SUBUSER) {
         const state = (record as OfferListItem).state;
         label = t(OfferStateMeta[state].label);
         className = `cont-estado ${OfferStateMeta[state].class}`;
-      } else if (type == TableTypes.PURCHASE_ORDER) {
+      } else if (
+        type == TableTypes.PURCHASE_ORDER ||
+        type == TableTypes.PURCHASE_ORDER_SUBUSER
+      ) {
         const state = (record as PurchaseOrder).state;
         label = t(OfferStateMeta[state].label);
         className = `cont-estado ${OfferStateMeta[state].class}`;

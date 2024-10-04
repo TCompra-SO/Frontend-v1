@@ -27,6 +27,7 @@ import GeneralColumnString from "./columns/GeneralColumnString";
 import GeneralColumnNumber from "./columns/GeneralColumnNumber";
 import TypeColumn from "./columns/TypeColumn";
 import ViewColumn from "./columns/ViewColumn";
+import DocumentColumn from "./columns/DocumentColumn";
 
 interface RequirementsTableProps {
   content: TableType;
@@ -44,6 +45,7 @@ export default function GeneralTable(props: RequirementsTableProps) {
     | ColumnType<SubUserProfile | RequirementTableItem>
     | ColumnType<OfferListItem | RequirementTableItem>
     | ColumnType<OfferListItem | PurchaseOrder>
+    | ColumnType<PurchaseOrderItemSubUser | PurchaseOrder>
     | ColumnType<OfferListItem | PurchaseOrder | RequirementTableItem>
     | ColumnType<OfferListItem | RequirementTableItem | SubUserProfile>
     | ColumnType<OfferListItem | PurchaseOrder | SubUserProfile>
@@ -59,6 +61,14 @@ export default function GeneralTable(props: RequirementsTableProps) {
       >
     | ColumnType<
         RequirementItemSubUser | OfferItemSubUser | PurchaseOrderItemSubUser
+      >
+    | ColumnType<
+        | RequirementTableItem
+        | OfferListItem
+        | PurchaseOrder
+        | RequirementItemSubUser
+        | OfferItemSubUser
+        | PurchaseOrderItemSubUser
       >
   > = [];
 
@@ -83,7 +93,7 @@ export default function GeneralTable(props: RequirementsTableProps) {
         props.content.type == TableTypes.REQUIREMENT_SUBUSER ||
         props.content.type == TableTypes.OFFER_SUBUSER ||
         props.content.type == TableTypes.PURCHASE_ORDER_SUBUSER
-          ? 900
+          ? 1000
           : 1000,
     },
     style: { width: "100%" },
@@ -138,6 +148,15 @@ export default function GeneralTable(props: RequirementsTableProps) {
         <Table
           dataSource={props.content.data}
           columns={columns as Array<ColumnType<OfferItemSubUser>>}
+          {...tableProps}
+        ></Table>
+      );
+    case TableTypes.PURCHASE_ORDER_SUBUSER:
+      getPurchaseOrderSubUserColumns();
+      return (
+        <Table
+          dataSource={props.content.data}
+          columns={columns as Array<ColumnType<PurchaseOrderItemSubUser>>}
           {...tableProps}
         ></Table>
       );
@@ -318,6 +337,42 @@ export default function GeneralTable(props: RequirementsTableProps) {
         TableTypes.OFFER_SUBUSER,
         props.content.onButtonClick,
         visibility[TableColumns.VIEW]
+      ),
+    ];
+    return columns;
+  }
+
+  function getPurchaseOrderSubUserColumns() {
+    columns = [
+      GeneralColumnString(
+        t("requirement"),
+        "requirementTitle",
+        true,
+        130,
+        visibility[TableColumns.REQUIREMENT]
+      ),
+      GeneralColumnString(
+        t("offer"),
+        "offerTitle",
+        true,
+        130,
+        visibility[TableColumns.OFFER]
+      ),
+      GeneralDateColumn(
+        t("selectionDateAbbrev"),
+        "selectionDate",
+        visibility[TableColumns.SELECTION_DATE]
+      ),
+      TypeColumn(visibility[TableColumns.TYPE]),
+      GeneralColumnNumber(
+        t("offers"),
+        "numberOffers",
+        visibility[TableColumns.OFFERS]
+      ),
+      StateColumn(TableTypes.OFFER_SUBUSER, visibility[TableColumns.STATE]),
+      DocumentColumn(
+        props.content.onButtonClick,
+        visibility[TableColumns.DOCUMENT]
       ),
     ];
     return columns;
