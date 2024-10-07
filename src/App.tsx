@@ -26,7 +26,7 @@ const Home = lazy(() => import("./pages/Home.tsx"));
 const Search = lazy(() => import("./pages/Search.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
 const Offers = lazy(() => import("./pages/Offers.tsx"));
-const PurchaseOrders = lazy(() => import("./pages/PurchaseOrder.tsx"));
+const PurchaseOrders = lazy(() => import("./pages/PurchaseOrders.tsx"));
 const Users = lazy(() => import("./pages/Users.tsx"));
 const CreateRequirementFloatButton = lazy(
   () =>

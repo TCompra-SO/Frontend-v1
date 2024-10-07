@@ -90,3 +90,12 @@ export function getBaseDataUserService(uid: string): HttpService {
     type: "AU-GE-BD-US",
   };
 }
+
+export function getUserService(uid: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+      ApiRoutes.auth.getUser
+    }${uid}`,
+    type: "AU-GE-US",
+  };
+}

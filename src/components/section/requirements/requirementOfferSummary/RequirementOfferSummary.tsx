@@ -3,7 +3,7 @@ import RequirementOfferListItemBody from "../requirementDetail/RequirementOfferL
 import { useTranslation } from "react-i18next";
 import FrontImage from "../../../common/FrontImage";
 import RequirementInfoNoTags from "../requirementDetail/RequirementInfoNoTags";
-import { DocType, UserTable } from "../../../../utilities/types";
+import { DocType, EntityType } from "../../../../utilities/types";
 
 interface RequirementOfferSummaryProps {
   offer: Offer;
@@ -32,7 +32,7 @@ export default function RequirementOfferSummary(
                 {DocType.RUC}: 23568745214
               </div>
               {/* r3v dni ruc */}
-              {props.offer.user.userTable == UserTable.COMPANY && (
+              {props.offer.user.typeEntity == EntityType.COMPANY && (
                 <div className="badge-grey-border">
                   {t("tenure")}: {props.offer.user.tenure} {t("years")}
                 </div>

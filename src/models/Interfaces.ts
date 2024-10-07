@@ -7,6 +7,7 @@ import {
   TableColumns,
   TableTypes,
   CommonFilter,
+  PurchaseOrderTableTypes,
 } from "../utilities/types";
 import {
   BaseUser,
@@ -17,6 +18,7 @@ import {
   RequirementItemSubUser,
   Requirement,
   User,
+  FullUser,
 } from "./MainInterfaces";
 import { SubUserProfile } from "./Responses";
 
@@ -108,6 +110,13 @@ export interface ModalOfferDetail extends CommonModalType {
   };
 }
 
+export interface ModalUserInfo extends CommonModalType {
+  type: ModalTypes.USER_INFO;
+  data: {
+    user: FullUser;
+  };
+}
+
 export interface ModalNone extends CommonModalType {
   type: ModalTypes.NONE;
   data: Record<string, never>;
@@ -125,6 +134,7 @@ export type ModalContent =
   | ModalConfirmation
   | ModalInputEmail
   | ModalOfferDetail
+  | ModalUserInfo
   | ModalNone;
 
 /********** Tables *************/
@@ -150,8 +160,8 @@ export interface TableTypeOffer extends TableHiddenColumns {
 
 export interface TableTypePurchaseOrder extends TableHiddenColumns {
   type: TableTypes.PURCHASE_ORDER;
+  subType: PurchaseOrderTableTypes;
   data: PurchaseOrder[];
-  // onButtonClick: (action: Action, data: PurchaseOrder) => void;
 }
 
 export interface TableTypeUsers extends TableHiddenColumns {

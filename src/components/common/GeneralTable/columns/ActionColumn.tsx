@@ -8,14 +8,18 @@ import {
   ActionByStateRequirement,
   ActionLabel,
   ActionSubUsers,
+  PurchaseOrderTableTypes,
   TableTypes,
 } from "../../../../utilities/types";
 import { useTranslation } from "react-i18next";
 import { allItems } from "../../../../utilities/globals";
+import { ItemType } from "antd/es/menu/interface";
 
+// extraParam tiene diferentes significados según el tipo de tabla
 export default function ActionColumn(
   type: TableTypes,
   onButtonClick: (action: Action, data: any) => void,
+  extraParam: any = false,
   hidden: boolean = false
 ) {
   const { t } = useTranslation();
@@ -53,13 +57,44 @@ export default function ActionColumn(
         <Dropdown
           trigger={["click"]}
           menu={{
-            items: ActionByState[key].map((action: Action) => {
-              return {
-                key: action,
-                label: t(ActionLabel[action]),
-                onClick: () => onButtonClick(action, record),
-              };
-            }),
+            items:
+              type != TableTypes.PURCHASE_ORDER
+                ? ActionByState[key].map((action: Action) => {
+                    return {
+                      key: action,
+                      label: t(ActionLabel[action]),
+                      onClick: () => onButtonClick(action, record),
+                    };
+                  })
+                : ActionByState[key].reduce<ItemType[]>(
+                    (acc, action: Action) => {
+                      if (
+                        action == Action.VIEW_HISTORY &&
+                        (extraParam == PurchaseOrderTableTypes.RECEIVED ||
+                          extraParam == PurchaseOrderTableTypes.ISSUED_SALES)
+                      )
+                        return acc;
+                      if (
+                        action == Action.VIEW_CUSTOMER &&
+                        (extraParam == PurchaseOrderTableTypes.ISSUED ||
+                          extraParam == PurchaseOrderTableTypes.ISSUED_SALES)
+                      )
+                        return acc;
+                      if (
+                        action == Action.VIEW_SUPPLIER &&
+                        (extraParam == PurchaseOrderTableTypes.RECEIVED ||
+                          extraParam == PurchaseOrderTableTypes.RECEIVED_SALES)
+                      )
+                        return acc;
+                      acc.push({
+                        key: action,
+                        label: t(ActionLabel[action]),
+                        onClick: () => onButtonClick(action, record),
+                      });
+                      return acc;
+                    },
+                    []
+                  ),
           }}
         >
           <div className="t-flex c-ofertas" style={{ padding: "7px 0" }}>

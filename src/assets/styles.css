@@ -1405,6 +1405,12 @@ body {
   padding: 20px;
   overflow: hidden;
 }
+.card-rubros-2 {
+  background: #f3f7fa;
+  flex: 1;
+  padding: 20px;
+  overflow: hidden;
+}
 .i-rubro {
   background: #f3f7fa;
 }

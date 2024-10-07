@@ -5,7 +5,8 @@ import {
   RequirementType,
   TimeMeasurement,
   Usage,
-  UserTable,
+  UserRoles,
+  EntityType,
 } from "../utilities/types";
 
 export interface BaseRequirementOffer {
@@ -68,13 +69,8 @@ export interface PurchaseOrder {
 }
 
 export interface User extends BaseUser {
-  email: string;
-  userType: number;
   document: string;
-  tenure?: number;
-  userTable: UserTable;
-  customerScore: number;
-  sellerScore: number;
+  typeEntity: EntityType;
   address: string;
   phone: string;
 }
@@ -82,7 +78,24 @@ export interface User extends BaseUser {
 export interface BaseUser {
   uid: string;
   name: string;
-  image?: string; // customerScore: number; sellerScore: number;  //  tenure?: number /email: string
+  image?: string;
+  email: string;
+  tenure?: number;
+  customerScore: number;
+  sellerScore: number;
+  customerCount: number;
+  sellerCount: number;
+}
+
+export interface FullUser extends User {
+  categories: number[];
+  typeID: UserRoles;
+  activeAccount: boolean;
+  cityID: number;
+  countryID: number;
+  planID: number;
+  specialty?: string;
+  aboutMe?: string;
 }
 
 export interface RequirementItemSubUser extends BaseRequirementOffer {

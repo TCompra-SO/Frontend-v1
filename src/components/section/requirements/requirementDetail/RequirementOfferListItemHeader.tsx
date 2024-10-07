@@ -7,7 +7,7 @@ import {
   OfferState,
   RequirementState,
   RequirementType,
-  UserTable,
+  EntityType,
 } from "../../../../utilities/types";
 import { useTranslation } from "react-i18next";
 import { getScore } from "../../../../utilities/globalFunctions";
@@ -145,7 +145,7 @@ export default function RequirementOfferListItemHeader({
                 </div>
               )}
               <div className="usuario-badge">
-                {props.offer.user.userTable == UserTable.COMPANY
+                {props.offer.user.typeEntity == EntityType.COMPANY
                   ? t("company")
                   : t("persona")}
               </div>

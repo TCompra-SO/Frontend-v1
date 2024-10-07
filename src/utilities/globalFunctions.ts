@@ -6,13 +6,7 @@ import {
   IdValueObj,
 } from "../models/Interfaces";
 import { defaultCountry, maxDocSizeMb, maxImageSizeMb } from "./globals";
-import {
-  RequirementState,
-  RequirementType,
-  UserClass,
-  UserTable,
-} from "./types";
-import { Requirement } from "../models/MainInterfaces";
+import { RequirementType, UserClass } from "./types";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -98,37 +92,4 @@ export function getLabelFromRequirementType(
 // Retorna el puntaje
 export function getScore(score: number) {
   return score.toFixed(0);
-}
-
-export function transformDataToRequirement(data: any) {
-  const req: Requirement = {
-    description: data.description,
-    category: data.category,
-    location: data.location,
-    publishDate: data.publishDate,
-    expirationDate: data.completion_date,
-    coin: data.coin,
-    price: data.price,
-    numberOffers: data.numberOffers,
-    state: data.state ?? RequirementState.FINISHED,
-    user: {
-      uid: "user1",
-      name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
-      email: "john.doejohn.doejohn.doejohn.doe@example.com",
-      document: "123456789",
-      userTable: UserTable.COMPANY,
-      tenure: 2,
-      customerScore: 3.5,
-      sellerScore: 1.5,
-      address: "Calle San Agustin 107 - Cercado - Arequipa",
-      userType: 0,
-      phone: "90909090",
-    },
-    deliveryTime: data.submission_date,
-    key: data.key,
-    title: data.title,
-    type: RequirementType.GOOD,
-  };
-  console.log(data, req);
-  return req;
 }

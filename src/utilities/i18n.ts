@@ -303,6 +303,7 @@ const resources = {
       myDocuments: "My documents",
       sent: "Sent",
       sentPl: "Sent",
+      loading: "Loading..."
     },
   },
   es: {
@@ -605,6 +606,8 @@ const resources = {
       receivedPl: "Recibidas",
       sent: "Enviado",
       sentPl: "Enviados",
+      loading: "Cargando...",
+
     },
   },
 };

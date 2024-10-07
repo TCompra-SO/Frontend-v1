@@ -12,6 +12,7 @@ import ConfirmationModal from "../common/ConfirmationModal";
 import InputEmailModal from "../common/InputEmailModal";
 import NoContentModalContainer from "./NoContentModalContainer";
 import OfferDetailModal from "../section/offers/offerDetail/OfferDetailModal";
+import UserInfoModal from "../common/userInfoModal";
 
 interface ModalContainerProps extends ModalProps {
   content: ModalContent;
@@ -112,6 +113,10 @@ export default function ModalContainer(props: ModalContainerProps) {
 
       case ModalTypes.OFFER_DETAIL: {
         return <OfferDetailModal offer={props.content.data.offer} />;
+      }
+
+      case ModalTypes.USER_INFO: {
+        return <UserInfoModal user={props.content.data.user} />;
       }
     }
   }

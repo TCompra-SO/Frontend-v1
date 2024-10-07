@@ -61,9 +61,16 @@ export enum TableTypes {
   PURCHASE_ORDER_SUBUSER = 7,
 }
 
-export enum UserTable {
-  COMPANY = 0,
-  PERSON = 1,
+// export enum EntityType {
+//   COMPANY = 0,
+//   PERSON = 1,
+//   SUBUSER = 2,
+// }
+
+export enum EntityType {
+  COMPANY = "Company",
+  PERSON = "User",
+  SUBUSER = "SubUser",
 }
 
 /*** Modales ****/
@@ -81,6 +88,7 @@ export enum ModalTypes {
   CONFIRM = 9,
   INPUT_EMAIL = 10,
   OFFER_DETAIL = 11,
+  USER_INFO = 12,
 }
 
 export const ModalWidth: {
@@ -98,6 +106,7 @@ export const ModalWidth: {
   [ModalTypes.CONFIRM]: mediumPlusModalWidth,
   [ModalTypes.INPUT_EMAIL]: smallModalWidth,
   [ModalTypes.OFFER_DETAIL]: commonModalWidth,
+  [ModalTypes.USER_INFO]: 900,
 };
 
 /***** Acciones *****/
@@ -195,22 +204,26 @@ export const ActionByStatePurchaseOrder: {
     Action.DOWNLOAD_PURCHASE_ORDER,
     Action.FINISH,
     Action.VIEW_SUPPLIER,
+    Action.VIEW_CUSTOMER,
     Action.VIEW_HISTORY,
     Action.CANCEL,
   ],
   [PurchaseOrderState.DISPUTE]: [
     Action.DOWNLOAD_PURCHASE_ORDER,
     Action.VIEW_SUPPLIER,
+    Action.VIEW_CUSTOMER,
     Action.VIEW_HISTORY,
   ],
   [PurchaseOrderState.FINISHED]: [
     Action.DOWNLOAD_PURCHASE_ORDER,
     Action.VIEW_SUPPLIER,
+    Action.VIEW_CUSTOMER,
     Action.VIEW_HISTORY,
   ],
   [PurchaseOrderState.CANCELED]: [
     Action.DOWNLOAD_PURCHASE_ORDER,
     Action.VIEW_SUPPLIER,
+    Action.VIEW_CUSTOMER,
     Action.VIEW_HISTORY,
   ],
   [PurchaseOrderState.ELIMINATED]: [],
@@ -324,4 +337,11 @@ export enum UserRoles {
   SELLER = 3,
   BUYER = 4,
   LEGAL = 5,
+}
+
+export enum PurchaseOrderTableTypes {
+  ISSUED = 0,
+  RECEIVED = 1,
+  ISSUED_SALES = 2,
+  RECEIVED_SALES = 3,
 }
