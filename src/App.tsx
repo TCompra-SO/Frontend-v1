@@ -21,6 +21,7 @@ import MainHeader from "./components/section/header/header/MainHeader.tsx";
 import { ListsProvider } from "./contexts/listsContext.tsx";
 import AuthRoleGuard from "./components/guards/AuthRoleGuard.tsx";
 import { RolesForSection } from "./utilities/roles.ts";
+import { RequirementType } from "./utilities/types.ts";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Search = lazy(() => import("./pages/Search.tsx"));
@@ -113,14 +114,55 @@ function App() {
                         />
                         <Route
                           path={`${pageRoutes.myRequirements}`}
-                          element={
-                            // <AuthRoleGuard
-                            //   allowedRoles={RolesForSection.myRequirements}
-                            // >
-                            <Requirements />
-                            // </AuthRoleGuard>
-                          }
-                        />
+                          // element={
+                          //   // <AuthRoleGuard
+                          //   //   allowedRoles={RolesForSection.myRequirements}
+                          //   // >
+                          //   <Requirements />
+                          //   // </AuthRoleGuard>
+                          // }
+                        >
+                          <Route
+                            path=""
+                            element={
+                              <Navigate
+                                to={`${pageRoutes.myRequirements}/${pageRoutes.goods}`}
+                                replace
+                              />
+                            }
+                          />
+                          <Route
+                            path={`${pageRoutes.goods}`}
+                            element={
+                              // <AuthRoleGuard
+                              //   allowedRoles={RolesForSection.myRequirements}
+                              // >
+                              <Requirements />
+                              // </AuthRoleGuard>
+                            }
+                          />
+                          <Route
+                            path={`${pageRoutes.services}`}
+                            element={
+                              // <AuthRoleGuard
+                              //   allowedRoles={RolesForSection.myRequirements}
+                              // >
+                              <Requirements />
+                              // </AuthRoleGuard>
+                            }
+                          />
+                          <Route
+                            path={`${pageRoutes.sales}`}
+                            element={
+                              // <AuthRoleGuard
+                              //   allowedRoles={RolesForSection.myRequirements}
+                              // >
+                              <Requirements />
+                              // </AuthRoleGuard>
+                            }
+                          />
+                        </Route>
+
                         <Route
                           path={`${pageRoutes.myOffers}`}
                           element={

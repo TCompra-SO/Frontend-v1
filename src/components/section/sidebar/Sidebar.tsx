@@ -83,7 +83,9 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
-                onClick={() => redirectTo(`${pageRoutes.myRequirements}`)}
+                onClick={() =>
+                  redirectTo(`${pageRoutes.myRequirements}/${pageRoutes.goods}`)
+                }
               >
                 <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
                 {t("goods")}
@@ -91,6 +93,11 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
+                onClick={() =>
+                  redirectTo(
+                    `${pageRoutes.myRequirements}/${pageRoutes.services}`
+                  )
+                }
               >
                 <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
                 {t("services")}
@@ -98,6 +105,9 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
+                onClick={() =>
+                  redirectTo(`${pageRoutes.myRequirements}/${pageRoutes.sales}`)
+                }
               >
                 <i className="fa-regular fa-basket-shopping text-center i-btn"></i>{" "}
                 {t("sales")}

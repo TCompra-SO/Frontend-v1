@@ -1,7 +1,7 @@
 import { FullUser, Requirement } from "../models/MainInterfaces";
-import { EntityType, RequirementState, RequirementType } from "./types";
+import { EntityType, RequirementType, Usage } from "./types";
 
-export function transformDataToRequirement(data: any) {
+export function transformDataToRequirement(data: any, type: RequirementType) {
   const req: Requirement = {
     description: data.description,
     category: data.category,
@@ -11,7 +11,7 @@ export function transformDataToRequirement(data: any) {
     coin: data.coin,
     price: data.price,
     numberOffers: data.numberOffers,
-    state: data.state ?? RequirementState.FINISHED,
+    state: data.state,
     user: {
       uid: "user1",
       name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
@@ -30,9 +30,13 @@ export function transformDataToRequirement(data: any) {
     deliveryTime: data.submission_date,
     key: data.key,
     title: data.title,
-    type: RequirementType.GOOD,
+    type: type,
+    image: data.image,
+    document: data.document,
+    warranty: data.warranty,
+    warrantyTime: data.duration,
+    used: data.used ? Usage.USED : Usage.NEW,
   };
-  console.log(data, req);
   return req;
 }
 

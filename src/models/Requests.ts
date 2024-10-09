@@ -94,5 +94,5 @@ export interface CreateRequirementRequest {
   duration?: number;
   allowed_bidersID: number;
   userID: string;
-  usage?: number;
+  used?: boolean;
 }

@@ -7,6 +7,7 @@ import {
 } from "../models/Interfaces";
 import { defaultCountry, maxDocSizeMb, maxImageSizeMb } from "./globals";
 import { RequirementType, UserClass } from "./types";
+import { pageRoutes } from "./routes";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -101,4 +102,19 @@ export function openDocument(documentUrl: string) {
     "_blank",
     "width=800,height=600,top=100,left=100,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes"
   );
+}
+
+export function getRouteType(pathname: string) {
+  const pathSegments = pathname.split("/");
+  const lastSegment = pathSegments[pathSegments.length - 1];
+  switch (lastSegment) {
+    case pageRoutes.goods:
+      return RequirementType.GOOD;
+    case pageRoutes.services:
+      return RequirementType.SERVICE;
+    case pageRoutes.sales:
+      return RequirementType.SALE;
+    default:
+      return RequirementType.GOOD;
+  }
 }

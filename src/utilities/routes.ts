@@ -67,4 +67,7 @@ export const pageRoutes = {
   certificates: "/certificados",
   allPurchaseOrders: "/all-ordenes-de-compra",
   statistics: "/statistics",
+  goods: "bienes",
+  services: "servicios",
+  sales: "liquidaciones",
 };

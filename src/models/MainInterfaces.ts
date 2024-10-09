@@ -35,7 +35,7 @@ export interface Requirement extends BasicRequirement {
   document?: string[];
   warranty?: number;
   warrantyTime?: TimeMeasurement;
-  usage?: Usage;
+  used?: Usage;
   deliveryTime: number;
 }
 

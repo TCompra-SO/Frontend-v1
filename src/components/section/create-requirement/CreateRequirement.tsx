@@ -17,7 +17,7 @@ import DocumentsCertifCR from "./create-requirement-items/DocumentsCertifCR";
 import AddImagesRC from "./create-requirement-items/AddImagesRC";
 import AddDocument from "./create-requirement-items/AddDocument";
 import ButtonContainer from "../../containers/ButtonContainer";
-import { RequirementType } from "../../../utilities/types";
+import { RequirementType, Usage } from "../../../utilities/types";
 import { useEffect, useState } from "react";
 import ItemCondition from "./create-requirement-items/ItemCondition";
 import { certifiedCompaniesOpt } from "../../../utilities/globals";
@@ -107,10 +107,17 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       completion_date: dayjs(values.expirationDate).toISOString(),
       submission_dateID: values.deliveryTime,
       allowed_bidersID: values.canOffer,
-      warranty: values.warranty,
-      duration: values.duration,
       userID: uid,
     };
+
+    if (type == RequirementType.GOOD || type == RequirementType.SERVICE) {
+      data.warranty = values.warranty;
+      data.duration = values.duration;
+    }
+
+    if (type == RequirementType.SALE)
+      data.used = values.itemCondition == Usage.USED;
+
     console.log(values, data);
     setApiParams({
       service: createRequirementService(),
