@@ -6,6 +6,9 @@ export const ApiMainRoutes = {
 };
 
 export const ApiRoutes = {
+  root: {
+    getName: "getName/",
+  },
   auth: {
     login: "login/",
     profileCompany: "profileCompany/",
@@ -35,9 +38,7 @@ export const ApiRoutes = {
       },
     },
   },
-  root: {
-    getName: "getName/",
-  },
+
   subUser: {
     root: "",
     register: "register/",
@@ -48,6 +49,7 @@ export const ApiRoutes = {
   },
   requirements: {
     getRequeriments: "getRequeriments/",
+    create: "create/",
   },
 };
 

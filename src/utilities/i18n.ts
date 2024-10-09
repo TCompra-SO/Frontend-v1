@@ -204,6 +204,8 @@ const resources = {
       subUserNotFoundInAnyCompany: "Subuser not found in any company",
       profileDoesNotExist: "Perfil doesn't exist",
       userUpdatedSuccessfully: "User updated successfully",
+      createRequirementSuccess: "Requirement created successfully",
+      createSaleSuccess: "Sale created successfully",
       // Other
       yes: "Yes",
       no: "No",
@@ -506,6 +508,8 @@ const resources = {
       subUserNotFoundInAnyCompany: "Subusuario no encontrado en ninguna empresa",
       profileDoesNotExist: "Perfil no existe",
       userUpdatedSuccessfully: "Usuario actualizado exitosamente",
+      createRequirementSuccess: "Requerimiento creado exitosamente",
+      createSaleSuccess: "Liquidación creada exitosamente",
       // Other
       yes: "Sí",
       no: "No",

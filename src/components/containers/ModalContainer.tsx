@@ -12,7 +12,7 @@ import ConfirmationModal from "../common/ConfirmationModal";
 import InputEmailModal from "../common/InputEmailModal";
 import NoContentModalContainer from "./NoContentModalContainer";
 import OfferDetailModal from "../section/offers/offerDetail/OfferDetailModal";
-import UserInfoModal from "../common/userInfoModal";
+import UserInfoModal from "../common/UserInfoModal";
 
 interface ModalContainerProps extends ModalProps {
   content: ModalContent;
@@ -31,6 +31,8 @@ export default function ModalContainer(props: ModalContainerProps) {
           <RequirementDetail
             offerList={props.content.data.offerList}
             requirement={props.content.data.requirement}
+            forPurchaseOrder={props.content.data.forPurchaseOrder}
+            filters={props.content.data.filters}
             onClose={props.onClose}
           />
         );
@@ -70,7 +72,7 @@ export default function ModalContainer(props: ModalContainerProps) {
           <RatingCanceledModal
             user={props.content.data.user}
             subUser={props.content.data.subUser}
-            requirementOffertitle={props.content.data.requirementOffertitle}
+            requirementOfferTitle={props.content.data.requirementOfferTitle}
             type={props.content.data.type}
             isOffer={props.content.data.isOffer}
             onClose={props.onClose}
@@ -83,7 +85,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             onClose={props.onClose}
             user={props.content.data.user}
             subUser={props.content.data.subUser}
-            requirementOffertitle={props.content.data.requirementOffertitle}
+            requirementOfferTitle={props.content.data.requirementOfferTitle}
             type={props.content.data.type}
             isOffer={props.content.data.isOffer}
           />

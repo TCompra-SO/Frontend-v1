@@ -93,3 +93,12 @@ export function getLabelFromRequirementType(
 export function getScore(score: number) {
   return score.toFixed(0);
 }
+
+// Abre documento en una nueva ventana
+export function openDocument(documentUrl: string) {
+  window.open(
+    documentUrl,
+    "_blank",
+    "width=800,height=600,top=100,left=100,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes"
+  );
+}

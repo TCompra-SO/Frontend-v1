@@ -9,3 +9,12 @@ export function getRequirementsService(): HttpService {
     type: "RE-REG",
   };
 }
+
+export function createRequirementService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.requirements
+    }${ApiRoutes.requirements.create}`,
+    type: "RE-CRE",
+  };
+}

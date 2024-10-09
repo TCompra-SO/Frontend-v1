@@ -8,6 +8,7 @@ import {
   UserRoles,
   EntityType,
 } from "../utilities/types";
+import { OfferFilters } from "./Interfaces";
 
 export interface BaseRequirementOffer {
   key: string;
@@ -15,27 +16,32 @@ export interface BaseRequirementOffer {
   type: RequirementType;
 }
 
-export interface Requirement extends BaseRequirementOffer {
-  description: string;
+export interface BasicRequirement extends BaseRequirementOffer {
+  user: User;
+  subUser?: User;
+  publishDate: string;
   category: number;
   location: number;
-  publishDate: string;
-  expirationDate: string;
   coin: number;
   price: number;
   numberOffers: number;
   state: RequirementState;
+}
+
+export interface Requirement extends BasicRequirement {
+  description: string;
+  expirationDate: string;
   image?: string[];
   document?: string[];
-  user: User;
-  subUser?: User;
   warranty?: number;
   warrantyTime?: TimeMeasurement;
   usage?: Usage;
   deliveryTime: number;
 }
 
-export interface Offer extends BaseRequirementOffer {
+export interface BasicOffer extends BaseRequirementOffer {}
+
+export interface Offer extends BasicOffer {
   requirementTitle: string;
   requirementId: string;
   description?: string;
@@ -58,14 +64,19 @@ export interface Offer extends BaseRequirementOffer {
   delivered?: boolean;
 }
 
-export interface PurchaseOrder {
+export interface BasicPurchaseOrder {}
+
+export interface PurchaseOrder extends BasicPurchaseOrder {
   key: string;
   requirementTitle: string;
+  requirementId: string;
+  offerId: string;
   selectionDate: string;
   state: PurchaseOrderState;
   user: User;
   subUser?: User;
   type: RequirementType;
+  filters?: OfferFilters;
 }
 
 export interface User extends BaseUser {

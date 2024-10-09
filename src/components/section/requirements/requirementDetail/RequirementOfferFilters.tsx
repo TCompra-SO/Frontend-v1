@@ -17,6 +17,8 @@ import { filterLabels } from "../../../../utilities/colors";
 
 interface RequirementOfferFiltersProps {
   onFilterChange: (filterType: OfferFilterTypes, value: any) => void;
+  fromPurchaseOrder: boolean;
+  filters?: OfferFilters;
 }
 
 export default function RequirementOfferFilters(
@@ -37,12 +39,15 @@ export default function RequirementOfferFilters(
         ),
       }))
   );
-  const [initialValues] = useState({
-    price: allSelect,
-    location: allSelect,
-    deliveryTime: allSelect,
-    warranty: allSelect,
-  });
+  console.log(props.filters);
+  const [initialValues] = useState<OfferFilters>(
+    props.filters ?? {
+      price: allSelect,
+      location: allSelect,
+      deliveryTime: allSelect,
+      warranty: allSelect,
+    }
+  );
 
   const showCountry = countryData[defaultCountry]
     ? defaultCountry
@@ -112,6 +117,7 @@ export default function RequirementOfferFilters(
                       options={commonList}
                       style={{ marginTop: "5px" }}
                       className="form-control"
+                      disabled={props.fromPurchaseOrder}
                     />
                   </Form.Item>
                 </Flex>
@@ -122,12 +128,7 @@ export default function RequirementOfferFilters(
                   <b style={{ color: "#92acbf" }}>{t("locationColumn")}</b>
                   <Form.Item name="location" style={{ width: "100%" }}>
                     <SelectContainer
-                      // options={[
-                      //   { value: allSelect, label: t("all") },
-                      //   { value: "2", label: "Ascendente Ascendente" },
-                      // ]}
-                      // style={{ marginTop: "5px" }}
-
+                      disabled={props.fromPurchaseOrder}
                       options={[{ label: t("all"), value: allSelect }].concat(
                         Object.keys(countryData).length > 0
                           ? countryData[showCountry].cities.map(
@@ -149,6 +150,7 @@ export default function RequirementOfferFilters(
                   <b style={{ color: "#92acbf" }}>{t("delivery")}</b>
                   <Form.Item name="deliveryTime" style={{ width: "100%" }}>
                     <SelectContainer
+                      disabled={props.fromPurchaseOrder}
                       options={[{ label: t("all"), value: allSelect }].concat(
                         getListForSelectIdValueMap(deliveryTimeData)
                       )}
@@ -164,6 +166,7 @@ export default function RequirementOfferFilters(
                   <b style={{ color: "#92acbf" }}>{t("warranty")}</b>
                   <Form.Item name="warranty" style={{ width: "100%" }}>
                     <SelectContainer
+                      disabled={props.fromPurchaseOrder}
                       options={commonList}
                       style={{ marginTop: "5px" }}
                       className="form-control"

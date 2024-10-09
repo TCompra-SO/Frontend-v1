@@ -5,12 +5,11 @@ import {
   maxImageSizeMb,
   phoneCode,
 } from "../utilities/globals";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { useContext, useEffect, useState } from "react";
 import showNotification from "../utilities/notification/showNotification";
 import { IdValueObj, useApiParams } from "../models/Interfaces";
-import { setIsLoading } from "../redux/loadingSlice";
 import ButtonContainer from "../components/containers/ButtonContainer";
 import InputContainer from "../components/containers/InputContainer";
 import SelectContainer from "../components/containers/SelectContainer";
@@ -44,7 +43,6 @@ interface ProfileProps {
 }
 
 export default function Profile(props: ProfileProps) {
-  const dispatch = useDispatch();
   const context = useContext(ListsContext);
   const { countryList, countryData, categoryData } = context;
   const { t } = useTranslation();
@@ -70,15 +68,6 @@ export default function Profile(props: ProfileProps) {
   const { phoneRules } = usePhoneRules(true);
   const { specialtyRules } = useSpecialtyRules(true);
   const { aboutMeRules } = useAboutMeRules(false);
-
-  useEffect(() => {
-    if (
-      equalServices(apiParams.service, profileUserService()) ||
-      equalServices(apiParams.service, profileCompanyService())
-    )
-      dispatch(setIsLoading(loading));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
@@ -461,6 +450,7 @@ export default function Profile(props: ProfileProps) {
               <Form.Item style={{}} wrapperCol={{ span: "24" }}>
                 {!profileSuccess && (
                   <ButtonContainer
+                    loading={loading}
                     htmlType="submit"
                     children={t("saveButton")}
                     className="btn btn-default wd-100"

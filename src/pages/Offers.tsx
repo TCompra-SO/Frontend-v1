@@ -448,7 +448,7 @@ export default function Offers() {
           data: {
             user: offer.user,
             subUser: offer.subUser,
-            requirementOffertitle: offer.requirementTitle,
+            requirementOfferTitle: offer.requirementTitle,
             type: offer.type,
             isOffer: false,
           },
@@ -479,7 +479,7 @@ export default function Offers() {
             subUser: offer.subUser,
             type: offer.type,
             isOffer: false,
-            requirementOffertitle: offer.requirementTitle,
+            requirementOfferTitle: offer.requirementTitle,
           },
         });
         setIsOpenModal(true);

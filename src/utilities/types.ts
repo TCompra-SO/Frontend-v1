@@ -59,6 +59,9 @@ export enum TableTypes {
   REQUIREMENT_SUBUSER = 5,
   OFFER_SUBUSER = 6,
   PURCHASE_ORDER_SUBUSER = 7,
+  ALL_REQUIREMENTS = 8,
+  ALL_OFFERS = 9,
+  ALL_PURCHASE_ORDERS = 10,
 }
 
 // export enum EntityType {

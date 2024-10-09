@@ -20,7 +20,7 @@ import SubUserName from "./SubUserName";
 interface RatingCanceledModalProps {
   user: BaseUser;
   subUser: BaseUser | undefined;
-  requirementOffertitle: string;
+  requirementOfferTitle: string;
   type: RequirementType;
   isOffer: boolean;
   onClose: (e: React.SyntheticEvent<Element, Event>) => any;
@@ -70,9 +70,9 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
                   <SubUserName small subUser={props.subUser} />
                 </div>
                 <div className="t-flex oferta-descripcion">
-                  <Tooltip title={props.requirementOffertitle}>
+                  <Tooltip title={props.requirementOfferTitle}>
                     <div className="text-truncate detalles-oferta">
-                      {props.requirementOffertitle}
+                      {props.requirementOfferTitle}
                     </div>
                   </Tooltip>
                 </div>
@@ -118,7 +118,7 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
           : props.type == RequirementType.SALE
           ? `${t("sale").toUpperCase()}: `
           : `${t("requirement").toUpperCase()}: `}
-        {props.requirementOffertitle}
+        {props.requirementOfferTitle}
       </Flex> */}
     </div>
   );

@@ -16,7 +16,7 @@ import SubUserName from "./SubUserName";
 interface RatingModalProps {
   user: BaseUser;
   subUser: BaseUser | undefined;
-  requirementOffertitle: string;
+  requirementOfferTitle: string;
   type: RequirementType;
   isOffer: boolean;
   onClose: (e: React.SyntheticEvent<Element, Event>) => any;
@@ -135,9 +135,9 @@ export default function RatingModal(props: RatingModalProps) {
                   <SubUserName small subUser={props.subUser} />
                 </div>
                 <div className="t-flex oferta-descripcion">
-                  <Tooltip title={props.requirementOffertitle}>
+                  <Tooltip title={props.requirementOfferTitle}>
                     <div className="text-truncate detalles-oferta">
-                      {props.requirementOffertitle}
+                      {props.requirementOfferTitle}
                     </div>
                   </Tooltip>
                 </div>

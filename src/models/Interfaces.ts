@@ -19,6 +19,9 @@ import {
   Requirement,
   User,
   FullUser,
+  BasicRequirement,
+  BasicOffer,
+  BasicPurchaseOrder,
 } from "./MainInterfaces";
 import { SubUserProfile } from "./Responses";
 
@@ -40,7 +43,12 @@ export interface ModalCancelPurchaseOrder extends CommonModalType {
 
 export interface ModalDetailedRequirement extends CommonModalType {
   type: ModalTypes.DETAILED_REQUIREMENT;
-  data: { offerList: Offer[]; requirement: Requirement };
+  data: {
+    offerList: Offer[];
+    requirement: Requirement;
+    forPurchaseOrder: boolean;
+    filters?: OfferFilters;
+  };
 }
 
 export interface ModalOfferSummary extends CommonModalType {
@@ -53,7 +61,7 @@ export interface ModalRateCanceled extends CommonModalType {
   data: {
     user: BaseUser;
     subUser: BaseUser | undefined;
-    requirementOffertitle: string;
+    requirementOfferTitle: string;
     type: RequirementType;
     isOffer: boolean;
   };
@@ -64,7 +72,7 @@ export interface ModalRateUser extends CommonModalType {
   data: {
     user: User;
     subUser: BaseUser | undefined;
-    requirementOffertitle: string;
+    requirementOfferTitle: string;
     type: RequirementType;
     isOffer: boolean;
   };
@@ -182,6 +190,23 @@ export interface TableTypeOfferSubUser extends TableHiddenColumns {
 export interface TableTypePurchaseOrderSubUser extends TableHiddenColumns {
   type: TableTypes.PURCHASE_ORDER_SUBUSER;
   data: PurchaseOrderItemSubUser[];
+}
+
+export interface TableTypeAllRequirements extends TableHiddenColumns {
+  type: TableTypes.ALL_REQUIREMENTS;
+  subType: RequirementType;
+  data: BasicRequirement[];
+}
+
+export interface TableTypeAllOffers extends TableHiddenColumns {
+  type: TableTypes.ALL_OFFERS;
+  data: BasicOffer[];
+}
+
+export interface TableTypeAllPurchaseOrders extends TableHiddenColumns {
+  type: TableTypes.ALL_PURCHASE_ORDERS;
+  subType: PurchaseOrderTableTypes;
+  data: BasicPurchaseOrder[];
 }
 
 export type TableType =

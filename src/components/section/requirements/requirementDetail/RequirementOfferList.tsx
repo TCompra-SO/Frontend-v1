@@ -5,6 +5,7 @@ import RequirementOfferListItemBody from "./RequirementOfferListItemBody";
 interface RequirementOfferListProps {
   offers: Offer[];
   requirement: Requirement;
+  forPurchaseOrder: boolean;
 }
 
 export default function RequirementOfferList(props: RequirementOfferListProps) {
@@ -16,7 +17,7 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
             <RequirementOfferListItemHeader
               offer={offer}
               showStateAndActions={{
-                show: true,
+                show: !props.forPurchaseOrder,
                 requirement: props.requirement,
               }}
             />

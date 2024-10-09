@@ -79,3 +79,20 @@ export interface NewPasswordRequest {
   email: string;
   password: string;
 }
+
+export interface CreateRequirementRequest {
+  name: string;
+  description: string;
+  categoryID: number;
+  cityID: number;
+  budget: number;
+  currencyID: number;
+  payment_methodID: number;
+  completion_date: string;
+  submission_dateID: number;
+  warranty?: number;
+  duration?: number;
+  allowed_bidersID: number;
+  userID: string;
+  usage?: number;
+}

@@ -1082,7 +1082,11 @@ export default function Requirements() {
       case Action.SHOW_OFFERS: {
         setDataModal({
           type: ModalTypes.DETAILED_REQUIREMENT,
-          data: { offerList, requirement: requirement },
+          data: {
+            offerList,
+            requirement: requirement,
+            forPurchaseOrder: false,
+          }, //r3v
         });
         setIsOpenModal(true);
 
@@ -1113,7 +1117,7 @@ export default function Requirements() {
             user: requirement.user,
             type: requirement.type,
             isOffer: true,
-            requirementOffertitle: requirement.title, // r3v obtener datos title user subuser de oferta ganadora
+            requirementOfferTitle: requirement.title, // r3v obtener datos title user subuser de oferta ganadora
             subUser: requirement.subUser,
           },
         });
@@ -1142,7 +1146,7 @@ export default function Requirements() {
             type: ModalTypes.CANCEL_PURCHASE_ORDER,
             data: {
               offerId: "",
-              requirementId: "",
+              requirementId: requirement.key,
               fromRequirementTable: true,
             },
           });
