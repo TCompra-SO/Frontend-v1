@@ -7,11 +7,11 @@ export async function transformDataToRequirement(
   data: any,
   type: RequirementType
 ) {
-  // const user = await makeRequest({
-  //   service: getBaseDataUserService("kMHAU9G3GFpDreBIZz67"),
-  //   method: "get",
-  // });
-  // console.log(user);
+  const user = await makeRequest({
+    service: getBaseDataUserService("kMHAU9G3GFpDreBIZz67"),
+    method: "get",
+  });
+  console.log(user);
   const req: Requirement = data;
   req.deliveryTime = data.submission_date;
   req.type = type;
