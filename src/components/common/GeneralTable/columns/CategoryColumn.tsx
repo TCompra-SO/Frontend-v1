@@ -1,34 +1,39 @@
 import { ColumnType } from "antd/es/table";
-import { Requirement } from "../../../../models/MainInterfaces";
+import {
+  BasicRequirement,
+  Requirement,
+} from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
 import { TableTypes } from "../../../../utilities/types";
+import { useContext } from "react";
+import { ListsContext } from "../../../../contexts/listsContext";
 
 export default function CategoryColumn(
   type: TableTypes,
   hidden: boolean = false
 ) {
   const { t } = useTranslation();
+  const context = useContext(ListsContext);
+  const { categoryData } = context;
 
-  const col: ColumnType<Requirement> = {
+  const col: ColumnType<Requirement | BasicRequirement> = {
     title: t("categoryColumn"),
     dataIndex: "category",
     key: "category",
     align: "center",
-    sorter:
-      type == TableTypes.REQUIREMENT
-        ? (a, b) => a.title.localeCompare(b.title)
-        : undefined,
+    sorter: (a, b) =>
+      categoryData[a.category]?.value.localeCompare(
+        categoryData[b.category]?.value
+      ),
     showSorterTooltip: false,
     width: "120px",
     hidden,
     render: (_, record) => {
-      if (type == TableTypes.REQUIREMENT)
-        return (
-          <div style={{ textAlign: "left" }}>
-            {(record as Requirement).category}
-          </div>
-        );
-      else return null;
+      return (
+        <div style={{ textAlign: "left" }}>
+          {categoryData[record.category]?.value ?? null}
+        </div>
+      );
     },
   };
   return col;

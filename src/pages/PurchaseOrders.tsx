@@ -75,6 +75,7 @@ const purchaseOrderList: PurchaseOrder[] = [
     },
     requirementId: "reqid",
     offerId: "offerid",
+    offerTitle: "",
   },
   {
     requirementTitle:
@@ -105,6 +106,7 @@ const purchaseOrderList: PurchaseOrder[] = [
     },
     requirementId: "req2id",
     offerId: "offer2id",
+    offerTitle: "",
   },
 ];
 
@@ -431,7 +433,7 @@ const offerList: Offer[] = [
       name: "SnapLens Co.",
       email: "info@snaplens.example.com",
       document: "098765432",
-      typeEntity: 0,
+      typeEntity: EntityType.COMPANY,
       customerScore: 0,
       sellerScore: 0,
       address: "Calle San Agustin 107 - Cercado - Arequipa",
@@ -462,7 +464,7 @@ const offerList: Offer[] = [
       name: "SnapLens Co.",
       email: "info@snaplens.example.com",
       document: "098765432",
-      typeEntity: 0,
+      typeEntity: EntityType.COMPANY,
       customerScore: 0,
       sellerScore: 0,
       address: "Calle San Agustin 107 - Cercado - Arequipa",
@@ -540,7 +542,7 @@ export default function PurchaseOrders() {
     data: purchaseOrderList,
     subType: tableSubType,
     hiddenColumns: [],
-    nameColumnHeader: t("offers"),
+    nameColumnHeader: t("user"),
     onButtonClick: handleOnButtonClick,
   });
   const [apiParams, setApiParams] = useState<useApiParams>({

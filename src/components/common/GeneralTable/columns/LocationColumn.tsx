@@ -1,5 +1,5 @@
 import { ColumnType } from "antd/es/table";
-import { Offer, Requirement } from "../../../../models/MainInterfaces";
+import { BasicRequirement } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
 import { useContext, useEffect, useState } from "react";
 import { ListsContext } from "../../../../contexts/listsContext";
@@ -25,13 +25,13 @@ export default function LocationColumn(hidden: boolean = false) {
     }
   }, [countryData]);
 
-  const col: ColumnType<Requirement | Offer> = {
+  const col: ColumnType<BasicRequirement> = {
     title: t("locationColumn"),
     dataIndex: "location",
     key: "location",
     align: "center",
     sorter: (a, b) =>
-      cities[a.location].value.localeCompare(cities[b.location].value),
+      cities[a.location]?.value.localeCompare(cities[b.location]?.value),
     showSorterTooltip: false,
     width: "130px",
     hidden,

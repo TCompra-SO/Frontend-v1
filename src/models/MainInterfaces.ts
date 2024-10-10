@@ -10,10 +10,13 @@ import {
 } from "../utilities/types";
 import { OfferFilters } from "./Interfaces";
 
-export interface BaseRequirementOffer {
+export interface BaseInterface {
   key: string;
-  title: string;
   type: RequirementType;
+}
+
+export interface BaseRequirementOffer extends BaseInterface {
+  title: string;
 }
 
 export interface BasicRequirement extends BaseRequirementOffer {
@@ -39,43 +42,43 @@ export interface Requirement extends BasicRequirement {
   deliveryTime: number;
 }
 
-export interface BasicOffer extends BaseRequirementOffer {}
-
-export interface Offer extends BasicOffer {
+export interface BasicOffer extends BaseRequirementOffer {
+  user: User;
+  subUser?: User;
   requirementTitle: string;
   requirementId: string;
-  description?: string;
+  publishDate: string;
   coin: number;
   price: number;
+  state: OfferState;
+}
+
+export interface Offer extends BasicOffer {
+  description?: string;
   warranty: number;
   warrantyTime: TimeMeasurement;
   deliveryTime: number;
-  user: User;
   location: number;
   image?: string[];
   document?: string[];
-  subUser?: User;
   selectionDate?: string;
-  publishDate: string;
-  state: OfferState;
-  type: RequirementType;
   igv?: boolean;
   deliveryDate?: string;
   delivered?: boolean;
 }
 
-export interface BasicPurchaseOrder {}
-
-export interface PurchaseOrder extends BasicPurchaseOrder {
-  key: string;
-  requirementTitle: string;
-  requirementId: string;
-  offerId: string;
-  selectionDate: string;
-  state: PurchaseOrderState;
+export interface BasicPurchaseOrder extends BaseInterface {
   user: User;
   subUser?: User;
-  type: RequirementType;
+  requirementTitle: string;
+  requirementId: string;
+  selectionDate: string;
+  state: PurchaseOrderState;
+  offerTitle: string;
+  offerId: string;
+}
+
+export interface PurchaseOrder extends BasicPurchaseOrder {
   filters?: OfferFilters;
 }
 
@@ -126,9 +129,7 @@ export interface OfferItemSubUser extends BaseRequirementOffer {
   coin: number;
 }
 
-export interface PurchaseOrderItemSubUser {
-  key: string;
-  type: RequirementType;
+export interface PurchaseOrderItemSubUser extends BaseInterface {
   requirementTitle: string;
   offerTitle: string;
   selectionDate: string;

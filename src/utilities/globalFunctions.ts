@@ -118,3 +118,8 @@ export function getRouteType(pathname: string) {
       return RequirementType.GOOD;
   }
 }
+
+// Retorna valor anidado para columna de tabla
+export function getNestedValue(dataIndex: string, record: any) {
+  return dataIndex.split(".").reduce((acc, key) => acc && acc[key], record);
+}

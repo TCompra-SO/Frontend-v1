@@ -6,6 +6,9 @@ import {
   PurchaseOrderItemSubUser,
   RequirementItemSubUser,
   Requirement,
+  BasicRequirement,
+  BasicOffer,
+  BasicPurchaseOrder,
 } from "../../../../models/MainInterfaces";
 import {
   OfferStateMeta,
@@ -24,6 +27,9 @@ export default function StateColumn(type: TableTypes, hidden: boolean = false) {
     | RequirementItemSubUser
     | OfferItemSubUser
     | PurchaseOrderItemSubUser
+    | BasicRequirement
+    | BasicOffer
+    | BasicPurchaseOrder
   > = {
     title: t("stateColumn"),
     key: "state",
@@ -38,20 +44,26 @@ export default function StateColumn(type: TableTypes, hidden: boolean = false) {
 
       if (
         type == TableTypes.REQUIREMENT ||
-        type == TableTypes.REQUIREMENT_SUBUSER
+        type == TableTypes.REQUIREMENT_SUBUSER ||
+        type == TableTypes.ALL_REQUIREMENTS
       ) {
-        const state = (record as Requirement).state;
+        const state = (record as BasicRequirement).state;
         label = t(RequirementStateMeta[state].label);
         className = `cont-estado ${RequirementStateMeta[state].class}`;
-      } else if (type == TableTypes.OFFER || type == TableTypes.OFFER_SUBUSER) {
-        const state = (record as Offer).state;
+      } else if (
+        type == TableTypes.OFFER ||
+        type == TableTypes.OFFER_SUBUSER ||
+        type == TableTypes.ALL_OFFERS
+      ) {
+        const state = (record as BasicOffer).state;
         label = t(OfferStateMeta[state].label);
         className = `cont-estado ${OfferStateMeta[state].class}`;
       } else if (
         type == TableTypes.PURCHASE_ORDER ||
-        type == TableTypes.PURCHASE_ORDER_SUBUSER
+        type == TableTypes.PURCHASE_ORDER_SUBUSER ||
+        type == TableTypes.ALL_PURCHASE_ORDERS
       ) {
-        const state = (record as PurchaseOrder).state;
+        const state = (record as BasicPurchaseOrder).state;
         label = t(OfferStateMeta[state].label);
         className = `cont-estado ${OfferStateMeta[state].class}`;
       }

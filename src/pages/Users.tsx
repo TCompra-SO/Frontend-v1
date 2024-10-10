@@ -50,6 +50,10 @@ const users: SubUserProfile[] = [
     numSales: 5,
     numOffers: 0,
     numPurchaseOrders: 0,
+    customerScore: 0,
+    sellerScore: 0,
+    customerCount: 0,
+    sellerCount: 0,
   },
   {
     uid: "user2",
@@ -71,6 +75,10 @@ const users: SubUserProfile[] = [
     numSales: 235,
     numOffers: 0,
     numPurchaseOrders: 0,
+    customerScore: 0,
+    sellerScore: 0,
+    customerCount: 0,
+    sellerCount: 0,
   },
   {
     uid: "user3",
@@ -92,6 +100,10 @@ const users: SubUserProfile[] = [
     numSales: 8,
     numOffers: 0,
     numPurchaseOrders: 0,
+    customerScore: 0,
+    sellerScore: 0,
+    customerCount: 0,
+    sellerCount: 0,
   },
   {
     uid: "user4",
@@ -113,6 +125,10 @@ const users: SubUserProfile[] = [
     numSales: 84,
     numOffers: 0,
     numPurchaseOrders: 0,
+    customerScore: 0,
+    sellerScore: 0,
+    customerCount: 0,
+    sellerCount: 0,
   },
 ];
 

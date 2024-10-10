@@ -35,10 +35,12 @@ export default function ActionColumn(
       let ActionByState: { [key: number]: Action[] } = {};
       let key: number = 0;
       switch (type) {
+        case TableTypes.ALL_REQUIREMENTS:
         case TableTypes.REQUIREMENT:
           ActionByState = ActionByStateRequirement;
           key = record.state;
           break;
+        case TableTypes.ALL_OFFERS:
         case TableTypes.OFFER:
           ActionByState = ActionByStateOffer; // r3v determinar si se debe mostrar calificar en oferta cancelada
           key = record.state;
@@ -47,6 +49,7 @@ export default function ActionColumn(
           ActionByState = ActionSubUsers;
           key = allItems;
           break;
+        case TableTypes.ALL_PURCHASE_ORDERS:
         case TableTypes.PURCHASE_ORDER:
           ActionByState = ActionByStatePurchaseOrder;
           key = record.state;

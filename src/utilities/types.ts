@@ -139,6 +139,9 @@ export enum Action {
   CANCEL = 22,
   OFFER_DETAIL = 23,
   ADD_USER = 24,
+  VIEW_REQUIREMENT = 25,
+  VIEW_OFFER = 26,
+  VIEW_PURCHASE_ORDER = 27,
 }
 
 export const ActionLabel: {
@@ -168,6 +171,9 @@ export const ActionLabel: {
   [Action.CANCEL]: "cancel",
   [Action.OFFER_DETAIL]: "offerDetail",
   [Action.ADD_USER]: "addUser",
+  [Action.VIEW_REQUIREMENT]: "view",
+  [Action.VIEW_OFFER]: "view",
+  [Action.VIEW_PURCHASE_ORDER]: "view",
 };
 
 export const ActionByStateRequirement: {

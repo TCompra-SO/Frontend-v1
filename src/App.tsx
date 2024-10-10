@@ -21,7 +21,6 @@ import MainHeader from "./components/section/header/header/MainHeader.tsx";
 import { ListsProvider } from "./contexts/listsContext.tsx";
 import AuthRoleGuard from "./components/guards/AuthRoleGuard.tsx";
 import { RolesForSection } from "./utilities/roles.ts";
-import { RequirementType } from "./utilities/types.ts";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Search = lazy(() => import("./pages/Search.tsx"));
@@ -29,6 +28,9 @@ const Requirements = lazy(() => import("./pages/Requirements.tsx"));
 const Offers = lazy(() => import("./pages/Offers.tsx"));
 const PurchaseOrders = lazy(() => import("./pages/PurchaseOrders.tsx"));
 const Users = lazy(() => import("./pages/Users.tsx"));
+const AllRequirements = lazy(() => import("./pages/AllRequirements.tsx"));
+const AllOffers = lazy(() => import("./pages/AllOffers.tsx"));
+const AllPurchaseOrders = lazy(() => import("./pages/AllPurchaseOrders.tsx"));
 const CreateRequirementFloatButton = lazy(
   () =>
     import(
@@ -191,6 +193,129 @@ function App() {
                             // </AuthRoleGuard>
                           }
                         />
+                        <Route path={`${pageRoutes.allRequirements}`}>
+                          <Route
+                            path=""
+                            element={
+                              <Navigate
+                                to={`${pageRoutes.allRequirements}/${pageRoutes.goods}`}
+                                replace
+                              />
+                            }
+                          />
+                          <Route
+                            path={`${pageRoutes.goods}`}
+                            element={
+                              // <AuthRoleGuard
+                              //   allowedRoles={RolesForSection.myRequirements}
+                              // >
+                              <AllRequirements />
+                              // </AuthRoleGuard>
+                            }
+                          />
+                          <Route
+                            path={`${pageRoutes.services}`}
+                            element={
+                              // <AuthRoleGuard
+                              //   allowedRoles={RolesForSection.myRequirements}
+                              // >
+                              <AllRequirements />
+                              // </AuthRoleGuard>
+                            }
+                          />
+                          <Route
+                            path={`${pageRoutes.sales}`}
+                            element={
+                              // <AuthRoleGuard
+                              //   allowedRoles={RolesForSection.myRequirements}
+                              // >
+                              <AllRequirements />
+                              // </AuthRoleGuard>
+                            }
+                          />
+                        </Route>
+                        <Route path={`${pageRoutes.allOffers}`}>
+                          <Route
+                            path=""
+                            element={
+                              <Navigate
+                                to={`${pageRoutes.allOffers}/${pageRoutes.goods}`}
+                                replace
+                              />
+                            }
+                          />
+                          <Route
+                            path={`${pageRoutes.goods}`}
+                            element={
+                              // <AuthRoleGuard
+                              //   allowedRoles={RolesForSection.myRequirements}
+                              // >
+                              <AllOffers />
+                              // </AuthRoleGuard>
+                            }
+                          />
+                          <Route
+                            path={`${pageRoutes.services}`}
+                            element={
+                              // <AuthRoleGuard
+                              //   allowedRoles={RolesForSection.myRequirements}
+                              // >
+                              <AllOffers />
+                              // </AuthRoleGuard>
+                            }
+                          />
+                          <Route
+                            path={`${pageRoutes.sales}`}
+                            element={
+                              // <AuthRoleGuard
+                              //   allowedRoles={RolesForSection.myRequirements}
+                              // >
+                              <AllOffers />
+                              // </AuthRoleGuard>
+                            }
+                          />
+                        </Route>
+                        <Route path={`${pageRoutes.allPurchaseOrders}`}>
+                          <Route
+                            path=""
+                            element={
+                              <Navigate
+                                to={`${pageRoutes.allPurchaseOrders}/${pageRoutes.goods}`}
+                                replace
+                              />
+                            }
+                          />
+                          <Route
+                            path={`${pageRoutes.goods}`}
+                            element={
+                              // <AuthRoleGuard
+                              //   allowedRoles={RolesForSection.myRequirements}
+                              // >
+                              <AllPurchaseOrders />
+                              // </AuthRoleGuard>
+                            }
+                          />
+                          <Route
+                            path={`${pageRoutes.services}`}
+                            element={
+                              // <AuthRoleGuard
+                              //   allowedRoles={RolesForSection.myRequirements}
+                              // >
+                              <AllPurchaseOrders />
+                              // </AuthRoleGuard>
+                            }
+                          />
+                          <Route
+                            path={`${pageRoutes.sales}`}
+                            element={
+                              // <AuthRoleGuard
+                              //   allowedRoles={RolesForSection.myRequirements}
+                              // >
+                              <AllPurchaseOrders />
+                              // </AuthRoleGuard>
+                            }
+                          />
+                        </Route>
                         <Route
                           path="*"
                           element={

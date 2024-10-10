@@ -1,5 +1,6 @@
 import { Flex } from "antd";
 import { ColumnType } from "antd/es/table";
+import { getNestedValue } from "../../../../utilities/globalFunctions";
 
 export default function GeneralColumnString(
   nameColumn: string,
@@ -18,7 +19,7 @@ export default function GeneralColumnString(
       <>
         {!truncate && (
           <div style={{ textAlign: "left" }} className={`t-flex dato-table`}>
-            {record[dataIndex]}
+            {getNestedValue(dataIndex, record)}
           </div>
         )}
         {truncate && (
@@ -27,13 +28,14 @@ export default function GeneralColumnString(
               className="text-truncate dato-table"
               style={{ textAlign: "left" }}
             >
-              {record[dataIndex]}
+              {getNestedValue(dataIndex, record)}
             </div>
           </Flex>
         )}
       </>
     ),
-    sorter: (a, b) => a[dataIndex].localeCompare(b[dataIndex]),
+    sorter: (a, b) =>
+      getNestedValue(dataIndex, a)?.localeCompare(getNestedValue(dataIndex, b)),
     showSorterTooltip: false,
   };
   if (!truncate) col.width = width;
