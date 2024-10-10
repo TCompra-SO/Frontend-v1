@@ -1042,8 +1042,6 @@ export default function Requirements() {
     onButtonClick: handleOnButtonClick,
   });
 
-  /*********************** */
-
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: getRequirementsService(),
     method: "get",
@@ -1060,12 +1058,21 @@ export default function Requirements() {
   }, []);
 
   useEffect(() => {
+    setData();
+  }, [responseData, error]);
+
+  async function setData() {
     if (responseData) {
+      const data = await Promise.all(
+        responseData.data.map(
+          async (e: any) =>
+            await transformDataToRequirement(e, RequirementType.GOOD)
+        )
+      );
+
       setTableContent({
         type: TableTypes.REQUIREMENT,
-        data: responseData.data.map((e: any) =>
-          transformDataToRequirement(e, RequirementType.GOOD)
-        ),
+        data,
         subType: RequirementType.GOOD,
         hiddenColumns: [TableColumns.CATEGORY],
         nameColumnHeader: t("goods"),
@@ -1074,9 +1081,7 @@ export default function Requirements() {
     } else if (error) {
       console.log(error);
     }
-  }, [responseData, error]);
-
-  /*********************** */
+  }
 
   function handleCloseModal() {
     setIsOpenModal(false);

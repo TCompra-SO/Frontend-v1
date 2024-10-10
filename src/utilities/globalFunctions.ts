@@ -4,10 +4,12 @@ import {
   HttpService,
   IdValueMap,
   IdValueObj,
+  useApiParams,
 } from "../models/Interfaces";
 import { defaultCountry, maxDocSizeMb, maxImageSizeMb } from "./globals";
 import { RequirementType, UserClass } from "./types";
 import { pageRoutes } from "./routes";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -122,4 +124,38 @@ export function getRouteType(pathname: string) {
 // Retorna valor anidado para columna de tabla
 export function getNestedValue(dataIndex: string, record: any) {
   return dataIndex.split(".").reduce((acc, key) => acc && acc[key], record);
+}
+
+export default async function makeRequest<T = any>({
+  service,
+  method,
+  dataToSend,
+  token,
+}: useApiParams<T>) {
+  let responseData: any | null = null;
+  let error: AxiosError<any, any> | null = null;
+
+  if (service) {
+    try {
+      console.log(token);
+      const config: AxiosRequestConfig = {
+        method: method,
+        url: service.url,
+        data: dataToSend,
+        headers: {
+          Authorization: token ? `Bearer ${token}` : undefined,
+          "Content-Type": "application/json",
+        },
+      };
+      console.log(config);
+      const result: AxiosResponse = await axios(config);
+      console.log("http request");
+      responseData = result.data;
+    } catch (err) {
+      console.log("HTTP error:", err);
+      error = err as AxiosError;
+    }
+  }
+
+  return { responseData, error };
 }
