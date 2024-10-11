@@ -31,6 +31,7 @@ const Users = lazy(() => import("./pages/Users.tsx"));
 const AllRequirements = lazy(() => import("./pages/AllRequirements.tsx"));
 const AllOffers = lazy(() => import("./pages/AllOffers.tsx"));
 const AllPurchaseOrders = lazy(() => import("./pages/AllPurchaseOrders.tsx"));
+const Certificates = lazy(() => import("./pages/Certificates.tsx"));
 const CreateRequirementFloatButton = lazy(
   () =>
     import(
@@ -312,6 +313,47 @@ function App() {
                               //   allowedRoles={RolesForSection.myRequirements}
                               // >
                               <AllPurchaseOrders />
+                              // </AuthRoleGuard>
+                            }
+                          />
+                        </Route>
+                        <Route path={`${pageRoutes.certificates}`}>
+                          <Route
+                            path=""
+                            element={
+                              <Navigate
+                                to={`${pageRoutes.certificates}/${pageRoutes.documents}`}
+                                replace
+                              />
+                            }
+                          />
+                          <Route
+                            path={`${pageRoutes.documents}`}
+                            element={
+                              // <AuthRoleGuard
+                              //   allowedRoles={RolesForSection.myRequirements}
+                              // >
+                              <Certificates />
+                              // </AuthRoleGuard>
+                            }
+                          />
+                          <Route
+                            path={`${pageRoutes.received}`}
+                            element={
+                              // <AuthRoleGuard
+                              //   allowedRoles={RolesForSection.myRequirements}
+                              // >
+                              <Certificates />
+                              // </AuthRoleGuard>
+                            }
+                          />
+                          <Route
+                            path={`${pageRoutes.sent}`}
+                            element={
+                              // <AuthRoleGuard
+                              //   allowedRoles={RolesForSection.myRequirements}
+                              // >
+                              <Certificates />
                               // </AuthRoleGuard>
                             }
                           />

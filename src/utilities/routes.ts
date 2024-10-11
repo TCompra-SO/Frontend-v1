@@ -70,4 +70,7 @@ export const pageRoutes = {
   goods: "bienes",
   services: "servicios",
   sales: "liquidaciones",
+  sent: "enviados",
+  received: "recibidos",
+  documents: "documentos",
 };
