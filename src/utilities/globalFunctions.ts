@@ -7,7 +7,7 @@ import {
   useApiParams,
 } from "../models/Interfaces";
 import { defaultCountry, maxDocSizeMb, maxImageSizeMb } from "./globals";
-import { RequirementType, UserClass } from "./types";
+import { PurchaseOrderTableTypes, RequirementType, UserClass } from "./types";
 import { pageRoutes } from "./routes";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 
@@ -86,9 +86,21 @@ export function getLabelFromRequirementType(
     case RequirementType.SERVICE:
       return plural ? "services" : "service";
     case RequirementType.SALE:
-      return plural ? "sale" : "sales";
+      return plural ? "sales" : "sale";
     case RequirementType.JOB:
       return plural ? "job" : "jobs";
+  }
+}
+
+// Retorna la llave del nombre del tipo de orden de compra
+export function getLabelFromPurchaseOrderType(type: PurchaseOrderTableTypes) {
+  switch (type) {
+    case PurchaseOrderTableTypes.ISSUED:
+    case PurchaseOrderTableTypes.ISSUED_SALES:
+      return "issued";
+    case PurchaseOrderTableTypes.RECEIVED:
+    case PurchaseOrderTableTypes.RECEIVED_SALES:
+      return "received";
   }
 }
 

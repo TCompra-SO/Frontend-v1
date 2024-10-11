@@ -7,6 +7,7 @@ import {
   Action,
   OfferState,
   PurchaseOrderState,
+  PurchaseOrderTableTypes,
   RequirementState,
   RequirementType,
   TableTypes,
@@ -263,6 +264,7 @@ const purc: PurchaseOrderItemSubUser[] = [
     state: PurchaseOrderState.PENDING,
     key: "1",
     type: RequirementType.SERVICE,
+    subType: PurchaseOrderTableTypes.ISSUED,
   },
   {
     requirementTitle: "req title fdfsf fs f sf sf sfs",
@@ -271,6 +273,7 @@ const purc: PurchaseOrderItemSubUser[] = [
     state: PurchaseOrderState.PENDING,
     key: "1",
     type: RequirementType.SERVICE,
+    subType: PurchaseOrderTableTypes.ISSUED,
   },
   {
     requirementTitle: "req title fdfsf fs f sf sf sfs",
@@ -279,6 +282,7 @@ const purc: PurchaseOrderItemSubUser[] = [
     state: PurchaseOrderState.PENDING,
     key: "1",
     type: RequirementType.SERVICE,
+    subType: PurchaseOrderTableTypes.ISSUED_SALES,
   },
   {
     requirementTitle: "req title fdfsf fs f sf sf sfs",
@@ -287,6 +291,7 @@ const purc: PurchaseOrderItemSubUser[] = [
     state: PurchaseOrderState.PENDING,
     key: "1",
     type: RequirementType.GOOD,
+    subType: PurchaseOrderTableTypes.RECEIVED,
   },
   {
     requirementTitle: "req title fdfsf fs f sf sf sfs",
@@ -295,6 +300,7 @@ const purc: PurchaseOrderItemSubUser[] = [
     state: PurchaseOrderState.PENDING,
     key: "1",
     type: RequirementType.SALE,
+    subType: PurchaseOrderTableTypes.RECEIVED_SALES,
   },
 ];
 

@@ -7,6 +7,7 @@ import {
   Usage,
   UserRoles,
   EntityType,
+  PurchaseOrderTableTypes,
 } from "../utilities/types";
 import { OfferFilters } from "./Interfaces";
 
@@ -134,4 +135,5 @@ export interface PurchaseOrderItemSubUser extends BaseInterface {
   offerTitle: string;
   selectionDate: string;
   state: PurchaseOrderState;
+  subType: PurchaseOrderTableTypes;
 }

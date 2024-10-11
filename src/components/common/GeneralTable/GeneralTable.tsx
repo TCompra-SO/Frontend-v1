@@ -32,6 +32,7 @@ import GeneralColumnNumber from "./columns/GeneralColumnNumber";
 import TypeColumn from "./columns/TypeColumn";
 import ViewColumn from "./columns/ViewColumn";
 import DocumentColumn from "./columns/DocumentColumn";
+import { getLabelFromPurchaseOrderType } from "../../../utilities/globalFunctions";
 
 interface RequirementsTableProps {
   content: TableType;
@@ -498,11 +499,6 @@ export default function GeneralTable(props: RequirementsTableProps) {
         visibility[TableColumns.SELECTION_DATE]
       ),
       TypeColumn(visibility[TableColumns.TYPE]),
-      GeneralColumnNumber(
-        t("offers"),
-        "numberOffers",
-        visibility[TableColumns.OFFERS]
-      ),
       StateColumn(TableTypes.OFFER_SUBUSER, visibility[TableColumns.STATE]),
       ViewColumn(
         TableTypes.OFFER_SUBUSER,
@@ -534,16 +530,28 @@ export default function GeneralTable(props: RequirementsTableProps) {
         "selectionDate",
         visibility[TableColumns.SELECTION_DATE]
       ),
-      TypeColumn(visibility[TableColumns.TYPE]),
-      GeneralColumnNumber(
-        t("offers"),
-        "numberOffers",
-        visibility[TableColumns.OFFERS]
+      GeneralColumnString(
+        t("class"),
+        "subType",
+        false,
+        90,
+        visibility[TableColumns.SUBTYPE],
+        false,
+        getLabelFromPurchaseOrderType
       ),
-      StateColumn(TableTypes.OFFER_SUBUSER, visibility[TableColumns.STATE]),
+      TypeColumn(visibility[TableColumns.TYPE]),
       DocumentColumn(
         props.content.onButtonClick,
         visibility[TableColumns.DOCUMENT]
+      ),
+      StateColumn(
+        TableTypes.PURCHASE_ORDER_SUBUSER,
+        visibility[TableColumns.STATE]
+      ),
+      ViewColumn(
+        TableTypes.PURCHASE_ORDER_SUBUSER,
+        props.content.onButtonClick,
+        visibility[TableColumns.VIEW]
       ),
     ];
     return columns;

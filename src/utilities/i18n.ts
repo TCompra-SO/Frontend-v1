@@ -305,7 +305,8 @@ const resources = {
       myDocuments: "My documents",
       sent: "Sent",
       sentPl: "Sent",
-      loading: "Loading..."
+      loading: "Loading...",
+      class: "Class"
     },
   },
   es: {
@@ -611,7 +612,7 @@ const resources = {
       sent: "Enviado",
       sentPl: "Enviados",
       loading: "Cargando...",
-
+      class: "Clase",
     },
   },
 };

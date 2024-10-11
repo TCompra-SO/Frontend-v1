@@ -14,7 +14,7 @@ export default function DocumentColumn(
   const { t } = useTranslation();
 
   const col: ColumnType<PurchaseOrderItemSubUser | PurchaseOrder> = {
-    title: t("actionColumn"),
+    title: t("document"),
     key: "action",
     align: "center",
     showSorterTooltip: false,

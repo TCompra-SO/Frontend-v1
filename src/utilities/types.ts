@@ -295,6 +295,7 @@ export enum TableColumns {
   SELECTION_DATE = 19,
   OFFER = 20,
   USERNAME = 21,
+  SUBTYPE = 22,
 }
 
 export enum UserClass {
