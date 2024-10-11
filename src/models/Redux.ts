@@ -1,13 +1,19 @@
-import { UserRoles } from "../utilities/types";
+import { EntityType, UserRoles } from "../utilities/types";
 
 export interface UserState {
   token: string;
-  type: string;
   uid: string;
   name: string;
   email: string;
   typeID: UserRoles;
   planID: number;
+  //
+  tenure?: number;
+  customerScore?: number;
+  sellerScore?: number;
+  customerCount?: number;
+  sellerCount?: number;
+  typeEntity: EntityType;
 }
 
 export interface LoadingState {
@@ -17,4 +23,5 @@ export interface LoadingState {
 export interface MainState {
   user: UserState;
   loading: LoadingState;
+  mainUser: UserState;
 }

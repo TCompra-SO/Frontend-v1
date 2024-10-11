@@ -1,15 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { UserState } from "../models/Redux";
-import { UserRoles } from "../utilities/types";
+import { EntityType, UserRoles } from "../utilities/types";
+import { BaseUser } from "../models/MainInterfaces";
 
 const initialState: UserState = {
   token: "",
-  type: "",
   uid: "",
   name: "",
   email: "",
   typeID: UserRoles.NONE,
   planID: 0,
+  typeEntity: EntityType.PERSON,
 };
 
 export const userSlice = createSlice({
@@ -23,13 +24,21 @@ export const userSlice = createSlice({
           action.payload.dataUser[0];
         console.log(action.payload);
         state.token = token;
-        state.type = type;
+        state.typeEntity = type;
         state.name = name;
         state.email = email;
         state.typeID = typeID;
         state.planID = planID;
         state.uid = uid;
       }
+    },
+    setBaseUser: (state, action: { payload: BaseUser; type: string }) => {
+      state.tenure = action.payload.tenure;
+      state.customerScore = action.payload.customerScore;
+      state.sellerScore = action.payload.sellerScore;
+      state.customerCount = action.payload.customerCount;
+      state.sellerCount = action.payload.sellerCount;
+      state.typeEntity = action.payload.typeEntity;
     },
     setUid: (state, action) => {
       state.uid = action.payload;
@@ -40,5 +49,5 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUser, setUid, setEmail } = userSlice.actions;
+export const { setUser, setUid, setEmail, setBaseUser } = userSlice.actions;
 export default userSlice.reducer;

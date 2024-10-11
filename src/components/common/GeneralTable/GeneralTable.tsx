@@ -380,6 +380,10 @@ export default function GeneralTable(props: RequirementsTableProps) {
         visibility[TableColumns.PUBLISH_DATE]
       ),
       TypeColumn(visibility[TableColumns.TYPE]),
+      DocumentColumn(
+        props.content.onButtonClick,
+        visibility[TableColumns.DOCUMENT]
+      ),
       StateColumn(props.content.type, visibility[TableColumns.STATE]),
       ViewColumn(
         TableTypes.ALL_PURCHASE_ORDERS,

@@ -6,7 +6,7 @@ import {
   RegisterRequest,
 } from "../models/Requests";
 import { useDispatch } from "react-redux";
-import { setUid, setUser, setEmail } from "../redux/userSlice";
+import { setUid, setUser, setEmail, setBaseUser } from "../redux/userSlice";
 import { DocType, ModalTypes, RegisterTypeId } from "../utilities/types";
 import { useNavigate } from "react-router-dom";
 import showNotification from "../utilities/notification/showNotification";
@@ -31,6 +31,8 @@ import { equalServices } from "../utilities/globalFunctions";
 import ModalContainer from "../components/containers/ModalContainer";
 import { AxiosError } from "axios";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
+import { getBaseUserForUserSubUser } from "../services/general";
+import { setMainUser } from "../redux/mainUserSlice";
 
 const LoginType = {
   LOGIN: "login",
@@ -194,7 +196,7 @@ export default function Login(props: LoginProps) {
     }
   }
 
-  function afterSubmit() {
+  async function afterSubmit() {
     if (loginType == LoginType.REGISTER) {
       dispatch(setUid(responseData.res.uid));
       showNotification(notification, "success", t("registerUserSuccess"));
@@ -202,6 +204,14 @@ export default function Login(props: LoginProps) {
       props.onRegisterSuccess(docType);
     } else {
       dispatch(setUser(responseData));
+      const { user, subUser } = await getBaseUserForUserSubUser(
+        responseData.dataUser[0].uid
+      );
+      if (subUser) {
+        dispatch(setBaseUser(subUser));
+        dispatch(setMainUser(user));
+      } else if (user) dispatch(setBaseUser(user));
+
       showNotification(notification, "success", t("welcome"));
       localStorage.setItem("token", responseData.token);
       navigate(`${pageRoutes.myRequirements}`);

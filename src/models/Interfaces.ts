@@ -53,7 +53,7 @@ export interface ModalDetailedRequirement extends CommonModalType {
 
 export interface ModalOfferSummary extends CommonModalType {
   type: ModalTypes.OFFER_SUMMARY;
-  data: { offer: Offer; requirement: Requirement };
+  data: { offer: Offer; requirement: Requirement; user: User };
 }
 
 export interface ModalRateCanceled extends CommonModalType {
@@ -70,7 +70,7 @@ export interface ModalRateCanceled extends CommonModalType {
 export interface ModalRateUser extends CommonModalType {
   type: ModalTypes.RATE_USER;
   data: {
-    user: User;
+    user: BaseUser;
     subUser: BaseUser | undefined;
     requirementOfferTitle: string;
     type: RequirementType;

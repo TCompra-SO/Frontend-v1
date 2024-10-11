@@ -47,7 +47,6 @@ export default function StateColumn(type: TableTypes, hidden: boolean = false) {
         type == TableTypes.REQUIREMENT_SUBUSER ||
         type == TableTypes.ALL_REQUIREMENTS
       ) {
-        console.log(record);
         const state = (record as BasicRequirement).state;
         label = t(RequirementStateMeta[state].label);
         className = `cont-estado ${RequirementStateMeta[state].class}`;

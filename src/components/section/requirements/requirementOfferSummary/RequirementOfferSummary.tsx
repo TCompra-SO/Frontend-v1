@@ -1,4 +1,4 @@
-import { Offer } from "../../../../models/MainInterfaces";
+import { Offer, User } from "../../../../models/MainInterfaces";
 import RequirementOfferListItemBody from "../requirementDetail/RequirementOfferListItemBody";
 import { useTranslation } from "react-i18next";
 import FrontImage from "../../../common/FrontImage";
@@ -7,6 +7,7 @@ import { DocType, EntityType } from "../../../../utilities/types";
 
 interface RequirementOfferSummaryProps {
   offer: Offer;
+  user: User;
 }
 
 export default function RequirementOfferSummary(
@@ -18,11 +19,11 @@ export default function RequirementOfferSummary(
     <div className="modal-card">
       <div className="detalle-oferta">
         <div className="t-flex gap-15 requerimiento-o">
-          <FrontImage image={props.offer.user.image} isUser={true} />
+          <FrontImage image={props.user.image} isUser={true} />
           <div className="t-flex detalle-req">
             <RequirementInfoNoTags
               title={props.offer.title}
-              user={props.offer.user}
+              user={props.user}
               type={props.offer.type}
               subUser={props.offer.subUser}
               description={props.offer.description}
@@ -32,19 +33,19 @@ export default function RequirementOfferSummary(
                 {DocType.RUC}: 23568745214
               </div>
               {/* r3v dni ruc */}
-              {props.offer.user.typeEntity == EntityType.COMPANY && (
+              {props.user.typeEntity == EntityType.COMPANY && (
                 <div className="badge-grey-border">
-                  {t("tenure")}: {props.offer.user.tenure} {t("years")}
+                  {t("tenure")}: {props.user.tenure} {t("years")}
                 </div>
               )}
               <div className="badge-grey-border">
-                {t("phone")}: {props.offer.user.phone}
+                {t("phone")}: {props.user.phone}
               </div>
               <div className="badge-grey-border">
                 {t("email")}:{" "}
                 {props.offer.subUser
                   ? props.offer.subUser.email
-                  : props.offer.user.email}
+                  : props.user.email}
               </div>
             </div>
           </div>

@@ -10,7 +10,7 @@ import {
   TableTypes,
   TimeMeasurement,
 } from "../utilities/types";
-import { Offer, Requirement } from "../models/MainInterfaces";
+import { FullUser, Offer, Requirement } from "../models/MainInterfaces";
 import { ChangeEvent, useEffect, useState } from "react";
 import {
   ModalContent,
@@ -24,7 +24,16 @@ import useApi from "../hooks/useApi";
 import { getRequirementsService } from "../services/requirementService";
 import { transformDataToRequirement } from "../utilities/transform";
 import { useLocation } from "react-router-dom";
-import { getRouteType } from "../utilities/globalFunctions";
+import { equalServices, getRouteType } from "../utilities/globalFunctions";
+import { useSelector } from "react-redux";
+import { MainState, UserState } from "../models/Redux";
+import { getUserService } from "../services/authService";
+import { getFullUser } from "../services/general";
+import {
+  destroyMessage,
+  showLoadingMessage,
+} from "../utilities/notification/showNotification";
+import { App } from "antd";
 
 // const requirements: Requirement[] = [
 //   {
@@ -678,10 +687,9 @@ const offerList: Offer[] = [
     selectionDate: "2024-09-12T20:36:45.673Z",
     type: RequirementType.GOOD,
     user: {
-      uid: "user1",
+      uid: "9i2lEIp4rFRnQXkM5GLv",
       name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
       email: "john.doejohn.doejohn.doejohn.doe@example.com",
-      document: "123456789",
       typeEntity: EntityType.COMPANY,
       tenure: 2,
       customerScore: 3.5,
@@ -734,7 +742,7 @@ const offerList: Offer[] = [
     state: OfferState.CANCELED,
     type: RequirementType.GOOD,
     user: {
-      uid: "user1",
+      uid: "WpIPS18MYqNWegvx5REP",
       name: "Aaaaaa bbbbbbbbb ccccccccc ddddddddddd S. A. C.",
       email: "john.doejohn.doejohn.doejohn.doe@example.com",
       document: "123456789",
@@ -785,7 +793,7 @@ const offerList: Offer[] = [
     state: OfferState.ACTIVE,
     type: RequirementType.GOOD,
     user: {
-      uid: "user1",
+      uid: "WpIPS18MYqNWegvx5REP",
       name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
       email: "john.doejohn.doejohn.doejohn.doe@example.com",
       document: "123456789",
@@ -817,7 +825,7 @@ const offerList: Offer[] = [
     state: OfferState.FINISHED,
     type: RequirementType.GOOD,
     user: {
-      uid: "user1",
+      uid: "WpIPS18MYqNWegvx5REP",
       name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
       email: "john.doejohn.doejohn.doejohn.doe@example.com",
       document: "123456789",
@@ -849,7 +857,7 @@ const offerList: Offer[] = [
     state: OfferState.WINNER,
     type: RequirementType.GOOD,
     user: {
-      uid: "user1",
+      uid: "WpIPS18MYqNWegvx5REP",
       name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
       email: "john.doejohn.doejohn.doejohn.doe@example.com",
       document: "123456789",
@@ -881,7 +889,7 @@ const offerList: Offer[] = [
     state: OfferState.ACTIVE,
     type: RequirementType.GOOD,
     user: {
-      uid: "user1",
+      uid: "WpIPS18MYqNWegvx5REP",
       name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
       email: "john.doejohn.doejohn.doejohn.doe@example.com",
       document: "123456789",
@@ -913,7 +921,7 @@ const offerList: Offer[] = [
     state: OfferState.CANCELED,
     type: RequirementType.GOOD,
     user: {
-      uid: "user1",
+      uid: "WpIPS18MYqNWegvx5REP",
       name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
       email: "john.doejohn.doejohn.doejohn.doe@example.com",
       document: "123456789",
@@ -945,7 +953,7 @@ const offerList: Offer[] = [
     state: OfferState.DISPUTE,
     type: RequirementType.GOOD,
     user: {
-      uid: "user1",
+      uid: "WpIPS18MYqNWegvx5REP",
       name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
       email: "john.doejohn.doejohn.doejohn.doe@example.com",
       document: "123456789",
@@ -977,7 +985,7 @@ const offerList: Offer[] = [
     state: OfferState.FINISHED,
     type: RequirementType.GOOD,
     user: {
-      uid: "user9",
+      uid: "WpIPS18MYqNWegvx5REP",
       name: "SnapLens Co.",
       email: "info@snaplens.example.com",
       document: "098765432",
@@ -1008,7 +1016,7 @@ const offerList: Offer[] = [
     state: OfferState.WINNER,
     type: RequirementType.GOOD,
     user: {
-      uid: "user9",
+      uid: "WpIPS18MYqNWegvx5REP",
       name: "SnapLens Co.",
       email: "info@snaplens.example.com",
       document: "098765432",
@@ -1027,8 +1035,15 @@ const offerList: Offer[] = [
 export default function Requirements() {
   const location = useLocation();
   const { t } = useTranslation();
+  const { message } = App.useApp();
   const [type] = useState(getRouteType(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const dataUser = useSelector((state: MainState) => state.user);
+  let mainDataUser: UserState | undefined = useSelector(
+    (state: MainState) => state.mainUser
+  );
+  console.log(dataUser, mainDataUser);
+  if (!mainDataUser.uid) mainDataUser = undefined;
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
@@ -1053,12 +1068,19 @@ export default function Requirements() {
     dataToSend: apiParams.dataToSend,
   });
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   useEffect(() => {
-    setData();
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      if (equalServices(apiParams.service, getRequirementsService())) setData();
+    }
   }, [responseData, error]);
 
   async function setData() {
@@ -1066,7 +1088,12 @@ export default function Requirements() {
       const data = await Promise.all(
         responseData.data.map(
           async (e: any) =>
-            await transformDataToRequirement(e, RequirementType.GOOD)
+            await transformDataToRequirement(
+              e,
+              RequirementType.GOOD,
+              dataUser,
+              mainDataUser
+            )
         )
       );
 
@@ -1087,7 +1114,7 @@ export default function Requirements() {
     setIsOpenModal(false);
   }
 
-  function handleOnButtonClick(action: Action, requirement: Requirement) {
+  async function handleOnButtonClick(action: Action, requirement: Requirement) {
     switch (action) {
       case Action.SHOW_OFFERS: {
         setDataModal({
@@ -1103,12 +1130,16 @@ export default function Requirements() {
         break;
       }
       case Action.SHOW_SUMMARY: {
-        console.log(requirement);
-        setDataModal({
-          type: ModalTypes.OFFER_SUMMARY,
-          data: { offer: offerList[0], requirement: requirement },
-        });
-        setIsOpenModal(true);
+        showLoadingMessage(message);
+        const user: FullUser | null = await getFullUser(offerList[0].user.uid);
+        if (user) {
+          setDataModal({
+            type: ModalTypes.OFFER_SUMMARY,
+            data: { offer: offerList[0], requirement: requirement, user },
+          });
+          setIsOpenModal(true);
+        }
+        destroyMessage(message);
         break;
       }
       case Action.REPUBLISH: {

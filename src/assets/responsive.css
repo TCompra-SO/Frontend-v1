@@ -1,14 +1,200 @@
 /* Estilos para pantallas pequeñas (móviles) */
+@media (max-width: 350px) {
+  .modal-card {
+    padding: 25px !important;
+  }
+  .bloque-estd {
+    flex: 1 0 50% !important;
+    padding: 25px;
+  }
+  .doc-botones {
+    padding: 15px !important;
+  }
+  .card-d3 {
+    flex-direction: column;
+  }
+  .imagen-perfil {
+    width: calc(100% - 40px);
+  }
+  .ofertas-recib {
+    font-size: 20px;
+  }
+  .multimedia-oferta {
+    flex-direction: column !important;
+    align-items: end !important;
+    width: 100%;
+  }
+  .card-ofertas {
+    padding: 15px;
+  }
+  .head-oferta {
+    align-items: start;
+  }
+  .img-oferta {
+    min-width: 50px;
+    width: 50px;
+    height: 50px;
+    margin-right: 5px;
+  }
+  .oferta-acciones {
+    gap: 5px;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+  }
+  .detalles-ofer-emp {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .doc-upload {
+    flex-direction: column;
+  }
+  .estado-envio {
+    flex-direction: column;
+  }
+  .estado-envio .wd-100 {
+    text-align: center;
+  }
+  .certificado-bloque .oferta-titulo {
+    flex-wrap: wrap;
+  }
+  .btn-certificados {
+    width: 100%;
+  }
+  .user-name {
+    font-size: 22px;
+  }
+  .card-d1 {
+    padding: 20px !important;
+    border-radius: 25px;
+  }
+  .sub-icon-cert {
+    font-size: 20px;
+    padding: 10px;
+  }
+  .icon-doc {
+    font-size: 60px;
+  }
+  .user-cantidad {
+    font-size: 14px;
+  }
+  .usuario-badge {
+    font-size: 11px !important;
+    padding: 3px 6px !important;
+  }
+  .tags-req {
+    flex-wrap: wrap;
+  }
+}
+
 @media (max-width: 476px) {
+  .titulo {
+    font-size: 24px;
+  }
   .doc-botones {
     flex-wrap: wrap;
   }
   .col-menu {
     width: calc(100% - 60px) !important;
   }
+  .card-white {
+    padding: 25px;
+  }
+  .tc-datos {
+    height: calc(100vh - 118px);
+    padding: 20px;
+  }
+  .sub-titulo {
+    font-size: 20px;
+  }
+  .calificar-detalle {
+    font-size: 16px;
+  }
+  .doc-name {
+    font-size: 20px;
+  }
+  .detalles-oferta {
+    font-size: 16px;
+  }
+  .sub-icon {
+    padding: 10px;
+    font-size: 20px;
+  }
+  .icon-doc-estado {
+    min-width: 50px;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+  .up-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .ofertas-recib {
+    font-size: 22px;
+  }
+  .bnt-filter {
+    font-size: 12px;
+    padding: 10px 12px;
+    border-radius: 0.7rem;
+  }
+  .usuario-badge {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+  .oferta-datos {
+    gap: 3px;
+  }
+  .tag-gray,
+  .tag-gray-2,
+  .tag-default {
+    font-size: 13px;
+    padding: 4px 8px;
+  }
+  .tags-oferta {
+    gap: 4px;
+  }
+  .user-empresa-2 {
+    width: 26px;
+    height: 26px;
+    font-size: 14px;
+  }
+  .badge-green,
+  .badge-warning {
+    padding: 10px 10px;
+    border-radius: 0.8rem;
+  }
+  .mas-acciones {
+    font-size: 20px;
+    height: 37px;
+    width: 37px;
+    min-width: 37px;
+  }
+  .cert-documentos {
+    margin-bottom: 5px;
+    justify-content: space-between !important;
+  }
+  .btn-green {
+    width: 100%;
+  }
+  .cert-documentos {
+    justify-content: center;
+  }
+  .mr-sub,
+  .mr-sub-2 {
+    margin-bottom: 15px;
+  }
+  .alert-base {
+    gap: 10px;
+  }
+  .oferta-datos {
+    margin-right: 5px;
+  }
 }
 
 @media (max-width: 576px) {
+  .modal-card {
+    padding: 30px;
+  }
   .card-pink,
   .card-blue,
   .card-teal,
@@ -36,14 +222,45 @@
   .datos-empresa {
     flex-direction: column;
   }
-  .card-d2 {
-    flex-direction: column;
+  .card-d1 {
+    padding: 25px;
   }
-  .card-d3 {
+  .card-d2 {
     flex-direction: column;
   }
   .datos-conacto {
     flex-direction: column;
+  }
+  .bloque-e1 {
+    flex-direction: column;
+    gap: 15px !important;
+  }
+  .bloque-e2 {
+    flex-wrap: wrap;
+    gap: 15px !important;
+  }
+  .bloque-e3 {
+    flex-wrap: wrap;
+    gap: 15px !important;
+  }
+  .bloque-estd {
+    overflow: auto !important;
+    flex: 1 0 25%;
+    gap: 20px !important;
+  }
+  .doc-botones {
+    padding: 20px;
+  }
+  .imagen-perfil {
+    padding: 20px;
+  }
+  .card-cantidad {
+    flex-direction: row !important;
+    text-align: left !important;
+    flex: 1 0 25%;
+  }
+  .doc-datos .doc-botones {
+    padding: 0 !important;
   }
 }
 
@@ -84,8 +301,8 @@
     gap: 10px;
   }
   .multimedia-oferta {
-    flex-direction: row !important;
-    align-items: center !important;
+    flex-direction: row;
+    align-items: center;
     justify-content: end;
     gap: 8px !important;
   }
@@ -121,11 +338,12 @@
   .card-datos {
     width: 100% !important;
   }
-  .imagen-perfil {
-    /* width: 150px; */
-  }
   .card-d4 {
     flex-direction: column;
+  }
+  .card-cantidad {
+    flex-direction: column;
+    text-align: center;
   }
 }
 

@@ -23,7 +23,6 @@ export default function useApi<T = any>({
     if (service) {
       setLoading(true);
       try {
-        console.log(token);
         const config: AxiosRequestConfig = {
           method: method,
           url: service.url,
@@ -33,9 +32,7 @@ export default function useApi<T = any>({
             "Content-Type": "application/json",
           },
         };
-        console.log(config);
         const result: AxiosResponse = await axios(config);
-        console.log("http request");
         setResponseData(result.data);
       } catch (err) {
         console.log("HTTP error:", err);

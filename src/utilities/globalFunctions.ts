@@ -138,6 +138,7 @@ export function getNestedValue(dataIndex: string, record: any) {
   return dataIndex.split(".").reduce((acc, key) => acc && acc[key], record);
 }
 
+// Hace una solicitud http
 export default async function makeRequest<T = any>({
   service,
   method,
@@ -149,7 +150,6 @@ export default async function makeRequest<T = any>({
 
   if (service) {
     try {
-      console.log(token);
       const config: AxiosRequestConfig = {
         method: method,
         url: service.url,
@@ -159,15 +159,12 @@ export default async function makeRequest<T = any>({
           "Content-Type": "application/json",
         },
       };
-      console.log(config);
       const result: AxiosResponse = await axios(config);
-      console.log("http request");
       responseData = result.data;
     } catch (err) {
       console.log("HTTP error:", err);
       error = err as AxiosError;
     }
   }
-
   return { responseData, error };
 }

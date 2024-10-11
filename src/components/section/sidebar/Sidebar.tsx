@@ -344,7 +344,7 @@ export default function Sidebar() {
                 common
               >
                 <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
-                {t("myDocument")}
+                {t("myDocuments")}
               </ButtonContainer>
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"

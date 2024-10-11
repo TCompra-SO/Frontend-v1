@@ -5,6 +5,7 @@ import AddUserModal from "../components/section/users/addUser/AddUserModal";
 import { useTranslation } from "react-i18next";
 import {
   Action,
+  EntityType,
   OfferState,
   PurchaseOrderState,
   PurchaseOrderTableTypes,
@@ -55,6 +56,7 @@ const users: SubUserProfile[] = [
     sellerScore: 0,
     customerCount: 0,
     sellerCount: 0,
+    typeEntity: EntityType.COMPANY,
   },
   {
     uid: "user2",
@@ -80,6 +82,7 @@ const users: SubUserProfile[] = [
     sellerScore: 0,
     customerCount: 0,
     sellerCount: 0,
+    typeEntity: EntityType.COMPANY,
   },
   {
     uid: "user3",
@@ -105,6 +108,7 @@ const users: SubUserProfile[] = [
     sellerScore: 0,
     customerCount: 0,
     sellerCount: 0,
+    typeEntity: EntityType.COMPANY,
   },
   {
     uid: "user4",
@@ -130,6 +134,7 @@ const users: SubUserProfile[] = [
     sellerScore: 0,
     customerCount: 0,
     sellerCount: 0,
+    typeEntity: EntityType.COMPANY,
   },
 ];
 

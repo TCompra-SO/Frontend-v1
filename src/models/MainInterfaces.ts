@@ -21,8 +21,8 @@ export interface BaseRequirementOffer extends BaseInterface {
 }
 
 export interface BasicRequirement extends BaseRequirementOffer {
-  user: User;
-  subUser?: User;
+  user: BaseUser;
+  subUser?: BaseUser;
   publishDate: string;
   category: number;
   location: number;
@@ -44,8 +44,8 @@ export interface Requirement extends BasicRequirement {
 }
 
 export interface BasicOffer extends BaseRequirementOffer {
-  user: User;
-  subUser?: User;
+  user: BaseUser;
+  subUser?: BaseUser;
   requirementTitle: string;
   requirementId: string;
   publishDate: string;
@@ -85,7 +85,6 @@ export interface PurchaseOrder extends BasicPurchaseOrder {
 
 export interface User extends BaseUser {
   document: string;
-  typeEntity: EntityType;
   address: string;
   phone: string;
 }
@@ -96,10 +95,11 @@ export interface BaseUser {
   image?: string;
   email: string;
   tenure?: number;
-  customerScore: number;
-  sellerScore: number;
-  customerCount: number;
-  sellerCount: number;
+  customerScore?: number;
+  sellerScore?: number;
+  customerCount?: number;
+  sellerCount?: number;
+  typeEntity: EntityType;
 }
 
 export interface FullUser extends User {
