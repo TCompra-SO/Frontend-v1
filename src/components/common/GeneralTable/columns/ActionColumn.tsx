@@ -6,6 +6,7 @@ import {
   ActionByStateOffer,
   ActionByStatePurchaseOrder,
   ActionByStateRequirement,
+  ActionCertificateFiles,
   ActionLabel,
   ActionSubUsers,
   PurchaseOrderTableTypes,
@@ -53,6 +54,9 @@ export default function ActionColumn(
         case TableTypes.PURCHASE_ORDER:
           ActionByState = ActionByStatePurchaseOrder;
           key = record.state;
+          break;
+        case TableTypes.MY_DOCUMENTS:
+          ActionByState = ActionCertificateFiles;
           break;
       }
 

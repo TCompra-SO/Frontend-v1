@@ -694,9 +694,6 @@ const offerList: Offer[] = [
       tenure: 2,
       customerScore: 3.5,
       sellerScore: 1.5,
-      address: "Calle San Agustin 107 - Cercado - Arequipa",
-
-      phone: "90909090",
       customerCount: 0,
       sellerCount: 0,
     },

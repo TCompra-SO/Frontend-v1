@@ -2,7 +2,6 @@ import { ColumnType } from "antd/es/table";
 import {
   BaseRequirementOffer,
   BasicPurchaseOrder,
-  PurchaseOrder,
   Requirement,
 } from "../../../../models/MainInterfaces";
 import { TableTypes } from "../../../../utilities/types";

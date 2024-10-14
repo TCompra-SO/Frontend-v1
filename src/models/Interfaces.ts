@@ -22,6 +22,7 @@ import {
   BasicRequirement,
   BasicOffer,
   BasicPurchaseOrder,
+  CertificateFile,
 } from "./MainInterfaces";
 import { SubUserProfile } from "./Responses";
 
@@ -125,6 +126,14 @@ export interface ModalUserInfo extends CommonModalType {
   };
 }
 
+export interface ModalAddCertificates extends CommonModalType {
+  type: ModalTypes.ADD_CERTIFICATES;
+}
+
+export interface ModalEditDocumentListToRequest extends CommonModalType {
+  type: ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST;
+}
+
 export interface ModalNone extends CommonModalType {
   type: ModalTypes.NONE;
   data: Record<string, never>;
@@ -143,6 +152,8 @@ export type ModalContent =
   | ModalInputEmail
   | ModalOfferDetail
   | ModalUserInfo
+  | ModalAddCertificates
+  | ModalEditDocumentListToRequest
   | ModalNone;
 
 /********** Tables *************/
@@ -208,6 +219,11 @@ export interface TableTypeAllPurchaseOrders extends TableHiddenColumns {
   data: BasicPurchaseOrder[];
 }
 
+export interface TableTypeMyDocuments extends TableHiddenColumns {
+  type: TableTypes.MY_DOCUMENTS;
+  data: CertificateFile[];
+}
+
 export type TableType =
   | TableTypeRequirement
   | TableTypeOffer
@@ -218,7 +234,8 @@ export type TableType =
   | TableTypePurchaseOrderSubUser
   | TableTypeAllRequirements
   | TableTypeAllOffers
-  | TableTypeAllPurchaseOrders;
+  | TableTypeAllPurchaseOrders
+  | TableTypeMyDocuments;
 
 /********************* */
 

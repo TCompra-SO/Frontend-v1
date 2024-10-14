@@ -439,6 +439,8 @@ export default function Users() {
             user={userData}
           />
         );
+      default:
+        return null;
     }
   }
 

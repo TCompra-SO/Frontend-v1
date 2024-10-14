@@ -8,6 +8,7 @@ import {
   UserRoles,
   EntityType,
   PurchaseOrderTableTypes,
+  CertificationState,
 } from "../utilities/types";
 import { OfferFilters } from "./Interfaces";
 
@@ -136,4 +137,18 @@ export interface PurchaseOrderItemSubUser extends BaseInterface {
   selectionDate: string;
   state: PurchaseOrderState;
   subType: PurchaseOrderTableTypes;
+}
+
+export interface CertificateFile {
+  name: string;
+  documentName: string;
+  url: string;
+}
+
+export interface CertificatesSent {
+  companyID: string;
+  companyName: string;
+  companyDocument: string;
+  creationDate: string;
+  state: CertificationState;
 }

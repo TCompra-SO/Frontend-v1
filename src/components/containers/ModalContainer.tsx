@@ -106,7 +106,6 @@ export default function ModalContainer(props: ModalContainerProps) {
           />
         );
       }
-
       case ModalTypes.INPUT_EMAIL: {
         return (
           <InputEmailModal
@@ -117,13 +116,17 @@ export default function ModalContainer(props: ModalContainerProps) {
           />
         );
       }
-
       case ModalTypes.OFFER_DETAIL: {
         return <OfferDetailModal offer={props.content.data.offer} />;
       }
-
       case ModalTypes.USER_INFO: {
         return <UserInfoModal user={props.content.data.user} />;
+      }
+      case ModalTypes.ADD_CERTIFICATES: {
+        return null;
+      }
+      case ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST: {
+        return null;
       }
     }
   }

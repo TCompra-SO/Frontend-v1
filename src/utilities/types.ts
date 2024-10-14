@@ -62,6 +62,9 @@ export enum TableTypes {
   ALL_REQUIREMENTS = 8,
   ALL_OFFERS = 9,
   ALL_PURCHASE_ORDERS = 10,
+  MY_DOCUMENTS = 11,
+  SENT_CERT = 12,
+  RECEIVED_CERT = 13,
 }
 
 // export enum EntityType {
@@ -92,6 +95,8 @@ export enum ModalTypes {
   INPUT_EMAIL = 10,
   OFFER_DETAIL = 11,
   USER_INFO = 12,
+  ADD_CERTIFICATES = 13,
+  EDIT_DOCUMENT_LIST_TO_REQUEST = 14,
 }
 
 export const ModalWidth: {
@@ -110,6 +115,8 @@ export const ModalWidth: {
   [ModalTypes.INPUT_EMAIL]: smallModalWidth,
   [ModalTypes.OFFER_DETAIL]: commonModalWidth,
   [ModalTypes.USER_INFO]: 900,
+  [ModalTypes.ADD_CERTIFICATES]: 800,
+  [ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST]: 600,
 };
 
 /***** Acciones *****/
@@ -142,6 +149,8 @@ export enum Action {
   VIEW_REQUIREMENT = 25,
   VIEW_OFFER = 26,
   VIEW_PURCHASE_ORDER = 27,
+  ADD_CERTIFICATES = 28,
+  EDIT_DOCUMENT_LIST_TO_REQUEST = 29,
 }
 
 export const ActionLabel: {
@@ -174,6 +183,8 @@ export const ActionLabel: {
   [Action.VIEW_REQUIREMENT]: "view",
   [Action.VIEW_OFFER]: "view",
   [Action.VIEW_PURCHASE_ORDER]: "view",
+  [Action.ADD_CERTIFICATES]: "addCertificates",
+  [Action.EDIT_DOCUMENT_LIST_TO_REQUEST]: "listOfDocumentsToRequest",
 };
 
 export const ActionByStateRequirement: {
@@ -247,6 +258,12 @@ export const ActionSubUsers: {
     Action.VIEW_PURCHASE_ORDERS,
     Action.EDIT_USER,
   ],
+};
+
+export const ActionCertificateFiles: {
+  [key: number]: Array<Action>;
+} = {
+  [allItems]: [Action.VIEW_DOCUMENT, Action.DELETE],
 };
 
 /*********/
@@ -354,4 +371,10 @@ export enum PurchaseOrderTableTypes {
   RECEIVED = 1,
   ISSUED_SALES = 2,
   RECEIVED_SALES = 3,
+}
+
+export enum CertificationState {
+  CERTIFIED = 0,
+  REJECTED = 1,
+  PENDING = 2,
 }

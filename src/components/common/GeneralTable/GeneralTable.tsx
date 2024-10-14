@@ -23,6 +23,7 @@ import {
   BasicOffer,
   BasicPurchaseOrder,
   BaseRequirementOffer,
+  CertificateFile,
 } from "../../../models/MainInterfaces";
 import { ColumnType } from "antd/es/table";
 import { useTranslation } from "react-i18next";
@@ -50,6 +51,7 @@ export default function GeneralTable(props: RequirementsTableProps) {
     | ColumnType<BasicPurchaseOrder>
     | ColumnType<SubUserProfile>
     | ColumnType<RequirementItemSubUser>
+    | ColumnType<CertificateFile>
     | ColumnType<SubUserProfile | Requirement>
     | ColumnType<Offer | Requirement>
     | ColumnType<Offer | PurchaseOrder>
@@ -205,6 +207,15 @@ export default function GeneralTable(props: RequirementsTableProps) {
         <Table
           dataSource={props.content.data}
           columns={columns as Array<ColumnType<BasicPurchaseOrder>>}
+          {...tableProps}
+        ></Table>
+      );
+    case TableTypes.MY_DOCUMENTS:
+      getMyDocumentsCertificateColumns();
+      return (
+        <Table
+          dataSource={props.content.data}
+          columns={columns as Array<ColumnType<CertificateFile>>}
           {...tableProps}
         ></Table>
       );
@@ -556,6 +567,31 @@ export default function GeneralTable(props: RequirementsTableProps) {
         TableTypes.PURCHASE_ORDER_SUBUSER,
         props.content.onButtonClick,
         visibility[TableColumns.VIEW]
+      ),
+    ];
+    return columns;
+  }
+
+  function getMyDocumentsCertificateColumns() {
+    columns = [
+      GeneralColumnString(
+        t("name"),
+        "name",
+        true,
+        130,
+        visibility[TableColumns.NAME]
+      ),
+      GeneralColumnString(
+        t("document"),
+        "documentName",
+        true,
+        130,
+        visibility[TableColumns.DOCUMENT]
+      ),
+      ActionColumn(
+        props.content.type,
+        props.content.onButtonClick,
+        visibility[TableColumns.ACTION]
       ),
     ];
     return columns;

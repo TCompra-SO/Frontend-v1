@@ -206,6 +206,7 @@ const resources = {
       userUpdatedSuccessfully: "User updated successfully",
       createRequirementSuccess: "Requirement created successfully",
       createSaleSuccess: "Sale created successfully",
+      listOfDocumentsToRequest: "List of documents to request",
       // Other
       yes: "Yes",
       no: "No",
@@ -306,7 +307,8 @@ const resources = {
       sent: "Sent",
       sentPl: "Sent",
       loading: "Loading...",
-      class: "Class"
+      class: "Class",
+      addCertificates: "Add certificates"
     },
   },
   es: {
@@ -511,6 +513,7 @@ const resources = {
       userUpdatedSuccessfully: "Usuario actualizado exitosamente",
       createRequirementSuccess: "Requerimiento creado exitosamente",
       createSaleSuccess: "Liquidación creada exitosamente",
+      listOfDocumentsToRequest: "Lista de documentos a solicitar",
       // Other
       yes: "Sí",
       no: "No",
@@ -609,10 +612,12 @@ const resources = {
       received: "Recibida",
       issuedPl: "Emitidas",
       receivedPl: "Recibidas",
+      myDocuments: "Mis documentos",
       sent: "Enviado",
       sentPl: "Enviados",
       loading: "Cargando...",
       class: "Clase",
+      addCertificates: "Agregar certificados"
     },
   },
 };

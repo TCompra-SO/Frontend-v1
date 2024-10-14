@@ -13,8 +13,9 @@ interface TablePageContentProps {
   titleIcon: ReactNode;
   subtitleIcon?: ReactNode;
   table: TableType;
-  onSearch: (e: ChangeEvent<HTMLInputElement>) => void;
+  onSearch?: (e: ChangeEvent<HTMLInputElement>) => void;
   additionalContentHeader?: ReactNode;
+  hideSearch?: boolean;
 }
 
 export default function TablePageContent(props: TablePageContentProps) {
@@ -36,19 +37,27 @@ export default function TablePageContent(props: TablePageContentProps) {
           }}
           gutter={[10, 10]}
         >
-          <Col xs={24} sm={24} md={16} lg={16} xl={16}>
+          <Col
+            xs={24}
+            sm={24}
+            md={!props.hideSearch ? 16 : 24}
+            lg={!props.hideSearch ? 16 : 24}
+            xl={!props.hideSearch ? 16 : 24}
+          >
             <div className="sub-titulo">
               {props.subtitleIcon} {props.subtitle}
             </div>
           </Col>
-          <Col xs={24} sm={24} md={8} lg={8} xl={8}>
-            <InputContainer
-              placeholder={`${t("search")}...`}
-              prefix={<SearchOutlined />}
-              className="form-control"
-              onChange={props.onSearch}
-            />
-          </Col>
+          {!props.hideSearch && (
+            <Col xs={24} sm={24} md={8} lg={8} xl={8}>
+              <InputContainer
+                placeholder={`${t("search")}...`}
+                prefix={<SearchOutlined />}
+                className="form-control"
+                onChange={props.onSearch}
+              />
+            </Col>
+          )}
         </Row>
         <div className="table-responsive">
           <GeneralTable content={props.table} />
