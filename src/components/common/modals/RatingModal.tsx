@@ -1,17 +1,17 @@
 import { App, Tooltip } from "antd";
-import { RequirementType, YesNo, UserClass } from "../../utilities/types";
-import SelectContainer from "../containers/SelectContainer";
-import RatingContainer from "../containers/RatingContainer";
-import { BaseUser } from "../../models/MainInterfaces";
-import { getUserClass } from "../../utilities/globalFunctions";
-import ButtonContainer from "../containers/ButtonContainer";
+import { RequirementType, YesNo, UserClass } from "../../../utilities/types";
+import SelectContainer from "../../containers/SelectContainer";
+import RatingContainer from "../../containers/RatingContainer";
+import { BaseUser } from "../../../models/MainInterfaces";
+import { getUserClass } from "../../../utilities/globalFunctions";
+import ButtonContainer from "../../containers/ButtonContainer";
 import { useState } from "react";
-import showNotification from "../../utilities/notification/showNotification";
+import showNotification from "../../../utilities/notification/showNotification";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import { MainState } from "../../models/Redux";
-import FrontImage from "./FrontImage";
-import SubUserName from "./SubUserName";
+import { MainState } from "../../../models/Redux";
+import FrontImage from "../FrontImage";
+import SubUserName from "../SubUserName";
 
 interface RatingModalProps {
   user: BaseUser;
@@ -27,7 +27,7 @@ export default function RatingModal(props: RatingModalProps) {
   const [answer, setAnswer] = useState<YesNo | null>(null);
   const [scores, setScores] = useState([0, 0, 0]);
   const { notification } = App.useApp();
-  const uid = useSelector((state: MainState) => state.user.uid);
+  const uid = useSelector((state: MainState) => state.mainUser.uid);
   const userClass: UserClass = getUserClass(props.isOffer, props.type);
 
   const questions = {

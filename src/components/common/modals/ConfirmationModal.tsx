@@ -1,4 +1,4 @@
-import ButtonContainer from "../containers/ButtonContainer";
+import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 
 interface ConfirmationModalProps {

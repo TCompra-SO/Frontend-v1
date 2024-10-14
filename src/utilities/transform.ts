@@ -6,7 +6,7 @@ export async function transformDataToRequirement(
   data: any,
   type: RequirementType,
   user: UserState,
-  mainUser?: UserState
+  mainUser: UserState
 ) {
   const req: Requirement = data;
   req.state = RequirementState.FINISHED;
@@ -15,7 +15,7 @@ export async function transformDataToRequirement(
   req.warrantyTime = data.duration;
   req.used = data.used ? Usage.USED : Usage.NEW;
   req.expirationDate = data.completion_date;
-  if (mainUser) {
+  if (mainUser.uid != user.uid) {
     req.user = mainUser;
     // req.user = {
     //   document: "111111",
@@ -50,11 +50,12 @@ export function transformToFullUser(response: any) {
   return user;
 }
 
-export function transformToBaseUser(response: any) {
+export function transformToBaseUser(response: any, fromLogin: boolean = false) {
   const user: BaseUser = response;
-  const subUser: BaseUser = response.auth_users;
+  let subUser: BaseUser = response.auth_users;
   if (subUser) {
     subUser.uid = response.auth_users.Uid;
   }
+  if (!subUser && fromLogin) subUser = user;
   return { user, subUser };
 }

@@ -5,12 +5,15 @@ import {
 } from "../utilities/transform";
 import { getBaseDataUserService, getUserService } from "./authService";
 
-export async function getBaseUserForUserSubUser(uid: string) {
+export async function getBaseUserForUserSubUser(
+  uid: string,
+  fromLogin: boolean = false
+) {
   const { responseData }: any = await makeRequest({
     service: getBaseDataUserService(uid),
     method: "get",
   });
-  if (responseData) return transformToBaseUser(responseData.data[0]);
+  if (responseData) return transformToBaseUser(responseData.data[0], fromLogin);
   else return { user: null, subUser: null };
 }
 

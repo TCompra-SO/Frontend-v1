@@ -1,21 +1,21 @@
 import { App, Tooltip } from "antd";
-import { BaseUser } from "../../models/MainInterfaces";
+import { BaseUser } from "../../../models/MainInterfaces";
 import {
   Action,
   ActionLabel,
   RequirementType,
   UserClass,
-} from "../../utilities/types";
-import RatingContainer from "../containers/RatingContainer";
+} from "../../../utilities/types";
+import RatingContainer from "../../containers/RatingContainer";
 import { useState } from "react";
-import ButtonContainer from "../containers/ButtonContainer";
-import { getUserClass } from "../../utilities/globalFunctions";
+import ButtonContainer from "../../containers/ButtonContainer";
+import { getUserClass } from "../../../utilities/globalFunctions";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import { MainState } from "../../models/Redux";
-import showNotification from "../../utilities/notification/showNotification";
-import FrontImage from "./FrontImage";
-import SubUserName from "./SubUserName";
+import { MainState } from "../../../models/Redux";
+import showNotification from "../../../utilities/notification/showNotification";
+import FrontImage from "../FrontImage";
+import SubUserName from "../SubUserName";
 
 interface RatingCanceledModalProps {
   user: BaseUser;
@@ -30,7 +30,7 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
   const { t } = useTranslation();
   const [score, setScore] = useState(0);
   const { notification } = App.useApp();
-  const uid = useSelector((state: MainState) => state.user.uid);
+  const uid = useSelector((state: MainState) => state.mainUser.uid);
 
   const userClass: UserClass = getUserClass(props.isOffer, props.type);
 

@@ -5,14 +5,16 @@ import { ModalProps } from "antd/lib";
 import RequirementOfferSummary from "../section/requirements/requirementOfferSummary/RequirementOfferSummary";
 import RequirementModalRepublish from "../section/requirements/RequirementModalRepublish";
 import { ModalContent } from "../../models/Interfaces";
-import RatingCanceledModal from "../common/RatingCanceledModal";
-import CancelPurchaseOrderModal from "../common/CancelPurchaseOrderModal";
-import RatingModal from "../common/RatingModal";
-import ConfirmationModal from "../common/ConfirmationModal";
-import InputEmailModal from "../common/InputEmailModal";
+import RatingCanceledModal from "../common/modals/RatingCanceledModal";
+import CancelPurchaseOrderModal from "../common/modals/CancelPurchaseOrderModal";
+import RatingModal from "../common/modals/RatingModal";
+import ConfirmationModal from "../common/modals/ConfirmationModal";
+import InputEmailModal from "../common/modals/InputEmailModal";
 import NoContentModalContainer from "./NoContentModalContainer";
 import OfferDetailModal from "../section/offers/offerDetail/OfferDetailModal";
-import UserInfoModal from "../common/UserInfoModal";
+import UserInfoModal from "../common/modals/UserInfoModal";
+import AddCertificatesModal from "../common/modals/AddCertificatesModal";
+import EditDocumentListToRequestModal from "../common/modals/EditDocumentListToRequestModal";
 
 interface ModalContainerProps extends ModalProps {
   content: ModalContent;
@@ -123,10 +125,10 @@ export default function ModalContainer(props: ModalContainerProps) {
         return <UserInfoModal user={props.content.data.user} />;
       }
       case ModalTypes.ADD_CERTIFICATES: {
-        return null;
+        return <AddCertificatesModal />;
       }
       case ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST: {
-        return null;
+        return <EditDocumentListToRequestModal />;
       }
     }
   }

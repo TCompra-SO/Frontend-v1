@@ -207,6 +207,7 @@ const resources = {
       createRequirementSuccess: "Requirement created successfully",
       createSaleSuccess: "Sale created successfully",
       listOfDocumentsToRequest: "List of documents to request",
+      editListOfDocumentsToRequest: "Edit list of documents to request",
       // Other
       yes: "Yes",
       no: "No",
@@ -308,7 +309,8 @@ const resources = {
       sentPl: "Sent",
       loading: "Loading...",
       class: "Class",
-      addCertificates: "Add certificates"
+      addCertificates: "Add certificates",
+      list: "List"
     },
   },
   es: {
@@ -514,6 +516,7 @@ const resources = {
       createRequirementSuccess: "Requerimiento creado exitosamente",
       createSaleSuccess: "Liquidación creada exitosamente",
       listOfDocumentsToRequest: "Lista de documentos a solicitar",
+      editListOfDocumentsToRequest: "Editar lista de documentos a solicitar",
       // Other
       yes: "Sí",
       no: "No",
@@ -617,7 +620,8 @@ const resources = {
       sentPl: "Enviados",
       loading: "Cargando...",
       class: "Clase",
-      addCertificates: "Agregar certificados"
+      addCertificates: "Agregar certificados",
+      list: "Lista"
     },
   },
 };

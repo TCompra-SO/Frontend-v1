@@ -342,6 +342,11 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
+                onClick={() =>
+                  redirectTo(
+                    `${pageRoutes.certificates}/${pageRoutes.documents}`
+                  )
+                }
               >
                 <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
                 {t("myDocuments")}
@@ -349,6 +354,9 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
+                onClick={() =>
+                  redirectTo(`${pageRoutes.certificates}/${pageRoutes.sent}`)
+                }
               >
                 <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
                 {t("sentPl")}
@@ -356,6 +364,11 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
+                onClick={() =>
+                  redirectTo(
+                    `${pageRoutes.certificates}/${pageRoutes.received}`
+                  )
+                }
               >
                 <i className="fa-regular fa-basket-shopping text-center i-btn"></i>{" "}
                 {t("receivedPl")}

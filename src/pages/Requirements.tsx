@@ -1036,11 +1036,10 @@ export default function Requirements() {
   const [type] = useState(getRouteType(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
   const dataUser = useSelector((state: MainState) => state.user);
-  let mainDataUser: UserState | undefined = useSelector(
-    (state: MainState) => state.mainUser
-  );
-  console.log(dataUser, mainDataUser);
-  if (!mainDataUser.uid) mainDataUser = undefined;
+  const mainDataUser = useSelector((state: MainState) => state.mainUser);
+
+  // console.log(dataUser, mainDataUser);
+
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},

@@ -153,8 +153,6 @@ export default function Login(props: LoginProps) {
   }
 
   function HandleSubmit(values: any) {
-    // afterSubmit();
-    // return;
     if (loginType == LoginType.LOGIN) {
       const data: LoginRequest = {
         email: values.email,
@@ -187,7 +185,7 @@ export default function Login(props: LoginProps) {
       };
       if (docType == DocType.DNI) data.dni = values.document.trim();
       else data.ruc = values.document.trim();
-      console.log(data);
+
       setApiParams({
         service: registerService(),
         method: "post",
@@ -205,12 +203,13 @@ export default function Login(props: LoginProps) {
     } else {
       dispatch(setUser(responseData));
       const { user, subUser } = await getBaseUserForUserSubUser(
-        responseData.dataUser[0].uid
+        responseData.dataUser[0].uid,
+        true
       );
-      if (subUser) {
+      if (user) {
         dispatch(setBaseUser(subUser));
         dispatch(setMainUser(user));
-      } else if (user) dispatch(setBaseUser(user));
+      }
 
       showNotification(notification, "success", t("welcome"));
       localStorage.setItem("token", responseData.token);
