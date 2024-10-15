@@ -23,6 +23,7 @@ import {
   BasicOffer,
   BasicPurchaseOrder,
   CertificateFile,
+  CertificationItem,
 } from "./MainInterfaces";
 import { SubUserProfile } from "./Responses";
 
@@ -134,6 +135,24 @@ export interface ModalEditDocumentListToRequest extends CommonModalType {
   type: ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST;
 }
 
+export interface ModalViewDocsReceivedCert extends CommonModalType {
+  type: ModalTypes.VIEW_DOCS_RECEIVED_CERT;
+  data: {
+    docs: CertificateFile[];
+    data: CertificationItem;
+    readonly?: boolean;
+  };
+}
+
+export interface ModalViewDocsSentCert extends CommonModalType {
+  type: ModalTypes.VIEW_DOCS_SENT_CERT;
+  data: {
+    docs: CertificateFile[];
+    data: CertificationItem;
+    readonly?: boolean;
+  };
+}
+
 export interface ModalNone extends CommonModalType {
   type: ModalTypes.NONE;
   data: Record<string, never>;
@@ -154,6 +173,8 @@ export type ModalContent =
   | ModalUserInfo
   | ModalAddCertificates
   | ModalEditDocumentListToRequest
+  | ModalViewDocsReceivedCert
+  | ModalViewDocsSentCert
   | ModalNone;
 
 /********** Tables *************/
@@ -224,6 +245,16 @@ export interface TableTypeMyDocuments extends TableHiddenColumns {
   data: CertificateFile[];
 }
 
+export interface TableTypeCertificatesSent extends TableHiddenColumns {
+  type: TableTypes.SENT_CERT;
+  data: CertificationItem[];
+}
+
+export interface TableTypeCertificatesReceived extends TableHiddenColumns {
+  type: TableTypes.RECEIVED_CERT;
+  data: CertificationItem[];
+}
+
 export type TableType =
   | TableTypeRequirement
   | TableTypeOffer
@@ -235,7 +266,9 @@ export type TableType =
   | TableTypeAllRequirements
   | TableTypeAllOffers
   | TableTypeAllPurchaseOrders
-  | TableTypeMyDocuments;
+  | TableTypeMyDocuments
+  | TableTypeCertificatesReceived
+  | TableTypeCertificatesSent;
 
 /********************* */
 

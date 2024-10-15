@@ -1328,7 +1328,11 @@ body {
   font-size: 30px;
 }
 .estado-red {
-  color: #01b43e;
+  color: #c50404;
+  font-size: 30px;
+}
+.estado-gray {
+  color: #383535;
   font-size: 30px;
 }
 .doc-name {
@@ -1349,6 +1353,19 @@ body {
   transition: all 0.2s ease-out;
 }
 .btn-certificados:hover {
+  background: #f8f8f8;
+}
+
+.select-certificados {
+  margin: 0.6rem 1rem;
+  border-radius: 0.8rem;
+  background: #fff;
+  color: #92acbf;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+.select-certificados:hover {
   background: #f8f8f8;
 }
 
@@ -1556,6 +1573,14 @@ body {
 
 .form-control > .ant-select-selector {
   text-align: left;
+}
+
+.ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
+  border: none;
+}
+
+.select-certificados .ant-select-selector {
+  border-radius: 0.8rem;
 }
 
 /************** Antd general ********************/

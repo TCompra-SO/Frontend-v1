@@ -1,4 +1,5 @@
 import {
+  CertificationState,
   CommonFilter,
   OfferState,
   PurchaseOrderState,
@@ -142,6 +143,24 @@ export const CardByStateOffer: {
     label: "eliminatedOffer",
     class: "card-black",
     icon: "fa-ban",
+  },
+};
+
+export const CertificationStateMeta: {
+  [key in CertificationState]: { class: string; label: string };
+} = {
+  [CertificationState.CERTIFIED]: {
+    class: "es-culminado",
+    label: "certified",
+  },
+
+  [CertificationState.REJECTED]: {
+    class: "es-cancelado",
+    label: "rejected",
+  },
+  [CertificationState.PENDING]: {
+    class: "es-atendido",
+    label: "pending",
   },
 };
 

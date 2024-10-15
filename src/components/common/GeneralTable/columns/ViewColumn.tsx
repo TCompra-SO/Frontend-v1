@@ -32,6 +32,9 @@ export default function ViewColumn(
         case TableTypes.PURCHASE_ORDER_SUBUSER:
           action = Action.VIEW_PURCHASE_ORDER;
           break;
+        case TableTypes.SENT_CERT:
+        case TableTypes.RECEIVED_CERT:
+          action = Action.VIEW;
       }
 
       return (

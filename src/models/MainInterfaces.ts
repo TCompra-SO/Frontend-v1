@@ -143,12 +143,14 @@ export interface CertificateFile {
   name: string;
   documentName: string;
   url: string;
+  state?: CertificationState;
 }
 
-export interface CertificatesSent {
+export interface CertificationItem {
   companyID: string;
   companyName: string;
   companyDocument: string;
   creationDate: string;
   state: CertificationState;
+  note?: string;
 }

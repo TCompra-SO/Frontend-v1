@@ -46,7 +46,6 @@ export default function AddCertificatesModal() {
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
   ) {
-    console.log(index);
     const file = e.target.files?.[0];
     if (file) {
       const { validImage, validSize } = checkImage(file);
@@ -78,7 +77,6 @@ export default function AddCertificatesModal() {
         newArray[index] = file.name;
         return newArray;
       });
-      console.log(docList);
     }
   }
 
@@ -89,7 +87,6 @@ export default function AddCertificatesModal() {
   }
 
   function sendDocuments() {
-    console.log(docList, nameList);
     for (let i = 0; i < docList.length; i++) {
       if (!docList[i] || !nameList[i]) {
         showNotification(
@@ -117,7 +114,7 @@ export default function AddCertificatesModal() {
         <div className="t-flex gap-15 datos-empresa">
           <div className="card-ofertas cert-datos dato-empresa">{name}</div>
           <div className="card-ofertas cert-datos dato-empresa">
-            {t("RUC")}: 12346598779
+            {t("document")}: 12346598779
           </div>
         </div>
         <div className="t-flex t-wrap up-footer">

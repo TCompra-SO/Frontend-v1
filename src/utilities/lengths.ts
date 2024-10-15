@@ -71,4 +71,8 @@ export const Lengths = {
     min: 5,
     max: 300,
   },
+  certificationNotes: {
+    min: 0,
+    max: 255,
+  },
 };

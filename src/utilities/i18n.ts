@@ -311,6 +311,7 @@ const resources = {
       received: "Received",
       issuedPl: "Issued",
       receivedPl: "Received",
+      receivedPlMasc: "Received",
       myDocuments: "My documents",
       sent: "Sent",
       sentPl: "Sent",
@@ -318,8 +319,16 @@ const resources = {
       class: "Class",
       addCertificates: "Add certificates",
       list: "List",
-      documents: "Documentos",
-
+      documents: "Documents",
+      certified: "Certified",
+      rejected: "Rejected",
+      receivedDocuments: "Received documents",
+      certificate: "Certificate",
+      reject: "Reject",
+      certifiesSent: "Certificates sent",
+      certifiesReceived: "Certificates received",
+      certify: "Certify",
+      approve: "Approve"
     },
   },
   es: {
@@ -631,6 +640,7 @@ const resources = {
       received: "Recibida",
       issuedPl: "Emitidas",
       receivedPl: "Recibidas",
+      receivedPlMasc: "Recibidos",
       myDocuments: "Mis documentos",
       sent: "Enviado",
       sentPl: "Enviados",
@@ -639,7 +649,15 @@ const resources = {
       addCertificates: "Agregar certificados",
       list: "Lista",
       documents: "Documentos",
-
+      certified: "Certificado",
+      rejected: "Rechazado",
+      receivedDocuments: "Documentos recibidos",
+      certificate: "Certificar",
+      reject: "Rechazar",
+      certifiesSent: "Certificados enviados",
+      certifiesReceived: "Certificados recibidos",
+      certify: "Certificar",
+      approve: "Aprobar"
     },
   },
 };

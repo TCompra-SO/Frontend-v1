@@ -9,8 +9,10 @@ import {
   BasicRequirement,
   BasicOffer,
   BasicPurchaseOrder,
+  CertificationItem,
 } from "../../../../models/MainInterfaces";
 import {
+  CertificationStateMeta,
   OfferStateMeta,
   RequirementStateMeta,
 } from "../../../../utilities/colors";
@@ -30,6 +32,7 @@ export default function StateColumn(type: TableTypes, hidden: boolean = false) {
     | BasicRequirement
     | BasicOffer
     | BasicPurchaseOrder
+    | CertificationItem
   > = {
     title: t("stateColumn"),
     key: "state",
@@ -66,6 +69,13 @@ export default function StateColumn(type: TableTypes, hidden: boolean = false) {
         const state = (record as BasicPurchaseOrder).state;
         label = t(OfferStateMeta[state].label);
         className = `cont-estado ${OfferStateMeta[state].class}`;
+      } else if (
+        type == TableTypes.SENT_CERT ||
+        type == TableTypes.RECEIVED_CERT
+      ) {
+        const state = (record as CertificationItem).state;
+        label = t(CertificationStateMeta[state].label);
+        className = `cont-estado ${CertificationStateMeta[state].class}`;
       }
       return (
         <div className="t-flex c-estados">

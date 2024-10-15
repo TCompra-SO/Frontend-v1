@@ -97,6 +97,8 @@ export enum ModalTypes {
   USER_INFO = 12,
   ADD_CERTIFICATES = 13,
   EDIT_DOCUMENT_LIST_TO_REQUEST = 14,
+  VIEW_DOCS_RECEIVED_CERT = 15,
+  VIEW_DOCS_SENT_CERT = 16,
 }
 
 export const ModalWidth: {
@@ -117,6 +119,8 @@ export const ModalWidth: {
   [ModalTypes.USER_INFO]: 900,
   [ModalTypes.ADD_CERTIFICATES]: 800,
   [ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST]: 600,
+  [ModalTypes.VIEW_DOCS_RECEIVED_CERT]: 800,
+  [ModalTypes.VIEW_DOCS_SENT_CERT]: 800,
 };
 
 /***** Acciones *****/
@@ -151,6 +155,7 @@ export enum Action {
   VIEW_PURCHASE_ORDER = 27,
   ADD_CERTIFICATES = 28,
   EDIT_DOCUMENT_LIST_TO_REQUEST = 29,
+  VIEW = 30,
 }
 
 export const ActionLabel: {
@@ -185,6 +190,7 @@ export const ActionLabel: {
   [Action.VIEW_PURCHASE_ORDER]: "view",
   [Action.ADD_CERTIFICATES]: "addCertificates",
   [Action.EDIT_DOCUMENT_LIST_TO_REQUEST]: "listOfDocumentsToRequest",
+  [Action.VIEW]: "view",
 };
 
 export const ActionByStateRequirement: {
@@ -374,7 +380,7 @@ export enum PurchaseOrderTableTypes {
 }
 
 export enum CertificationState {
-  CERTIFIED = 0,
-  REJECTED = 1,
-  PENDING = 2,
+  CERTIFIED = 1,
+  REJECTED = 2,
+  PENDING = 3,
 }

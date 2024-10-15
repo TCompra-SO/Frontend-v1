@@ -12,7 +12,7 @@ interface TablePageContentProps {
   subtitle?: string;
   titleIcon: ReactNode;
   subtitleIcon?: ReactNode;
-  table: TableType;
+  table: TableType | null;
   onSearch?: (e: ChangeEvent<HTMLInputElement>) => void;
   additionalContentHeader?: ReactNode;
   hideSearch?: boolean;
@@ -59,9 +59,11 @@ export default function TablePageContent(props: TablePageContentProps) {
             </Col>
           )}
         </Row>
-        <div className="table-responsive">
-          <GeneralTable content={props.table} />
-        </div>
+        {props.table && (
+          <div className="table-responsive">
+            <GeneralTable content={props.table} />
+          </div>
+        )}
       </div>
     </>
   );

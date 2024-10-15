@@ -189,7 +189,7 @@ export default function Sidebar() {
                 common
               >
                 <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
-                {t("receivedPl")}
+                {t("receivedPlMasc")}
               </ButtonContainer>
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"

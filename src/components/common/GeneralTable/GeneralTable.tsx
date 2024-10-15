@@ -24,6 +24,7 @@ import {
   BasicPurchaseOrder,
   BaseRequirementOffer,
   CertificateFile,
+  CertificationItem,
 } from "../../../models/MainInterfaces";
 import { ColumnType } from "antd/es/table";
 import { useTranslation } from "react-i18next";
@@ -35,11 +36,11 @@ import ViewColumn from "./columns/ViewColumn";
 import DocumentColumn from "./columns/DocumentColumn";
 import { getLabelFromPurchaseOrderType } from "../../../utilities/globalFunctions";
 
-interface RequirementsTableProps {
+interface GeneralTableProps {
   content: TableType;
 }
 
-export default function GeneralTable(props: RequirementsTableProps) {
+export default function GeneralTable(props: GeneralTableProps) {
   const { t } = useTranslation();
   const pageSizeOptions = pageSizeOptionsSt;
   let columns: Array<
@@ -52,6 +53,7 @@ export default function GeneralTable(props: RequirementsTableProps) {
     | ColumnType<SubUserProfile>
     | ColumnType<RequirementItemSubUser>
     | ColumnType<CertificateFile>
+    | ColumnType<CertificationItem>
     | ColumnType<SubUserProfile | Requirement>
     | ColumnType<Offer | Requirement>
     | ColumnType<Offer | PurchaseOrder>
@@ -84,6 +86,18 @@ export default function GeneralTable(props: RequirementsTableProps) {
         | BasicRequirement
         | BasicOffer
         | BasicPurchaseOrder
+      >
+    | ColumnType<
+        | Requirement
+        | Offer
+        | PurchaseOrder
+        | RequirementItemSubUser
+        | OfferItemSubUser
+        | PurchaseOrderItemSubUser
+        | BasicRequirement
+        | BasicOffer
+        | BasicPurchaseOrder
+        | CertificationItem
       >
   > = [];
 
@@ -216,6 +230,24 @@ export default function GeneralTable(props: RequirementsTableProps) {
         <Table
           dataSource={props.content.data}
           columns={columns as Array<ColumnType<CertificateFile>>}
+          {...tableProps}
+        ></Table>
+      );
+    case TableTypes.SENT_CERT:
+      getCertificatesSentColumns();
+      return (
+        <Table
+          dataSource={props.content.data}
+          columns={columns as Array<ColumnType<CertificationItem>>}
+          {...tableProps}
+        ></Table>
+      );
+    case TableTypes.RECEIVED_CERT:
+      getCertificatesReceivedColumns();
+      return (
+        <Table
+          dataSource={props.content.data}
+          columns={columns as Array<ColumnType<CertificationItem>>}
           {...tableProps}
         ></Table>
       );
@@ -592,6 +624,67 @@ export default function GeneralTable(props: RequirementsTableProps) {
         props.content.type,
         props.content.onButtonClick,
         visibility[TableColumns.ACTION]
+      ),
+    ];
+    return columns;
+  }
+
+  function getCertificatesSentColumns() {
+    columns = [
+      GeneralColumnString(
+        t("company"),
+        "companyName",
+        true,
+        130,
+        visibility[TableColumns.NAME]
+      ),
+      GeneralColumnString(
+        t("document"),
+        "companyDocument",
+        false,
+        130,
+        visibility[TableColumns.DOCUMENT]
+      ),
+      GeneralDateColumn(
+        t("date"),
+        "creationDate",
+        visibility[TableColumns.CREATION_DATE]
+      ),
+      StateColumn(TableTypes.SENT_CERT, visibility[TableColumns.STATE]),
+      ViewColumn(
+        TableTypes.SENT_CERT,
+        props.content.onButtonClick,
+        visibility[TableColumns.VIEW]
+      ),
+    ];
+    return columns;
+  }
+  function getCertificatesReceivedColumns() {
+    columns = [
+      GeneralColumnString(
+        t("company"),
+        "companyName",
+        true,
+        130,
+        visibility[TableColumns.NAME]
+      ),
+      GeneralColumnString(
+        t("document"),
+        "companyDocument",
+        false,
+        130,
+        visibility[TableColumns.DOCUMENT]
+      ),
+      GeneralDateColumn(
+        t("date"),
+        "creationDate",
+        visibility[TableColumns.CREATION_DATE]
+      ),
+      StateColumn(props.content.type, visibility[TableColumns.STATE]),
+      ViewColumn(
+        TableTypes.SENT_CERT,
+        props.content.onButtonClick,
+        visibility[TableColumns.VIEW]
       ),
     ];
     return columns;

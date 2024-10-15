@@ -119,8 +119,7 @@ export function openDocument(documentUrl: string) {
 }
 
 export function getRouteType(pathname: string) {
-  const pathSegments = pathname.split("/");
-  const lastSegment = pathSegments[pathSegments.length - 1];
+  const lastSegment = getLastSegmentFromRoute(pathname);
   switch (lastSegment) {
     case pageRoutes.goods:
       return RequirementType.GOOD;
@@ -131,6 +130,11 @@ export function getRouteType(pathname: string) {
     default:
       return RequirementType.GOOD;
   }
+}
+
+export function getLastSegmentFromRoute(pathname: string) {
+  const pathSegments = pathname.split("/");
+  return pathSegments[pathSegments.length - 1];
 }
 
 // Retorna valor anidado para columna de tabla
