@@ -99,6 +99,7 @@ const resources = {
       selectDifferentCategories: "Categories must be different",
       mustIndicateReasonCancellation:
         "Please provide a reason for the cancellation",
+      mustUploadAFileAndProvideNameForEachItem: "You must upload a file and provide a name for each item",
       // Profile
       sentValidationCode: "Code was sent successfully",
       timerResendValidationCode: "You can resend the code in ",
@@ -208,6 +209,8 @@ const resources = {
       createSaleSuccess: "Sale created successfully",
       listOfDocumentsToRequest: "List of documents to request",
       editListOfDocumentsToRequest: "Edit list of documents to request",
+      certifyYourCompany: "Certify your company",
+      improveYourCompanysImage: "Improve significantly your company's image.",
       // Other
       yes: "Yes",
       no: "No",
@@ -268,8 +271,12 @@ const resources = {
       months: "Months",
       days: "Days",
       documentListCertif: "Documents for certification",
-      addImages: "Upload images",
-      addDocument: "Upload document",
+      addImages: "Add images",
+      addDocument: "Add document",
+      uploadDocument: "Upload document",
+      uploadDocuments: "Upload documents",
+      uploadImages: "Upload images",
+      uploadFile: "Upload file",
       field: "Field",
       itemCondition: "Item condition",
       new: "New",
@@ -310,7 +317,9 @@ const resources = {
       loading: "Loading...",
       class: "Class",
       addCertificates: "Add certificates",
-      list: "List"
+      list: "List",
+      documents: "Documentos",
+
     },
   },
   es: {
@@ -437,6 +446,7 @@ const resources = {
       deleteRequirementConfirmation:
         "¿Está seguro de eliminar el requerimiento?",
       deleteOfferConfirmation: "¿Está seguro de eliminar la oferta?",
+      mustUploadAFileAndProvideNameForEachItem: "Debe subir un archivo y escribir un nombre por cada item",
       // Action
       showOffers: "Ver ofertas",
       delete: "Eliminar",
@@ -517,6 +527,8 @@ const resources = {
       createSaleSuccess: "Liquidación creada exitosamente",
       listOfDocumentsToRequest: "Lista de documentos a solicitar",
       editListOfDocumentsToRequest: "Editar lista de documentos a solicitar",
+      certifyYourCompany: "Certifica tu empresa",
+      improveYourCompanysImage: "Mejora notablemente la imagen de tu empresa.",
       // Other
       yes: "Sí",
       no: "No",
@@ -581,6 +593,10 @@ const resources = {
       documentListCertif: "Lista de documentos a certificar",
       addImages: "Agregar imágenes",
       addDocument: "Agregar documento",
+      uploadImages: "Subir imágenes",
+      uploadDocument: "Subir documento",
+      uploadDocuments: "Subir documentos",
+      uploadFile: "Subir archivo",
       field: "Campo",
       itemCondition: "Estado del artículo",
       new: "Nuevo",
@@ -621,7 +637,9 @@ const resources = {
       loading: "Cargando...",
       class: "Clase",
       addCertificates: "Agregar certificados",
-      list: "Lista"
+      list: "Lista",
+      documents: "Documentos",
+
     },
   },
 };

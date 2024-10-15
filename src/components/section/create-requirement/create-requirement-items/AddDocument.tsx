@@ -24,7 +24,7 @@ export default function AddDocument() {
       showNotification(
         notification,
         "error",
-        `${file.name}${t("nameInvalidImageSize")}${maxDocSizeMb} mb`
+        `${file.name} ${t("nameInvalidImageSize")}${maxDocSizeMb} mb`
       );
     if (!validSize) return Upload.LIST_IGNORE;
     return false;
