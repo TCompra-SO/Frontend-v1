@@ -24,6 +24,7 @@ import { RolesForSection, RolesForSubSection } from "./utilities/roles.ts";
 import { loadUserInfo } from "./services/complete/authServiceComplete.ts";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "./redux/loadingSlice.ts";
+import useSocket from "./socket/socket.tsx";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Search = lazy(() => import("./pages/Search.tsx"));
@@ -59,6 +60,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => (
 );
 
 function App() {
+  useSocket();
   const dispatch = useDispatch();
   dispatch(setIsLoading(true));
 

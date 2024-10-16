@@ -657,7 +657,9 @@ export default function AllRequirements() {
     console.log(e.target.value);
   }
 
-  function handleOnButtonClick(action: Action, requirement: BasicRequirement) {}
+  function handleOnButtonClick(action: Action, requirement: BasicRequirement) {
+    console.log(action, requirement);
+  }
 
   return (
     <TablePageContent

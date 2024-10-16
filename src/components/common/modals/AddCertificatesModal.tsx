@@ -1,7 +1,7 @@
 import { t } from "i18next";
 import ButtonContainer from "../../containers/ButtonContainer";
 import InputContainer from "../../containers/InputContainer";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
 import { App, Input, InputRef } from "antd";
@@ -16,7 +16,11 @@ export default function AddCertificatesModal() {
   const uid = useSelector((state: MainState) => state.mainUser.uid);
   const name = useSelector((state: MainState) => state.mainUser.name);
   // const doc = useSelector((state: MainState) => state.mainUser.document); //r3v
-  const fileInputRef = useRef<InputRef>(null);
+  const fileInputRefs = useRef<(InputRef | null)[]>([]);
+
+  useEffect(() => {
+    fileInputRefs.current = fileInputRefs.current.slice(0, docList.length);
+  }, [docList.length]);
 
   function deleteBlock(index: number) {
     setDocList((array) => {
@@ -36,9 +40,9 @@ export default function AddCertificatesModal() {
     setNameList((array) => [...array, ""]);
   }
 
-  function handleClick() {
-    if (fileInputRef.current) {
-      fileInputRef.current.input!.click();
+  function handleClick(e: React.MouseEvent<HTMLElement>, index: number) {
+    if (fileInputRefs.current[index]) {
+      fileInputRefs.current[index]?.input!.click();
     }
   }
 
@@ -50,8 +54,9 @@ export default function AddCertificatesModal() {
     if (file) {
       const { validImage, validSize } = checkImage(file);
       const { validSize: validSizeDoc } = checkDoc(file);
+
       if (validImage) {
-        if (validSize) {
+        if (!validSize) {
           showNotification(
             notification,
             "error",
@@ -143,7 +148,7 @@ export default function AddCertificatesModal() {
                 multiple={false}
                 onChange={(e) => handleChangeImage(e, index)}
                 style={{ display: "none" }}
-                ref={fileInputRef}
+                ref={(el) => (fileInputRefs.current[index] = el)}
               />
               <InputContainer
                 type="text"
@@ -155,7 +160,7 @@ export default function AddCertificatesModal() {
               <div className="t-flex doc-botones">
                 <ButtonContainer
                   className="btn btn-opaco btn-sm wd-100"
-                  onClick={handleClick}
+                  onClick={(e) => handleClick(e, index)}
                 >
                   <i
                     className="fa-regular fa-images"
