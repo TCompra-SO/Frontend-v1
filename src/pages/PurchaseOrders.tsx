@@ -22,7 +22,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import useApi from "../hooks/useApi";
-import { getUserService } from "../services/authService";
+import { getUserService } from "../services/requests/authService";
 import { App } from "antd";
 import showNotification, {
   destroyMessage,

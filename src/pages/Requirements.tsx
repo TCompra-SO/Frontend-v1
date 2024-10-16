@@ -21,14 +21,14 @@ import { useTranslation } from "react-i18next";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import { mainModalScrollStyle } from "../utilities/globals";
 import useApi from "../hooks/useApi";
-import { getRequirementsService } from "../services/requirementService";
+import { getRequirementsService } from "../services/requests/requirementService";
 import { transformDataToRequirement } from "../utilities/transform";
 import { useLocation } from "react-router-dom";
 import { equalServices, getRouteType } from "../utilities/globalFunctions";
 import { useSelector } from "react-redux";
 import { MainState, UserState } from "../models/Redux";
-import { getUserService } from "../services/authService";
-import { getFullUser } from "../services/general";
+import { getUserService } from "../services/requests/authService";
+import { getFullUser } from "../services/complete/general";
 import {
   destroyMessage,
   showLoadingMessage,

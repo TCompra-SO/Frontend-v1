@@ -25,11 +25,12 @@ import { CreateRequirementRequest } from "../../../models/Requests";
 import { useApiParams } from "../../../models/Interfaces";
 import useApi from "../../../hooks/useApi";
 import { equalServices } from "../../../utilities/globalFunctions";
-import { createRequirementService } from "../../../services/requirementService";
+import { createRequirementService } from "../../../services/requests/requirementService";
 import showNotification from "../../../utilities/notification/showNotification";
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
+import { createSaleService } from "../../../services/requests/saleService";
 
 interface CreateRequirementProps {
   closeModal: () => void;
@@ -63,7 +64,10 @@ export default function CreateRequirement(props: CreateRequirementProps) {
 
   useEffect(() => {
     if (responseData) {
-      if (equalServices(apiParams.service, createRequirementService())) {
+      if (
+        equalServices(apiParams.service, createRequirementService()) ||
+        equalServices(apiParams.service, createSaleService())
+      ) {
         showNotification(
           notification,
           "success",
@@ -120,7 +124,10 @@ export default function CreateRequirement(props: CreateRequirementProps) {
 
     console.log(values, data);
     setApiParams({
-      service: createRequirementService(),
+      service:
+        type == RequirementType.SALE
+          ? createSaleService()
+          : createRequirementService(),
       method: "post",
       dataToSend: data,
     });

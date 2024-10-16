@@ -97,6 +97,7 @@ export default function AddCertificatesModal() {
         return;
       }
     }
+    console.log(uid);
   }
 
   return (

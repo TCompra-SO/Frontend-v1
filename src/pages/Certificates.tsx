@@ -23,7 +23,7 @@ import {
 import ButtonContainer from "../components/containers/ButtonContainer";
 import { Row } from "antd";
 import { useLocation } from "react-router-dom";
-import { pageRoutes } from "../utilities/routes";
+import { pageSubRoutes } from "../utilities/routes";
 
 const cert: CertificateFile[] = [
   {
@@ -74,7 +74,7 @@ const cert2: CertificationItem[] = [
 export default function Certificates() {
   const location = useLocation();
   const { t } = useTranslation();
-  const [type, setType] = useState(getLastSegmentFromRoute(location.pathname));
+  const [type] = useState(getLastSegmentFromRoute(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -99,7 +99,7 @@ export default function Certificates() {
 
   useEffect(() => {
     switch (type) {
-      case pageRoutes.documents:
+      case pageSubRoutes.documents:
         setTableContent({
           type: TableTypes.MY_DOCUMENTS,
           data: cert,
@@ -108,7 +108,7 @@ export default function Certificates() {
           onButtonClick: handleOnButtonClick,
         });
         break;
-      case pageRoutes.sent:
+      case pageSubRoutes.sent:
         setTableContent({
           type: TableTypes.SENT_CERT,
           data: cert2,
@@ -117,7 +117,7 @@ export default function Certificates() {
           onButtonClick: handleOnButtonClick,
         });
         break;
-      case pageRoutes.received:
+      case pageSubRoutes.received:
         setTableContent({
           type: TableTypes.RECEIVED_CERT,
           data: cert2,
@@ -154,7 +154,7 @@ export default function Certificates() {
     action: Action,
     obj: CertificateFile | CertificationItem
   ) {
-    if (type == pageRoutes.documents) {
+    if (type == pageSubRoutes.documents) {
       const certificate = obj as CertificateFile;
       switch (action) {
         case Action.VIEW_DOCUMENT:
@@ -163,7 +163,7 @@ export default function Certificates() {
         case Action.DELETE:
           console.log(certificate); //r3v
       }
-    } else if (type == pageRoutes.sent) {
+    } else if (type == pageSubRoutes.sent) {
       const certificate = obj as CertificationItem;
       switch (action) {
         case Action.VIEW:
@@ -178,7 +178,7 @@ export default function Certificates() {
           setIsOpenModal(true);
           break;
       }
-    } else if (type == pageRoutes.received) {
+    } else if (type == pageSubRoutes.received) {
       const certificate = obj as CertificationItem;
       switch (action) {
         case Action.VIEW:
@@ -208,9 +208,9 @@ export default function Certificates() {
         title={t("certificates")}
         titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
         subtitle={
-          type == pageRoutes.documents
+          type == pageSubRoutes.documents
             ? t("myDocuments")
-            : type == pageRoutes.received
+            : type == pageSubRoutes.received
             ? t("certifiesReceived")
             : t("certifiesSent")
         }

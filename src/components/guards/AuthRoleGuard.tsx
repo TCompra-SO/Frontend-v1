@@ -7,7 +7,9 @@ import { UserRoles } from "../../utilities/types";
 
 interface AuthRoleGuardProps {
   children: ReactNode;
-  allowedRoles: Record<UserRoles, boolean>;
+  allowedRoles:
+    | Record<UserRoles, boolean>
+    | Record<string, Record<UserRoles, boolean>>;
 }
 
 export default function AuthRoleGuard({

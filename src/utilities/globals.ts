@@ -22,6 +22,10 @@ export const phoneCode: string = "+51";
 
 export const allItems: number = 0;
 
+// local storage keys
+export const userDataKey: string = "udata";
+export const tokenKey: string = "token";
+
 /* Window size (>=) */
 export const windowSize = {
   sm: 576,

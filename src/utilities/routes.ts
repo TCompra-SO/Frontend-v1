@@ -3,6 +3,7 @@ export const ApiMainRoutes = {
   util: "util/",
   subUser: "subUser/",
   requirements: "requeriments/",
+  requirement: "requeriment/",
 };
 
 export const ApiRoutes = {
@@ -51,6 +52,9 @@ export const ApiRoutes = {
     getRequeriments: "getRequeriments/",
     create: "create/",
   },
+  requirement: {
+    create: "create/",
+  },
 };
 
 export const pageRoutes = {
@@ -67,10 +71,17 @@ export const pageRoutes = {
   certificates: "/certificados",
   allPurchaseOrders: "/all-ordenes-de-compra",
   statistics: "/statistics",
+};
+
+export const pageSubRoutes: Record<string, string> = {
   goods: "bienes",
   services: "servicios",
   sales: "liquidaciones",
-  sent: "enviados",
-  received: "recibidos",
+
   documents: "documentos",
+  sent: "enviados",
+  issued: "emitidos",
+  issuedSales: "enviados-liquidaciones",
+  received: "recibidos",
+  receivedSales: "recibidos-liquidaciones",
 };

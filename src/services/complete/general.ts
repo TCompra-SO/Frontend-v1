@@ -1,9 +1,12 @@
-import makeRequest from "../utilities/globalFunctions";
+import makeRequest from "../../utilities/globalFunctions";
 import {
   transformToBaseUser,
   transformToFullUser,
-} from "../utilities/transform";
-import { getBaseDataUserService, getUserService } from "./authService";
+} from "../../utilities/transform";
+import {
+  getBaseDataUserService,
+  getUserService,
+} from "../requests/authService";
 
 export async function getBaseUserForUserSubUser(
   uid: string,

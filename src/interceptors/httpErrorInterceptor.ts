@@ -8,13 +8,13 @@ import {
   sendCodeRecoveryService,
   sendCodeService,
   validateCodeService,
-} from "../services/authService";
+} from "../services/requests/authService";
 import {
   changeRoleSubUserService,
   registerSubUserService,
   updateProfileSubUserService,
-} from "../services/subUserService";
-import { getNameReniecService } from "../services/utilService";
+} from "../services/requests/subUserService";
+import { getNameReniecService } from "../services/requests/utilService";
 
 export default function httpErrorInterceptor(error: any, type: string): string {
   let erroMsg: string = "errorOccurred";

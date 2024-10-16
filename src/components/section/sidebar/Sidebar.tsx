@@ -3,7 +3,7 @@ import ButtonContainer from "../../containers/ButtonContainer";
 import ImageContainer from "../../containers/ImageContainer";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { pageRoutes } from "../../../utilities/routes";
+import { pageRoutes, pageSubRoutes } from "../../../utilities/routes";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
 import { RolesForSection } from "../../../utilities/roles";
@@ -84,7 +84,9 @@ export default function Sidebar() {
                 className="btn btn-transparent wd-100 text-left"
                 common
                 onClick={() =>
-                  redirectTo(`${pageRoutes.myRequirements}/${pageRoutes.goods}`)
+                  redirectTo(
+                    `${pageRoutes.myRequirements}/${pageSubRoutes.goods}`
+                  )
                 }
               >
                 <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
@@ -95,7 +97,7 @@ export default function Sidebar() {
                 common
                 onClick={() =>
                   redirectTo(
-                    `${pageRoutes.myRequirements}/${pageRoutes.services}`
+                    `${pageRoutes.myRequirements}/${pageSubRoutes.services}`
                   )
                 }
               >
@@ -106,7 +108,9 @@ export default function Sidebar() {
                 className="btn btn-transparent wd-100 text-left"
                 common
                 onClick={() =>
-                  redirectTo(`${pageRoutes.myRequirements}/${pageRoutes.sales}`)
+                  redirectTo(
+                    `${pageRoutes.myRequirements}/${pageSubRoutes.sales}`
+                  )
                 }
               >
                 <i className="fa-regular fa-basket-shopping text-center i-btn"></i>{" "}
@@ -136,7 +140,9 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
-                onClick={() => redirectTo(`${pageRoutes.myOffers}`)}
+                onClick={() =>
+                  redirectTo(`${pageRoutes.myOffers}/${pageSubRoutes.goods}`)
+                }
               >
                 <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
                 {t("goods")}
@@ -144,6 +150,9 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
+                onClick={() =>
+                  redirectTo(`${pageRoutes.myOffers}/${pageSubRoutes.services}`)
+                }
               >
                 <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
                 {t("services")}
@@ -151,6 +160,9 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
+                onClick={() =>
+                  redirectTo(`${pageRoutes.myOffers}/${pageSubRoutes.sales}`)
+                }
               >
                 <i className="fa-regular fa-basket-shopping text-center i-btn"></i>{" "}
                 {t("sales")}
@@ -179,7 +191,11 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
-                onClick={() => redirectTo(`${pageRoutes.myPurchaseOrders}`)}
+                onClick={() =>
+                  redirectTo(
+                    `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issued}`
+                  )
+                }
               >
                 <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
                 {t("issuedPl")}
@@ -187,13 +203,23 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
+                onClick={() =>
+                  redirectTo(
+                    `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.received}`
+                  )
+                }
               >
                 <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
-                {t("receivedPlMasc")}
+                {t("receivedPl")}
               </ButtonContainer>
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
+                onClick={() =>
+                  redirectTo(
+                    `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issuedSales}`
+                  )
+                }
               >
                 <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
                 {`${t("issuedPl")} - ${t("salesAbbrev")}`}
@@ -201,6 +227,11 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
+                onClick={() =>
+                  redirectTo(
+                    `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.receivedSales}`
+                  )
+                }
               >
                 <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
                 {`${t("receivedPl")} - ${t("salesAbbrev")}`}
@@ -256,7 +287,11 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
-                // onClick={() => redirectTo(`${pageRoutes.myRequirements}`)}
+                onClick={() =>
+                  redirectTo(
+                    `${pageRoutes.allRequirements}/${pageSubRoutes.goods}`
+                  )
+                }
               >
                 <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
                 {t("goods")}
@@ -264,6 +299,11 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
+                onClick={() =>
+                  redirectTo(
+                    `${pageRoutes.allRequirements}/${pageSubRoutes.services}`
+                  )
+                }
               >
                 <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
                 {t("services")}
@@ -271,6 +311,11 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
+                onClick={() =>
+                  redirectTo(
+                    `${pageRoutes.allRequirements}/${pageSubRoutes.sales}`
+                  )
+                }
               >
                 <i className="fa-regular fa-basket-shopping text-center i-btn"></i>{" "}
                 {t("sales")}
@@ -299,7 +344,9 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
-                // onClick={() => redirectTo(`${pageRoutes.myOffers}`)}
+                onClick={() =>
+                  redirectTo(`${pageRoutes.allOffers}/${pageSubRoutes.goods}`)
+                }
               >
                 <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
                 {t("goods")}
@@ -307,6 +354,11 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
+                onClick={() =>
+                  redirectTo(
+                    `${pageRoutes.allOffers}/${pageSubRoutes.services}`
+                  )
+                }
               >
                 <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
                 {t("services")}
@@ -314,6 +366,9 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
+                onClick={() =>
+                  redirectTo(`${pageRoutes.allOffers}/${pageSubRoutes.sales}`)
+                }
               >
                 <i className="fa-regular fa-basket-shopping text-center i-btn"></i>{" "}
                 {t("sales")}
@@ -344,7 +399,7 @@ export default function Sidebar() {
                 common
                 onClick={() =>
                   redirectTo(
-                    `${pageRoutes.certificates}/${pageRoutes.documents}`
+                    `${pageRoutes.certificates}/${pageSubRoutes.documents}`
                   )
                 }
               >
@@ -355,7 +410,7 @@ export default function Sidebar() {
                 className="btn btn-transparent wd-100 text-left"
                 common
                 onClick={() =>
-                  redirectTo(`${pageRoutes.certificates}/${pageRoutes.sent}`)
+                  redirectTo(`${pageRoutes.certificates}/${pageSubRoutes.sent}`)
                 }
               >
                 <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
@@ -366,12 +421,12 @@ export default function Sidebar() {
                 common
                 onClick={() =>
                   redirectTo(
-                    `${pageRoutes.certificates}/${pageRoutes.received}`
+                    `${pageRoutes.certificates}/${pageSubRoutes.received}`
                   )
                 }
               >
                 <i className="fa-regular fa-basket-shopping text-center i-btn"></i>{" "}
-                {t("receivedPl")}
+                {t("receivedPlMasc")}
               </ButtonContainer>
             </div>
           </>
@@ -402,6 +457,11 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
+                onClick={() =>
+                  redirectTo(
+                    `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.issued}`
+                  )
+                }
               >
                 <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
                 {t("issuedPl")}
@@ -409,6 +469,11 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
+                onClick={() =>
+                  redirectTo(
+                    `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.received}`
+                  )
+                }
               >
                 <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
                 {t("receivedPl")}
@@ -416,6 +481,11 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
+                onClick={() =>
+                  redirectTo(
+                    `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.issuedSales}`
+                  )
+                }
               >
                 <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
                 {`${t("issuedPl")} - ${t("salesAbbrev")}`}
@@ -423,6 +493,11 @@ export default function Sidebar() {
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
+                onClick={() =>
+                  redirectTo(
+                    `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.receivedSales}`
+                  )
+                }
               >
                 <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
                 {`${t("receivedPl")} - ${t("salesAbbrev")}`}

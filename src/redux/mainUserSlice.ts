@@ -3,7 +3,7 @@ import { UserState } from "../models/Redux";
 import { EntityType, UserRoles } from "../utilities/types";
 import { BaseUser } from "../models/MainInterfaces";
 
-const initialState: UserState = {
+export const mainUserInitialState: UserState = {
   token: "",
   uid: "",
   name: "",
@@ -11,11 +11,16 @@ const initialState: UserState = {
   typeID: UserRoles.ADMIN,
   planID: 0,
   typeEntity: EntityType.COMPANY,
+  tenure: undefined,
+  customerScore: undefined,
+  sellerScore: undefined,
+  customerCount: undefined,
+  sellerCount: undefined,
 };
 
 export const mainUserSlice = createSlice({
   name: "mainUser",
-  initialState,
+  initialState: mainUserInitialState,
   reducers: {
     setMainUser: (state, action: { payload: BaseUser; type: string }) => {
       state.typeEntity = action.payload.typeEntity;
@@ -30,8 +35,11 @@ export const mainUserSlice = createSlice({
       state.typeEntity = action.payload.typeEntity;
       console.log(state);
     },
+    setFullMainUser: (state, action: { payload: UserState; type: string }) => {
+      state = action.payload;
+    },
   },
 });
 
-export const { setMainUser } = mainUserSlice.actions;
+export const { setMainUser, setFullMainUser } = mainUserSlice.actions;
 export default mainUserSlice.reducer;

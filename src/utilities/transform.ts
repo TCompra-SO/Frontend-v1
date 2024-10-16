@@ -54,8 +54,9 @@ export function transformToBaseUser(response: any, fromLogin: boolean = false) {
   const user: BaseUser = response;
   let subUser: BaseUser = response.auth_users;
   if (subUser) {
+    // usuario es subusuario
     subUser.uid = response.auth_users.Uid;
   }
-  if (!subUser && fromLogin) subUser = user;
+  if (!subUser && fromLogin) subUser = user; // para usuario logueado: usuario es principal, subuser y user son iguales
   return { user, subUser };
 }

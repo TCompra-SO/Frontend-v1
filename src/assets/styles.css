@@ -62,7 +62,7 @@ body {
   -moz-user-select: none;
   user-select: none;
   background-color: transparent;
-  border: 1px solid transparent;
+  border: 1px solid transparent !important;
   padding: 0.6rem 0.9rem;
   font-size: 0.9rem;
   border-radius: 0.8rem;
@@ -1244,6 +1244,20 @@ body {
 .btn-green:focus {
   background: #009f35 !important;
 }
+
+.btn-green-o {
+  color: #01b43e !important;
+  background: rgb(1 180 62 / 10%) !important;
+}
+
+.btn-green-o:hover {
+  background: rgb(1 180 62 / 20%) !important;
+}
+.btn-green-o.focus,
+.btn-green-o:focus {
+  background: rgb(1 180 62 / 20%) !important;
+}
+
 .btn-black {
   color: #fff;
   background: #3b4c56 !important;
@@ -1274,7 +1288,7 @@ body {
   font-weight: 600;
 }
 .f-white {
-  background-color: #fff;
+  background-color: #fff !important;
 }
 .img-bg-certificado {
   background-image: url(/src/assets/images/certificado-modal.svg);
@@ -1691,6 +1705,10 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
 /* Border radius de Popover */
 .ant-popover .ant-popover-inner {
   border-radius: 0.7rem;
+}
+
+.ant-modal .ant-modal-close {
+  border-radius: 50%;
 }
 
 /*****************************/

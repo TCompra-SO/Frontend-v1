@@ -33,7 +33,7 @@ export default function ViewDocsReceivedCertificate(
   }
 
   function submit(approve: boolean) {
-    console.log(options);
+    console.log(options, approve);
   }
 
   return (
@@ -109,9 +109,9 @@ export default function ViewDocsReceivedCertificate(
             </div>
           </div>
         ))}
-        <div className="text-right t-felx gap-15">
+        <div className="t-flex gap-15 wd-100 alert-btn">
           <ButtonContainer
-            className="btn btn-green"
+            className="btn alert-boton btn-green"
             onClick={() => submit(false)}
           >
             {t("certify")}
@@ -119,7 +119,7 @@ export default function ViewDocsReceivedCertificate(
           {/* </div>
         <div className="text-right "> */}
           <ButtonContainer
-            className="btn btn-green"
+            className="btn alert-boton btn-green-o"
             onClick={() => submit(true)}
           >
             {t("reject")}

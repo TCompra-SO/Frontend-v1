@@ -2,8 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import { UserState } from "../models/Redux";
 import { EntityType, UserRoles } from "../utilities/types";
 import { BaseUser } from "../models/MainInterfaces";
+import { encryptData } from "../utilities/crypto";
+import { userDataKey } from "../utilities/globals";
 
-const initialState: UserState = {
+export const userInitialState: UserState = {
   token: "",
   uid: "",
   name: "",
@@ -11,11 +13,16 @@ const initialState: UserState = {
   typeID: UserRoles.NONE,
   planID: 0,
   typeEntity: EntityType.PERSON,
+  tenure: undefined,
+  customerScore: undefined,
+  sellerScore: undefined,
+  customerCount: undefined,
+  sellerCount: undefined,
 };
 
 export const userSlice = createSlice({
   name: "user",
-  initialState,
+  initialState: userInitialState,
   reducers: {
     setUser: (state, action) => {
       const { token } = action.payload;
@@ -30,6 +37,7 @@ export const userSlice = createSlice({
         state.typeID = typeID;
         state.planID = planID;
         state.uid = uid;
+        localStorage.setItem(userDataKey, encryptData(JSON.stringify(state)));
       }
     },
     setBaseUser: (state, action: { payload: BaseUser; type: string }) => {
@@ -46,8 +54,12 @@ export const userSlice = createSlice({
     setEmail: (state, action) => {
       state.email = action.payload;
     },
+    setFullUser: (state, action: { payload: UserState; type: string }) => {
+      state = action.payload;
+    },
   },
 });
 
-export const { setUser, setUid, setEmail, setBaseUser } = userSlice.actions;
+export const { setUser, setUid, setEmail, setBaseUser, setFullUser } =
+  userSlice.actions;
 export default userSlice.reducer;

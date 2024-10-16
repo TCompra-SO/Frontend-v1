@@ -12,7 +12,10 @@ import { useNavigate } from "react-router-dom";
 import showNotification from "../utilities/notification/showNotification";
 import { setIsLoading } from "../redux/loadingSlice";
 import useApi from "../hooks/useApi";
-import { loginService, registerService } from "../services/authService";
+import {
+  loginService,
+  registerService,
+} from "../services/requests/authService";
 import { useApiParams } from "../models/Interfaces";
 
 import { useTranslation } from "react-i18next";
@@ -26,13 +29,14 @@ import {
 import InputContainer from "../components/containers/InputContainer";
 import SelectContainer from "../components/containers/SelectContainer";
 import ButtonContainer from "../components/containers/ButtonContainer";
-import { getNameReniecService } from "../services/utilService";
+import { getNameReniecService } from "../services/requests/utilService";
 import { equalServices } from "../utilities/globalFunctions";
 import ModalContainer from "../components/containers/ModalContainer";
 import { AxiosError } from "axios";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
-import { getBaseUserForUserSubUser } from "../services/general";
+import { getBaseUserForUserSubUser } from "../services/complete/general";
 import { setMainUser } from "../redux/mainUserSlice";
+import { tokenKey } from "../utilities/globals";
 
 const LoginType = {
   LOGIN: "login",
@@ -212,7 +216,7 @@ export default function Login(props: LoginProps) {
       }
 
       showNotification(notification, "success", t("welcome"));
-      localStorage.setItem("token", responseData.token);
+      localStorage.setItem(tokenKey, responseData.token);
       navigate(`${pageRoutes.myRequirements}`);
     }
   }

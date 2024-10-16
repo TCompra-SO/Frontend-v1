@@ -17,7 +17,7 @@ import {
   TLDsService,
   userRolesService,
   whoCanOfferService,
-} from "../services/utilService";
+} from "../services/requests/utilService";
 import { UserRoles } from "../utilities/types";
 
 interface ListsContextType {

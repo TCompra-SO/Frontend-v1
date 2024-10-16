@@ -16,7 +16,6 @@ import UserInfoModal from "../common/modals/UserInfoModal";
 import AddCertificatesModal from "../common/modals/AddCertificatesModal";
 import EditDocumentListToRequestModal from "../common/modals/EditDocumentListToRequestModal";
 import ViewDocsReceivedCertificate from "../common/modals/ViewDocsReceivedCertificate";
-import ViewDocsSentCertificate from "../common/modals/ViewDocsSentCertificate";
 
 interface ModalContainerProps extends ModalProps {
   content: ModalContent;
@@ -133,15 +132,6 @@ export default function ModalContainer(props: ModalContainerProps) {
         return <EditDocumentListToRequestModal />;
       }
       case ModalTypes.VIEW_DOCS_RECEIVED_CERT:
-      case ModalTypes.VIEW_DOCS_SENT_CERT: {
-        return (
-          <ViewDocsReceivedCertificate
-            data={props.content.data.data}
-            docs={props.content.data.docs}
-            readOnly={props.content.data.readonly}
-          />
-        );
-      }
       case ModalTypes.VIEW_DOCS_SENT_CERT: {
         return (
           <ViewDocsReceivedCertificate

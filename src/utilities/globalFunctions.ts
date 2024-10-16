@@ -1,4 +1,3 @@
-import moment from "moment";
 import {
   CountryCities,
   HttpService,
@@ -8,8 +7,9 @@ import {
 } from "../models/Interfaces";
 import { defaultCountry, maxDocSizeMb, maxImageSizeMb } from "./globals";
 import { PurchaseOrderTableTypes, RequirementType, UserClass } from "./types";
-import { pageRoutes } from "./routes";
+import { pageSubRoutes } from "./routes";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import dayjs from "dayjs";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -51,7 +51,7 @@ export function equalServices(
 
 // Verifica si fecha es menor a hoy
 export function isDateEarlierThanToday(current: any) {
-  return current && current < moment().startOf("day");
+  return current && dayjs(current).isBefore(dayjs().startOf("day"));
 }
 
 // Transforma objeto de datos de lista en lista para select de Antd
@@ -121,11 +121,11 @@ export function openDocument(documentUrl: string) {
 export function getRouteType(pathname: string) {
   const lastSegment = getLastSegmentFromRoute(pathname);
   switch (lastSegment) {
-    case pageRoutes.goods:
+    case pageSubRoutes.goods:
       return RequirementType.GOOD;
-    case pageRoutes.services:
+    case pageSubRoutes.services:
       return RequirementType.SERVICE;
-    case pageRoutes.sales:
+    case pageSubRoutes.sales:
       return RequirementType.SALE;
     default:
       return RequirementType.GOOD;

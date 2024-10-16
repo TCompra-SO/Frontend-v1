@@ -17,7 +17,7 @@ import useApi from "../hooks/useApi";
 import {
   profileCompanyService,
   profileUserService,
-} from "../services/authService";
+} from "../services/requests/authService";
 import { useTranslation } from "react-i18next";
 import { DocType } from "../utilities/types";
 import {

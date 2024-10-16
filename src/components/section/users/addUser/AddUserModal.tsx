@@ -8,7 +8,7 @@ import FullNameAU from "./items/FullNameAU";
 import PhoneAU from "./items/PhoneAU";
 import EmailAU from "./items/EmailAU";
 import UserTypeAU from "./items/UserTypeAU";
-import { getNameReniecService } from "../../../../services/utilService";
+import { getNameReniecService } from "../../../../services/requests/utilService";
 import { useEffect, useState } from "react";
 import {
   ChangeRoleSubUserRequest,
@@ -24,13 +24,13 @@ import {
   changeRoleSubUserService,
   registerSubUserService,
   updateProfileSubUserService,
-} from "../../../../services/subUserService";
+} from "../../../../services/requests/subUserService";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../../models/Redux";
 import { equalServices } from "../../../../utilities/globalFunctions";
 import PasswordAU from "./items/PasswordAU";
 import { SubUserProfile } from "../../../../models/Responses";
-import { newPasswordService } from "../../../../services/authService";
+import { newPasswordService } from "../../../../services/requests/authService";
 
 interface AddUserModalProps {
   onClose: () => void;

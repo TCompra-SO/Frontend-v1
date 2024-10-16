@@ -1,4 +1,4 @@
-import { pageRoutes } from "./routes";
+import { pageRoutes, pageSubRoutes } from "./routes";
 import { UserRoles } from "./types";
 
 export const RolesForSection: {
@@ -37,12 +37,12 @@ export const RolesForSection: {
     [UserRoles.LEGAL]: false,
   },
   myPurchaseOrders: {
-    [UserRoles.ADMIN]: true,
-    [UserRoles.SELLER]: true,
-    [UserRoles.SELLER_BUYER]: true,
     [UserRoles.NONE]: false,
+    [UserRoles.ADMIN]: true,
     [UserRoles.BUYER]: true,
     [UserRoles.LEGAL]: false,
+    [UserRoles.SELLER]: true,
+    [UserRoles.SELLER_BUYER]: true,
   },
   users: {
     [UserRoles.ADMIN]: true,
@@ -107,5 +107,44 @@ export const RolesForSection: {
     [UserRoles.SELLER]: false,
     [UserRoles.BUYER]: false,
     [UserRoles.LEGAL]: false,
+  },
+};
+
+export const RolesForSubSection: {
+  [key: string]: Record<string, Record<UserRoles, boolean>>;
+} = {
+  [pageRoutes.myPurchaseOrders]: {
+    [pageSubRoutes.issued]: {
+      [UserRoles.NONE]: false,
+      [UserRoles.ADMIN]: true,
+      [UserRoles.BUYER]: true,
+      [UserRoles.LEGAL]: false,
+      [UserRoles.SELLER]: false,
+      [UserRoles.SELLER_BUYER]: true,
+    },
+    [pageSubRoutes.issuedSales]: {
+      [UserRoles.NONE]: false,
+      [UserRoles.ADMIN]: true,
+      [UserRoles.BUYER]: true,
+      [UserRoles.LEGAL]: false,
+      [UserRoles.SELLER]: false,
+      [UserRoles.SELLER_BUYER]: true,
+    },
+    [pageSubRoutes.received]: {
+      [UserRoles.NONE]: false,
+      [UserRoles.ADMIN]: true,
+      [UserRoles.BUYER]: false,
+      [UserRoles.LEGAL]: false,
+      [UserRoles.SELLER]: true,
+      [UserRoles.SELLER_BUYER]: true,
+    },
+    [pageSubRoutes.receivedSales]: {
+      [UserRoles.NONE]: false,
+      [UserRoles.ADMIN]: true,
+      [UserRoles.BUYER]: false,
+      [UserRoles.LEGAL]: false,
+      [UserRoles.SELLER]: true,
+      [UserRoles.SELLER_BUYER]: true,
+    },
   },
 };

@@ -17,7 +17,7 @@ import { TableTypeUsers, useApiParams } from "../models/Interfaces";
 import { mainModalScrollStyle } from "../utilities/globals";
 import ButtonContainer from "../components/containers/ButtonContainer";
 import useApi from "../hooks/useApi";
-import { getSubUserService } from "../services/subUserService";
+import { getSubUserService } from "../services/requests/subUserService";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { equalServices } from "../utilities/globalFunctions";
