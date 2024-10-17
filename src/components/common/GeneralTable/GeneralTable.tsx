@@ -278,6 +278,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       ActionColumn(
         props.content.type,
         props.content.onButtonClick,
+        null,
         visibility[TableColumns.ACTION]
       ),
     ];

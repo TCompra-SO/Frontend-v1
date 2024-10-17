@@ -24,7 +24,6 @@ import { RolesForSection, RolesForSubSection } from "./utilities/roles.ts";
 import { loadUserInfo } from "./services/complete/authServiceComplete.ts";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "./redux/loadingSlice.ts";
-import useSocket from "./socket/socket.tsx";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Search = lazy(() => import("./pages/Search.tsx"));
@@ -36,6 +35,7 @@ const AllRequirements = lazy(() => import("./pages/AllRequirements.tsx"));
 const AllOffers = lazy(() => import("./pages/AllOffers.tsx"));
 const AllPurchaseOrders = lazy(() => import("./pages/AllPurchaseOrders.tsx"));
 const Certificates = lazy(() => import("./pages/Certificates.tsx"));
+const Statistics = lazy(() => import("./pages/Statistics.tsx"));
 const CreateRequirementFloatButton = lazy(
   () =>
     import(
@@ -60,7 +60,6 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => (
 );
 
 function App() {
-  useSocket();
   const dispatch = useDispatch();
   dispatch(setIsLoading(true));
 
@@ -464,6 +463,16 @@ function App() {
                             }
                           />
                         </Route>
+                        <Route
+                          path={`${pageRoutes.statistics}`}
+                          element={
+                            <AuthRoleGuard
+                              allowedRoles={RolesForSection.statistics}
+                            >
+                              <Statistics />
+                            </AuthRoleGuard>
+                          }
+                        />
                         <Route
                           path="*"
                           element={

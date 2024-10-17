@@ -367,14 +367,12 @@ const offerList: Offer[] = [
       uid: "user10",
       name: "EcoWheels Ltd.",
       email: "info@ecowheels.example.com",
-      document: "456789012",
+
       typeEntity: EntityType.COMPANY,
       customerScore: 0,
       sellerScore: 0,
-      address: "Calle San Agustin 107 - Cercado - Arequipa",
 
       tenure: 3,
-      phone: "998989898",
       customerCount: 0,
       sellerCount: 0,
     },

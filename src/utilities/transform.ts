@@ -5,8 +5,8 @@ import { RequirementState, RequirementType, Usage } from "./types";
 export async function transformDataToRequirement(
   data: any,
   type: RequirementType,
-  user: UserState,
-  mainUser: UserState
+  user: UserState | BaseUser,
+  mainUser: UserState | BaseUser
 ) {
   const req: Requirement = data;
   req.state = RequirementState.FINISHED;
@@ -37,7 +37,6 @@ export async function transformDataToRequirement(
   //   phone: "9888888",
   //   ...user,
   // };
-
   return req;
 }
 

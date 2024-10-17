@@ -1,19 +1,50 @@
-import { lazy, useState } from "react";
+import { lazy, useEffect, useState } from "react";
 import ButtonContainer from "../components/containers/ButtonContainer";
 
 import NoContentModalContainer from "../components/containers/NoContentModalContainer";
 import ValidateCode from "../components/section/profile/ValidateCode.tsx";
+import { useTranslation } from "react-i18next";
+import { TableTypeRequirement } from "../models/Interfaces.ts";
+import {
+  RequirementType,
+  TableColumns,
+  TableTypes,
+} from "../utilities/types.ts";
+import GeneralTable from "../components/common/GeneralTable/GeneralTable.tsx";
+import useSocket from "../socket/useSocket.tsx";
 
 const Login = lazy(() => import("./Login.tsx"));
 const Profile = lazy(() => import("./Profile.tsx"));
 
 export default function Home() {
+  const { t } = useTranslation();
   const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
   const [isOpenValCodeModal, setIsOpenValCodeModal] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
-
   const [docType, setDocType] = useState("");
+
+  const tableData = useSocket();
+  const [tableContent, setTableContent] = useState<TableTypeRequirement>({
+    type: TableTypes.REQUIREMENT,
+    data: tableData,
+    subType: RequirementType.GOOD,
+    hiddenColumns: [
+      TableColumns.CATEGORY,
+      TableColumns.OFFERS,
+      TableColumns.ACTION,
+      TableColumns.STATE,
+    ],
+    nameColumnHeader: t("goods"),
+    onButtonClick: () => {},
+  });
+
+  useEffect(() => {
+    setTableContent((prevContent) => ({
+      ...prevContent,
+      data: tableData,
+    }));
+  }, [tableData]);
 
   function handleOpenLoginModal() {
     setIsOpenLoginModal(true);
@@ -75,11 +106,12 @@ export default function Home() {
         isForgotPassword={isForgotPassword}
       />
       <ButtonContainer onClick={() => handleOpenModal(true)}>
-        Login
+        {t("login")}
       </ButtonContainer>
-      {/* <ButtonContainer onClick={() => handleOpenModal(false)}>
-        Crear .
-      </ButtonContainer> */}
+
+      <div className="table-responsive">
+        <GeneralTable content={tableContent} />
+      </div>
     </>
   );
 }

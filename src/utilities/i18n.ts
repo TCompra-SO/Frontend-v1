@@ -328,7 +328,13 @@ const resources = {
       certifiesSent: "Certificates sent",
       certifiesReceived: "Certificates received",
       certify: "Certify",
-      approve: "Approve"
+      approve: "Approve",
+      newCustomers: "New customers",
+      certifications: "Certifications",
+      logistics: "Logistics",
+      employees: "Employees",
+      issuedOrders: "Issued orders",
+      receivedOrders: "Received orders"
     },
   },
   es: {
@@ -657,7 +663,13 @@ const resources = {
       certifiesSent: "Certificados enviados",
       certifiesReceived: "Certificados recibidos",
       certify: "Certificar",
-      approve: "Aprobar"
+      approve: "Aprobar",
+      newCustomers: "Nuevos clientes",
+      certifications: "Certificaciones",
+      logistics: "Logística",
+      employees: "Trabajadores",
+      issuedOrders: "Órdenes emitidas",
+      receivedOrders: "Órdenes recibidas"
     },
   },
 };

@@ -154,3 +154,17 @@ export interface CertificationItem {
   state: CertificationState;
   note?: string;
 }
+
+export interface StatisticsData {
+  customers: number;
+  requirements: number;
+  certifications: number;
+  goods: number;
+  services: number;
+  sales: number;
+  // rrhh: number;
+  offers: number;
+  issuedPurchaseOrders: number;
+  receivedPurchaseOrders: number;
+  employees: number;
+}
