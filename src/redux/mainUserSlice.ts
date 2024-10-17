@@ -36,7 +36,7 @@ export const mainUserSlice = createSlice({
       console.log(state);
     },
     setFullMainUser: (state, action: { payload: UserState; type: string }) => {
-      state = action.payload;
+      return { ...action.payload };
     },
   },
 });

@@ -12,17 +12,22 @@ import {
 } from "../utilities/types.ts";
 import GeneralTable from "../components/common/GeneralTable/GeneralTable.tsx";
 import useSocket from "../socket/useSocket.tsx";
+import useIsLoggedIn from "../hooks/useIsLoggedIn.ts";
+import { useNavigate } from "react-router-dom";
+import { pageRoutes } from "../utilities/routes.ts";
 
 const Login = lazy(() => import("./Login.tsx"));
 const Profile = lazy(() => import("./Profile.tsx"));
 
 export default function Home() {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
   const [isOpenValCodeModal, setIsOpenValCodeModal] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [docType, setDocType] = useState("");
+  const isLoggedIn = useIsLoggedIn();
 
   const tableData = useSocket();
   const [tableContent, setTableContent] = useState<TableTypeRequirement>({
@@ -105,8 +110,15 @@ export default function Home() {
         onClose={handleCloseValCodeModal}
         isForgotPassword={isForgotPassword}
       />
-      <ButtonContainer onClick={() => handleOpenModal(true)}>
-        {t("login")}
+
+      <ButtonContainer
+        onClick={() => {
+          isLoggedIn
+            ? navigate(`${pageRoutes.myRequirements}`)
+            : handleOpenModal(true);
+        }}
+      >
+        {isLoggedIn ? t("myRequirements") : t("login")}
       </ButtonContainer>
 
       <div className="table-responsive">

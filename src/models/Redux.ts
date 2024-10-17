@@ -20,8 +20,13 @@ export interface LoadingState {
   isLoading: boolean;
 }
 
+export interface LoadingUserState {
+  isLoading: boolean;
+}
+
 export interface MainState {
   user: UserState;
   loading: LoadingState;
   mainUser: UserState;
+  loadingUser: LoadingUserState;
 }

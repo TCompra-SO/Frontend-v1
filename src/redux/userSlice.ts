@@ -55,7 +55,7 @@ export const userSlice = createSlice({
       state.email = action.payload;
     },
     setFullUser: (state, action: { payload: UserState; type: string }) => {
-      state = action.payload;
+      return { ...action.payload };
     },
   },
 });
