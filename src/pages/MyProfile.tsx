@@ -3,7 +3,7 @@ import { FullUser, PlanData } from "../models/MainInterfaces";
 import { DocType, EntityType, UserRoles } from "../utilities/types";
 import { useContext, useEffect, useState } from "react";
 import { ListsContext } from "../contexts/listsContext";
-import NameMP from "../components/section/myProfile/nameMP";
+import NameMP from "../components/section/myProfile/NameMP";
 import PhoneField from "../components/common/formFields/PhoneField";
 import LocationField from "../components/common/formFields/LocationField";
 import AddressField from "../components/common/formFields/AddressField";
