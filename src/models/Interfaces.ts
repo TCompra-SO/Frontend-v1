@@ -7,6 +7,7 @@ import {
   TableColumns,
   TableTypes,
   CommonFilter,
+  PurchaseOrderTableTypes,
 } from "../utilities/types";
 import {
   BaseUser,
@@ -17,6 +18,12 @@ import {
   RequirementItemSubUser,
   Requirement,
   User,
+  FullUser,
+  BasicRequirement,
+  BasicOffer,
+  BasicPurchaseOrder,
+  CertificateFile,
+  CertificationItem,
 } from "./MainInterfaces";
 import { SubUserProfile } from "./Responses";
 
@@ -38,12 +45,17 @@ export interface ModalCancelPurchaseOrder extends CommonModalType {
 
 export interface ModalDetailedRequirement extends CommonModalType {
   type: ModalTypes.DETAILED_REQUIREMENT;
-  data: { offerList: Offer[]; requirement: Requirement };
+  data: {
+    offerList: Offer[];
+    requirement: Requirement;
+    forPurchaseOrder: boolean;
+    filters?: OfferFilters;
+  };
 }
 
 export interface ModalOfferSummary extends CommonModalType {
   type: ModalTypes.OFFER_SUMMARY;
-  data: { offer: Offer; requirement: Requirement };
+  data: { offer: Offer; requirement: Requirement; user: User };
 }
 
 export interface ModalRateCanceled extends CommonModalType {
@@ -51,7 +63,7 @@ export interface ModalRateCanceled extends CommonModalType {
   data: {
     user: BaseUser;
     subUser: BaseUser | undefined;
-    requirementOffertitle: string;
+    requirementOfferTitle: string;
     type: RequirementType;
     isOffer: boolean;
   };
@@ -60,9 +72,9 @@ export interface ModalRateCanceled extends CommonModalType {
 export interface ModalRateUser extends CommonModalType {
   type: ModalTypes.RATE_USER;
   data: {
-    user: User;
+    user: BaseUser;
     subUser: BaseUser | undefined;
-    requirementOffertitle: string;
+    requirementOfferTitle: string;
     type: RequirementType;
     isOffer: boolean;
   };
@@ -108,6 +120,39 @@ export interface ModalOfferDetail extends CommonModalType {
   };
 }
 
+export interface ModalUserInfo extends CommonModalType {
+  type: ModalTypes.USER_INFO;
+  data: {
+    user: FullUser;
+  };
+}
+
+export interface ModalAddCertificates extends CommonModalType {
+  type: ModalTypes.ADD_CERTIFICATES;
+}
+
+export interface ModalEditDocumentListToRequest extends CommonModalType {
+  type: ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST;
+}
+
+export interface ModalViewDocsReceivedCert extends CommonModalType {
+  type: ModalTypes.VIEW_DOCS_RECEIVED_CERT;
+  data: {
+    docs: CertificateFile[];
+    data: CertificationItem;
+    readonly?: boolean;
+  };
+}
+
+export interface ModalViewDocsSentCert extends CommonModalType {
+  type: ModalTypes.VIEW_DOCS_SENT_CERT;
+  data: {
+    docs: CertificateFile[];
+    data: CertificationItem;
+    readonly?: boolean;
+  };
+}
+
 export interface ModalNone extends CommonModalType {
   type: ModalTypes.NONE;
   data: Record<string, never>;
@@ -125,6 +170,11 @@ export type ModalContent =
   | ModalConfirmation
   | ModalInputEmail
   | ModalOfferDetail
+  | ModalUserInfo
+  | ModalAddCertificates
+  | ModalEditDocumentListToRequest
+  | ModalViewDocsReceivedCert
+  | ModalViewDocsSentCert
   | ModalNone;
 
 /********** Tables *************/
@@ -150,8 +200,8 @@ export interface TableTypeOffer extends TableHiddenColumns {
 
 export interface TableTypePurchaseOrder extends TableHiddenColumns {
   type: TableTypes.PURCHASE_ORDER;
+  subType: PurchaseOrderTableTypes;
   data: PurchaseOrder[];
-  // onButtonClick: (action: Action, data: PurchaseOrder) => void;
 }
 
 export interface TableTypeUsers extends TableHiddenColumns {
@@ -174,6 +224,37 @@ export interface TableTypePurchaseOrderSubUser extends TableHiddenColumns {
   data: PurchaseOrderItemSubUser[];
 }
 
+export interface TableTypeAllRequirements extends TableHiddenColumns {
+  type: TableTypes.ALL_REQUIREMENTS;
+  data: BasicRequirement[];
+}
+
+export interface TableTypeAllOffers extends TableHiddenColumns {
+  type: TableTypes.ALL_OFFERS;
+  data: BasicOffer[];
+}
+
+export interface TableTypeAllPurchaseOrders extends TableHiddenColumns {
+  type: TableTypes.ALL_PURCHASE_ORDERS;
+  subType: PurchaseOrderTableTypes;
+  data: BasicPurchaseOrder[];
+}
+
+export interface TableTypeMyDocuments extends TableHiddenColumns {
+  type: TableTypes.MY_DOCUMENTS;
+  data: CertificateFile[];
+}
+
+export interface TableTypeCertificatesSent extends TableHiddenColumns {
+  type: TableTypes.SENT_CERT;
+  data: CertificationItem[];
+}
+
+export interface TableTypeCertificatesReceived extends TableHiddenColumns {
+  type: TableTypes.RECEIVED_CERT;
+  data: CertificationItem[];
+}
+
 export type TableType =
   | TableTypeRequirement
   | TableTypeOffer
@@ -181,7 +262,13 @@ export type TableType =
   | TableTypeUsers
   | TableTypeRequirementSubUser
   | TableTypeOfferSubUser
-  | TableTypePurchaseOrderSubUser;
+  | TableTypePurchaseOrderSubUser
+  | TableTypeAllRequirements
+  | TableTypeAllOffers
+  | TableTypeAllPurchaseOrders
+  | TableTypeMyDocuments
+  | TableTypeCertificatesReceived
+  | TableTypeCertificatesSent;
 
 /********************* */
 

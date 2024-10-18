@@ -3,9 +3,13 @@ export const ApiMainRoutes = {
   util: "util/",
   subUser: "subUser/",
   requirements: "requeriments/",
+  requirement: "requeriment/",
 };
 
 export const ApiRoutes = {
+  root: {
+    getName: "getName/",
+  },
   auth: {
     login: "login/",
     profileCompany: "profileCompany/",
@@ -17,6 +21,7 @@ export const ApiRoutes = {
     recoverPassword: "recoveryPassword/",
     newPassword: "NewPassword/",
     getBaseDataUser: "getBaseDataUser/",
+    getUser: "getUser/",
   },
   util: {
     countries: "countries/",
@@ -34,9 +39,7 @@ export const ApiRoutes = {
       },
     },
   },
-  root: {
-    getName: "getName/",
-  },
+
   subUser: {
     root: "",
     register: "register/",
@@ -47,6 +50,10 @@ export const ApiRoutes = {
   },
   requirements: {
     getRequeriments: "getRequeriments/",
+    create: "create/",
+  },
+  requirement: {
+    create: "create/",
   },
 };
 
@@ -64,4 +71,17 @@ export const pageRoutes = {
   certificates: "/certificados",
   allPurchaseOrders: "/all-ordenes-de-compra",
   statistics: "/statistics",
+};
+
+export const pageSubRoutes: Record<string, string> = {
+  goods: "bienes",
+  services: "servicios",
+  sales: "liquidaciones",
+
+  documents: "documentos",
+  sent: "enviados",
+  issued: "emitidos",
+  issuedSales: "enviados-liquidaciones",
+  received: "recibidos",
+  receivedSales: "recibidos-liquidaciones",
 };

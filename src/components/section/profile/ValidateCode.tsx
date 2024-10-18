@@ -22,7 +22,7 @@ import {
   sendCodeRecoveryService,
   sendCodeService,
   validateCodeService,
-} from "../../../services/authService";
+} from "../../../services/requests/authService";
 import OTPInputContainer from "../../containers/OTPInputContainer";
 import { equalServices } from "../../../utilities/globalFunctions";
 import NoContentModalContainer from "../../containers/NoContentModalContainer";

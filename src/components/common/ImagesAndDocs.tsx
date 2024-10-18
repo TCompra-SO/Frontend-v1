@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Image } from "antd";
+import { openDocument } from "../../utilities/globalFunctions";
 
 interface ImagesAndDocsProps {
   image: string[] | undefined;
@@ -13,11 +14,7 @@ export default function ImagesAndDocs(props: ImagesAndDocsProps) {
 
   function showDocument() {
     props.document?.forEach((documentUrl) => {
-      window.open(
-        documentUrl,
-        "_blank",
-        "width=800,height=600,top=100,left=100,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes"
-      );
+      openDocument(documentUrl);
     });
   }
 

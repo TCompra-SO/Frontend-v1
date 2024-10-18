@@ -62,7 +62,7 @@ body {
   -moz-user-select: none;
   user-select: none;
   background-color: transparent;
-  border: 1px solid transparent;
+  border: 1px solid transparent !important;
   padding: 0.6rem 0.9rem;
   font-size: 0.9rem;
   border-radius: 0.8rem;
@@ -694,7 +694,7 @@ body {
 .tags-req {
   gap: 8px;
   align-items: center;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
 }
 .badge-default {
   flex: 1;
@@ -1234,37 +1234,51 @@ body {
   font-size: 24px;
 }
 .btn-green {
-  color: #fff;
-  background: #01b43e;
+  color: #fff !important;
+  background: #01b43e !important;
 }
 .btn-green:hover {
-  background: #009f35;
+  background: #009f35 !important;
 }
 .btn-green.focus,
 .btn-green:focus {
-  background: #009f35;
+  background: #009f35 !important;
 }
+
+.btn-green-o {
+  color: #01b43e !important;
+  background: rgb(1 180 62 / 10%) !important;
+}
+
+.btn-green-o:hover {
+  background: rgb(1 180 62 / 20%) !important;
+}
+.btn-green-o.focus,
+.btn-green-o:focus {
+  background: rgb(1 180 62 / 20%) !important;
+}
+
 .btn-black {
   color: #fff;
-  background: #3b4c56;
+  background: #3b4c56 !important;
 }
 .btn-black:hover {
-  background: #33414a;
+  background: #33414a !important;
 }
 .btn-black.focus,
 .btn-black:focus {
-  background: #33414a;
+  background: #33414a !important;
 }
 .btn-opaco {
-  color: #3b4c56;
-  background: #e1e6ea;
+  color: #3b4c56 !important;
+  background: #e1e6ea !important;
 }
 .btn-opaco:hover {
-  background: #c9cdd1;
+  background: #c9cdd1 !important;
 }
 .btn-opaco.focus,
 .btn-opaco:focus {
-  background: #c9cdd1;
+  background: #c9cdd1 !important;
 }
 .oferta-cant-doc {
   background: #01b43e;
@@ -1274,7 +1288,7 @@ body {
   font-weight: 600;
 }
 .f-white {
-  background-color: #fff;
+  background-color: #fff !important;
 }
 .img-bg-certificado {
   background-image: url(/src/assets/images/certificado-modal.svg);
@@ -1291,6 +1305,7 @@ body {
   font-size: 20px;
   font-weight: 600;
   text-align: center;
+  line-height: 1;
 }
 .cert-documentos {
   gap: 10px;
@@ -1327,7 +1342,11 @@ body {
   font-size: 30px;
 }
 .estado-red {
-  color: #01b43e;
+  color: #c50404;
+  font-size: 30px;
+}
+.estado-gray {
+  color: #383535;
   font-size: 30px;
 }
 .doc-name {
@@ -1348,6 +1367,19 @@ body {
   transition: all 0.2s ease-out;
 }
 .btn-certificados:hover {
+  background: #f8f8f8;
+}
+
+.select-certificados {
+  margin: 0.6rem 1rem;
+  border-radius: 0.8rem;
+  background: #fff;
+  color: #92acbf;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+.select-certificados:hover {
   background: #f8f8f8;
 }
 
@@ -1403,6 +1435,13 @@ body {
   background: #fff;
   flex: 1;
   padding: 20px;
+  border-radius: 1.2rem;
+  overflow: hidden;
+}
+.card-rubros-2 {
+  background: #f3f7fa;
+  flex: 1;
+  padding: 20px;
   overflow: hidden;
 }
 .i-rubro {
@@ -1411,6 +1450,7 @@ body {
 .card-cantidad {
   background: #3b4c56;
   padding: 20px;
+  border-radius: 1.2rem;
   flex: 1;
 }
 .i-cantidad {
@@ -1444,6 +1484,82 @@ body {
   cursor: pointer;
 }
 
+/* Estadisticas */
+.gap-30 {
+  gap: 30px;
+}
+.icon-estadisticas {
+  background: rgb(188 19 115 / 5%);
+  color: #bc1373;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 26px;
+}
+.cantidad-estd {
+  color: #510839;
+  font-size: 22px;
+  font-weight: 600;
+}
+.detalles-estd {
+  font-weight: 600;
+  font-size: 18px;
+  color: rgb(81 8 57 / 80%);
+}
+.bloque-estd {
+  line-height: 1;
+  flex: 1;
+  overflow: hidden;
+}
+.icon-chart-1 {
+  font-size: 36px;
+  color: #bc1373;
+  font-weight: 500;
+}
+.icon-chart-2 {
+  font-size: 36px;
+  color: #01b43e;
+  font-weight: 500;
+}
+.icon-chart-3 {
+  font-size: 36px;
+  color: #007aff;
+  font-weight: 500;
+}
+.icon-chart-4 {
+  font-size: 36px;
+  color: #17a2b8;
+  font-weight: 500;
+}
+.chart-cantidad {
+  font-size: 28px;
+  color: #510839;
+  font-weight: 600;
+  line-height: 0.8;
+  margin-top: 5px;
+}
+.chart-section {
+  line-height: 1.2;
+  flex: 1;
+}
+.chart-text-1 {
+  font-size: 18px;
+  color: rgb(81 8 57 / 80%);
+  font-weight: 600;
+}
+.chart-text-2 {
+  font-size: 18px;
+  color: rgb(81 8 57 / 50%);
+  font-weight: 600;
+}
+
+.detalles-ofer-emp {
+  align-items: center;
+}
+
 /********** Antd's select **************************/
 
 .form-control .ant-select-selector {
@@ -1473,6 +1589,14 @@ body {
 
 .form-control > .ant-select-selector {
   text-align: left;
+}
+
+.ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
+  border: none;
+}
+
+.select-certificados .ant-select-selector {
+  border-radius: 0.8rem;
 }
 
 /************** Antd general ********************/
@@ -1583,6 +1707,10 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
 /* Border radius de Popover */
 .ant-popover .ant-popover-inner {
   border-radius: 0.7rem;
+}
+
+.ant-modal .ant-modal-close {
+  border-radius: 50%;
 }
 
 /*****************************/

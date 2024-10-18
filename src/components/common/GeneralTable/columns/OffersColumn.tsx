@@ -1,16 +1,19 @@
 import { ColumnType } from "antd/es/table";
-import { Requirement } from "../../../../models/MainInterfaces";
+import {
+  BasicRequirement,
+  Requirement,
+} from "../../../../models/MainInterfaces";
 import { Action, TableTypes } from "../../../../utilities/types";
 import { useTranslation } from "react-i18next";
 
 export default function OffersColumn(
   type: TableTypes,
-  onButtonClick: (action: Action, data: Requirement) => void,
+  onButtonClick: (action: Action, data: any) => void,
   hidden: boolean = false
 ) {
   const { t } = useTranslation();
 
-  const col: ColumnType<Requirement> = {
+  const col: ColumnType<Requirement | BasicRequirement> = {
     title: t("offersColumn"),
     dataIndex: "numberOffers",
     key: "offers",
@@ -20,19 +23,17 @@ export default function OffersColumn(
     width: "75px",
     hidden,
     render: (_, record) => {
-      if (type == TableTypes.REQUIREMENT)
-        return (
-          <div className="t-flex c-ofertas">
-            <div
-              className="oferta-cant"
-              style={{ cursor: "pointer" }}
-              onClick={() => onButtonClick(Action.SHOW_OFFERS, record)}
-            >
-              {record.numberOffers}
-            </div>
+      return (
+        <div className="t-flex c-ofertas">
+          <div
+            className="oferta-cant"
+            style={{ cursor: "pointer" }}
+            onClick={() => onButtonClick(Action.SHOW_OFFERS, record)}
+          >
+            {record.numberOffers}
           </div>
-        );
-      else return null;
+        </div>
+      );
     },
   };
   return col;

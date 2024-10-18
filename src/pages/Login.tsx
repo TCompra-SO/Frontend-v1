@@ -6,13 +6,16 @@ import {
   RegisterRequest,
 } from "../models/Requests";
 import { useDispatch } from "react-redux";
-import { setUid, setUser, setEmail } from "../redux/userSlice";
+import { setUid, setUser, setEmail, setBaseUser } from "../redux/userSlice";
 import { DocType, ModalTypes, RegisterTypeId } from "../utilities/types";
 import { useNavigate } from "react-router-dom";
 import showNotification from "../utilities/notification/showNotification";
 import { setIsLoading } from "../redux/loadingSlice";
 import useApi from "../hooks/useApi";
-import { loginService, registerService } from "../services/authService";
+import {
+  loginService,
+  registerService,
+} from "../services/requests/authService";
 import { useApiParams } from "../models/Interfaces";
 
 import { useTranslation } from "react-i18next";
@@ -26,11 +29,14 @@ import {
 import InputContainer from "../components/containers/InputContainer";
 import SelectContainer from "../components/containers/SelectContainer";
 import ButtonContainer from "../components/containers/ButtonContainer";
-import { getNameReniecService } from "../services/utilService";
+import { getNameReniecService } from "../services/requests/utilService";
 import { equalServices } from "../utilities/globalFunctions";
 import ModalContainer from "../components/containers/ModalContainer";
 import { AxiosError } from "axios";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
+import { getBaseUserForUserSubUser } from "../services/complete/general";
+import { setMainUser } from "../redux/mainUserSlice";
+import { tokenKey } from "../utilities/globals";
 
 const LoginType = {
   LOGIN: "login",
@@ -151,8 +157,6 @@ export default function Login(props: LoginProps) {
   }
 
   function HandleSubmit(values: any) {
-    // afterSubmit();
-    // return;
     if (loginType == LoginType.LOGIN) {
       const data: LoginRequest = {
         email: values.email,
@@ -185,7 +189,7 @@ export default function Login(props: LoginProps) {
       };
       if (docType == DocType.DNI) data.dni = values.document.trim();
       else data.ruc = values.document.trim();
-      console.log(data);
+
       setApiParams({
         service: registerService(),
         method: "post",
@@ -194,7 +198,7 @@ export default function Login(props: LoginProps) {
     }
   }
 
-  function afterSubmit() {
+  async function afterSubmit() {
     if (loginType == LoginType.REGISTER) {
       dispatch(setUid(responseData.res.uid));
       showNotification(notification, "success", t("registerUserSuccess"));
@@ -202,8 +206,17 @@ export default function Login(props: LoginProps) {
       props.onRegisterSuccess(docType);
     } else {
       dispatch(setUser(responseData));
+      const { user, subUser } = await getBaseUserForUserSubUser(
+        responseData.dataUser[0].uid,
+        true
+      );
+      if (user) {
+        dispatch(setBaseUser(subUser));
+        dispatch(setMainUser(user));
+      }
+
       showNotification(notification, "success", t("welcome"));
-      localStorage.setItem("token", responseData.token);
+      localStorage.setItem(tokenKey, responseData.token);
       navigate(`${pageRoutes.myRequirements}`);
     }
   }

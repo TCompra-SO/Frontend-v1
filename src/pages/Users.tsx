@@ -5,8 +5,10 @@ import AddUserModal from "../components/section/users/addUser/AddUserModal";
 import { useTranslation } from "react-i18next";
 import {
   Action,
+  EntityType,
   OfferState,
   PurchaseOrderState,
+  PurchaseOrderTableTypes,
   RequirementState,
   RequirementType,
   TableTypes,
@@ -15,7 +17,7 @@ import { TableTypeUsers, useApiParams } from "../models/Interfaces";
 import { mainModalScrollStyle } from "../utilities/globals";
 import ButtonContainer from "../components/containers/ButtonContainer";
 import useApi from "../hooks/useApi";
-import { getSubUserService } from "../services/subUserService";
+import { getSubUserService } from "../services/requests/subUserService";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { equalServices } from "../utilities/globalFunctions";
@@ -35,7 +37,7 @@ const users: SubUserProfile[] = [
     name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
     email: "john.doejohn.doejohn.doejohn.doe@example.com",
     document: "123456789",
-    // userTable: UserTable.COMPANY,
+    // typeEntity: EntityType.COMPANY,
     // tenure: 2,
     // customerScore: 3.5,
     // sellerScore: 1.5,
@@ -50,13 +52,18 @@ const users: SubUserProfile[] = [
     numSales: 5,
     numOffers: 0,
     numPurchaseOrders: 0,
+    customerScore: 0,
+    sellerScore: 0,
+    customerCount: 0,
+    sellerCount: 0,
+    typeEntity: EntityType.COMPANY,
   },
   {
     uid: "user2",
     name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
     email: "aaaaaaaaa@example.com",
     document: "123456789",
-    // userTable: UserTable.COMPANY,
+    // typeEntity: EntityType.COMPANY,
     // tenure: 2,
     // customerScore: 3.5,
     // sellerScore: 1.5,
@@ -71,13 +78,18 @@ const users: SubUserProfile[] = [
     numSales: 235,
     numOffers: 0,
     numPurchaseOrders: 0,
+    customerScore: 0,
+    sellerScore: 0,
+    customerCount: 0,
+    sellerCount: 0,
+    typeEntity: EntityType.COMPANY,
   },
   {
     uid: "user3",
     name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
     email: "mmmmmmmm@example.com",
     document: "123456789",
-    // userTable: UserTable.COMPANY,
+    // typeEntity: EntityType.COMPANY,
     // tenure: 2,
     // customerScore: 3.5,
     // sellerScore: 1.5,
@@ -92,13 +104,18 @@ const users: SubUserProfile[] = [
     numSales: 8,
     numOffers: 0,
     numPurchaseOrders: 0,
+    customerScore: 0,
+    sellerScore: 0,
+    customerCount: 0,
+    sellerCount: 0,
+    typeEntity: EntityType.COMPANY,
   },
   {
     uid: "user4",
     name: "aaaaaaaaaaaaaa S. A. C.",
     email: "ccccccccc@example.com",
     document: "123456789",
-    // userTable: UserTable.COMPANY,
+    // typeEntity: EntityType.COMPANY,
     // tenure: 2,
     // customerScore: 3.5,
     // sellerScore: 1.5,
@@ -113,6 +130,11 @@ const users: SubUserProfile[] = [
     numSales: 84,
     numOffers: 0,
     numPurchaseOrders: 0,
+    customerScore: 0,
+    sellerScore: 0,
+    customerCount: 0,
+    sellerCount: 0,
+    typeEntity: EntityType.COMPANY,
   },
 ];
 
@@ -247,6 +269,7 @@ const purc: PurchaseOrderItemSubUser[] = [
     state: PurchaseOrderState.PENDING,
     key: "1",
     type: RequirementType.SERVICE,
+    subType: PurchaseOrderTableTypes.ISSUED,
   },
   {
     requirementTitle: "req title fdfsf fs f sf sf sfs",
@@ -255,6 +278,7 @@ const purc: PurchaseOrderItemSubUser[] = [
     state: PurchaseOrderState.PENDING,
     key: "1",
     type: RequirementType.SERVICE,
+    subType: PurchaseOrderTableTypes.ISSUED,
   },
   {
     requirementTitle: "req title fdfsf fs f sf sf sfs",
@@ -263,6 +287,7 @@ const purc: PurchaseOrderItemSubUser[] = [
     state: PurchaseOrderState.PENDING,
     key: "1",
     type: RequirementType.SERVICE,
+    subType: PurchaseOrderTableTypes.ISSUED_SALES,
   },
   {
     requirementTitle: "req title fdfsf fs f sf sf sfs",
@@ -271,6 +296,7 @@ const purc: PurchaseOrderItemSubUser[] = [
     state: PurchaseOrderState.PENDING,
     key: "1",
     type: RequirementType.GOOD,
+    subType: PurchaseOrderTableTypes.RECEIVED,
   },
   {
     requirementTitle: "req title fdfsf fs f sf sf sfs",
@@ -279,6 +305,7 @@ const purc: PurchaseOrderItemSubUser[] = [
     state: PurchaseOrderState.PENDING,
     key: "1",
     type: RequirementType.SALE,
+    subType: PurchaseOrderTableTypes.RECEIVED_SALES,
   },
 ];
 
@@ -412,6 +439,8 @@ export default function Users() {
             user={userData}
           />
         );
+      default:
+        return null;
     }
   }
 

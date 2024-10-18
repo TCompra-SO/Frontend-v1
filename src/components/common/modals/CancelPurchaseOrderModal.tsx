@@ -1,11 +1,11 @@
 import { App } from "antd";
-import TextAreaContainer from "../containers/TextAreaContainer";
+import TextAreaContainer from "../../containers/TextAreaContainer";
 import { SyntheticEvent, useState } from "react";
-import ButtonContainer from "../containers/ButtonContainer";
+import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
-import { Lengths } from "../../utilities/lengths";
-import showNotification from "../../utilities/notification/showNotification";
-import { Action, ActionLabel } from "../../utilities/types";
+import { Lengths } from "../../../utilities/lengths";
+import showNotification from "../../../utilities/notification/showNotification";
+import { Action, ActionLabel } from "../../../utilities/types";
 
 interface CancelPurchaseOrderModalProps {
   onClose: (e: SyntheticEvent<Element, Event>) => any;

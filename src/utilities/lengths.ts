@@ -67,4 +67,12 @@ export const Lengths = {
     min: 0,
     max: 150,
   },
+  docListToRequest: {
+    min: 5,
+    max: 300,
+  },
+  certificationNotes: {
+    min: 0,
+    max: 255,
+  },
 };

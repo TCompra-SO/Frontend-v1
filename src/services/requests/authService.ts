@@ -1,5 +1,5 @@
-import { HttpService } from "../models/Interfaces";
-import { ApiMainRoutes, ApiRoutes } from "../utilities/routes";
+import { HttpService } from "../../models/Interfaces";
+import { ApiMainRoutes, ApiRoutes } from "../../utilities/routes";
 
 export function loginService(): HttpService {
   return {
@@ -88,5 +88,14 @@ export function getBaseDataUserService(uid: string): HttpService {
       ApiRoutes.auth.getBaseDataUser
     }${uid}`,
     type: "AU-GE-BD-US",
+  };
+}
+
+export function getUserService(uid: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+      ApiRoutes.auth.getUser
+    }${uid}`,
+    type: "AU-GE-US",
   };
 }

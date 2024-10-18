@@ -1,4 +1,4 @@
-import { Col, Form, Row } from "antd";
+import { App, Col, Form, Row } from "antd";
 import CategoryCR from "./create-requirement-items/CategoryCR";
 import TitleCR from "./create-requirement-items/TitleCR";
 import { useTranslation } from "react-i18next";
@@ -17,17 +17,73 @@ import DocumentsCertifCR from "./create-requirement-items/DocumentsCertifCR";
 import AddImagesRC from "./create-requirement-items/AddImagesRC";
 import AddDocument from "./create-requirement-items/AddDocument";
 import ButtonContainer from "../../containers/ButtonContainer";
-import { RequirementType } from "../../../utilities/types";
-import { useState } from "react";
+import { RequirementType, Usage } from "../../../utilities/types";
+import { useEffect, useState } from "react";
 import ItemCondition from "./create-requirement-items/ItemCondition";
 import { certifiedCompaniesOpt } from "../../../utilities/globals";
+import { CreateRequirementRequest } from "../../../models/Requests";
+import { useApiParams } from "../../../models/Interfaces";
+import useApi from "../../../hooks/useApi";
+import { equalServices } from "../../../utilities/globalFunctions";
+import { createRequirementService } from "../../../services/requests/requirementService";
+import showNotification from "../../../utilities/notification/showNotification";
+import { MainState } from "../../../models/Redux";
+import { useSelector } from "react-redux";
+import dayjs from "dayjs";
+import { createSaleService } from "../../../services/requests/saleService";
 
-export default function CreateRequirement() {
+interface CreateRequirementProps {
+  closeModal: () => void;
+}
+
+export default function CreateRequirement(props: CreateRequirementProps) {
   const { t } = useTranslation();
+  const uid = useSelector((state: MainState) => state.user.uid);
+  const { notification } = App.useApp();
   const [form] = Form.useForm();
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [showDocListToCetificate, setShowDocListToCetificate] = useState(false);
-  const [isPremium] = useState<boolean>(true);
+  const [isPremium] = useState<boolean>(true); // r3v
+  const [apiParams, setApiParams] = useState<
+    useApiParams<CreateRequirementRequest>
+  >({
+    service: null,
+    method: "get",
+  });
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi<CreateRequirementRequest>({
+      service: apiParams.service,
+      method: apiParams.method,
+      dataToSend: apiParams.dataToSend,
+    });
+
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      if (
+        equalServices(apiParams.service, createRequirementService()) ||
+        equalServices(apiParams.service, createSaleService())
+      ) {
+        showNotification(
+          notification,
+          "success",
+          t(
+            type == RequirementType.GOOD || type == RequirementType.SERVICE
+              ? "createRequirementSuccess"
+              : "createSaleSuccess"
+          )
+        );
+        props.closeModal();
+      }
+    } else if (error) {
+      showNotification(notification, "error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
 
   function changeTab(newtype: RequirementType) {
     if (newtype != type) {
@@ -44,7 +100,37 @@ export default function CreateRequirement() {
   }
 
   function createRequirement(values: any) {
-    console.log(values);
+    const data: CreateRequirementRequest = {
+      name: values.title,
+      description: values.description,
+      categoryID: values.category,
+      cityID: values.location,
+      budget: values.budget,
+      currencyID: values.currency,
+      payment_methodID: values.paymentMethod,
+      completion_date: dayjs(values.expirationDate).toISOString(),
+      submission_dateID: values.deliveryTime,
+      allowed_bidersID: values.canOffer,
+      userID: uid,
+    };
+
+    if (type == RequirementType.GOOD || type == RequirementType.SERVICE) {
+      data.warranty = values.warranty;
+      data.duration = values.duration;
+    }
+
+    if (type == RequirementType.SALE)
+      data.used = values.itemCondition == Usage.USED;
+
+    console.log(values, data);
+    setApiParams({
+      service:
+        type == RequirementType.SALE
+          ? createSaleService()
+          : createRequirementService(),
+      method: "post",
+      dataToSend: data,
+    });
   }
 
   return (
@@ -98,18 +184,6 @@ export default function CreateRequirement() {
           <i className="fa-regular fa-basket-shopping"></i>{" "}
           <span className="req-btn-info">{t("sales")}</span>
         </ButtonContainer>
-        {/* <ButtonContainer
-          common
-          className={`btn btn-grey wd-25 ${
-            type == RequirementType.JOB ? "active" : ""
-          }`}
-          onClick={() => {
-            changeTab(RequirementType.JOB);
-          }}
-        >
-          <i className="fa-regular fa-user-tie"></i>{" "}
-          <span className="req-btn-info">{t("rrhh")}</span>
-        </ButtonContainer> */}
       </div>
 
       <Form
@@ -201,6 +275,11 @@ export default function CreateRequirement() {
             <div className="footer-text">{t("allDataIsImportant")}</div>
             <div className="wd-25">
               <ButtonContainer
+                loading={
+                  equalServices(apiParams.service, createRequirementService())
+                    ? loading
+                    : false
+                }
                 htmlType="submit"
                 className="btn btn-default wd-100"
               >

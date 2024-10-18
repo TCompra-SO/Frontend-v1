@@ -2,7 +2,7 @@ import { Offer } from "../../../../models/MainInterfaces";
 import { dateFormat, defaultCountry } from "../../../../utilities/globals";
 
 import { useTranslation } from "react-i18next";
-import { TimeMeasurement, UserTable } from "../../../../utilities/types";
+import { TimeMeasurement, EntityType } from "../../../../utilities/types";
 import { ListsContext } from "../../../../contexts/listsContext";
 import { useContext, useEffect, useState } from "react";
 import dayjs from "dayjs";
@@ -44,7 +44,7 @@ export default function RequirementOfferListItemBody(
           <div className="tag-gray">{cities[props.offer.location].value}</div>
         )}
         {props.showUserData &&
-          props.offer.user.userTable == UserTable.COMPANY && (
+          props.offer.user.typeEntity == EntityType.COMPANY && (
             <div className="tag-gray">
               {t("tenure")}: {props.offer.user.tenure} {t("years")}
             </div>

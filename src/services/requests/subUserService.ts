@@ -1,5 +1,5 @@
-import { HttpService } from "../models/Interfaces";
-import { ApiMainRoutes, ApiRoutes } from "../utilities/routes";
+import { HttpService } from "../../models/Interfaces";
+import { ApiMainRoutes, ApiRoutes } from "../../utilities/routes";
 
 export function registerSubUserService(): HttpService {
   return {

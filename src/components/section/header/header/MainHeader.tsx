@@ -1,4 +1,4 @@
-import { Dropdown, Space } from "antd";
+import { Dropdown, MenuProps, Space } from "antd";
 import Premium from "../items/Premium";
 import Notification from "../items/Notification";
 import Chat from "../items/Chat";
@@ -9,97 +9,103 @@ import ProfileMenu from "../items/ProfileMenu";
 import useWindowSize from "../../../../hooks/useWindowSize";
 import { windowSize } from "../../../../utilities/globals";
 import { useTranslation } from "react-i18next";
+import { useLogout } from "../../../../hooks/authHook";
 
 function MainHeader() {
   const { t } = useTranslation();
   const { width } = useWindowSize();
-  const [dropdownItems, setDropdownItems] = useState({
-    items: [
-      {
-        key: "profile",
-        label: (
-          <Space style={{ margin: "-10px 0" }}>
-            <ProfileMenu />
-            {t("myProfile")}
-          </Space>
-        ),
-      },
-      {
-        key: "logout",
-        label: (
-          <Space style={{ margin: "-10px 0" }}>
-            <Logout /> {t("logout")}
-          </Space>
-        ),
-      },
-    ],
-  });
+  const logout = useLogout();
+  const [dropdownItems, setDropdownItems] = useState([
+    {
+      key: "profile",
+      label: (
+        <Space style={{ margin: "-10px 0" }}>
+          <ProfileMenu />
+          {t("myProfile")}
+        </Space>
+      ),
+    },
+    {
+      key: "logout",
+      label: (
+        <Space style={{ margin: "-10px 0" }}>
+          <Logout /> {t("logout")}
+        </Space>
+      ),
+    },
+  ]);
+
+  const onClick: MenuProps["onClick"] = ({ key }) => {
+    switch (key) {
+      case "logout":
+        logout();
+        break;
+      case "profile":
+        break;
+    }
+  };
 
   useEffect(() => {
     if (width > windowSize.md) {
-      setDropdownItems({
-        items: [
-          {
-            key: "profile",
-            label: (
-              <Space style={{ margin: "-10px 0" }}>
-                <ProfileMenu />
-                {t("myProfile")}
-              </Space>
-            ),
-          },
-          {
-            key: "logout",
-            label: (
-              <Space style={{ margin: "-10px 0" }}>
-                <Logout />
-                {t("logout")}
-              </Space>
-            ),
-          },
-        ],
-      });
+      setDropdownItems([
+        {
+          key: "profile",
+          label: (
+            <Space style={{ margin: "-10px 0" }}>
+              <ProfileMenu />
+              {t("myProfile")}
+            </Space>
+          ),
+        },
+        {
+          key: "logout",
+          label: (
+            <Space style={{ margin: "-10px 0" }}>
+              <Logout />
+              {t("logout")}
+            </Space>
+          ),
+        },
+      ]);
     } else {
-      setDropdownItems({
-        items: [
-          {
-            key: "notification",
-            label: (
-              <Space style={{ margin: "-10px 0" }} size={16}>
-                <Notification />
-                {t("notifications")}
-              </Space>
-            ),
-          },
-          {
-            key: "chat",
-            label: (
-              <Space style={{ margin: "-10px 0" }}>
-                <Chat />
-                {t("chat")}
-              </Space>
-            ),
-          },
-          {
-            key: "profile",
-            label: (
-              <Space style={{ margin: "-10px 0" }} size={16}>
-                <ProfileMenu />
-                {t("myProfile")}
-              </Space>
-            ),
-          },
-          {
-            key: "logout",
-            label: (
-              <Space style={{ margin: "-10px 0" }}>
-                <Logout />
-                {t("logout")}
-              </Space>
-            ),
-          },
-        ],
-      });
+      setDropdownItems([
+        {
+          key: "notification",
+          label: (
+            <Space style={{ margin: "-10px 0" }} size={16}>
+              <Notification />
+              {t("notifications")}
+            </Space>
+          ),
+        },
+        {
+          key: "chat",
+          label: (
+            <Space style={{ margin: "-10px 0" }}>
+              <Chat />
+              {t("chat")}
+            </Space>
+          ),
+        },
+        {
+          key: "profile",
+          label: (
+            <Space style={{ margin: "-10px 0" }} size={16}>
+              <ProfileMenu />
+              {t("myProfile")}
+            </Space>
+          ),
+        },
+        {
+          key: "logout",
+          label: (
+            <Space style={{ margin: "-10px 0" }}>
+              <Logout />
+              {t("logout")}
+            </Space>
+          ),
+        },
+      ]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [width]);
@@ -107,6 +113,7 @@ function MainHeader() {
   return (
     <div className="t-flex header-tc">
       <i className="fa-solid fa-bars-progress i-menu"></i>
+
       <div className="t-flex options-tc">
         {width > windowSize.md && (
           <>
@@ -117,7 +124,7 @@ function MainHeader() {
         )}
         <UserName />
         <Dropdown
-          menu={dropdownItems}
+          menu={{ items: dropdownItems, onClick: onClick }}
           trigger={["click"]}
           placement="bottomRight"
         >

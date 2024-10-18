@@ -5,76 +5,87 @@ import {
   RequirementType,
   TimeMeasurement,
   Usage,
-  UserTable,
+  UserRoles,
+  EntityType,
+  PurchaseOrderTableTypes,
+  CertificationState,
 } from "../utilities/types";
+import { OfferFilters } from "./Interfaces";
 
-export interface BaseRequirementOffer {
+export interface BaseInterface {
   key: string;
-  title: string;
   type: RequirementType;
 }
 
-export interface Requirement extends BaseRequirementOffer {
-  description: string;
+export interface BaseRequirementOffer extends BaseInterface {
+  title: string;
+}
+
+export interface BasicRequirement extends BaseRequirementOffer {
+  user: BaseUser;
+  subUser?: BaseUser;
+  publishDate: string;
   category: number;
   location: number;
-  publishDate: string;
-  expirationDate: string;
   coin: number;
   price: number;
   numberOffers: number;
   state: RequirementState;
+}
+
+export interface Requirement extends BasicRequirement {
+  description: string;
+  expirationDate: string;
   image?: string[];
   document?: string[];
-  user: User;
-  subUser?: User;
   warranty?: number;
   warrantyTime?: TimeMeasurement;
-  usage?: Usage;
+  used?: Usage;
   deliveryTime: number;
 }
 
-export interface Offer extends BaseRequirementOffer {
+export interface BasicOffer extends BaseRequirementOffer {
+  user: BaseUser;
+  subUser?: BaseUser;
   requirementTitle: string;
   requirementId: string;
-  description?: string;
+  publishDate: string;
   coin: number;
   price: number;
+  state: OfferState;
+}
+
+export interface Offer extends BasicOffer {
+  description?: string;
   warranty: number;
   warrantyTime: TimeMeasurement;
   deliveryTime: number;
-  user: User;
   location: number;
   image?: string[];
   document?: string[];
-  subUser?: User;
   selectionDate?: string;
-  publishDate: string;
-  state: OfferState;
-  type: RequirementType;
   igv?: boolean;
   deliveryDate?: string;
   delivered?: boolean;
 }
 
-export interface PurchaseOrder {
-  key: string;
-  requirementTitle: string;
-  selectionDate: string;
-  state: PurchaseOrderState;
+export interface BasicPurchaseOrder extends BaseInterface {
   user: User;
   subUser?: User;
-  type: RequirementType;
+  requirementTitle: string;
+  requirementId: string;
+  selectionDate: string;
+  state: PurchaseOrderState;
+  offerTitle: string;
+  offerId: string;
+}
+
+export interface PurchaseOrder extends BasicPurchaseOrder {
+  filters?: OfferFilters;
 }
 
 export interface User extends BaseUser {
-  email: string;
-  userType: number;
   document: string;
-  tenure?: number;
-  userTable: UserTable;
-  customerScore: number;
-  sellerScore: number;
   address: string;
   phone: string;
 }
@@ -82,7 +93,25 @@ export interface User extends BaseUser {
 export interface BaseUser {
   uid: string;
   name: string;
-  image?: string; // customerScore: number; sellerScore: number;  //  tenure?: number /email: string
+  image?: string;
+  email: string;
+  tenure?: number;
+  customerScore?: number;
+  sellerScore?: number;
+  customerCount?: number;
+  sellerCount?: number;
+  typeEntity: EntityType;
+}
+
+export interface FullUser extends User {
+  categories: number[];
+  typeID: UserRoles;
+  activeAccount: boolean;
+  cityID: number;
+  countryID: number;
+  planID: number;
+  specialty?: string;
+  aboutMe?: string;
 }
 
 export interface RequirementItemSubUser extends BaseRequirementOffer {
@@ -102,11 +131,47 @@ export interface OfferItemSubUser extends BaseRequirementOffer {
   coin: number;
 }
 
-export interface PurchaseOrderItemSubUser {
-  key: string;
-  type: RequirementType;
+export interface PurchaseOrderItemSubUser extends BaseInterface {
   requirementTitle: string;
   offerTitle: string;
   selectionDate: string;
   state: PurchaseOrderState;
+  subType: PurchaseOrderTableTypes;
+}
+
+export interface CertificateFile {
+  name: string;
+  documentName: string;
+  url: string;
+  state?: CertificationState;
+}
+
+export interface CertificationItem {
+  companyID: string;
+  companyName: string;
+  companyDocument: string;
+  creationDate: string;
+  state: CertificationState;
+  note?: string;
+}
+
+export interface StatisticsData {
+  customers: number;
+  requirements: number;
+  certifications: number;
+  goods: number;
+  services: number;
+  sales: number;
+  // rrhh: number;
+  offers: number;
+  issuedPurchaseOrders: number;
+  receivedPurchaseOrders: number;
+  employees: number;
+}
+
+export interface PlanData {
+  goods: number;
+  services: number;
+  sales: number;
+  offers: number;
 }

@@ -59,11 +59,24 @@ export enum TableTypes {
   REQUIREMENT_SUBUSER = 5,
   OFFER_SUBUSER = 6,
   PURCHASE_ORDER_SUBUSER = 7,
+  ALL_REQUIREMENTS = 8,
+  ALL_OFFERS = 9,
+  ALL_PURCHASE_ORDERS = 10,
+  MY_DOCUMENTS = 11,
+  SENT_CERT = 12,
+  RECEIVED_CERT = 13,
 }
 
-export enum UserTable {
-  COMPANY = 0,
-  PERSON = 1,
+// export enum EntityType {
+//   COMPANY = 0,
+//   PERSON = 1,
+//   SUBUSER = 2,
+// }
+
+export enum EntityType {
+  COMPANY = "Company",
+  PERSON = "User",
+  SUBUSER = "SubUser",
 }
 
 /*** Modales ****/
@@ -81,6 +94,11 @@ export enum ModalTypes {
   CONFIRM = 9,
   INPUT_EMAIL = 10,
   OFFER_DETAIL = 11,
+  USER_INFO = 12,
+  ADD_CERTIFICATES = 13,
+  EDIT_DOCUMENT_LIST_TO_REQUEST = 14,
+  VIEW_DOCS_RECEIVED_CERT = 15,
+  VIEW_DOCS_SENT_CERT = 16,
 }
 
 export const ModalWidth: {
@@ -98,6 +116,11 @@ export const ModalWidth: {
   [ModalTypes.CONFIRM]: mediumPlusModalWidth,
   [ModalTypes.INPUT_EMAIL]: smallModalWidth,
   [ModalTypes.OFFER_DETAIL]: commonModalWidth,
+  [ModalTypes.USER_INFO]: 900,
+  [ModalTypes.ADD_CERTIFICATES]: 800,
+  [ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST]: 600,
+  [ModalTypes.VIEW_DOCS_RECEIVED_CERT]: 800,
+  [ModalTypes.VIEW_DOCS_SENT_CERT]: 800,
 };
 
 /***** Acciones *****/
@@ -127,6 +150,12 @@ export enum Action {
   CANCEL = 22,
   OFFER_DETAIL = 23,
   ADD_USER = 24,
+  VIEW_REQUIREMENT = 25,
+  VIEW_OFFER = 26,
+  VIEW_PURCHASE_ORDER = 27,
+  ADD_CERTIFICATES = 28,
+  EDIT_DOCUMENT_LIST_TO_REQUEST = 29,
+  VIEW = 30,
 }
 
 export const ActionLabel: {
@@ -156,6 +185,12 @@ export const ActionLabel: {
   [Action.CANCEL]: "cancel",
   [Action.OFFER_DETAIL]: "offerDetail",
   [Action.ADD_USER]: "addUser",
+  [Action.VIEW_REQUIREMENT]: "view",
+  [Action.VIEW_OFFER]: "view",
+  [Action.VIEW_PURCHASE_ORDER]: "view",
+  [Action.ADD_CERTIFICATES]: "addCertificates",
+  [Action.EDIT_DOCUMENT_LIST_TO_REQUEST]: "listOfDocumentsToRequest",
+  [Action.VIEW]: "view",
 };
 
 export const ActionByStateRequirement: {
@@ -195,22 +230,26 @@ export const ActionByStatePurchaseOrder: {
     Action.DOWNLOAD_PURCHASE_ORDER,
     Action.FINISH,
     Action.VIEW_SUPPLIER,
+    Action.VIEW_CUSTOMER,
     Action.VIEW_HISTORY,
     Action.CANCEL,
   ],
   [PurchaseOrderState.DISPUTE]: [
     Action.DOWNLOAD_PURCHASE_ORDER,
     Action.VIEW_SUPPLIER,
+    Action.VIEW_CUSTOMER,
     Action.VIEW_HISTORY,
   ],
   [PurchaseOrderState.FINISHED]: [
     Action.DOWNLOAD_PURCHASE_ORDER,
     Action.VIEW_SUPPLIER,
+    Action.VIEW_CUSTOMER,
     Action.VIEW_HISTORY,
   ],
   [PurchaseOrderState.CANCELED]: [
     Action.DOWNLOAD_PURCHASE_ORDER,
     Action.VIEW_SUPPLIER,
+    Action.VIEW_CUSTOMER,
     Action.VIEW_HISTORY,
   ],
   [PurchaseOrderState.ELIMINATED]: [],
@@ -225,6 +264,12 @@ export const ActionSubUsers: {
     Action.VIEW_PURCHASE_ORDERS,
     Action.EDIT_USER,
   ],
+};
+
+export const ActionCertificateFiles: {
+  [key: number]: Array<Action>;
+} = {
+  [allItems]: [Action.VIEW_DOCUMENT, Action.DELETE],
 };
 
 /*********/
@@ -273,6 +318,7 @@ export enum TableColumns {
   SELECTION_DATE = 19,
   OFFER = 20,
   USERNAME = 21,
+  SUBTYPE = 22,
 }
 
 export enum UserClass {
@@ -324,4 +370,17 @@ export enum UserRoles {
   SELLER = 3,
   BUYER = 4,
   LEGAL = 5,
+}
+
+export enum PurchaseOrderTableTypes {
+  ISSUED = 0,
+  RECEIVED = 1,
+  ISSUED_SALES = 2,
+  RECEIVED_SALES = 3,
+}
+
+export enum CertificationState {
+  CERTIFIED = 1,
+  REJECTED = 2,
+  PENDING = 3,
 }

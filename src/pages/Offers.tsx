@@ -7,7 +7,7 @@ import {
   RequirementType,
   TableTypes,
   TimeMeasurement,
-  UserTable,
+  EntityType,
 } from "../utilities/types";
 import ModalContainer from "../components/containers/ModalContainer";
 import { ChangeEvent, useState } from "react";
@@ -40,14 +40,16 @@ const offerList: Offer[] = [
       email: "john.doejohn.doejohn.doejohn.doe@example.com",
 
       document: "123456789",
-      userTable: UserTable.COMPANY,
+      typeEntity: EntityType.COMPANY,
       tenure: 10,
       customerScore: 3.5,
       sellerScore: 1.5,
       address: "Calle San Agustin 107 - Cercado - Arequipa",
 
       phone: "998989898",
-      userType: 0,
+
+      customerCount: 0,
+      sellerCount: 0,
     },
     subUser: {
       uid: "user1",
@@ -55,13 +57,15 @@ const offerList: Offer[] = [
       email: "javiersolis@example.com",
 
       document: "123456789",
-      userTable: UserTable.COMPANY,
+      typeEntity: EntityType.COMPANY,
       customerScore: 0,
       sellerScore: 0,
       address: "Calle San Agustin 107 - Cercado - Arequipa",
       tenure: 3,
       phone: "998989898",
-      userType: 0,
+
+      customerCount: 0,
+      sellerCount: 0,
     },
     image: [
       "https://img.freepik.com/foto-gratis/belleza-otonal-abstracta-patron-venas-hoja-multicolor-generado-ia_188544-9871.jpg",
@@ -95,25 +99,27 @@ const offerList: Offer[] = [
       name: "Jane Smith",
       email: "jane.smith@example.com",
       document: "987654321",
-      userTable: 1,
+      typeEntity: EntityType.COMPANY,
       customerScore: 0,
       sellerScore: 0,
       address: "Calle San Agustin 107 - Cercado - Arequipa",
       tenure: 3,
       phone: "998989898",
-      userType: 0,
+      customerCount: 0,
+      sellerCount: 0,
     },
     subUser: {
       uid: "subuser1",
       name: "Javier Req Solís Calcina Javier Alberto Solís Calcina",
       email: "javiersolis@example.com",
       document: "123456789",
-      userTable: UserTable.COMPANY,
+      typeEntity: EntityType.COMPANY,
       customerScore: 0,
       sellerScore: 0,
       address: "Calle San Agustin 107 - Cercado - Arequipa",
       phone: "998989898",
-      userType: 0,
+      customerCount: 0,
+      sellerCount: 0,
     },
   },
   {
@@ -137,13 +143,15 @@ const offerList: Offer[] = [
       name: "Fitness Pro Tech Co.",
       email: "fitnesspro@example.com",
       document: "246810975",
-      userTable: 0,
+      typeEntity: EntityType.PERSON,
       customerScore: 0,
       sellerScore: 0,
       address: "Calle San Agustin 107 - Cercado - Arequipa",
       tenure: 3,
       phone: "998989898",
-      userType: 0,
+
+      customerCount: 0,
+      sellerCount: 0,
     },
   },
   {
@@ -167,13 +175,15 @@ const offerList: Offer[] = [
       name: "SoundTech Solutions Ltd.",
       email: "info@soundtech.example.com",
       document: "135792468",
-      userTable: 1,
+      typeEntity: EntityType.COMPANY,
       customerScore: 0,
       sellerScore: 0,
       address: "Calle San Agustin 107 - Cercado - Arequipa",
       tenure: 3,
       phone: "998989898",
-      userType: 0,
+
+      customerCount: 0,
+      sellerCount: 0,
     },
   },
   {
@@ -197,13 +207,15 @@ const offerList: Offer[] = [
       name: "Coffee Experts Inc.",
       email: "info@coffeeexperts.example.com",
       document: "864209753",
-      userTable: 0,
+      typeEntity: EntityType.COMPANY,
       customerScore: 0,
       sellerScore: 0,
       address: "Calle San Agustin 107 - Cercado - Arequipa",
       tenure: 3,
       phone: "998989898",
-      userType: 0,
+
+      customerCount: 0,
+      sellerCount: 0,
     },
   },
   {
@@ -228,13 +240,15 @@ const offerList: Offer[] = [
       email: "info@auditech.example.com",
 
       document: "975310864",
-      userTable: 0,
+      typeEntity: EntityType.COMPANY,
       customerScore: 0,
       sellerScore: 0,
       address: "Calle San Agustin 107 - Cercado - Arequipa",
       tenure: 3,
       phone: "998989898",
-      userType: 0,
+
+      customerCount: 0,
+      sellerCount: 0,
     },
   },
   {
@@ -258,13 +272,15 @@ const offerList: Offer[] = [
       name: "FitGear Solutions",
       email: "info@fitgear.example.com",
       document: "531086479",
-      userTable: 1,
+      typeEntity: EntityType.COMPANY,
       customerScore: 0,
       sellerScore: 0,
       address: "Calle San Agustin 107 - Cercado - Arequipa",
       tenure: 3,
       phone: "998989898",
-      userType: 0,
+
+      customerCount: 0,
+      sellerCount: 0,
     },
   },
   {
@@ -288,13 +304,15 @@ const offerList: Offer[] = [
       name: "TechSavvy Inc.",
       email: "info@techsavvy.example.com",
       document: "123098765",
-      userTable: 1,
+      typeEntity: EntityType.COMPANY,
       customerScore: 0,
       sellerScore: 0,
       address: "Calle San Agustin 107 - Cercado - Arequipa",
       tenure: 3,
       phone: "998989898",
-      userType: 0,
+
+      customerCount: 0,
+      sellerCount: 0,
     },
   },
   {
@@ -318,13 +336,15 @@ const offerList: Offer[] = [
       name: "SnapLens Co.",
       email: "info@snaplens.example.com",
       document: "098765432",
-      userTable: 0,
+      typeEntity: EntityType.COMPANY,
       customerScore: 0,
       sellerScore: 0,
       address: "Calle San Agustin 107 - Cercado - Arequipa",
       tenure: 3,
       phone: "998989898",
-      userType: 0,
+
+      customerCount: 0,
+      sellerCount: 0,
     },
   },
   {
@@ -347,14 +367,14 @@ const offerList: Offer[] = [
       uid: "user10",
       name: "EcoWheels Ltd.",
       email: "info@ecowheels.example.com",
-      document: "456789012",
-      userTable: 1,
+
+      typeEntity: EntityType.COMPANY,
       customerScore: 0,
       sellerScore: 0,
-      address: "Calle San Agustin 107 - Cercado - Arequipa",
-      userType: 0,
+
       tenure: 3,
-      phone: "998989898",
+      customerCount: 0,
+      sellerCount: 0,
     },
   },
 ];
@@ -388,7 +408,6 @@ export default function Offers() {
   }
 
   function handleOnButtonClick(action: Action, offer: Offer) {
-    console.log(action);
     switch (action) {
       case Action.OFFER_DETAIL:
         setDataModal({
@@ -427,7 +446,7 @@ export default function Offers() {
           data: {
             user: offer.user,
             subUser: offer.subUser,
-            requirementOffertitle: offer.requirementTitle,
+            requirementOfferTitle: offer.requirementTitle,
             type: offer.type,
             isOffer: false,
           },
@@ -458,7 +477,7 @@ export default function Offers() {
             subUser: offer.subUser,
             type: offer.type,
             isOffer: false,
-            requirementOffertitle: offer.requirementTitle,
+            requirementOfferTitle: offer.requirementTitle,
           },
         });
         setIsOpenModal(true);

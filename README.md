@@ -145,7 +145,7 @@ _Props_
 | Nombre                | Tipo                                               | Descripción                                                          |
 | --------------------- | -------------------------------------------------- | -------------------------------------------------------------------- |
 | user                  | `User`                                             | Información del usuario que está siendo calificado.                  |
-| requirementOffertitle | `string`                                           | Título de la oferta o requerimiento relacionado.                     |
+| requirementOfferTitle | `string`                                           | Título de la oferta o requerimiento relacionado.                     |
 | type                  | `RequirementType`                                  | Tipo de requerimiento (`GOOD`, `SERVICE`, `SALE`, etc.).             |
 | isOffer               | `boolean`                                          | Indicador de si es una oferta (`true`) o un requerimiento (`false`). |
 | onClose               | `(e: React.SyntheticEvent<Element, Event>) => any` | Función de callback llamada al cerrar el modal.                      |
@@ -159,7 +159,7 @@ _Props_
 | Nombre                | Tipo                                               | Descripción                                                          |
 | --------------------- | -------------------------------------------------- | -------------------------------------------------------------------- |
 | user                  | `User`                                             | Información del usuario que está siendo calificado.                  |
-| requirementOffertitle | `string`                                           | Título de la oferta o requerimiento relacionado.                     |
+| requirementOfferTitle | `string`                                           | Título de la oferta o requerimiento relacionado.                     |
 | type                  | `RequirementType`                                  | Tipo de requerimiento (`GOOD`, `SERVICE`, `SALE`, etc.).             |
 | isOffer               | `boolean`                                          | Indicador de si es una oferta (`true`) o un requerimiento (`false`). |
 | onClose               | `(e: React.SyntheticEvent<Element, Event>) => any` | Función de callback llamada al cerrar el modal.                      |

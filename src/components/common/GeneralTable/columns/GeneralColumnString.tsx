@@ -1,13 +1,19 @@
 import { Flex } from "antd";
 import { ColumnType } from "antd/es/table";
+import { getNestedValue } from "../../../../utilities/globalFunctions";
+import { useTranslation } from "react-i18next";
 
 export default function GeneralColumnString(
   nameColumn: string,
   dataIndex: string,
   truncate: boolean,
   width: number = 130,
-  hidden: boolean = false
+  hidden: boolean = false,
+  sorter: boolean = true,
+  getLabelFunction?: (type: any) => string
 ) {
+  const { t } = useTranslation();
+
   const col: ColumnType<any> = {
     title: nameColumn,
     dataIndex,
@@ -18,7 +24,9 @@ export default function GeneralColumnString(
       <>
         {!truncate && (
           <div style={{ textAlign: "left" }} className={`t-flex dato-table`}>
-            {record[dataIndex]}
+            {getLabelFunction
+              ? t(getLabelFunction(getNestedValue(dataIndex, record)))
+              : getNestedValue(dataIndex, record)}
           </div>
         )}
         {truncate && (
@@ -27,13 +35,20 @@ export default function GeneralColumnString(
               className="text-truncate dato-table"
               style={{ textAlign: "left" }}
             >
-              {record[dataIndex]}
+              {getLabelFunction
+                ? t(getLabelFunction(getNestedValue(dataIndex, record)))
+                : getNestedValue(dataIndex, record)}
             </div>
           </Flex>
         )}
       </>
     ),
-    sorter: (a, b) => a[dataIndex].localeCompare(b[dataIndex]),
+    sorter: sorter
+      ? (a, b) =>
+          getNestedValue(dataIndex, a)?.localeCompare(
+            getNestedValue(dataIndex, b)
+          )
+      : false,
     showSorterTooltip: false,
   };
   if (!truncate) col.width = width;

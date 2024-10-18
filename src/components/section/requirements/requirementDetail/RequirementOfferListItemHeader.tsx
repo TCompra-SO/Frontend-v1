@@ -7,7 +7,7 @@ import {
   OfferState,
   RequirementState,
   RequirementType,
-  UserTable,
+  EntityType,
 } from "../../../../utilities/types";
 import { useTranslation } from "react-i18next";
 import { getScore } from "../../../../utilities/globalFunctions";
@@ -99,7 +99,7 @@ export default function RequirementOfferListItemHeader({
             data: {
               user: props.offer.user,
               subUser: props.offer.subUser,
-              requirementOffertitle: props.offer.title,
+              requirementOfferTitle: props.offer.title,
               type: props.offer.type,
               isOffer: true,
             },
@@ -145,9 +145,9 @@ export default function RequirementOfferListItemHeader({
                 </div>
               )}
               <div className="usuario-badge">
-                {props.offer.user.userTable == UserTable.COMPANY
+                {props.offer.user.typeEntity == EntityType.COMPANY
                   ? t("company")
-                  : t("persona")}
+                  : t("person")}
               </div>
               <div className="usuario-puntuacion">
                 <i className="fa-solid fa-star user-start"></i>
@@ -183,7 +183,7 @@ export default function RequirementOfferListItemHeader({
             </div>
           </div>
         </div>
-        {props.showStateAndActions && (
+        {props.showStateAndActions.show && (
           <div className="oferta-acciones">
             {props.offer.state == OfferState.WINNER && (
               <div className="badge-green">

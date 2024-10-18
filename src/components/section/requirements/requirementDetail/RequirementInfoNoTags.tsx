@@ -5,14 +5,14 @@ import {
   getScore,
 } from "../../../../utilities/globalFunctions";
 import { useTranslation } from "react-i18next";
-import { User } from "../../../../models/MainInterfaces";
+import { BaseUser } from "../../../../models/MainInterfaces";
 import { RequirementType } from "../../../../utilities/types";
 import DescriptionParagraph from "../../../common/DescriptionParagraph";
 
 interface RequirementInfoNoTagsProps {
   title: string;
-  user: User;
-  subUser?: User;
+  user: BaseUser;
+  subUser?: BaseUser;
   type: RequirementType;
   description?: string;
 }
@@ -41,11 +41,17 @@ export default function RequirementInfoNoTags(
           <div className="valor-start">
             {getScore(
               props.type == RequirementType.SALE
-                ? props.user.sellerScore
-                : props.user.customerScore
+                ? props.user.sellerScore ?? 0
+                : props.user.customerScore ?? 0
             )}
           </div>
-          <b className="p-cantidad">(41.5k)</b>
+          <b className="p-cantidad">
+            (
+            {props.type == RequirementType.SALE
+              ? props.user.sellerCount
+              : props.user.customerCount}
+            )
+          </b>
         </div>
       </div>
 

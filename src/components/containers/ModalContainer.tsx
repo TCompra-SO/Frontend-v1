@@ -5,13 +5,17 @@ import { ModalProps } from "antd/lib";
 import RequirementOfferSummary from "../section/requirements/requirementOfferSummary/RequirementOfferSummary";
 import RequirementModalRepublish from "../section/requirements/RequirementModalRepublish";
 import { ModalContent } from "../../models/Interfaces";
-import RatingCanceledModal from "../common/RatingCanceledModal";
-import CancelPurchaseOrderModal from "../common/CancelPurchaseOrderModal";
-import RatingModal from "../common/RatingModal";
-import ConfirmationModal from "../common/ConfirmationModal";
-import InputEmailModal from "../common/InputEmailModal";
+import RatingCanceledModal from "../common/modals/RatingCanceledModal";
+import CancelPurchaseOrderModal from "../common/modals/CancelPurchaseOrderModal";
+import RatingModal from "../common/modals/RatingModal";
+import ConfirmationModal from "../common/modals/ConfirmationModal";
+import InputEmailModal from "../common/modals/InputEmailModal";
 import NoContentModalContainer from "./NoContentModalContainer";
 import OfferDetailModal from "../section/offers/offerDetail/OfferDetailModal";
+import UserInfoModal from "../common/modals/UserInfoModal";
+import AddCertificatesModal from "../common/modals/AddCertificatesModal";
+import EditDocumentListToRequestModal from "../common/modals/EditDocumentListToRequestModal";
+import ViewDocsReceivedCertificate from "../common/modals/ViewDocsReceivedCertificate";
 
 interface ModalContainerProps extends ModalProps {
   content: ModalContent;
@@ -30,6 +34,8 @@ export default function ModalContainer(props: ModalContainerProps) {
           <RequirementDetail
             offerList={props.content.data.offerList}
             requirement={props.content.data.requirement}
+            forPurchaseOrder={props.content.data.forPurchaseOrder}
+            filters={props.content.data.filters}
             onClose={props.onClose}
           />
         );
@@ -54,7 +60,12 @@ export default function ModalContainer(props: ModalContainerProps) {
         );
       }
       case ModalTypes.OFFER_SUMMARY: {
-        return <RequirementOfferSummary offer={props.content.data.offer} />;
+        return (
+          <RequirementOfferSummary
+            offer={props.content.data.offer}
+            user={props.content.data.user}
+          />
+        );
       }
       case ModalTypes.REPUBLISH_REQUIREMENT: {
         return (
@@ -69,7 +80,7 @@ export default function ModalContainer(props: ModalContainerProps) {
           <RatingCanceledModal
             user={props.content.data.user}
             subUser={props.content.data.subUser}
-            requirementOffertitle={props.content.data.requirementOffertitle}
+            requirementOfferTitle={props.content.data.requirementOfferTitle}
             type={props.content.data.type}
             isOffer={props.content.data.isOffer}
             onClose={props.onClose}
@@ -82,7 +93,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             onClose={props.onClose}
             user={props.content.data.user}
             subUser={props.content.data.subUser}
-            requirementOffertitle={props.content.data.requirementOffertitle}
+            requirementOfferTitle={props.content.data.requirementOfferTitle}
             type={props.content.data.type}
             isOffer={props.content.data.isOffer}
           />
@@ -98,7 +109,6 @@ export default function ModalContainer(props: ModalContainerProps) {
           />
         );
       }
-
       case ModalTypes.INPUT_EMAIL: {
         return (
           <InputEmailModal
@@ -109,9 +119,27 @@ export default function ModalContainer(props: ModalContainerProps) {
           />
         );
       }
-
       case ModalTypes.OFFER_DETAIL: {
         return <OfferDetailModal offer={props.content.data.offer} />;
+      }
+      case ModalTypes.USER_INFO: {
+        return <UserInfoModal user={props.content.data.user} />;
+      }
+      case ModalTypes.ADD_CERTIFICATES: {
+        return <AddCertificatesModal />;
+      }
+      case ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST: {
+        return <EditDocumentListToRequestModal />;
+      }
+      case ModalTypes.VIEW_DOCS_RECEIVED_CERT:
+      case ModalTypes.VIEW_DOCS_SENT_CERT: {
+        return (
+          <ViewDocsReceivedCertificate
+            data={props.content.data.data}
+            docs={props.content.data.docs}
+            readOnly={props.content.data.readonly}
+          />
+        );
       }
     }
   }
