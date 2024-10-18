@@ -1,31 +1,31 @@
 import { Form } from "antd";
 import { useTranslation } from "react-i18next";
-import InputContainer from "../../containers/InputContainer";
 import { ReactNode } from "react";
+import InputNumberContainer from "../../containers/InputNumberContainer";
+import { useTenureRules } from "../../../hooks/validators";
 
-interface NameFieldProps {
+interface TenureFieldProps {
   edit?: boolean;
   value?: string;
   fromMyPerfil?: boolean;
   onlyItem?: boolean;
-  disabled?: boolean;
 }
 
-export default function NameField(props: NameFieldProps) {
+export default function TenureField(props: TenureFieldProps) {
   const { t } = useTranslation();
+  const { tenureRules } = useTenureRules(true);
   const item: ReactNode = (
     <Form.Item
-      label={t("name")}
-      name="name"
+      name="tenure"
+      label={t("tenure")}
       labelCol={{ span: 0 }}
-      rules={[{ required: true }]}
-      initialValue={props.value}
+      rules={tenureRules}
     >
-      <InputContainer
-        disabled={props.disabled}
-        type="text"
+      <InputNumberContainer
+        min={0}
+        parser={(value) => parseInt(value || "0", 10)}
         className="form-control"
-        placeholder={t("name")}
+        placeholder={t("tenure") + ` (${t("years")})`}
       />
     </Form.Item>
   );

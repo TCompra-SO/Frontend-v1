@@ -241,3 +241,18 @@ export function useDescriptionCRRules(required: boolean) {
   ]);
   return { descriptionCRRules };
 }
+
+export function useTenureRules(required: boolean) {
+  const [tenureRules] = useState<Rule[]>([
+    {
+      required,
+    },
+    {
+      min: Lengths.tenure.min,
+    },
+    {
+      max: Lengths.tenure.max,
+    },
+  ]);
+  return { tenureRules };
+}

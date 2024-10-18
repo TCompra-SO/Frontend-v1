@@ -32,6 +32,7 @@ import InputNumberContainer from "../components/containers/InputNumberContainer"
 import { ListsContext } from "../contexts/listsContext";
 import PhoneField from "../components/common/formFields/PhoneField";
 import AddressField from "../components/common/formFields/AddressField";
+import TenureField from "../components/common/formFields/TenureField";
 // import LocationField from "../components/common/formFields/LocationField";
 
 interface ProfileProps {
@@ -297,23 +298,7 @@ export default function Profile(props: ProfileProps) {
                 <>
                   <Row gutter={[15, 15]}>
                     <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                      <Form.Item
-                        name="tenure"
-                        label={t("tenure")}
-                        labelCol={{ span: 0 }}
-                        rules={[
-                          {
-                            required: true,
-                          },
-                        ]}
-                      >
-                        <InputNumberContainer
-                          min={0}
-                          parser={(value) => parseInt(value || "0", 10)}
-                          className="form-control"
-                          placeholder={t("tenure") + ` (${t("years")})`}
-                        />
-                      </Form.Item>
+                      <TenureField onlyItem />
                     </Col>
                     <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                       <Form.Item

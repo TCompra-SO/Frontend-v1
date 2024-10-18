@@ -3,12 +3,12 @@ import { FullUser, PlanData } from "../models/MainInterfaces";
 import { DocType, EntityType, UserRoles } from "../utilities/types";
 import { useContext, useEffect, useState } from "react";
 import { ListsContext } from "../contexts/listsContext";
-import NameMP from "../components/section/myProfile/NameMP";
 import PhoneField from "../components/common/formFields/PhoneField";
 import LocationField from "../components/common/formFields/LocationField";
 import AddressField from "../components/common/formFields/AddressField";
 import EmailField from "../components/common/formFields/EmailField";
 import { Form } from "antd";
+import NameField from "../components/common/formFields/NameField";
 
 const user1: FullUser = {
   uid: "user1",
@@ -240,7 +240,7 @@ export default function MyProfile() {
             <Form form={form} colon={false} requiredMark={false}>
               <div className="t-flex gap-15 f-column">
                 <div className="t-flex t-wrap gap-15">
-                  <NameMP />
+                  <NameField fromMyPerfil />
                   <AddressField fromMyPerfil />
                   <LocationField fromMyPerfil />
                 </div>
