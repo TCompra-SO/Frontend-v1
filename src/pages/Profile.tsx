@@ -20,12 +20,7 @@ import {
 } from "../services/requests/authService";
 import { useTranslation } from "react-i18next";
 import { DocType } from "../utilities/types";
-import {
-  useAboutMeRules,
-  useAddressRules,
-  usePhoneRules,
-  useSpecialtyRules,
-} from "../hooks/validators";
+import { useAboutMeRules, useSpecialtyRules } from "../hooks/validators";
 import { DefaultOptionType } from "antd/es/select";
 import React from "react";
 import {
@@ -35,6 +30,9 @@ import {
 } from "../utilities/globalFunctions";
 import InputNumberContainer from "../components/containers/InputNumberContainer";
 import { ListsContext } from "../contexts/listsContext";
+import PhoneField from "../components/common/formFields/PhoneField";
+import AddressField from "../components/common/formFields/AddressField";
+// import LocationField from "../components/common/formFields/LocationField";
 
 interface ProfileProps {
   docType: string;
@@ -64,8 +62,6 @@ export default function Profile(props: ProfileProps) {
       dataToSend: apiParams.dataToSend,
     });
 
-  const { addressRules } = useAddressRules(true);
-  const { phoneRules } = usePhoneRules(true);
   const { specialtyRules } = useSpecialtyRules(true);
   const { aboutMeRules } = useAboutMeRules(false);
 
@@ -130,7 +126,7 @@ export default function Profile(props: ProfileProps) {
       phone: phoneCode + values.phone.trim(),
       address: values.address.trim(),
       countryID: values.country,
-      cityID: values.city,
+      cityID: values.location,
       categories: [values.category1, values.category2, values.category3],
       planID: 1, // r3v
     };
@@ -245,39 +241,10 @@ export default function Profile(props: ProfileProps) {
               </Form.Item>
               <Row gutter={[15, 15]}>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                  <Form.Item
-                    label={t("phone")}
-                    name="phone"
-                    rules={phoneRules}
-                    labelCol={{ span: 0 }}
-                  >
-                    <Space.Compact style={{ width: "100%" }}>
-                      <InputContainer
-                        style={{ width: "25%" }}
-                        readOnly={true}
-                        defaultValue={phoneCode}
-                        className="form-control"
-                      />
-                      <InputContainer
-                        className="form-control"
-                        style={{ width: "75%" }}
-                        placeholder={t("phone")}
-                      />
-                    </Space.Compact>
-                  </Form.Item>
+                  <PhoneField onlyItem />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                  <Form.Item
-                    label={t("address")}
-                    name="address"
-                    rules={addressRules}
-                    labelCol={{ span: 0 }}
-                  >
-                    <InputContainer
-                      className="form-control"
-                      placeholder={t("address")}
-                    />
-                  </Form.Item>
+                  <AddressField onlyItem />
                 </Col>
               </Row>
 
@@ -322,6 +289,7 @@ export default function Profile(props: ProfileProps) {
                       className="form-control"
                     />
                   </Form.Item>
+                  {/* <LocationField onlyItem /> */}
                 </Col>
               </Row>
 

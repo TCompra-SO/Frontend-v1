@@ -4,10 +4,10 @@ import { DocType, EntityType, UserRoles } from "../utilities/types";
 import { useContext, useEffect, useState } from "react";
 import { ListsContext } from "../contexts/listsContext";
 import NameMP from "../components/section/myProfile/nameMP";
-import PhoneAU from "../components/section/users/addUser/items/PhoneAU";
-import LocationAU from "../components/section/users/addUser/items/LocationAU";
-import AddressAU from "../components/section/users/addUser/items/AddressAU";
-import EmailAU from "../components/section/users/addUser/items/EmailAU";
+import PhoneField from "../components/common/formFields/PhoneField";
+import LocationField from "../components/common/formFields/LocationField";
+import AddressField from "../components/common/formFields/AddressField";
+import EmailField from "../components/common/formFields/EmailField";
 import { Form } from "antd";
 
 const user1: FullUser = {
@@ -241,12 +241,12 @@ export default function MyProfile() {
               <div className="t-flex gap-15 f-column">
                 <div className="t-flex t-wrap gap-15">
                   <NameMP />
-                  <AddressAU fromMyPerfil />
-                  <LocationAU fromMyPerfil />
+                  <AddressField fromMyPerfil />
+                  <LocationField fromMyPerfil />
                 </div>
                 <div className="t-flex t-wrap gap-15">
-                  <PhoneAU fromMyPerfil value={user?.phone} />
-                  <EmailAU fromMyPerfil value={user?.email} />
+                  <PhoneField fromMyPerfil value={user?.phone} />
+                  <EmailField fromMyPerfil value={user?.email} />
 
                   <div className="t-flex datos-input">
                     <div className="titulo-input">

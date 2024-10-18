@@ -1,13 +1,13 @@
 import { useTranslation } from "react-i18next";
 import ButtonContainer from "../../../containers/ButtonContainer";
 import { App, Col, Form, Row } from "antd";
-import DniAU from "./items/DniAU";
-import LocationAU from "./items/LocationAU";
-import AddressAU from "./items/AddressAU";
-import FullNameAU from "./items/FullNameAU";
-import PhoneAU from "./items/PhoneAU";
-import EmailAU from "./items/EmailAU";
-import UserTypeAU from "./items/UserTypeAU";
+import DniField from "../../../common/formFields/DniField";
+import LocationField from "../../../common/formFields/LocationField";
+import AddressField from "../../../common/formFields/AddressField";
+import FullNameField from "../../../common/formFields/FullNameField";
+import PhoneField from "../../../common/formFields/PhoneField";
+import EmailField from "../../../common/formFields/EmailField";
+import UserTypeField from "../../../common/formFields/UserTypeField";
 import { getNameReniecService } from "../../../../services/requests/utilService";
 import { useEffect, useState } from "react";
 import {
@@ -28,7 +28,7 @@ import {
 import { useSelector } from "react-redux";
 import { MainState } from "../../../../models/Redux";
 import { equalServices } from "../../../../utilities/globalFunctions";
-import PasswordAU from "./items/PasswordAU";
+import PasswordField from "../../../common/formFields/PasswordField";
 import { SubUserProfile } from "../../../../models/Responses";
 import { newPasswordService } from "../../../../services/requests/authService";
 
@@ -334,7 +334,7 @@ export default function AddUserModal(props: AddUserModalProps) {
         <div className="t-flex form-tc">
           <Row gutter={[15, 15]}>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <DniAU
+              <DniField
                 getUserName={getUserName}
                 resetFields={resetFields}
                 edit={props.edit}
@@ -342,35 +342,35 @@ export default function AddUserModal(props: AddUserModalProps) {
               />
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <FullNameAU edit={props.edit} value={props.userData?.name} />
+              <FullNameField edit={props.edit} value={props.userData?.name} />
             </Col>
           </Row>
           <Row gutter={[15, 15]}>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <AddressAU edit={props.edit} value={props.userData?.address} />
+              <AddressField edit={props.edit} value={props.userData?.address} />
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <EmailAU edit={props.edit} value={props.userData?.email} />
+              <EmailField edit={props.edit} value={props.userData?.email} />
             </Col>
           </Row>
           <Row gutter={[15, 15]}>
             <Col xs={24} sm={24} md={8} lg={8} xl={8}>
-              <LocationAU edit={props.edit} value={props.userData?.cityID} />
+              <LocationField edit={props.edit} value={props.userData?.cityID} />
             </Col>
             <Col xs={24} sm={24} md={8} lg={8} xl={8}>
-              <PhoneAU edit={props.edit} value={props.userData?.phone} />
+              <PhoneField edit={props.edit} value={props.userData?.phone} />
             </Col>
             <Col xs={24} sm={24} md={8} lg={8} xl={8}>
-              <UserTypeAU edit={props.edit} value={props.userData?.typeID} />
+              <UserTypeField edit={props.edit} value={props.userData?.typeID} />
             </Col>
           </Row>
           {props.edit && (
             <Row gutter={[15, 15]}>
               <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <PasswordAU name={"password1"} />
+                <PasswordField name={"password1"} />
               </Col>
               <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <PasswordAU name={"password2"} confirmPassword />
+                <PasswordField name={"password2"} confirmPassword />
               </Col>
             </Row>
           )}
