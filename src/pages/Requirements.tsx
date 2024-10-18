@@ -1038,7 +1038,7 @@ export default function Requirements() {
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
 
-  console.log(dataUser, mainDataUser);
+  // console.log(dataUser, mainDataUser);
 
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,

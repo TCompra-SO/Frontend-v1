@@ -7,6 +7,7 @@ import { phoneCode } from "../../../../../utilities/globals";
 interface PhoneAUProps {
   edit?: boolean;
   value?: string;
+  fromMyPerfil?: boolean;
 }
 
 export default function PhoneAU(props: PhoneAUProps) {
@@ -14,7 +15,7 @@ export default function PhoneAU(props: PhoneAUProps) {
   const { phoneRules } = usePhoneRules(true);
 
   return (
-    <div className="t-flex ad-user">
+    <div className={`t-flex ${props.fromMyPerfil ? "datos-input" : "ad-user"}`}>
       <div className="titulo-input">{t("phone")}</div>
 
       <Space.Compact>

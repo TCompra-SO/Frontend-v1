@@ -275,6 +275,7 @@ const resources = {
       addDocument: "Add document",
       uploadDocument: "Upload document",
       uploadDocuments: "Upload documents",
+      uploadImage: "Upload image",
       uploadImages: "Upload images",
       uploadFile: "Upload file",
       field: "Field",
@@ -334,7 +335,8 @@ const resources = {
       logistics: "Logistics",
       employees: "Employees",
       issuedOrders: "Issued orders",
-      receivedOrders: "Received orders"
+      receivedOrders: "Received orders",
+      personalData: "Personal data"
     },
   },
   es: {
@@ -608,6 +610,7 @@ const resources = {
       documentListCertif: "Lista de documentos a certificar",
       addImages: "Agregar imágenes",
       addDocument: "Agregar documento",
+      uploadImage: "Subir imagen",
       uploadImages: "Subir imágenes",
       uploadDocument: "Subir documento",
       uploadDocuments: "Subir documentos",
@@ -669,7 +672,8 @@ const resources = {
       logistics: "Logística",
       employees: "Trabajadores",
       issuedOrders: "Órdenes emitidas",
-      receivedOrders: "Órdenes recibidas"
+      receivedOrders: "Órdenes recibidas",
+      personalData: "Datos personales"
     },
   },
 };

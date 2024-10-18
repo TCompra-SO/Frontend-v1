@@ -6,6 +6,7 @@ import { useAddressRules } from "../../../../../hooks/validators";
 interface AddressAUProps {
   value?: string;
   edit?: boolean;
+  fromMyPerfil?: boolean;
 }
 
 export default function AddressAU(props: AddressAUProps) {
@@ -13,7 +14,7 @@ export default function AddressAU(props: AddressAUProps) {
   const { addressRules } = useAddressRules(true);
 
   return (
-    <div className="t-flex ad-user">
+    <div className={`t-flex ${props.fromMyPerfil ? "datos-input" : "ad-user"}`}>
       <div className="titulo-input">{t("address")}</div>
       <Form.Item
         label={t("address")}

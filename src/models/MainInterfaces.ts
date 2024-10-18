@@ -168,3 +168,10 @@ export interface StatisticsData {
   receivedPurchaseOrders: number;
   employees: number;
 }
+
+export interface PlanData {
+  goods: number;
+  services: number;
+  sales: number;
+  offers: number;
+}

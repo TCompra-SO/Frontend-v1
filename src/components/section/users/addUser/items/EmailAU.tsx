@@ -6,14 +6,16 @@ import { useEmailRules } from "../../../../../hooks/validators";
 interface EmailAUProps {
   edit?: boolean;
   value?: string;
+  fromMyPerfil?: boolean;
 }
 
 export default function EmailAU(props: EmailAUProps) {
   const { t } = useTranslation();
   const { emailRules } = useEmailRules(true);
+  console.log(props.value);
 
   return (
-    <div className="t-flex ad-user">
+    <div className={`t-flex ${props.fromMyPerfil ? "datos-input" : "ad-user"}`}>
       <div className="titulo-input">{t("email")}</div>
       <Form.Item
         label={t("email")}

@@ -339,13 +339,6 @@ export default function Profile(props: ProfileProps) {
                           },
                         ]}
                       >
-                        {/* <SelectContainer
-                          placeholder={t("tenure")}
-                          className="form-control"
-                          options={tenureList.map((t: IdValueObj) => {
-                            return { id: t.id, label: t.value, value: t.id };
-                          })}
-                        /> */}
                         <InputNumberContainer
                           min={0}
                           parser={(value) => parseInt(value || "0", 10)}

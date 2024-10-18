@@ -60,6 +60,7 @@ export default function Sidebar() {
             }
             common
             className={buttonClass}
+            onClick={() => redirectTo(`${pageRoutes.profile}`)}
           />
         )}
         {RolesForSection.myRequirements[typeID] && (

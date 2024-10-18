@@ -8,6 +8,7 @@ import { getCityListForSelect } from "../../../../../utilities/globalFunctions";
 interface LocationAUProps {
   value?: number;
   edit?: boolean;
+  fromMyPerfil?: boolean;
 }
 
 export default function LocationAU(props: LocationAUProps) {
@@ -16,7 +17,7 @@ export default function LocationAU(props: LocationAUProps) {
   const { countryData } = context;
 
   return (
-    <div className="t-flex ad-user">
+    <div className={`t-flex ${props.fromMyPerfil ? "datos-input" : "ad-user"}`}>
       <div className="titulo-input">{t("location")}</div>
 
       <Form.Item

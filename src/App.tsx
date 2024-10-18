@@ -36,6 +36,7 @@ const AllOffers = lazy(() => import("./pages/AllOffers.tsx"));
 const AllPurchaseOrders = lazy(() => import("./pages/AllPurchaseOrders.tsx"));
 const Certificates = lazy(() => import("./pages/Certificates.tsx"));
 const Statistics = lazy(() => import("./pages/Statistics.tsx"));
+const MyProfile = lazy(() => import("./pages/MyProfile.tsx"));
 const CreateRequirementFloatButton = lazy(
   () =>
     import(
@@ -128,6 +129,16 @@ function App() {
                               allowedRoles={RolesForSection.search}
                             >
                               <Search />
+                            </AuthRoleGuard>
+                          }
+                        />
+                        <Route
+                          path={`${pageRoutes.profile}`}
+                          element={
+                            <AuthRoleGuard
+                              allowedRoles={RolesForSection.profile}
+                            >
+                              <MyProfile />
                             </AuthRoleGuard>
                           }
                         />
