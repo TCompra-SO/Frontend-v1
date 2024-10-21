@@ -105,8 +105,8 @@ export function getLabelFromPurchaseOrderType(type: PurchaseOrderTableTypes) {
 }
 
 // Retorna el puntaje
-export function getScore(score: number) {
-  return score.toFixed(0);
+export function getScore(score: number | undefined) {
+  return score ? score.toFixed(0) : 0;
 }
 
 // Abre documento en una nueva ventana

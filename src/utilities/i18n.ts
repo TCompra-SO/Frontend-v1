@@ -6,6 +6,13 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
+      // Stars
+      noRate: "Not rated",
+      veryPoorRate: "Very poor",
+      poorRate: "Poor",
+      neutralRate: "Neutral",
+      goodRate: "Good",
+      excellentRate: "Excellent",
       // Column names
       actionColumn: "Actions",
       categoryColumn: "Category",
@@ -99,7 +106,8 @@ const resources = {
       selectDifferentCategories: "Categories must be different",
       mustIndicateReasonCancellation:
         "Please provide a reason for the cancellation",
-      mustUploadAFileAndProvideNameForEachItem: "You must upload a file and provide a name for each item",
+      mustUploadAFileAndProvideNameForEachItem:
+        "You must upload a file and provide a name for each item",
       // Profile
       sentValidationCode: "Code was sent successfully",
       timerResendValidationCode: "You can resend the code in ",
@@ -299,7 +307,7 @@ const resources = {
       editEmployee: "Edit employee",
       fullname: "Fullname",
       userType: "User type",
-      submit:  "Submit",
+      submit: "Submit",
       document: "Document",
       user: "User",
       quantity: "Quantity",
@@ -336,11 +344,18 @@ const resources = {
       employees: "Employees",
       issuedOrders: "Issued orders",
       receivedOrders: "Received orders",
-      personalData: "Personal data"
+      personalData: "Personal data",
     },
   },
   es: {
     translation: {
+      // Stars
+      noRate: "Sin valoración",
+      veryPoorRate: "Muy deficiente",
+      poorRate: "Deficiente",
+      neutralRate: "Neutral",
+      goodRate: "Bueno",
+      excellentRate: "Excelente",
       // Column names
       actionColumn: "Acciones",
       categoryColumn: "Rubro",
@@ -463,7 +478,8 @@ const resources = {
       deleteRequirementConfirmation:
         "¿Está seguro de eliminar el requerimiento?",
       deleteOfferConfirmation: "¿Está seguro de eliminar la oferta?",
-      mustUploadAFileAndProvideNameForEachItem: "Debe subir un archivo y escribir un nombre por cada item",
+      mustUploadAFileAndProvideNameForEachItem:
+        "Debe subir un archivo y escribir un nombre por cada item",
       // Action
       showOffers: "Ver ofertas",
       delete: "Eliminar",
@@ -536,8 +552,10 @@ const resources = {
       noCompanyFoundForSubUser: "No se encontró la empresa para el usuario",
       emailDocAlreadyRegistered: "Documento o email ya registrado",
       subUserPasswordIsDocument: "La contraseña del usuario es su documento",
-      cantAssignAdmintoSubUser: "No se puede asignar rol de administrador a subusuario",
-      subUserNotFoundInAnyCompany: "Subusuario no encontrado en ninguna empresa",
+      cantAssignAdmintoSubUser:
+        "No se puede asignar rol de administrador a subusuario",
+      subUserNotFoundInAnyCompany:
+        "Subusuario no encontrado en ninguna empresa",
       profileDoesNotExist: "Perfil no existe",
       userUpdatedSuccessfully: "Usuario actualizado exitosamente",
       createRequirementSuccess: "Requerimiento creado exitosamente",
@@ -636,7 +654,7 @@ const resources = {
       editEmployee: "Editar trabajador",
       fullname: "Nombre completo",
       userType: "Tipo de usuario",
-      submit:  "Enviar",
+      submit: "Enviar",
       document: "Documento",
       user: "Usuario",
       quantity: "Cantidad",
@@ -673,7 +691,7 @@ const resources = {
       employees: "Trabajadores",
       issuedOrders: "Órdenes emitidas",
       receivedOrders: "Órdenes recibidas",
-      personalData: "Datos personales"
+      personalData: "Datos personales",
     },
   },
 };

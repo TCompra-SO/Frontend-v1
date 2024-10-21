@@ -694,8 +694,8 @@ const offerList: Offer[] = [
       tenure: 2,
       customerScore: 3.5,
       sellerScore: 1.5,
-      customerCount: 0,
-      sellerCount: 0,
+      customerCount: 999,
+      sellerCount: 12,
     },
     subUser: {
       uid: "user1",

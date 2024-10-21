@@ -10,11 +10,11 @@ import {
   EntityType,
 } from "../../../../utilities/types";
 import { useTranslation } from "react-i18next";
-import { getScore } from "../../../../utilities/globalFunctions";
 import { useState } from "react";
 import { ModalContent } from "../../../../models/Interfaces";
 import ModalContainer from "../../../containers/ModalContainer";
 import FrontImage from "../../../common/FrontImage";
+import RateStarCount from "../../../common/RateStarCount";
 
 interface RequirementOfferListItemProps {
   offer: Offer;
@@ -149,17 +149,19 @@ export default function RequirementOfferListItemHeader({
                   ? t("company")
                   : t("person")}
               </div>
-              <div className="usuario-puntuacion">
-                <i className="fa-solid fa-star user-start"></i>
-                <div className="valor-start-2">
-                  {getScore(
-                    props.offer.type == RequirementType.SALE
-                      ? props.offer.user.customerScore
-                      : props.offer.user.sellerScore
-                  )}
-                </div>
-                <b className="user-cantidad">(41.5k)</b>
-              </div>
+              <RateStarCount
+                score={
+                  props.offer.type == RequirementType.SALE
+                    ? props.offer.user.customerScore
+                    : props.offer.user.sellerScore
+                }
+                count={
+                  props.offer.type == RequirementType.SALE
+                    ? props.offer.user.sellerCount
+                    : props.offer.user.customerCount
+                }
+                forOffer
+              />
             </div>
             <div className="t-flex oferta-descripcion">
               <div className="text-truncate detalles-oferta">
