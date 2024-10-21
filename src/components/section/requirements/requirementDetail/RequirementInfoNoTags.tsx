@@ -1,9 +1,6 @@
 import { Tooltip } from "antd";
 import SubUserName from "../../../common/SubUserName";
-import {
-  getLabelFromRequirementType,
-  getScore,
-} from "../../../../utilities/globalFunctions";
+import { getLabelFromRequirementType } from "../../../../utilities/globalFunctions";
 import { useTranslation } from "react-i18next";
 import { BaseUser } from "../../../../models/MainInterfaces";
 import { RequirementType } from "../../../../utilities/types";

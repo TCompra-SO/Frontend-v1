@@ -336,9 +336,11 @@ export default function AddUserModal(props: AddUserModalProps) {
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
               <DniField
                 getUserName={getUserName}
-                resetFields={resetFields}
+                onChange={() => resetFields(["fullname"])}
                 edit={props.edit}
                 value={props.userData?.document}
+                isDni={true}
+                includeSearch
               />
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>

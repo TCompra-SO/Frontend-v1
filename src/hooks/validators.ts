@@ -247,12 +247,12 @@ export function useTenureRules(required: boolean) {
     {
       required,
     },
-    {
-      min: Lengths.tenure.min,
-    },
-    {
-      max: Lengths.tenure.max,
-    },
+    // {
+    //   min: Lengths.tenure.min,
+    // },
+    // {
+    //   max: Lengths.tenure.max,
+    // },
   ]);
   return { tenureRules };
 }

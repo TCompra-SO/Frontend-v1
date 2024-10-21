@@ -1,38 +1,33 @@
 import { Form } from "antd";
 import { useTranslation } from "react-i18next";
+import { useAboutMeRules } from "../../../hooks/validators";
 import InputContainer from "../../containers/InputContainer";
 import { ReactNode } from "react";
 
-interface NameFieldProps {
+interface AboutMeFieldProps {
   edit?: boolean;
   value?: string;
   fromMyPerfil?: boolean;
   onlyItem?: boolean;
 }
 
-export default function NameField(props: NameFieldProps) {
+export default function AboutMeField(props: AboutMeFieldProps) {
   const { t } = useTranslation();
+  const { aboutMeRules } = useAboutMeRules(true);
   const item: ReactNode = (
     <Form.Item
-      label={t("name")}
-      name="name"
+      label={t("field")}
       labelCol={{ span: 0 }}
-      rules={[{ required: true }]}
-      initialValue={props.value}
+      name="aboutMe"
+      rules={aboutMeRules}
     >
-      <InputContainer
-        disabled={props.edit}
-        type="text"
-        className="form-control"
-        placeholder={t("name")}
-      />
+      <InputContainer className="form-control" placeholder={t("aboutMe")} />
     </Form.Item>
   );
-
   if (props.onlyItem) return item;
   return (
     <div className={`t-flex ${props.fromMyPerfil ? "datos-input" : "ad-user"}`}>
-      <div className="titulo-input">{t("name")}</div>
+      <div className="titulo-input">{t("aboutMe")}</div>
       {item}
     </div>
   );

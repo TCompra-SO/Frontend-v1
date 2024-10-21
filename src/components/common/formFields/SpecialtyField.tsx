@@ -1,38 +1,33 @@
 import { Form } from "antd";
 import { useTranslation } from "react-i18next";
+import { useSpecialtyRules } from "../../../hooks/validators";
 import InputContainer from "../../containers/InputContainer";
 import { ReactNode } from "react";
 
-interface NameFieldProps {
+interface SpecialtyFieldProps {
   edit?: boolean;
   value?: string;
   fromMyPerfil?: boolean;
   onlyItem?: boolean;
 }
 
-export default function NameField(props: NameFieldProps) {
+export default function SpecialtyField(props: SpecialtyFieldProps) {
   const { t } = useTranslation();
+  const { specialtyRules } = useSpecialtyRules(true);
   const item: ReactNode = (
     <Form.Item
-      label={t("name")}
-      name="name"
+      label={t("specialty")}
       labelCol={{ span: 0 }}
-      rules={[{ required: true }]}
-      initialValue={props.value}
+      name="specialty"
+      rules={specialtyRules}
     >
-      <InputContainer
-        disabled={props.edit}
-        type="text"
-        className="form-control"
-        placeholder={t("name")}
-      />
+      <InputContainer className="form-control" placeholder={t("specialty")} />
     </Form.Item>
   );
-
   if (props.onlyItem) return item;
   return (
     <div className={`t-flex ${props.fromMyPerfil ? "datos-input" : "ad-user"}`}>
-      <div className="titulo-input">{t("name")}</div>
+      <div className="titulo-input">{t("specialty")}</div>
       {item}
     </div>
   );

@@ -11,7 +11,6 @@ import { useContext, useEffect, useState } from "react";
 import showNotification from "../utilities/notification/showNotification";
 import { IdValueObj, useApiParams } from "../models/Interfaces";
 import ButtonContainer from "../components/containers/ButtonContainer";
-import InputContainer from "../components/containers/InputContainer";
 import SelectContainer from "../components/containers/SelectContainer";
 import useApi from "../hooks/useApi";
 import {
@@ -20,7 +19,6 @@ import {
 } from "../services/requests/authService";
 import { useTranslation } from "react-i18next";
 import { DocType } from "../utilities/types";
-import { useAboutMeRules, useSpecialtyRules } from "../hooks/validators";
 import { DefaultOptionType } from "antd/es/select";
 import React from "react";
 import {
@@ -28,11 +26,12 @@ import {
   equalServices,
   getListForSelectIdValueMap,
 } from "../utilities/globalFunctions";
-import InputNumberContainer from "../components/containers/InputNumberContainer";
 import { ListsContext } from "../contexts/listsContext";
 import PhoneField from "../components/common/formFields/PhoneField";
 import AddressField from "../components/common/formFields/AddressField";
 import TenureField from "../components/common/formFields/TenureField";
+import SpecialtyField from "../components/common/formFields/SpecialtyField";
+import AboutMeField from "../components/common/formFields/AboutMeField";
 // import LocationField from "../components/common/formFields/LocationField";
 
 interface ProfileProps {
@@ -49,7 +48,7 @@ export default function Profile(props: ProfileProps) {
   const [form] = Form.useForm();
   const fileInputRef = React.useRef<InputRef>(null);
   const uid = useSelector((state: MainState) => state.user.uid);
-  const [imageSrc, setImageSrc] = useState("https://placehold.co/100x100");
+  const [imageSrc, setImageSrc] = useState("/src/assets/images/img-prod.svg");
   const [profileSuccess, setProfileSuccess] = useState(false);
   const [cities, setCities] = useState<IdValueObj[]>([]);
   const [apiParams, setApiParams] = useState<useApiParams<ProfileRequest>>({
@@ -62,9 +61,6 @@ export default function Profile(props: ProfileProps) {
       method: apiParams.method,
       dataToSend: apiParams.dataToSend,
     });
-
-  const { specialtyRules } = useSpecialtyRules(true);
-  const { aboutMeRules } = useAboutMeRules(false);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
@@ -290,7 +286,6 @@ export default function Profile(props: ProfileProps) {
                       className="form-control"
                     />
                   </Form.Item>
-                  {/* <LocationField onlyItem /> */}
                 </Col>
               </Row>
 
@@ -301,31 +296,11 @@ export default function Profile(props: ProfileProps) {
                       <TenureField onlyItem />
                     </Col>
                     <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                      <Form.Item
-                        label={t("specialty")}
-                        labelCol={{ span: 0 }}
-                        name="specialty"
-                        rules={specialtyRules}
-                      >
-                        <InputContainer
-                          className="form-control"
-                          placeholder={t("specialty")}
-                        />
-                      </Form.Item>
+                      <SpecialtyField onlyItem />
                     </Col>
                   </Row>
 
-                  <Form.Item
-                    label={t("field")}
-                    labelCol={{ span: 0 }}
-                    name="aboutMe"
-                    rules={aboutMeRules}
-                  >
-                    <InputContainer
-                      className="form-control"
-                      placeholder={t("aboutMe")}
-                    />
-                  </Form.Item>
+                  <AboutMeField onlyItem />
                 </>
               )}
 

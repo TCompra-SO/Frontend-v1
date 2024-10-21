@@ -1,14 +1,18 @@
 import { useTranslation } from "react-i18next";
 import { FullUser, PlanData } from "../models/MainInterfaces";
-import { DocType, EntityType, UserRoles } from "../utilities/types";
+import { EntityType, UserRoles } from "../utilities/types";
 import { useContext, useEffect, useState } from "react";
 import { ListsContext } from "../contexts/listsContext";
 import PhoneField from "../components/common/formFields/PhoneField";
 import LocationField from "../components/common/formFields/LocationField";
 import AddressField from "../components/common/formFields/AddressField";
 import EmailField from "../components/common/formFields/EmailField";
-import { Form } from "antd";
+import { Col, Form, Row } from "antd";
 import NameField from "../components/common/formFields/NameField";
+import DniField from "../components/common/formFields/DniField";
+import TenureField from "../components/common/formFields/TenureField";
+import SpecialtyField from "../components/common/formFields/SpecialtyField";
+import AboutMeField from "../components/common/formFields/AboutMeField";
 
 const user1: FullUser = {
   uid: "user1",
@@ -58,7 +62,18 @@ export default function MyProfile() {
   }, []);
 
   useEffect(() => {
-    if (user) form.setFieldsValue({ address: user.address });
+    if (user)
+      form.setFieldsValue({
+        address: user.address,
+        name: user.name,
+        location: user.cityID,
+        phone: user.phone,
+        email: user.email,
+        document: user.document,
+        tenure: user.tenure,
+        specialty: user.specialty,
+        aboutMe: user.aboutMe,
+      });
   }, [user]);
 
   return (
@@ -68,12 +83,16 @@ export default function MyProfile() {
       </div>
       <div className="t-flex gap-15 f-column">
         <div className="t-flex gap-15 perfil-user">
+          {/* <Row>
+            <Col xs={24} sm={24} md={12} lg={4} xl={4}> */}
           <div className="card-white imagen-perfil">
             <img src="img/avatar.jpg" className="imagen-p" />
             <div className="bnt-filter">
               {t("uploadImage")} <i className="fa-regular fa-images"></i>
             </div>
           </div>
+          {/* </Col>
+            <Col xs={24} sm={24} md={12} lg={20} xl={20}> */}
           <div className="t-flex gap-15 card-datos">
             <div className="card-white card-d1">
               <div className="user-name">{user?.name}</div>
@@ -161,8 +180,12 @@ export default function MyProfile() {
               </div>
             </div>
           </div>
+          {/* </Col>
+          </Row> */}
         </div>
         <div className="t-flex t-wrap gap-15 card-d3">
+          {/* <Row>
+            <Col xs={24} sm={24} md={12} lg={6} xl={6}> */}
           <div className="card-cantidad t-flex oferta-titulo doc-botones">
             <div className="icon-doc-estado i-cantidad">
               <i className="fa-regular fa-dolly"></i>
@@ -176,6 +199,8 @@ export default function MyProfile() {
               </div>
             </div>
           </div>
+          {/* </Col>
+            <Col xs={24} sm={24} md={12} lg={6} xl={6}> */}
           <div className="card-cantidad t-flex oferta-titulo doc-botones">
             <div className="icon-doc-estado i-cantidad">
               <i className="fa-regular fa-hand-holding-magic"></i>
@@ -189,6 +214,8 @@ export default function MyProfile() {
               </div>
             </div>
           </div>
+          {/* </Col>
+            <Col xs={24} sm={24} md={12} lg={6} xl={6}> */}
           <div className="card-cantidad t-flex oferta-titulo doc-botones">
             <div className="icon-doc-estado i-cantidad">
               <i className="fa-regular fa-basket-shopping"></i>
@@ -202,19 +229,8 @@ export default function MyProfile() {
               </div>
             </div>
           </div>
-          {/* <div className="card-cantidad t-flex oferta-titulo doc-botones">
-            <div className="icon-doc-estado i-cantidad">
-              <i className="fa-regular fa-user-tie"></i>
-            </div>
-            <div className="oferta-usuario col-documento">
-              <div className="text-truncate doc-name dato-cantidad1">
-                Ilimitado
-              </div>
-              <div className="text-truncate detalles-oferta dato-cantidad2">
-              {t('rrhh')}
-              </div>
-            </div>
-          </div> */}
+          {/* </Col>
+            <Col xs={24} sm={24} md={12} lg={6} xl={6}> */}
           <div className="card-cantidad t-flex oferta-titulo doc-botones">
             <div className="icon-doc-estado i-cantidad">
               <i className="fa-regular fa-tags"></i>
@@ -228,6 +244,8 @@ export default function MyProfile() {
               </div>
             </div>
           </div>
+          {/* </Col>
+          </Row> */}
         </div>
         <div className="t-flex gap-15 card-d4">
           <div className="card-white card-personal">
@@ -240,39 +258,25 @@ export default function MyProfile() {
             <Form form={form} colon={false} requiredMark={false}>
               <div className="t-flex gap-15 f-column">
                 <div className="t-flex t-wrap gap-15">
-                  <NameField fromMyPerfil />
+                  <NameField fromMyPerfil edit />
                   <AddressField fromMyPerfil />
                   <LocationField fromMyPerfil />
                 </div>
                 <div className="t-flex t-wrap gap-15">
-                  <PhoneField fromMyPerfil value={user?.phone} />
-                  <EmailField fromMyPerfil value={user?.email} />
-
-                  <div className="t-flex datos-input">
-                    <div className="titulo-input">
-                      {user?.typeEntity == EntityType.COMPANY
-                        ? DocType.RUC
-                        : DocType.DNI}
-                    </div>
-                    <input type="text" className="form-control" />
-                  </div>
+                  <PhoneField fromMyPerfil />
+                  <EmailField fromMyPerfil edit />
+                  <DniField
+                    isDni={user?.typeEntity != EntityType.COMPANY}
+                    edit
+                  />
                   {user?.typeEntity == EntityType.COMPANY && (
-                    <div className="t-flex datos-input">
-                      <div className="titulo-input">{t("tenure")}</div>
-                      <input type="text" className="form-control" />
-                    </div>
+                    <TenureField fromMyPerfil />
                   )}
                 </div>
                 {user?.typeEntity == EntityType.COMPANY && (
                   <div className="t-flex t-wrap gap-15">
-                    <div className="t-flex datos-input">
-                      <div className="titulo-input">{t("specialty")}</div>
-                      <input type="text" className="form-control" />
-                    </div>
-                    <div className="t-flex datos-input">
-                      <div className="titulo-input">{t("aboutMe")}</div>
-                      <input type="text" className="form-control" />
-                    </div>
+                    <SpecialtyField fromMyPerfil />
+                    <AboutMeField fromMyPerfil />
                   </div>
                 )}
                 <div className="t-flex t-wrap up-footer">

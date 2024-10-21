@@ -164,19 +164,19 @@ body {
 }
 
 .btn-border-default {
-  color: #bc1373;
-  border: 2px solid #bc1373;
+  color: #bc1373 !important;
+  border: 2px solid #bc1373 !important;
 }
 
 .btn-border-default:hover {
-  color: #fff;
-  background: #bc1373;
+  color: #fff !important;
+  background: #bc1373 !important;
 }
 
 .btn-border-default.focus,
 .btn-border-default:focus {
-  color: #fff;
-  background: #bc1373;
+  color: #fff !important;
+  background: #bc1373 !important;
 }
 
 /* Formularios */
@@ -285,7 +285,6 @@ body {
 }
 
 .sub-menu {
-  flex-grow: 1;
   gap: 2px;
   flex-direction: column;
   margin-left: 22px;
@@ -694,10 +693,8 @@ body {
 .tags-req {
   gap: 8px;
   align-items: center;
-  /* flex-wrap: wrap; */
 }
 .badge-default {
-  flex: 1;
   background: #bc1373;
   color: #fff;
   font-size: 16px;
@@ -815,7 +812,7 @@ body {
 }
 .oferta-titulo {
   align-items: center;
-  flex-grow: 1;
+  flex: 1;
   overflow: hidden;
 }
 .img-oferta {
@@ -1326,6 +1323,9 @@ body {
 .doc-botones {
   gap: 10px;
 }
+.d-contacto {
+  gap: 10px;
+}
 .icon-doc-estado {
   background: #e1e6ea;
   width: 55px;
@@ -1381,6 +1381,14 @@ body {
 }
 .select-certificados:hover {
   background: #f8f8f8;
+}
+
+/* Modal Perfil */
+.card-rubros-2 {
+  background: #f3f7fa;
+  flex: 1;
+  padding: 20px;
+  overflow: hidden;
 }
 
 /* Seccion Perfil */

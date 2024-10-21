@@ -33,7 +33,9 @@ export default function TenureField(props: TenureFieldProps) {
   if (props.onlyItem) return item;
   return (
     <div className={`t-flex ${props.fromMyPerfil ? "datos-input" : "ad-user"}`}>
-      <div className="titulo-input">{t("name")}</div>
+      <div className="titulo-input">
+        {t("tenure")} ({t("years").toLowerCase()})
+      </div>
       {item}
     </div>
   );
