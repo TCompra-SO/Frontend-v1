@@ -18,7 +18,7 @@ export default function PhoneField(props: PhoneFieldProps) {
   const item: ReactNode = (
     <Space.Compact style={{ width: "100%" }}>
       <InputContainer
-        style={{ width: "30%" }}
+        style={{ width: "65px" }}
         readOnly={true}
         defaultValue={phoneCode}
         className="form-control"

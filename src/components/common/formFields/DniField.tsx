@@ -26,7 +26,7 @@ export default function DniField(props: DniFieldProps) {
       label={t("document")}
       name="document"
       labelCol={{ span: 0 }}
-      rules={props.isDni ? dniRules : rucRules}
+      // rules={props.isDni ? dniRules : rucRules}
       initialValue={props.value}
     >
       <div className="t-flex" style={{ alignItems: "center" }}>

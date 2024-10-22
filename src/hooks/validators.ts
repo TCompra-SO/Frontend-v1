@@ -220,6 +220,9 @@ export function useAboutMeRules(required: boolean) {
     {
       max: Lengths.aboutMe.max,
     },
+    {
+      validator: useNoBlankSpacesValidator(),
+    },
   ]);
   return { aboutMeRules };
 }

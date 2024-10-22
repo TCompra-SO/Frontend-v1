@@ -2,7 +2,7 @@ import { App, Col, Form, Input, InputRef, Row } from "antd";
 import { ProfileRequest } from "../models/Requests";
 import {
   defaultCountry,
-  maxImageSizeMb,
+  defaultUserImage,
   phoneCode,
 } from "../utilities/globals";
 import { useSelector } from "react-redux";
@@ -22,7 +22,6 @@ import { DocType } from "../utilities/types";
 import { DefaultOptionType } from "antd/es/select";
 import React from "react";
 import {
-  checkImage,
   equalServices,
   getListForSelectIdValueMap,
 } from "../utilities/globalFunctions";
@@ -32,6 +31,7 @@ import AddressField from "../components/common/formFields/AddressField";
 import TenureField from "../components/common/formFields/TenureField";
 import SpecialtyField from "../components/common/formFields/SpecialtyField";
 import AboutMeField from "../components/common/formFields/AboutMeField";
+import { useHandleChangeImage } from "../hooks/useHandleChangeImage";
 // import LocationField from "../components/common/formFields/LocationField";
 
 interface ProfileProps {
@@ -48,9 +48,10 @@ export default function Profile(props: ProfileProps) {
   const [form] = Form.useForm();
   const fileInputRef = React.useRef<InputRef>(null);
   const uid = useSelector((state: MainState) => state.user.uid);
-  const [imageSrc, setImageSrc] = useState("/src/assets/images/img-prod.svg");
+  const [imageSrc, setImageSrc] = useState(defaultUserImage);
   const [profileSuccess, setProfileSuccess] = useState(false);
   const [cities, setCities] = useState<IdValueObj[]>([]);
+  const handleChangeImage = useHandleChangeImage(notification);
   const [apiParams, setApiParams] = useState<useApiParams<ProfileRequest>>({
     service: null,
     method: "get",
@@ -144,20 +145,9 @@ export default function Profile(props: ProfileProps) {
     });
   }
 
-  function handleChangeImage(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (file) {
-      const { validImage, validSize } = checkImage(file);
-      if (validImage && validSize) setImageSrc(URL.createObjectURL(file));
-      else if (!validImage)
-        showNotification(notification, "error", t("invalidImage"));
-      else if (!validSize)
-        showNotification(
-          notification,
-          "error",
-          t("invalidImageSize") + maxImageSizeMb + " mb"
-        );
-    }
+  function changeImage(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = handleChangeImage(e);
+    if (file) setImageSrc(URL.createObjectURL(file));
   }
 
   function handleClick() {
@@ -231,7 +221,7 @@ export default function Profile(props: ProfileProps) {
                 <Input
                   accept="image/*"
                   type="file"
-                  onChange={handleChangeImage}
+                  onChange={changeImage}
                   style={{ display: "none" }}
                   ref={fileInputRef}
                 />

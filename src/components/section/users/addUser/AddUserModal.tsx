@@ -205,7 +205,6 @@ export default function AddUserModal(props: AddUserModalProps) {
   }
 
   function checkUpdates() {
-    console.log(changePassword, passSuccess);
     if (
       ((changePassword && passSuccess) || !changePassword) &&
       roleSuccess &&

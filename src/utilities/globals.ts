@@ -22,6 +22,10 @@ export const phoneCode: string = "+51";
 
 export const allItems: number = 0;
 
+export const defaultUserImage: string = "/src/assets/images/img-prod.svg";
+export const defaultRequirementImage: string =
+  "/src/assets/images/img-prod.svg";
+
 // local storage keys
 export const userDataKey: string = "udata";
 export const tokenKey: string = "token";

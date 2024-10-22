@@ -1,18 +1,34 @@
 import { useTranslation } from "react-i18next";
 import { FullUser, PlanData } from "../models/MainInterfaces";
 import { EntityType, UserRoles } from "../utilities/types";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { ListsContext } from "../contexts/listsContext";
 import PhoneField from "../components/common/formFields/PhoneField";
 import LocationField from "../components/common/formFields/LocationField";
 import AddressField from "../components/common/formFields/AddressField";
 import EmailField from "../components/common/formFields/EmailField";
-import { Col, Form, Row } from "antd";
+import { App, Form, Input, InputRef } from "antd";
 import NameField from "../components/common/formFields/NameField";
 import DniField from "../components/common/formFields/DniField";
 import TenureField from "../components/common/formFields/TenureField";
 import SpecialtyField from "../components/common/formFields/SpecialtyField";
 import AboutMeField from "../components/common/formFields/AboutMeField";
+import ButtonContainer from "../components/containers/ButtonContainer";
+import { defaultUserImage } from "../utilities/globals";
+import { useHandleChangeImage } from "../hooks/useHandleChangeImage";
+import PasswordField from "../components/common/formFields/PasswordField";
+import { useApiParams } from "../models/Interfaces";
+import { NewPasswordRequest } from "../models/Requests";
+import { useSelector } from "react-redux";
+import { MainState } from "../models/Redux";
+import useApi from "../hooks/useApi";
+import {
+  getUserService,
+  newPasswordService,
+} from "../services/requests/authService";
+import showNotification from "../utilities/notification/showNotification";
+import { equalServices } from "../utilities/globalFunctions";
+import { transformToFullUser } from "../utilities/transform";
 
 const user1: FullUser = {
   uid: "user1",
@@ -54,11 +70,32 @@ export default function MyProfile() {
   const [plan, setPlan] = useState<PlanData>();
   const context = useContext(ListsContext);
   const { categoryData } = context;
+  const fileInputRef = useRef<InputRef>(null);
   const [form] = Form.useForm();
+  const [passwordForm] = Form.useForm();
+  const { notification } = App.useApp();
+  const [imageSrc, setImageSrc] = useState(defaultUserImage);
+  const handleChangeImage = useHandleChangeImage(notification);
+  const [token] = useState(useSelector((state: MainState) => state.user.token));
+  const uid = useSelector((state: MainState) => state.user.uid);
+  const [apiParams, setApiParams] = useState<useApiParams<NewPasswordRequest>>({
+    service: null,
+    method: "get",
+    token,
+  });
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi<NewPasswordRequest>({
+      service: apiParams.service,
+      method: apiParams.method,
+      dataToSend: apiParams.dataToSend,
+      token: apiParams.token,
+    });
 
   useEffect(() => {
-    setUser(user1);
-    setPlan(planData1);
+    setApiParams({
+      service: getUserService(uid),
+      method: "get",
+    });
   }, []);
 
   useEffect(() => {
@@ -76,6 +113,76 @@ export default function MyProfile() {
       });
   }, [user]);
 
+  useEffect(() => {
+    if (apiParams.service) {
+      console.log(apiParams);
+      fetchData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      if (equalServices(apiParams.service, newPasswordService()))
+        changePasswordSuccess();
+      else if (equalServices(apiParams.service, getUserService("")))
+        setFormData(responseData);
+    } else if (error) {
+      showNotification(notification, "error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
+
+  function setFormData(responseData: any) {
+    const user = transformToFullUser(responseData.data[0]);
+    setUser(user);
+    setPlan(planData1);
+    if (user.image) setImageSrc(user.image);
+  }
+
+  function handleClick() {
+    // Trigger the file input click event
+    if (fileInputRef.current) {
+      fileInputRef.current.input!.click();
+    }
+  }
+
+  function changePasswordSuccess() {
+    showNotification(notification, "success", t("passwordHasBeenUpdated"));
+  }
+
+  function changeImage(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = handleChangeImage(e);
+    console.log(file);
+    if (file) setImageSrc(URL.createObjectURL(file));
+  }
+
+  function saveMyProfile(values: any) {
+    console.log(user?.uid, values);
+    values.address.trim();
+    values.phone.trim();
+    values.specialty.trim();
+    values.aboutMe.trim();
+  }
+
+  function saveMyPassword(values: any) {
+    if (values.password1 !== values.password2) {
+      showNotification(notification, "error", t("passwordsMusMatch"));
+      passwordForm.resetFields();
+      return;
+    }
+    const passwordData: NewPasswordRequest = {
+      email: user?.email ?? "",
+      password: values.password1,
+    };
+    setApiParams({
+      service: newPasswordService(),
+      method: "post",
+      dataToSend: passwordData,
+      token: token,
+    });
+  }
+
   return (
     <>
       <div className="t-flex t-wrap c-titulo">
@@ -83,16 +190,13 @@ export default function MyProfile() {
       </div>
       <div className="t-flex gap-15 f-column">
         <div className="t-flex gap-15 perfil-user">
-          {/* <Row>
-            <Col xs={24} sm={24} md={12} lg={4} xl={4}> */}
           <div className="card-white imagen-perfil">
-            <img src="img/avatar.jpg" className="imagen-p" />
-            <div className="bnt-filter">
+            <img src={imageSrc} className="imagen-p" />
+            <div className="bnt-filter" onClick={handleClick}>
               {t("uploadImage")} <i className="fa-regular fa-images"></i>
             </div>
           </div>
-          {/* </Col>
-            <Col xs={24} sm={24} md={12} lg={20} xl={20}> */}
+
           <div className="t-flex gap-15 card-datos">
             <div className="card-white card-d1">
               <div className="user-name">{user?.name}</div>
@@ -180,12 +284,8 @@ export default function MyProfile() {
               </div>
             </div>
           </div>
-          {/* </Col>
-          </Row> */}
         </div>
         <div className="t-flex t-wrap gap-15 card-d3">
-          {/* <Row>
-            <Col xs={24} sm={24} md={12} lg={6} xl={6}> */}
           <div className="card-cantidad t-flex oferta-titulo doc-botones">
             <div className="icon-doc-estado i-cantidad">
               <i className="fa-regular fa-dolly"></i>
@@ -199,8 +299,6 @@ export default function MyProfile() {
               </div>
             </div>
           </div>
-          {/* </Col>
-            <Col xs={24} sm={24} md={12} lg={6} xl={6}> */}
           <div className="card-cantidad t-flex oferta-titulo doc-botones">
             <div className="icon-doc-estado i-cantidad">
               <i className="fa-regular fa-hand-holding-magic"></i>
@@ -214,8 +312,6 @@ export default function MyProfile() {
               </div>
             </div>
           </div>
-          {/* </Col>
-            <Col xs={24} sm={24} md={12} lg={6} xl={6}> */}
           <div className="card-cantidad t-flex oferta-titulo doc-botones">
             <div className="icon-doc-estado i-cantidad">
               <i className="fa-regular fa-basket-shopping"></i>
@@ -229,8 +325,6 @@ export default function MyProfile() {
               </div>
             </div>
           </div>
-          {/* </Col>
-            <Col xs={24} sm={24} md={12} lg={6} xl={6}> */}
           <div className="card-cantidad t-flex oferta-titulo doc-botones">
             <div className="icon-doc-estado i-cantidad">
               <i className="fa-regular fa-tags"></i>
@@ -244,8 +338,6 @@ export default function MyProfile() {
               </div>
             </div>
           </div>
-          {/* </Col>
-          </Row> */}
         </div>
         <div className="t-flex gap-15 card-d4">
           <div className="card-white card-personal">
@@ -255,7 +347,21 @@ export default function MyProfile() {
                 <div>{t("personalData")}</div>
               </div>
             </div>
-            <Form form={form} colon={false} requiredMark={false}>
+            <Form
+              form={form}
+              colon={false}
+              requiredMark={false}
+              onFinish={saveMyProfile}
+            >
+              <Form.Item name="image" style={{ display: "none" }}>
+                <Input
+                  accept="image/*"
+                  type="file"
+                  onChange={changeImage}
+                  style={{ display: "none" }}
+                  ref={fileInputRef}
+                />
+              </Form.Item>
               <div className="t-flex gap-15 f-column">
                 <div className="t-flex t-wrap gap-15">
                   <NameField fromMyPerfil edit />
@@ -268,6 +374,7 @@ export default function MyProfile() {
                   <DniField
                     isDni={user?.typeEntity != EntityType.COMPANY}
                     edit
+                    value={user?.document}
                   />
                   {user?.typeEntity == EntityType.COMPANY && (
                     <TenureField fromMyPerfil />
@@ -281,7 +388,12 @@ export default function MyProfile() {
                 )}
                 <div className="t-flex t-wrap up-footer">
                   <div className="footer-text">{t("allDataIsImportant")}</div>
-                  <button className="btn btn-default">{t("saveButton")}</button>
+                  <ButtonContainer
+                    className="btn btn-default"
+                    htmlType="submit"
+                  >
+                    {t("saveButton")}
+                  </ButtonContainer>
                 </div>
               </div>
             </Form>
@@ -293,19 +405,24 @@ export default function MyProfile() {
                 <div>{t("password")}</div>
               </div>
             </div>
-            <div className="t-flex gap-15 f-column">
-              <div className="t-flex f-column">
-                <div className="titulo-input">{t("newPassword")}</div>
-                <input type="text" className="form-control" />
+            <Form
+              form={passwordForm}
+              colon={false}
+              requiredMark={false}
+              onFinish={saveMyPassword}
+            >
+              <div className="t-flex gap-15 f-column">
+                <PasswordField fromMyPerfil name="password1" />
+                <PasswordField fromMyPerfil name="password2" confirmPassword />
+                <ButtonContainer
+                  className="btn btn-default wd-100"
+                  htmlType="submit"
+                  loading={loading}
+                >
+                  {t("saveButton")}
+                </ButtonContainer>
               </div>
-              <div className="t-flex f-column">
-                <div className="titulo-input">{t("confirmPassword")}</div>
-                <input type="text" className="form-control" />
-              </div>
-              <button className="btn btn-default wd-100">
-                {t("saveButton")}
-              </button>
-            </div>
+            </Form>
           </div>
         </div>
       </div>

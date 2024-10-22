@@ -101,8 +101,8 @@ export default function CreateRequirement(props: CreateRequirementProps) {
 
   function createRequirement(values: any) {
     const data: CreateRequirementRequest = {
-      name: values.title,
-      description: values.description,
+      name: values.title.trim(),
+      description: values.description.trim(),
       categoryID: values.category,
       cityID: values.location,
       budget: values.budget,

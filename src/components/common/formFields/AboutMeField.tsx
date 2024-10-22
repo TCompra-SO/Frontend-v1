@@ -13,7 +13,7 @@ interface AboutMeFieldProps {
 
 export default function AboutMeField(props: AboutMeFieldProps) {
   const { t } = useTranslation();
-  const { aboutMeRules } = useAboutMeRules(true);
+  const { aboutMeRules } = useAboutMeRules(false);
   const item: ReactNode = (
     <Form.Item
       label={t("field")}
