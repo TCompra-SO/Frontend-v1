@@ -24,7 +24,11 @@ import useApi from "../hooks/useApi";
 import { getRequirementsService } from "../services/requests/requirementService";
 import { transformDataToRequirement } from "../utilities/transform";
 import { useLocation } from "react-router-dom";
-import { equalServices, getRouteType } from "../utilities/globalFunctions";
+import {
+  equalServices,
+  getLabelFromRequirementType,
+  getRouteType,
+} from "../utilities/globalFunctions";
 import { useSelector } from "react-redux";
 import { MainState, UserState } from "../models/Redux";
 import { getUserService } from "../services/requests/authService";
@@ -1030,15 +1034,13 @@ const offerList: Offer[] = [
 ];
 
 export default function Requirements() {
-  const location = useLocation();
   const { t } = useTranslation();
   const { message } = App.useApp();
-  const [type] = useState(getRouteType(location.pathname));
+  const location = useLocation();
+  const [type, setType] = useState(getRouteType(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
-
-  // console.log(dataUser, mainDataUser);
 
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -1047,9 +1049,9 @@ export default function Requirements() {
   const [tableContent, setTableContent] = useState<TableTypeRequirement>({
     type: TableTypes.REQUIREMENT,
     data: [], //requirements
-    subType: RequirementType.GOOD,
+    subType: type,
     hiddenColumns: [TableColumns.CATEGORY],
-    nameColumnHeader: t("goods"),
+    nameColumnHeader: t(getLabelFromRequirementType(type)),
     onButtonClick: handleOnButtonClick,
   });
 
@@ -1064,9 +1066,19 @@ export default function Requirements() {
     dataToSend: apiParams.dataToSend,
   });
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    setType(getRouteType(location.pathname));
+  }, [location]);
+
+  useEffect(() => {
+    setTableContent((prev) => {
+      return {
+        ...prev,
+        subType: type,
+        nameColumnHeader: t(getLabelFromRequirementType(type)),
+      };
+    });
+  }, [type]);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
@@ -1219,13 +1231,7 @@ export default function Requirements() {
       <TablePageContent
         title={t("myRequirements")}
         titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
-        subtitle={`${t("listOf")} ${t(
-          type == RequirementType.GOOD
-            ? "goods"
-            : type == RequirementType.SERVICE
-            ? "services"
-            : "sales"
-        )}`}
+        subtitle={`${t("listOf")} ${t(getLabelFromRequirementType(type))}`}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
         onSearch={handleSearch}

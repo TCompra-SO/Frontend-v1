@@ -74,7 +74,7 @@ const cert2: CertificationItem[] = [
 export default function Certificates() {
   const location = useLocation();
   const { t } = useTranslation();
-  const [type] = useState(getLastSegmentFromRoute(location.pathname));
+  const [type, setType] = useState(getLastSegmentFromRoute(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -84,18 +84,18 @@ export default function Certificates() {
     | TableTypeMyDocuments
     | TableTypeCertificatesReceived
     | TableTypeCertificatesSent
-    | null
-  >(
-    null
-    //   {
-    //   type:
-    //     TableTypes.MY_DOCUMENTS | TableTypes.SENT_CERT | TableTypes.RECEIVED_CERT,
-    //   data: [],
-    //   hiddenColumns: [],
-    //   nameColumnHeader: t("name"),
-    //   onButtonClick: handleOnButtonClick,
-    // }
-  );
+  >({
+    type:
+      TableTypes.MY_DOCUMENTS | TableTypes.SENT_CERT | TableTypes.RECEIVED_CERT,
+    data: [],
+    hiddenColumns: [],
+    nameColumnHeader: t("name"),
+    onButtonClick: handleOnButtonClick,
+  });
+
+  useEffect(() => {
+    setType(getLastSegmentFromRoute(location.pathname));
+  }, [location]);
 
   useEffect(() => {
     switch (type) {
@@ -127,7 +127,7 @@ export default function Certificates() {
         });
         break;
     }
-  }, [location]);
+  }, [type]);
 
   function handleCloseModal() {
     setIsOpenModal(false);

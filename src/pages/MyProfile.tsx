@@ -417,7 +417,11 @@ export default function MyProfile() {
                 <ButtonContainer
                   className="btn btn-default wd-100"
                   htmlType="submit"
-                  loading={loading}
+                  loading={
+                    equalServices(apiParams.service, newPasswordService())
+                      ? loading
+                      : undefined
+                  }
                 >
                   {t("saveButton")}
                 </ButtonContainer>

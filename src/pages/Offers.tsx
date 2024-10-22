@@ -10,10 +10,15 @@ import {
   EntityType,
 } from "../utilities/types";
 import ModalContainer from "../components/containers/ModalContainer";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { ModalContent, TableTypeOffer } from "../models/Interfaces";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import { mainModalScrollStyle } from "../utilities/globals";
+import {
+  getLabelFromRequirementType,
+  getRouteType,
+} from "../utilities/globalFunctions";
+import { useLocation } from "react-router-dom";
 
 const offerList: Offer[] = [
   {
@@ -381,19 +386,36 @@ const offerList: Offer[] = [
 
 export default function Offers() {
   const { t } = useTranslation();
+  const location = useLocation();
+  const [type, setType] = useState(getRouteType(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
   });
-  const [tableContent] = useState<TableTypeOffer>({
+  const [tableContent, setTableContent] = useState<TableTypeOffer>({
     type: TableTypes.OFFER,
     data: offerList,
+    subType: type,
     hiddenColumns: [],
     nameColumnHeader: t("offers"),
     onButtonClick: handleOnButtonClick,
   });
+
+  useEffect(() => {
+    setType(getRouteType(location.pathname));
+  }, [location]);
+
+  useEffect(() => {
+    setTableContent((prev) => {
+      return {
+        ...prev,
+        subType: type,
+        data: offerList,
+      };
+    });
+  }, [type]);
 
   function handleCloseModal() {
     setIsOpenModal(false);
@@ -502,7 +524,7 @@ export default function Offers() {
       <TablePageContent
         title={t("myOffers")}
         titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
-        subtitle={`${t("listOf")} ${t("goods")}`}
+        subtitle={`${t("listOf")} ${t(getLabelFromRequirementType(type))}`}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
         onSearch={handleSearch}

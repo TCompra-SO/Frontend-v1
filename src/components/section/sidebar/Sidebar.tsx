@@ -273,7 +273,7 @@ export default function Sidebar() {
               children={
                 <>
                   <i className="fa-regular fa-paste text-center i-btn"></i>{" "}
-                  {t("goods")}{" "}
+                  {t("requirements")}{" "}
                   <i className="fa-solid fa-chevron-down i-sub text-center"></i>
                 </>
               }
@@ -516,7 +516,7 @@ export default function Sidebar() {
             }
             common
             className={buttonClass}
-            onClick={() => toggleMenu(menuStat)}
+            onClick={() => redirectTo(`${pageRoutes.statistics}`)}
           />
         )}
       </div>

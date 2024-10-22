@@ -667,6 +667,8 @@ const resources = {
       received: "Recibida",
       issuedPl: "Emitidas",
       receivedPl: "Recibidas",
+      issuedPlSales: "Emitidas - Liquidaciones",
+      receivedPlSales: "Recibidas - Liquidaciones",
       receivedPlMasc: "Recibidos",
       myDocuments: "Mis documentos",
       sent: "Enviado",

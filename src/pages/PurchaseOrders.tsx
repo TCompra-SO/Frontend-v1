@@ -28,9 +28,15 @@ import showNotification, {
   destroyMessage,
   showLoadingMessage,
 } from "../utilities/notification/showNotification";
-import { equalServices } from "../utilities/globalFunctions";
+import {
+  equalServices,
+  getLabelFromPurchaseOrderType,
+  getLastSegmentFromRoute,
+  getPurchaseOrderType,
+} from "../utilities/globalFunctions";
 import { transformToFullUser } from "../utilities/transform";
 import { mainModalScrollStyle } from "../utilities/globals";
+import { useLocation } from "react-router-dom";
 
 const purchaseOrderList: PurchaseOrder[] = [
   {
@@ -492,6 +498,8 @@ const req: Requirement = {
 
 export default function PurchaseOrders() {
   const { t } = useTranslation();
+  const location = useLocation();
+  const [type, setType] = useState(getPurchaseOrderType(location.pathname));
   const { notification, message } = App.useApp();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [tableSubType, setTableSubType] = useState<PurchaseOrderTableTypes>(
@@ -501,7 +509,7 @@ export default function PurchaseOrders() {
     type: ModalTypes.NONE,
     data: {},
   });
-  const [tableContent] = useState<TableTypePurchaseOrder>({
+  const [tableContent, setTableContent] = useState<TableTypePurchaseOrder>({
     type: TableTypes.PURCHASE_ORDER,
     data: purchaseOrderList,
     subType: tableSubType,
@@ -518,6 +526,19 @@ export default function PurchaseOrders() {
     method: apiParams.method,
     dataToSend: apiParams.dataToSend,
   });
+
+  useEffect(() => {
+    setType(getPurchaseOrderType(location.pathname));
+  }, [location]);
+
+  useEffect(() => {
+    setTableContent((prev) => {
+      return {
+        ...prev,
+        subType: type,
+      };
+    });
+  }, [type]);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
@@ -625,7 +646,9 @@ export default function PurchaseOrders() {
       <TablePageContent
         title={t("myPurchaseOrders")}
         titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
-        subtitle={`${t("listOf")} ${t("purchaseOrders")}`}
+        subtitle={`${t("listOf")} ${t(
+          getLabelFromPurchaseOrderType(type, true, false)
+        )}`}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
         onSearch={handleSearch}

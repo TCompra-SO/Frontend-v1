@@ -93,14 +93,20 @@ export function getLabelFromRequirementType(
 }
 
 // Retorna la llave del nombre del tipo de orden de compra
-export function getLabelFromPurchaseOrderType(type: PurchaseOrderTableTypes) {
+export function getLabelFromPurchaseOrderType(
+  type: PurchaseOrderTableTypes,
+  plural: boolean = false,
+  onlyTwoLabels: boolean = true
+) {
   switch (type) {
-    case PurchaseOrderTableTypes.ISSUED:
     case PurchaseOrderTableTypes.ISSUED_SALES:
-      return "issued";
-    case PurchaseOrderTableTypes.RECEIVED:
+      if (!onlyTwoLabels) return "issuedPlSales";
+    case PurchaseOrderTableTypes.ISSUED:
+      return plural ? "issuedPl" : "issued";
     case PurchaseOrderTableTypes.RECEIVED_SALES:
-      return "received";
+      if (!onlyTwoLabels) return "receivedPlSales";
+    case PurchaseOrderTableTypes.RECEIVED:
+      return plural ? "receivedPl" : "received";
   }
 }
 
@@ -129,6 +135,22 @@ export function getRouteType(pathname: string) {
       return RequirementType.SALE;
     default:
       return RequirementType.GOOD;
+  }
+}
+
+export function getPurchaseOrderType(pathname: string) {
+  const lastSegment = getLastSegmentFromRoute(pathname);
+  switch (lastSegment) {
+    case pageSubRoutes.issued:
+      return PurchaseOrderTableTypes.ISSUED;
+    case pageSubRoutes.issuedSales:
+      return PurchaseOrderTableTypes.ISSUED_SALES;
+    case pageSubRoutes.received:
+      return PurchaseOrderTableTypes.RECEIVED;
+    case pageSubRoutes.receivedSales:
+      return PurchaseOrderTableTypes.RECEIVED_SALES;
+    default:
+      return PurchaseOrderTableTypes.ISSUED;
   }
 }
 
