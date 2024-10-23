@@ -35,6 +35,7 @@ const AllRequirements = lazy(() => import("./pages/AllRequirements.tsx"));
 const AllOffers = lazy(() => import("./pages/AllOffers.tsx"));
 const AllPurchaseOrders = lazy(() => import("./pages/AllPurchaseOrders.tsx"));
 const Certificates = lazy(() => import("./pages/Certificates.tsx"));
+const CertificatesDocs = lazy(() => import("./pages/CertificatesDocs.tsx"));
 const Statistics = lazy(() => import("./pages/Statistics.tsx"));
 const MyProfile = lazy(() => import("./pages/MyProfile.tsx"));
 const CreateRequirementFloatButton = lazy(
@@ -449,7 +450,7 @@ function App() {
                               <AuthRoleGuard
                                 allowedRoles={RolesForSection.certificates}
                               >
-                                <Certificates />
+                                <CertificatesDocs />
                               </AuthRoleGuard>
                             }
                           />

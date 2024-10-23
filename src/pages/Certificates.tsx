@@ -6,7 +6,6 @@ import {
   ModalContent,
   TableTypeCertificatesReceived,
   TableTypeCertificatesSent,
-  TableTypeMyDocuments,
 } from "../models/Interfaces";
 import {
   Action,
@@ -16,12 +15,7 @@ import {
 } from "../utilities/types";
 import { useTranslation } from "react-i18next";
 import { CertificateFile, CertificationItem } from "../models/MainInterfaces";
-import {
-  getLastSegmentFromRoute,
-  openDocument,
-} from "../utilities/globalFunctions";
-import ButtonContainer from "../components/containers/ButtonContainer";
-import { Row } from "antd";
+import { getLastSegmentFromRoute } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
 import { pageSubRoutes } from "../utilities/routes";
 
@@ -81,12 +75,9 @@ export default function Certificates() {
     data: {},
   });
   const [tableContent, setTableContent] = useState<
-    | TableTypeMyDocuments
-    | TableTypeCertificatesReceived
-    | TableTypeCertificatesSent
+    TableTypeCertificatesReceived | TableTypeCertificatesSent
   >({
-    type:
-      TableTypes.MY_DOCUMENTS | TableTypes.SENT_CERT | TableTypes.RECEIVED_CERT,
+    type: TableTypes.SENT_CERT | TableTypes.RECEIVED_CERT,
     data: [],
     hiddenColumns: [],
     nameColumnHeader: t("name"),
@@ -99,15 +90,6 @@ export default function Certificates() {
 
   useEffect(() => {
     switch (type) {
-      case pageSubRoutes.documents:
-        setTableContent({
-          type: TableTypes.MY_DOCUMENTS,
-          data: cert,
-          hiddenColumns: [],
-          nameColumnHeader: t("name"),
-          onButtonClick: handleOnButtonClick,
-        });
-        break;
       case pageSubRoutes.sent:
         setTableContent({
           type: TableTypes.SENT_CERT,
@@ -127,43 +109,18 @@ export default function Certificates() {
         });
         break;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
   function handleCloseModal() {
     setIsOpenModal(false);
   }
 
-  function openModal(action: Action) {
-    switch (action) {
-      case Action.ADD_CERTIFICATES:
-        setDataModal({
-          type: ModalTypes.ADD_CERTIFICATES,
-        });
-        setIsOpenModal(true);
-        break;
-      case Action.EDIT_DOCUMENT_LIST_TO_REQUEST:
-        setDataModal({
-          type: ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST,
-        });
-        setIsOpenModal(true);
-        break;
-    }
-  }
-
   function handleOnButtonClick(
     action: Action,
     obj: CertificateFile | CertificationItem
   ) {
-    if (type == pageSubRoutes.documents) {
-      const certificate = obj as CertificateFile;
-      switch (action) {
-        case Action.VIEW_DOCUMENT:
-          openDocument(certificate.url);
-          break;
-        case Action.DELETE:
-          console.log(certificate); //r3v
-      }
-    } else if (type == pageSubRoutes.sent) {
+    if (type == pageSubRoutes.sent) {
       const certificate = obj as CertificationItem;
       switch (action) {
         case Action.VIEW:
@@ -208,36 +165,13 @@ export default function Certificates() {
         title={t("certificates")}
         titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
         subtitle={
-          type == pageSubRoutes.documents
-            ? t("myDocuments")
-            : type == pageSubRoutes.received
+          type == pageSubRoutes.received
             ? t("certifiesReceived")
             : t("certifiesSent")
         }
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
         hideSearch={true}
-        additionalContentHeader={
-          <Row gutter={[10, 10]}>
-            <ButtonContainer
-              common
-              className="btn btn-default"
-              onClick={() => openModal(Action.ADD_CERTIFICATES)}
-              style={{ marginRight: "10px" }}
-            >
-              <i className="fas fa-certificate"></i> {t("addCertificates")}
-            </ButtonContainer>
-
-            <ButtonContainer
-              common
-              className="btn btn-default"
-              onClick={() => openModal(Action.EDIT_DOCUMENT_LIST_TO_REQUEST)}
-            >
-              <i className="fas fa-list-alt"></i>{" "}
-              {t("listOfDocumentsToRequest")}
-            </ButtonContainer>
-          </Row>
-        }
       />
     </>
   );
