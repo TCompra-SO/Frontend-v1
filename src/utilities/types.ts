@@ -384,3 +384,8 @@ export enum CertificationState {
   REJECTED = 2,
   PENDING = 3,
 }
+
+export enum ImageRequestLabels {
+  AVATAR = "avatar",
+  UID = "name",
+}

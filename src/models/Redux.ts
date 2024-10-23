@@ -14,6 +14,7 @@ export interface UserState {
   customerCount?: number;
   sellerCount?: number;
   typeEntity: EntityType;
+  document: string;
 }
 
 export interface LoadingState {

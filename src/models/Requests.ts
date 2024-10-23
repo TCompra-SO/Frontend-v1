@@ -96,3 +96,25 @@ export interface CreateRequirementRequest {
   userID: string;
   used?: boolean;
 }
+
+export interface UploadAvatarRequest {
+  avatar: File;
+  uid: string;
+}
+
+export interface CreateOfferRequest {
+  name: string;
+  email: string;
+  description: string;
+  cityID: number;
+  deliveryTimeID: number;
+  currencyID: number;
+  warranty: number;
+  timeMeasurementID: number;
+  support: number;
+  budget: number;
+  includesIGV: boolean;
+  includesDelivery: boolean;
+  requerimentID: string;
+  userID: string;
+}

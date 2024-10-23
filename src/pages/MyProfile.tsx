@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { FullUser, PlanData } from "../models/MainInterfaces";
-import { EntityType, UserRoles } from "../utilities/types";
+import { EntityType, ImageRequestLabels, UserRoles } from "../utilities/types";
 import { useContext, useEffect, useRef, useState } from "react";
 import { ListsContext } from "../contexts/listsContext";
 import PhoneField from "../components/common/formFields/PhoneField";
@@ -18,7 +18,7 @@ import { defaultUserImage } from "../utilities/globals";
 import { useHandleChangeImage } from "../hooks/useHandleChangeImage";
 import PasswordField from "../components/common/formFields/PasswordField";
 import { useApiParams } from "../models/Interfaces";
-import { NewPasswordRequest } from "../models/Requests";
+import { NewPasswordRequest, UploadAvatarRequest } from "../models/Requests";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import useApi from "../hooks/useApi";
@@ -29,6 +29,7 @@ import {
 import showNotification from "../utilities/notification/showNotification";
 import { equalServices } from "../utilities/globalFunctions";
 import { transformToFullUser } from "../utilities/transform";
+import { uploadAvatarService } from "../services/requests/imageService";
 
 const user1: FullUser = {
   uid: "user1",
@@ -78,18 +79,21 @@ export default function MyProfile() {
   const handleChangeImage = useHandleChangeImage(notification);
   const [token] = useState(useSelector((state: MainState) => state.user.token));
   const uid = useSelector((state: MainState) => state.user.uid);
-  const [apiParams, setApiParams] = useState<useApiParams<NewPasswordRequest>>({
+  const [apiParams, setApiParams] = useState<
+    useApiParams<NewPasswordRequest | FormData>
+  >({
     service: null,
     method: "get",
     token,
   });
-  const { loading, responseData, error, errorMsg, fetchData } =
-    useApi<NewPasswordRequest>({
-      service: apiParams.service,
-      method: apiParams.method,
-      dataToSend: apiParams.dataToSend,
-      token: apiParams.token,
-    });
+  const { loading, responseData, error, errorMsg, fetchData } = useApi<
+    NewPasswordRequest | FormData
+  >({
+    service: apiParams.service,
+    method: apiParams.method,
+    dataToSend: apiParams.dataToSend,
+    token: apiParams.token,
+  });
 
   useEffect(() => {
     setApiParams({
@@ -127,6 +131,8 @@ export default function MyProfile() {
         changePasswordSuccess();
       else if (equalServices(apiParams.service, getUserService("")))
         setFormData(responseData);
+      else if (equalServices(apiParams.service, uploadAvatarService()))
+        console.log(responseData);
     } else if (error) {
       showNotification(notification, "error", errorMsg);
     }
@@ -153,8 +159,22 @@ export default function MyProfile() {
 
   function changeImage(e: React.ChangeEvent<HTMLInputElement>) {
     const file = handleChangeImage(e);
-    console.log(file);
-    if (file) setImageSrc(URL.createObjectURL(file));
+
+    if (file && user) {
+      const data: UploadAvatarRequest = {
+        uid: user.uid,
+        avatar: file,
+      };
+      const formData = new FormData();
+      formData.append(ImageRequestLabels.AVATAR, data.avatar);
+      formData.append(ImageRequestLabels.UID, data.uid);
+      setApiParams({
+        service: uploadAvatarService(),
+        method: "post",
+        dataToSend: formData,
+      });
+      setImageSrc(URL.createObjectURL(file));
+    }
   }
 
   function saveMyProfile(values: any) {

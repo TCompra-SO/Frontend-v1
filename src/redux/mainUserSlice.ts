@@ -16,6 +16,7 @@ export const mainUserInitialState: UserState = {
   sellerScore: undefined,
   customerCount: undefined,
   sellerCount: undefined,
+  document: "",
 };
 
 export const mainUserSlice = createSlice({
@@ -33,6 +34,7 @@ export const mainUserSlice = createSlice({
       state.customerCount = action.payload.customerCount;
       state.sellerCount = action.payload.sellerCount;
       state.typeEntity = action.payload.typeEntity;
+      state.document = action.payload.document;
       console.log(state);
     },
     setFullMainUser: (state, action: { payload: UserState; type: string }) => {

@@ -1,39 +1,51 @@
 import { App, Col, Form, Row } from "antd";
-import CategoryCR from "./create-requirement-items/CategoryCR";
-import TitleCR from "./create-requirement-items/TitleCR";
 import { useTranslation } from "react-i18next";
-import DescriptionCR from "./create-requirement-items/DescriptionCR";
-import CanOfferCR from "./create-requirement-items/CanOfferCR";
 import EmailCR from "./create-requirement-items/EmailCR";
-import LocationCR from "./create-requirement-items/LocationCR";
-import BudgetCR from "./create-requirement-items/BudgetCR";
-import CurrencyCR from "./create-requirement-items/CurrencyCR";
-import PaymentMethodCR from "./create-requirement-items/PaymentMethodCR";
-import FinalDateCR from "./create-requirement-items/FinalDateCR";
-import DeliveryTimeCR from "./create-requirement-items/DeliveryTimeCR";
-import WarrantyCR from "./create-requirement-items/WarrantyCR";
-import WarrantyTimeCR from "./create-requirement-items/WarrantyTimeCR";
 import DocumentsCertifCR from "./create-requirement-items/DocumentsCertifCR";
 import AddImagesRC from "./create-requirement-items/AddImagesRC";
 import AddDocument from "./create-requirement-items/AddDocument";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { RequirementType, Usage } from "../../../utilities/types";
 import { useEffect, useState } from "react";
-import ItemCondition from "./create-requirement-items/ItemCondition";
 import { certifiedCompaniesOpt } from "../../../utilities/globals";
 import { CreateRequirementRequest } from "../../../models/Requests";
 import { useApiParams } from "../../../models/Interfaces";
 import useApi from "../../../hooks/useApi";
-import { equalServices } from "../../../utilities/globalFunctions";
+import {
+  equalServices,
+  isDateEarlierThanToday,
+} from "../../../utilities/globalFunctions";
 import { createRequirementService } from "../../../services/requests/requirementService";
 import showNotification from "../../../utilities/notification/showNotification";
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
 import { createSaleService } from "../../../services/requests/saleService";
+import TitleField from "../../common/formFields/TitleField";
+import DescriptionCRField from "../../common/formFields/DescriptionCRField";
+import CategoryField from "../../common/formFields/CategoryField";
+import LocationField from "../../common/formFields/LocationField";
+import BudgetField from "../../common/formFields/BudgetField";
+import CurrencyField from "../../common/formFields/CurrencyField";
+import PaymentMethodField from "../../common/formFields/PaymentMethod";
+import DateField from "../../common/formFields/DateField";
+import DeliveryTimeField from "../../common/formFields/DeliveryTimeField";
+import WarrantyField from "../../common/formFields/WarrantyField";
+import DurationField from "../../common/formFields/DurationField";
+import ItemConditionField from "../../common/formFields/ItemConditionField";
+import CanOfferField from "../../common/formFields/CanOfferField";
 
 interface CreateRequirementProps {
   closeModal: () => void;
+}
+
+interface LabelForCreateRequirementProps {
+  label: string;
+}
+
+function LabelForCreateRequirement({ label }: LabelForCreateRequirementProps) {
+  const { t } = useTranslation();
+  return <div className="titulo-input">{t(label)}</div>;
 }
 
 export default function CreateRequirement(props: CreateRequirementProps) {
@@ -122,7 +134,6 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     if (type == RequirementType.SALE)
       data.used = values.itemCondition == Usage.USED;
 
-    console.log(values, data);
     setApiParams({
       service:
         type == RequirementType.SALE
@@ -194,15 +205,18 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       >
         <div className="t-flex form-tc">
           <div>
-            <TitleCR />
+            <LabelForCreateRequirement label={"title"} />
+            <TitleField></TitleField>
           </div>
           <div>
-            <DescriptionCR />
+            <LabelForCreateRequirement label={"description"} />
+            <DescriptionCRField></DescriptionCRField>
           </div>
           {isPremium && (
             <>
               <div>
-                <CanOfferCR
+                <LabelForCreateRequirement label={"whoCanMakeOffers"} />
+                <CanOfferField
                   type={type}
                   handleOptionChange={getDocListCertification}
                 />
@@ -216,7 +230,8 @@ export default function CreateRequirement(props: CreateRequirementProps) {
           )}
           <Row gutter={[15, 15]}>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <CategoryCR></CategoryCR>
+              <LabelForCreateRequirement label={"category"} />
+              <CategoryField />
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
               <EmailCR />
@@ -225,40 +240,55 @@ export default function CreateRequirement(props: CreateRequirementProps) {
 
           <Row gutter={[15, 15]}>
             <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-              <LocationCR />
+              <LabelForCreateRequirement label={"location"} />
+              <LocationField onlyItem />
             </Col>
             <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-              <BudgetCR />
+              <LabelForCreateRequirement label={"budget"} />
+              <BudgetField />
             </Col>
             <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-              <CurrencyCR />
+              <LabelForCreateRequirement label={"currency"} />
+              <CurrencyField />
             </Col>
             <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-              <PaymentMethodCR />
+              <LabelForCreateRequirement label={"paymentMethod"} />
+              <PaymentMethodField />
             </Col>
           </Row>
 
           <Row gutter={[15, 15]}>
             <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-              <FinalDateCR />
+              <LabelForCreateRequirement label={"expirationDate"} />
+              <DateField
+                name={"expirationDate"}
+                disabledDate={isDateEarlierThanToday}
+              />
             </Col>
             <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-              <DeliveryTimeCR />
+              <LabelForCreateRequirement label={"deliveryTime"} />
+              <DeliveryTimeField />
             </Col>
             {(type == RequirementType.GOOD ||
               type == RequirementType.SERVICE) && (
               <>
                 <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-                  <WarrantyCR required={type == RequirementType.GOOD} />
+                  <LabelForCreateRequirement label={"warranty"} />
+                  <WarrantyField required={type == RequirementType.GOOD} />
                 </Col>
                 <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-                  <WarrantyTimeCR required={type == RequirementType.GOOD} />
+                  <LabelForCreateRequirement label={"duration"} />
+                  <DurationField
+                    required={type == RequirementType.GOOD}
+                    name="duration"
+                  />
                 </Col>
               </>
             )}
             {type == RequirementType.SALE && (
               <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <ItemCondition />
+                <LabelForCreateRequirement label={"itemCondition"} />
+                <ItemConditionField />
               </Col>
             )}
           </Row>

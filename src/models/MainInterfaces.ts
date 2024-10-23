@@ -93,6 +93,7 @@ export interface User extends BaseUser {
 export interface BaseUser {
   uid: string;
   name: string;
+  document: string;
   image?: string;
   email: string;
   tenure?: number;

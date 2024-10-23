@@ -245,6 +245,24 @@ export function useDescriptionCRRules(required: boolean) {
   return { descriptionCRRules };
 }
 
+export function useOfferDescriptionRules(required: boolean) {
+  const [offerDescriptionRules] = useState<Rule[]>([
+    {
+      required,
+    },
+    {
+      min: Lengths.offerDescription.min,
+    },
+    {
+      max: Lengths.offerDescription.max,
+    },
+    {
+      validator: useNoBlankSpacesValidator(),
+    },
+  ]);
+  return { offerDescriptionRules };
+}
+
 export function useTenureRules(required: boolean) {
   const [tenureRules] = useState<Rule[]>([
     {

@@ -18,6 +18,7 @@ export const userInitialState: UserState = {
   sellerScore: undefined,
   customerCount: undefined,
   sellerCount: undefined,
+  document: "",
 };
 
 export const userSlice = createSlice({
@@ -41,12 +42,14 @@ export const userSlice = createSlice({
       }
     },
     setBaseUser: (state, action: { payload: BaseUser; type: string }) => {
+      console.log(action.payload);
       state.tenure = action.payload.tenure;
       state.customerScore = action.payload.customerScore;
       state.sellerScore = action.payload.sellerScore;
       state.customerCount = action.payload.customerCount;
       state.sellerCount = action.payload.sellerCount;
       state.typeEntity = action.payload.typeEntity;
+      state.document = action.payload.document;
     },
     setUid: (state, action) => {
       state.uid = action.payload;

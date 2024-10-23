@@ -26,7 +26,6 @@ import { useDispatch } from "react-redux";
 import { setIsLoading } from "./redux/loadingSlice.ts";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
-const Search = lazy(() => import("./pages/Search.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
 const Offers = lazy(() => import("./pages/Offers.tsx"));
 const PurchaseOrders = lazy(() => import("./pages/PurchaseOrders.tsx"));
@@ -38,6 +37,7 @@ const Certificates = lazy(() => import("./pages/Certificates.tsx"));
 const CertificatesDocs = lazy(() => import("./pages/CertificatesDocs.tsx"));
 const Statistics = lazy(() => import("./pages/Statistics.tsx"));
 const MyProfile = lazy(() => import("./pages/MyProfile.tsx"));
+const ProductDetail = lazy(() => import("./pages/ProductDetail.tsx"));
 const CreateRequirementFloatButton = lazy(
   () =>
     import(
@@ -124,12 +124,12 @@ function App() {
                     <Suspense fallback={<LoadingPage />}>
                       <Routes>
                         <Route
-                          path={`${pageRoutes.search}`}
+                          path={`${pageRoutes.productDetail}/:requirementId`}
                           element={
                             <AuthRoleGuard
-                              allowedRoles={RolesForSection.search}
+                              allowedRoles={RolesForSection.productDetail}
                             >
-                              <Search />
+                              <ProductDetail />
                             </AuthRoleGuard>
                           }
                         />
