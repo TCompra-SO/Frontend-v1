@@ -23,7 +23,7 @@ export default function AuthRoleGuard({
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsWaiting(false);
-    }, 500); // espera para obtener datos del usuario
+    }, 300); // espera para obtener datos del usuario
 
     return () => clearTimeout(timer);
   }, []);

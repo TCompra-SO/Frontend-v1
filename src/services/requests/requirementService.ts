@@ -5,8 +5,8 @@ export function getRequirementsService(): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.getRequeriments}`,
-    type: "RE-REG",
+    }${ApiRoutes.requirements.getRequirements}`,
+    type: "RE-GET-ALL",
   };
 }
 
@@ -16,5 +16,17 @@ export function createRequirementService(): HttpService {
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.create}`,
     type: "RE-CRE",
+  };
+}
+
+export function getRequirementByIdService(
+  reqId: string,
+  showErrorMessage: boolean = true
+): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.requirements
+    }${ApiRoutes.requirements.getRequirement}${reqId}`,
+    type: showErrorMessage ? "RE-GET-ID" : "",
   };
 }

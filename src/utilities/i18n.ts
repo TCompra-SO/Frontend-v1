@@ -219,6 +219,11 @@ const resources = {
       editListOfDocumentsToRequest: "Edit list of documents to request",
       certifyYourCompany: "Certify your company",
       improveYourCompanysImage: "Improve significantly your company's image.",
+      cantOfferToYourOwnRequirement:"You cannot offer to your own requirement",
+      alreadyMadeOffer: "You have already made an offer on this requirement",
+      requirementNotFound: "The requirement could not be found",
+      errorOccurredLoginAgain: "An error occurred. Log in again",
+      offerCreatedSuccessfully: "Offer created successfully",
       // Other
       yes: "Yes",
       no: "No",
@@ -566,6 +571,11 @@ const resources = {
       editListOfDocumentsToRequest: "Editar lista de documentos a solicitar",
       certifyYourCompany: "Certifica tu empresa",
       improveYourCompanysImage: "Mejora notablemente la imagen de tu empresa.",
+      cantOfferToYourOwnRequirement:"No puedes ofertar a tu propio requerimiento",
+      alreadyMadeOffer: "Ya haz realizado una oferta a este requerimiento",
+      requirementNotFound: "No se ha podido encontrar el requerimiento",
+      errorOccurredLoginAgain: "Se produjo un error. Inicie sesión nuevamente",
+      offerCreatedSuccessfully: "Oferta creada exitosamente",
       // Other
       yes: "Sí",
       no: "No",

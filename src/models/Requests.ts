@@ -91,7 +91,7 @@ export interface CreateRequirementRequest {
   completion_date: string;
   submission_dateID: number;
   warranty?: number;
-  duration?: number;
+  durationID?: number;
   allowed_bidersID: number;
   userID: string;
   used?: boolean;

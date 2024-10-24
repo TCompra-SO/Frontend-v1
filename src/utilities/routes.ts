@@ -51,7 +51,8 @@ export const ApiRoutes = {
     getUser: "getUser/",
   },
   requirements: {
-    getRequeriments: "getRequeriments/",
+    getRequirement: "getRequeriment/",
+    getRequirements: "getRequeriments/",
     create: "create/",
   },
   requirement: {

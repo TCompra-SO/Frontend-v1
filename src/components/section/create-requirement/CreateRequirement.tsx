@@ -128,7 +128,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
 
     if (type == RequirementType.GOOD || type == RequirementType.SERVICE) {
       data.warranty = values.warranty;
-      data.duration = values.duration;
+      data.durationID = values.duration;
     }
 
     if (type == RequirementType.SALE)

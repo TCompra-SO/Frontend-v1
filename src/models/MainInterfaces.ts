@@ -42,6 +42,8 @@ export interface Requirement extends BasicRequirement {
   warrantyTime?: TimeMeasurement;
   used?: Usage;
   deliveryTime: number;
+  paymentMethod: number;
+  allowedBidder: number;
 }
 
 export interface BasicOffer extends BaseRequirementOffer {

@@ -14,18 +14,27 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { CreateOfferRequest } from "../models/Requests";
 import { MainState } from "../models/Redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useApiParams } from "../models/Interfaces";
 import useApi from "../hooks/useApi";
-import { Params, useParams } from "react-router-dom";
+import { Params, useNavigate, useParams } from "react-router-dom";
 import { createOfferService } from "../services/requests/offerService";
 import showNotification from "../utilities/notification/showNotification";
 import { equalServices } from "../utilities/globalFunctions";
+import { getRequirementByIdService } from "../services/requests/requirementService";
+import { pageRoutes } from "../utilities/routes";
+import { setIsLoading } from "../redux/loadingSlice";
+import { Requirement } from "../models/MainInterfaces";
+import { transformFromGetRequirementByIdToRequirement } from "../utilities/transform";
+import { RequirementType } from "../utilities/types";
 
 export default function ProductDetail() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { notification } = App.useApp();
   const { requirementId } = useParams<Params>();
+  const [requirement, setRequirement] = useState<Requirement>();
   const uid = useSelector((state: MainState) => state.user.uid);
   const email = useSelector((state: MainState) => state.user.email);
   const [checkedIGV, setCheckedIGV] = useState(false);
@@ -43,6 +52,21 @@ export default function ProductDetail() {
     });
 
   useEffect(() => {
+    if (equalServices(apiParams.service, getRequirementByIdService("", false)))
+      dispatch(setIsLoading(loading));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
+
+  useEffect(() => {
+    if (requirementId) {
+      setApiParams({
+        service: getRequirementByIdService(requirementId, false),
+        method: "get",
+      });
+    } else navigate(pageRoutes.home);
+  }, [requirementId]);
+
+  useEffect(() => {
     if (apiParams.service) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
@@ -50,12 +74,35 @@ export default function ProductDetail() {
   useEffect(() => {
     if (responseData) {
       if (equalServices(apiParams.service, createOfferService())) {
-        console.log(responseData);
+        showNotification(
+          notification,
+          "success",
+          t("offerCreatedSuccessfully")
+        );
+      } else if (
+        equalServices(apiParams.service, getRequirementByIdService("", false))
+      ) {
+        setRequirementData(responseData);
       }
     } else if (error) {
+      if (
+        equalServices(apiParams.service, getRequirementByIdService("", false))
+      ) {
+        navigate(pageRoutes.home);
+        return;
+      }
       showNotification(notification, "error", errorMsg);
     }
   }, [responseData, error]);
+
+  async function setRequirementData(response: any) {
+    console.log(response);
+    const s = await transformFromGetRequirementByIdToRequirement(
+      response.data,
+      RequirementType.GOOD
+    );
+    console.log(s);
+  }
 
   function createOffer(values: any) {
     const data: CreateOfferRequest = {
