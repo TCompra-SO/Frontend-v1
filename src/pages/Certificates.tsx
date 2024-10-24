@@ -18,6 +18,7 @@ import { CertificateFile, CertificationItem } from "../models/MainInterfaces";
 import { getLastSegmentFromRoute } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
 import { pageSubRoutes } from "../utilities/routes";
+import { App } from "antd";
 
 const cert: CertificateFile[] = [
   {
@@ -67,6 +68,7 @@ const cert2: CertificationItem[] = [
 
 export default function Certificates() {
   const location = useLocation();
+  const { message } = App.useApp();
   const { t } = useTranslation();
   const [type, setType] = useState(getLastSegmentFromRoute(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -111,6 +113,13 @@ export default function Certificates() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
+
+  // useEffect(() => {
+  //   if (equalServices(apiParams.service, getUserService("")))
+  //     if (loading) showLoadingMessage(message);
+  //     else destroyMessage(message);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [loading]);
 
   function handleCloseModal() {
     setIsOpenModal(false);

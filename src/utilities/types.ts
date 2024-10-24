@@ -386,6 +386,6 @@ export enum CertificationState {
 }
 
 export enum ImageRequestLabels {
-  AVATAR = "avatar",
-  UID = "name",
+  AVATAR = "image",
+  UID = "uid",
 }

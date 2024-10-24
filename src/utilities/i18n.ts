@@ -224,6 +224,7 @@ const resources = {
       requirementNotFound: "The requirement could not be found",
       errorOccurredLoginAgain: "An error occurred. Log in again",
       offerCreatedSuccessfully: "Offer created successfully",
+      imageUpdatedSuccessfully: "Image updated successfully",
       // Other
       yes: "Yes",
       no: "No",
@@ -576,6 +577,7 @@ const resources = {
       requirementNotFound: "No se ha podido encontrar el requerimiento",
       errorOccurredLoginAgain: "Se produjo un error. Inicie sesión nuevamente",
       offerCreatedSuccessfully: "Oferta creada exitosamente",
+      imageUpdatedSuccessfully: "Imagen actualizada exitosamente",
       // Other
       yes: "Sí",
       no: "No",

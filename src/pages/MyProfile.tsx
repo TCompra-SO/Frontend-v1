@@ -79,6 +79,7 @@ export default function MyProfile() {
   const handleChangeImage = useHandleChangeImage(notification);
   const [token] = useState(useSelector((state: MainState) => state.user.token));
   const uid = useSelector((state: MainState) => state.user.uid);
+
   const [apiParams, setApiParams] = useState<
     useApiParams<NewPasswordRequest | FormData>
   >({
@@ -94,6 +95,42 @@ export default function MyProfile() {
     dataToSend: apiParams.dataToSend,
     token: apiParams.token,
   });
+
+  const [apiParamsImage, setApiParamsImage] = useState<useApiParams<FormData>>({
+    service: null,
+    method: "get",
+    token,
+  });
+  const {
+    loading: loadingImage,
+    responseData: responseDataImage,
+    error: errorImage,
+    errorMsg: errorMsgImage,
+    fetchData: fetchDataImage,
+  } = useApi<NewPasswordRequest | FormData>({
+    service: apiParamsImage.service,
+    method: apiParamsImage.method,
+    dataToSend: apiParamsImage.dataToSend,
+    token: apiParamsImage.token,
+  });
+
+  // const [apiParamsForm, setApiParamsForm] = useState<useApiParams<any>>({ /* r3v */
+  //   service: null,
+  //   method: "get",
+  //   token,
+  // });
+  // const {
+  //   loading: loadingForm,
+  //   responseData: responseDataForm,
+  //   error: errorForm,
+  //   errorMsg: errorMsgForm,
+  //   fetchData: fetchDataForm,
+  // } = useApi<NewPasswordRequest | FormData>({
+  //   service: apiParamsForm.service,
+  //   method: apiParamsForm.method,
+  //   dataToSend: apiParamsForm.dataToSend,
+  //   token: apiParamsForm.token,
+  // });
 
   useEffect(() => {
     setApiParams({
@@ -115,11 +152,18 @@ export default function MyProfile() {
         specialty: user.specialty,
         aboutMe: user.aboutMe,
       });
+    if (user?.image) setImageSrc(user.image);
   }, [user]);
 
   useEffect(() => {
+    if (apiParamsImage.service) {
+      fetchDataImage(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsImage]);
+
+  useEffect(() => {
     if (apiParams.service) {
-      console.log(apiParams);
       fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -131,13 +175,20 @@ export default function MyProfile() {
         changePasswordSuccess();
       else if (equalServices(apiParams.service, getUserService("")))
         setFormData(responseData);
-      else if (equalServices(apiParams.service, uploadAvatarService()))
-        console.log(responseData);
     } else if (error) {
       showNotification(notification, "error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
+
+  useEffect(() => {
+    if (responseDataImage) {
+      showNotification(notification, "success", t("imageUpdatedSuccessfully"));
+    } else if (errorImage) {
+      showNotification(notification, "error", errorMsgImage);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataImage, errorImage]);
 
   function setFormData(responseData: any) {
     const user = transformToFullUser(responseData.data[0]);
@@ -168,7 +219,7 @@ export default function MyProfile() {
       const formData = new FormData();
       formData.append(ImageRequestLabels.AVATAR, data.avatar);
       formData.append(ImageRequestLabels.UID, data.uid);
-      setApiParams({
+      setApiParamsImage({
         service: uploadAvatarService(),
         method: "post",
         dataToSend: formData,
@@ -212,9 +263,13 @@ export default function MyProfile() {
         <div className="t-flex gap-15 perfil-user">
           <div className="card-white imagen-perfil">
             <img src={imageSrc} className="imagen-p" />
-            <div className="bnt-filter" onClick={handleClick}>
+            <ButtonContainer
+              className="bnt-filter"
+              onClick={handleClick}
+              loading={loadingImage}
+            >
               {t("uploadImage")} <i className="fa-regular fa-images"></i>
-            </div>
+            </ButtonContainer>
           </div>
 
           <div className="t-flex gap-15 card-datos">
@@ -411,6 +466,11 @@ export default function MyProfile() {
                   <ButtonContainer
                     className="btn btn-default"
                     htmlType="submit"
+                    // loading={
+                    //   equalServices(apiParams.service, newPasswordService())
+                    //     ? loading
+                    //     : undefined
+                    // }
                   >
                     {t("saveButton")}
                   </ButtonContainer>

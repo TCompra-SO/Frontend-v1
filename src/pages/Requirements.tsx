@@ -1091,6 +1091,13 @@ export default function Requirements() {
     }
   }, [responseData, error]);
 
+  // useEffect(() => {
+  //   if (equalServices(apiParams.service, getUserService("")))
+  //     if (loading) showLoadingMessage(message);
+  //     else destroyMessage(message);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [loading]);
+
   async function setData() {
     if (responseData) {
       const data = await Promise.all(
