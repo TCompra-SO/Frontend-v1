@@ -19,6 +19,7 @@ import {
   getRouteType,
 } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
+import { getBaseUserForUserSubUser } from "../services/complete/general";
 
 const offerList: Offer[] = [
   {
@@ -224,6 +225,22 @@ const offerList: Offer[] = [
       customerCount: 0,
       sellerCount: 0,
     },
+    subUser: {
+      uid: "user6",
+      name: "AudioTech Corp.",
+      email: "info@auditech.example.com",
+
+      document: "975310864",
+      typeEntity: EntityType.COMPANY,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
+      tenure: 3,
+      phone: "998989898",
+
+      customerCount: 0,
+      sellerCount: 0,
+    },
   },
   {
     key: "6",
@@ -242,6 +259,22 @@ const offerList: Offer[] = [
     state: OfferState.ACTIVE,
     type: RequirementType.GOOD,
     user: {
+      uid: "user6",
+      name: "AudioTech Corp.",
+      email: "info@auditech.example.com",
+
+      document: "975310864",
+      typeEntity: EntityType.COMPANY,
+      customerScore: 0,
+      sellerScore: 0,
+      address: "Calle San Agustin 107 - Cercado - Arequipa",
+      tenure: 3,
+      phone: "998989898",
+
+      customerCount: 0,
+      sellerCount: 0,
+    },
+    subUser: {
       uid: "user6",
       name: "AudioTech Corp.",
       email: "info@auditech.example.com",
@@ -466,6 +499,7 @@ export default function Offers() {
 
       case Action.RATE_CANCELED: {
         /* r3v get user subuser from requirement */
+        // getBaseUserForUserSubUser(offer.);
         setDataModal({
           type: ModalTypes.RATE_CANCELED,
           data: {
