@@ -194,6 +194,7 @@ export interface TableTypeRequirement extends TableHiddenColumns {
 
 export interface TableTypeOffer extends TableHiddenColumns {
   type: TableTypes.OFFER;
+  subType: RequirementType;
   data: Offer[];
   // onButtonClick: (action: Action, data: Offer) => void;
 }

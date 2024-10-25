@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import TablePageContent from "../components/section/table-page/TablePageContent";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { TableTypeAllRequirements } from "../models/Interfaces";
 import {
   Action,
@@ -10,6 +10,11 @@ import {
   TableTypes,
 } from "../utilities/types";
 import { BasicRequirement, Requirement } from "../models/MainInterfaces";
+import {
+  getLabelFromRequirementType,
+  getRouteType,
+} from "../utilities/globalFunctions";
+import { useLocation } from "react-router-dom";
 
 const requirements: Requirement[] = [
   {
@@ -645,6 +650,8 @@ const requirements: Requirement[] = [
 
 export default function AllRequirements() {
   const { t } = useTranslation();
+  const location = useLocation();
+  const [type, setType] = useState(getRouteType(location.pathname));
   const [tableContent, setTableContent] = useState<TableTypeAllRequirements>({
     type: TableTypes.ALL_REQUIREMENTS,
     data: requirements, //[]
@@ -652,6 +659,20 @@ export default function AllRequirements() {
     nameColumnHeader: t("goods"),
     onButtonClick: handleOnButtonClick,
   });
+
+  useEffect(() => {
+    setType(getRouteType(location.pathname));
+  }, [location]);
+
+  useEffect(() => {
+    setTableContent((prev) => {
+      return {
+        ...prev,
+        subType: type,
+        nameColumnHeader: t(getLabelFromRequirementType(type)),
+      };
+    });
+  }, [type]);
 
   function handleSearch(e: ChangeEvent<HTMLInputElement>) {
     console.log(e.target.value);
@@ -665,7 +686,7 @@ export default function AllRequirements() {
     <TablePageContent
       title={t("requirements")}
       titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
-      subtitle={`${t("listOf")} ${t("goods")}`}
+      subtitle={`${t("listOf")} ${t(getLabelFromRequirementType(type))}`}
       subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
       table={tableContent}
       onSearch={handleSearch}

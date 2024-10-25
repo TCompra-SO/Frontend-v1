@@ -30,9 +30,12 @@ export default function RequirementOfferSummary(
             />
             <div className="t-flex tags-req t-wrap">
               <div className="badge-grey-border">
-                {DocType.RUC}: 23568745214
+                {props.offer.user.typeEntity == EntityType.COMPANY
+                  ? DocType.RUC
+                  : DocType.DNI}
+                : {props.offer.user.document}
               </div>
-              {/* r3v dni ruc */}
+
               {props.user.typeEntity == EntityType.COMPANY && (
                 <div className="badge-grey-border">
                   {t("tenure")}: {props.user.tenure} {t("years")}

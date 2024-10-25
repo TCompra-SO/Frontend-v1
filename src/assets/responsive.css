@@ -347,6 +347,12 @@
   }
 }
 
+@media (max-width: 1200px) {
+  .card-d4 {
+    flex-direction: column;
+  }
+}
+
 /* Estilos para pantallas grandes (escritorios) */
 @media (min-width: 769px) {
 }

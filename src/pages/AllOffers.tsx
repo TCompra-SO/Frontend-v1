@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import TablePageContent from "../components/section/table-page/TablePageContent";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { TableTypeAllOffers } from "../models/Interfaces";
 import {
   Action,
@@ -11,6 +11,11 @@ import {
   TimeMeasurement,
 } from "../utilities/types";
 import { BasicOffer, Offer } from "../models/MainInterfaces";
+import {
+  getLabelFromRequirementType,
+  getRouteType,
+} from "../utilities/globalFunctions";
+import { useLocation } from "react-router-dom";
 
 const offerList: Offer[] = [
   {
@@ -379,6 +384,8 @@ const offerList: Offer[] = [
 ];
 export default function AllOffers() {
   const { t } = useTranslation();
+  const location = useLocation();
+  const [type, setType] = useState(getRouteType(location.pathname));
   const [tableContent, setTableContent] = useState<TableTypeAllOffers>({
     type: TableTypes.ALL_OFFERS,
     data: offerList, //[]
@@ -386,6 +393,20 @@ export default function AllOffers() {
     nameColumnHeader: t("goods"),
     onButtonClick: handleOnButtonClick,
   });
+
+  useEffect(() => {
+    setType(getRouteType(location.pathname));
+  }, [location]);
+
+  useEffect(() => {
+    setTableContent((prev) => {
+      return {
+        ...prev,
+        subType: type,
+        data: offerList,
+      };
+    });
+  }, [type]);
 
   function handleSearch(e: ChangeEvent<HTMLInputElement>) {
     console.log(e.target.value);
@@ -397,7 +418,7 @@ export default function AllOffers() {
     <TablePageContent
       title={t("offers")}
       titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
-      subtitle={`${t("listOf")} ${t("goods")}`}
+      subtitle={`${t("listOf")}  ${t(getLabelFromRequirementType(type))}`}
       subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
       table={tableContent}
       onSearch={handleSearch}

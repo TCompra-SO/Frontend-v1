@@ -7,8 +7,8 @@ export interface SubUserProfile extends BaseUser {
   companyID: string;
   document: string;
   phone: string;
-  email?: string;
-  typeID?: UserRoles;
+  email: string;
+  typeID: UserRoles;
   createdAt: string;
   numGoods: number;
   numServices: number;

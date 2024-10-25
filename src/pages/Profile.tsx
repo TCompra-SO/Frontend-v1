@@ -2,7 +2,7 @@ import { App, Col, Form, Input, InputRef, Row } from "antd";
 import { ProfileRequest } from "../models/Requests";
 import {
   defaultCountry,
-  maxImageSizeMb,
+  defaultUserImage,
   phoneCode,
 } from "../utilities/globals";
 import { useSelector } from "react-redux";
@@ -11,7 +11,6 @@ import { useContext, useEffect, useState } from "react";
 import showNotification from "../utilities/notification/showNotification";
 import { IdValueObj, useApiParams } from "../models/Interfaces";
 import ButtonContainer from "../components/containers/ButtonContainer";
-import InputContainer from "../components/containers/InputContainer";
 import SelectContainer from "../components/containers/SelectContainer";
 import useApi from "../hooks/useApi";
 import {
@@ -20,18 +19,19 @@ import {
 } from "../services/requests/authService";
 import { useTranslation } from "react-i18next";
 import { DocType } from "../utilities/types";
-import { useAboutMeRules, useSpecialtyRules } from "../hooks/validators";
 import { DefaultOptionType } from "antd/es/select";
 import React from "react";
 import {
-  checkImage,
   equalServices,
   getListForSelectIdValueMap,
 } from "../utilities/globalFunctions";
-import InputNumberContainer from "../components/containers/InputNumberContainer";
 import { ListsContext } from "../contexts/listsContext";
 import PhoneField from "../components/common/formFields/PhoneField";
 import AddressField from "../components/common/formFields/AddressField";
+import TenureField from "../components/common/formFields/TenureField";
+import SpecialtyField from "../components/common/formFields/SpecialtyField";
+import AboutMeField from "../components/common/formFields/AboutMeField";
+import { useHandleChangeImage } from "../hooks/useHandleChangeImage";
 // import LocationField from "../components/common/formFields/LocationField";
 
 interface ProfileProps {
@@ -48,9 +48,10 @@ export default function Profile(props: ProfileProps) {
   const [form] = Form.useForm();
   const fileInputRef = React.useRef<InputRef>(null);
   const uid = useSelector((state: MainState) => state.user.uid);
-  const [imageSrc, setImageSrc] = useState("https://placehold.co/100x100");
+  const [imageSrc, setImageSrc] = useState(defaultUserImage);
   const [profileSuccess, setProfileSuccess] = useState(false);
   const [cities, setCities] = useState<IdValueObj[]>([]);
+  const handleChangeImage = useHandleChangeImage(notification);
   const [apiParams, setApiParams] = useState<useApiParams<ProfileRequest>>({
     service: null,
     method: "get",
@@ -61,9 +62,6 @@ export default function Profile(props: ProfileProps) {
       method: apiParams.method,
       dataToSend: apiParams.dataToSend,
     });
-
-  const { specialtyRules } = useSpecialtyRules(true);
-  const { aboutMeRules } = useAboutMeRules(false);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
@@ -147,20 +145,9 @@ export default function Profile(props: ProfileProps) {
     });
   }
 
-  function handleChangeImage(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (file) {
-      const { validImage, validSize } = checkImage(file);
-      if (validImage && validSize) setImageSrc(URL.createObjectURL(file));
-      else if (!validImage)
-        showNotification(notification, "error", t("invalidImage"));
-      else if (!validSize)
-        showNotification(
-          notification,
-          "error",
-          t("invalidImageSize") + maxImageSizeMb + " mb"
-        );
-    }
+  function changeImage(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = handleChangeImage(e);
+    if (file) setImageSrc(URL.createObjectURL(file));
   }
 
   function handleClick() {
@@ -234,7 +221,7 @@ export default function Profile(props: ProfileProps) {
                 <Input
                   accept="image/*"
                   type="file"
-                  onChange={handleChangeImage}
+                  onChange={changeImage}
                   style={{ display: "none" }}
                   ref={fileInputRef}
                 />
@@ -289,7 +276,6 @@ export default function Profile(props: ProfileProps) {
                       className="form-control"
                     />
                   </Form.Item>
-                  {/* <LocationField onlyItem /> */}
                 </Col>
               </Row>
 
@@ -297,50 +283,14 @@ export default function Profile(props: ProfileProps) {
                 <>
                   <Row gutter={[15, 15]}>
                     <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                      <Form.Item
-                        name="tenure"
-                        label={t("tenure")}
-                        labelCol={{ span: 0 }}
-                        rules={[
-                          {
-                            required: true,
-                          },
-                        ]}
-                      >
-                        <InputNumberContainer
-                          min={0}
-                          parser={(value) => parseInt(value || "0", 10)}
-                          className="form-control"
-                          placeholder={t("tenure") + ` (${t("years")})`}
-                        />
-                      </Form.Item>
+                      <TenureField onlyItem />
                     </Col>
                     <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                      <Form.Item
-                        label={t("specialty")}
-                        labelCol={{ span: 0 }}
-                        name="specialty"
-                        rules={specialtyRules}
-                      >
-                        <InputContainer
-                          className="form-control"
-                          placeholder={t("specialty")}
-                        />
-                      </Form.Item>
+                      <SpecialtyField onlyItem />
                     </Col>
                   </Row>
 
-                  <Form.Item
-                    label={t("field")}
-                    labelCol={{ span: 0 }}
-                    name="aboutMe"
-                    rules={aboutMeRules}
-                  >
-                    <InputContainer
-                      className="form-control"
-                      placeholder={t("aboutMe")}
-                    />
-                  </Form.Item>
+                  <AboutMeField onlyItem />
                 </>
               )}
 

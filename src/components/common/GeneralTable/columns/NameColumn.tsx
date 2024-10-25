@@ -8,12 +8,15 @@ import { TableTypes } from "../../../../utilities/types";
 import { useContext } from "react";
 import { ListsContext } from "../../../../contexts/listsContext";
 import { SubUserProfile } from "../../../../models/Responses";
+import { getLabelFromRole } from "../../../../utilities/globalFunctions";
+import { useTranslation } from "react-i18next";
 
 export default function NameColumn(
   type: TableTypes,
   nameColumnHeader: string,
   hidden: boolean = false
 ) {
+  const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { categoryData } = context;
   let dataIndex = "title";
@@ -91,8 +94,8 @@ export default function NameColumn(
               {type == TableTypes.REQUIREMENT && categoryData
                 ? categoryData[(record as Requirement).category]?.value
                 : null}
-              {type == TableTypes.USERS && <>Vendedor</>}
-              {/** r3v*/}
+              {type == TableTypes.USERS &&
+                t(getLabelFromRole((record as SubUserProfile).typeID))}
             </div>
           )}
         </div>

@@ -8,6 +8,7 @@ interface PasswordFieldProps {
   name: string;
   confirmPassword?: boolean;
   onlyItem?: boolean;
+  fromMyPerfil?: boolean;
 }
 
 export default function PasswordField(props: PasswordFieldProps) {
@@ -30,7 +31,7 @@ export default function PasswordField(props: PasswordFieldProps) {
 
   if (props.onlyItem) return item;
   return (
-    <div className="t-flex ad-user">
+    <div className={`t-flex ${props.fromMyPerfil ? "f-column" : "ad-user"}`}>
       <div className="titulo-input">
         {props.confirmPassword ? t("confirmPassword") : t("newPassword")}
       </div>

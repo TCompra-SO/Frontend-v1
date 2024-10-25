@@ -4,6 +4,8 @@ export const ApiMainRoutes = {
   subUser: "subUser/",
   requirements: "requeriments/",
   requirement: "requeriment/",
+  image: "image/",
+  offers: "offers/",
 };
 
 export const ApiRoutes = {
@@ -49,18 +51,25 @@ export const ApiRoutes = {
     getUser: "getUser/",
   },
   requirements: {
-    getRequeriments: "getRequeriments/",
+    getRequirement: "getRequeriment/",
+    getRequirements: "getRequeriments/",
     create: "create/",
   },
   requirement: {
+    create: "create/",
+  },
+  image: {
+    uploadAvatar: "upload-avatar",
+  },
+  offers: {
     create: "create/",
   },
 };
 
 export const pageRoutes = {
   home: "/",
-  search: "/busqueda",
   profile: "/perfil",
+  productDetail: "/detalle",
   myRequirements: "/mis-requerimientos",
   myOffers: "/mis-ofertas",
   myPurchaseOrders: "/mis-ordenes-de-compra",

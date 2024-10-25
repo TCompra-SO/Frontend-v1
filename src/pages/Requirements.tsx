@@ -24,7 +24,11 @@ import useApi from "../hooks/useApi";
 import { getRequirementsService } from "../services/requests/requirementService";
 import { transformDataToRequirement } from "../utilities/transform";
 import { useLocation } from "react-router-dom";
-import { equalServices, getRouteType } from "../utilities/globalFunctions";
+import {
+  equalServices,
+  getLabelFromRequirementType,
+  getRouteType,
+} from "../utilities/globalFunctions";
 import { useSelector } from "react-redux";
 import { MainState, UserState } from "../models/Redux";
 import { getUserService } from "../services/requests/authService";
@@ -694,8 +698,9 @@ const offerList: Offer[] = [
       tenure: 2,
       customerScore: 3.5,
       sellerScore: 1.5,
-      customerCount: 0,
-      sellerCount: 0,
+      customerCount: 999,
+      sellerCount: 12,
+      document: "1072184858",
     },
     subUser: {
       uid: "user1",
@@ -737,6 +742,7 @@ const offerList: Offer[] = [
     publishDate: "2024-09-12T20:36:45.673Z",
     selectionDate: "2024-09-12T20:36:45.673Z",
     state: OfferState.CANCELED,
+    canceledByCreator: true,
     type: RequirementType.GOOD,
     user: {
       uid: "WpIPS18MYqNWegvx5REP",
@@ -916,6 +922,7 @@ const offerList: Offer[] = [
     location: 11,
     warrantyTime: TimeMeasurement.MONTHS,
     state: OfferState.CANCELED,
+    canceledByCreator: false,
     type: RequirementType.GOOD,
     user: {
       uid: "WpIPS18MYqNWegvx5REP",
@@ -1030,15 +1037,13 @@ const offerList: Offer[] = [
 ];
 
 export default function Requirements() {
-  const location = useLocation();
   const { t } = useTranslation();
   const { message } = App.useApp();
-  const [type] = useState(getRouteType(location.pathname));
+  const location = useLocation();
+  const [type, setType] = useState(getRouteType(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
-
-  // console.log(dataUser, mainDataUser);
 
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -1047,9 +1052,9 @@ export default function Requirements() {
   const [tableContent, setTableContent] = useState<TableTypeRequirement>({
     type: TableTypes.REQUIREMENT,
     data: [], //requirements
-    subType: RequirementType.GOOD,
+    subType: type,
     hiddenColumns: [TableColumns.CATEGORY],
-    nameColumnHeader: t("goods"),
+    nameColumnHeader: t(getLabelFromRequirementType(type)),
     onButtonClick: handleOnButtonClick,
   });
 
@@ -1064,9 +1069,19 @@ export default function Requirements() {
     dataToSend: apiParams.dataToSend,
   });
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    setType(getRouteType(location.pathname));
+  }, [location]);
+
+  useEffect(() => {
+    setTableContent((prev) => {
+      return {
+        ...prev,
+        subType: type,
+        nameColumnHeader: t(getLabelFromRequirementType(type)),
+      };
+    });
+  }, [type]);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
@@ -1078,6 +1093,13 @@ export default function Requirements() {
       if (equalServices(apiParams.service, getRequirementsService())) setData();
     }
   }, [responseData, error]);
+
+  // useEffect(() => {
+  //   if (equalServices(apiParams.service, getUserService("")))
+  //     if (loading) showLoadingMessage(message);
+  //     else destroyMessage(message);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [loading]);
 
   async function setData() {
     if (responseData) {
@@ -1219,13 +1241,7 @@ export default function Requirements() {
       <TablePageContent
         title={t("myRequirements")}
         titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
-        subtitle={`${t("listOf")} ${t(
-          type == RequirementType.GOOD
-            ? "goods"
-            : type == RequirementType.SERVICE
-            ? "services"
-            : "sales"
-        )}`}
+        subtitle={`${t("listOf")} ${t(getLabelFromRequirementType(type))}`}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
         onSearch={handleSearch}

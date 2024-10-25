@@ -75,4 +75,9 @@ export const Lengths = {
     min: 0,
     max: 255,
   },
+
+  tenure: {
+    min: 1,
+    max: 3,
+  },
 };

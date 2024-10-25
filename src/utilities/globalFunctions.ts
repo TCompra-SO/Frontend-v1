@@ -6,8 +6,13 @@ import {
   useApiParams,
 } from "../models/Interfaces";
 import { defaultCountry, maxDocSizeMb, maxImageSizeMb } from "./globals";
-import { PurchaseOrderTableTypes, RequirementType, UserClass } from "./types";
-import { pageSubRoutes } from "./routes";
+import {
+  PurchaseOrderTableTypes,
+  RequirementType,
+  UserClass,
+  UserRoles,
+} from "./types";
+import { pageRoutes, pageSubRoutes } from "./routes";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import dayjs from "dayjs";
 
@@ -93,20 +98,28 @@ export function getLabelFromRequirementType(
 }
 
 // Retorna la llave del nombre del tipo de orden de compra
-export function getLabelFromPurchaseOrderType(type: PurchaseOrderTableTypes) {
+export function getLabelFromPurchaseOrderType(
+  type: PurchaseOrderTableTypes,
+  plural: boolean = false,
+  onlyTwoLabels: boolean = true
+) {
   switch (type) {
-    case PurchaseOrderTableTypes.ISSUED:
     case PurchaseOrderTableTypes.ISSUED_SALES:
-      return "issued";
-    case PurchaseOrderTableTypes.RECEIVED:
+      if (!onlyTwoLabels) return "issuedPlSales";
+      return plural ? "issuedPl" : "issued";
+    case PurchaseOrderTableTypes.ISSUED:
+      return plural ? "issuedPl" : "issued";
     case PurchaseOrderTableTypes.RECEIVED_SALES:
-      return "received";
+      if (!onlyTwoLabels) return "receivedPlSales";
+      return plural ? "receivedPl" : "received";
+    case PurchaseOrderTableTypes.RECEIVED:
+      return plural ? "receivedPl" : "received";
   }
 }
 
 // Retorna el puntaje
-export function getScore(score: number) {
-  return score.toFixed(0);
+export function getScore(score: number | undefined) {
+  return score ? score.toFixed(0) : 0;
 }
 
 // Abre documento en una nueva ventana
@@ -130,6 +143,28 @@ export function getRouteType(pathname: string) {
     default:
       return RequirementType.GOOD;
   }
+}
+
+export function getPurchaseOrderType(pathname: string) {
+  const lastSegment = getLastSegmentFromRoute(pathname);
+  switch (lastSegment) {
+    case pageSubRoutes.issued:
+      return PurchaseOrderTableTypes.ISSUED;
+    case pageSubRoutes.issuedSales:
+      return PurchaseOrderTableTypes.ISSUED_SALES;
+    case pageSubRoutes.received:
+      return PurchaseOrderTableTypes.RECEIVED;
+    case pageSubRoutes.receivedSales:
+      return PurchaseOrderTableTypes.RECEIVED_SALES;
+    default:
+      return PurchaseOrderTableTypes.ISSUED;
+  }
+}
+
+export function isHome(pathname: string) {
+  const lastSegment = getLastSegmentFromRoute(pathname);
+  const home = getLastSegmentFromRoute(pageRoutes.home);
+  return lastSegment === home;
 }
 
 export function getLastSegmentFromRoute(pathname: string) {
@@ -171,4 +206,22 @@ export default async function makeRequest<T = any>({
     }
   }
   return { responseData, error };
+}
+
+// Retorna la llave del nombre del tipo de requerimiento
+export function getLabelFromRole(type: UserRoles) {
+  switch (type) {
+    case UserRoles.ADMIN:
+      return "admin";
+    case UserRoles.LEGAL:
+      return "legal";
+    case UserRoles.SELLER:
+      return "seller";
+    case UserRoles.BUYER:
+      return "buyer";
+    case UserRoles.SELLER_BUYER:
+      return "sellerBuyer";
+    case UserRoles.NONE:
+      return "none";
+  }
 }

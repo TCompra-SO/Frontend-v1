@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { CSSProperties, useState } from "react";
 import ButtonContainer from "../../containers/ButtonContainer";
 import ImageContainer from "../../containers/ImageContainer";
 import { useTranslation } from "react-i18next";
@@ -8,10 +8,16 @@ import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
 import { RolesForSection } from "../../../utilities/roles";
 
-export default function Sidebar() {
+interface SidebarProps {
+  showMenu: boolean;
+  onShowMenu: (show: boolean) => void;
+}
+
+export default function Sidebar(props: SidebarProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const typeID = useSelector((state: MainState) => state.user.typeID);
+  const [menuStyle] = useState<CSSProperties>({ display: "block" });
   const menuReq: string = "menuReq";
   const menuOff: string = "menuOff";
   const menuPurch: string = "menuPurch";
@@ -19,7 +25,6 @@ export default function Sidebar() {
   const menuAllOff: string = "menuAllOff";
   const menuAllPurch: string = "menuAllPurch";
   const menuCert: string = "menuCert";
-  const menuStat: string = "menuStat";
   const [menuVisibility, setMenuVisibility] = useState<{
     [key: string]: boolean;
   }>({});
@@ -33,19 +38,26 @@ export default function Sidebar() {
   }
 
   function redirectTo(route: string) {
-    console.log(route);
     navigate(route);
   }
 
   return (
-    <div className="col-menu t-flex">
-      <i className="fa-solid fa-circle-xmark btn-close"></i>
+    <div
+      className="col-menu t-flex"
+      style={props.showMenu ? menuStyle : undefined}
+    >
+      {props.showMenu && (
+        <i
+          className="fa-solid fa-circle-xmark btn-close"
+          onClick={() => props.onShowMenu(false)}
+        ></i>
+      )}
       <div>
         <ImageContainer
           src="/src/assets/images/logo-white.svg"
-          style={{ width: "100%", cursor: "pointer" }}
+          style={{ width: "100%" }}
           preview={false}
-          onClick={() => redirectTo(pageRoutes.home)}
+          // onClick={() => redirectTo(pageRoutes.home)}
         ></ImageContainer>
       </div>
 
@@ -273,7 +285,7 @@ export default function Sidebar() {
               children={
                 <>
                   <i className="fa-regular fa-paste text-center i-btn"></i>{" "}
-                  {t("goods")}{" "}
+                  {t("requirements")}{" "}
                   <i className="fa-solid fa-chevron-down i-sub text-center"></i>
                 </>
               }
@@ -516,7 +528,7 @@ export default function Sidebar() {
             }
             common
             className={buttonClass}
-            onClick={() => toggleMenu(menuStat)}
+            onClick={() => redirectTo(`${pageRoutes.statistics}`)}
           />
         )}
       </div>

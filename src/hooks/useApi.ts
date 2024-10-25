@@ -16,7 +16,7 @@ export default function useApi<T = any>({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [error, setError] = useState<AxiosError<any, any> | null>(null);
 
-  async function fetchData() {
+  async function fetchData(includeHeader: boolean = true) {
     setResponseData(null);
     setErrorMsg(null);
     setError(null);
@@ -27,11 +27,16 @@ export default function useApi<T = any>({
           method: method,
           url: service.url,
           data: dataToSend,
-          headers: {
-            Authorization: token ? `Bearer ${token}` : undefined,
-            "Content-Type": "application/json",
-          },
+          headers: includeHeader
+            ? {
+                Authorization: token ? `Bearer ${token}` : undefined,
+                "Content-Type": "application/json",
+              }
+            : {
+                Authorization: token ? `Bearer ${token}` : undefined,
+              },
         };
+        console.log(config);
         const result: AxiosResponse = await axios(config);
         setResponseData(result.data);
       } catch (err) {

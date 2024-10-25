@@ -15,7 +15,7 @@ export default function AddCertificatesModal() {
   const [nameList, setNameList] = useState<string[]>([""]);
   const uid = useSelector((state: MainState) => state.mainUser.uid);
   const name = useSelector((state: MainState) => state.mainUser.name);
-  // const doc = useSelector((state: MainState) => state.mainUser.document); //r3v
+  const doc = useSelector((state: MainState) => state.mainUser.document);
   const fileInputRefs = useRef<(InputRef | null)[]>([]);
 
   useEffect(() => {
@@ -120,7 +120,7 @@ export default function AddCertificatesModal() {
         <div className="t-flex gap-15 datos-empresa">
           <div className="card-ofertas cert-datos dato-empresa">{name}</div>
           <div className="card-ofertas cert-datos dato-empresa">
-            {t("document")}: 12346598779
+            {t("document")}: {doc}
           </div>
         </div>
         <div className="t-flex t-wrap up-footer">

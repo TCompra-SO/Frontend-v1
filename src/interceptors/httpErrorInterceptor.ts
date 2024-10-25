@@ -9,6 +9,7 @@ import {
   sendCodeService,
   validateCodeService,
 } from "../services/requests/authService";
+import { createOfferService } from "../services/requests/offerService";
 import {
   changeRoleSubUserService,
   registerSubUserService,
@@ -161,6 +162,22 @@ export default function httpErrorInterceptor(error: any, type: string): string {
       switch (code) {
         case 404:
           erroMsg = "userNotFound";
+          break;
+      }
+      break;
+    case createOfferService().type:
+      switch (code) {
+        case 403:
+          erroMsg = "errorOccurredLoginAgain";
+          break;
+        case 409:
+          erroMsg = "alreadyMadeOffer";
+          break;
+        case 404:
+          erroMsg = "cantOfferToYourOwnRequirement";
+          break;
+        case 401:
+          erroMsg = "requirementNotFound";
           break;
       }
       break;

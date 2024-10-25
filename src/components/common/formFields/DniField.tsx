@@ -1,59 +1,66 @@
-import { useDniRules } from "../../../hooks/validators";
+import { useDniRules, useRucRules } from "../../../hooks/validators";
 import { DocType } from "../../../utilities/types";
 import { Form } from "antd";
 import InputContainer from "../../containers/InputContainer";
 import { useTranslation } from "react-i18next";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 
 interface DniFieldProps {
-  getUserName: () => void;
-  resetFields: (fields?: string[]) => void;
+  getUserName?: () => void;
+  onChange?: () => void;
   edit?: boolean;
   value?: string;
   onlyItem?: boolean;
+  isDni: boolean;
+  fromMyPerfil?: boolean;
+  includeSearch?: boolean;
 }
 
 export default function DniField(props: DniFieldProps) {
   const { t } = useTranslation();
   const { dniRules } = useDniRules(true);
-  const [value] = useState(props.value);
+  const { rucRules } = useRucRules(true);
+
   const item: ReactNode = (
     <Form.Item
       label={t("document")}
       name="document"
       labelCol={{ span: 0 }}
-      rules={dniRules}
-      initialValue={value}
+      // rules={props.isDni ? dniRules : rucRules}
+      initialValue={props.value}
     >
       <div className="t-flex" style={{ alignItems: "center" }}>
         <InputContainer
           type="text"
           className="form-control"
-          onChange={() => props.resetFields(["fullname"])}
+          onChange={props.onChange}
           disabled={props.edit}
-          value={value}
-          placeholder={DocType.DNI}
+          placeholder={props.isDni ? DocType.DNI : DocType.RUC}
         />
-        <i
-          onClick={props.edit ? () => {} : props.getUserName}
-          className="fas fa-search"
-          style={{
-            marginLeft: "7px",
-            cursor: "pointer",
-            background: "#ffe9f7",
-            color: "#bc1373",
-            padding: "13px",
-            borderRadius: "0.6rem",
-          }}
-        ></i>
+        {props.includeSearch && (
+          <i
+            onClick={props.edit ? () => {} : props.getUserName}
+            className="fas fa-search"
+            style={{
+              marginLeft: "7px",
+              cursor: "pointer",
+              background: "#ffe9f7",
+              color: "#bc1373",
+              padding: "13px",
+              borderRadius: "0.6rem",
+            }}
+          ></i>
+        )}
       </div>
     </Form.Item>
   );
 
   if (props.onlyItem) return item;
   return (
-    <div className="t-flex ad-user">
-      <div className="titulo-input">{DocType.DNI}</div>
+    <div className={`t-flex ${props.fromMyPerfil ? "datos-input" : "ad-user"}`}>
+      <div className="titulo-input">
+        {props.isDni ? DocType.DNI : DocType.RUC}
+      </div>
       {item}
     </div>
   );

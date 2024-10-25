@@ -12,14 +12,6 @@ export const RolesForSection: {
     [UserRoles.SELLER]: true,
     [UserRoles.SELLER_BUYER]: true,
   },
-  search: {
-    [UserRoles.ADMIN]: true,
-    [UserRoles.BUYER]: true,
-    [UserRoles.LEGAL]: true,
-    [UserRoles.SELLER]: true,
-    [UserRoles.SELLER_BUYER]: true,
-    [UserRoles.NONE]: false,
-  },
   myRequirements: {
     [UserRoles.ADMIN]: true,
     [UserRoles.BUYER]: true,
@@ -107,6 +99,14 @@ export const RolesForSection: {
     [UserRoles.SELLER]: false,
     [UserRoles.BUYER]: false,
     [UserRoles.LEGAL]: false,
+  },
+  productDetail: {
+    [UserRoles.NONE]: true,
+    [UserRoles.ADMIN]: true,
+    [UserRoles.SELLER_BUYER]: true,
+    [UserRoles.SELLER]: true,
+    [UserRoles.BUYER]: true,
+    [UserRoles.LEGAL]: true,
   },
 };
 

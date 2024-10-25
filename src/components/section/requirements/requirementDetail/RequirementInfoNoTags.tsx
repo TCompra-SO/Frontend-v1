@@ -1,13 +1,11 @@
 import { Tooltip } from "antd";
 import SubUserName from "../../../common/SubUserName";
-import {
-  getLabelFromRequirementType,
-  getScore,
-} from "../../../../utilities/globalFunctions";
+import { getLabelFromRequirementType } from "../../../../utilities/globalFunctions";
 import { useTranslation } from "react-i18next";
 import { BaseUser } from "../../../../models/MainInterfaces";
 import { RequirementType } from "../../../../utilities/types";
 import DescriptionParagraph from "../../../common/DescriptionParagraph";
+import RateStarCount from "../../../common/RateStarCount";
 
 interface RequirementInfoNoTagsProps {
   title: string;
@@ -36,23 +34,18 @@ export default function RequirementInfoNoTags(
         <div className="badge-second">
           {t(getLabelFromRequirementType(props.type))}
         </div>
-        <div className="puntuacion">
-          <i className="fa-solid fa-star p-start"></i>
-          <div className="valor-start">
-            {getScore(
-              props.type == RequirementType.SALE
-                ? props.user.sellerScore ?? 0
-                : props.user.customerScore ?? 0
-            )}
-          </div>
-          <b className="p-cantidad">
-            (
-            {props.type == RequirementType.SALE
+        <RateStarCount
+          score={
+            props.type == RequirementType.SALE
+              ? props.user.sellerScore
+              : props.user.customerScore
+          }
+          count={
+            props.type == RequirementType.SALE
               ? props.user.sellerCount
-              : props.user.customerCount}
-            )
-          </b>
-        </div>
+              : props.user.customerCount
+          }
+        />
       </div>
 
       <DescriptionParagraph text={props.description} />

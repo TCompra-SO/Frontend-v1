@@ -42,6 +42,8 @@ export interface Requirement extends BasicRequirement {
   warrantyTime?: TimeMeasurement;
   used?: Usage;
   deliveryTime: number;
+  paymentMethod: number;
+  allowedBidder: number;
 }
 
 export interface BasicOffer extends BaseRequirementOffer {
@@ -67,6 +69,7 @@ export interface Offer extends BasicOffer {
   igv?: boolean;
   deliveryDate?: string;
   delivered?: boolean;
+  canceledByCreator?: boolean;
 }
 
 export interface BasicPurchaseOrder extends BaseInterface {
@@ -93,6 +96,7 @@ export interface User extends BaseUser {
 export interface BaseUser {
   uid: string;
   name: string;
+  document: string;
   image?: string;
   email: string;
   tenure?: number;

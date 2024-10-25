@@ -6,6 +6,13 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
+      // Stars
+      noRate: "Not rated",
+      veryPoorRate: "Very poor",
+      poorRate: "Poor",
+      neutralRate: "Neutral",
+      goodRate: "Good",
+      excellentRate: "Excellent",
       // Column names
       actionColumn: "Actions",
       categoryColumn: "Category",
@@ -99,7 +106,8 @@ const resources = {
       selectDifferentCategories: "Categories must be different",
       mustIndicateReasonCancellation:
         "Please provide a reason for the cancellation",
-      mustUploadAFileAndProvideNameForEachItem: "You must upload a file and provide a name for each item",
+      mustUploadAFileAndProvideNameForEachItem:
+        "You must upload a file and provide a name for each item",
       // Profile
       sentValidationCode: "Code was sent successfully",
       timerResendValidationCode: "You can resend the code in ",
@@ -211,6 +219,12 @@ const resources = {
       editListOfDocumentsToRequest: "Edit list of documents to request",
       certifyYourCompany: "Certify your company",
       improveYourCompanysImage: "Improve significantly your company's image.",
+      cantOfferToYourOwnRequirement:"You cannot offer to your own requirement",
+      alreadyMadeOffer: "You have already made an offer on this requirement",
+      requirementNotFound: "The requirement could not be found",
+      errorOccurredLoginAgain: "An error occurred. Log in again",
+      offerCreatedSuccessfully: "Offer created successfully",
+      imageUpdatedSuccessfully: "Image updated successfully",
       // Other
       yes: "Yes",
       no: "No",
@@ -299,7 +313,7 @@ const resources = {
       editEmployee: "Edit employee",
       fullname: "Fullname",
       userType: "User type",
-      submit:  "Submit",
+      submit: "Submit",
       document: "Document",
       user: "User",
       quantity: "Quantity",
@@ -336,11 +350,26 @@ const resources = {
       employees: "Employees",
       issuedOrders: "Issued orders",
       receivedOrders: "Received orders",
-      personalData: "Personal data"
+      personalData: "Personal data",
+      priceIncludesIGV: "Price includes I. G. V.",
+      includeDelivery: "Include delivery",
+      home: "Home",
+      admin: "Administrator",
+      buyer: "Buyer",
+      sellerBuyer: "Supplier / Buyer",
+      none: "None",
+      legal: "Legal"
     },
   },
   es: {
     translation: {
+      // Stars
+      noRate: "Sin valoración",
+      veryPoorRate: "Muy deficiente",
+      poorRate: "Deficiente",
+      neutralRate: "Neutral",
+      goodRate: "Bueno",
+      excellentRate: "Excelente",
       // Column names
       actionColumn: "Acciones",
       categoryColumn: "Rubro",
@@ -463,7 +492,8 @@ const resources = {
       deleteRequirementConfirmation:
         "¿Está seguro de eliminar el requerimiento?",
       deleteOfferConfirmation: "¿Está seguro de eliminar la oferta?",
-      mustUploadAFileAndProvideNameForEachItem: "Debe subir un archivo y escribir un nombre por cada item",
+      mustUploadAFileAndProvideNameForEachItem:
+        "Debe subir un archivo y escribir un nombre por cada item",
       // Action
       showOffers: "Ver ofertas",
       delete: "Eliminar",
@@ -536,8 +566,10 @@ const resources = {
       noCompanyFoundForSubUser: "No se encontró la empresa para el usuario",
       emailDocAlreadyRegistered: "Documento o email ya registrado",
       subUserPasswordIsDocument: "La contraseña del usuario es su documento",
-      cantAssignAdmintoSubUser: "No se puede asignar rol de administrador a subusuario",
-      subUserNotFoundInAnyCompany: "Subusuario no encontrado en ninguna empresa",
+      cantAssignAdmintoSubUser:
+        "No se puede asignar rol de administrador a subusuario",
+      subUserNotFoundInAnyCompany:
+        "Subusuario no encontrado en ninguna empresa",
       profileDoesNotExist: "Perfil no existe",
       userUpdatedSuccessfully: "Usuario actualizado exitosamente",
       createRequirementSuccess: "Requerimiento creado exitosamente",
@@ -546,6 +578,12 @@ const resources = {
       editListOfDocumentsToRequest: "Editar lista de documentos a solicitar",
       certifyYourCompany: "Certifica tu empresa",
       improveYourCompanysImage: "Mejora notablemente la imagen de tu empresa.",
+      cantOfferToYourOwnRequirement:"No puedes ofertar a tu propio requerimiento",
+      alreadyMadeOffer: "Ya haz realizado una oferta a este requerimiento",
+      requirementNotFound: "No se ha podido encontrar el requerimiento",
+      errorOccurredLoginAgain: "Se produjo un error. Inicie sesión nuevamente",
+      offerCreatedSuccessfully: "Oferta creada exitosamente",
+      imageUpdatedSuccessfully: "Imagen actualizada exitosamente",
       // Other
       yes: "Sí",
       no: "No",
@@ -636,7 +674,7 @@ const resources = {
       editEmployee: "Editar trabajador",
       fullname: "Nombre completo",
       userType: "Tipo de usuario",
-      submit:  "Enviar",
+      submit: "Enviar",
       document: "Documento",
       user: "Usuario",
       quantity: "Cantidad",
@@ -649,6 +687,8 @@ const resources = {
       received: "Recibida",
       issuedPl: "Emitidas",
       receivedPl: "Recibidas",
+      issuedPlSales: "Emitidas - Liquidaciones",
+      receivedPlSales: "Recibidas - Liquidaciones",
       receivedPlMasc: "Recibidos",
       myDocuments: "Mis documentos",
       sent: "Enviado",
@@ -673,7 +713,15 @@ const resources = {
       employees: "Trabajadores",
       issuedOrders: "Órdenes emitidas",
       receivedOrders: "Órdenes recibidas",
-      personalData: "Datos personales"
+      personalData: "Datos personales",
+      priceIncludesIGV: "Precio incluye I. G. V.",
+      includeDelivery: "Incluye envío",
+      home: "Página principal",
+      admin: "Administrador",
+      buyer: "Comprador",
+      sellerBuyer: "Vendedor / Comprador",
+      none: "Ninguno",
+      legal: "Legal"
     },
   },
 };

@@ -12,6 +12,7 @@ import {
   RequirementState,
   RequirementType,
   TableTypes,
+  UserRoles,
 } from "../utilities/types";
 import { TableTypeUsers, useApiParams } from "../models/Interfaces";
 import { mainModalScrollStyle } from "../utilities/globals";
@@ -57,6 +58,7 @@ const users: SubUserProfile[] = [
     customerCount: 0,
     sellerCount: 0,
     typeEntity: EntityType.COMPANY,
+    typeID: UserRoles.BUYER,
   },
   {
     uid: "user2",
@@ -83,6 +85,7 @@ const users: SubUserProfile[] = [
     customerCount: 0,
     sellerCount: 0,
     typeEntity: EntityType.COMPANY,
+    typeID: UserRoles.LEGAL,
   },
   {
     uid: "user3",
@@ -109,6 +112,7 @@ const users: SubUserProfile[] = [
     customerCount: 0,
     sellerCount: 0,
     typeEntity: EntityType.COMPANY,
+    typeID: UserRoles.SELLER,
   },
   {
     uid: "user4",
@@ -135,6 +139,7 @@ const users: SubUserProfile[] = [
     customerCount: 0,
     sellerCount: 0,
     typeEntity: EntityType.COMPANY,
+    typeID: UserRoles.SELLER_BUYER,
   },
 ];
 

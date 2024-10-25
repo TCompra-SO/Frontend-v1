@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import TablePageContent from "../components/section/table-page/TablePageContent";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { TableTypeAllPurchaseOrders } from "../models/Interfaces";
 import {
   Action,
@@ -12,6 +12,11 @@ import {
   TableTypes,
 } from "../utilities/types";
 import { BasicPurchaseOrder, PurchaseOrder } from "../models/MainInterfaces";
+import {
+  getLabelFromPurchaseOrderType,
+  getPurchaseOrderType,
+} from "../utilities/globalFunctions";
+import { useLocation } from "react-router-dom";
 
 const purchaseOrderList: PurchaseOrder[] = [
   {
@@ -92,6 +97,8 @@ const purchaseOrderList: PurchaseOrder[] = [
 ];
 export default function AllOffers() {
   const { t } = useTranslation();
+  const location = useLocation();
+  const [type, setType] = useState(getPurchaseOrderType(location.pathname));
   const [tableContent, setTableContent] = useState<TableTypeAllPurchaseOrders>({
     type: TableTypes.ALL_PURCHASE_ORDERS,
     data: purchaseOrderList, //[]
@@ -100,6 +107,19 @@ export default function AllOffers() {
     nameColumnHeader: t("user"),
     onButtonClick: handleOnButtonClick,
   });
+
+  useEffect(() => {
+    setType(getPurchaseOrderType(location.pathname));
+  }, [location]);
+
+  useEffect(() => {
+    setTableContent((prev) => {
+      return {
+        ...prev,
+        subType: type,
+      };
+    });
+  }, [type]);
 
   function handleSearch(e: ChangeEvent<HTMLInputElement>) {
     console.log(e.target.value);
@@ -114,7 +134,9 @@ export default function AllOffers() {
     <TablePageContent
       title={t("offers")}
       titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
-      subtitle={`${t("listOf")} ${t("goods")}`}
+      subtitle={`${t("listOf")} ${t(
+        getLabelFromPurchaseOrderType(type, true, false)
+      )}`}
       subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
       table={tableContent}
       onSearch={handleSearch}
