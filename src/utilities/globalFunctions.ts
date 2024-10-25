@@ -6,7 +6,12 @@ import {
   useApiParams,
 } from "../models/Interfaces";
 import { defaultCountry, maxDocSizeMb, maxImageSizeMb } from "./globals";
-import { PurchaseOrderTableTypes, RequirementType, UserClass } from "./types";
+import {
+  PurchaseOrderTableTypes,
+  RequirementType,
+  UserClass,
+  UserRoles,
+} from "./types";
 import { pageRoutes, pageSubRoutes } from "./routes";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import dayjs from "dayjs";
@@ -201,4 +206,22 @@ export default async function makeRequest<T = any>({
     }
   }
   return { responseData, error };
+}
+
+// Retorna la llave del nombre del tipo de requerimiento
+export function getLabelFromRole(type: UserRoles) {
+  switch (type) {
+    case UserRoles.ADMIN:
+      return "admin";
+    case UserRoles.LEGAL:
+      return "legal";
+    case UserRoles.SELLER:
+      return "seller";
+    case UserRoles.BUYER:
+      return "buyer";
+    case UserRoles.SELLER_BUYER:
+      return "sellerBuyer";
+    case UserRoles.NONE:
+      return "none";
+  }
 }

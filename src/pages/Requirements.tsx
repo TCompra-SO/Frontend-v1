@@ -700,6 +700,7 @@ const offerList: Offer[] = [
       sellerScore: 1.5,
       customerCount: 999,
       sellerCount: 12,
+      document: "1072184858",
     },
     subUser: {
       uid: "user1",
@@ -741,6 +742,7 @@ const offerList: Offer[] = [
     publishDate: "2024-09-12T20:36:45.673Z",
     selectionDate: "2024-09-12T20:36:45.673Z",
     state: OfferState.CANCELED,
+    canceledByCreator: true,
     type: RequirementType.GOOD,
     user: {
       uid: "WpIPS18MYqNWegvx5REP",
@@ -920,6 +922,7 @@ const offerList: Offer[] = [
     location: 11,
     warrantyTime: TimeMeasurement.MONTHS,
     state: OfferState.CANCELED,
+    canceledByCreator: false,
     type: RequirementType.GOOD,
     user: {
       uid: "WpIPS18MYqNWegvx5REP",

@@ -1,4 +1,4 @@
-import { Dropdown, MenuProps, Space } from "antd";
+import { Dropdown, Flex, MenuProps, Space } from "antd";
 import Premium from "../items/Premium";
 import Notification from "../items/Notification";
 import Chat from "../items/Chat";
@@ -142,7 +142,10 @@ function MainHeader(props: MainHeaderProps) {
           trigger={["click"]}
           placement="bottomRight"
         >
-          <i className="fa-regular fa-caret-down"></i>
+          <i
+            className="fa-regular fa-caret-down"
+            style={{ padding: "5px", marginLeft: "-5px", cursor: "pointer" }}
+          ></i>
         </Dropdown>
       </div>
     </div>

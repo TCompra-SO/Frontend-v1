@@ -67,12 +67,6 @@ export enum TableTypes {
   RECEIVED_CERT = 13,
 }
 
-// export enum EntityType {
-//   COMPANY = 0,
-//   PERSON = 1,
-//   SUBUSER = 2,
-// }
-
 export enum EntityType {
   COMPANY = "Company",
   PERSON = "User",

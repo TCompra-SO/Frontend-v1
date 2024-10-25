@@ -37,7 +37,7 @@ const offerList: Offer[] = [
     deliveryDate: "2024-09-12T20:36:45.673Z",
     location: 12,
     warrantyTime: TimeMeasurement.MONTHS,
-    state: OfferState.ACTIVE,
+    state: OfferState.CANCELED,
     type: RequirementType.GOOD,
     user: {
       uid: "user1",
@@ -79,6 +79,7 @@ const offerList: Offer[] = [
     document: [
       "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
     ],
+    canceledByCreator: false,
   },
   {
     key: "2",
@@ -126,6 +127,7 @@ const offerList: Offer[] = [
       customerCount: 0,
       sellerCount: 0,
     },
+    canceledByCreator: true,
   },
   {
     key: "3",
@@ -287,6 +289,7 @@ const offerList: Offer[] = [
       customerCount: 0,
       sellerCount: 0,
     },
+    canceledByCreator: false,
   },
   {
     key: "8",

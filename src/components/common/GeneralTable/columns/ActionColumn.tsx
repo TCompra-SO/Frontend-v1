@@ -15,6 +15,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { allItems } from "../../../../utilities/globals";
 import { ItemType } from "antd/es/menu/interface";
+import { Offer } from "../../../../models/MainInterfaces";
 
 // extraParam tiene diferentes significados según el tipo de tabla
 export default function ActionColumn(
@@ -43,7 +44,7 @@ export default function ActionColumn(
           break;
         case TableTypes.ALL_OFFERS:
         case TableTypes.OFFER:
-          ActionByState = ActionByStateOffer; // r3v determinar si se debe mostrar calificar en oferta cancelada
+          ActionByState = ActionByStateOffer;
           key = record.state;
           break;
         case TableTypes.USERS:
@@ -66,13 +67,30 @@ export default function ActionColumn(
           menu={{
             items:
               type != TableTypes.PURCHASE_ORDER
-                ? ActionByState[key].map((action: Action) => {
-                    return {
-                      key: action,
-                      label: t(ActionLabel[action]),
-                      onClick: () => onButtonClick(action, record),
-                    };
-                  })
+                ? type == TableTypes.OFFER
+                  ? ActionByState[key].reduce<ItemType[]>(
+                      (acc, action: Action) => {
+                        const canceledByCreator = (record as Offer)
+                          .canceledByCreator;
+                        if (action == Action.RATE_CANCELED && canceledByCreator)
+                          return acc;
+                        else
+                          acc.push({
+                            key: action,
+                            label: t(ActionLabel[action]),
+                            onClick: () => onButtonClick(action, record),
+                          });
+                        return acc;
+                      },
+                      []
+                    )
+                  : ActionByState[key].map((action: Action) => {
+                      return {
+                        key: action,
+                        label: t(ActionLabel[action]),
+                        onClick: () => onButtonClick(action, record),
+                      };
+                    })
                 : ActionByState[key].reduce<ItemType[]>(
                     (acc, action: Action) => {
                       if (

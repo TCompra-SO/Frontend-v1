@@ -353,7 +353,12 @@ const resources = {
       personalData: "Personal data",
       priceIncludesIGV: "Price includes I. G. V.",
       includeDelivery: "Include delivery",
-      home: "Home"
+      home: "Home",
+      admin: "Administrator",
+      buyer: "Buyer",
+      sellerBuyer: "Supplier / Buyer",
+      none: "None",
+      legal: "Legal"
     },
   },
   es: {
@@ -711,7 +716,12 @@ const resources = {
       personalData: "Datos personales",
       priceIncludesIGV: "Precio incluye I. G. V.",
       includeDelivery: "Incluye envío",
-      home: "Página principal"
+      home: "Página principal",
+      admin: "Administrador",
+      buyer: "Comprador",
+      sellerBuyer: "Vendedor / Comprador",
+      none: "Ninguno",
+      legal: "Legal"
     },
   },
 };

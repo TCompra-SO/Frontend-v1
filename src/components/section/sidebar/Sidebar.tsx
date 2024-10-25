@@ -46,10 +46,12 @@ export default function Sidebar(props: SidebarProps) {
       className="col-menu t-flex"
       style={props.showMenu ? menuStyle : undefined}
     >
-      <i
-        className="fa-solid fa-circle-xmark btn-close"
-        onClick={() => props.onShowMenu(false)}
-      ></i>
+      {props.showMenu && (
+        <i
+          className="fa-solid fa-circle-xmark btn-close"
+          onClick={() => props.onShowMenu(false)}
+        ></i>
+      )}
       <div>
         <ImageContainer
           src="/src/assets/images/logo-white.svg"

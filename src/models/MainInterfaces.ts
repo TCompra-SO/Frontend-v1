@@ -69,6 +69,7 @@ export interface Offer extends BasicOffer {
   igv?: boolean;
   deliveryDate?: string;
   delivered?: boolean;
+  canceledByCreator?: boolean;
 }
 
 export interface BasicPurchaseOrder extends BaseInterface {

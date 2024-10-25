@@ -59,8 +59,10 @@ export default function RequirementOfferListItemHeader({
         key: Action.SELECT_OFFER,
         onClick: () => onOpenModal(Action.SELECT_OFFER),
       });
-    if (props.offer.state == OfferState.CANCELED)
-      // r3v creador de ofera canceló la oferta)
+    if (
+      props.offer.state == OfferState.CANCELED &&
+      props.offer.canceledByCreator
+    )
       items.push({
         label: t(ActionLabel[Action.RATE_CANCELED]),
         key: Action.RATE_CANCELED,
