@@ -7,7 +7,7 @@ import {
 } from "../models/Interfaces";
 import { defaultCountry, maxDocSizeMb, maxImageSizeMb } from "./globals";
 import { PurchaseOrderTableTypes, RequirementType, UserClass } from "./types";
-import { pageSubRoutes } from "./routes";
+import { pageRoutes, pageSubRoutes } from "./routes";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import dayjs from "dayjs";
 
@@ -101,10 +101,12 @@ export function getLabelFromPurchaseOrderType(
   switch (type) {
     case PurchaseOrderTableTypes.ISSUED_SALES:
       if (!onlyTwoLabels) return "issuedPlSales";
+      return plural ? "issuedPl" : "issued";
     case PurchaseOrderTableTypes.ISSUED:
       return plural ? "issuedPl" : "issued";
     case PurchaseOrderTableTypes.RECEIVED_SALES:
       if (!onlyTwoLabels) return "receivedPlSales";
+      return plural ? "receivedPl" : "received";
     case PurchaseOrderTableTypes.RECEIVED:
       return plural ? "receivedPl" : "received";
   }
@@ -152,6 +154,12 @@ export function getPurchaseOrderType(pathname: string) {
     default:
       return PurchaseOrderTableTypes.ISSUED;
   }
+}
+
+export function isHome(pathname: string) {
+  const lastSegment = getLastSegmentFromRoute(pathname);
+  const home = getLastSegmentFromRoute(pageRoutes.home);
+  return lastSegment === home;
 }
 
 export function getLastSegmentFromRoute(pathname: string) {

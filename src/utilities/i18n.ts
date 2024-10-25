@@ -352,7 +352,8 @@ const resources = {
       receivedOrders: "Received orders",
       personalData: "Personal data",
       priceIncludesIGV: "Price includes I. G. V.",
-      includeDelivery: "Include delivery"
+      includeDelivery: "Include delivery",
+      home: "Home"
     },
   },
   es: {
@@ -709,7 +710,8 @@ const resources = {
       receivedOrders: "Órdenes recibidas",
       personalData: "Datos personales",
       priceIncludesIGV: "Precio incluye I. G. V.",
-      includeDelivery: "Incluye envío"
+      includeDelivery: "Incluye envío",
+      home: "Página principal"
     },
   },
 };

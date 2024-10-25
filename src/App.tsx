@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from "react";
+import { CSSProperties, lazy, Suspense, useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { App as AntdApp, ConfigProvider, theme } from "antd";
 import LoadingCond from "./pages/utils/LoadingCond.tsx";
@@ -46,20 +46,28 @@ const CreateRequirementFloatButton = lazy(
 );
 const currentLanguage = i18n.language;
 
-const MainLayout = ({ children }: { children: React.ReactNode }) => (
-  <div className="t-flex">
-    <Sidebar />
+function MainLayout({ children }: { children: React.ReactNode }) {
+  const [showMenu, setShowMenu] = useState(false);
 
-    <div className="col-datos">
-      <MainHeader />
+  function handleShowMenu(show: boolean) {
+    setShowMenu(show);
+  }
 
-      <div className="tc-datos scroll-y">{children}</div>
-      {/* <Footer style={{ textAlign: "center" }}>
+  return (
+    <div className="t-flex">
+      <Sidebar showMenu={showMenu} onShowMenu={handleShowMenu} />
+
+      <div className="col-datos">
+        <MainHeader onShowMenu={handleShowMenu} />
+
+        <div className="tc-datos scroll-y">{children}</div>
+        {/* <Footer style={{ textAlign: "center" }}>
         TCompra ©{new Date().getFullYear()} Soluciones Online S. A. C.
       </Footer> */}
+      </div>
     </div>
-  </div>
-);
+  );
+}
 
 function App() {
   const dispatch = useDispatch();

@@ -4,17 +4,24 @@ import Notification from "../items/Notification";
 import Chat from "../items/Chat";
 import UserName from "../items/UserName";
 import Logout from "../items/Logout";
-import { useEffect, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import ProfileMenu from "../items/ProfileMenu";
 import useWindowSize from "../../../../hooks/useWindowSize";
 import { windowSize } from "../../../../utilities/globals";
 import { useTranslation } from "react-i18next";
 import { useLogout } from "../../../../hooks/authHook";
 
-function MainHeader() {
+interface MainHeaderProps {
+  onShowMenu: (show: boolean) => void;
+}
+
+function MainHeader(props: MainHeaderProps) {
   const { t } = useTranslation();
   const { width } = useWindowSize();
   const logout = useLogout();
+  const [showMenuButtonStyle, setShowMenuButtonStyle] = useState<CSSProperties>(
+    { display: "none" }
+  );
   const [dropdownItems, setDropdownItems] = useState([
     {
       key: "profile",
@@ -47,6 +54,7 @@ function MainHeader() {
 
   useEffect(() => {
     if (width > windowSize.md) {
+      setShowMenuButtonStyle({ display: "none" });
       setDropdownItems([
         {
           key: "profile",
@@ -106,13 +114,19 @@ function MainHeader() {
           ),
         },
       ]);
+      setShowMenuButtonStyle({});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [width]);
 
   return (
     <div className="t-flex header-tc">
-      <i className="fa-solid fa-bars-progress i-menu"></i>
+      <i
+        className="fa-solid fa-bars-progress i-menu"
+        style={showMenuButtonStyle}
+        onClick={() => props.onShowMenu(true)}
+      ></i>
+      <div></div>
 
       <div className="t-flex options-tc">
         {width > windowSize.md && (
