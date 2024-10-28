@@ -1,10 +1,15 @@
-import { BaseUser, FullUser, Requirement } from "../models/MainInterfaces";
+import {
+  BaseUser,
+  FullUser,
+  Offer,
+  Requirement,
+} from "../models/MainInterfaces";
 import { UserState } from "../models/Redux";
 import { getBaseDataUserService } from "../services/requests/authService";
 import makeRequest from "./globalFunctions";
 import { RequirementState, RequirementType, Usage } from "./types";
 
-export async function transformDataToRequirement(
+export function transformDataToRequirement(
   data: any,
   type: RequirementType,
   user: UserState | BaseUser,
@@ -21,26 +26,8 @@ export async function transformDataToRequirement(
   req.allowedBidder = data.allowed_bidersID;
   if (mainUser.uid != user.uid) {
     req.user = mainUser;
-    // req.user = {
-    //   document: "111111",
-    //   address: "address example",
-    //   phone: "9888888",
-    //   ...mainUser,
-    // };
     req.subUser = user;
-    // req.subUser = {
-    //   document: "111111",
-    //   address: "address example",
-    //   phone: "9888888",
-    //   ...user,
-    // };
   } else req.user = user;
-  // req.user = {
-  //   document: "111111",
-  //   address: "address example",
-  //   phone: "9888888",
-  //   ...user,
-  // };
   return req;
 }
 
@@ -105,4 +92,29 @@ export async function transformFromGetRequirementByIdToRequirement(
     return req;
   }
   return null;
+}
+
+export function transformToOffer(
+  data: any,
+  type: RequirementType,
+  user: UserState | BaseUser,
+  mainUser: UserState | BaseUser
+) {
+  const offer: Offer = data;
+  offer.key = data.uid;
+  offer.title = data.name;
+  offer.location = data.cityID;
+  offer.deliveryTime = data.deliveryTime;
+  offer.coin = data.currencyID;
+  offer.warrantyTime = data.timeMeasurementID;
+  offer.price = data.budget;
+  offer.igv = data.includesIGV;
+  offer.requirementId = data.requerimentID;
+  offer.state = data.stateID;
+  offer.type = type;
+  if (mainUser.uid != user.uid) {
+    offer.user = mainUser;
+    offer.subUser = user;
+  } else offer.user = user;
+  return offer;
 }

@@ -11,6 +11,7 @@ import {
 } from "../utilities/types";
 import { BasicRequirement, Requirement } from "../models/MainInterfaces";
 import {
+  equalServices,
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
@@ -690,6 +691,11 @@ export default function AllRequirements() {
       subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
       table={tableContent}
       onSearch={handleSearch}
+      // loading={
+      //   equalServices(apiParams.service, getRequirementsService())
+      //     ? loading
+      //     : undefined
+      // }
     />
   );
 }

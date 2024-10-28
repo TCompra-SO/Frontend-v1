@@ -70,6 +70,7 @@ export interface Offer extends BasicOffer {
   deliveryDate?: string;
   delivered?: boolean;
   canceledByCreator?: boolean;
+  includesDelivery?: boolean;
 }
 
 export interface BasicPurchaseOrder extends BaseInterface {

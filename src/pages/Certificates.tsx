@@ -15,7 +15,10 @@ import {
 } from "../utilities/types";
 import { useTranslation } from "react-i18next";
 import { CertificateFile, CertificationItem } from "../models/MainInterfaces";
-import { getLastSegmentFromRoute } from "../utilities/globalFunctions";
+import {
+  equalServices,
+  getLastSegmentFromRoute,
+} from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
 import { pageSubRoutes } from "../utilities/routes";
 import { App } from "antd";
@@ -181,6 +184,11 @@ export default function Certificates() {
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
         hideSearch={true}
+        // loading={
+        //   equalServices(apiParams.service, getRequirementsService())
+        //     ? loading
+        //     : undefined
+        // }
       />
     </>
   );

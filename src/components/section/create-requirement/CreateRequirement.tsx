@@ -1,11 +1,15 @@
-import { App, Col, Form, Row } from "antd";
+import { App, Col, Form, Row, UploadFile } from "antd";
 import { useTranslation } from "react-i18next";
 import EmailCR from "./create-requirement-items/EmailCR";
 import DocumentsCertifCR from "./create-requirement-items/DocumentsCertifCR";
 import AddImagesRC from "./create-requirement-items/AddImagesRC";
 import AddDocument from "./create-requirement-items/AddDocument";
 import ButtonContainer from "../../containers/ButtonContainer";
-import { RequirementType, Usage } from "../../../utilities/types";
+import {
+  ImageRequestLabels,
+  RequirementType,
+  Usage,
+} from "../../../utilities/types";
 import { useEffect, useState } from "react";
 import { certifiedCompaniesOpt } from "../../../utilities/globals";
 import { CreateRequirementRequest } from "../../../models/Requests";
@@ -34,6 +38,8 @@ import WarrantyField from "../../common/formFields/WarrantyField";
 import DurationField from "../../common/formFields/DurationField";
 import ItemConditionField from "../../common/formFields/ItemConditionField";
 import CanOfferField from "../../common/formFields/CanOfferField";
+import { uploadImagesRequirementService } from "../../../services/requests/imageService";
+import { uploadDocsRequirementService } from "../../../services/requests/documentService";
 
 interface CreateRequirementProps {
   closeModal: () => void;
@@ -69,6 +75,52 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       dataToSend: apiParams.dataToSend,
     });
 
+  // Para imagenes
+  const [apiParamsImg, setApiParamsImg] = useState<useApiParams<FormData>>({
+    service: null,
+    method: "get",
+  });
+  const {
+    loading: loadingImg,
+    responseData: responseDataImg,
+    error: errorImg,
+    errorMsg: errorMsgImg,
+    fetchData: fetchDataImg,
+  } = useApi<FormData>({
+    service: apiParamsImg.service,
+    method: apiParamsImg.method,
+    dataToSend: apiParamsImg.dataToSend,
+    token: apiParamsImg.token,
+  });
+
+  // Para documentos
+  const [apiParamsDoc, setApiParamsDoc] = useState<useApiParams<FormData>>({
+    service: null,
+    method: "get",
+  });
+  const {
+    loading: loadingDoc,
+    responseData: responseDataDoc,
+    error: errorDoc,
+    errorMsg: errorMsgDoc,
+    fetchData: fetchDataDoc,
+  } = useApi<FormData>({
+    service: apiParamsDoc.service,
+    method: apiParamsDoc.method,
+    dataToSend: apiParamsDoc.dataToSend,
+    token: apiParamsDoc.token,
+  });
+
+  useEffect(() => {
+    if (apiParamsImg.service) fetchDataImg();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsImg]);
+
+  useEffect(() => {
+    if (apiParamsDoc.service) fetchDataDoc();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsDoc]);
+
   useEffect(() => {
     if (apiParams.service) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -96,6 +148,24 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
+
+  useEffect(() => {
+    if (responseDataImg) {
+      console.log("responseDataImg");
+    } else if (errorImg) {
+      showNotification(notification, "error", errorMsgImg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataImg, errorImg]);
+
+  useEffect(() => {
+    if (responseDataDoc) {
+      console.log("responseDataDoc");
+    } else if (errorDoc) {
+      showNotification(notification, "error", errorMsgDoc);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataDoc, errorDoc]);
 
   function changeTab(newtype: RequirementType) {
     if (newtype != type) {
@@ -134,6 +204,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     if (type == RequirementType.SALE)
       data.used = values.itemCondition == Usage.USED;
 
+    console.log(data);
     setApiParams({
       service:
         type == RequirementType.SALE
@@ -142,6 +213,34 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       method: "post",
       dataToSend: data,
     });
+
+    if (values.images && values.images.fileList.length > 0) {
+      const formData = new FormData();
+      formData.append(
+        ImageRequestLabels.IMAGES,
+        values.images.fileList.map((f: UploadFile) => f.originFileObj)
+      );
+      formData.append(ImageRequestLabels.UID, uid);
+      setApiParamsImg({
+        service: uploadImagesRequirementService(),
+        method: "post",
+        dataToSend: formData,
+      });
+    }
+
+    if (values.doc && values.doc.fileList.length > 0) {
+      const formDataDoc = new FormData();
+      formDataDoc.append(
+        ImageRequestLabels.DOCUMENTS,
+        values.doc.fileList.map((f: UploadFile) => f.originFileObj)
+      );
+      formDataDoc.append(ImageRequestLabels.UID, uid);
+      setApiParamsImg({
+        service: uploadDocsRequirementService(),
+        method: "post",
+        dataToSend: formDataDoc,
+      });
+    }
   }
 
   return (
@@ -308,7 +407,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
                 loading={
                   equalServices(apiParams.service, createRequirementService())
                     ? loading
-                    : false
+                    : undefined
                 }
                 htmlType="submit"
                 className="btn btn-default wd-100"

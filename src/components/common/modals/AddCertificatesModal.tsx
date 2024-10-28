@@ -77,11 +77,11 @@ export default function AddCertificatesModal() {
         newArray[index] = file;
         return newArray;
       });
-      setNameList((prev) => {
-        const newArray = [...prev];
-        newArray[index] = file.name;
-        return newArray;
-      });
+      // setNameList((prev) => {
+      //   const newArray = [...prev];
+      //   newArray[index] = file.name;
+      //   return newArray;
+      // });
     }
   }
 
@@ -158,6 +158,11 @@ export default function AddCertificatesModal() {
                 onChange={(e) => handleInputChange(e, index)}
               />
               <div className="t-flex doc-botones">
+                {docList[index]?.name && (
+                  <div className="name-doc text-truncate wd-100">
+                    {docList[index]?.name}
+                  </div>
+                )}
                 <ButtonContainer
                   className="btn btn-opaco btn-sm wd-100"
                   onClick={(e) => handleClick(e, index)}
@@ -169,9 +174,13 @@ export default function AddCertificatesModal() {
                   {t("uploadFile")}
                 </ButtonContainer>
                 <ButtonContainer
-                  className="btn btn-black btn-sm wd-100"
+                  className="btn btn-black btn-sm btn-trash"
                   onClick={() => deleteBlock(index)}
                 >
+                  <i
+                    className="fa-regular fa-trash"
+                    style={{ marginRight: "5px" }}
+                  ></i>
                   {t("delete")}
                 </ButtonContainer>
               </div>

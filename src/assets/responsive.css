@@ -189,6 +189,13 @@
   .oferta-datos {
     margin-right: 5px;
   }
+  .btn-trash {
+    width: 100%;
+  }
+  /* Página Principal */
+  .container-tc {
+    padding: 0 50px;
+  }
 }
 
 @media (max-width: 576px) {

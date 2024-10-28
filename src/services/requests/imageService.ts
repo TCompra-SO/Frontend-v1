@@ -9,3 +9,12 @@ export function uploadAvatarService(): HttpService {
     type: "IM-UP-AV",
   };
 }
+
+export function uploadImagesRequirementService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.images}${
+      ApiRoutes.images.uploadImages
+    }`,
+    type: "IM-REQ-UP",
+  };
+}

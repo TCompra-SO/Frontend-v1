@@ -11,15 +11,25 @@ import {
 } from "../utilities/types";
 import ModalContainer from "../components/containers/ModalContainer";
 import { ChangeEvent, useEffect, useState } from "react";
-import { ModalContent, TableTypeOffer } from "../models/Interfaces";
+import {
+  ModalContent,
+  TableTypeOffer,
+  useApiParams,
+} from "../models/Interfaces";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import { mainModalScrollStyle } from "../utilities/globals";
 import {
+  equalServices,
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
 import { getBaseUserForUserSubUser } from "../services/complete/general";
+import { getOffersService } from "../services/requests/offerService";
+import useApi from "../hooks/useApi";
+import { useSelector } from "react-redux";
+import { MainState } from "../models/Redux";
+import { transformToOffer } from "../utilities/transform";
 
 const offerList: Offer[] = [
   {
@@ -423,6 +433,8 @@ const offerList: Offer[] = [
 export default function Offers() {
   const { t } = useTranslation();
   const location = useLocation();
+  const dataUser = useSelector((state: MainState) => state.user);
+  const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const [type, setType] = useState(getRouteType(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
 
@@ -432,12 +444,34 @@ export default function Offers() {
   });
   const [tableContent, setTableContent] = useState<TableTypeOffer>({
     type: TableTypes.OFFER,
-    data: offerList,
+    data: [], //offerList,
     subType: type,
     hiddenColumns: [],
     nameColumnHeader: t("offers"),
     onButtonClick: handleOnButtonClick,
   });
+
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: getOffersService(),
+    method: "get",
+  });
+
+  const { loading, responseData, error, errorMsg, fetchData } = useApi({
+    service: apiParams.service,
+    method: apiParams.method,
+    dataToSend: apiParams.dataToSend,
+  });
+
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      if (equalServices(apiParams.service, getOffersService())) setData();
+    }
+  }, [responseData, error]);
 
   useEffect(() => {
     setType(getRouteType(location.pathname));
@@ -452,6 +486,28 @@ export default function Offers() {
       };
     });
   }, [type]);
+
+  async function setData() {
+    if (responseData) {
+      const data = await Promise.all(
+        responseData.data.map(
+          async (e: any) =>
+            await transformToOffer(e, type, dataUser, mainDataUser)
+        )
+      );
+
+      setTableContent({
+        type: TableTypes.OFFER,
+        data: data,
+        subType: type,
+        hiddenColumns: [],
+        nameColumnHeader: t("offers"),
+        onButtonClick: handleOnButtonClick,
+      });
+    } else if (error) {
+      console.log(error);
+    }
+  }
 
   function handleCloseModal() {
     setIsOpenModal(false);
@@ -565,6 +621,11 @@ export default function Offers() {
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
         onSearch={handleSearch}
+        loading={
+          equalServices(apiParams.service, getOffersService())
+            ? loading
+            : undefined
+        }
       />
     </>
   );

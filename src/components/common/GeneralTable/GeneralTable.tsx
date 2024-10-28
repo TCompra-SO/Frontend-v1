@@ -38,6 +38,7 @@ import { getLabelFromPurchaseOrderType } from "../../../utilities/globalFunction
 
 interface GeneralTableProps {
   content: TableType;
+  loading?: boolean;
 }
 
 export default function GeneralTable(props: GeneralTableProps) {
@@ -139,6 +140,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<Requirement>>}
           {...tableProps}
         ></Table>
@@ -148,6 +150,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<Offer>>}
           {...tableProps}
         ></Table>
@@ -157,6 +160,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<PurchaseOrder>>}
           {...tableProps}
         ></Table>
@@ -166,6 +170,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<SubUserProfile>>}
           {...tableProps}
         ></Table>
@@ -175,6 +180,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<RequirementItemSubUser>>}
           {...tableProps}
         ></Table>
@@ -184,6 +190,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<OfferItemSubUser>>}
           {...tableProps}
         ></Table>
@@ -193,6 +200,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<PurchaseOrderItemSubUser>>}
           {...tableProps}
         ></Table>
@@ -202,6 +210,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<BasicRequirement>>}
           {...tableProps}
         ></Table>
@@ -211,6 +220,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<BasicOffer>>}
           {...tableProps}
         ></Table>
@@ -220,6 +230,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<BasicPurchaseOrder>>}
           {...tableProps}
         ></Table>
@@ -229,6 +240,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<CertificateFile>>}
           {...tableProps}
         ></Table>
@@ -238,6 +250,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<CertificationItem>>}
           {...tableProps}
         ></Table>
@@ -247,6 +260,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<CertificationItem>>}
           {...tableProps}
         ></Table>

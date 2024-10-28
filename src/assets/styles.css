@@ -1568,6 +1568,17 @@ body {
   align-items: center;
 }
 
+.name-doc {
+  color: rgb(59 76 86 / 70%);
+  background: #e4eaef;
+  padding: 0.56rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+  border-radius: 0.8rem;
+}
+
 /********** Antd's select **************************/
 
 .form-control .ant-select-selector {

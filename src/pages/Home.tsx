@@ -29,7 +29,7 @@ export default function Home() {
   const [docType, setDocType] = useState("");
   const isLoggedIn = useIsLoggedIn();
 
-  const tableData = useSocket();
+  const { requirements: tableData, loading: loadingTable } = useSocket();
   const [tableContent, setTableContent] = useState<TableTypeRequirement>({
     type: TableTypes.REQUIREMENT,
     data: tableData,
@@ -122,7 +122,7 @@ export default function Home() {
       </ButtonContainer>
 
       <div className="table-responsive">
-        <GeneralTable content={tableContent} />
+        <GeneralTable content={tableContent} loading={loadingTable} />
       </div>
     </>
   );

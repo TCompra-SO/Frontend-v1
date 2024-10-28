@@ -12,6 +12,7 @@ import {
 } from "../utilities/types";
 import { BasicOffer, Offer } from "../models/MainInterfaces";
 import {
+  equalServices,
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
@@ -422,6 +423,11 @@ export default function AllOffers() {
       subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
       table={tableContent}
       onSearch={handleSearch}
+      // loading={
+      //   equalServices(apiParams.service, getRequirementsService())
+      //     ? loading
+      //     : undefined
+      // }
     />
   );
 }

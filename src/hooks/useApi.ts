@@ -47,6 +47,7 @@ export default function useApi<T = any>({
         setErrorMsg(errorMsg_);
       } finally {
         setLoading(false);
+        console.log("fin");
       }
     }
   }

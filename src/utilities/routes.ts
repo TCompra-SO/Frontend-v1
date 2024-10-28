@@ -5,6 +5,8 @@ export const ApiMainRoutes = {
   requirements: "requeriments/",
   requirement: "requeriment/",
   image: "image/",
+  images: "images/",
+  documents: "documents/",
   offers: "offers/",
 };
 
@@ -61,8 +63,16 @@ export const ApiRoutes = {
   image: {
     uploadAvatar: "upload-avatar",
   },
+  images: {
+    uploadImages: "upload-images",
+  },
+  documents: {
+    uploadDocuments: "upload-documents",
+  },
   offers: {
     create: "create/",
+    getOffers: "getOffers/",
+    getDetailOffer: "getDetailOffer/",
   },
 };
 

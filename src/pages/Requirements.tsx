@@ -1081,6 +1081,7 @@ export default function Requirements() {
         nameColumnHeader: t(getLabelFromRequirementType(type)),
       };
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
   useEffect(() => {
@@ -1104,14 +1105,13 @@ export default function Requirements() {
   async function setData() {
     if (responseData) {
       const data = await Promise.all(
-        responseData.data.map(
-          async (e: any) =>
-            await transformDataToRequirement(
-              e,
-              RequirementType.GOOD,
-              dataUser,
-              mainDataUser
-            )
+        responseData.data.map(async (e: any) =>
+          transformDataToRequirement(
+            e,
+            RequirementType.GOOD,
+            dataUser,
+            mainDataUser
+          )
         )
       );
 
@@ -1245,6 +1245,11 @@ export default function Requirements() {
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
         onSearch={handleSearch}
+        loading={
+          equalServices(apiParams.service, getRequirementsService())
+            ? loading
+            : undefined
+        }
       />
     </>
   );

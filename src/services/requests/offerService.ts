@@ -9,3 +9,21 @@ export function createOfferService(): HttpService {
     type: "OF-CRE",
   };
 }
+
+export function getOffersService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+      ApiRoutes.offers.getOffers
+    }`,
+    type: "OF-GET-ALL",
+  };
+}
+
+export function getOfferByIdService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+      ApiRoutes.offers.getDetailOffer
+    }`,
+    type: "OF-GET-ID",
+  };
+}

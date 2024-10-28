@@ -652,6 +652,11 @@ export default function PurchaseOrders() {
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
         onSearch={handleSearch}
+        // loading={
+        //   equalServices(apiParams.service, getRequirementsService())
+        //     ? loading
+        //     : undefined
+        // }
       />
     </>
   );
