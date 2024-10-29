@@ -9,3 +9,12 @@ export function uploadDocsRequirementService(): HttpService {
     type: "DO-REQ-UP",
   };
 }
+
+export function uploadDocsOfferService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.documents}${
+      ApiRoutes.documents.uploadDocuments
+    }`,
+    type: "DO-OFF-UP",
+  };
+}

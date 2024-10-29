@@ -2,8 +2,8 @@ import { App, Col, Form, Row, UploadFile } from "antd";
 import { useTranslation } from "react-i18next";
 import EmailCR from "./create-requirement-items/EmailCR";
 import DocumentsCertifCR from "./create-requirement-items/DocumentsCertifCR";
-import AddImagesRC from "./create-requirement-items/AddImagesRC";
-import AddDocument from "./create-requirement-items/AddDocument";
+import AddImagesField from "../../common/formFields/AddImagesField";
+import AddDocumentField from "../../common/formFields/AddDocumentField";
 import ButtonContainer from "../../containers/ButtonContainer";
 import {
   ImageRequestLabels,
@@ -138,15 +138,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         equalServices(apiParams.service, createSaleService())
       ) {
         setReqSuccess(true);
-        showNotification(
-          notification,
-          "success",
-          t(
-            type == RequirementType.GOOD || type == RequirementType.SERVICE
-              ? "createRequirementSuccess"
-              : "createSaleSuccess"
-          )
-        );
+
         uploadImgsAndDocs();
       }
     } else if (error) {
@@ -183,6 +175,30 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       (reqSuccess && formDataImg && imgSuccess && !formDataDoc) ||
       (reqSuccess && formDataImg && imgSuccess && formDataDoc && docSuccess)
     ) {
+      showNotification(
+        notification,
+        "success",
+        t(
+          type == RequirementType.GOOD || type == RequirementType.SERVICE
+            ? "createRequirementSuccess"
+            : "createSaleSuccess"
+        )
+      );
+      props.closeModal();
+    } else if (
+      (reqSuccess && formDataDoc && !docSuccess && !formDataImg) ||
+      (reqSuccess && formDataImg && !imgSuccess && !formDataDoc) ||
+      (reqSuccess && formDataImg && !imgSuccess && formDataDoc && !docSuccess)
+    ) {
+      showNotification(
+        notification,
+        "warning",
+        t(
+          type == RequirementType.GOOD || type == RequirementType.SERVICE
+            ? "createRequirementSuccessNoDocOrImages"
+            : "createSaleSuccessNoDocOrImages"
+        )
+      );
       props.closeModal();
     }
   }, [reqSuccess, imgSuccess, docSuccess]);
@@ -194,6 +210,15 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     }
   }
 
+  useEffect(() => {
+    if (!reqSuccess) {
+      setFormDataDoc(null);
+      setFormDataImg(null);
+      setDocSuccess(false);
+      setImgSuccess(false);
+    }
+  }, [reqSuccess]);
+
   function getDocListCertification(val: number | string) {
     setShowDocListToCetificate(val == certifiedCompaniesOpt);
     if (val == certifiedCompaniesOpt)
@@ -202,11 +227,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   }
 
   function createRequirement(values: any) {
-    setDocSuccess(false);
-    setImgSuccess(false);
     setReqSuccess(false);
-    setFormDataDoc(null);
-    setFormDataImg(null);
 
     const data: CreateRequirementRequest = {
       name: values.title.trim(),
@@ -430,10 +451,10 @@ export default function CreateRequirement(props: CreateRequirementProps) {
 
           <Row gutter={[15, 15]}>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <AddImagesRC />
+              <AddImagesField />
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <AddDocument />
+              <AddDocumentField />
             </Col>
           </Row>
           <div className="t-flex t-wrap up-footer">

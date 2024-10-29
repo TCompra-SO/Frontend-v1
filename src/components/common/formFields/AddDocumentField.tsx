@@ -2,11 +2,11 @@ import { App, Form, Upload } from "antd";
 import { RcFile } from "antd/lib/upload";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { maxDocSizeMb } from "../../../../utilities/globals";
-import { checkDoc } from "../../../../utilities/globalFunctions";
-import showNotification from "../../../../utilities/notification/showNotification";
+import { maxDocSizeMb } from "../../../utilities/globals";
+import { checkDoc } from "../../../utilities/globalFunctions";
+import showNotification from "../../../utilities/notification/showNotification";
 
-export default function AddDocument() {
+export default function AddDocumentField() {
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const fileInputRefDoc = useRef<HTMLDivElement>(null);

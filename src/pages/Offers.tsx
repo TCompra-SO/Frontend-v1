@@ -482,7 +482,6 @@ export default function Offers() {
       return {
         ...prev,
         subType: type,
-        data: offerList,
       };
     });
   }, [type]);

@@ -10,16 +10,13 @@ import {
 import { RcFile, UploadChangeParam } from "antd/lib/upload";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  maxImageSizeMb,
-  maxImagesQuantity,
-} from "../../../../utilities/globals";
-import { checkImage } from "../../../../utilities/globalFunctions";
-import showNotification from "../../../../utilities/notification/showNotification";
+import { maxImageSizeMb, maxImagesQuantity } from "../../../utilities/globals";
+import { checkImage } from "../../../utilities/globalFunctions";
+import showNotification from "../../../utilities/notification/showNotification";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
-export default function AddImagesRC() {
+export default function AddImagesField() {
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const [previewOpen, setPreviewOpen] = useState(false);
