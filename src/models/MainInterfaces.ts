@@ -180,3 +180,12 @@ export interface PlanData {
   sales: number;
   offers: number;
 }
+
+export interface BasicRateData {
+  title: string;
+  userId: string;
+  userName: string;
+  userImage?: string;
+  subUserId?: string;
+  subUserName?: string;
+}

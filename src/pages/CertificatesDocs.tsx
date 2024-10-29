@@ -49,11 +49,7 @@ export default function CertificatesDocs() {
     type: ModalTypes.NONE,
     data: {},
   });
-  const [tableContent] = useState<
-    | TableTypeMyDocuments
-    | TableTypeCertificatesReceived
-    | TableTypeCertificatesSent
-  >({
+  const [tableContent] = useState<TableTypeMyDocuments>({
     type: TableTypes.MY_DOCUMENTS,
     data: cert,
     hiddenColumns: [],
@@ -82,11 +78,8 @@ export default function CertificatesDocs() {
     }
   }
 
-  function handleOnButtonClick(
-    action: Action,
-    obj: CertificateFile | CertificationItem
-  ) {
-    const certificate = obj as CertificateFile;
+  function handleOnButtonClick(action: Action, certificate: CertificateFile) {
+    // const certificate = obj as CertificateFile;
     switch (action) {
       case Action.VIEW_DOCUMENT:
         openDocument(certificate.url);

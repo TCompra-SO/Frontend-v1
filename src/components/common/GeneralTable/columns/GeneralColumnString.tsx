@@ -18,6 +18,7 @@ export default function GeneralColumnString(
     title: nameColumn,
     dataIndex,
     align: "center",
+    ellipsis: truncate,
     key: dataIndex,
     hidden,
     render: (_, record) => (

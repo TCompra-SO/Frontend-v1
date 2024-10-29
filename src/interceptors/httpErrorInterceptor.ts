@@ -9,6 +9,8 @@ import {
   sendCodeService,
   validateCodeService,
 } from "../services/requests/authService";
+import { uploadDocsRequirementService } from "../services/requests/documentService";
+import { uploadImagesRequirementService } from "../services/requests/imageService";
 import { createOfferService } from "../services/requests/offerService";
 import {
   changeRoleSubUserService,
@@ -180,6 +182,12 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           erroMsg = "requirementNotFound";
           break;
       }
+      break;
+    case uploadDocsRequirementService().type:
+      erroMsg = "errorOccurredUploadingDocs";
+      break;
+    case uploadImagesRequirementService().type:
+      erroMsg = "errorOccurredUploadingImgs";
       break;
     case "": // No mostrar mensaje
       erroMsg = "";

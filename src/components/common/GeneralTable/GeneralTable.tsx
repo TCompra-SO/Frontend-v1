@@ -89,6 +89,12 @@ export default function GeneralTable(props: GeneralTableProps) {
         | BasicPurchaseOrder
       >
     | ColumnType<
+        | SubUserProfile
+        | BaseRequirementOffer
+        | BasicPurchaseOrder
+        | CertificateFile
+      >
+    | ColumnType<
         | Requirement
         | Offer
         | PurchaseOrder
@@ -621,13 +627,14 @@ export default function GeneralTable(props: GeneralTableProps) {
 
   function getMyDocumentsCertificateColumns() {
     columns = [
-      GeneralColumnString(
-        t("name"),
-        "name",
-        true,
-        130,
-        visibility[TableColumns.NAME]
-      ),
+      // GeneralColumnString(
+      //   t("name"),
+      //   "name",
+      //   true,
+      //   130,
+      //   visibility[TableColumns.NAME]
+      // ),
+      NameColumn(props.content.type, t("name"), visibility[TableColumns.NAME]),
       GeneralColumnString(
         t("document"),
         "documentName",

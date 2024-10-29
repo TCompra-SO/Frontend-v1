@@ -451,7 +451,7 @@ export default function Sidebar(props: SidebarProps) {
                 <>
                   <i
                     className="fa-regular fa-money-check-pen text-center"
-                    style={{ width: "25px;" }}
+                    style={{ width: "25px" }}
                   ></i>{" "}
                   {t("finishedPurchaseOrders")}{" "}
                   <i className="fa-solid fa-chevron-down i-sub text-center"></i>

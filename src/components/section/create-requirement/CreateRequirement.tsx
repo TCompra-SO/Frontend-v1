@@ -62,6 +62,11 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [showDocListToCetificate, setShowDocListToCetificate] = useState(false);
   const [isPremium] = useState<boolean>(true); // r3v
+  const [formDataImg, setFormDataImg] = useState<FormData | null>(null);
+  const [formDataDoc, setFormDataDoc] = useState<FormData | null>(null);
+  const [reqSuccess, setReqSuccess] = useState(false);
+  const [docSuccess, setDocSuccess] = useState(false);
+  const [imgSuccess, setImgSuccess] = useState(false);
   const [apiParams, setApiParams] = useState<
     useApiParams<CreateRequirementRequest>
   >({
@@ -112,12 +117,12 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   });
 
   useEffect(() => {
-    if (apiParamsImg.service) fetchDataImg();
+    if (apiParamsImg.service) fetchDataImg(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParamsImg]);
 
   useEffect(() => {
-    if (apiParamsDoc.service) fetchDataDoc();
+    if (apiParamsDoc.service) fetchDataDoc(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParamsDoc]);
 
@@ -132,6 +137,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         equalServices(apiParams.service, createRequirementService()) ||
         equalServices(apiParams.service, createSaleService())
       ) {
+        setReqSuccess(true);
         showNotification(
           notification,
           "success",
@@ -141,9 +147,10 @@ export default function CreateRequirement(props: CreateRequirementProps) {
               : "createSaleSuccess"
           )
         );
-        props.closeModal();
+        uploadImgsAndDocs();
       }
     } else if (error) {
+      setReqSuccess(false);
       showNotification(notification, "error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -151,8 +158,9 @@ export default function CreateRequirement(props: CreateRequirementProps) {
 
   useEffect(() => {
     if (responseDataImg) {
-      console.log("responseDataImg");
+      setImgSuccess(true);
     } else if (errorImg) {
+      setImgSuccess(false);
       showNotification(notification, "error", errorMsgImg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -160,12 +168,24 @@ export default function CreateRequirement(props: CreateRequirementProps) {
 
   useEffect(() => {
     if (responseDataDoc) {
-      console.log("responseDataDoc");
+      setDocSuccess(true);
     } else if (errorDoc) {
+      setDocSuccess(false);
       showNotification(notification, "error", errorMsgDoc);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataDoc, errorDoc]);
+
+  useEffect(() => {
+    if (
+      (reqSuccess && !formDataDoc && !formDataImg) ||
+      (reqSuccess && formDataDoc && docSuccess && !formDataImg) ||
+      (reqSuccess && formDataImg && imgSuccess && !formDataDoc) ||
+      (reqSuccess && formDataImg && imgSuccess && formDataDoc && docSuccess)
+    ) {
+      props.closeModal();
+    }
+  }, [reqSuccess, imgSuccess, docSuccess]);
 
   function changeTab(newtype: RequirementType) {
     if (newtype != type) {
@@ -182,6 +202,12 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   }
 
   function createRequirement(values: any) {
+    setDocSuccess(false);
+    setImgSuccess(false);
+    setReqSuccess(false);
+    setFormDataDoc(null);
+    setFormDataImg(null);
+
     const data: CreateRequirementRequest = {
       name: values.title.trim(),
       description: values.description.trim(),
@@ -216,31 +242,41 @@ export default function CreateRequirement(props: CreateRequirementProps) {
 
     if (values.images && values.images.fileList.length > 0) {
       const formData = new FormData();
-      formData.append(
-        ImageRequestLabels.IMAGES,
-        values.images.fileList.map((f: UploadFile) => f.originFileObj)
-      );
-      formData.append(ImageRequestLabels.UID, uid);
-      setApiParamsImg({
-        service: uploadImagesRequirementService(),
-        method: "post",
-        dataToSend: formData,
+      values.images.fileList.forEach((file: UploadFile) => {
+        if (file.originFileObj) {
+          formData.append(ImageRequestLabels.IMAGES, file.originFileObj);
+        }
       });
+      formData.append(ImageRequestLabels.UID, uid);
+
+      setFormDataImg(formData);
     }
 
     if (values.doc && values.doc.fileList.length > 0) {
       const formDataDoc = new FormData();
-      formDataDoc.append(
-        ImageRequestLabels.DOCUMENTS,
-        values.doc.fileList.map((f: UploadFile) => f.originFileObj)
-      );
+      values.doc.fileList.forEach((file: UploadFile) => {
+        if (file.originFileObj) {
+          formDataDoc.append(ImageRequestLabels.IMAGES, file.originFileObj);
+        }
+      });
       formDataDoc.append(ImageRequestLabels.UID, uid);
-      setApiParamsImg({
+      setFormDataDoc(formDataDoc);
+    }
+  }
+
+  function uploadImgsAndDocs() {
+    if (formDataDoc)
+      setApiParamsDoc({
         service: uploadDocsRequirementService(),
         method: "post",
         dataToSend: formDataDoc,
       });
-    }
+    if (formDataImg)
+      setApiParamsImg({
+        service: uploadImagesRequirementService(),
+        method: "post",
+        dataToSend: formDataImg,
+      });
   }
 
   return (
@@ -404,11 +440,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
             <div className="footer-text">{t("allDataIsImportant")}</div>
             <div className="wd-25">
               <ButtonContainer
-                loading={
-                  equalServices(apiParams.service, createRequirementService())
-                    ? loading
-                    : undefined
-                }
+                loading={loading || loadingDoc || loadingImg}
                 htmlType="submit"
                 className="btn btn-default wd-100"
               >

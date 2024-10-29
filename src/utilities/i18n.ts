@@ -225,6 +225,8 @@ const resources = {
       errorOccurredLoginAgain: "An error occurred. Log in again",
       offerCreatedSuccessfully: "Offer created successfully",
       imageUpdatedSuccessfully: "Image updated successfully",
+      errorOccurredUploadingDocs: "An error occurred while uploading files",
+      errorOccurredUploadingImgs: "An error occurred while uploading images",
       // Other
       yes: "Yes",
       no: "No",
@@ -584,6 +586,8 @@ const resources = {
       errorOccurredLoginAgain: "Se produjo un error. Inicie sesión nuevamente",
       offerCreatedSuccessfully: "Oferta creada exitosamente",
       imageUpdatedSuccessfully: "Imagen actualizada exitosamente",
+      errorOccurredUploadingDocs: "Se produjo un error al subir los archivos",
+      errorOccurredUploadingImgs: "Se produjo un error al subir las imágenes",
       // Other
       yes: "Sí",
       no: "No",

@@ -2,6 +2,7 @@ import { ColumnType } from "antd/es/table";
 import {
   BaseRequirementOffer,
   BasicPurchaseOrder,
+  CertificateFile,
   Requirement,
 } from "../../../../models/MainInterfaces";
 import { TableTypes } from "../../../../utilities/types";
@@ -30,6 +31,9 @@ export default function NameColumn(
     case TableTypes.USERS:
       dataIndex = "name";
       break;
+    case TableTypes.MY_DOCUMENTS:
+      dataIndex = "name";
+      break;
     case TableTypes.PURCHASE_ORDER:
     case TableTypes.ALL_PURCHASE_ORDERS:
       dataIndex = "user.name";
@@ -37,7 +41,7 @@ export default function NameColumn(
   }
 
   const col: ColumnType<
-    SubUserProfile | BaseRequirementOffer | BasicPurchaseOrder
+    SubUserProfile | BaseRequirementOffer | BasicPurchaseOrder | CertificateFile
   > = {
     title: nameColumnHeader,
     dataIndex,
@@ -57,6 +61,10 @@ export default function NameColumn(
       } else if (type === TableTypes.USERS) {
         const aName = (a as SubUserProfile).name;
         const bName = (b as SubUserProfile).name;
+        return aName.localeCompare(bName);
+      } else if (type === TableTypes.MY_DOCUMENTS) {
+        const aName = (a as CertificateFile).name;
+        const bName = (b as CertificateFile).name;
         return aName.localeCompare(bName);
       } else if (
         type == TableTypes.PURCHASE_ORDER ||
@@ -82,6 +90,8 @@ export default function NameColumn(
               type === TableTypes.ALL_REQUIREMENTS) &&
               (record as BaseRequirementOffer).title}
             {type === TableTypes.USERS && (record as SubUserProfile).name}
+            {type === TableTypes.MY_DOCUMENTS &&
+              (record as CertificateFile).name}
             {(type === TableTypes.PURCHASE_ORDER ||
               type === TableTypes.ALL_PURCHASE_ORDERS) &&
               (record as BasicPurchaseOrder).user.name}
