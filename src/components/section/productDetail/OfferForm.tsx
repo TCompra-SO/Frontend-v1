@@ -193,7 +193,10 @@ export default function OfferForm(props: OfferFormProps) {
         const formDataDoc = new FormData();
         values.doc.fileList.forEach((file: UploadFile) => {
           if (file.originFileObj) {
-            formDataDoc.append(ImageRequestLabels.IMAGES, file.originFileObj);
+            formDataDoc.append(
+              ImageRequestLabels.DOCUMENTS,
+              file.originFileObj
+            );
           }
         });
         formDataDoc.append(ImageRequestLabels.UID, uid);

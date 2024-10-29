@@ -40,6 +40,7 @@ export function checkImage(image: File) {
 export function checkDoc(file: File) {
   const fileSizeMB = file.size / (1024 * 1024);
   return {
+    validFile: file.type === "application/pdf",
     validSize: fileSizeMB <= maxDocSizeMb,
   };
 }

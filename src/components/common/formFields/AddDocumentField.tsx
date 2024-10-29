@@ -18,15 +18,16 @@ export default function AddDocumentField() {
     }
   }
 
-  function checkImageBeforeUpload(file: RcFile) {
-    const { validSize } = checkDoc(file);
-    if (!validSize)
+  function checkDocBeforeUpload(file: RcFile) {
+    const { validSize, validFile } = checkDoc(file);
+    if (!validFile) showNotification(notification, "error", `${t("onlyPdfs")}`);
+    else if (!validSize)
       showNotification(
         notification,
         "error",
         `${file.name} ${t("nameInvalidImageSize")}${maxDocSizeMb} mb`
       );
-    if (!validSize) return Upload.LIST_IGNORE;
+    if (!validFile || !validSize) return Upload.LIST_IGNORE;
     return false;
   }
 
@@ -43,10 +44,11 @@ export default function AddDocumentField() {
         <Form.Item name="doc">
           <Upload
             multiple={false}
+            accept=".pdf"
             // onChange={handleChange}
             listType="picture-card"
             style={{ display: "none" }}
-            beforeUpload={checkImageBeforeUpload}
+            beforeUpload={checkDocBeforeUpload}
           >
             <div style={{ display: "none" }} ref={fileInputRefDoc} />
           </Upload>

@@ -53,7 +53,7 @@ export default function AddCertificatesModal() {
     const file = e.target.files?.[0];
     if (file) {
       const { validImage, validSize } = checkImage(file);
-      const { validSize: validSizeDoc } = checkDoc(file);
+      const { validSize: validSizeDoc, validFile } = checkDoc(file);
 
       if (validImage) {
         if (!validSize) {
@@ -64,7 +64,9 @@ export default function AddCertificatesModal() {
           );
           return;
         }
-      } else if (!validSizeDoc) {
+      } else if (!validFile)
+        showNotification(notification, "error", `${t("onlyPdfs")}`);
+      else if (!validSizeDoc) {
         showNotification(
           notification,
           "error",

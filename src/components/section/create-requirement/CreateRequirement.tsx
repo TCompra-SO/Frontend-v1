@@ -65,6 +65,8 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   const [formDataImg, setFormDataImg] = useState<FormData | null>(null);
   const [formDataDoc, setFormDataDoc] = useState<FormData | null>(null);
   const [reqSuccess, setReqSuccess] = useState(false);
+  const [processFinished, setProcessFinished] = useState(false);
+  const [processFlag, setProcessFlag] = useState(1);
   const [docSuccess, setDocSuccess] = useState(false);
   const [imgSuccess, setImgSuccess] = useState(false);
   const [apiParams, setApiParams] = useState<
@@ -139,7 +141,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       ) {
         setReqSuccess(true);
 
-        uploadImgsAndDocs();
+        uploadImgsAndDocs(responseData.data.uid);
       }
     } else if (error) {
       setReqSuccess(false);
@@ -155,6 +157,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       setImgSuccess(false);
       showNotification(notification, "error", errorMsgImg);
     }
+    if (responseDataImg || errorImg) if (!formDataDoc) setProcessFinished(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataImg, errorImg]);
 
@@ -169,6 +172,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   }, [responseDataDoc, errorDoc]);
 
   useEffect(() => {
+    console.log(reqSuccess, formDataDoc, docSuccess, formDataImg, imgSuccess);
     if (
       (reqSuccess && !formDataDoc && !formDataImg) ||
       (reqSuccess && formDataDoc && docSuccess && !formDataImg) ||
@@ -211,13 +215,14 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   }
 
   useEffect(() => {
-    if (!reqSuccess) {
+    if (!processFinished) {
+      setReqSuccess(false);
       setFormDataDoc(null);
       setFormDataImg(null);
       setDocSuccess(false);
       setImgSuccess(false);
     }
-  }, [reqSuccess]);
+  }, [processFinished]);
 
   function getDocListCertification(val: number | string) {
     setShowDocListToCetificate(val == certifiedCompaniesOpt);
@@ -227,7 +232,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   }
 
   function createRequirement(values: any) {
-    setReqSuccess(false);
+    setProcessFinished(false);
 
     const data: CreateRequirementRequest = {
       name: values.title.trim(),
@@ -268,7 +273,6 @@ export default function CreateRequirement(props: CreateRequirementProps) {
           formData.append(ImageRequestLabels.IMAGES, file.originFileObj);
         }
       });
-      formData.append(ImageRequestLabels.UID, uid);
 
       setFormDataImg(formData);
     }
@@ -277,27 +281,34 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       const formDataDoc = new FormData();
       values.doc.fileList.forEach((file: UploadFile) => {
         if (file.originFileObj) {
-          formDataDoc.append(ImageRequestLabels.IMAGES, file.originFileObj);
+          formDataDoc.append(ImageRequestLabels.DOCUMENTS, file.originFileObj);
         }
       });
-      formDataDoc.append(ImageRequestLabels.UID, uid);
+
       setFormDataDoc(formDataDoc);
     }
   }
 
-  function uploadImgsAndDocs() {
-    if (formDataDoc)
+  function uploadImgsAndDocs(reqId: string) {
+    if (!formDataDoc && !formDataImg) setProcessFinished(true);
+    if (formDataDoc) {
+      const data: FormData = formDataDoc;
+      data.append(ImageRequestLabels.UID, reqId);
       setApiParamsDoc({
         service: uploadDocsRequirementService(),
         method: "post",
-        dataToSend: formDataDoc,
+        dataToSend: data,
       });
-    if (formDataImg)
+    }
+    if (formDataImg) {
+      const data: FormData = formDataImg;
+      data.append(ImageRequestLabels.UID, reqId);
       setApiParamsImg({
         service: uploadImagesRequirementService(),
         method: "post",
-        dataToSend: formDataImg,
+        dataToSend: data,
       });
+    }
   }
 
   return (
