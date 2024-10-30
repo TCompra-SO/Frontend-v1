@@ -21,7 +21,7 @@ import showNotification from "../../../utilities/notification/showNotification";
 import { useApiParams } from "../../../models/Interfaces";
 import useApi from "../../../hooks/useApi";
 import { createOfferService } from "../../../services/requests/offerService";
-import { ImageRequestLabels } from "../../../utilities/types";
+import { ImageRequestLabels, ProcessFlag } from "../../../utilities/types";
 import { uploadDocsOfferService } from "../../../services/requests/documentService";
 import { uploadImagesOfferService } from "../../../services/requests/imageService";
 
@@ -39,9 +39,9 @@ export default function OfferForm(props: OfferFormProps) {
   const [checkedDelivery, setCheckedDelivery] = useState(false);
   const [formDataImg, setFormDataImg] = useState<FormData | null>(null);
   const [formDataDoc, setFormDataDoc] = useState<FormData | null>(null);
-  const [reqSuccess, setReqSuccess] = useState(false);
-  const [docSuccess, setDocSuccess] = useState(false);
-  const [imgSuccess, setImgSuccess] = useState(false);
+  const [reqSuccess, setReqSuccess] = useState(ProcessFlag.NOT_INI);
+  const [docSuccess, setDocSuccess] = useState(ProcessFlag.NOT_INI);
+  const [imgSuccess, setImgSuccess] = useState(ProcessFlag.NOT_INI);
 
   const [apiParams, setApiParams] = useState<useApiParams<CreateOfferRequest>>({
     service: null,
@@ -97,20 +97,21 @@ export default function OfferForm(props: OfferFormProps) {
 
   useEffect(() => {
     if (responseData) {
-      setReqSuccess(true);
+      setReqSuccess(ProcessFlag.FIN_SUCCESS);
 
       uploadImgsAndDocs();
     } else if (error) {
-      setReqSuccess(false);
+      setReqSuccess(ProcessFlag.FIN_UNSUCCESS);
       showNotification(notification, "error", errorMsg);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
   useEffect(() => {
     if (responseDataImg) {
-      setImgSuccess(true);
+      setImgSuccess(ProcessFlag.FIN_SUCCESS);
     } else if (errorImg) {
-      setImgSuccess(false);
+      setImgSuccess(ProcessFlag.FIN_UNSUCCESS);
       showNotification(notification, "error", errorMsgImg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -118,9 +119,9 @@ export default function OfferForm(props: OfferFormProps) {
 
   useEffect(() => {
     if (responseDataDoc) {
-      setDocSuccess(true);
+      setDocSuccess(ProcessFlag.FIN_SUCCESS);
     } else if (errorDoc) {
-      setDocSuccess(false);
+      setDocSuccess(ProcessFlag.FIN_UNSUCCESS);
       showNotification(notification, "error", errorMsgDoc);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -128,36 +129,37 @@ export default function OfferForm(props: OfferFormProps) {
 
   useEffect(() => {
     if (
-      (reqSuccess && !formDataDoc && !formDataImg) ||
-      (reqSuccess && formDataDoc && docSuccess && !formDataImg) ||
-      (reqSuccess && formDataImg && imgSuccess && !formDataDoc) ||
-      (reqSuccess && formDataImg && imgSuccess && formDataDoc && docSuccess)
+      reqSuccess != ProcessFlag.NOT_INI &&
+      docSuccess != ProcessFlag.NOT_INI &&
+      imgSuccess != ProcessFlag.NOT_INI
     ) {
-      showNotification(notification, "success", t("offerCreatedSuccessfully"));
-    } else if (
-      (reqSuccess && formDataDoc && !docSuccess && !formDataImg) ||
-      (reqSuccess && formDataImg && !imgSuccess && !formDataDoc) ||
-      (reqSuccess && formDataImg && !imgSuccess && formDataDoc && !docSuccess)
-    ) {
-      showNotification(
-        notification,
-        "warning",
-        t("offerCreatedSuccessfullyNoDocOrImages")
-      );
+      if (
+        reqSuccess == ProcessFlag.FIN_SUCCESS &&
+        docSuccess == ProcessFlag.FIN_SUCCESS &&
+        imgSuccess == ProcessFlag.FIN_SUCCESS
+      ) {
+        showNotification(
+          notification,
+          "success",
+          t("offerCreatedSuccessfully")
+        );
+      } else {
+        showNotification(
+          notification,
+          "warning",
+          t("offerCreatedSuccessfullyNoDocOrImages")
+        );
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reqSuccess, imgSuccess, docSuccess]);
 
-  useEffect(() => {
-    if (!reqSuccess) {
-      setFormDataDoc(null);
-      setFormDataImg(null);
-      setDocSuccess(false);
-      setImgSuccess(false);
-    }
-  }, [reqSuccess]);
-
   function createOffer(values: any) {
-    setReqSuccess(false);
+    setReqSuccess(ProcessFlag.NOT_INI);
+    setFormDataDoc(null);
+    setFormDataImg(null);
+    setDocSuccess(ProcessFlag.NOT_INI);
+    setImgSuccess(ProcessFlag.NOT_INI);
 
     if (props.requirementId) {
       const data: CreateOfferRequest = {
@@ -259,7 +261,10 @@ export default function OfferForm(props: OfferFormProps) {
           </a>
         </Checkbox>
       </div>
-      <ButtonContainer htmlType="submit" loading={loading}>
+      <ButtonContainer
+        htmlType="submit"
+        loading={loading || loadingDoc || loadingImg}
+      >
         {t("saveButton")}
       </ButtonContainer>
     </Form>

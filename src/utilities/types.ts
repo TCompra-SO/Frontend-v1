@@ -385,3 +385,9 @@ export enum ImageRequestLabels {
   IMAGES = "images",
   DOCUMENTS = "documents",
 }
+
+export enum ProcessFlag {
+  NOT_INI = 0,
+  FIN_SUCCESS = 1,
+  FIN_UNSUCCESS = 2,
+}

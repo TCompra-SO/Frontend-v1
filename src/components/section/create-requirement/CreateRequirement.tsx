@@ -7,6 +7,7 @@ import AddDocumentField from "../../common/formFields/AddDocumentField";
 import ButtonContainer from "../../containers/ButtonContainer";
 import {
   ImageRequestLabels,
+  ProcessFlag,
   RequirementType,
   Usage,
 } from "../../../utilities/types";
@@ -64,11 +65,9 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   const [isPremium] = useState<boolean>(true); // r3v
   const [formDataImg, setFormDataImg] = useState<FormData | null>(null);
   const [formDataDoc, setFormDataDoc] = useState<FormData | null>(null);
-  const [reqSuccess, setReqSuccess] = useState(false);
-  const [processFinished, setProcessFinished] = useState(false);
-  const [processFlag, setProcessFlag] = useState(1);
-  const [docSuccess, setDocSuccess] = useState(false);
-  const [imgSuccess, setImgSuccess] = useState(false);
+  const [reqSuccess, setReqSuccess] = useState(ProcessFlag.NOT_INI);
+  const [docSuccess, setDocSuccess] = useState(ProcessFlag.NOT_INI);
+  const [imgSuccess, setImgSuccess] = useState(ProcessFlag.NOT_INI);
   const [apiParams, setApiParams] = useState<
     useApiParams<CreateRequirementRequest>
   >({
@@ -139,12 +138,11 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         equalServices(apiParams.service, createRequirementService()) ||
         equalServices(apiParams.service, createSaleService())
       ) {
-        setReqSuccess(true);
-
+        setReqSuccess(ProcessFlag.FIN_SUCCESS);
         uploadImgsAndDocs(responseData.data.uid);
       }
     } else if (error) {
-      setReqSuccess(false);
+      setReqSuccess(ProcessFlag.FIN_UNSUCCESS);
       showNotification(notification, "error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -152,59 +150,60 @@ export default function CreateRequirement(props: CreateRequirementProps) {
 
   useEffect(() => {
     if (responseDataImg) {
-      setImgSuccess(true);
+      setImgSuccess(ProcessFlag.FIN_SUCCESS);
     } else if (errorImg) {
-      setImgSuccess(false);
+      setImgSuccess(ProcessFlag.FIN_UNSUCCESS);
       showNotification(notification, "error", errorMsgImg);
     }
-    if (responseDataImg || errorImg) if (!formDataDoc) setProcessFinished(true);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataImg, errorImg]);
 
   useEffect(() => {
     if (responseDataDoc) {
-      setDocSuccess(true);
+      setDocSuccess(ProcessFlag.FIN_SUCCESS);
     } else if (errorDoc) {
-      setDocSuccess(false);
+      setDocSuccess(ProcessFlag.FIN_UNSUCCESS);
       showNotification(notification, "error", errorMsgDoc);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataDoc, errorDoc]);
 
   useEffect(() => {
-    console.log(reqSuccess, formDataDoc, docSuccess, formDataImg, imgSuccess);
     if (
-      (reqSuccess && !formDataDoc && !formDataImg) ||
-      (reqSuccess && formDataDoc && docSuccess && !formDataImg) ||
-      (reqSuccess && formDataImg && imgSuccess && !formDataDoc) ||
-      (reqSuccess && formDataImg && imgSuccess && formDataDoc && docSuccess)
+      reqSuccess != ProcessFlag.NOT_INI &&
+      docSuccess != ProcessFlag.NOT_INI &&
+      imgSuccess != ProcessFlag.NOT_INI
     ) {
-      showNotification(
-        notification,
-        "success",
-        t(
-          type == RequirementType.GOOD || type == RequirementType.SERVICE
-            ? "createRequirementSuccess"
-            : "createSaleSuccess"
-        )
-      );
-      props.closeModal();
-    } else if (
-      (reqSuccess && formDataDoc && !docSuccess && !formDataImg) ||
-      (reqSuccess && formDataImg && !imgSuccess && !formDataDoc) ||
-      (reqSuccess && formDataImg && !imgSuccess && formDataDoc && !docSuccess)
-    ) {
-      showNotification(
-        notification,
-        "warning",
-        t(
-          type == RequirementType.GOOD || type == RequirementType.SERVICE
-            ? "createRequirementSuccessNoDocOrImages"
-            : "createSaleSuccessNoDocOrImages"
-        )
-      );
-      props.closeModal();
+      if (
+        reqSuccess == ProcessFlag.FIN_SUCCESS &&
+        docSuccess == ProcessFlag.FIN_SUCCESS &&
+        imgSuccess == ProcessFlag.FIN_SUCCESS
+      ) {
+        showNotification(
+          notification,
+          "success",
+          t(
+            type == RequirementType.GOOD || type == RequirementType.SERVICE
+              ? "createRequirementSuccess"
+              : "createSaleSuccess"
+          )
+        );
+        props.closeModal();
+      } else {
+        showNotification(
+          notification,
+          "warning",
+          t(
+            type == RequirementType.GOOD || type == RequirementType.SERVICE
+              ? "createRequirementSuccessNoDocOrImages"
+              : "createSaleSuccessNoDocOrImages"
+          )
+        );
+        props.closeModal();
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reqSuccess, imgSuccess, docSuccess]);
 
   function changeTab(newtype: RequirementType) {
@@ -214,16 +213,6 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     }
   }
 
-  useEffect(() => {
-    if (!processFinished) {
-      setReqSuccess(false);
-      setFormDataDoc(null);
-      setFormDataImg(null);
-      setDocSuccess(false);
-      setImgSuccess(false);
-    }
-  }, [processFinished]);
-
   function getDocListCertification(val: number | string) {
     setShowDocListToCetificate(val == certifiedCompaniesOpt);
     if (val == certifiedCompaniesOpt)
@@ -232,7 +221,11 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   }
 
   function createRequirement(values: any) {
-    setProcessFinished(false);
+    setReqSuccess(ProcessFlag.NOT_INI);
+    setFormDataDoc(null);
+    setFormDataImg(null);
+    setDocSuccess(ProcessFlag.NOT_INI);
+    setImgSuccess(ProcessFlag.NOT_INI);
 
     const data: CreateRequirementRequest = {
       name: values.title.trim(),
@@ -290,7 +283,11 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   }
 
   function uploadImgsAndDocs(reqId: string) {
-    if (!formDataDoc && !formDataImg) setProcessFinished(true);
+    if (!formDataDoc) setDocSuccess(ProcessFlag.FIN_SUCCESS);
+    if (!formDataImg) setImgSuccess(ProcessFlag.FIN_SUCCESS);
+    if (!formDataDoc && !formDataImg) {
+      return;
+    }
     if (formDataDoc) {
       const data: FormData = formDataDoc;
       data.append(ImageRequestLabels.UID, reqId);
