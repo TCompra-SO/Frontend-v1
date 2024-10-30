@@ -24,11 +24,8 @@ export function transformDataToRequirement(
   req.expirationDate = data.completion_date;
   req.paymentMethod = data.payment_methodID;
   req.allowedBidder = data.allowed_bidersID;
-  (req.image = [
-    "https://imgv3.fotor.com/images/cover-photo-image/AI-illustration-of-a-dragon-by-Fotor-AI-text-to-image-generator.jpg",
-    "https://www.searchenginejournal.com/wp-content/uploads/2022/06/image-search-1600-x-840-px-62c6dc4ff1eee-sej.png",
-  ]), //data.images;
-    (req.document = data.files);
+  req.image = data.images;
+  req.document = data.files;
   if (mainUser.uid != user.uid) {
     req.user = mainUser;
     req.subUser = user;

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import {
   defaultRequirementImage,
   defaultUserImage,
@@ -17,23 +17,30 @@ interface FrontImageProps {
 export default function FrontImage(props: FrontImageProps) {
   const [imgList, setImgList] = useState<string[]>([]);
   const childRef = useRef<ImagePreviewGroupContainerRef>(null);
-  let src = props.isUser ? defaultUserImage : defaultRequirementImage;
+  const [src, setSrc] = useState(
+    props.isUser ? defaultUserImage : defaultRequirementImage
+  );
 
   function handleOpenPreview() {
-    if (props.image && props.image.length > 0)
+    if (props.image && props.image.length > 0) {
       if (childRef.current) {
         childRef.current.openPreview();
       }
+    }
   }
 
-  if (props.image)
-    if (typeof props.image === "string") {
-      src = props.image;
-      setImgList([props.image]);
-    } else if (props.image.length > 0) {
-      src = props.image[0];
-      setImgList(props.image);
+  // Update imgList when props.image changes
+  useEffect(() => {
+    if (props.image) {
+      if (typeof props.image === "string") {
+        setSrc(props.image);
+        setImgList([props.image]);
+      } else if (Array.isArray(props.image) && props.image.length > 0) {
+        setSrc(props.image[0]);
+        setImgList(props.image);
+      }
     }
+  }, [props.image]); // Dependency on props.image
 
   return (
     <>

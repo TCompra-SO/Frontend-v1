@@ -139,7 +139,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         equalServices(apiParams.service, createSaleService())
       ) {
         setReqSuccess(ProcessFlag.FIN_SUCCESS);
-        uploadImgsAndDocs(responseData.data.uid);
+        uploadImgsAndDocs(responseData.data?.uid);
       }
     } else if (error) {
       setReqSuccess(ProcessFlag.FIN_UNSUCCESS);
@@ -282,29 +282,34 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     }
   }
 
-  function uploadImgsAndDocs(reqId: string) {
-    if (!formDataDoc) setDocSuccess(ProcessFlag.FIN_SUCCESS);
-    if (!formDataImg) setImgSuccess(ProcessFlag.FIN_SUCCESS);
-    if (!formDataDoc && !formDataImg) {
-      return;
-    }
-    if (formDataDoc) {
-      const data: FormData = formDataDoc;
-      data.append(ImageRequestLabels.UID, reqId);
-      setApiParamsDoc({
-        service: uploadDocsRequirementService(),
-        method: "post",
-        dataToSend: data,
-      });
-    }
-    if (formDataImg) {
-      const data: FormData = formDataImg;
-      data.append(ImageRequestLabels.UID, reqId);
-      setApiParamsImg({
-        service: uploadImagesRequirementService(),
-        method: "post",
-        dataToSend: data,
-      });
+  function uploadImgsAndDocs(reqId: string | undefined) {
+    if (reqId) {
+      if (!formDataDoc) setDocSuccess(ProcessFlag.FIN_SUCCESS);
+      if (!formDataImg) setImgSuccess(ProcessFlag.FIN_SUCCESS);
+      if (!formDataDoc && !formDataImg) {
+        return;
+      }
+      if (formDataDoc) {
+        const data: FormData = formDataDoc;
+        data.append(ImageRequestLabels.UID, reqId);
+        setApiParamsDoc({
+          service: uploadDocsRequirementService(),
+          method: "post",
+          dataToSend: data,
+        });
+      }
+      if (formDataImg) {
+        const data: FormData = formDataImg;
+        data.append(ImageRequestLabels.UID, reqId);
+        setApiParamsImg({
+          service: uploadImagesRequirementService(),
+          method: "post",
+          dataToSend: data,
+        });
+      }
+    } else {
+      setDocSuccess(ProcessFlag.FIN_UNSUCCESS);
+      setImgSuccess(ProcessFlag.FIN_UNSUCCESS);
     }
   }
 
