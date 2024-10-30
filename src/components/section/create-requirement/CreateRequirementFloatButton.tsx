@@ -6,6 +6,8 @@ import useIsLoggedIn from "../../../hooks/useIsLoggedIn";
 import { useLocation, useNavigate } from "react-router-dom";
 import { isHome } from "../../../utilities/globalFunctions";
 import { pageRoutes } from "../../../utilities/routes";
+import { MainState } from "../../../models/Redux";
+import { useSelector } from "react-redux";
 
 const CreateRequirement = lazy(
   () => import("../create-requirement/CreateRequirement")
@@ -15,6 +17,7 @@ export default function CreateRequirementFloatButton() {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
+  const isLoading = useSelector((state: MainState) => state.loading.isLoading);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isHomePage, setIsHomePage] = useState(true);
   const isLoggedIn = useIsLoggedIn();
@@ -25,7 +28,7 @@ export default function CreateRequirementFloatButton() {
 
   return (
     <>
-      {isLoggedIn ? (
+      {isLoggedIn && !isLoading ? (
         <>
           <FloatButton.Group shape="circle" style={{ insetInlineEnd: 24 }}>
             {!isHomePage && (

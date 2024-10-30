@@ -3,15 +3,22 @@ import { RequirementType, YesNo, UserClass } from "../../../utilities/types";
 import SelectContainer from "../../containers/SelectContainer";
 import RatingContainer from "../../containers/RatingContainer";
 import { BaseUser } from "../../../models/MainInterfaces";
-import { getUserClass } from "../../../utilities/globalFunctions";
+import {
+  calculateFinalScore,
+  getUserClass,
+} from "../../../utilities/globalFunctions";
 import ButtonContainer from "../../containers/ButtonContainer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import showNotification from "../../../utilities/notification/showNotification";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
 import FrontImage from "../FrontImage";
 import SubUserName from "../SubUserName";
+import { useApiParams } from "../../../models/Interfaces";
+import { RegisterScoreRequest } from "../../../models/Requests";
+import useApi from "../../../hooks/useApi";
+import { registerScoreService } from "../../../services/requests/scoreService";
 
 interface RatingModalProps {
   user: BaseUser;
@@ -19,7 +26,7 @@ interface RatingModalProps {
   requirementOfferTitle: string;
   type: RequirementType;
   isOffer: boolean;
-  onClose: (e: React.SyntheticEvent<Element, Event>) => any;
+  onClose: () => any;
 }
 
 export default function RatingModal(props: RatingModalProps) {
@@ -85,6 +92,34 @@ export default function RatingModal(props: RatingModalProps) {
     ],
   };
 
+  const [apiParams, setApiParams] = useState<
+    useApiParams<RegisterScoreRequest>
+  >({
+    service: null,
+    method: "get",
+  });
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi<RegisterScoreRequest>({
+      service: apiParams.service,
+      method: apiParams.method,
+      dataToSend: apiParams.dataToSend,
+    });
+
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      showNotification(notification, "success", t("scoreSavedSuccessfully"));
+      props.onClose();
+    } else if (error) {
+      showNotification(notification, "error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
+
   function onScoreChange(position: number, score: number) {
     const copy = scores;
     copy[position] = score;
@@ -95,17 +130,24 @@ export default function RatingModal(props: RatingModalProps) {
     setAnswer(answer);
   }
 
-  function closeModal(e: React.SyntheticEvent<Element, Event>) {
-    props.onClose(e);
-  }
-
-  function rateUser(e: React.SyntheticEvent<Element, Event>) {
+  function rateUser() {
     if (answer === null || scores[0] == 0 || scores[1] == 0 || scores[2] == 0) {
       showNotification(notification, "info", t("mustAnswerAllQuestions"));
       return;
     }
-    console.log(props.user.uid, uid, scores, answer);
-    props.onClose(e);
+
+    const data: RegisterScoreRequest = {
+      typeScore: userClass == UserClass.CUSTOMER ? "Client" : "Provider",
+      uidEntity: props.user.uid,
+      uidUser: uid,
+      score: calculateFinalScore(scores),
+    };
+    console.log(data);
+    setApiParams({
+      service: registerScoreService(),
+      method: "post",
+      dataToSend: data,
+    });
   }
 
   return (
@@ -194,11 +236,12 @@ export default function RatingModal(props: RatingModalProps) {
             children={t("submit")}
             className="btn btn-default wd-100"
             onClick={rateUser}
+            loading={loading}
           />
           <ButtonContainer
             children={t("cancelButton")}
             className="btn btn-second wd-100"
-            onClick={closeModal}
+            onClick={props.onClose}
           />
         </div>
       </div>

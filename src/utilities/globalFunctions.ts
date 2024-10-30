@@ -123,6 +123,13 @@ export function getScore(score: number | undefined) {
   return score ? score.toFixed(0) : 0;
 }
 
+// Retorna el promedio del puntaje
+export function calculateFinalScore(scores: number[]) {
+  if (scores.length === 0) return 0;
+  const sum = scores.reduce((acc, num) => acc + num, 0);
+  return sum / scores.length;
+}
+
 // Abre documento en una nueva ventana
 export function openDocument(documentUrl: string) {
   window.open(

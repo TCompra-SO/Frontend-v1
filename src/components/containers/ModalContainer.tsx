@@ -23,7 +23,7 @@ interface ModalContainerProps extends ModalProps {
   showFooter?: boolean;
   className?: string;
   maskClosable?: boolean;
-  onClose: (e: React.SyntheticEvent<Element, Event>) => any;
+  onClose: (e?: React.SyntheticEvent<Element, Event>) => any;
 }
 
 export default function ModalContainer(props: ModalContainerProps) {

@@ -745,7 +745,7 @@ const offerList: Offer[] = [
     canceledByCreator: true,
     type: RequirementType.GOOD,
     user: {
-      uid: "WpIPS18MYqNWegvx5REP",
+      uid: "5AM89Ku44FQ9S7qrmwol",
       name: "Aaaaaa bbbbbbbbb ccccccccc ddddddddddd S. A. C.",
       email: "john.doejohn.doejohn.doejohn.doe@example.com",
       document: "123456789",
@@ -796,7 +796,7 @@ const offerList: Offer[] = [
     state: OfferState.ACTIVE,
     type: RequirementType.GOOD,
     user: {
-      uid: "WpIPS18MYqNWegvx5REP",
+      uid: "5AM89Ku44FQ9S7qrmwol",
       name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
       email: "john.doejohn.doejohn.doejohn.doe@example.com",
       document: "123456789",
@@ -828,7 +828,7 @@ const offerList: Offer[] = [
     state: OfferState.FINISHED,
     type: RequirementType.GOOD,
     user: {
-      uid: "WpIPS18MYqNWegvx5REP",
+      uid: "5AM89Ku44FQ9S7qrmwol",
       name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
       email: "john.doejohn.doejohn.doejohn.doe@example.com",
       document: "123456789",
@@ -860,7 +860,7 @@ const offerList: Offer[] = [
     state: OfferState.WINNER,
     type: RequirementType.GOOD,
     user: {
-      uid: "WpIPS18MYqNWegvx5REP",
+      uid: "5AM89Ku44FQ9S7qrmwol",
       name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
       email: "john.doejohn.doejohn.doejohn.doe@example.com",
       document: "123456789",

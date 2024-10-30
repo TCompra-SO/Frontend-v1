@@ -7,15 +7,22 @@ import {
   UserClass,
 } from "../../../utilities/types";
 import RatingContainer from "../../containers/RatingContainer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ButtonContainer from "../../containers/ButtonContainer";
-import { getUserClass } from "../../../utilities/globalFunctions";
+import {
+  calculateFinalScore,
+  getUserClass,
+} from "../../../utilities/globalFunctions";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
 import showNotification from "../../../utilities/notification/showNotification";
 import FrontImage from "../FrontImage";
 import SubUserName from "../SubUserName";
+import { useApiParams } from "../../../models/Interfaces";
+import { RegisterScoreRequest } from "../../../models/Requests";
+import useApi from "../../../hooks/useApi";
+import { registerScoreService } from "../../../services/requests/scoreService";
 
 interface RatingCanceledModalProps {
   user: BaseUser;
@@ -23,28 +30,66 @@ interface RatingCanceledModalProps {
   requirementOfferTitle: string;
   type: RequirementType;
   isOffer: boolean;
-  onClose: (e: React.SyntheticEvent<Element, Event>) => any;
+  onClose: () => any;
 }
 
 export default function RatingCanceledModal(props: RatingCanceledModalProps) {
   const { t } = useTranslation();
   const [score, setScore] = useState(0);
   const { notification } = App.useApp();
-  const uid = useSelector((state: MainState) => state.mainUser.uid);
-
+  const uid = useSelector((state: MainState) => state.user.uid);
   const userClass: UserClass = getUserClass(props.isOffer, props.type);
+
+  const [apiParams, setApiParams] = useState<
+    useApiParams<RegisterScoreRequest>
+  >({
+    service: null,
+    method: "get",
+  });
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi<RegisterScoreRequest>({
+      service: apiParams.service,
+      method: apiParams.method,
+      dataToSend: apiParams.dataToSend,
+    });
+
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      showNotification(notification, "success", t("scoreSavedSuccessfully"));
+      props.onClose();
+    } else if (error) {
+      showNotification(notification, "error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
 
   function onScoreChange(score: number) {
     setScore(score);
   }
 
-  function saveScore(e: React.SyntheticEvent<Element, Event>) {
+  function saveScore() {
     if (score == 0) {
       showNotification(notification, "info", t("mustAnswerQuestion"));
       return;
     }
-    console.log(score, props.user.uid, "uid", uid);
-    props.onClose(e);
+
+    const data: RegisterScoreRequest = {
+      typeScore: userClass == UserClass.CUSTOMER ? "Client" : "Provider",
+      uidEntity: props.user.uid,
+      uidUser: uid,
+      score: calculateFinalScore([score]),
+    };
+
+    setApiParams({
+      service: registerScoreService(),
+      method: "post",
+      dataToSend: data,
+    });
   }
 
   return (
@@ -93,6 +138,7 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
         <div className="t-flex gap-15">
           <ButtonContainer
             onClick={saveScore}
+            loading={loading}
             children={t("submit")}
             className="btn btn-default wd-100"
           />
@@ -103,23 +149,6 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
           />
         </div>
       </div>
-      {/* <Flex align="center" style={style} justify="center">
-        <b>
-          {`${
-            userClass == UserClass.CUSTOMER
-              ? `${t("customer").toUpperCase()}:`
-              : `${t("seller").toUpperCase()}:`
-          } ${props.user.name}`}
-        </b>
-      </Flex>
-      <Flex align="center" justify="center" style={style}>
-        {props.isOffer
-          ? `${t("offer").toUpperCase()}: `
-          : props.type == RequirementType.SALE
-          ? `${t("sale").toUpperCase()}: `
-          : `${t("requirement").toUpperCase()}: `}
-        {props.requirementOfferTitle}
-      </Flex> */}
     </div>
   );
 }

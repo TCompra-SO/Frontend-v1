@@ -124,6 +124,14 @@ function App() {
                   </Suspense>
                 }
               />
+              <Route
+                path={`${pageRoutes.productDetail}/:requirementId`}
+                element={
+                  <AuthRoleGuard allowedRoles={RolesForSection.productDetail}>
+                    <ProductDetail />
+                  </AuthRoleGuard>
+                }
+              />
 
               <Route
                 path="*"
@@ -131,16 +139,6 @@ function App() {
                   <MainLayout>
                     <Suspense fallback={<LoadingPage />}>
                       <Routes>
-                        <Route
-                          path={`${pageRoutes.productDetail}/:requirementId`}
-                          element={
-                            <AuthRoleGuard
-                              allowedRoles={RolesForSection.productDetail}
-                            >
-                              <ProductDetail />
-                            </AuthRoleGuard>
-                          }
-                        />
                         <Route
                           path={`${pageRoutes.profile}`}
                           element={

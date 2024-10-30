@@ -8,6 +8,7 @@ export const ApiMainRoutes = {
   images: "images/",
   documents: "documents/",
   offers: "offers/",
+  score: "score/",
 };
 
 export const ApiRoutes = {
@@ -73,6 +74,9 @@ export const ApiRoutes = {
     create: "create/",
     getOffers: "getOffers/",
     getDetailOffer: "getDetailOffer/",
+  },
+  score: {
+    registerScore: "registerScore/",
   },
 };
 

@@ -12,6 +12,7 @@ import {
 import { uploadDocsRequirementService } from "../services/requests/documentService";
 import { uploadImagesRequirementService } from "../services/requests/imageService";
 import { createOfferService } from "../services/requests/offerService";
+import { registerScoreService } from "../services/requests/scoreService";
 import {
   changeRoleSubUserService,
   registerSubUserService,
@@ -188,6 +189,13 @@ export default function httpErrorInterceptor(error: any, type: string): string {
       break;
     case uploadImagesRequirementService().type:
       erroMsg = "errorOccurredUploadingImgs";
+      break;
+    case registerScoreService().type:
+      switch (code) {
+        case 401:
+          erroMsg = "cantRateSameEntity";
+          break;
+      }
       break;
     case "": // No mostrar mensaje
       erroMsg = "";

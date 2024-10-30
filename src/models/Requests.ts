@@ -118,3 +118,11 @@ export interface CreateOfferRequest {
   requerimentID: string;
   userID: string;
 }
+
+export interface RegisterScoreRequest {
+  typeScore: "Client" | "Provider";
+  uidEntity: string; // calificado
+  uidUser: string; // calificador
+  score: number;
+  comments?: string;
+}

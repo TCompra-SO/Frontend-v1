@@ -231,6 +231,8 @@ const resources = {
       imageUpdatedSuccessfully: "Image updated successfully",
       errorOccurredUploadingDocs: "An error occurred while uploading files",
       errorOccurredUploadingImgs: "An error occurred while uploading images",
+      scoreSavedSuccessfully: "Score was saved successfully",
+      cantRateSameEntity: "You can´t rate users from the same company",
       // Other
       yes: "Yes",
       no: "No",
@@ -596,6 +598,8 @@ const resources = {
       imageUpdatedSuccessfully: "Imagen actualizada exitosamente",
       errorOccurredUploadingDocs: "Se produjo un error al subir los archivos",
       errorOccurredUploadingImgs: "Se produjo un error al subir las imágenes",
+      scoreSavedSuccessfully: "Calificación guardada exitosamente",
+      cantRateSameEntity: "No puede calificar a usuarios de la misma empresa",
       // Other
       yes: "Sí",
       no: "No",

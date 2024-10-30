@@ -11,7 +11,6 @@ interface RateStarCountProps {
 
 export default function RateStarCount(props: RateStarCountProps) {
   const { t } = useTranslation();
-  console.log(props.score);
   const [newScore] = useState(getScore(props.score));
   let label: string = t("noRate");
   if (newScore) {
