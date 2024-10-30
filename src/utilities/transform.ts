@@ -84,7 +84,8 @@ export async function transformFromGetRequirementByIdToRequirement(
       allowedBidder: data.allowed_bidersID,
       publishDate: data.publish_date,
       state: data.stateID,
-
+      image: data.images,
+      document: data.files,
       user,
       subUser,
 

@@ -1,6 +1,9 @@
-import { useState } from "react";
-import { Image } from "antd";
+import { useRef } from "react";
 import { openDocument } from "../../utilities/globalFunctions";
+import {
+  ImagePreviewGroupContainer,
+  ImagePreviewGroupContainerRef,
+} from "../containers/ImagePreviewGroupContainer";
 
 interface ImagesAndDocsProps {
   image: string[] | undefined;
@@ -10,7 +13,13 @@ interface ImagesAndDocsProps {
 }
 
 export default function ImagesAndDocs(props: ImagesAndDocsProps) {
-  const [previewOpen, setPreviewOpen] = useState(false);
+  const childRef = useRef<ImagePreviewGroupContainerRef>(null);
+
+  function handleOpenPreview() {
+    if (childRef.current) {
+      childRef.current.openPreview();
+    }
+  }
 
   function showDocument() {
     props.document?.forEach((documentUrl) => {
@@ -21,19 +30,13 @@ export default function ImagesAndDocs(props: ImagesAndDocsProps) {
   return (
     <div className="t-flex multimedia">
       {props.image && props.image.length > 0 && (
-        <Image.PreviewGroup
-          items={props.image}
-          preview={{
-            visible: previewOpen,
-            onVisibleChange: (visible) => setPreviewOpen(visible),
-          }}
-        />
+        <ImagePreviewGroupContainer ref={childRef} image={props.image} />
       )}
       <div className="t-flex">
         <i
           className="fa-regular fa-images multi-datos"
           onClick={() => {
-            if (props.image && props.image.length > 0) setPreviewOpen(true);
+            if (props.image && props.image.length > 0) handleOpenPreview();
           }}
         ></i>
         <div className="multi-back"></div>
