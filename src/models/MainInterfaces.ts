@@ -99,6 +99,7 @@ export interface BaseUser {
   name: string;
   document: string;
   image?: string;
+  avatar?: string;
   email: string;
   tenure?: number;
   customerScore?: number;

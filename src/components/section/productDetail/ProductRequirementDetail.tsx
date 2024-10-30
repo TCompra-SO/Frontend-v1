@@ -4,7 +4,9 @@ interface RequirementDetailProps {
   requirement: Requirement | undefined;
 }
 
-export default function RequirementDetail(props: RequirementDetailProps) {
+export default function ProductRequirementDetail(
+  props: RequirementDetailProps
+) {
   return (
     <div>
       RequirementDetail<br></br>

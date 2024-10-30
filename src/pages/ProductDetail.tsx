@@ -1,4 +1,3 @@
-import { App } from "antd";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -13,7 +12,7 @@ import { Requirement } from "../models/MainInterfaces";
 import { transformFromGetRequirementByIdToRequirement } from "../utilities/transform";
 import { RequirementType } from "../utilities/types";
 import OfferForm from "../components/section/productDetail/OfferForm";
-import RequirementDetail from "../components/section/productDetail/RequirementDetail";
+import ProductRequirementDetail from "../components/section/productDetail/ProductRequirementDetail";
 
 export default function ProductDetail() {
   const { t } = useTranslation();
@@ -80,7 +79,7 @@ export default function ProductDetail() {
 
   return (
     <>
-      <RequirementDetail requirement={requirement} />
+      <ProductRequirementDetail requirement={requirement} />
       <OfferForm requirementId={requirementId} />
     </>
   );

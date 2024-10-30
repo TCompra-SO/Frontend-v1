@@ -24,6 +24,8 @@ export function transformDataToRequirement(
   req.expirationDate = data.completion_date;
   req.paymentMethod = data.payment_methodID;
   req.allowedBidder = data.allowed_bidersID;
+  req.image = data.images;
+  req.document = data.files;
   if (mainUser.uid != user.uid) {
     req.user = mainUser;
     req.subUser = user;

@@ -10,7 +10,6 @@ import { setUid, setUser, setEmail, setBaseUser } from "../redux/userSlice";
 import { DocType, ModalTypes, RegisterTypeId } from "../utilities/types";
 import { useNavigate } from "react-router-dom";
 import showNotification from "../utilities/notification/showNotification";
-import { setIsLoading } from "../redux/loadingSlice";
 import useApi from "../hooks/useApi";
 import {
   loginService,
@@ -103,11 +102,6 @@ export default function Login(props: LoginProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
-
-  useEffect(() => {
-    dispatch(setIsLoading(loading));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
