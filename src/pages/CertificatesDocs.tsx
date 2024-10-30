@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import { mainModalScrollStyle } from "../utilities/globals";
@@ -7,6 +7,7 @@ import {
   TableTypeCertificatesReceived,
   TableTypeCertificatesSent,
   TableTypeMyDocuments,
+  useApiParams,
 } from "../models/Interfaces";
 import {
   Action,
@@ -16,9 +17,11 @@ import {
 } from "../utilities/types";
 import { useTranslation } from "react-i18next";
 import { CertificateFile, CertificationItem } from "../models/MainInterfaces";
-import { openDocument } from "../utilities/globalFunctions";
+import { equalServices, openDocument } from "../utilities/globalFunctions";
 import ButtonContainer from "../components/containers/ButtonContainer";
-import { Row } from "antd";
+import { App, Row } from "antd";
+import useApi from "../hooks/useApi";
+import showNotification from "../utilities/notification/showNotification";
 
 const cert: CertificateFile[] = [
   {
@@ -44,6 +47,7 @@ const cert: CertificateFile[] = [
 
 export default function CertificatesDocs() {
   const { t } = useTranslation();
+  const { notification, message } = App.useApp();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -56,6 +60,32 @@ export default function CertificatesDocs() {
     nameColumnHeader: t("name"),
     onButtonClick: handleOnButtonClick,
   });
+
+  // const [apiParams, setApiParams] = useState<useApiParams>({
+  //   service: getOffersService(),
+  //   method: "get",
+  // });
+
+  // const { loading, responseData, error, errorMsg, fetchData } = useApi({
+  //   service: apiParams.service,
+  //   method: apiParams.method,
+  //   dataToSend: apiParams.dataToSend,
+  // });
+
+  // useEffect(() => {
+  //   if (apiParams.service) fetchData();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [apiParams]);
+
+  // useEffect(() => {
+  //   if (responseData) {
+  //     if (equalServices(apiParams.service, getOffersService())) setData();
+  //   } else if (error) {
+  //     if (equalServices(apiParams.service, getOffersService()))
+  //       showNotification(notification, "error", errorMsg);
+  //   }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [responseData, error]);
 
   function handleCloseModal() {
     setIsOpenModal(false);

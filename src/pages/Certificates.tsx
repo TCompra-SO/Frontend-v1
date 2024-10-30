@@ -6,6 +6,7 @@ import {
   ModalContent,
   TableTypeCertificatesReceived,
   TableTypeCertificatesSent,
+  useApiParams,
 } from "../models/Interfaces";
 import {
   Action,
@@ -22,6 +23,8 @@ import {
 import { useLocation } from "react-router-dom";
 import { pageSubRoutes } from "../utilities/routes";
 import { App } from "antd";
+import useApi from "../hooks/useApi";
+import showNotification from "../utilities/notification/showNotification";
 
 const cert: CertificateFile[] = [
   {
@@ -71,7 +74,7 @@ const cert2: CertificationItem[] = [
 
 export default function Certificates() {
   const location = useLocation();
-  const { message } = App.useApp();
+  const { notification, message } = App.useApp();
   const { t } = useTranslation();
   const [type, setType] = useState(getLastSegmentFromRoute(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -88,6 +91,32 @@ export default function Certificates() {
     nameColumnHeader: t("name"),
     onButtonClick: handleOnButtonClick,
   });
+
+  // const [apiParams, setApiParams] = useState<useApiParams>({
+  //   service: getOffersService(),
+  //   method: "get",
+  // });
+
+  // const { loading, responseData, error, errorMsg, fetchData } = useApi({
+  //   service: apiParams.service,
+  //   method: apiParams.method,
+  //   dataToSend: apiParams.dataToSend,
+  // });
+
+  // useEffect(() => {
+  //   if (apiParams.service) fetchData();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [apiParams]);
+
+  // useEffect(() => {
+  //   if (responseData) {
+  //     if (equalServices(apiParams.service, getOffersService())) setData();
+  //   } else if (error) {
+  //     if (equalServices(apiParams.service, getOffersService()))
+  //       showNotification(notification, "error", errorMsg);
+  //   }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [responseData, error]);
 
   useEffect(() => {
     setType(getLastSegmentFromRoute(location.pathname));

@@ -13,7 +13,6 @@ interface RequirementDetailProps {
 export default function ProductRequirementDetail(
   props: RequirementDetailProps
 ) {
-  console.log(props.requirement);
   const childRef = useRef<ImagePreviewGroupContainerRef>(null);
 
   function handleOpenPreview() {

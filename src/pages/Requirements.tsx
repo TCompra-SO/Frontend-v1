@@ -33,7 +33,7 @@ import { useSelector } from "react-redux";
 import { MainState, UserState } from "../models/Redux";
 import { getUserService } from "../services/requests/authService";
 import { getFullUser } from "../services/complete/general";
-import {
+import showNotification, {
   destroyMessage,
   showLoadingMessage,
 } from "../utilities/notification/showNotification";
@@ -1038,7 +1038,7 @@ const offerList: Offer[] = [
 
 export default function Requirements() {
   const { t } = useTranslation();
-  const { message } = App.useApp();
+  const { notification, message } = App.useApp();
   const location = useLocation();
   const [type, setType] = useState(getRouteType(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -1092,6 +1092,9 @@ export default function Requirements() {
   useEffect(() => {
     if (responseData) {
       if (equalServices(apiParams.service, getRequirementsService())) setData();
+    } else if (error) {
+      if (equalServices(apiParams.service, getRequirementsService()))
+        showNotification(notification, "error", errorMsg);
     }
   }, [responseData, error]);
 

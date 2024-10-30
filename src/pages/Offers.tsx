@@ -30,6 +30,8 @@ import useApi from "../hooks/useApi";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { transformToOffer } from "../utilities/transform";
+import showNotification from "../utilities/notification/showNotification";
+import { App } from "antd";
 
 const offerList: Offer[] = [
   {
@@ -433,6 +435,7 @@ const offerList: Offer[] = [
 export default function Offers() {
   const { t } = useTranslation();
   const location = useLocation();
+  const { notification, message } = App.useApp();
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const [type, setType] = useState(getRouteType(location.pathname));
@@ -470,7 +473,11 @@ export default function Offers() {
   useEffect(() => {
     if (responseData) {
       if (equalServices(apiParams.service, getOffersService())) setData();
+    } else if (error) {
+      if (equalServices(apiParams.service, getOffersService()))
+        showNotification(notification, "error", errorMsg);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
   useEffect(() => {

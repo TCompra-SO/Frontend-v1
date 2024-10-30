@@ -1,4 +1,4 @@
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useApiParams } from "../models/Interfaces";
@@ -15,7 +15,7 @@ import OfferForm from "../components/section/productDetail/OfferForm";
 import ProductRequirementDetail from "../components/section/productDetail/ProductRequirementDetail";
 
 export default function ProductDetail() {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { requirementId } = useParams<Params>();
@@ -25,7 +25,7 @@ export default function ProductDetail() {
     service: null,
     method: "get",
   });
-  const { loading, responseData, error, errorMsg, fetchData } = useApi({
+  const { loading, responseData, error, fetchData } = useApi({
     service: apiParams.service,
     method: apiParams.method,
     dataToSend: apiParams.dataToSend,
@@ -44,6 +44,7 @@ export default function ProductDetail() {
         method: "get",
       });
     } else navigate(pageRoutes.home);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requirementId]);
 
   useEffect(() => {
@@ -66,6 +67,7 @@ export default function ProductDetail() {
         return;
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
   async function setRequirementData(response: any) {
