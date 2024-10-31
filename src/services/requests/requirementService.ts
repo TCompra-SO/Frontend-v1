@@ -39,3 +39,12 @@ export function selectOfferService(): HttpService {
     type: "RE-SE-OF",
   };
 }
+
+export function getBasicRateDataReqService(id: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.requirements
+    }${ApiRoutes.requirements.getBasicRateData}${id}`,
+    type: "RE-BA-RA",
+  };
+}

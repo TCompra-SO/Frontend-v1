@@ -25,6 +25,7 @@ import { getRequirementsService } from "../services/requests/requirementService"
 import {
   transformDataToRequirement,
   transformToBaseUser,
+  transformToBasicRateData,
   transformToOffer,
 } from "../utilities/transform";
 import { useLocation } from "react-router-dom";
@@ -41,7 +42,10 @@ import showNotification, {
   showLoadingMessage,
 } from "../utilities/notification/showNotification";
 import { App } from "antd";
-import { getOffersByRequirementIdService } from "../services/requests/offerService";
+import {
+  getBasicRateDataOfferService,
+  getOffersByRequirementIdService,
+} from "../services/requests/offerService";
 import { getBaseDataUserService } from "../services/requests/authService";
 
 // const requirements: Requirement[] = [
@@ -1064,6 +1068,7 @@ export default function Requirements() {
     onButtonClick: handleOnButtonClick,
   });
 
+  // Obtener lista inicialmente y obtener ofertas
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: getRequirementsService(),
     method: "get",
@@ -1073,6 +1078,24 @@ export default function Requirements() {
     service: apiParams.service,
     method: apiParams.method,
     dataToSend: apiParams.dataToSend,
+  });
+
+  // Obtener datos para culminar
+  const [apiParamsRate, setApiParamsRate] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingRate,
+    responseData: responseDataRate,
+    error: errorRate,
+    errorMsg: errorMsgRate,
+    fetchData: fetchDataRate,
+  } = useApi({
+    service: apiParamsRate.service,
+    method: apiParamsRate.method,
+    dataToSend: apiParamsRate.dataToSend,
   });
 
   useEffect(() => {
@@ -1116,6 +1139,20 @@ export default function Requirements() {
       else destroyMessage(message);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
+
+  useEffect(() => {
+    if (apiParamsRate.service) fetchDataRate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsRate]);
+
+  useEffect(() => {
+    if (responseDataRate) {
+      openRateModal(responseDataRate);
+    } else if (errorRate) {
+      showNotification(notification, "error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataRate, errorRate]);
 
   async function setData() {
     if (responseData) {
@@ -1170,6 +1207,23 @@ export default function Requirements() {
     }
   }
 
+  function openRateModal(responseData: any) {
+    const data = transformToBasicRateData(responseData.data[0]);
+    if (requirement) {
+      setDataModal({
+        type: ModalTypes.RATE_USER,
+        data: {
+          user: requirement.user,
+          type: requirement.type,
+          isOffer: true,
+          requirementOfferTitle: requirement.title, // r3v obtener datos title user subuser de oferta ganadora
+          subUser: requirement.subUser,
+        },
+      });
+      setIsOpenModal(true);
+    }
+  }
+
   async function handleOnButtonClick(action: Action, requirement: Requirement) {
     setRequirement(requirement);
     switch (action) {
@@ -1203,17 +1257,10 @@ export default function Requirements() {
         break;
       }
       case Action.FINISH: {
-        setDataModal({
-          type: ModalTypes.RATE_USER,
-          data: {
-            user: requirement.user,
-            type: requirement.type,
-            isOffer: true,
-            requirementOfferTitle: requirement.title, // r3v obtener datos title user subuser de oferta ganadora
-            subUser: requirement.subUser,
-          },
+        setApiParamsRate({
+          service: getBasicRateDataOfferService("YjThZe9nNfZAFfrJeMb5"), // r3v
+          method: "get",
         });
-        setIsOpenModal(true);
 
         break;
       }

@@ -183,6 +183,7 @@ export interface PlanData {
 }
 
 export interface BasicRateData {
+  uid: string;
   title: string;
   userId: string;
   userName: string;

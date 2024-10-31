@@ -53,12 +53,12 @@ export default function Sidebar(props: SidebarProps) {
         ></i>
       )}
       <div>
-        <ImageContainer
+        <img
           src="/src/assets/images/logo-white.svg"
           style={{ width: "100%" }}
-          preview={false}
+          // preview={false}
           // onClick={() => redirectTo(pageRoutes.home)}
-        ></ImageContainer>
+        ></img>
       </div>
 
       <div className="menu-tc-1 t-flex scroll-y">

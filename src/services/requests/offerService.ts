@@ -36,3 +36,12 @@ export function getOffersByRequirementIdService(reqId: string): HttpService {
     type: "OF-GET-RID",
   };
 }
+
+export function getBasicRateDataOfferService(id: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+      ApiRoutes.offers.getBasicRateData
+    }${id}`,
+    type: "OF-BA-RA",
+  };
+}

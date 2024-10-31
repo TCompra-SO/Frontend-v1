@@ -1,5 +1,6 @@
 import {
   BaseUser,
+  BasicRateData,
   FullUser,
   Offer,
   Requirement,
@@ -124,4 +125,9 @@ export function transformToOffer(
   //   offer.subUser = user;
   // } else offer.user = user;
   return offer;
+}
+
+export function transformToBasicRateData(data: any) {
+  const basicData: BasicRateData = data;
+  return basicData;
 }

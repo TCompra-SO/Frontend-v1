@@ -2,7 +2,7 @@ import { App, Tooltip } from "antd";
 import { RequirementType, YesNo, UserClass } from "../../../utilities/types";
 import SelectContainer from "../../containers/SelectContainer";
 import RatingContainer from "../../containers/RatingContainer";
-import { BaseUser } from "../../../models/MainInterfaces";
+import { BaseUser, BasicRateData } from "../../../models/MainInterfaces";
 import {
   calculateFinalScore,
   getUserClass,
@@ -24,6 +24,7 @@ interface RatingModalProps {
   user: BaseUser;
   subUser: BaseUser | undefined;
   requirementOfferTitle: string;
+  basicRateData?: BasicRateData;
   type: RequirementType;
   isOffer: boolean;
   onClose: () => any;

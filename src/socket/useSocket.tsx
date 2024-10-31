@@ -50,7 +50,7 @@ export default function useSocket() {
       }
       setLoading(false);
 
-      socketAPI.on("getRequirements", async () => {
+      socketAPI.on("getRequeriments", async () => {
         setLoading(true);
         const { responseData }: any = await makeRequest({
           service: getRequirementsService(),
@@ -78,7 +78,7 @@ export default function useSocket() {
 
     // Limpiar el socket al desmontar el componente
     return () => {
-      socketAPI.off("getRequirements");
+      socketAPI.off("getRequeriments");
     };
   }, []);
   return { requirements, loading };
