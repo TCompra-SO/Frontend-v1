@@ -57,6 +57,7 @@ export const ApiRoutes = {
     getRequirement: "getRequeriment/",
     getRequirements: "getRequeriments/",
     create: "create/",
+    selectOffer: "selectOffer/",
   },
   requirement: {
     create: "create/",
@@ -74,6 +75,7 @@ export const ApiRoutes = {
     create: "create/",
     getOffers: "getOffers/",
     getDetailOffer: "getDetailOffer/",
+    getOffersByRequirement: "getOffersByRequeriment/",
   },
   score: {
     registerScore: "registerScore/",

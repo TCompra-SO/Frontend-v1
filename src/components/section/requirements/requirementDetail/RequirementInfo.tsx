@@ -16,7 +16,6 @@ export default function RequirementInfo(props: RequirementInfoProps) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { deliveryTimeData } = context;
-  console.log(props.requirement);
 
   return (
     <div className="t-flex gap-15 requerimiento-o">

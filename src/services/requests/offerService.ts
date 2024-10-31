@@ -27,3 +27,12 @@ export function getOfferByIdService(): HttpService {
     type: "OF-GET-ID",
   };
 }
+
+export function getOffersByRequirementIdService(reqId: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+      ApiRoutes.offers.getOffersByRequirement
+    }${reqId}`,
+    type: "OF-GET-RID",
+  };
+}

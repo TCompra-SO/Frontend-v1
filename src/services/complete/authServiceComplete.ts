@@ -11,7 +11,7 @@ export async function loadUserInfo(): Promise<boolean> {
   const userData = localStorage.getItem(userDataKey);
   if (userData) {
     const userInfo = JSON.parse(decryptData(userData));
-    console.log(userInfo);
+    // console.log(userInfo);
     if (userInfo) {
       store.dispatch(
         setUser({

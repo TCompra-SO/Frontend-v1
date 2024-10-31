@@ -26,7 +26,7 @@ export default function CancelPurchaseOrderModal(
   };
 
   function cancelPurchaseOrder(e: SyntheticEvent<Element, Event>) {
-    console.log(props.offerId, props.requirementId, text);
+    console.log(props.offerId, props.requirementId, text.trim());
     if (!text) {
       showNotification(
         notification,

@@ -29,7 +29,6 @@ export default function FrontImage(props: FrontImageProps) {
     }
   }
 
-  // Update imgList when props.image changes
   useEffect(() => {
     if (props.image) {
       if (typeof props.image === "string") {
@@ -40,7 +39,7 @@ export default function FrontImage(props: FrontImageProps) {
         setImgList(props.image);
       }
     }
-  }, [props.image]); // Dependency on props.image
+  }, [props.image]);
 
   return (
     <>
@@ -49,6 +48,9 @@ export default function FrontImage(props: FrontImageProps) {
         src={src}
         className={props.small ? "img-oferta" : "portada-detalle"}
         onClick={handleOpenPreview}
+        style={{
+          cursor: props.image && props.image.length > 0 ? "pointer" : undefined,
+        }}
       />
     </>
   );

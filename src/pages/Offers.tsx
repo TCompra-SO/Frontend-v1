@@ -495,11 +495,10 @@ export default function Offers() {
 
   async function setData() {
     if (responseData) {
-      const data = await Promise.all(
-        responseData.data.map(
-          async (e: any) =>
-            await transformToOffer(e, type, dataUser, mainDataUser)
-        )
+      const data = responseData.data.map((e: any) =>
+        dataUser.uid == mainDataUser.uid
+          ? transformToOffer(e, type, dataUser)
+          : transformToOffer(e, type, dataUser, mainDataUser)
       );
 
       setTableContent({

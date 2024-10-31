@@ -48,7 +48,7 @@ export default function RequirementOfferListItemHeader({
       items.push({
         label: t(ActionLabel[Action.CANCEL_PURCHASE_ORDER]),
         key: Action.CANCEL_PURCHASE_ORDER,
-        onClick: () => onOpenModal(Action.CANCEL_PURCHASE_ORDER),
+        onClick: () => onOpenModal(Action.CANCEL_PURCHASE_ORDER), // r3v completar
       });
     if (
       props.offer.state == OfferState.ACTIVE &&

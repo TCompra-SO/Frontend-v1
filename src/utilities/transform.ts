@@ -7,7 +7,7 @@ import {
 import { UserState } from "../models/Redux";
 import { getBaseDataUserService } from "../services/requests/authService";
 import makeRequest from "./globalFunctions";
-import { RequirementState, RequirementType, Usage } from "./types";
+import { RequirementType, Usage } from "./types";
 
 export function transformDataToRequirement(
   data: any,
@@ -16,7 +16,6 @@ export function transformDataToRequirement(
   mainUser: UserState | BaseUser
 ) {
   const req: Requirement = data;
-  req.state = RequirementState.FINISHED;
   req.deliveryTime = data.submission_date;
   req.type = type;
   req.warrantyTime = data.duration;
@@ -101,7 +100,7 @@ export function transformToOffer(
   data: any,
   type: RequirementType,
   user: UserState | BaseUser,
-  mainUser: UserState | BaseUser
+  mainUser?: UserState | BaseUser
 ) {
   const offer: Offer = data;
   offer.key = data.uid;
@@ -115,9 +114,14 @@ export function transformToOffer(
   offer.requirementId = data.requerimentID;
   offer.state = data.stateID;
   offer.type = type;
-  if (mainUser.uid != user.uid) {
+  offer.requirementTitle = data.requerimentTitle;
+  if (mainUser) {
     offer.user = mainUser;
     offer.subUser = user;
   } else offer.user = user;
+  // if (mainUser.uid != user.uid) {
+  //   offer.user = mainUser;
+  //   offer.subUser = user;
+  // } else offer.user = user;
   return offer;
 }

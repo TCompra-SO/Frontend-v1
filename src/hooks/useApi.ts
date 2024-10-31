@@ -36,14 +36,13 @@ export default function useApi<T = any>({
                 Authorization: token ? `Bearer ${token}` : undefined,
               },
         };
-        console.log(config);
+        // console.log(config);
         const result: AxiosResponse = await axios(config);
         setResponseData(result.data);
       } catch (err) {
         console.log("HTTP error:", err);
         setError(err as AxiosError);
         const errorMsg_ = t(httpErrorInterceptor(err, service.type));
-
         setErrorMsg(errorMsg_);
       } finally {
         setLoading(false);

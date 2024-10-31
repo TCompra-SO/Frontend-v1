@@ -30,7 +30,6 @@ export const userSlice = createSlice({
       if (action.payload.dataUser) {
         const { uid, name, email, type, typeID, planID } =
           action.payload.dataUser[0];
-        console.log(action.payload);
         state.token = token;
         state.typeEntity = type;
         state.name = name;
@@ -39,10 +38,10 @@ export const userSlice = createSlice({
         state.planID = planID;
         state.uid = uid;
         localStorage.setItem(userDataKey, encryptData(JSON.stringify(state)));
+        console.log(state.uid);
       }
     },
     setBaseUser: (state, action: { payload: BaseUser; type: string }) => {
-      console.log(action.payload);
       state.tenure = action.payload.tenure;
       state.customerScore = action.payload.customerScore;
       state.sellerScore = action.payload.sellerScore;

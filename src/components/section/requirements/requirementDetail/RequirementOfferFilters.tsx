@@ -39,7 +39,7 @@ export default function RequirementOfferFilters(
         ),
       }))
   );
-  console.log(props.filters);
+
   const [initialValues] = useState<OfferFilters>(
     props.filters ?? {
       price: allSelect,

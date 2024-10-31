@@ -22,22 +22,27 @@ import TablePageContent from "../components/section/table-page/TablePageContent"
 import { mainModalScrollStyle } from "../utilities/globals";
 import useApi from "../hooks/useApi";
 import { getRequirementsService } from "../services/requests/requirementService";
-import { transformDataToRequirement } from "../utilities/transform";
-import { useLocation } from "react-router-dom";
 import {
+  transformDataToRequirement,
+  transformToBaseUser,
+  transformToOffer,
+} from "../utilities/transform";
+import { useLocation } from "react-router-dom";
+import makeRequest, {
   equalServices,
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
 import { useSelector } from "react-redux";
-import { MainState, UserState } from "../models/Redux";
-import { getUserService } from "../services/requests/authService";
+import { MainState } from "../models/Redux";
 import { getFullUser } from "../services/complete/general";
 import showNotification, {
   destroyMessage,
   showLoadingMessage,
 } from "../utilities/notification/showNotification";
 import { App } from "antd";
+import { getOffersByRequirementIdService } from "../services/requests/offerService";
+import { getBaseDataUserService } from "../services/requests/authService";
 
 // const requirements: Requirement[] = [
 //   {
@@ -1042,6 +1047,7 @@ export default function Requirements() {
   const location = useLocation();
   const [type, setType] = useState(getRouteType(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [requirement, setRequirement] = useState<Requirement>();
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
 
@@ -1092,18 +1098,24 @@ export default function Requirements() {
   useEffect(() => {
     if (responseData) {
       if (equalServices(apiParams.service, getRequirementsService())) setData();
+      if (equalServices(apiParams.service, getOffersByRequirementIdService("")))
+        openDetailedRequirement(responseData);
     } else if (error) {
-      if (equalServices(apiParams.service, getRequirementsService()))
+      if (
+        equalServices(apiParams.service, getRequirementsService()) ||
+        equalServices(apiParams.service, getOffersByRequirementIdService(""))
+      )
         showNotification(notification, "error", errorMsg);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
-  // useEffect(() => {
-  //   if (equalServices(apiParams.service, getUserService("")))
-  //     if (loading) showLoadingMessage(message);
-  //     else destroyMessage(message);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [loading]);
+  useEffect(() => {
+    if (equalServices(apiParams.service, getOffersByRequirementIdService("")))
+      if (loading) showLoadingMessage(message);
+      else destroyMessage(message);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
 
   async function setData() {
     if (responseData) {
@@ -1131,23 +1143,41 @@ export default function Requirements() {
     }
   }
 
-  function handleCloseModal() {
-    setIsOpenModal(false);
+  async function openDetailedRequirement(responseData: any) {
+    console.log(responseData);
+    if (requirement && responseData.data && Array.isArray(responseData.data)) {
+      const offerArray: Offer[] = await Promise.all(
+        responseData.data.map(async (item: any) => {
+          const { responseData }: any = await makeRequest({
+            service: getBaseDataUserService(item.userID),
+            method: "get",
+          });
+          const { user, subUser } = transformToBaseUser(responseData.data[0]);
+          return subUser
+            ? transformToOffer(item, type, subUser, user)
+            : transformToOffer(item, type, user);
+        })
+      );
+      setDataModal({
+        type: ModalTypes.DETAILED_REQUIREMENT,
+        data: {
+          offerList: offerArray,
+          requirement: requirement,
+          forPurchaseOrder: false,
+        },
+      });
+      setIsOpenModal(true);
+    }
   }
 
   async function handleOnButtonClick(action: Action, requirement: Requirement) {
+    setRequirement(requirement);
     switch (action) {
       case Action.SHOW_OFFERS: {
-        setDataModal({
-          type: ModalTypes.DETAILED_REQUIREMENT,
-          data: {
-            offerList,
-            requirement: requirement,
-            forPurchaseOrder: false,
-          }, //r3v
+        setApiParams({
+          service: getOffersByRequirementIdService(requirement.key), //"xBquYtjTR4flsTymcjph"), //requirement.key),
+          method: "get",
         });
-        setIsOpenModal(true);
-
         break;
       }
       case Action.SHOW_SUMMARY: {
@@ -1230,6 +1260,10 @@ export default function Requirements() {
 
   function cancelRequirement(requirementId: string) {
     console.log("cancelRequirement", requirementId);
+  }
+
+  function handleCloseModal() {
+    setIsOpenModal(false);
   }
 
   return (

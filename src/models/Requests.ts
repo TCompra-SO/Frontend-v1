@@ -126,3 +126,9 @@ export interface RegisterScoreRequest {
   score: number;
   comments?: string;
 }
+
+export interface SelectOfferRequest {
+  requerimentID: string;
+  offerID: string;
+  observation?: string;
+}
