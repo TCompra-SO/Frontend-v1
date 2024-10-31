@@ -12,6 +12,7 @@ import {
 import { uploadDocsRequirementService } from "../services/requests/documentService";
 import { uploadImagesRequirementService } from "../services/requests/imageService";
 import { createOfferService } from "../services/requests/offerService";
+import { selectOfferService } from "../services/requests/requirementService";
 import { registerScoreService } from "../services/requests/scoreService";
 import {
   changeRoleSubUserService,
@@ -194,6 +195,22 @@ export default function httpErrorInterceptor(error: any, type: string): string {
       switch (code) {
         case 401:
           erroMsg = "cantRateSameEntity";
+          break;
+      }
+      break;
+    case selectOfferService().type:
+      switch (code) {
+        case 400:
+          erroMsg = "requirementDoesNotExist";
+          break;
+        case 403:
+          erroMsg = "reqOfferNotFound";
+          break;
+        case 404:
+          erroMsg = "offerWasAlreadySelected";
+          break;
+        case 405:
+          erroMsg = "cantOfferToRequirement";
           break;
       }
       break;
