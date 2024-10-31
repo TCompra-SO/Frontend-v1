@@ -234,6 +234,7 @@ const resources = {
       scoreSavedSuccessfully: "Score was saved successfully",
       cantRateSameEntity: "You can´t rate users from the same company",
       offerSelectedSuccessfully: "Offer selected successfully",
+      thereAreNoOffers: "There are no offers",
       // Other
       yes: "Yes",
       no: "No",
@@ -602,6 +603,7 @@ const resources = {
       scoreSavedSuccessfully: "Calificación guardada exitosamente",
       cantRateSameEntity: "No puede calificar a usuarios de la misma empresa",
       offerSelectedSuccessfully: "Oferta seleccionada exitosamente",
+      thereAreNoOffers: "No hay ofertas",
       // Other
       yes: "Sí",
       no: "No",

@@ -27,11 +27,13 @@ export default function RequirementDetail(props: RequirementDetailProps) {
         <div className="detalle-oferta">
           <RequirementInfo requirement={props.requirement}></RequirementInfo>
 
-          <RequirementOfferFilters
-            onFilterChange={HandleonFilterChange}
-            fromPurchaseOrder={props.forPurchaseOrder}
-            filters={props.filters}
-          ></RequirementOfferFilters>
+          {props.offerList.length > 0 && (
+            <RequirementOfferFilters
+              onFilterChange={HandleonFilterChange}
+              fromPurchaseOrder={props.forPurchaseOrder}
+              filters={props.filters}
+            ></RequirementOfferFilters>
+          )}
 
           <RequirementOfferList
             offers={props.offerList}
