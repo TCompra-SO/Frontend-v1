@@ -38,7 +38,6 @@ import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { getFullUser } from "../services/complete/general";
 import showNotification, {
-  destroyMessage,
   showLoadingMessage,
 } from "../utilities/notification/showNotification";
 import { App } from "antd";
@@ -1080,24 +1079,6 @@ export default function Requirements() {
     dataToSend: apiParams.dataToSend,
   });
 
-  // Obtener datos para culminar
-  const [apiParamsRate, setApiParamsRate] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingRate,
-    responseData: responseDataRate,
-    error: errorRate,
-    errorMsg: errorMsgRate,
-    fetchData: fetchDataRate,
-  } = useApi({
-    service: apiParamsRate.service,
-    method: apiParamsRate.method,
-    dataToSend: apiParamsRate.dataToSend,
-  });
-
   useEffect(() => {
     setType(getRouteType(location.pathname));
   }, [location]);
@@ -1135,10 +1116,33 @@ export default function Requirements() {
 
   useEffect(() => {
     if (equalServices(apiParams.service, getOffersByRequirementIdService("")))
-      if (loading) showLoadingMessage(message);
-      else destroyMessage(message);
+      showLoadingMessage(message, loading);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
+
+  /* Obtener datos para culminar */
+  const [apiParamsRate, setApiParamsRate] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingRate,
+    responseData: responseDataRate,
+    error: errorRate,
+    errorMsg: errorMsgRate,
+    fetchData: fetchDataRate,
+  } = useApi({
+    service: apiParamsRate.service,
+    method: apiParamsRate.method,
+    dataToSend: apiParamsRate.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingRate);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingRate]);
 
   useEffect(() => {
     if (apiParamsRate.service) fetchDataRate();
@@ -1149,7 +1153,7 @@ export default function Requirements() {
     if (responseDataRate) {
       openRateModal(responseDataRate);
     } else if (errorRate) {
-      showNotification(notification, "error", errorMsg);
+      showNotification(notification, "error", errorMsgRate);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataRate, errorRate]);
@@ -1213,11 +1217,9 @@ export default function Requirements() {
       setDataModal({
         type: ModalTypes.RATE_USER,
         data: {
-          user: requirement.user,
+          basicRateData: data,
           type: requirement.type,
           isOffer: true,
-          requirementOfferTitle: requirement.title, // r3v obtener datos title user subuser de oferta ganadora
-          subUser: requirement.subUser,
         },
       });
       setIsOpenModal(true);
@@ -1226,6 +1228,7 @@ export default function Requirements() {
 
   async function handleOnButtonClick(action: Action, requirement: Requirement) {
     setRequirement(requirement);
+
     switch (action) {
       case Action.SHOW_OFFERS: {
         setApiParams({
@@ -1235,7 +1238,7 @@ export default function Requirements() {
         break;
       }
       case Action.SHOW_SUMMARY: {
-        showLoadingMessage(message);
+        showLoadingMessage(message, true);
         const user: FullUser | null = await getFullUser(offerList[0].user.uid);
         if (user) {
           setDataModal({
@@ -1244,7 +1247,7 @@ export default function Requirements() {
           });
           setIsOpenModal(true);
         }
-        destroyMessage(message);
+        showLoadingMessage(message, false);
         break;
       }
       case Action.REPUBLISH: {
@@ -1253,15 +1256,14 @@ export default function Requirements() {
           data: { requirementId: requirement.key },
         });
         setIsOpenModal(true);
-
         break;
       }
       case Action.FINISH: {
-        setApiParamsRate({
-          service: getBasicRateDataOfferService("YjThZe9nNfZAFfrJeMb5"), // r3v
-          method: "get",
-        });
-
+        if (requirement.offerId)
+          setApiParamsRate({
+            service: getBasicRateDataOfferService(requirement.offerId),
+            method: "get",
+          });
         break;
       }
       case Action.DELETE: {

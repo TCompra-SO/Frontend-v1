@@ -24,6 +24,7 @@ import {
   BasicPurchaseOrder,
   CertificateFile,
   CertificationItem,
+  BasicRateData,
 } from "./MainInterfaces";
 import { SubUserProfile } from "./Responses";
 
@@ -61,9 +62,7 @@ export interface ModalOfferSummary extends CommonModalType {
 export interface ModalRateCanceled extends CommonModalType {
   type: ModalTypes.RATE_CANCELED;
   data: {
-    user: BaseUser;
-    subUser: BaseUser | undefined;
-    requirementOfferTitle: string;
+    basicRateData: BasicRateData;
     type: RequirementType;
     isOffer: boolean;
   };
@@ -72,9 +71,7 @@ export interface ModalRateCanceled extends CommonModalType {
 export interface ModalRateUser extends CommonModalType {
   type: ModalTypes.RATE_USER;
   data: {
-    user: BaseUser;
-    subUser: BaseUser | undefined;
-    requirementOfferTitle: string;
+    basicRateData: BasicRateData;
     type: RequirementType;
     isOffer: boolean;
   };

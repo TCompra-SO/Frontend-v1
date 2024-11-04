@@ -25,7 +25,6 @@ import useApi from "../hooks/useApi";
 import { getUserService } from "../services/requests/authService";
 import { App } from "antd";
 import showNotification, {
-  destroyMessage,
   showLoadingMessage,
 } from "../utilities/notification/showNotification";
 import {
@@ -547,8 +546,8 @@ export default function PurchaseOrders() {
 
   useEffect(() => {
     if (equalServices(apiParams.service, getUserService("")))
-      if (loading) showLoadingMessage(message);
-      else destroyMessage(message);
+      showLoadingMessage(message, loading);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 

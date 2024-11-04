@@ -2,7 +2,7 @@ import { App, Tooltip } from "antd";
 import { RequirementType, YesNo, UserClass } from "../../../utilities/types";
 import SelectContainer from "../../containers/SelectContainer";
 import RatingContainer from "../../containers/RatingContainer";
-import { BaseUser, BasicRateData } from "../../../models/MainInterfaces";
+import { BasicRateData } from "../../../models/MainInterfaces";
 import {
   calculateFinalScore,
   getUserClass,
@@ -21,10 +21,7 @@ import useApi from "../../../hooks/useApi";
 import { registerScoreService } from "../../../services/requests/scoreService";
 
 interface RatingModalProps {
-  user: BaseUser;
-  subUser: BaseUser | undefined;
-  requirementOfferTitle: string;
-  basicRateData?: BasicRateData;
+  basicRateData: BasicRateData;
   type: RequirementType;
   isOffer: boolean;
   onClose: () => any;
@@ -139,9 +136,10 @@ export default function RatingModal(props: RatingModalProps) {
 
     const data: RegisterScoreRequest = {
       typeScore: userClass == UserClass.CUSTOMER ? "Client" : "Provider",
-      uidEntity: props.user.uid,
+      uidEntity: props.basicRateData.userId,
       uidUser: uid,
       score: calculateFinalScore(scores),
+      comments: "",
     };
     console.log(data);
     setApiParams({
@@ -167,20 +165,27 @@ export default function RatingModal(props: RatingModalProps) {
         <div className="card-ofertas">
           <div className="t-flex">
             <div className="t-flex oferta-titulo">
-              <FrontImage small image={props.user.image} isUser={true} />
+              <FrontImage
+                small
+                image={props.basicRateData.userImage}
+                isUser={true}
+              />
               <div className="oferta-usuario">
                 <div className="oferta-datos  m-0">
-                  <Tooltip title={props.user.name}>
+                  <Tooltip title={props.basicRateData.userName}>
                     <div className="usuario-name text-truncate">
-                      {props.user.name}
+                      {props.basicRateData.userName}
                     </div>
                   </Tooltip>
-                  <SubUserName small subUser={props.subUser} />
+                  <SubUserName
+                    small
+                    subUserName={props.basicRateData.subUserName}
+                  />
                 </div>
                 <div className="t-flex oferta-descripcion">
-                  <Tooltip title={props.requirementOfferTitle}>
+                  <Tooltip title={props.basicRateData.title}>
                     <div className="text-truncate detalles-oferta">
-                      {props.requirementOfferTitle}
+                      {props.basicRateData.title}
                     </div>
                   </Tooltip>
                 </div>

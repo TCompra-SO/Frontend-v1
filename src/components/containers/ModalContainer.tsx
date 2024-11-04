@@ -78,9 +78,7 @@ export default function ModalContainer(props: ModalContainerProps) {
       case ModalTypes.RATE_CANCELED: {
         return (
           <RatingCanceledModal
-            user={props.content.data.user}
-            subUser={props.content.data.subUser}
-            requirementOfferTitle={props.content.data.requirementOfferTitle}
+            basicRateData={props.content.data.basicRateData}
             type={props.content.data.type}
             isOffer={props.content.data.isOffer}
             onClose={props.onClose}
@@ -91,9 +89,7 @@ export default function ModalContainer(props: ModalContainerProps) {
         return (
           <RatingModal
             onClose={props.onClose}
-            user={props.content.data.user}
-            subUser={props.content.data.subUser}
-            requirementOfferTitle={props.content.data.requirementOfferTitle}
+            basicRateData={props.content.data.basicRateData}
             type={props.content.data.type}
             isOffer={props.content.data.isOffer}
           />

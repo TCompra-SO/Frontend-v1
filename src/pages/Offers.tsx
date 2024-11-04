@@ -29,9 +29,15 @@ import { getOffersService } from "../services/requests/offerService";
 import useApi from "../hooks/useApi";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
-import { transformToOffer } from "../utilities/transform";
-import showNotification from "../utilities/notification/showNotification";
+import {
+  transformToBasicRateData,
+  transformToOffer,
+} from "../utilities/transform";
+import showNotification, {
+  showLoadingMessage,
+} from "../utilities/notification/showNotification";
 import { App } from "antd";
+import { getBasicRateDataReqService } from "../services/requests/requirementService";
 
 const offerList: Offer[] = [
   {
@@ -439,6 +445,7 @@ export default function Offers() {
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const [type, setType] = useState(getRouteType(location.pathname));
+  const [currentAction, setCurrentAction] = useState<Action>(Action.CANCEL);
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const [dataModal, setDataModal] = useState<ModalContent>({
@@ -493,6 +500,43 @@ export default function Offers() {
     });
   }, [type]);
 
+  /* Obtener datos para culminar */
+  const [apiParamsRate, setApiParamsRate] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingRate,
+    responseData: responseDataRate,
+    error: errorRate,
+    errorMsg: errorMsgRate,
+    fetchData: fetchDataRate,
+  } = useApi({
+    service: apiParamsRate.service,
+    method: apiParamsRate.method,
+    dataToSend: apiParamsRate.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingRate);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingRate]);
+
+  useEffect(() => {
+    if (apiParamsRate.service) fetchDataRate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsRate]);
+
+  useEffect(() => {
+    if (responseDataRate) {
+      openRateModal(responseDataRate);
+    } else if (errorRate) {
+      showNotification(notification, "error", errorMsgRate);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataRate, errorRate]);
+
   async function setData() {
     if (responseData) {
       const data = responseData.data.map((e: any) =>
@@ -526,7 +570,24 @@ export default function Offers() {
     console.log("goToChat", offer.key, offer.requirementId);
   }
 
+  function openRateModal(responseData: any) {
+    const data = transformToBasicRateData(responseData.data[0]);
+    setDataModal({
+      type:
+        currentAction == Action.FINISH
+          ? ModalTypes.RATE_USER
+          : ModalTypes.RATE_CANCELED,
+      data: {
+        basicRateData: data,
+        type,
+        isOffer: false,
+      },
+    });
+    setIsOpenModal(true);
+  }
+
   function handleOnButtonClick(action: Action, offer: Offer) {
+    setCurrentAction(action);
     switch (action) {
       case Action.OFFER_DETAIL:
         setDataModal({
@@ -559,19 +620,10 @@ export default function Offers() {
       }
 
       case Action.RATE_CANCELED: {
-        /* r3v get user subuser from requirement */
-        // getBaseUserForUserSubUser(offer.);
-        setDataModal({
-          type: ModalTypes.RATE_CANCELED,
-          data: {
-            user: offer.user,
-            subUser: offer.subUser,
-            requirementOfferTitle: offer.requirementTitle,
-            type: offer.type,
-            isOffer: false,
-          },
+        setApiParamsRate({
+          service: getBasicRateDataReqService(offer.requirementId),
+          method: "get",
         });
-        setIsOpenModal(true);
         break;
       }
 
@@ -589,18 +641,10 @@ export default function Offers() {
       }
 
       case Action.FINISH: {
-        /* r3v get user subuser from requirement */
-        setDataModal({
-          type: ModalTypes.RATE_USER,
-          data: {
-            user: offer.user,
-            subUser: offer.subUser,
-            type: offer.type,
-            isOffer: false,
-            requirementOfferTitle: offer.requirementTitle,
-          },
+        setApiParamsRate({
+          service: getBasicRateDataReqService(offer.requirementId),
+          method: "get",
         });
-        setIsOpenModal(true);
         break;
       }
     }

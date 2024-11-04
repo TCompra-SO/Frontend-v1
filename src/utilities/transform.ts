@@ -8,7 +8,7 @@ import {
 import { UserState } from "../models/Redux";
 import { getBaseDataUserService } from "../services/requests/authService";
 import makeRequest from "./globalFunctions";
-import { RequirementType, Usage } from "./types";
+import { OfferState, RequirementType, Usage } from "./types";
 
 export function transformDataToRequirement(
   data: any,
@@ -26,6 +26,9 @@ export function transformDataToRequirement(
   req.allowedBidder = data.allowed_bidersID;
   req.image = data.images;
   req.document = data.files;
+  if (data.winOffer) {
+    req.offerId = data.winOffer.uid;
+  }
   if (mainUser.uid != user.uid) {
     req.user = mainUser;
     req.subUser = user;
@@ -88,10 +91,12 @@ export async function transformFromGetRequirementByIdToRequirement(
       document: data.files,
       user,
       subUser,
-
       numberOffers: data.number_offers,
       type,
     };
+    if (data.winOffer) {
+      req.offerId = data.winOffer.uid;
+    }
     return req;
   }
   return null;
@@ -113,7 +118,7 @@ export function transformToOffer(
   offer.price = data.budget;
   offer.igv = data.includesIGV;
   offer.requirementId = data.requerimentID;
-  offer.state = data.stateID;
+  offer.state = OfferState.CANCELED; //data.stateID; //OfferState.CANCELED
   offer.type = type;
   offer.requirementTitle = data.requerimentTitle;
   if (mainUser) {
@@ -129,5 +134,10 @@ export function transformToOffer(
 
 export function transformToBasicRateData(data: any) {
   const basicData: BasicRateData = data;
-  return basicData;
+  if (basicData.userId !== basicData.subUserId) return basicData;
+  else {
+    basicData.subUserId = undefined;
+    basicData.subUserName = undefined;
+    return basicData;
+  }
 }

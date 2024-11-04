@@ -30,7 +30,7 @@ export default function RequirementInfoNoTags(
         <Tooltip title={props.user.name}>
           <div className="badge-default text-truncate">{props.user.name}</div>
         </Tooltip>
-        <SubUserName subUser={props.subUser} />
+        <SubUserName subUserName={props.subUser?.name} />
         <div className="badge-second">
           {t(getLabelFromRequirementType(props.type))}
         </div>

@@ -1,5 +1,9 @@
 import { Dropdown, Popover, Tooltip } from "antd";
-import { Offer, Requirement } from "../../../../models/MainInterfaces";
+import {
+  BasicRateData,
+  Offer,
+  Requirement,
+} from "../../../../models/MainInterfaces";
 import {
   Action,
   ActionLabel,
@@ -61,7 +65,7 @@ export default function RequirementOfferListItemHeader({
       });
     if (
       props.offer.state == OfferState.CANCELED &&
-      props.offer.canceledByCreator
+      props.offer.canceledByCreator // r3v
     )
       items.push({
         label: t(ActionLabel[Action.RATE_CANCELED]),
@@ -74,7 +78,6 @@ export default function RequirementOfferListItemHeader({
     if (props.showStateAndActions.show) {
       switch (action) {
         case Action.CANCEL_PURCHASE_ORDER:
-          setIsOpenModal(true);
           setDataModal({
             type: ModalTypes.CANCEL_PURCHASE_ORDER,
             data: {
@@ -83,10 +86,9 @@ export default function RequirementOfferListItemHeader({
               fromRequirementTable: false,
             },
           });
+          setIsOpenModal(true);
           break;
         case Action.SELECT_OFFER:
-          setIsOpenModal(true);
-
           setDataModal({
             type: ModalTypes.SELECT_OFFER,
             data: {
@@ -94,19 +96,26 @@ export default function RequirementOfferListItemHeader({
               requirement: props.showStateAndActions.requirement,
             },
           });
+          setIsOpenModal(true);
           break;
-        case Action.RATE_CANCELED:
+        case Action.RATE_CANCELED: {
+          const data: BasicRateData = {
+            uid: props.offer.key,
+            title: props.offer.title,
+            userId: props.offer.user.uid,
+            userName: props.offer.user.name,
+            userImage: props.offer.user.image,
+          };
           setDataModal({
             type: ModalTypes.RATE_CANCELED,
             data: {
-              user: props.offer.user,
-              subUser: props.offer.subUser,
-              requirementOfferTitle: props.offer.title,
+              basicRateData: data,
               type: props.offer.type,
               isOffer: true,
             },
           });
           setIsOpenModal(true);
+        }
       }
     }
   }

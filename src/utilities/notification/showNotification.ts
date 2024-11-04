@@ -18,16 +18,14 @@ export default function showNotification(
 
 export function showLoadingMessage(
   message: MessageInstance,
+  show: boolean,
   text: string = "Cargando..."
 ) {
-  if (message)
+  if (message && show)
     message.open({
       type: "loading",
       content: text,
       duration: 0,
     });
-}
-
-export function destroyMessage(message: MessageInstance) {
-  message.destroy();
+  if (!show) message.destroy();
 }
