@@ -242,6 +242,8 @@ const resources = {
       offerWasAlreadySelected: "An offer was already selected",
       cantOfferToRequirement: "No offer can be selected for this requirement",
       cantOfferToSale: "No offer can be selected for this sale",
+      ifYouWantToEliminateYourOfferClickOnDelete: "If you want to delete your offer, click on Delete",
+      deleteOffer: "Delete offer",
       // Other
       yes: "Yes",
       no: "No",
@@ -374,8 +376,13 @@ const resources = {
       admin: "Administrator",
       buyer: "Buyer",
       sellerBuyer: "Supplier / Buyer",
+      sellerRole: "Seller",
       none: "None",
-      legal: "Legal"
+      legal: "Legal",
+      offerFormTitle: "Offer",
+      data: "Data",
+      score: "Score",
+      created: "Created"
     },
   },
   es: {
@@ -615,9 +622,11 @@ const resources = {
       saleDoesNotExist: "La liquidación no existe",
       reqOfferNotFound: "Requerimiento u oferta no encontrada",
       saleOfferNotFound: "Liquidación u oferta no encontrada",
-      offerWasAlreadySelected: "Una oferta ya fue sleeccionada",
+      offerWasAlreadySelected: "Una oferta ya fue seleccionada",
       cantOfferToRequirement: "No se puede seleccionar una oferta para este requerimiento",
       cantOfferToSale: "No se puede seleccionar una oferta para esta liquidación",
+      ifYouWantToEliminateYourOfferClickOnDelete: "Si quieres borrar tu oferta, haz click en Eliminar",
+      deleteOffer: "Eliminar oferta",
       // Other
       yes: "Sí",
       no: "No",
@@ -754,8 +763,13 @@ const resources = {
       admin: "Administrador",
       buyer: "Comprador",
       sellerBuyer: "Vendedor / Comprador",
+      sellerRole: "Vendedor",
       none: "Ninguno",
-      legal: "Legal"
+      legal: "Legal",
+      offerFormTitle: "Ofertar",
+      data: "Datos",
+      score: "Calificación",
+      created: "Creado"
     },
   },
 };

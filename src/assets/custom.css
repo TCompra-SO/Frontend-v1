@@ -1,0 +1,38 @@
+/********** Antd's select **************************/
+
+.form-control .ant-select-selector {
+  border: 1px solid transparent !important;
+  background: transparent !important;
+}
+
+.ant-select.ant-select-in-form-item {
+  padding: 0;
+}
+
+.ant-select-focused .ant-select-selector {
+  border-color: none !important;
+  outline: 0 !important;
+  box-shadow: 0 0 0 0.25rem rgba(188, 19, 115, 0.25) !important;
+}
+
+.ant-select-single .ant-select-selector {
+  font-weight: 400;
+  color: #92acbf;
+  font-size: 1rem;
+}
+
+.ant-form-item-control-input-content > .ant-select {
+  height: 40.33px !important;
+}
+
+.form-control > .ant-select-selector {
+  text-align: left;
+}
+
+.ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
+  border: none;
+}
+
+.select-certificados .ant-select-selector {
+  border-radius: 0.8rem;
+}

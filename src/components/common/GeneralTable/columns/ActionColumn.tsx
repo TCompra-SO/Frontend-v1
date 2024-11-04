@@ -72,10 +72,9 @@ export default function ActionColumn(
                       (acc, action: Action) => {
                         const canceledByCreator = (record as Offer) // r3v
                           .canceledByCreator;
-                        if (
-                          action == Action.RATE_CANCELED &&
-                          !canceledByCreator
-                        )
+                        if (action == Action.RATE_CANCELED && canceledByCreator)
+                          return acc;
+                        else
                           acc.push({
                             key: action,
                             label: t(ActionLabel[action]),

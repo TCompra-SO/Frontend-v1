@@ -1,0 +1,70 @@
+import { useTranslation } from "react-i18next";
+import { Requirement } from "../../../models/MainInterfaces";
+import { ListsContext } from "../../../contexts/listsContext";
+import { useContext, useEffect, useState } from "react";
+import { defaultCountry } from "../../../utilities/globals";
+import { IdValueMap, IdValueObj } from "../../../models/Interfaces";
+import { Coins } from "../../../utilities/types";
+
+interface BasicDataRequirementProps {
+  requirement: Requirement | undefined;
+}
+
+export default function BasicDataRequirement(props: BasicDataRequirementProps) {
+  const { t } = useTranslation();
+  const context = useContext(ListsContext);
+  const { countryData, currencyData } = context;
+  const [cities, setCities] = useState<IdValueMap>({});
+
+  useEffect(() => {
+    if (countryData && countryData[defaultCountry]) {
+      const loadedCities = countryData[defaultCountry].cities.reduce(
+        (acc: IdValueMap, { id, value }: IdValueObj) => {
+          acc[id] = { value };
+          return acc;
+        },
+        {}
+      );
+      setCities(loadedCities);
+    }
+  }, [countryData]);
+
+  return (
+    <div className="section-galeria cbl-1">
+      <img
+        src={
+          props.requirement?.image && props.requirement.image.length > 0
+            ? props.requirement.image[0]
+            : "/src/assets/images/header-01.svg"
+        }
+        alt=""
+        className="img-slider-req"
+      />
+      <div className="galeria-detalles">
+        <div className="t-flex f-column gap-15 detalles-requ">
+          <div className="t-flex gap-15 det-c">
+            <div className="det-1">
+              <div className="ub-1">
+                {props.requirement?.location &&
+                  cities[props.requirement?.location]?.value}
+                , {countryData[defaultCountry]?.value}
+              </div>
+              <div className="ub-2">{props.requirement?.title}</div>
+            </div>
+            <div className="det-2">
+              {props.requirement?.coin &&
+                Coins[currencyData[props.requirement?.coin].alias]}{" "}
+              {props.requirement?.price}
+              <span>/{t("priceColumn")}</span>
+            </div>
+          </div>
+          <div className="t-flex">
+            <div className="det-3 text-truncate">
+              {props.requirement?.user.name}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

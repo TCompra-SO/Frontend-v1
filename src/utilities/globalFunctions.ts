@@ -224,7 +224,7 @@ export function getLabelFromRole(type: UserRoles) {
     case UserRoles.LEGAL:
       return "legal";
     case UserRoles.SELLER:
-      return "seller";
+      return "sellerRole";
     case UserRoles.BUYER:
       return "buyer";
     case UserRoles.SELLER_BUYER:

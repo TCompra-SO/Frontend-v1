@@ -13,6 +13,7 @@ import { transformFromGetRequirementByIdToRequirement } from "../utilities/trans
 import { RequirementType } from "../utilities/types";
 import OfferForm from "../components/section/productDetail/OfferForm";
 import ProductRequirementDetail from "../components/section/productDetail/ProductRequirementDetail";
+import ProductDetailHeader from "../components/section/productDetail/ProductDetailHeader";
 
 export default function ProductDetail() {
   // const { t } = useTranslation();
@@ -81,8 +82,8 @@ export default function ProductDetail() {
 
   return (
     <>
+      <ProductDetailHeader reqTitle={requirement?.title} />
       <ProductRequirementDetail requirement={requirement} />
-      <OfferForm requirementId={requirementId} />
     </>
   );
 }

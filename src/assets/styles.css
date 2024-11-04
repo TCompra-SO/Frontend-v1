@@ -1587,45 +1587,6 @@ body {
   border-radius: 0.8rem;
 }
 
-/********** Antd's select **************************/
-
-.form-control .ant-select-selector {
-  border: 1px solid transparent !important;
-  background: transparent !important;
-}
-
-.ant-select.ant-select-in-form-item {
-  padding: 0;
-}
-
-.ant-select-focused .ant-select-selector {
-  border-color: none !important;
-  outline: 0 !important;
-  box-shadow: 0 0 0 0.25rem rgba(188, 19, 115, 0.25) !important;
-}
-
-.ant-select-single .ant-select-selector {
-  font-weight: 400;
-  color: #92acbf;
-  font-size: 1rem;
-}
-
-.ant-form-item-control-input-content > .ant-select {
-  height: 40.33px !important;
-}
-
-.form-control > .ant-select-selector {
-  text-align: left;
-}
-
-.ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
-  border: none;
-}
-
-.select-certificados .ant-select-selector {
-  border-radius: 0.8rem;
-}
-
 /* Estilos Index: Icompleto */
 .container-tc {
   padding: 0 100px;
@@ -1644,7 +1605,7 @@ body {
   border-bottom: 1px solid rgba(255, 255, 255, 0.25);
 }
 .section-slider {
-  background-image: url(../img/back-01.jpg);
+  background-image: url(images/back-01.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;
@@ -1671,7 +1632,7 @@ body {
 
 /* Requerimiento Detalles */
 .section-guia {
-  background-image: url(../img/header-01.svg);
+  background-image: url(images/header-01.svg);
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;
@@ -1748,7 +1709,7 @@ body {
   align-items: flex-start;
 }
 .det-1 {
-  background: rgb(48 0 32 / 80%);
+  background: #300020;
   color: #fff;
   padding: 15px;
   border-radius: 1rem;
@@ -1840,170 +1801,4 @@ body {
 }
 .cbl-6 {
   grid-column: 2 / span 3;
-}
-
-/************** Antd general ********************/
-
-/* No espacio entre elementos de formulario */
-.ant-form-item {
-  margin-bottom: 0px;
-}
-
-/* Modales */
-.ant-modal {
-  line-height: inherit !important;
-}
-
-.ant-modal .ant-modal-body {
-  line-height: inherit !important;
-}
-
-.ant-modal .ant-modal-content {
-  background: transparent;
-  padding: 0;
-  border-radius: 2rem;
-}
-
-/* Focus en Input password */
-.ant-input-outlined:focus-within {
-  border-color: transparent !important;
-  outline: 0 !important;
-  box-shadow: 0 0 0 0.25rem rgba(188, 19, 115, 0.25) !important;
-}
-
-/* Focus en date picker */
-.ant-picker-outlined:focus-within {
-  border-color: transparent !important;
-  outline: 0 !important;
-  box-shadow: 0 0 0 0.25rem rgba(188, 19, 115, 0.25) !important;
-}
-
-/* Color de texto en input number */
-.ant-input-number .ant-input-number-input {
-  color: inherit;
-}
-
-.ant-picker .ant-picker-input > input {
-  color: inherit;
-  font-size: inherit;
-  font-family: "Rubik";
-}
-
-/* Button height */
-.ant-btn {
-  height: inherit;
-}
-
-/* Number input  */
-
-.ant-input-number {
-  width: 100%;
-}
-
-.ant-input-number .ant-input-number-input {
-  padding: 0;
-}
-
-.ant-input-number:focus-within {
-  border-color: none !important;
-  outline: 0 !important;
-  box-shadow: 0 0 0 0.25rem rgba(188, 19, 115, 0.25) !important;
-}
-
-/* Ocultar cuadro de Upload */
-.hide-upload .ant-upload-wrapper .ant-upload-select {
-  display: none;
-}
-
-/* Reduce tamaño de preview de Upload para tipo picture-card */
-.ant-upload-list-picture-card .ant-upload-list-item-container {
-  width: 70px !important;
-  height: 70px !important;
-}
-
-/* No mostrar nada cuando Form.Item no tiene contenido */
-.ant-form-item .ant-form-item-control-input {
-  min-height: 0;
-}
-
-/* Muestra sólo el primer error de validación */
-form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
-  display: none;
-}
-
-/* Cambiar hover de button */
-.ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
-  background: #990057;
-  color: #ffffff;
-}
-
-/* Tamaño de fuente en tabla */
-.ant-table-wrapper .ant-table {
-  font-size: 16px;
-}
-
-/* No margin bottom al usar Typography  */
-.ant-typography {
-  margin-bottom: 0 !important;
-}
-
-/* Border radius de Popover */
-.ant-popover .ant-popover-inner {
-  border-radius: 0.7rem;
-}
-
-.ant-modal .ant-modal-close {
-  border-radius: 50%;
-}
-
-/*****************************/
-
-/* Truncar texto */
-.text-truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Pasar texto a siguiente línea */
-.long-text-wrap {
-  word-wrap: break-word;
-  word-break: break-all;
-}
-
-/* Rate stars */
-.ant-rate .ant-rate-star:not(:last-child) {
-  margin-inline-end: 3px;
-}
-
-/* Tablas */
-
-.card-white .ant-table-wrapper .ant-table-tbody > tr > td {
-  background: #f3f7fa;
-  border-bottom: 5px solid white;
-  padding: 5px 10px;
-}
-
-.card-white td:first-child {
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
-}
-
-.card-white td:last-child {
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
-}
-
-/* Scrollbar */
-
-.custom-scroll::-webkit-scrollbar {
-  width: 5px;
-}
-.custom-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scroll::-webkit-scrollbar-thumb {
-  background-color: #b7bfc5;
-  border-radius: 35px;
-  border: 0px;
 }
