@@ -2,8 +2,10 @@ import { Offer, Requirement } from "../../../../models/MainInterfaces";
 import RequirementOfferListItemHeader from "./RequirementOfferListItemHeader";
 import RequirementOfferListItemBody from "./RequirementOfferListItemBody";
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { OfferState, RequirementState } from "../../../../utilities/types";
+import { requirementDetailContext } from "../../../../contexts/requirementDetailContext";
+import { allSelect } from "../../../../utilities/globals";
 
 interface RequirementOfferListProps {
   offers: Offer[];
@@ -13,12 +15,38 @@ interface RequirementOfferListProps {
 
 export default function RequirementOfferList(props: RequirementOfferListProps) {
   const { t } = useTranslation();
+  const { filters } = useContext(requirementDetailContext);
   const [reqCopy, setReqCopy] = useState<Requirement>(props.requirement);
   const [offersCopy, setOffersCopy] = useState<Offer[]>([]);
 
   useEffect(() => {
     setOffersCopy([...props.offers]);
   }, [props.offers]);
+
+  useEffect(() => {
+    setOffersCopy((prev) => {
+      prev = props.offers;
+      if (filters.location != allSelect && filters.deliveryTime == allSelect)
+        prev = prev.filter((offer) => offer.location == filters.location);
+      else if (
+        filters.location == allSelect &&
+        filters.deliveryTime != allSelect
+      )
+        prev = prev.filter(
+          (offer) => offer.deliveryTime == filters.deliveryTime
+        );
+      else if (
+        filters.location != allSelect &&
+        filters.deliveryTime != allSelect
+      ) {
+        prev = prev.filter((offer) => offer.location == filters.location);
+        prev = prev.filter(
+          (offer) => offer.deliveryTime == filters.deliveryTime
+        );
+      }
+      return prev;
+    });
+  }, [filters]);
 
   function handleSuccessfulSelection(offerId: string) {
     setReqCopy((prevObject) => ({

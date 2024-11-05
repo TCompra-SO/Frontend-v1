@@ -16,7 +16,7 @@ import { getListForSelectIdValueMap } from "../../../../utilities/globalFunction
 import { filterLabels } from "../../../../utilities/colors";
 
 interface RequirementOfferFiltersProps {
-  onFilterChange: (filterType: OfferFilterTypes, value: any) => void;
+  // onFilterChange: (filterType: OfferFilterTypes, value: any) => void;
   fromPurchaseOrder: boolean;
   filters?: OfferFilters;
 }
@@ -57,27 +57,24 @@ export default function RequirementOfferFilters(
     let location: string = filterNames.location;
     let deliveryTime: string = filterNames.deliveryTime;
 
-    if (changedValues.price) {
-      console.log("change price");
-      props.onFilterChange(OfferFilterTypes.PRICE, changedValues.price);
-    } else if (changedValues.location) {
-      console.log("change location");
-      location =
-        countryData[showCountry].cities.find(
-          (city) => city.id == changedValues.location
-        )?.value ?? t("all");
-      props.onFilterChange(OfferFilterTypes.LOCATION, changedValues.location);
-    } else if (changedValues.deliveryTime) {
-      console.log("change deliveryTime");
-      deliveryTime =
-        deliveryTimeData[changedValues.deliveryTime]?.value ?? t("all");
-      props.onFilterChange(
-        OfferFilterTypes.DELIVERY,
-        changedValues.deliveryTime
-      );
-    } else if (changedValues.warranty) {
-      props.onFilterChange(OfferFilterTypes.WARRANTY, changedValues.warranty);
-    }
+    // if (changedValues.price) {
+    //   props.onFilterChange(OfferFilterTypes.PRICE, changedValues.price);
+    // } else if (changedValues.location) {
+    //   location =
+    //     countryData[showCountry].cities.find(
+    //       (city) => city.id == changedValues.location
+    //     )?.value ?? t("all");
+    //   props.onFilterChange(OfferFilterTypes.LOCATION, changedValues.location);
+    // } else if (changedValues.deliveryTime) {
+    //   deliveryTime =
+    //     deliveryTimeData[changedValues.deliveryTime]?.value ?? t("all");
+    //   props.onFilterChange(
+    //     OfferFilterTypes.DELIVERY,
+    //     changedValues.deliveryTime
+    //   );
+    // } else if (changedValues.warranty) {
+    //   props.onFilterChange(OfferFilterTypes.WARRANTY, changedValues.warranty);
+    // }
 
     updateFilters(allValues, {
       location,
