@@ -118,7 +118,7 @@ export function transformToOffer(
   offer.price = data.budget;
   offer.igv = data.includesIGV;
   offer.requirementId = data.requerimentID;
-  offer.state = OfferState.CANCELED; //data.stateID; //OfferState.CANCELED
+  offer.state = data.stateID; //OfferState.CANCELED
   offer.canceledByCreator = false;
   offer.type = type;
   offer.requirementTitle = data.requerimentTitle;

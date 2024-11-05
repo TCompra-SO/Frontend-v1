@@ -24,7 +24,11 @@ interface RequirementOfferListItemProps {
   offer: Offer;
   style?: React.CSSProperties;
   showStateAndActions:
-    | { show: true; requirement: Requirement }
+    | {
+        show: true;
+        requirement: Requirement;
+        onSuccessfulSelection: (offerId: string) => void;
+      }
     | { show: false };
 }
 
@@ -74,6 +78,10 @@ export default function RequirementOfferListItemHeader({
       });
   }
 
+  function handleOnCloseModal() {
+    setIsOpenModal(false);
+  }
+
   function onOpenModal(action: Action) {
     if (props.showStateAndActions.show) {
       switch (action) {
@@ -94,6 +102,7 @@ export default function RequirementOfferListItemHeader({
             data: {
               offer: props.offer,
               requirement: props.showStateAndActions.requirement,
+              onSuccess: handleSuccessfulSelection,
             },
           });
           setIsOpenModal(true);
@@ -120,8 +129,9 @@ export default function RequirementOfferListItemHeader({
     }
   }
 
-  function handleOnCloseModal() {
-    setIsOpenModal(false);
+  function handleSuccessfulSelection(offerId: string) {
+    if (props.showStateAndActions.show)
+      props.showStateAndActions.onSuccessfulSelection(offerId);
   }
 
   return (

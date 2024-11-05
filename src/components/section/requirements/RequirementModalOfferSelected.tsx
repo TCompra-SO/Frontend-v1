@@ -19,6 +19,7 @@ interface RequirementModalOfferSelectedProps {
   offer: Offer;
   requirement: Requirement;
   onClose: () => any;
+  onSucces: (offerId: string) => void;
 }
 
 export default function RequirementModalOfferSelected(
@@ -48,6 +49,8 @@ export default function RequirementModalOfferSelected(
     if (responseData) {
       showNotification(notification, "success", t("offerSelectedSuccessfully"));
       props.onClose();
+      if (apiParams.dataToSend?.offerID)
+        props.onSucces(apiParams.dataToSend.offerID);
     } else if (error) {
       showNotification(notification, "error", errorMsg);
     }

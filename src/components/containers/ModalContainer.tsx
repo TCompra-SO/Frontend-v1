@@ -55,6 +55,7 @@ export default function ModalContainer(props: ModalContainerProps) {
           <RequirementModalOfferSelected
             offer={props.content.data.offer}
             requirement={props.content.data.requirement}
+            onSucces={props.content.data.onSuccess}
             onClose={props.onClose}
           />
         );

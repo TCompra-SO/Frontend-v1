@@ -261,7 +261,7 @@ export default function Profile(props: ProfileProps) {
                   <Form.Item
                     label={t("city")}
                     labelCol={{ span: 0 }}
-                    name="city"
+                    name="location"
                     rules={[
                       {
                         required: true,

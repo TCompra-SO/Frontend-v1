@@ -84,7 +84,11 @@ export interface ModalRepublishRequirement extends CommonModalType {
 
 export interface ModalSelectOffer extends CommonModalType {
   type: ModalTypes.SELECT_OFFER;
-  data: { offer: Offer; requirement: Requirement };
+  data: {
+    offer: Offer;
+    requirement: Requirement;
+    onSuccess: (offerId: string) => void;
+  };
 }
 
 export interface ModalValidateCode extends CommonModalType {
