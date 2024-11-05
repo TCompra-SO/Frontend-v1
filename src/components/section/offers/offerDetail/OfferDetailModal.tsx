@@ -51,7 +51,7 @@ export default function OfferDetailModal(props: OfferDetailModalProps) {
             <div className="t-flex tags-req t-wrap">
               {cities[props.offer.location] && (
                 <div className="badge-grey-border">
-                  {cities[props.offer.location].value}
+                  {cities[props.offer.location]?.value}
                 </div>
               )}
               <div className="badge-grey-border">
@@ -62,7 +62,7 @@ export default function OfferDetailModal(props: OfferDetailModalProps) {
                 deliveryTimeData[props.offer.deliveryTime] && (
                   <div className="badge-grey-border">
                     {t("deliveryTime")}:{" "}
-                    {deliveryTimeData[props.offer.deliveryTime].value}
+                    {deliveryTimeData[props.offer.deliveryTime]?.value}
                   </div>
                 )}
             </div>

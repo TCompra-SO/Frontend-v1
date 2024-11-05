@@ -11,8 +11,8 @@ import { setIsLoading } from "../redux/loadingSlice";
 import { Requirement } from "../models/MainInterfaces";
 import { transformFromGetRequirementByIdToRequirement } from "../utilities/transform";
 import { RequirementType } from "../utilities/types";
-import OfferForm from "../components/section/productDetail/OfferForm";
-import ProductRequirementDetail from "../components/section/productDetail/ProductRequirementDetail";
+import OfferForm from "../components/section/productDetail/ProductRequirementDetail/items/OfferForm";
+import ProductRequirementDetail from "../components/section/productDetail/ProductRequirementDetail/ProductRequirementDetail";
 import ProductDetailHeader from "../components/section/productDetail/ProductDetailHeader";
 
 export default function ProductDetail() {
@@ -72,11 +72,11 @@ export default function ProductDetail() {
   }, [responseData, error]);
 
   async function setRequirementData(response: any) {
-    console.log(response);
     const req = await transformFromGetRequirementByIdToRequirement(
       response.data,
       RequirementType.GOOD
     );
+    console.log(response, req);
     if (req) setRequirement(req);
   }
 

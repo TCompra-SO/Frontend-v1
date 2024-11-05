@@ -1,29 +1,32 @@
 import { useTranslation } from "react-i18next";
-import ButtonContainer from "../../containers/ButtonContainer";
-import { App, Checkbox, Form, UploadFile } from "antd";
-import { MainState } from "../../../models/Redux";
+import ButtonContainer from "../../../../containers/ButtonContainer";
+import { App, Form, UploadFile } from "antd";
+import { MainState } from "../../../../../models/Redux";
 import { useSelector } from "react-redux";
-import TitleField from "../../common/formFields/TitleField";
-import EmailField from "../../common/formFields/EmailField";
-import OfferDescriptionField from "../../common/formFields/OfferDescriptionField";
-import LocationField from "../../common/formFields/LocationField";
-import DeliveryTimeField from "../../common/formFields/DeliveryTimeField";
-import CurrencyField from "../../common/formFields/CurrencyField";
-import WarrantyField from "../../common/formFields/WarrantyField";
-import DurationField from "../../common/formFields/DurationField";
-import SupportField from "../../common/formFields/SupportField";
-import BudgetField from "../../common/formFields/BudgetField";
-import AddImagesField from "../../common/formFields/AddImagesField";
-import AddDocumentField from "../../common/formFields/AddDocumentField";
-import { CreateOfferRequest } from "../../../models/Requests";
+import TitleField from "../../../../common/formFields/TitleField";
+import EmailField from "../../../../common/formFields/EmailField";
+import OfferDescriptionField from "../../../../common/formFields/OfferDescriptionField";
+import LocationField from "../../../../common/formFields/LocationField";
+import DeliveryTimeField from "../../../../common/formFields/DeliveryTimeField";
+import CurrencyField from "../../../../common/formFields/CurrencyField";
+import WarrantyField from "../../../../common/formFields/WarrantyField";
+import DurationField from "../../../../common/formFields/DurationField";
+import SupportField from "../../../../common/formFields/SupportField";
+import BudgetField from "../../../../common/formFields/BudgetField";
+import AddImagesField from "../../../../common/formFields/AddImagesField";
+import AddDocumentField from "../../../../common/formFields/AddDocumentField";
+import { CreateOfferRequest } from "../../../../../models/Requests";
 import { ReactNode, useEffect, useState } from "react";
-import showNotification from "../../../utilities/notification/showNotification";
-import { useApiParams } from "../../../models/Interfaces";
-import useApi from "../../../hooks/useApi";
-import { createOfferService } from "../../../services/requests/offerService";
-import { ImageRequestLabels, ProcessFlag } from "../../../utilities/types";
-import { uploadDocsOfferService } from "../../../services/requests/documentService";
-import { uploadImagesOfferService } from "../../../services/requests/imageService";
+import showNotification from "../../../../../utilities/notification/showNotification";
+import { useApiParams } from "../../../../../models/Interfaces";
+import useApi from "../../../../../hooks/useApi";
+import { createOfferService } from "../../../../../services/requests/offerService";
+import {
+  ImageRequestLabels,
+  ProcessFlag,
+} from "../../../../../utilities/types";
+import { uploadDocsOfferService } from "../../../../../services/requests/documentService";
+import { uploadImagesOfferService } from "../../../../../services/requests/imageService";
 import React from "react";
 
 function RowContainer({ children }: { children: ReactNode }) {
@@ -139,7 +142,6 @@ export default function OfferForm(props: OfferFormProps) {
   }, [responseDataDoc, errorDoc]);
 
   useEffect(() => {
-    console.log(reqSuccess, docSuccess, imgSuccess);
     if (
       reqSuccess != ProcessFlag.NOT_INI &&
       docSuccess != ProcessFlag.NOT_INI &&

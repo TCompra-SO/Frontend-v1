@@ -382,7 +382,12 @@ const resources = {
       offerFormTitle: "Offer",
       data: "Data",
       score: "Score",
-      created: "Created"
+      created: "Created",
+      details: "Details",
+      files: "Files",
+      noImages: "No images",
+      noDocuments: "No documents",
+      images: "Images"
     },
   },
   es: {
@@ -769,7 +774,12 @@ const resources = {
       offerFormTitle: "Ofertar",
       data: "Datos",
       score: "Calificación",
-      created: "Creado"
+      created: "Creado",
+      details: "Detalles",
+      files: "Archivos",
+      noImages: "Sin imágenes",
+      noDocuments: "Sin documentos",
+      images: "Imágenes"
     },
   },
 };
