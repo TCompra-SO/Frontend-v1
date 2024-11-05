@@ -16,7 +16,11 @@ import showNotification from "../../../utilities/notification/showNotification";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
-export default function AddImagesField() {
+export default function AddImagesField({
+  forOffer = false,
+}: {
+  forOffer: boolean;
+}) {
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -77,10 +81,10 @@ export default function AddImagesField() {
 
   return (
     <>
-      <div className="hide-upload">
+      <div className="hide-upload" style={forOffer ? { width: "100%" } : {}}>
         <div
-          className="multimedia-subir"
-          style={{ marginBottom: "15px" }}
+          className={forOffer ? "multimedia-files" : "multimedia-subir"}
+          style={forOffer ? {} : { marginBottom: "15px" }}
           onClick={handleClick}
         >
           <i className="fa-regular fa-images"></i> {t("addImages")}

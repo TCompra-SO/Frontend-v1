@@ -6,7 +6,11 @@ import { maxDocSizeMb } from "../../../utilities/globals";
 import { checkDoc } from "../../../utilities/globalFunctions";
 import showNotification from "../../../utilities/notification/showNotification";
 
-export default function AddDocumentField() {
+export default function AddDocumentField({
+  forOffer = false,
+}: {
+  forOffer: boolean;
+}) {
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const fileInputRefDoc = useRef<HTMLDivElement>(null);
@@ -33,10 +37,10 @@ export default function AddDocumentField() {
 
   return (
     <>
-      <div className="hide-upload">
+      <div className="hide-upload" style={forOffer ? { width: "100%" } : {}}>
         <div
-          className="multimedia-subir"
-          style={{ marginBottom: "15px" }}
+          className={forOffer ? "multimedia-files" : "multimedia-subir"}
+          style={forOffer ? {} : { marginBottom: "15px" }}
           onClick={handleClick}
         >
           <i className="fa-regular fa-file-lines"></i> {t("addDocument")}

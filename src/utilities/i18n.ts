@@ -83,6 +83,7 @@ const resources = {
       acceptButton: "Accept",
       cancelButton: "Cancel",
       saveButton: "Save",
+      offerButton: "Submit",
       // Rules
       enterValidEmail: "Enter a valid email",
       // Error messages
@@ -387,7 +388,8 @@ const resources = {
       files: "Files",
       noImages: "No images",
       noDocuments: "No documents",
-      images: "Images"
+      images: "Images",
+      sendMessage: "Send message"
     },
   },
   es: {
@@ -468,6 +470,7 @@ const resources = {
       acceptButton: "Aceptar",
       cancelButton: "Cancelar",
       saveButton: "Guardar",
+      offerButton: "Ofertar",
       // Rules
       enterValidEmail: "Ingrese un email válido",
       // Error messages
@@ -779,7 +782,8 @@ const resources = {
       files: "Archivos",
       noImages: "Sin imágenes",
       noDocuments: "Sin documentos",
-      images: "Imágenes"
+      images: "Imágenes",
+      sendMessage: "Enviar mensaje"
     },
   },
 };

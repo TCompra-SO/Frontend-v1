@@ -56,6 +56,7 @@ export default function OfferForm(props: OfferFormProps) {
   const [reqSuccess, setReqSuccess] = useState(ProcessFlag.NOT_INI);
   const [docSuccess, setDocSuccess] = useState(ProcessFlag.NOT_INI);
   const [imgSuccess, setImgSuccess] = useState(ProcessFlag.NOT_INI);
+  const [offerId, setofferId] = useState<string>("");
 
   const [apiParams, setApiParams] = useState<useApiParams<CreateOfferRequest>>({
     service: null,
@@ -113,6 +114,7 @@ export default function OfferForm(props: OfferFormProps) {
     if (responseData) {
       setReqSuccess(ProcessFlag.FIN_SUCCESS);
       console.log(responseData);
+      setofferId(responseData.data?.uid);
       uploadImgsAndDocs(responseData.data?.uid);
     } else if (error) {
       setReqSuccess(ProcessFlag.FIN_UNSUCCESS);
@@ -232,8 +234,8 @@ export default function OfferForm(props: OfferFormProps) {
     });
   }
 
-  function uploadImgsAndDocs(offerId: string | undefined) {
-    if (offerId) {
+  function uploadImgsAndDocs(offerIdResponse: string | undefined) {
+    if (offerIdResponse) {
       if (!formDataDoc) setDocSuccess(ProcessFlag.FIN_SUCCESS);
       if (!formDataImg) setImgSuccess(ProcessFlag.FIN_SUCCESS);
       if (!formDataDoc && !formDataImg) {
@@ -257,6 +259,14 @@ export default function OfferForm(props: OfferFormProps) {
     }
   }
 
+  function deleteOffer() {
+    console.log("deleting", offerId);
+  }
+
+  function goToChat() {
+    console.log("chat", props.requirementId);
+  }
+
   return (
     <div className="card-white cbl-6">
       <div className="t-flex mr-sub-2">
@@ -265,93 +275,111 @@ export default function OfferForm(props: OfferFormProps) {
           <div>{t("offerFormTitle")}</div>
         </div>
       </div>
-      <Form
-        form={form}
-        colon={false}
-        requiredMark={false}
-        onFinish={createOffer}
-      >
-        <div className="t-flex gap-15 f-column form-oferta">
-          <RowContainer>
-            <TitleField />
-            <EmailField onlyItem edit value={email} />
-          </RowContainer>
-          <RowContainer>
-            <OfferDescriptionField />
-          </RowContainer>
-          <RowContainer>
-            <LocationField onlyItem />
-            <DeliveryTimeField />
-            <CurrencyField />
-          </RowContainer>
-          <RowContainer>
-            <WarrantyField required={true} />
-            <DurationField required={true} name={"duration"} />
-            <SupportField />
-            <BudgetField />
-          </RowContainer>
-
-          <AddImagesField />
-          <AddDocumentField />
-
-          <div className="t-flex t-wrap gap-15 up-footer">
-            <div className="t-flex gap-5 uf-1">
-              <div className="footer-text">
-                <input
-                  type="checkbox"
-                  onChange={(e) => setCheckedIGV(e.target.checked)}
-                />{" "}
-                {t("priceIncludesIGV")}
-              </div>
-              <div className="footer-text">
-                <input
-                  type="checkbox"
-                  onChange={(e) => setCheckedDelivery(e.target.checked)}
-                />{" "}
-                {t("includeDelivery")}
-              </div>
-            </div>
-            <div className="t-flex gap-10 uf-2">
-              <button className="btn btn-default">
-                <i className="fa-regular fa-tag"></i> Ofertar
-              </button>
-              <button className="btn btn-green">
-                <i className="fa-regular fa-comment"></i> Enviar Mensaje
-              </button>
+      {reqSuccess != ProcessFlag.NOT_INI &&
+      docSuccess != ProcessFlag.NOT_INI &&
+      imgSuccess != ProcessFlag.NOT_INI ? (
+        <div className="t-flex f-column j-conten j-items oferta-check gap-10">
+          <i className="fa-regular fa-clipboard-check fa-3x"></i>
+          <div className="aviso-h">
+            <div className="cantidad-estd">{t("alreadyMadeOffer")}</div>
+            <div className="detalles-estd">
+              {t("ifYouWantToEliminateYourOfferClickOnDelete")}
             </div>
           </div>
-
-          {/* <Checkbox onChange={(e) => setCheckedIGV(e.target.checked)}>
-            <a className="forgot-password text-left" style={{ width: "100%" }}>
-              {t("priceIncludesIGV")}
-            </a>
-          </Checkbox>
-          <Checkbox onChange={(e) => setCheckedDelivery(e.target.checked)}>
-            <a className="forgot-password text-left" style={{ width: "100%" }}>
-              {t("includeDelivery")}
-            </a>
-          </Checkbox> */}
-
           <ButtonContainer
-            htmlType="submit"
-            loading={loading || loadingDoc || loadingImg}
+            className="btn btn-default btn-sm"
+            icon={<i className="fa-regular fa-trash"></i>}
+            onClick={deleteOffer}
           >
-            {t("saveButton")}
+            {t("deleteOffer")}
           </ButtonContainer>
         </div>
-      </Form>
-      <div className="t-flex f-column j-conten j-items oferta-check gap-10">
-        <i className="fa-regular fa-clipboard-check fa-3x"></i>
-        <div className="aviso-h">
-          <div className="cantidad-estd">{t("alreadyMadeOffer")}</div>
-          <div className="detalles-estd">
-            {t("ifYouWantToEliminateYourOfferClickOnDelete")}
+      ) : (
+        <Form
+          form={form}
+          colon={false}
+          requiredMark={false}
+          onFinish={createOffer}
+        >
+          <div className="t-flex gap-15 f-column form-oferta">
+            <RowContainer>
+              <TitleField />
+              <EmailField onlyItem edit value={email} />
+            </RowContainer>
+            <RowContainer>
+              <OfferDescriptionField />
+            </RowContainer>
+            <RowContainer>
+              <LocationField onlyItem />
+              <DeliveryTimeField />
+              <CurrencyField />
+            </RowContainer>
+            <RowContainer>
+              <WarrantyField required={true} />
+              <DurationField required={true} name={"duration"} />
+              <SupportField />
+              <BudgetField />
+            </RowContainer>
+            <div className="t-flex gap-15 archivos-up">
+              <AddImagesField forOffer />
+              <AddDocumentField forOffer />
+            </div>
+
+            <div className="t-flex t-wrap gap-15 up-footer">
+              <div className="t-flex gap-5 uf-1">
+                <div className="footer-text">
+                  <input
+                    id="priceIncludesIGV"
+                    type="checkbox"
+                    onChange={(e) => setCheckedIGV(e.target.checked)}
+                  />{" "}
+                  <label htmlFor="priceIncludesIGV">
+                    {t("priceIncludesIGV")}
+                  </label>
+                </div>
+                <div className="footer-text">
+                  <input
+                    id="includeDelivery"
+                    type="checkbox"
+                    onChange={(e) => setCheckedDelivery(e.target.checked)}
+                  />{" "}
+                  <label htmlFor="includeDelivery">
+                    {t("includeDelivery")}
+                  </label>
+                </div>
+              </div>
+              <div className="t-flex gap-10 uf-2">
+                <ButtonContainer
+                  htmlType="submit"
+                  className="btn btn-default"
+                  icon={<i className="fa-regular fa-tag"></i>}
+                  loading={loading || loadingDoc || loadingImg}
+                >
+                  {`${t("offerButton")}`}
+                </ButtonContainer>
+                <ButtonContainer
+                  className="btn btn-green"
+                  icon={<i className="fa-regular fa-comment"></i>}
+                  onClick={goToChat}
+                >
+                  {`${t("sendMessage")}`}
+                </ButtonContainer>
+              </div>
+            </div>
+
+            {/* <Checkbox onChange={(e) => setCheckedIGV(e.target.checked)}>
+          <a className="forgot-password text-left" style={{ width: "100%" }}>
+            {t("priceIncludesIGV")}
+          </a>
+        </Checkbox>
+        <Checkbox onChange={(e) => setCheckedDelivery(e.target.checked)}>
+          <a className="forgot-password text-left" style={{ width: "100%" }}>
+            {t("includeDelivery")}
+          </a>
+        </Checkbox> */}
           </div>
-        </div>
-        <button className="btn btn-default btn-sm">
-          <i className="fa-regular fa-trash"></i> {t("deleteOffer")}
-        </button>
-      </div>
+        </Form>
+      )}
     </div>
   );
 }
