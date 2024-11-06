@@ -767,7 +767,7 @@ const resources = {
       personalData: "Datos personales",
       priceIncludesIGV: "Precio incluye I. G. V.",
       includeDelivery: "Incluye envío",
-      home: "Página principal",
+      home: "Inicio",
       admin: "Administrador",
       buyer: "Comprador",
       sellerBuyer: "Vendedor / Comprador",

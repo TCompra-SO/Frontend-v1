@@ -181,6 +181,13 @@ export function getLastSegmentFromRoute(pathname: string) {
   return pathSegments[pathSegments.length - 1];
 }
 
+export function getSectionFromRoute(pathname: string) {
+  const pathSegments = pathname.split("/");
+  if (pathSegments.length <= 1 || pathSegments[1] === "")
+    return pageRoutes.home;
+  return pathSegments[1];
+}
+
 // Retorna valor anidado para columna de tabla
 export function getNestedValue(dataIndex: string, record: any) {
   return dataIndex.split(".").reduce((acc, key) => acc && acc[key], record);

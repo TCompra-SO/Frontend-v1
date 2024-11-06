@@ -19,6 +19,7 @@ export const userInitialState: UserState = {
   customerCount: undefined,
   sellerCount: undefined,
   document: "",
+  isLoggedIn: false,
 };
 
 export const userSlice = createSlice({
@@ -59,9 +60,18 @@ export const userSlice = createSlice({
     setFullUser: (state, action: { payload: UserState; type: string }) => {
       return { ...action.payload };
     },
+    setIsLoggedIn: (state, action) => {
+      state.isLoggedIn = action.payload;
+    },
   },
 });
 
-export const { setUser, setUid, setEmail, setBaseUser, setFullUser } =
-  userSlice.actions;
+export const {
+  setUser,
+  setUid,
+  setEmail,
+  setBaseUser,
+  setFullUser,
+  setIsLoggedIn,
+} = userSlice.actions;
 export default userSlice.reducer;

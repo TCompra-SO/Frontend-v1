@@ -25,6 +25,7 @@ import { RolesForSection, RolesForSubSection } from "./utilities/roles.ts";
 import { loadUserInfo } from "./services/complete/authServiceComplete.ts";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "./redux/loadingSlice.ts";
+import { setIsLoggedIn } from "./redux/userSlice.ts";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
@@ -62,9 +63,6 @@ function MainLayout({ children }: { children: React.ReactNode }) {
         <MainHeader onShowMenu={handleShowMenu} />
 
         <div className="tc-datos scroll-y">{children}</div>
-        {/* <Footer style={{ textAlign: "center" }}>
-        TCompra ©{new Date().getFullYear()} Soluciones Online S. A. C.
-      </Footer> */}
       </div>
     </div>
   );
@@ -76,7 +74,7 @@ function App() {
 
   useEffect(() => {
     async function getUserData() {
-      await loadUserInfo();
+      dispatch(setIsLoggedIn(await loadUserInfo()));
       dispatch(setIsLoading(false));
     }
     getUserData();
@@ -94,7 +92,9 @@ function App() {
             // borderRadius: 16,
             colorBgContainer: mainBackgroundColor,
             fontFamily: "Rubik",
+            fontSize: 16,
           },
+
           components: {
             Table: {
               headerColor: tableHeaderTextColor,
@@ -121,6 +121,7 @@ function App() {
                 path={`${pageRoutes.home}`}
                 element={
                   <Suspense fallback={<LoadingPage />}>
+                    <MainHeader />
                     <Home></Home>
                   </Suspense>
                 }
@@ -128,9 +129,12 @@ function App() {
               <Route
                 path={`${pageRoutes.productDetail}/:requirementId`}
                 element={
-                  <AuthRoleGuard allowedRoles={RolesForSection.productDetail}>
-                    <ProductDetail />
-                  </AuthRoleGuard>
+                  <Suspense fallback={<LoadingPage />}>
+                    <AuthRoleGuard allowedRoles={RolesForSection.productDetail}>
+                      <MainHeader />
+                      <ProductDetail />
+                    </AuthRoleGuard>
+                  </Suspense>
                 }
               />
 

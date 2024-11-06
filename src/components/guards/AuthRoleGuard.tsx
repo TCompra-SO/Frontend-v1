@@ -17,7 +17,7 @@ export default function AuthRoleGuard({
   allowedRoles,
 }: AuthRoleGuardProps) {
   const [isWaiting, setIsWaiting] = useState(true);
-  const uid = useSelector((state: MainState) => state.user.uid);
+  // const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const typeId = useSelector((state: MainState) => state.user.typeID);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export default function AuthRoleGuard({
     return null;
   }
 
-  if (!uid || typeId == UserRoles.NONE || !allowedRoles[typeId]) {
+  if (!allowedRoles[typeId]) {
     return <Navigate to={pageRoutes.home} />;
   }
 

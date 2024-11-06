@@ -48,7 +48,10 @@ export default function RequirementInfoNoTags(
         />
       </div>
 
-      <DescriptionParagraph text={props.description} />
+      <DescriptionParagraph
+        text={props.description}
+        className="info-req-no-clamp"
+      />
     </>
   );
 }

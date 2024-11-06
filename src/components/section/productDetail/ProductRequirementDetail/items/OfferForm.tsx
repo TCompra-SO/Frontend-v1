@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import ButtonContainer from "../../../../containers/ButtonContainer";
-import { App, Form, UploadFile } from "antd";
+import { App, Checkbox, Form, UploadFile } from "antd";
 import { MainState } from "../../../../../models/Redux";
 import { useSelector } from "react-redux";
 import TitleField from "../../../../common/formFields/TitleField";
@@ -327,26 +327,14 @@ export default function OfferForm(props: OfferFormProps) {
 
             <div className="t-flex t-wrap gap-15 up-footer">
               <div className="t-flex gap-5 uf-1">
-                <div className="footer-text">
-                  <input
-                    id="priceIncludesIGV"
-                    type="checkbox"
-                    onChange={(e) => setCheckedIGV(e.target.checked)}
-                  />{" "}
-                  <label htmlFor="priceIncludesIGV">
-                    {t("priceIncludesIGV")}
-                  </label>
-                </div>
-                <div className="footer-text">
-                  <input
-                    id="includeDelivery"
-                    type="checkbox"
-                    onChange={(e) => setCheckedDelivery(e.target.checked)}
-                  />{" "}
-                  <label htmlFor="includeDelivery">
-                    {t("includeDelivery")}
-                  </label>
-                </div>
+                <Checkbox onChange={(e) => setCheckedIGV(e.target.checked)}>
+                  <div className="footer-text">{t("priceIncludesIGV")}</div>
+                </Checkbox>
+                <Checkbox
+                  onChange={(e) => setCheckedDelivery(e.target.checked)}
+                >
+                  <div className="footer-text">{t("includeDelivery")}</div>
+                </Checkbox>
               </div>
               <div className="t-flex gap-10 uf-2">
                 <ButtonContainer
@@ -366,17 +354,6 @@ export default function OfferForm(props: OfferFormProps) {
                 </ButtonContainer>
               </div>
             </div>
-
-            {/* <Checkbox onChange={(e) => setCheckedIGV(e.target.checked)}>
-          <a className="forgot-password text-left" style={{ width: "100%" }}>
-            {t("priceIncludesIGV")}
-          </a>
-        </Checkbox>
-        <Checkbox onChange={(e) => setCheckedDelivery(e.target.checked)}>
-          <a className="forgot-password text-left" style={{ width: "100%" }}>
-            {t("includeDelivery")}
-          </a>
-        </Checkbox> */}
           </div>
         </Form>
       )}

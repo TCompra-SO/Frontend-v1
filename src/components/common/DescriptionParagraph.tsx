@@ -1,9 +1,11 @@
 import { useState } from "react";
-import ParagraphContainer from "../containers/ParagraphContainer";
 import { useTranslation } from "react-i18next";
+import ParagraphContainer from "../containers/ParagraphContainer";
 
 interface DescriptionParagraphProps {
   text: string | undefined;
+  className?: string;
+  rows?: number;
 }
 
 export default function DescriptionParagraph(props: DescriptionParagraphProps) {
@@ -15,9 +17,10 @@ export default function DescriptionParagraph(props: DescriptionParagraphProps) {
       {props.text && (
         <ParagraphContainer
           children={props.text}
-          className="info-req-no-clamp"
+          style={{ whiteSpace: "pre-wrap" }}
+          className={props.className}
           ellipsis={{
-            rows: 3,
+            rows: props.rows ?? 3,
             expandable: "collapsible",
             expanded,
             onExpand: (_, info) => setExpanded(info.expanded),

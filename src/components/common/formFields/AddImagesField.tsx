@@ -19,7 +19,7 @@ type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 export default function AddImagesField({
   forOffer = false,
 }: {
-  forOffer: boolean;
+  forOffer?: boolean;
 }) {
   const { t } = useTranslation();
   const { notification } = App.useApp();

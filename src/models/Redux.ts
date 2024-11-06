@@ -15,6 +15,7 @@ export interface UserState {
   sellerCount?: number;
   typeEntity: EntityType;
   document: string;
+  isLoggedIn?: boolean;
 }
 
 export interface LoadingState {

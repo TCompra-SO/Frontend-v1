@@ -30,8 +30,21 @@ export default function BasicDataRequirement(props: BasicDataRequirementProps) {
       }
   }
 
+  function stopPropagation(event: any) {
+    event.stopPropagation();
+  }
+
   return (
-    <div className="section-galeria cbl-1">
+    <div
+      className="section-galeria cbl-1"
+      onClick={handleOpenPreview}
+      style={{
+        cursor:
+          props.requirement?.image && props.requirement?.image.length > 0
+            ? "pointer"
+            : "default",
+      }}
+    >
       <ImagePreviewGroupContainer
         ref={childRef}
         image={props.requirement?.image}
@@ -44,13 +57,15 @@ export default function BasicDataRequirement(props: BasicDataRequirementProps) {
         }
         alt=""
         className="img-slider-req"
-        onClick={handleOpenPreview}
-        style={{ cursor: "pointer" }}
       />
       <div className="galeria-detalles">
         <div className="t-flex f-column gap-15 detalles-requ">
           <div className="t-flex gap-15 det-c">
-            <div className="det-1">
+            <div
+              className="det-1"
+              onClick={stopPropagation}
+              style={{ cursor: "default" }}
+            >
               <div className="ub-1">
                 {props.requirement &&
                   countryData &&
@@ -62,7 +77,11 @@ export default function BasicDataRequirement(props: BasicDataRequirementProps) {
               </div>
               <div className="ub-2">{props.requirement?.title}</div>
             </div>
-            <div className="det-2">
+            <div
+              className="det-2"
+              onClick={stopPropagation}
+              style={{ cursor: "default", whiteSpace: "nowrap" }}
+            >
               {props.requirement?.coin &&
                 Coins[currencyData[props.requirement?.coin]?.alias]}{" "}
               {props.requirement?.price}
@@ -70,7 +89,11 @@ export default function BasicDataRequirement(props: BasicDataRequirementProps) {
             </div>
           </div>
           <div className="t-flex">
-            <div className="det-3 text-truncate">
+            <div
+              className="det-3 text-truncate"
+              onClick={stopPropagation}
+              style={{ cursor: "default" }}
+            >
               {props.requirement?.user.name}
             </div>
           </div>

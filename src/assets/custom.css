@@ -95,6 +95,11 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
   margin-right: 5px;
 }
 
+/* No line height */
+.ant-app {
+  line-height: inherit;
+}
+
 /*****************************/
 /* Truncar texto */
 .text-truncate {

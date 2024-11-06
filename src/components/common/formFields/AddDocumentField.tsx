@@ -9,7 +9,7 @@ import showNotification from "../../../utilities/notification/showNotification";
 export default function AddDocumentField({
   forOffer = false,
 }: {
-  forOffer: boolean;
+  forOffer?: boolean;
 }) {
   const { t } = useTranslation();
   const { notification } = App.useApp();

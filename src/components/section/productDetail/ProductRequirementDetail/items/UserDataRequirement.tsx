@@ -57,6 +57,7 @@ export default function UserDataRequirement(props: UserDataRequirementProps) {
           </div>
           <div className="dato-detalle-2 text-truncate">{props.user?.name}</div>
         </div>
+
         {props.subUser && (
           <div className="t-flex gap-10">
             <div className="dato-detalle-1">
