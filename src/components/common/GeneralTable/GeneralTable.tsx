@@ -35,14 +35,18 @@ import TypeColumn from "./columns/TypeColumn";
 import ViewColumn from "./columns/ViewColumn";
 import DocumentColumn from "./columns/DocumentColumn";
 import { getLabelFromPurchaseOrderType } from "../../../utilities/globalFunctions";
+import { useNavigate } from "react-router-dom";
+import { pageRoutes } from "../../../utilities/routes";
 
 interface GeneralTableProps {
   content: TableType;
   loading?: boolean;
+  onRowAction?: boolean;
 }
 
 export default function GeneralTable(props: GeneralTableProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const pageSizeOptions = pageSizeOptionsSt;
   let columns: Array<
     | ColumnType<Offer>
@@ -145,6 +149,16 @@ export default function GeneralTable(props: GeneralTableProps) {
       getRequirementTableColumns();
       return (
         <Table
+          onRow={
+            props.onRowAction
+              ? (record: Requirement) => {
+                  return {
+                    onClick: () =>
+                      navigate(`${pageRoutes.productDetail}/${record.key}`),
+                  };
+                }
+              : undefined
+          }
           dataSource={props.content.data}
           loading={props.loading}
           columns={columns as Array<ColumnType<Requirement>>}

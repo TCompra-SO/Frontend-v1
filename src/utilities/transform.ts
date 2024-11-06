@@ -112,7 +112,7 @@ export function transformToOffer(
   offer.key = data.uid;
   offer.title = data.name;
   offer.location = data.cityID;
-  offer.deliveryTime = data.deliveryTime;
+  offer.deliveryTime = data.deliveryTimeID;
   offer.coin = data.currencyID;
   offer.warrantyTime = data.timeMeasurementID;
   offer.price = data.budget;

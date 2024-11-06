@@ -7,7 +7,7 @@ import {
   defaultCountry,
 } from "../../../../utilities/globals";
 import { useContext, useState } from "react";
-import { OfferFilterTypes, CommonFilter } from "../../../../utilities/types";
+import { CommonFilter } from "../../../../utilities/types";
 import { IdValueObj, OfferFilters } from "../../../../models/Interfaces";
 import { requirementDetailContext } from "../../../../contexts/requirementDetailContext";
 import { useTranslation } from "react-i18next";
@@ -57,24 +57,26 @@ export default function RequirementOfferFilters(
     let location: string = filterNames.location;
     let deliveryTime: string = filterNames.deliveryTime;
 
-    // if (changedValues.price) {
-    //   props.onFilterChange(OfferFilterTypes.PRICE, changedValues.price);
-    // } else if (changedValues.location) {
-    //   location =
-    //     countryData[showCountry].cities.find(
-    //       (city) => city.id == changedValues.location
-    //     )?.value ?? t("all");
-    //   props.onFilterChange(OfferFilterTypes.LOCATION, changedValues.location);
-    // } else if (changedValues.deliveryTime) {
-    //   deliveryTime =
-    //     deliveryTimeData[changedValues.deliveryTime]?.value ?? t("all");
-    //   props.onFilterChange(
-    //     OfferFilterTypes.DELIVERY,
-    //     changedValues.deliveryTime
-    //   );
-    // } else if (changedValues.warranty) {
-    //   props.onFilterChange(OfferFilterTypes.WARRANTY, changedValues.warranty);
-    // }
+    if (changedValues.location) {
+      location =
+        countryData[showCountry].cities.find(
+          (city) => city.id == changedValues.location
+        )?.value ?? t("all");
+    }
+    if (changedValues.deliveryTime) {
+      deliveryTime =
+        deliveryTimeData[changedValues.deliveryTime]?.value ?? t("all");
+    }
+    if (changedValues.price && changedValues.price != CommonFilter.ALL) {
+      allValues.warranty = CommonFilter.ALL;
+      form.setFieldValue("warranty", allValues.warranty);
+    } else if (
+      changedValues.warranty &&
+      changedValues.warranty != CommonFilter.ALL
+    ) {
+      allValues.price = CommonFilter.ALL;
+      form.setFieldValue("price", allValues.price);
+    }
 
     updateFilters(allValues, {
       location,

@@ -3,9 +3,14 @@ import RequirementOfferListItemHeader from "./RequirementOfferListItemHeader";
 import RequirementOfferListItemBody from "./RequirementOfferListItemBody";
 import { useTranslation } from "react-i18next";
 import { useContext, useEffect, useState } from "react";
-import { OfferState, RequirementState } from "../../../../utilities/types";
+import {
+  CommonFilter,
+  OfferState,
+  RequirementState,
+} from "../../../../utilities/types";
 import { requirementDetailContext } from "../../../../contexts/requirementDetailContext";
 import { allSelect } from "../../../../utilities/globals";
+import { transformToDays } from "../../../../utilities/globalFunctions";
 
 interface RequirementOfferListProps {
   offers: Offer[];
@@ -24,8 +29,9 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
   }, [props.offers]);
 
   useEffect(() => {
-    setOffersCopy((prev) => {
-      prev = props.offers;
+    setOffersCopy(() => {
+      let prev = [...props.offers];
+      // Ubicación y tiempo de entrega
       if (filters.location != allSelect && filters.deliveryTime == allSelect)
         prev = prev.filter((offer) => offer.location == filters.location);
       else if (
@@ -44,8 +50,26 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
           (offer) => offer.deliveryTime == filters.deliveryTime
         );
       }
+      // Precio y garantía
+      if (filters.price == CommonFilter.ASC)
+        prev.sort((a, b) => a.price - b.price);
+      else if (filters.price == CommonFilter.DESC)
+        prev.sort((a, b) => b.price - a.price);
+      if (filters.warranty == CommonFilter.ASC)
+        prev.sort(
+          (a, b) =>
+            transformToDays(a.warranty, a.warrantyTime) -
+            transformToDays(b.warranty, b.warrantyTime)
+        );
+      else if (filters.warranty == CommonFilter.DESC)
+        prev.sort(
+          (a, b) =>
+            transformToDays(b.warranty, b.warrantyTime) -
+            transformToDays(a.warranty, a.warrantyTime)
+        );
       return prev;
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   function handleSuccessfulSelection(offerId: string) {

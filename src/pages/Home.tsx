@@ -122,7 +122,11 @@ export default function Home() {
       </ButtonContainer>
 
       <div className="table-responsive">
-        <GeneralTable content={tableContent} loading={loadingTable} />
+        <GeneralTable
+          content={tableContent}
+          loading={loadingTable}
+          onRowAction
+        />
       </div>
     </>
   );

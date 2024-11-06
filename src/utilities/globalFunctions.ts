@@ -9,6 +9,7 @@ import { defaultCountry, maxDocSizeMb, maxImageSizeMb } from "./globals";
 import {
   PurchaseOrderTableTypes,
   RequirementType,
+  TimeMeasurement,
   UserClass,
   UserRoles,
 } from "./types";
@@ -231,5 +232,17 @@ export function getLabelFromRole(type: UserRoles) {
       return "sellerBuyer";
     case UserRoles.NONE:
       return "none";
+  }
+}
+
+// Transforma tiempo a días
+export function transformToDays(n: number, time: TimeMeasurement) {
+  switch (time) {
+    case TimeMeasurement.MONTHS:
+      return n * 30;
+    case TimeMeasurement.YEARS:
+      return n * 365;
+    default:
+      return n;
   }
 }
