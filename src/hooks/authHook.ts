@@ -27,17 +27,20 @@ export function useLogout() {
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
 
   const logout = () => {
-    localStorage.removeItem(tokenKey);
-    localStorage.removeItem(userDataKey);
-    dispatch(setFullMainUser(mainUserInitialState));
-    dispatch(setFullUser(userInitialState));
-    localStorage.setItem("logout", Date.now().toString());
-    dispatch(setIsLoggedIn(false));
+    if (isLoggedIn) {
+      localStorage.removeItem(tokenKey);
+      localStorage.removeItem(userDataKey);
+      dispatch(setFullMainUser(mainUserInitialState));
+      dispatch(setFullUser(userInitialState));
+      localStorage.setItem("logout", Date.now().toString());
+      localStorage.removeItem("logout");
+    }
   };
 
   useEffect(() => {
     function handleStorageChange(event: StorageEvent) {
       if (event.key === "logout") {
+        dispatch(setIsLoggedIn(false));
         navigate(pageRoutes.home);
       }
     }
@@ -46,7 +49,7 @@ export function useLogout() {
     return () => {
       window.removeEventListener("storage", handleStorageChange);
     };
-  }, [isLoggedIn]);
+  }, []);
 
   return logout;
 }

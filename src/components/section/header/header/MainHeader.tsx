@@ -50,6 +50,10 @@ function MainHeader(props: MainHeaderProps) {
   ]);
 
   useEffect(() => {
+    console.log("closing", isLoggedIn);
+  }, [isLoggedIn]);
+
+  useEffect(() => {
     setCurrentSection(getSectionFromRoute(location.pathname));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);

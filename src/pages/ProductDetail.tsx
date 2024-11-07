@@ -77,7 +77,7 @@ export default function ProductDetail() {
     );
     console.log(response, req);
     if (req) setRequirement(req);
-    // else navigate(pageRoutes.home);
+    else navigate(pageRoutes.home);
   }
 
   return (
