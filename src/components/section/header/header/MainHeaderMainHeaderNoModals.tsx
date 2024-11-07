@@ -15,11 +15,11 @@ import { MainState } from "../../../../models/Redux";
 import { getSectionFromRoute } from "../../../../utilities/globalFunctions";
 import { pageRoutes } from "../../../../utilities/routes";
 
-interface MainHeaderProps {
+interface MainHeaderNoModalsProps {
   onShowMenu?: (show: boolean) => void;
 }
 
-function MainHeader(props: MainHeaderProps) {
+export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
   const { t } = useTranslation();
   const { width } = useWindowSize();
   const [logoSrc, setLogoSrc] = useState("/src/assets/images/logo-white.svg");
@@ -48,10 +48,6 @@ function MainHeader(props: MainHeaderProps) {
       ),
     },
   ]);
-
-  useEffect(() => {
-    console.log("closing", isLoggedIn);
-  }, [isLoggedIn]);
 
   useEffect(() => {
     setCurrentSection(getSectionFromRoute(location.pathname));
@@ -214,5 +210,3 @@ function MainHeader(props: MainHeaderProps) {
     </header>
   );
 }
-
-export default MainHeader;
