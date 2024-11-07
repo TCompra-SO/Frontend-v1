@@ -74,7 +74,7 @@ function App() {
 
   useEffect(() => {
     async function getUserData() {
-      dispatch(setIsLoggedIn(await loadUserInfo()));
+      await loadUserInfo();
       dispatch(setIsLoading(false));
     }
     getUserData();

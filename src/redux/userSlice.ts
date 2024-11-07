@@ -38,9 +38,10 @@ export const userSlice = createSlice({
         state.typeID = typeID;
         state.planID = planID;
         state.uid = uid;
+
         localStorage.setItem(userDataKey, encryptData(JSON.stringify(state)));
         console.log(state.uid);
-      }
+      } else localStorage.removeItem(userDataKey);
     },
     setBaseUser: (state, action: { payload: BaseUser; type: string }) => {
       state.tenure = action.payload.tenure;

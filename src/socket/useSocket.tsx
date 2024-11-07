@@ -33,7 +33,7 @@ export default function useSocket() {
         service: getRequirementsService(),
         method: "get",
       });
-      console.log(responseData);
+      // console.log(responseData);
       if (responseData) {
         const data = await Promise.all(
           responseData.data.map(

@@ -36,6 +36,7 @@ import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { getBaseUserForUserSubUser } from "../services/complete/general";
 import { setMainUser } from "../redux/mainUserSlice";
 import { tokenKey } from "../utilities/globals";
+import { loadUserInfo } from "../services/complete/authServiceComplete";
 
 const LoginType = {
   LOGIN: "login",
@@ -200,17 +201,18 @@ export default function Login(props: LoginProps) {
       props.onRegisterSuccess(docType);
     } else {
       dispatch(setUser(responseData));
-      const { user, subUser } = await getBaseUserForUserSubUser(
-        responseData.dataUser[0].uid,
-        true
-      );
-      if (user) {
-        dispatch(setBaseUser(subUser));
-        dispatch(setMainUser(user));
-      }
+      // const { user, subUser } = await getBaseUserForUserSubUser(
+      //   responseData.dataUser[0].uid,
+      //   true
+      // );
+      // if (user) {
+      //   dispatch(setBaseUser(subUser));
+      //   dispatch(setMainUser(user));
+      // }
+      await loadUserInfo();
 
       showNotification(notification, "success", t("welcome"));
-      localStorage.setItem(tokenKey, responseData.token);
+
       navigate(`${pageRoutes.myRequirements}`);
     }
   }

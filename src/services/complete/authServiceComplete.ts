@@ -1,18 +1,19 @@
 import { decryptData } from "../../utilities/crypto";
 import store from "../../redux/store";
-import { setBaseUser, setUser } from "../../redux/userSlice";
+import { setBaseUser, setIsLoggedIn, setUser } from "../../redux/userSlice";
 import { getBaseUserForUserSubUser } from "./general";
 import { setMainUser } from "../../redux/mainUserSlice";
-import { userDataKey } from "../../utilities/globals";
+import { tokenKey, userDataKey } from "../../utilities/globals";
 import { setIsUserLoading } from "../../redux/loadingUserSlice";
 
-export async function loadUserInfo(): Promise<boolean> {
+export async function loadUserInfo() {
   store.dispatch(setIsUserLoading(true));
   const userData = localStorage.getItem(userDataKey);
   if (userData) {
     const userInfo = JSON.parse(decryptData(userData));
     // console.log(userInfo);
     if (userInfo) {
+      localStorage.setItem(tokenKey, userInfo.token);
       store.dispatch(
         setUser({
           token: userInfo.token,
@@ -40,14 +41,14 @@ export async function loadUserInfo(): Promise<boolean> {
         store.dispatch(setBaseUser(subUser));
       }
       store.dispatch(setIsUserLoading(false));
-      console.log(1);
-      return user && subUser ? true : false;
+      store.dispatch(setIsLoggedIn(user && subUser ? true : false));
+      return;
     }
     store.dispatch(setIsUserLoading(false));
-    console.log(2);
-    return false;
+    store.dispatch(setIsLoggedIn(false));
+    return;
   }
-  console.log(3);
+
   store.dispatch(setIsUserLoading(false));
-  return false;
+  store.dispatch(setIsLoggedIn(false));
 }
