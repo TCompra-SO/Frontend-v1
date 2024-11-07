@@ -15,7 +15,7 @@ import {
 
 import { useDispatch, useSelector } from "react-redux";
 import { pageRoutes } from "../utilities/routes";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { MainState } from "../models/Redux";
 import { setIsUserLoading } from "../redux/loadingUserSlice";
 import { decryptData } from "../utilities/crypto";
@@ -25,6 +25,7 @@ export function useLogout() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
+  const logoutKey: string = "logout";
 
   const logout = () => {
     if (isLoggedIn) {
@@ -32,14 +33,14 @@ export function useLogout() {
       localStorage.removeItem(userDataKey);
       dispatch(setFullMainUser(mainUserInitialState));
       dispatch(setFullUser(userInitialState));
-      localStorage.setItem("logout", Date.now().toString());
-      localStorage.removeItem("logout");
+      localStorage.setItem(logoutKey, Date.now().toString());
+      localStorage.removeItem(logoutKey);
     }
   };
 
   useEffect(() => {
     function handleStorageChange(event: StorageEvent) {
-      if (event.key === "logout") {
+      if (event.key === logoutKey) {
         dispatch(setIsLoggedIn(false));
         navigate(pageRoutes.home);
       }
