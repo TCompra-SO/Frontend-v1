@@ -5,7 +5,8 @@ export default function Premium() {
 
   return (
     <div className="user-premium">
-      <i className="fa-regular fa-crown"></i> {t("premium")}
+      <i className="fa-regular fa-crown"></i>{" "}
+      <span className="req-btn-info">{t("premium")}</span>
     </div>
   );
 }

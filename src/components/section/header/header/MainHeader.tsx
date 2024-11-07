@@ -78,6 +78,7 @@ function MainHeader(props: MainHeaderProps) {
         },
       ]);
     } else {
+      setShowMenuButtonStyle({});
       setDropdownItems([
         {
           key: "notification",
@@ -116,8 +117,8 @@ function MainHeader(props: MainHeaderProps) {
           ),
         },
       ]);
-      setShowMenuButtonStyle({});
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [width]);
 
@@ -130,11 +131,6 @@ function MainHeader(props: MainHeaderProps) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [width, currentSection]);
-
-  useEffect(() => {
-    console.log(isLoggedIn);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoggedIn]);
 
   const onClick: MenuProps["onClick"] = ({ key }) => {
     switch (key) {
@@ -172,9 +168,9 @@ function MainHeader(props: MainHeaderProps) {
             <img src={logoSrc} className="logo-header" alt="Logo" />
           )}
           <div className="t-flex options-tc">
+            <Premium />
             {width > windowSize.md && (
               <>
-                <Premium />
                 <Chat />
                 <Notification />
               </>

@@ -2,7 +2,6 @@ import { FloatButton } from "antd";
 import { useTranslation } from "react-i18next";
 import NoContentModalContainer from "../../containers/NoContentModalContainer";
 import { lazy, useEffect, useState } from "react";
-import useIsLoggedIn from "../../../hooks/useIsLoggedIn";
 import { useLocation, useNavigate } from "react-router-dom";
 import { isHome } from "../../../utilities/globalFunctions";
 import { pageRoutes } from "../../../utilities/routes";
@@ -20,7 +19,7 @@ export default function CreateRequirementFloatButton() {
   const isLoading = useSelector((state: MainState) => state.loading.isLoading);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isHomePage, setIsHomePage] = useState(true);
-  const isLoggedIn = useIsLoggedIn();
+  const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
 
   useEffect(() => {
     setIsHomePage(isHome(location.pathname));

@@ -12,9 +12,10 @@ import {
 } from "../utilities/types.ts";
 import GeneralTable from "../components/common/GeneralTable/GeneralTable.tsx";
 import useSocket from "../socket/useSocket.tsx";
-import useIsLoggedIn from "../hooks/useIsLoggedIn.ts";
 import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../utilities/routes.ts";
+import { useSelector } from "react-redux";
+import { MainState } from "../models/Redux.ts";
 
 const Login = lazy(() => import("./Login.tsx"));
 const Profile = lazy(() => import("./Profile.tsx"));
@@ -27,7 +28,7 @@ export default function Home() {
   const [showLogin, setShowLogin] = useState(true);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [docType, setDocType] = useState("");
-  const isLoggedIn = useIsLoggedIn();
+  const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
 
   const { requirements: tableData, loading: loadingTable } = useSocket();
   const [tableContent, setTableContent] = useState<TableTypeRequirement>({

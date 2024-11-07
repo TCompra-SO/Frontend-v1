@@ -22,10 +22,9 @@ import MainHeader from "./components/section/header/header/MainHeader.tsx";
 import { ListsProvider } from "./contexts/listsContext.tsx";
 import AuthRoleGuard from "./components/guards/AuthRoleGuard.tsx";
 import { RolesForSection, RolesForSubSection } from "./utilities/roles.ts";
-import { loadUserInfo } from "./services/complete/authServiceComplete.ts";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "./redux/loadingSlice.ts";
-import { setIsLoggedIn } from "./redux/userSlice.ts";
+import { useLoadUserInfo } from "./hooks/authHook.ts";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
@@ -70,6 +69,7 @@ function MainLayout({ children }: { children: React.ReactNode }) {
 
 function App() {
   const dispatch = useDispatch();
+  const loadUserInfo = useLoadUserInfo();
   dispatch(setIsLoading(true));
 
   useEffect(() => {
@@ -89,7 +89,6 @@ function App() {
           algorithm: theme.defaultAlgorithm,
           token: {
             colorPrimary: primaryColor,
-            // borderRadius: 16,
             colorBgContainer: mainBackgroundColor,
             fontFamily: "Rubik",
             fontSize: 16,
