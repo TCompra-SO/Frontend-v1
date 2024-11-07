@@ -55,9 +55,6 @@ function MainHeader(props: MainHeaderProps) {
   }, [location]);
 
   useEffect(() => {
-    if (width <= windowSize.sm) {
-      setLogoSrc("/src/assets/images/favicon.svg");
-    }
     if (width > windowSize.md) {
       setShowMenuButtonStyle({ display: "none" });
       setDropdownItems([
@@ -124,6 +121,21 @@ function MainHeader(props: MainHeaderProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [width]);
 
+  useEffect(() => {
+    if (width > windowSize.sm) {
+      if (currentSection == pageRoutes.home)
+        setLogoSrc("/src/assets/images/logo-white.svg");
+      else setLogoSrc("/src/assets/images/logo-black.svg");
+    } else setLogoSrc("/src/assets/images/favicon.svg");
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [width, currentSection]);
+
+  useEffect(() => {
+    console.log(isLoggedIn);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggedIn]);
+
   const onClick: MenuProps["onClick"] = ({ key }) => {
     switch (key) {
       case "logout":
@@ -157,11 +169,7 @@ function MainHeader(props: MainHeaderProps) {
           )}
           {(currentSection == pageRoutes.home ||
             currentSection == pageRoutes.productDetail) && (
-            <img
-              src="/src/assets/images/favicon.svg"
-              className="logo-header"
-              alt="Logo"
-            />
+            <img src={logoSrc} className="logo-header" alt="Logo" />
           )}
           <div className="t-flex options-tc">
             {width > windowSize.md && (
@@ -191,15 +199,7 @@ function MainHeader(props: MainHeaderProps) {
       ) : (
         <header className="">
           <div className="t-flex header-tc header-menu">
-            <img
-              src={
-                currentSection == pageRoutes.home
-                  ? "/src/assets/images/logo-white.svg"
-                  : "/src/assets/images/logo-black.svg"
-              }
-              alt="Logo"
-              style={{ height: "48px" }}
-            />
+            <img src={logoSrc} alt="Logo" style={{ height: "48px" }} />
             <div className="t-flex options-tc">
               <button className="btn btn-default">
                 <i className="fa-regular fa-user"></i>{" "}

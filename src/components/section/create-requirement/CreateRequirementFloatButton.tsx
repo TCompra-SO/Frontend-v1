@@ -28,7 +28,7 @@ export default function CreateRequirementFloatButton() {
 
   return (
     <>
-      {isLoggedIn && !isLoading ? (
+      {!isLoading ? (
         <>
           <FloatButton.Group shape="circle" style={{ insetInlineEnd: 24 }}>
             {!isHomePage && (
@@ -39,23 +39,27 @@ export default function CreateRequirementFloatButton() {
                 onClick={() => navigate(pageRoutes.home)}
               />
             )}
-            <FloatButton
-              icon={<i className="fa-solid fa-plus" />}
-              type="primary"
-              tooltip={t("createRequirement")}
-              onClick={() => setIsOpenModal(true)}
-            />
+            {isLoggedIn && (
+              <FloatButton
+                icon={<i className="fa-solid fa-plus" />}
+                type="primary"
+                tooltip={t("createRequirement")}
+                onClick={() => setIsOpenModal(true)}
+              />
+            )}
           </FloatButton.Group>
 
-          <NoContentModalContainer
-            open={isOpenModal}
-            onClose={() => setIsOpenModal(false)}
-            width={850}
-            closable={true}
-            maskClosable={false}
-          >
-            <CreateRequirement closeModal={() => setIsOpenModal(false)} />
-          </NoContentModalContainer>
+          {isLoggedIn && (
+            <NoContentModalContainer
+              open={isOpenModal}
+              onClose={() => setIsOpenModal(false)}
+              width={850}
+              closable={true}
+              maskClosable={false}
+            >
+              <CreateRequirement closeModal={() => setIsOpenModal(false)} />
+            </NoContentModalContainer>
+          )}
         </>
       ) : null}
     </>

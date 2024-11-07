@@ -40,11 +40,14 @@ export async function loadUserInfo(): Promise<boolean> {
         store.dispatch(setBaseUser(subUser));
       }
       store.dispatch(setIsUserLoading(false));
+      console.log(1);
       return user && subUser ? true : false;
     }
     store.dispatch(setIsUserLoading(false));
+    console.log(2);
     return false;
   }
+  console.log(3);
   store.dispatch(setIsUserLoading(false));
   return false;
 }
