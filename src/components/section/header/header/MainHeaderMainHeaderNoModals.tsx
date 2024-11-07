@@ -1,4 +1,4 @@
-import { Dropdown, Flex, MenuProps, Space } from "antd";
+import { Dropdown, MenuProps, Space } from "antd";
 import Premium from "../items/Premium";
 import Notification from "../items/Notification";
 import Chat from "../items/Chat";
@@ -14,13 +14,17 @@ import { useSelector } from "react-redux";
 import { MainState } from "../../../../models/Redux";
 import { getSectionFromRoute } from "../../../../utilities/globalFunctions";
 import { pageRoutes } from "../../../../utilities/routes";
+import ButtonContainer from "../../../containers/ButtonContainer";
+import { useNavigate } from "react-router-dom";
 
 interface MainHeaderNoModalsProps {
   onShowMenu?: (show: boolean) => void;
+  onOpenLoginModal?: () => void;
 }
 
 export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { width } = useWindowSize();
   const [logoSrc, setLogoSrc] = useState("/src/assets/images/logo-white.svg");
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
@@ -138,6 +142,7 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
         logout();
         break;
       case "profile":
+        navigate(`${pageRoutes.profile}`);
         break;
     }
   };
@@ -193,16 +198,19 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
           </div>
         </div>
       ) : (
-        <header className="">
+        <header>
           <div className="t-flex header-tc header-menu">
             <img src={logoSrc} alt="Logo" style={{ height: "48px" }} />
             <div className="t-flex options-tc">
-              <button className="btn btn-default">
-                <i className="fa-regular fa-user"></i>{" "}
+              <ButtonContainer
+                className="btn btn-default"
+                onClick={() => props.onOpenLoginModal?.()}
+                icon={<i className="fa-regular fa-user"></i>}
+              >
                 <span className="req-btn-info">
                   {t("login")}/{t("register")}
                 </span>
-              </button>
+              </ButtonContainer>
             </div>
           </div>
         </header>

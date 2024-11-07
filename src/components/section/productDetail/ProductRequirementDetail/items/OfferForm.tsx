@@ -22,12 +22,15 @@ import { useApiParams } from "../../../../../models/Interfaces";
 import useApi from "../../../../../hooks/useApi";
 import { createOfferService } from "../../../../../services/requests/offerService";
 import {
+  CantOfferMotives,
   ImageRequestLabels,
   ProcessFlag,
 } from "../../../../../utilities/types";
 import { uploadDocsOfferService } from "../../../../../services/requests/documentService";
 import { uploadImagesOfferService } from "../../../../../services/requests/imageService";
 import React from "react";
+import CantOfferMessage from "./CantOfferMessage";
+import { Requirement } from "../../../../../models/MainInterfaces";
 
 function RowContainer({ children }: { children: ReactNode }) {
   return (
@@ -40,7 +43,7 @@ function RowContainer({ children }: { children: ReactNode }) {
 }
 
 interface OfferFormProps {
-  requirementId: string | undefined;
+  requirement: Requirement | undefined;
 }
 
 export default function OfferForm(props: OfferFormProps) {
@@ -48,7 +51,11 @@ export default function OfferForm(props: OfferFormProps) {
   const [form] = Form.useForm();
   const email = useSelector((state: MainState) => state.user.email);
   const uid = useSelector((state: MainState) => state.user.uid);
+  const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const { notification } = App.useApp();
+  const [cantOfferMotive, setCantOfferMotive] = useState<CantOfferMotives>(
+    CantOfferMotives.NONE
+  );
   const [checkedIGV, setCheckedIGV] = useState(false);
   const [checkedDelivery, setCheckedDelivery] = useState(false);
   const [formDataImg, setFormDataImg] = useState<FormData | null>(null);
@@ -57,6 +64,19 @@ export default function OfferForm(props: OfferFormProps) {
   const [docSuccess, setDocSuccess] = useState(ProcessFlag.NOT_INI);
   const [imgSuccess, setImgSuccess] = useState(ProcessFlag.NOT_INI);
   const [offerId, setofferId] = useState<string>("");
+
+  /** Verificar si el usuario puede ofertar */
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setCantOfferMotive(CantOfferMotives.NOT_LOGGED_IN);
+      return;
+    }
+    if (props.requirement && props.requirement.user.uid == uid)
+      setCantOfferMotive(CantOfferMotives.IS_CREATOR);
+  }, [isLoggedIn, props.requirement]);
+
+  /************ */
 
   const [apiParams, setApiParams] = useState<useApiParams<CreateOfferRequest>>({
     service: null,
@@ -177,7 +197,7 @@ export default function OfferForm(props: OfferFormProps) {
     setDocSuccess(ProcessFlag.NOT_INI);
     setImgSuccess(ProcessFlag.NOT_INI);
 
-    if (props.requirementId) {
+    if (props.requirement) {
       const data: CreateOfferRequest = {
         name: values.title.trim(),
         email: values.email,
@@ -191,7 +211,7 @@ export default function OfferForm(props: OfferFormProps) {
         budget: values.budget,
         includesIGV: checkedIGV,
         includesDelivery: checkedDelivery,
-        requerimentID: props.requirementId,
+        requerimentID: props.requirement.key,
         userID: uid,
       };
 
@@ -259,12 +279,8 @@ export default function OfferForm(props: OfferFormProps) {
     }
   }
 
-  function deleteOffer() {
-    console.log("deleting", offerId);
-  }
-
   function goToChat() {
-    console.log("chat", props.requirementId);
+    console.log("chat", props.requirement?.key);
   }
 
   return (
@@ -275,87 +291,84 @@ export default function OfferForm(props: OfferFormProps) {
           <div>{t("offerFormTitle")}</div>
         </div>
       </div>
-      {reqSuccess != ProcessFlag.NOT_INI &&
-      docSuccess != ProcessFlag.NOT_INI &&
-      imgSuccess != ProcessFlag.NOT_INI ? (
-        <div className="t-flex f-column j-conten j-items oferta-check gap-10">
-          <i className="fa-regular fa-clipboard-check fa-3x"></i>
-          <div className="aviso-h">
-            <div className="cantidad-estd">{t("alreadyMadeOffer")}</div>
-            <div className="detalles-estd">
-              {t("ifYouWantToEliminateYourOfferClickOnDelete")}
-            </div>
-          </div>
-          <ButtonContainer
-            className="btn btn-default btn-sm"
-            icon={<i className="fa-regular fa-trash"></i>}
-            onClick={deleteOffer}
+      {cantOfferMotive == CantOfferMotives.NONE ? (
+        reqSuccess != ProcessFlag.NOT_INI &&
+        docSuccess != ProcessFlag.NOT_INI &&
+        imgSuccess != ProcessFlag.NOT_INI ? (
+          <CantOfferMessage
+            offerId={offerId}
+            motive={CantOfferMotives.ALREADY_MADE_OFFER}
+            type={props.requirement?.type}
+          />
+        ) : (
+          <Form
+            form={form}
+            colon={false}
+            requiredMark={false}
+            onFinish={createOffer}
           >
-            {t("deleteOffer")}
-          </ButtonContainer>
-        </div>
-      ) : (
-        <Form
-          form={form}
-          colon={false}
-          requiredMark={false}
-          onFinish={createOffer}
-        >
-          <div className="t-flex gap-15 f-column form-oferta">
-            <RowContainer>
-              <TitleField />
-              <EmailField onlyItem edit value={email} />
-            </RowContainer>
-            <RowContainer>
-              <OfferDescriptionField />
-            </RowContainer>
-            <RowContainer>
-              <LocationField onlyItem />
-              <DeliveryTimeField />
-              <CurrencyField />
-            </RowContainer>
-            <RowContainer>
-              <WarrantyField required={true} />
-              <DurationField required={true} name={"duration"} />
-              <SupportField />
-              <BudgetField />
-            </RowContainer>
-            <div className="t-flex gap-15 archivos-up">
-              <AddImagesField forOffer />
-              <AddDocumentField forOffer />
-            </div>
+            <div className="t-flex gap-15 f-column form-oferta">
+              <RowContainer>
+                <TitleField />
+                <EmailField onlyItem edit value={email} />
+              </RowContainer>
+              <RowContainer>
+                <OfferDescriptionField />
+              </RowContainer>
+              <RowContainer>
+                <LocationField onlyItem />
+                <DeliveryTimeField />
+                <CurrencyField />
+              </RowContainer>
+              <RowContainer>
+                <WarrantyField required={true} />
+                <DurationField required={true} name={"duration"} />
+                <SupportField />
+                <BudgetField />
+              </RowContainer>
+              <div className="t-flex gap-15 archivos-up">
+                <AddImagesField forOffer />
+                <AddDocumentField forOffer />
+              </div>
 
-            <div className="t-flex t-wrap gap-15 up-footer">
-              <div className="t-flex gap-5 uf-1">
-                <Checkbox onChange={(e) => setCheckedIGV(e.target.checked)}>
-                  <div className="footer-text">{t("priceIncludesIGV")}</div>
-                </Checkbox>
-                <Checkbox
-                  onChange={(e) => setCheckedDelivery(e.target.checked)}
-                >
-                  <div className="footer-text">{t("includeDelivery")}</div>
-                </Checkbox>
-              </div>
-              <div className="t-flex gap-10 uf-2">
-                <ButtonContainer
-                  htmlType="submit"
-                  className="btn btn-default"
-                  icon={<i className="fa-regular fa-tag"></i>}
-                  loading={loading || loadingDoc || loadingImg}
-                >
-                  {`${t("offerButton")}`}
-                </ButtonContainer>
-                <ButtonContainer
-                  className="btn btn-green"
-                  icon={<i className="fa-regular fa-comment"></i>}
-                  onClick={goToChat}
-                >
-                  {`${t("sendMessage")}`}
-                </ButtonContainer>
+              <div className="t-flex t-wrap gap-15 up-footer">
+                <div className="t-flex gap-5 uf-1">
+                  <Checkbox onChange={(e) => setCheckedIGV(e.target.checked)}>
+                    <div className="footer-text">{t("priceIncludesIGV")}</div>
+                  </Checkbox>
+                  <Checkbox
+                    onChange={(e) => setCheckedDelivery(e.target.checked)}
+                  >
+                    <div className="footer-text">{t("includeDelivery")}</div>
+                  </Checkbox>
+                </div>
+                <div className="t-flex gap-10 uf-2">
+                  <ButtonContainer
+                    htmlType="submit"
+                    className="btn btn-default"
+                    icon={<i className="fa-regular fa-tag"></i>}
+                    loading={loading || loadingDoc || loadingImg}
+                  >
+                    {`${t("offerButton")}`}
+                  </ButtonContainer>
+                  <ButtonContainer
+                    className="btn btn-green"
+                    icon={<i className="fa-regular fa-comment"></i>}
+                    onClick={goToChat}
+                  >
+                    {`${t("sendMessage")}`}
+                  </ButtonContainer>
+                </div>
               </div>
             </div>
-          </div>
-        </Form>
+          </Form>
+        )
+      ) : (
+        <CantOfferMessage
+          offerId={offerId}
+          motive={cantOfferMotive}
+          type={props.requirement?.type}
+        />
       )}
     </div>
   );

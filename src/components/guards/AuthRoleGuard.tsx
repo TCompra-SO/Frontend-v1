@@ -2,8 +2,8 @@ import { Navigate } from "react-router-dom";
 import { ReactNode, useEffect, useState } from "react";
 import { MainState } from "../../models/Redux";
 import { useSelector } from "react-redux";
-import { pageRoutes } from "../../utilities/routes";
 import { UserRoles } from "../../utilities/types";
+import { navigateToAfterLoggingOut } from "../../utilities/globals";
 
 interface AuthRoleGuardProps {
   children: ReactNode;
@@ -33,7 +33,7 @@ export default function AuthRoleGuard({
   }
 
   if (!allowedRoles[typeId]) {
-    return <Navigate to={pageRoutes.home} />;
+    return <Navigate to={navigateToAfterLoggingOut} />;
   }
 
   return <>{children}</>;

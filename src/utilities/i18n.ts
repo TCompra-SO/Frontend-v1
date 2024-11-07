@@ -245,6 +245,9 @@ const resources = {
       cantOfferToSale: "No offer can be selected for this sale",
       ifYouWantToEliminateYourOfferClickOnDelete: "If you want to delete your offer, click on Delete",
       deleteOffer: "Delete offer",
+      mustLoginToOffer: "You must log in to make an offer",
+      yourRequirementHas: "Your requirement has ",
+      yourSaleHas: "Your sale has ",
       // Other
       yes: "Yes",
       no: "No",
@@ -635,6 +638,9 @@ const resources = {
       cantOfferToSale: "No se puede seleccionar una oferta para esta liquidación",
       ifYouWantToEliminateYourOfferClickOnDelete: "Si quieres borrar tu oferta, haz click en Eliminar",
       deleteOffer: "Eliminar oferta",
+      mustLoginToOffer: "Debes iniciar sesión para ofertar",
+      yourRequirementHas: "Tu requerimiento tiene ",
+      yourSaleHas: "Tu liquidación tiene ",
       // Other
       yes: "Sí",
       no: "No",

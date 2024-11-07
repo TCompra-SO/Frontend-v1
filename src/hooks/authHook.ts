@@ -1,5 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { tokenKey, userDataKey } from "../utilities/globals";
+import {
+  navigateToAfterLoggingOut,
+  tokenKey,
+  userDataKey,
+} from "../utilities/globals";
 import {
   mainUserInitialState,
   setFullMainUser,
@@ -14,7 +18,6 @@ import {
 } from "../redux/userSlice";
 
 import { useDispatch, useSelector } from "react-redux";
-import { pageRoutes } from "../utilities/routes";
 import { useEffect } from "react";
 import { MainState } from "../models/Redux";
 import { setIsUserLoading } from "../redux/loadingUserSlice";
@@ -42,7 +45,7 @@ export function useLogout() {
     function handleStorageChange(event: StorageEvent) {
       if (event.key === logoutKey) {
         dispatch(setIsLoggedIn(false));
-        navigate(pageRoutes.home);
+        navigate(navigateToAfterLoggingOut);
       }
     }
     window.addEventListener("storage", handleStorageChange);
@@ -92,10 +95,12 @@ export function useLoadUserInfo() {
         if (subUser) {
           dispatch(setBaseUser(subUser));
         }
+
         dispatch(setIsUserLoading(false));
         dispatch(setIsLoggedIn(user && subUser ? true : false));
         return;
       }
+
       dispatch(setIsUserLoading(false));
       dispatch(setIsLoggedIn(false));
       return;
@@ -104,5 +109,6 @@ export function useLoadUserInfo() {
     dispatch(setIsUserLoading(false));
     dispatch(setIsLoggedIn(false));
   }
+
   return loadUserInfo;
 }

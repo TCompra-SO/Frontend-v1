@@ -200,10 +200,8 @@ export default function Login(props: LoginProps) {
     } else {
       dispatch(setUser(responseData));
       await loadUserInfo();
-
       showNotification(notification, "success", t("welcome"));
-
-      navigate(`${pageRoutes.myRequirements}`);
+      props.closeLoginModal();
     }
   }
 

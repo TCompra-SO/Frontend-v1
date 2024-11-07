@@ -391,3 +391,16 @@ export enum ProcessFlag {
   FIN_SUCCESS = 1,
   FIN_UNSUCCESS = 2,
 }
+
+export enum CantOfferMotives {
+  NONE = 0,
+  ALREADY_MADE_OFFER = 1,
+  NOT_LOGGED_IN = 2,
+  OTHER_USER_IN_COMPANY_MADE_OFFER = 3,
+  IS_CREATOR = 4,
+  IS_MAIN_CREATOR = 5,
+  CHANGED_STATE = 6,
+  ONLY_PREMIUM = 7,
+  ONLY_CERTIFIED = 8,
+  NO_ALLOWED_ROLE = 9,
+}

@@ -185,7 +185,7 @@ export function getSectionFromRoute(pathname: string) {
   const pathSegments = pathname.split("/");
   if (pathSegments.length <= 1 || pathSegments[1] === "")
     return pageRoutes.home;
-  return pathSegments[1];
+  return "/" + pathSegments[1];
 }
 
 // Retorna valor anidado para columna de tabla

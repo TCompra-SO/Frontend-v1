@@ -30,7 +30,7 @@ export default function ProductRequirementDetail(
           images={props.requirement?.image}
           docs={props.requirement?.document}
         />
-        <OfferForm requirementId={props.requirement?.key} />
+        <OfferForm requirement={props.requirement} />
       </div>
     </div>
   );

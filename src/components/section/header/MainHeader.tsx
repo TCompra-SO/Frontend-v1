@@ -1,13 +1,7 @@
 import { lazy, useState } from "react";
 import MainHeaderNoModals from "./header/MainHeaderMainHeaderNoModals";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
-import { MainState } from "../../../models/Redux.ts";
 import NoContentModalContainer from "../../containers/NoContentModalContainer.tsx";
 import ValidateCode from "../profile/ValidateCode.tsx";
-import ButtonContainer from "../../containers/ButtonContainer.tsx";
-import { pageRoutes } from "../../../utilities/routes.ts";
 
 const Login = lazy(() => import("./../../../pages/Login.tsx"));
 const Profile = lazy(() => import("./../../../pages/Profile.tsx"));
@@ -17,14 +11,11 @@ interface MainHeaderProps {
 }
 
 export default function MainHeader(props: MainHeaderProps) {
-  const navigate = useNavigate();
-  const { t } = useTranslation();
   const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
   const [isOpenValCodeModal, setIsOpenValCodeModal] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [docType, setDocType] = useState("");
-  const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
 
   function handleOpenLoginModal() {
     setIsOpenLoginModal(true);
@@ -59,7 +50,12 @@ export default function MainHeader(props: MainHeaderProps) {
 
   return (
     <>
-      <MainHeaderNoModals onShowMenu={props.onShowMenu} />
+      <MainHeaderNoModals
+        onShowMenu={props.onShowMenu}
+        onOpenLoginModal={() => {
+          handleOpenModal(true);
+        }}
+      />
       <NoContentModalContainer
         open={isOpenLoginModal}
         onClose={handleCloseLoginModal}
@@ -86,16 +82,6 @@ export default function MainHeader(props: MainHeaderProps) {
         onClose={handleCloseValCodeModal}
         isForgotPassword={isForgotPassword}
       />
-
-      <ButtonContainer
-        onClick={() => {
-          isLoggedIn
-            ? navigate(`${pageRoutes.myRequirements}`)
-            : handleOpenModal(true);
-        }}
-      >
-        {isLoggedIn ? t("myRequirements") : t("login")}
-      </ButtonContainer>
     </>
   );
 }

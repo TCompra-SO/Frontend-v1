@@ -1,4 +1,5 @@
 import React from "react";
+import { pageRoutes } from "./routes";
 
 export const dateFormat: string = "DD-MM-YYYY";
 export const TCompra: string = "TCompra";
@@ -21,6 +22,8 @@ export const certifiedCompaniesOpt: number = 3;
 export const phoneCode: string = "+51";
 
 export const allItems: number = 0;
+
+export const navigateToAfterLoggingOut = pageRoutes.home;
 
 export const defaultUserImage: string = "/src/assets/images/user-default.svg";
 export const defaultRequirementImage: string =
