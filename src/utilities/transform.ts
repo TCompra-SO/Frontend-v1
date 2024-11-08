@@ -144,7 +144,7 @@ export function transformToBasicRateData(data: any) {
   }
 }
 
-export function transformToPurchaseOrder(data: any, type: RequirementType) {
+export function transformToPurchaseOrder(data: any) {
   const purcOrder: PurchaseOrder = {
     requirementTitle: data.requerimentTitle,
     requirementId: data.requerimentID,
@@ -153,7 +153,7 @@ export function transformToPurchaseOrder(data: any, type: RequirementType) {
     offerTitle: data.offerTitle,
     offerId: data.offerID,
     key: data.uid,
-    type,
+    type: data.type,
     filters: {
       price: data.price_Filter,
       deliveryTime: data.deliveryTime_Filter,

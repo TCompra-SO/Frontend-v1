@@ -33,9 +33,18 @@ import {
   getLastSegmentFromRoute,
   getPurchaseOrderType,
 } from "../utilities/globalFunctions";
-import { transformToFullUser } from "../utilities/transform";
+import {
+  transformToBasicRateData,
+  transformToFullUser,
+  transformToPurchaseOrder,
+} from "../utilities/transform";
 import { mainModalScrollStyle } from "../utilities/globals";
 import { useLocation } from "react-router-dom";
+import { getReqIssuedPurchaseOrderByUserService } from "../services/requests/purchaseOrderService";
+import { MainState } from "../models/Redux";
+import { useSelector } from "react-redux";
+import { getBasicRateDataOfferService } from "../services/requests/offerService";
+import { getBasicRateDataReqService } from "../services/requests/requirementService";
 
 const purchaseOrderList: PurchaseOrder[] = [
   {
@@ -498,26 +507,28 @@ const req: Requirement = {
 export default function PurchaseOrders() {
   const { t } = useTranslation();
   const location = useLocation();
+  const uid = useSelector((state: MainState) => state.user.uid);
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
   const { notification, message } = App.useApp();
+  const [currentPurchaseOrder, setCurrentPurchaseOrder] =
+    useState<PurchaseOrder | null>(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [tableSubType, setTableSubType] = useState<PurchaseOrderTableTypes>(
-    PurchaseOrderTableTypes.ISSUED
-  );
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
   });
   const [tableContent, setTableContent] = useState<TableTypePurchaseOrder>({
     type: TableTypes.PURCHASE_ORDER,
-    data: purchaseOrderList,
-    subType: tableSubType,
+    data: [],
+    subType: type,
     hiddenColumns: [],
     nameColumnHeader: t("user"),
     onButtonClick: handleOnButtonClick,
   });
+
+  /** Obtener datos iniciales */
   const [apiParams, setApiParams] = useState<useApiParams>({
-    service: null,
+    service: getReqIssuedPurchaseOrderByUserService(uid),
     method: "get",
   });
   const { loading, responseData, error, errorMsg, fetchData } = useApi({
@@ -553,6 +564,13 @@ export default function PurchaseOrders() {
 
   useEffect(() => {
     if (responseData) {
+      if (
+        equalServices(
+          apiParams.service,
+          getReqIssuedPurchaseOrderByUserService("")
+        )
+      )
+        setTableData();
       if (equalServices(apiParams.service, getUserService("")))
         showUserInfo(responseData);
     } else if (error) {
@@ -561,8 +579,84 @@ export default function PurchaseOrders() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
+  /* Obtener datos para culminar */
+  const [apiParamsRate, setApiParamsRate] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingRate,
+    responseData: responseDataRate,
+    error: errorRate,
+    errorMsg: errorMsgRate,
+    fetchData: fetchDataRate,
+  } = useApi({
+    service: apiParamsRate.service,
+    method: apiParamsRate.method,
+    dataToSend: apiParamsRate.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingRate);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingRate]);
+
+  useEffect(() => {
+    if (apiParamsRate.service) fetchDataRate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsRate]);
+
+  useEffect(() => {
+    if (responseDataRate) {
+      openRateModal(responseDataRate);
+    } else if (errorRate) {
+      showNotification(notification, "error", errorMsgRate);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataRate, errorRate]);
+
+  /** Funciones */
+
+  async function setTableData() {
+    if (responseData) {
+      const data = responseData.data.map((po: any) =>
+        transformToPurchaseOrder(po)
+      );
+
+      setTableContent({
+        type: TableTypes.PURCHASE_ORDER,
+        data,
+        subType: type,
+        hiddenColumns: [],
+        nameColumnHeader: t("user"),
+        onButtonClick: handleOnButtonClick,
+      });
+    } else if (error) {
+      console.log(error);
+    }
+  }
+
   function handleCloseModal() {
     setIsOpenModal(false);
+  }
+
+  function openRateModal(responseData: any) {
+    const data = transformToBasicRateData(responseData.data[0]);
+    console.log(currentPurchaseOrder);
+    if (currentPurchaseOrder) {
+      setDataModal({
+        type: ModalTypes.RATE_USER,
+        data: {
+          basicRateData: data,
+          type: currentPurchaseOrder.type,
+          isOffer:
+            type == PurchaseOrderTableTypes.ISSUED ||
+            type == PurchaseOrderTableTypes.RECEIVED_SALES,
+        },
+      });
+      setIsOpenModal(true);
+    }
   }
 
   function showUserInfo(responseData: any) {
@@ -577,11 +671,18 @@ export default function PurchaseOrders() {
   }
 
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
+    setCurrentPurchaseOrder(purchaseOrder);
+
     switch (action) {
       case Action.VIEW_CUSTOMER:
+        setApiParams({
+          service: getUserService(purchaseOrder.userClientId),
+          method: "get",
+        });
+        break;
       case Action.VIEW_SUPPLIER:
         setApiParams({
-          service: getUserService(purchaseOrder.user.uid),
+          service: getUserService(purchaseOrder.userProviderId),
           method: "get",
         });
         break;
@@ -589,19 +690,23 @@ export default function PurchaseOrders() {
         console.log("pdf", purchaseOrder.key);
         break;
       case Action.FINISH:
-        setDataModal({
-          type: ModalTypes.RATE_USER,
-          data: {
-            user: purchaseOrder.user,
-            type: purchaseOrder.type,
-            isOffer:
-              tableSubType == PurchaseOrderTableTypes.ISSUED ||
-              tableSubType == PurchaseOrderTableTypes.RECEIVED_SALES,
-            requirementOfferTitle: purchaseOrder.requirementTitle, // r3v obtener datos title user subuser de oferta ganadora
-            subUser: purchaseOrder.subUser,
-          },
-        });
-        setIsOpenModal(true);
+        // if (tableSubType == PurchaseOrderTableTypes.RECEIVED_SALES) // buscar en ofertas liquidaciones r3v
+        // if (tableSubType == PurchaseOrderTableTypes.ISSUED_SALES) // buscar en liquidaciones
+        if (type == PurchaseOrderTableTypes.ISSUED) {
+          // Buscar en oferta de requerimiento
+          if (purchaseOrder.type == RequirementType.GOOD)
+            setApiParamsRate({
+              service: getBasicRateDataOfferService(purchaseOrder.offerId),
+              method: "get",
+            });
+          break;
+        } else if (type == PurchaseOrderTableTypes.RECEIVED)
+          if (purchaseOrder.type == RequirementType.GOOD)
+            // Buscar en requerimiento
+            setApiParamsRate({
+              service: getBasicRateDataReqService(purchaseOrder.requirementId),
+              method: "get",
+            });
         break;
       case Action.VIEW_HISTORY:
         setDataModal({

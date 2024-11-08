@@ -22,7 +22,7 @@ export default function ActionColumn(
   type: TableTypes,
   onButtonClick: (action: Action, data: any) => void,
   hidden: boolean = false,
-  extraParam: any = false
+  extraParam?: any
 ) {
   const { t } = useTranslation();
 

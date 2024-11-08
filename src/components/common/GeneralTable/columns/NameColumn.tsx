@@ -41,9 +41,8 @@ export default function NameColumn(
     case TableTypes.PURCHASE_ORDER:
     case TableTypes.ALL_PURCHASE_ORDERS:
       if (
-        extraParam &&
-        (extraParam == PurchaseOrderTableTypes.ISSUED ||
-          extraParam == PurchaseOrderTableTypes.ISSUED_SALES)
+        extraParam == PurchaseOrderTableTypes.ISSUED ||
+        extraParam == PurchaseOrderTableTypes.ISSUED_SALES
       )
         dataIndex = "userNameProvider";
       else dataIndex = "userNameClient";
@@ -81,9 +80,8 @@ export default function NameColumn(
         type == TableTypes.ALL_PURCHASE_ORDERS
       ) {
         if (
-          extraParam &&
-          (extraParam == PurchaseOrderTableTypes.ISSUED ||
-            extraParam == PurchaseOrderTableTypes.ISSUED_SALES)
+          extraParam == PurchaseOrderTableTypes.ISSUED ||
+          extraParam == PurchaseOrderTableTypes.ISSUED_SALES
         ) {
           const aName = (a as BasicPurchaseOrder).userNameProvider;
           const bName = (b as BasicPurchaseOrder).userNameProvider;
@@ -97,44 +95,45 @@ export default function NameColumn(
       return 0;
     },
     showSorterTooltip: false,
-    render: (_, record) => (
-      <>
-        <div className="datos-prod">
-          <div
-            className="text-truncate info-req-no-clamp"
-            style={{ textAlign: "left" }}
-          >
-            {(type === TableTypes.REQUIREMENT ||
-              type === TableTypes.OFFER ||
-              type === TableTypes.ALL_OFFERS ||
-              type === TableTypes.ALL_REQUIREMENTS) &&
-              (record as BaseRequirementOffer).title}
-            {type === TableTypes.USERS && (record as SubUserProfile).name}
-            {type === TableTypes.MY_DOCUMENTS &&
-              (record as CertificateFile).name}
-            {(type === TableTypes.PURCHASE_ORDER ||
-              type === TableTypes.ALL_PURCHASE_ORDERS) &&
-              (extraParam &&
-              (extraParam == PurchaseOrderTableTypes.ISSUED ||
-                extraParam == PurchaseOrderTableTypes.ISSUED_SALES)
-                ? (record as BasicPurchaseOrder).userNameProvider
-                : (record as BasicPurchaseOrder).userNameClient)}
-          </div>
-          {(type == TableTypes.REQUIREMENT || type == TableTypes.USERS) && (
+    render: (_, record) => {
+      return (
+        <>
+          <div className="datos-prod">
             <div
-              className="text-truncate info-categoria"
+              className="text-truncate info-req-no-clamp"
               style={{ textAlign: "left" }}
             >
-              {type == TableTypes.REQUIREMENT && categoryData
-                ? categoryData[(record as Requirement).category]?.value
-                : null}
-              {type == TableTypes.USERS &&
-                t(getLabelFromRole((record as SubUserProfile).typeID))}
+              {(type === TableTypes.REQUIREMENT ||
+                type === TableTypes.OFFER ||
+                type === TableTypes.ALL_OFFERS ||
+                type === TableTypes.ALL_REQUIREMENTS) &&
+                (record as BaseRequirementOffer).title}
+              {type === TableTypes.USERS && (record as SubUserProfile).name}
+              {type === TableTypes.MY_DOCUMENTS &&
+                (record as CertificateFile).name}
+              {(type === TableTypes.PURCHASE_ORDER ||
+                type === TableTypes.ALL_PURCHASE_ORDERS) &&
+                (extraParam == PurchaseOrderTableTypes.ISSUED ||
+                extraParam == PurchaseOrderTableTypes.ISSUED_SALES
+                  ? (record as BasicPurchaseOrder).userNameProvider
+                  : (record as BasicPurchaseOrder).userNameClient)}
             </div>
-          )}
-        </div>
-      </>
-    ),
+            {(type == TableTypes.REQUIREMENT || type == TableTypes.USERS) && (
+              <div
+                className="text-truncate info-categoria"
+                style={{ textAlign: "left" }}
+              >
+                {type == TableTypes.REQUIREMENT && categoryData
+                  ? categoryData[(record as Requirement).category]?.value
+                  : null}
+                {type == TableTypes.USERS &&
+                  t(getLabelFromRole((record as SubUserProfile).typeID))}
+              </div>
+            )}
+          </div>
+        </>
+      );
+    },
   };
   return col;
 }
