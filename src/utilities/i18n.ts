@@ -248,6 +248,13 @@ const resources = {
       mustLoginToOffer: "You must log in to make an offer",
       yourRequirementHas: "Your requirement has ",
       yourSaleHas: "Your sale has ",
+      thisRequirementIsNoLongerAvailable: "This requirement is no longer available",
+      thisSaleIsNoLongerAvailable: "This sale is no longer available",
+      otherEmployeeHasAlreadyMadeAnOffer: "Other employee has already made an offer",
+      aSubUserHasAlreadyMadeAnOffer: "A subuser has already made an offer",
+      onlyPremiumUserCanMakeAnOffer: "Only Premium users can make an offer",
+      onlyCertifiedCompaniesCanMakeAnOffer: "Only certified companies can make an offer",
+      noPermissionToMakeOffer: "You do not have permission to make an offer.",
       // Other
       yes: "Yes",
       no: "No",
@@ -392,7 +399,11 @@ const resources = {
       noImages: "No images",
       noDocuments: "No documents",
       images: "Images",
-      sendMessage: "Send message"
+      sendMessage: "Send message",
+      itHad: "It had ",
+      goTo: "Go to ",
+      controlPanel: "Control panel",
+      getCertified: "Get certified"
     },
   },
   es: {
@@ -641,6 +652,13 @@ const resources = {
       mustLoginToOffer: "Debes iniciar sesión para ofertar",
       yourRequirementHas: "Tu requerimiento tiene ",
       yourSaleHas: "Tu liquidación tiene ",
+      thisRequirementIsNoLongerAvailable: "Este requerimiento ya no está disponible",
+      thisSaleIsNoLongerAvailable: "Esta liquidación ya no está disponible",
+      otherEmployeeHasAlreadyMadeAnOffer: "Otro trabajador ya hizo una oferta",
+      aSubUserHasAlreadyMadeAnOffer: "Un subusuario ya hizo una oferta",
+      onlyPremiumUserCanMakeAnOffer: "Solo usuarios Premium pueden ofertar",
+      onlyCertifiedCompaniesCanMakeAnOffer: "Solo empresas certificadas pueden ofertar",
+      noPermissionToMakeOffer: "No tienes permisos para ofertar",
       // Other
       yes: "Sí",
       no: "No",
@@ -789,7 +807,11 @@ const resources = {
       noImages: "Sin imágenes",
       noDocuments: "Sin documentos",
       images: "Imágenes",
-      sendMessage: "Enviar mensaje"
+      sendMessage: "Enviar mensaje",
+      itHad: "Tuvo ",
+      goTo: "Ir a ",
+      controlPanel: "Panel de control",
+      getCertified: "Certifícate"
     },
   },
 };

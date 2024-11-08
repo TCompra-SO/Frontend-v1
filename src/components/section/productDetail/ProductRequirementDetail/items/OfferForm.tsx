@@ -298,7 +298,7 @@ export default function OfferForm(props: OfferFormProps) {
           <CantOfferMessage
             offerId={offerId}
             motive={CantOfferMotives.ALREADY_MADE_OFFER}
-            type={props.requirement?.type}
+            requirement={props.requirement}
           />
         ) : (
           <Form
@@ -367,7 +367,7 @@ export default function OfferForm(props: OfferFormProps) {
         <CantOfferMessage
           offerId={offerId}
           motive={cantOfferMotive}
-          type={props.requirement?.type}
+          requirement={props.requirement}
         />
       )}
     </div>

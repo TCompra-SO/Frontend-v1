@@ -387,6 +387,9 @@
   .det-c {
     gap: 10px;
   }
+  .oferta-check {
+    height: auto;
+  }
 }
 
 /* Estilos para pantallas medianas (tablets) */
