@@ -9,6 +9,7 @@ export const ApiMainRoutes = {
   documents: "documents/",
   offers: "offers/",
   score: "score/",
+  purchaseOrder: "purchaseOrder/",
 };
 
 export const ApiRoutes = {
@@ -81,6 +82,11 @@ export const ApiRoutes = {
   },
   score: {
     registerScore: "registerScore/",
+  },
+  purchaseOrder: {
+    getPurchaseOrders: "getPurchaseOrders",
+    getPurchaseOrderByUser: "getPurchaseOrderByUser/",
+    getPurchaseOrderById: "getPurchaseOrderID/",
   },
 };
 

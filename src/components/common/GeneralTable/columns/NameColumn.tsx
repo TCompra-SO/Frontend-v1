@@ -5,7 +5,10 @@ import {
   CertificateFile,
   Requirement,
 } from "../../../../models/MainInterfaces";
-import { TableTypes } from "../../../../utilities/types";
+import {
+  PurchaseOrderTableTypes,
+  TableTypes,
+} from "../../../../utilities/types";
 import { useContext } from "react";
 import { ListsContext } from "../../../../contexts/listsContext";
 import { SubUserProfile } from "../../../../models/Responses";
@@ -15,7 +18,8 @@ import { useTranslation } from "react-i18next";
 export default function NameColumn(
   type: TableTypes,
   nameColumnHeader: string,
-  hidden: boolean = false
+  hidden: boolean = false,
+  extraParam?: any
 ) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
@@ -36,7 +40,13 @@ export default function NameColumn(
       break;
     case TableTypes.PURCHASE_ORDER:
     case TableTypes.ALL_PURCHASE_ORDERS:
-      dataIndex = "user.name";
+      if (
+        extraParam &&
+        (extraParam == PurchaseOrderTableTypes.ISSUED ||
+          extraParam == PurchaseOrderTableTypes.ISSUED_SALES)
+      )
+        dataIndex = "userNameProvider";
+      else dataIndex = "userNameClient";
       break;
   }
 
@@ -70,9 +80,19 @@ export default function NameColumn(
         type == TableTypes.PURCHASE_ORDER ||
         type == TableTypes.ALL_PURCHASE_ORDERS
       ) {
-        const aName = (a as BasicPurchaseOrder).user.name;
-        const bName = (b as BasicPurchaseOrder).user.name;
-        return aName.localeCompare(bName);
+        if (
+          extraParam &&
+          (extraParam == PurchaseOrderTableTypes.ISSUED ||
+            extraParam == PurchaseOrderTableTypes.ISSUED_SALES)
+        ) {
+          const aName = (a as BasicPurchaseOrder).userNameProvider;
+          const bName = (b as BasicPurchaseOrder).userNameProvider;
+          return aName.localeCompare(bName);
+        } else {
+          const aName = (a as BasicPurchaseOrder).userNameClient;
+          const bName = (b as BasicPurchaseOrder).userNameClient;
+          return aName.localeCompare(bName);
+        }
       }
       return 0;
     },
@@ -94,7 +114,11 @@ export default function NameColumn(
               (record as CertificateFile).name}
             {(type === TableTypes.PURCHASE_ORDER ||
               type === TableTypes.ALL_PURCHASE_ORDERS) &&
-              (record as BasicPurchaseOrder).user.name}
+              (extraParam &&
+              (extraParam == PurchaseOrderTableTypes.ISSUED ||
+                extraParam == PurchaseOrderTableTypes.ISSUED_SALES)
+                ? (record as BasicPurchaseOrder).userNameProvider
+                : (record as BasicPurchaseOrder).userNameClient)}
           </div>
           {(type == TableTypes.REQUIREMENT || type == TableTypes.USERS) && (
             <div

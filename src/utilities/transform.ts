@@ -9,7 +9,7 @@ import {
 import { UserState } from "../models/Redux";
 import { getBaseDataUserService } from "../services/requests/authService";
 import makeRequest from "./globalFunctions";
-import { OfferState, RequirementType, Usage } from "./types";
+import { RequirementType, Usage } from "./types";
 
 export function transformDataToRequirement(
   data: any,
@@ -144,22 +144,40 @@ export function transformToBasicRateData(data: any) {
   }
 }
 
-export function transformToPurchaseOrder(
-  data: any,
-  type: RequirementType,
-  user: UserState | BaseUser,
-  mainUser: UserState | BaseUser
-) {
-  const purOrder: PurchaseOrder = {
-    user,
-    requirementTitle: "",
-    requirementId: "",
-    selectionDate: "",
-    state: "d:/tcompraV2/new/Frontend-v1/src/utilities/types".PENDING,
-    offerTitle: "",
-    offerId: "",
-    key: "",
+export function transformToPurchaseOrder(data: any, type: RequirementType) {
+  const purcOrder: PurchaseOrder = {
+    requirementTitle: data.requerimentTitle,
+    requirementId: data.requerimentID,
+    selectionDate: data.createDate,
+    state: data.state,
+    offerTitle: data.offerTitle,
+    offerId: data.offerID,
+    key: data.uid,
     type,
-    filters,
+    filters: {
+      price: data.price_Filter,
+      deliveryTime: data.deliveryTime_Filter,
+      location: data.location_Filter,
+      warranty: data.warranty_Filter,
+    },
+    userClientId: data.userClientID,
+    userNameClient: data.userNameClient,
+    addressClient: data.addressClient,
+    documentClient: data.documentClient,
+    subUserClientId: data.subUserClientID,
+    userProviderId: data.userProviderID,
+    subUserProviderId: data.subUserProviderID,
+    addressProvider: data.addressProvider,
+    documentProvider: data.documentProvider,
+    emailProvider: data.emailProvider,
+    deliveryDate: data.deliveryDate,
+    price: data.price,
+    subTotal: data.subtotal,
+    igv: data.igv,
+    total: data.total,
+    subUserNameClient: data.nameSubUserClient,
+    userNameProvider: data.nameUserProvider,
+    subUserNameProvider: data.nameSubUserProvider,
   };
+  return purcOrder;
 }

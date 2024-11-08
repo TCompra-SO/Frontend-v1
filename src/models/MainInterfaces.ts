@@ -75,8 +75,27 @@ export interface Offer extends BasicOffer {
 }
 
 export interface BasicPurchaseOrder extends BaseInterface {
-  user: User;
-  subUser?: User;
+  userClientId: string;
+  userNameClient: string;
+  subUserClientId: string;
+  subUserNameClient: string;
+  addressClient: string;
+  documentClient: string;
+
+  userProviderId: string;
+  userNameProvider: string;
+  subUserProviderId: string;
+  subUserNameProvider: string;
+  addressProvider: string;
+  documentProvider: string;
+  emailProvider: string;
+
+  deliveryDate: string;
+  price: number;
+  subTotal: number;
+  igv: number;
+  total: number;
+
   requirementTitle: string;
   requirementId: string;
   selectionDate: string;

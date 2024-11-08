@@ -21,8 +21,8 @@ import { Offer } from "../../../../models/MainInterfaces";
 export default function ActionColumn(
   type: TableTypes,
   onButtonClick: (action: Action, data: any) => void,
-  extraParam: any = false,
-  hidden: boolean = false
+  hidden: boolean = false,
+  extraParam: any = false
 ) {
   const { t } = useTranslation();
 

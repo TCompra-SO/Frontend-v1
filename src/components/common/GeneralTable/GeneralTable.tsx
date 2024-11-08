@@ -312,7 +312,6 @@ export default function GeneralTable(props: GeneralTableProps) {
       ActionColumn(
         props.content.type,
         props.content.onButtonClick,
-        null,
         visibility[TableColumns.ACTION]
       ),
     ];
@@ -345,33 +344,39 @@ export default function GeneralTable(props: GeneralTableProps) {
   }
 
   function getPurchaseOrderTableColumns() {
-    columns = [
-      NameColumn(
-        props.content.type,
-        props.content.nameColumnHeader,
-        visibility[TableColumns.NAME]
-      ),
-      GeneralColumnString(
-        t("requirement"),
-        "requirementTitle",
-        true,
-        130,
-        visibility[TableColumns.REQUIREMENT]
-      ),
-      GeneralDateColumn(
-        t("selectionDateAbbrev"),
-        "selectionDate",
-        visibility[TableColumns.SELECTION_DATE]
-      ),
-      TypeColumn(visibility[TableColumns.TYPE]),
-      StateColumn(props.content.type, visibility[TableColumns.STATE]),
-      ActionColumn(
-        props.content.type,
-        props.content.onButtonClick,
-        visibility[TableColumns.ACTION]
-      ),
-    ];
-    return columns;
+    if (props.content.type == TableTypes.PURCHASE_ORDER) {
+      columns = [
+        NameColumn(
+          props.content.type,
+          props.content.nameColumnHeader,
+          visibility[TableColumns.NAME],
+          props.content.subType
+        ),
+
+        GeneralColumnString(
+          t("requirement"),
+          "requirementTitle",
+          true,
+          130,
+          visibility[TableColumns.REQUIREMENT]
+        ),
+        GeneralDateColumn(
+          t("selectionDateAbbrev"),
+          "selectionDate",
+          visibility[TableColumns.SELECTION_DATE]
+        ),
+        TypeColumn(visibility[TableColumns.TYPE]),
+        StateColumn(props.content.type, visibility[TableColumns.STATE]),
+        ActionColumn(
+          props.content.type,
+          props.content.onButtonClick,
+          visibility[TableColumns.ACTION],
+          props.content.subType
+        ),
+      ];
+      return columns;
+    }
+    return [];
   }
 
   function getAllRequirementsTableColumns() {
@@ -432,44 +437,48 @@ export default function GeneralTable(props: GeneralTableProps) {
   }
 
   function getAllPurchaseOrdersTableColumns() {
-    columns = [
-      NameColumn(
-        props.content.type,
-        props.content.nameColumnHeader,
-        visibility[TableColumns.NAME]
-      ),
-      GeneralColumnString(
-        t("requirement"),
-        "requirementTitle",
-        true,
-        130,
-        visibility[TableColumns.REQUIREMENT]
-      ),
-      GeneralColumnString(
-        t("offer"),
-        "offerTitle",
-        true,
-        130,
-        visibility[TableColumns.OFFER]
-      ),
-      GeneralDateColumn(
-        t("publishDateAbbrev"),
-        "publishDate",
-        visibility[TableColumns.PUBLISH_DATE]
-      ),
-      TypeColumn(visibility[TableColumns.TYPE]),
-      DocumentColumn(
-        props.content.onButtonClick,
-        visibility[TableColumns.DOCUMENT]
-      ),
-      StateColumn(props.content.type, visibility[TableColumns.STATE]),
-      ViewColumn(
-        TableTypes.ALL_PURCHASE_ORDERS,
-        props.content.onButtonClick,
-        visibility[TableColumns.VIEW]
-      ),
-    ];
-    return columns;
+    if (props.content.type == TableTypes.PURCHASE_ORDER) {
+      columns = [
+        NameColumn(
+          props.content.type,
+          props.content.nameColumnHeader,
+          visibility[TableColumns.NAME]
+        ),
+        GeneralColumnString(
+          t("requirement"),
+          "requirementTitle",
+          true,
+          130,
+          visibility[TableColumns.REQUIREMENT]
+        ),
+        GeneralColumnString(
+          t("offer"),
+          "offerTitle",
+          true,
+          130,
+          visibility[TableColumns.OFFER]
+        ),
+        GeneralDateColumn(
+          t("publishDateAbbrev"),
+          "publishDate",
+          visibility[TableColumns.PUBLISH_DATE]
+        ),
+        TypeColumn(visibility[TableColumns.TYPE]),
+        DocumentColumn(
+          props.content.onButtonClick,
+          visibility[TableColumns.DOCUMENT]
+        ),
+        StateColumn(props.content.type, visibility[TableColumns.STATE]),
+        ViewColumn(
+          TableTypes.ALL_PURCHASE_ORDERS,
+          props.content.onButtonClick,
+          visibility[TableColumns.VIEW]
+        ),
+      ];
+
+      return columns;
+    }
+    return [];
   }
 
   function getUsersTableColumns() {
