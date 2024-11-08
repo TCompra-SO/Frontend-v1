@@ -3,6 +3,7 @@ import {
   BasicRateData,
   FullUser,
   Offer,
+  PurchaseOrder,
   Requirement,
 } from "../models/MainInterfaces";
 import { UserState } from "../models/Redux";
@@ -141,4 +142,24 @@ export function transformToBasicRateData(data: any) {
     basicData.subUserName = undefined;
     return basicData;
   }
+}
+
+export function transformToPurchaseOrder(
+  data: any,
+  type: RequirementType,
+  user: UserState | BaseUser,
+  mainUser: UserState | BaseUser
+) {
+  const purOrder: PurchaseOrder = {
+    user,
+    requirementTitle: "",
+    requirementId: "",
+    selectionDate: "",
+    state: "d:/tcompraV2/new/Frontend-v1/src/utilities/types".PENDING,
+    offerTitle: "",
+    offerId: "",
+    key: "",
+    type,
+    filters,
+  };
 }

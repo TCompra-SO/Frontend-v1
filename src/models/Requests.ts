@@ -1,4 +1,4 @@
-import { RegisterTypeId, UserRoles } from "../utilities/types";
+import { CommonFilter, RegisterTypeId, UserRoles } from "../utilities/types";
 
 export interface LoginRequest {
   email: string;
@@ -131,4 +131,8 @@ export interface SelectOfferRequest {
   requerimentID: string;
   offerID: string;
   observation?: string;
+  price_Filter: CommonFilter;
+  deliveryTime_Filter: number;
+  location_Filter: number;
+  warranty_Filter: CommonFilter;
 }

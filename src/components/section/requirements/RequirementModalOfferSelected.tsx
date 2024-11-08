@@ -62,11 +62,14 @@ export default function RequirementModalOfferSelected(
   }
 
   function selectOffer() {
-    console.log(filters, text.trim());
     const notes = text.trim();
     const data: SelectOfferRequest = {
       requerimentID: props.requirement.key,
       offerID: props.offer.key,
+      price_Filter: filters.price,
+      deliveryTime_Filter: filters.deliveryTime,
+      location_Filter: filters.location,
+      warranty_Filter: filters.warranty,
     };
     if (notes) data.observation = notes;
     console.log(data);

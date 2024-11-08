@@ -10,7 +10,6 @@ import {
   PurchaseOrderTableTypes,
 } from "../utilities/types";
 import {
-  BaseUser,
   OfferItemSubUser,
   Offer,
   PurchaseOrder,
