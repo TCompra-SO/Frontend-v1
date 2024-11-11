@@ -1,5 +1,5 @@
 import { lazy, useState } from "react";
-import MainHeaderNoModals from "./header/MainHeaderMainHeaderNoModals";
+import MainHeaderNoModals from "./header/MainHeaderNoModals.tsx";
 import NoContentModalContainer from "../../containers/NoContentModalContainer.tsx";
 import ValidateCode from "../profile/ValidateCode.tsx";
 

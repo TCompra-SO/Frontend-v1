@@ -19,7 +19,7 @@ export const userInitialState: UserState = {
   customerCount: undefined,
   sellerCount: undefined,
   document: "",
-  isLoggedIn: false,
+  isLoggedIn: undefined,
 };
 
 export const userSlice = createSlice({
