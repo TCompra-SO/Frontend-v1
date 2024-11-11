@@ -73,6 +73,8 @@ export default function OfferForm(props: OfferFormProps) {
     if (!isLoggedIn) {
       setCantOfferMotive(CantOfferMotives.NOT_LOGGED_IN);
       return;
+    } else {
+      setCantOfferMotive(CantOfferMotives.NONE);
     }
     if (props.requirement && props.requirement.user.uid == uid)
       setCantOfferMotive(CantOfferMotives.IS_CREATOR);
@@ -321,7 +323,7 @@ export default function OfferForm(props: OfferFormProps) {
               <RowContainer>
                 <LocationField onlyItem />
                 <DeliveryTimeField />
-                <CurrencyField disabled value={props.requirement?.coin} />
+                <CurrencyField disabled />
               </RowContainer>
               <RowContainer>
                 <WarrantyField required={true} />

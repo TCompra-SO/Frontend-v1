@@ -39,12 +39,12 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
               ? `${t("yourSaleHas")} (${props.requirement?.numberOffers}) ${t(
                   "offers"
                 )}`
-              : `${t("yourSaleHas")}  (${props.requirement?.numberOffers}) ${t(
-                  "offers"
-                )}`
+              : `${t("yourRequirementHas")}  (${
+                  props.requirement?.numberOffers
+                }) ${t("offers")}`
           }`
         );
-        setOptionalText("");
+        setOptionalText("ss");
         break;
       case CantOfferMotives.CHANGED_STATE:
         setMainText(
@@ -98,6 +98,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
       </div>
       {props.motive == CantOfferMotives.ALREADY_MADE_OFFER && (
         <ButtonContainer
+          style={{ height: "auto" }}
           className="btn btn-default btn-sm"
           icon={<i className="fa-regular fa-trash"></i>}
           onClick={deleteOffer}
@@ -107,6 +108,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
       )}
       {props.motive == CantOfferMotives.CHANGED_STATE && (
         <ButtonContainer
+          style={{ height: "auto" }}
           className="btn btn-default btn-sm"
           icon={<i className="fa-regular fa-house"></i>}
           onClick={() => navigate(pageRoutes.home)}
@@ -117,6 +119,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
       {(props.motive == CantOfferMotives.IS_CREATOR ||
         props.motive == CantOfferMotives.IS_MAIN_CREATOR) && (
         <ButtonContainer
+          style={{ height: "auto" }}
           className="btn btn-default btn-sm"
           icon={<i className="fa-regular fa-columns"></i>}
           onClick={() => navigate(pageRoutes.home)} // r3v
@@ -126,6 +129,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
       )}
       {props.motive == CantOfferMotives.ONLY_CERTIFIED && (
         <ButtonContainer
+          style={{ height: "auto" }}
           className="btn btn-default btn-sm"
           icon={<i className="fa-regular fa-star"></i>}
           onClick={() => {}} // r3v
