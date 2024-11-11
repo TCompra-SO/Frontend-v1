@@ -65,6 +65,8 @@ export default function OfferForm(props: OfferFormProps) {
   const [imgSuccess, setImgSuccess] = useState(ProcessFlag.NOT_INI);
   const [offerId, setofferId] = useState<string>("");
 
+  form.setFieldValue("currency", props.requirement?.coin);
+
   /** Verificar si el usuario puede ofertar */
 
   useEffect(() => {

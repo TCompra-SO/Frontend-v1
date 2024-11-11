@@ -6,7 +6,6 @@ import SelectContainer from "../../containers/SelectContainer";
 import { getListForSelectIdValueMap } from "../../../utilities/globalFunctions";
 
 interface CurrencyFieldProps {
-  value?: number;
   disabled?: boolean;
 }
 
@@ -14,7 +13,6 @@ export default function CurrencyField(props: CurrencyFieldProps) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { currencyData } = context;
-  console.log(props.value);
 
   return (
     <Form.Item
@@ -22,7 +20,6 @@ export default function CurrencyField(props: CurrencyFieldProps) {
       name="currency"
       labelCol={{ span: 0 }}
       rules={[{ required: true }]}
-      initialValue={props.value}
     >
       <SelectContainer
         placeholder={t("select")}
