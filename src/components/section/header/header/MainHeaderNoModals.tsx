@@ -16,6 +16,8 @@ import { getSectionFromRoute } from "../../../../utilities/globalFunctions";
 import { pageRoutes } from "../../../../utilities/routes";
 import ButtonContainer from "../../../containers/ButtonContainer";
 import { useNavigate } from "react-router-dom";
+import { UserRoles } from "../../../../utilities/types";
+import ControlPanel from "../items/ControlPanel";
 
 interface MainHeaderNoModalsProps {
   onShowMenu?: (show: boolean) => void;
@@ -27,7 +29,10 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
   const navigate = useNavigate();
   const { width } = useWindowSize();
   const [logoSrc, setLogoSrc] = useState("/src/assets/images/logo-white.svg");
-  const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
+  const { isLoggedIn, typeID } = useSelector((state: MainState) => ({
+    isLoggedIn: state.user.isLoggedIn,
+    typeID: state.user.typeID,
+  }));
   const [currentSection, setCurrentSection] = useState(pageRoutes.home);
   const logout = useLogout();
   const [showMenuButtonStyle, setShowMenuButtonStyle] = useState<CSSProperties>(
@@ -40,6 +45,15 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
         <Space style={{ margin: "-10px 0" }}>
           <ProfileMenu />
           {t("myProfile")}
+        </Space>
+      ),
+    },
+    {
+      key: "control",
+      label: (
+        <Space style={{ margin: "-10px 0" }}>
+          <ControlPanel />
+          {t("controlPanel")}
         </Space>
       ),
     },
@@ -68,6 +82,15 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
             <Space style={{ margin: "-10px 0" }}>
               <ProfileMenu />
               {t("myProfile")}
+            </Space>
+          ),
+        },
+        {
+          key: "control",
+          label: (
+            <Space style={{ margin: "-10px 0" }}>
+              <ControlPanel />
+              {t("controlPanel")}
             </Space>
           ),
         },
@@ -112,6 +135,15 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
           ),
         },
         {
+          key: "control",
+          label: (
+            <Space style={{ margin: "-10px 0" }}>
+              <ControlPanel />
+              {t("controlPanel")}
+            </Space>
+          ),
+        },
+        {
           key: "logout",
           label: (
             <Space style={{ margin: "-10px 0" }}>
@@ -143,6 +175,23 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
         break;
       case "profile":
         navigate(`${pageRoutes.profile}`);
+        break;
+      case "control":
+        switch (typeID) {
+          case UserRoles.ADMIN:
+          case UserRoles.BUYER:
+          case UserRoles.SELLER_BUYER:
+            navigate(`${pageRoutes.myRequirements}`);
+            break;
+          case UserRoles.SELLER:
+            navigate(`${pageRoutes.myOffers}`);
+            break;
+          case UserRoles.LEGAL:
+            navigate(`${pageRoutes.certificates}`);
+            break;
+          default:
+            navigate(`${pageRoutes.home}`);
+        }
         break;
     }
   };
