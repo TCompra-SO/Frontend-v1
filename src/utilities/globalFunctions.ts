@@ -16,6 +16,8 @@ import {
 import { pageRoutes, pageSubRoutes } from "./routes";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import dayjs from "dayjs";
+import i18next from "i18next";
+import httpErrorInterceptor from "../interceptors/httpErrorInterceptor";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -201,6 +203,7 @@ export default async function makeRequest<T = any>({
   token,
 }: useApiParams<T>) {
   let responseData: any | null = null;
+  let errorMsg: string | null = null;
   let error: AxiosError<any, any> | null = null;
 
   if (service) {
@@ -219,9 +222,10 @@ export default async function makeRequest<T = any>({
     } catch (err) {
       console.log("HTTP error:", err);
       error = err as AxiosError;
+      errorMsg = i18next.t(httpErrorInterceptor(err, service.type));
     }
   }
-  return { responseData, error };
+  return { responseData, error, errorMsg };
 }
 
 // Retorna la llave del nombre del tipo de requerimiento

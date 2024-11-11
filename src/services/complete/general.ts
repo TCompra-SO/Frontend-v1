@@ -1,6 +1,7 @@
 import { User } from "../../models/MainInterfaces";
 import makeRequest from "../../utilities/globalFunctions";
 import {
+  transformFromGetRequirementByIdToRequirement,
   transformToBaseUser,
   transformToFullUser,
   transformToOffer,
@@ -11,26 +12,36 @@ import {
   getUserService,
 } from "../requests/authService";
 import { getOfferByIdService } from "../requests/offerService";
+import { getRequirementByIdService } from "../requests/requirementService";
 
 export async function getBaseUserForUserSubUser(
   uid: string,
   fromLogin: boolean = false
 ) {
-  const { responseData }: any = await makeRequest({
+  const { responseData, error, errorMsg } = await makeRequest({
     service: getBaseDataUserService(uid),
     method: "get",
   });
-  if (responseData) return transformToBaseUser(responseData.data[0], fromLogin);
-  else return { user: null, subUser: null };
+  if (responseData)
+    return {
+      ...transformToBaseUser(responseData.data[0], fromLogin),
+      error,
+      errorMsg,
+    };
+  else return { error, errorMsg, user: null, subUser: null };
 }
 
 export async function getFullUser(uid: string) {
-  const { responseData }: any = await makeRequest({
+  const { responseData, error, errorMsg } = await makeRequest({
     service: getUserService(uid),
     method: "get",
   });
-  if (responseData) return transformToFullUser(responseData.data[0]);
-  else return null;
+
+  return {
+    user: responseData ? transformToFullUser(responseData.data[0]) : null,
+    error,
+    errorMsg,
+  };
 }
 
 export async function getOfferById(
@@ -38,10 +49,34 @@ export async function getOfferById(
   type: RequirementType,
   user: User
 ) {
-  const { responseData }: any = await makeRequest({
+  const { responseData, error, errorMsg } = await makeRequest({
     service: getOfferByIdService(id),
     method: "get",
   });
-  if (responseData) return transformToOffer(responseData.data[0], type, user);
-  else return null;
+
+  return {
+    offer: responseData
+      ? transformToOffer(responseData.data[0], type, user)
+      : null,
+    error,
+    errorMsg,
+  };
+}
+
+export async function getRequirementById(id: string, type: RequirementType) {
+  const { responseData, error, errorMsg } = await makeRequest({
+    service: getRequirementByIdService(id),
+    method: "get",
+  });
+
+  return {
+    requirement: responseData
+      ? await transformFromGetRequirementByIdToRequirement(
+          responseData.data[0],
+          type
+        )
+      : null,
+    error,
+    errorMsg,
+  };
 }

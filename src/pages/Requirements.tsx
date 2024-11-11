@@ -2,15 +2,12 @@ import ModalContainer from "../components/containers/ModalContainer";
 import {
   Action,
   ModalTypes,
-  OfferState,
   RequirementState,
   TableColumns,
   RequirementType,
-  EntityType,
   TableTypes,
-  TimeMeasurement,
 } from "../utilities/types";
-import { FullUser, Offer, Requirement } from "../models/MainInterfaces";
+import { Offer, Requirement } from "../models/MainInterfaces";
 import { ChangeEvent, useEffect, useState } from "react";
 import {
   ModalContent,
@@ -106,7 +103,9 @@ export default function Requirements() {
     if (responseData) {
       if (equalServices(apiParams.service, getRequirementsService()))
         setTableData();
-      if (equalServices(apiParams.service, getOffersByRequirementIdService("")))
+      else if (
+        equalServices(apiParams.service, getOffersByRequirementIdService(""))
+      )
         openDetailedRequirement(responseData);
     } else if (error) {
       if (
@@ -245,11 +244,9 @@ export default function Requirements() {
       case Action.SHOW_SUMMARY: {
         if (requirement.offerUserId && requirement.offerId) {
           showLoadingMessage(message, true);
-          const user: FullUser | null = await getFullUser(
-            requirement.offerUserId
-          );
+          const { user } = await getFullUser(requirement.offerUserId);
           if (user) {
-            const offer: Offer | null = await getOfferById(
+            const { offer } = await getOfferById(
               requirement.offerId,
               type,
               user
@@ -271,6 +268,7 @@ export default function Requirements() {
         break;
       }
       case Action.REPUBLISH: {
+        // r3v
         setDataModal({
           type: ModalTypes.REPUBLISH_REQUIREMENT,
           data: { requirementId: requirement.key },
@@ -287,6 +285,7 @@ export default function Requirements() {
         break;
       }
       case Action.DELETE: {
+        // r3v
         setDataModal({
           type: ModalTypes.CONFIRM,
           data: {
@@ -301,6 +300,7 @@ export default function Requirements() {
         break;
       }
       case Action.CANCEL_REQUIREMENT: {
+        // r3v
         if (
           requirement.state == RequirementState.SELECTED &&
           requirement.offerId
