@@ -4,9 +4,8 @@ import RequirementOfferList from "./RequirementOfferList";
 
 import { Offer, Requirement } from "../../../../models/MainInterfaces";
 import { SyntheticEvent } from "react";
-import { OfferFilterTypes } from "../../../../utilities/types";
-import { RequirementDetailProvider } from "../../../../contexts/requirementDetailContext";
 import { OfferFilters } from "../../../../models/Interfaces";
+import { RequirementDetailProvider } from "../../../../contexts/RequirementDetailProvider";
 
 interface RequirementDetailProps {
   offerList: Offer[];
@@ -17,10 +16,6 @@ interface RequirementDetailProps {
 }
 
 export default function RequirementDetail(props: RequirementDetailProps) {
-  // function HandleonFilterChange(filterType: OfferFilterTypes, value: any) {
-  //   console.log("Cambio en filtro", filterType, value);
-  // }
-
   return (
     <RequirementDetailProvider>
       <div className="modal-card">
@@ -29,7 +24,6 @@ export default function RequirementDetail(props: RequirementDetailProps) {
 
           {props.offerList.length > 0 && (
             <RequirementOfferFilters
-              // onFilterChange={HandleonFilterChange}
               fromPurchaseOrder={props.forPurchaseOrder}
               filters={props.filters}
             ></RequirementOfferFilters>

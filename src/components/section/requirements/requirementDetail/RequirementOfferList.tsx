@@ -29,6 +29,7 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
   }, [props.offers]);
 
   useEffect(() => {
+    console.log("aaaaaaa", filters);
     setOffersCopy(() => {
       let prev = [...props.offers];
       // Ubicación y tiempo de entrega

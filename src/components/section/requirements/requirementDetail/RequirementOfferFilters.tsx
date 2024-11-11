@@ -6,7 +6,7 @@ import {
   commonModalWidth,
   defaultCountry,
 } from "../../../../utilities/globals";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CommonFilter } from "../../../../utilities/types";
 import { IdValueObj, OfferFilters } from "../../../../models/Interfaces";
 import { requirementDetailContext } from "../../../../contexts/requirementDetailContext";
@@ -16,7 +16,6 @@ import { getListForSelectIdValueMap } from "../../../../utilities/globalFunction
 import { filterLabels } from "../../../../utilities/colors";
 
 interface RequirementOfferFiltersProps {
-  // onFilterChange: (filterType: OfferFilterTypes, value: any) => void;
   fromPurchaseOrder: boolean;
   filters?: OfferFilters;
 }
@@ -48,6 +47,14 @@ export default function RequirementOfferFilters(
       warranty: allSelect,
     }
   );
+
+  useEffect(() => {
+    updateFilters(initialValues, {
+      location: "",
+      deliveryTime: "",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialValues]);
 
   const showCountry = countryData[defaultCountry]
     ? defaultCountry

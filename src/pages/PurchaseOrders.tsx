@@ -308,7 +308,7 @@ export default function PurchaseOrders() {
           method: "get",
         });
         break;
-      case Action.DOWNLOAD_PURCHASE_ORDER:
+      case Action.DOWNLOAD_PURCHASE_ORDER: // r3v
         console.log("pdf", purchaseOrder.key);
         break;
       case Action.FINISH:
@@ -336,7 +336,7 @@ export default function PurchaseOrders() {
           method: "get",
         });
         break;
-      case Action.CANCEL:
+      case Action.CANCEL: //r3v
         setDataModal({
           type: ModalTypes.CANCEL_PURCHASE_ORDER,
           data: {

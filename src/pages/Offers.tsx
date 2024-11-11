@@ -1,14 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Offer } from "../models/MainInterfaces";
-import {
-  Action,
-  ModalTypes,
-  OfferState,
-  RequirementType,
-  TableTypes,
-  TimeMeasurement,
-  EntityType,
-} from "../utilities/types";
+import { Action, ModalTypes, TableTypes } from "../utilities/types";
 import ModalContainer from "../components/containers/ModalContainer";
 import { ChangeEvent, useEffect, useState } from "react";
 import {

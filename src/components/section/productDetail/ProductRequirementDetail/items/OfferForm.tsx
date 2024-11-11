@@ -319,7 +319,7 @@ export default function OfferForm(props: OfferFormProps) {
               <RowContainer>
                 <LocationField onlyItem />
                 <DeliveryTimeField />
-                <CurrencyField />
+                <CurrencyField disabled value={props.requirement?.coin} />
               </RowContainer>
               <RowContainer>
                 <WarrantyField required={true} />
