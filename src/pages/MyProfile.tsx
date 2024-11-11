@@ -31,33 +31,6 @@ import { equalServices } from "../utilities/globalFunctions";
 import { transformToFullUser } from "../utilities/transform";
 import { uploadAvatarService } from "../services/requests/imageService";
 
-// const user1: FullUser = {
-//   uid: "user1",
-//   name: "Soluciones Online  S. A. C.",
-//   email: "john.doe@example.com",
-//   document: "123456789",
-//   typeEntity: EntityType.COMPANY,
-//   tenure: 6,
-//   customerScore: 4.5,
-//   sellerScore: 2.3,
-//   address: "Calle San Agustin 107 - Cercado - Arequipa",
-//   image:
-//     "https://imgv3.fotor.com/images/cover-photo-image/AI-illustration-of-a-dragon-by-Fotor-AI-text-to-image-generator.jpg",
-//   phone: "894859430",
-//   specialty:
-//     "especialty especialty especialty especialty especialty especialty especialty",
-//   aboutMe:
-//     "about me about me about me about me about me about me about me about me about me ",
-//   categories: [1, 2, 3],
-//   typeID: UserRoles.ADMIN,
-//   activeAccount: false,
-//   cityID: 1,
-//   countryID: 1,
-//   planID: 0,
-//   customerCount: 234,
-//   sellerCount: 12,
-// };
-
 const planData1: PlanData = {
   goods: 9982,
   services: 1213,
@@ -153,6 +126,7 @@ export default function MyProfile() {
         specialty: user.specialty,
         aboutMe: user.aboutMe,
       });
+    console.log(form.getFieldsValue());
     if (user?.avatar) setImageSrc(user.avatar);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -450,6 +424,7 @@ export default function MyProfile() {
                   <PhoneField fromMyPerfil />
                   <EmailField fromMyPerfil edit />
                   <DniField
+                    fromMyPerfil
                     isDni={user?.typeEntity != EntityType.COMPANY}
                     edit
                     value={user?.document}

@@ -26,8 +26,8 @@ export default function DniField(props: DniFieldProps) {
       label={t("document")}
       name="document"
       labelCol={{ span: 0 }}
-      // rules={props.isDni ? dniRules : rucRules}
-      initialValue={props.value}
+      rules={props.isDni ? dniRules : rucRules}
+      // initialValue={props.value}
     >
       <div className="t-flex" style={{ alignItems: "center" }}>
         <InputContainer
@@ -36,6 +36,7 @@ export default function DniField(props: DniFieldProps) {
           onChange={props.onChange}
           disabled={props.edit}
           placeholder={props.isDni ? DocType.DNI : DocType.RUC}
+          value={props.value}
         />
         {props.includeSearch && (
           <i
