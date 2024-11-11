@@ -32,6 +32,8 @@ export interface BasicRequirement extends BaseRequirementOffer {
   numberOffers: number;
   state: RequirementState;
   offerId?: string;
+  offerUserId?: string;
+  offerSubUserId?: string;
 }
 
 export interface Requirement extends BasicRequirement {

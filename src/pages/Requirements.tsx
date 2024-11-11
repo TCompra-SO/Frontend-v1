@@ -36,7 +36,7 @@ import makeRequest, {
 } from "../utilities/globalFunctions";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
-import { getFullUser } from "../services/complete/general";
+import { getFullUser, getOfferById } from "../services/complete/general";
 import showNotification, {
   showLoadingMessage,
 } from "../utilities/notification/showNotification";
@@ -46,371 +46,6 @@ import {
   getOffersByRequirementIdService,
 } from "../services/requests/offerService";
 import { getBaseDataUserService } from "../services/requests/authService";
-
-const offerList: Offer[] = [
-  {
-    key: "1",
-    title: "Gaming Laptop",
-    description:
-      "High-performance gaming laptop with RGB keyboard High-performance gaming laptop with RGB keyboard High-performance gaming laptop with RGB keyboard High-performance gaming laptop with RGB keyboard High-performance gaming laptop with RGB keyboard",
-    requirementTitle:
-      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
-    requirementId: "1",
-    coin: 2,
-    price: 150089.56,
-    warranty: 1,
-    deliveryTime: 1,
-    location: 12,
-    warrantyTime: TimeMeasurement.MONTHS,
-    state: OfferState.WINNER,
-    publishDate: "2024-09-12T20:36:45.673Z",
-    selectionDate: "2024-09-12T20:36:45.673Z",
-    type: RequirementType.GOOD,
-    user: {
-      uid: "9i2lEIp4rFRnQXkM5GLv",
-      name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
-      email: "john.doejohn.doejohn.doejohn.doe@example.com",
-      typeEntity: EntityType.COMPANY,
-      tenure: 2,
-      customerScore: 3.5,
-      sellerScore: 1.5,
-      customerCount: 999,
-      sellerCount: 12,
-      document: "1072184858",
-    },
-    subUser: {
-      uid: "user1",
-      name: "Javier Alberto Solís Calcina Javier Alberto Solís Calcina",
-      email: "javiersolis@example.com",
-      document: "123456789",
-      typeEntity: EntityType.COMPANY,
-      customerScore: 0,
-      sellerScore: 0,
-      address: "Calle San Agustin 107 - Cercado - Arequipa",
-
-      phone: "90909090",
-      customerCount: 0,
-      sellerCount: 0,
-    },
-    image: [
-      "https://img.freepik.com/foto-gratis/belleza-otonal-abstracta-patron-venas-hoja-multicolor-generado-ia_188544-9871.jpg",
-    ],
-    document: [
-      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-      "https://filesamples.com/samples/document/docx/sample2.docx",
-    ],
-  },
-  {
-    key: "2",
-    title:
-      "Smartphone Latest model smartphone with dual cameras Latest model smartphone with dual cameras",
-    requirementTitle:
-      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
-    description:
-      "Latest model smartphone with dual cameras, Waterproof fitness tracker with heart rate monitor",
-    requirementId: "1",
-    coin: 2,
-    price: 800,
-    warranty: 2,
-    deliveryTime: 2,
-    location: 12,
-    warrantyTime: TimeMeasurement.MONTHS,
-    publishDate: "2024-09-12T20:36:45.673Z",
-    selectionDate: "2024-09-12T20:36:45.673Z",
-    state: OfferState.CANCELED,
-    canceledByCreator: true,
-    type: RequirementType.GOOD,
-    user: {
-      uid: "5AM89Ku44FQ9S7qrmwol",
-      name: "Aaaaaa bbbbbbbbb ccccccccc ddddddddddd S. A. C.",
-      email: "john.doejohn.doejohn.doejohn.doe@example.com",
-      document: "123456789",
-      typeEntity: EntityType.COMPANY,
-      tenure: 2,
-      customerScore: 3.5,
-      sellerScore: 1.5,
-      address: "Calle San Agustin 107 - Cercado - Arequipa",
-
-      customerCount: 0,
-      sellerCount: 0,
-      phone: "90909090",
-    },
-    subUser: {
-      uid: "user1",
-      name: "Silvia Solís Calcina",
-      email: "javiersolis@example.com",
-      document: "123456789",
-      typeEntity: EntityType.COMPANY,
-      customerScore: 0,
-      sellerScore: 0,
-      address: "Calle San Agustin 107 - Cercado - Arequipa",
-
-      phone: "90909090",
-      customerCount: 0,
-      sellerCount: 0,
-    },
-    image: [
-      "https://img.freepik.com/foto-gratis/persona-que-sostiene-marco-concepto-paisaje-naturaleza-abierta_23-2150063228.jpg?t=st=1727120950~exp=1727124550~hmac=fde0521fde5a1669d826da23ef62b9f7804f51b67739b6d42ecb84eb7cab4b3f&w=826",
-      "https://img.freepik.com/premium-photo/hyperrealistic-rain-drops-leaf-hd-vibrant-colors_926796-9124.jpg",
-      "https://img.freepik.com/premium-photo/water-droplets-branch-tree-early-morning_867442-11940.jpg",
-    ],
-  },
-  {
-    key: "3",
-    title: "Fitness Tracker",
-    description: "",
-    requirementTitle:
-      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
-    requirementId: "1",
-    coin: 2,
-    price: 100,
-    warranty: 32,
-    deliveryTime: 3,
-    publishDate: "2024-09-12T20:36:45.673Z",
-    location: 5,
-    warrantyTime: TimeMeasurement.YEARS,
-    state: OfferState.ACTIVE,
-    type: RequirementType.GOOD,
-    user: {
-      uid: "5AM89Ku44FQ9S7qrmwol",
-      name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
-      email: "john.doejohn.doejohn.doejohn.doe@example.com",
-      document: "123456789",
-      typeEntity: EntityType.COMPANY,
-      tenure: 2,
-      customerScore: 3.5,
-      sellerScore: 1.5,
-      address: "Calle San Agustin 107 - Cercado - Arequipa",
-
-      phone: "90909090",
-      customerCount: 0,
-      sellerCount: 0,
-    },
-  },
-  {
-    key: "4",
-    title: "Wireless Headphones",
-    description: "Noise-cancelling wireless headphones with Bluetooth",
-    requirementTitle:
-      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
-    requirementId: "1",
-    coin: 2,
-    price: 120,
-    warranty: 7,
-    deliveryTime: 4,
-    publishDate: "2024-09-12T20:36:45.673Z",
-    location: 5,
-    warrantyTime: TimeMeasurement.YEARS,
-    state: OfferState.FINISHED,
-    type: RequirementType.GOOD,
-    user: {
-      uid: "5AM89Ku44FQ9S7qrmwol",
-      name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
-      email: "john.doejohn.doejohn.doejohn.doe@example.com",
-      document: "123456789",
-      typeEntity: EntityType.COMPANY,
-      tenure: 2,
-      customerScore: 3.5,
-      sellerScore: 1.5,
-      address: "Calle San Agustin 107 - Cercado - Arequipa",
-
-      phone: "90909090",
-      customerCount: 0,
-      sellerCount: 0,
-    },
-  },
-  {
-    key: "5",
-    title: "Coffee Machine",
-    description: "Espresso coffee machine with milk frother",
-    requirementTitle:
-      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
-    requirementId: "1",
-    coin: 1,
-    price: 200,
-    warranty: 8,
-    deliveryTime: 5,
-    location: 5,
-    warrantyTime: TimeMeasurement.YEARS,
-    publishDate: "2024-09-12T20:36:45.673Z",
-    state: OfferState.WINNER,
-    type: RequirementType.GOOD,
-    user: {
-      uid: "5AM89Ku44FQ9S7qrmwol",
-      name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
-      email: "john.doejohn.doejohn.doejohn.doe@example.com",
-      document: "123456789",
-      typeEntity: EntityType.COMPANY,
-      tenure: 2,
-      customerScore: 3.5,
-      sellerScore: 1.5,
-      address: "Calle San Agustin 107 - Cercado - Arequipa",
-
-      phone: "90909090",
-      customerCount: 0,
-      sellerCount: 0,
-    },
-  },
-  {
-    key: "6",
-    title: "Portable Speaker",
-    description: "Portable Bluetooth speaker with waterproof design",
-    requirementTitle:
-      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
-    requirementId: "1",
-    coin: 1,
-    price: 80,
-    warranty: 12,
-    deliveryTime: 6,
-    publishDate: "2024-09-12T20:36:45.673Z",
-    location: 5,
-    warrantyTime: TimeMeasurement.DAYS,
-    state: OfferState.ACTIVE,
-    type: RequirementType.GOOD,
-    user: {
-      uid: "WpIPS18MYqNWegvx5REP",
-      name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
-      email: "john.doejohn.doejohn.doejohn.doe@example.com",
-      document: "123456789",
-      typeEntity: EntityType.COMPANY,
-      tenure: 2,
-      customerScore: 3.5,
-      sellerScore: 1.5,
-      address: "Calle San Agustin 107 - Cercado - Arequipa",
-
-      phone: "90909090",
-      customerCount: 0,
-      sellerCount: 0,
-    },
-  },
-  {
-    key: "7",
-    title: "Smartwatch",
-    description: "Fitness-focused smartwatch with GPS and heart rate monitor",
-    requirementTitle:
-      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
-    requirementId: "1",
-    coin: 1,
-    price: 300,
-    warranty: 7,
-    publishDate: "2024-09-12T20:36:45.673Z",
-    deliveryTime: 1,
-    location: 11,
-    warrantyTime: TimeMeasurement.MONTHS,
-    state: OfferState.CANCELED,
-    canceledByCreator: false,
-    type: RequirementType.GOOD,
-    user: {
-      uid: "WpIPS18MYqNWegvx5REP",
-      name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
-      email: "john.doejohn.doejohn.doejohn.doe@example.com",
-      document: "123456789",
-      typeEntity: EntityType.COMPANY,
-      tenure: 2,
-      customerScore: 3.5,
-      sellerScore: 1.5,
-      address: "Calle San Agustin 107 - Cercado - Arequipa",
-
-      phone: "90909090",
-      customerCount: 0,
-      sellerCount: 0,
-    },
-  },
-  {
-    key: "8",
-    title: "Desktop Computer",
-    description: "High-end desktop computer for gaming and professional use",
-    requirementTitle:
-      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
-    requirementId: "1",
-    coin: 1,
-    price: 2500,
-    warranty: 8,
-    deliveryTime: 2,
-    location: 11,
-    warrantyTime: TimeMeasurement.MONTHS,
-    publishDate: "2024-09-12T20:36:45.673Z",
-    state: OfferState.DISPUTE,
-    type: RequirementType.GOOD,
-    user: {
-      uid: "WpIPS18MYqNWegvx5REP",
-      name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
-      email: "john.doejohn.doejohn.doejohn.doe@example.com",
-      document: "123456789",
-      typeEntity: EntityType.COMPANY,
-      tenure: 2,
-      customerScore: 3.5,
-      sellerScore: 1.5,
-      address: "Calle San Agustin 107 - Cercado - Arequipa",
-
-      phone: "90909090",
-      customerCount: 0,
-      sellerCount: 0,
-    },
-  },
-  {
-    key: "9",
-    title: "Camera Kit",
-    description: "Professional camera kit with multiple lenses and accessories",
-    requirementTitle:
-      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
-    requirementId: "1",
-    coin: 1,
-    price: 1800,
-    warranty: 1,
-    deliveryTime: 3,
-    location: 11,
-    warrantyTime: TimeMeasurement.MONTHS,
-    publishDate: "2024-09-12T20:36:45.673Z",
-    state: OfferState.FINISHED,
-    type: RequirementType.GOOD,
-    user: {
-      uid: "WpIPS18MYqNWegvx5REP",
-      name: "SnapLens Co.",
-      email: "info@snaplens.example.com",
-      document: "098765432",
-      typeEntity: EntityType.COMPANY,
-      customerScore: 0,
-      sellerScore: 0,
-      address: "Calle San Agustin 107 - Cercado - Arequipa",
-
-      phone: "7878978799",
-      customerCount: 0,
-      sellerCount: 0,
-    },
-  },
-  {
-    key: "10",
-    title: "Electric Scooter",
-    description: "Foldable electric scooter with long battery life",
-    requirementTitle:
-      "Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20 Liquido 10 Unidades de Teléfono inteligente Samsung Galaxy S20",
-    requirementId: "1",
-    coin: 1,
-    price: 600,
-    warranty: 3,
-    deliveryTime: 4,
-    publishDate: "2024-09-12T20:36:45.673Z",
-    location: 11,
-    warrantyTime: TimeMeasurement.MONTHS,
-    state: OfferState.WINNER,
-    type: RequirementType.GOOD,
-    user: {
-      uid: "WpIPS18MYqNWegvx5REP",
-      name: "SnapLens Co.",
-      email: "info@snaplens.example.com",
-      document: "098765432",
-      typeEntity: EntityType.PERSON,
-      customerScore: 0,
-      sellerScore: 0,
-      address: "Calle San Agustin 107 - Cercado - Arequipa",
-
-      phone: "7878978799",
-      customerCount: 0,
-      sellerCount: 0,
-    },
-  },
-];
 
 export default function Requirements() {
   const { t } = useTranslation();
@@ -602,22 +237,37 @@ export default function Requirements() {
     switch (action) {
       case Action.SHOW_OFFERS: {
         setApiParams({
-          service: getOffersByRequirementIdService(requirement.key), //"xBquYtjTR4flsTymcjph"), //requirement.key),
+          service: getOffersByRequirementIdService(requirement.key),
           method: "get",
         });
         break;
       }
       case Action.SHOW_SUMMARY: {
-        showLoadingMessage(message, true);
-        const user: FullUser | null = await getFullUser(offerList[0].user.uid);
-        if (user) {
-          setDataModal({
-            type: ModalTypes.OFFER_SUMMARY,
-            data: { offer: offerList[0], requirement: requirement, user },
-          });
-          setIsOpenModal(true);
+        if (requirement.offerUserId && requirement.offerId) {
+          showLoadingMessage(message, true);
+          const user: FullUser | null = await getFullUser(
+            requirement.offerUserId
+          );
+          if (user) {
+            const offer: Offer | null = await getOfferById(
+              requirement.offerId,
+              type,
+              user
+            );
+            if (offer) {
+              setDataModal({
+                type: ModalTypes.OFFER_SUMMARY,
+                data: { offer, requirement: requirement, user },
+              });
+              setIsOpenModal(true);
+            } else {
+              showNotification(notification, "error", t("errorOccurred"));
+            }
+          } else {
+            showNotification(notification, "error", t("errorOccurred"));
+          }
+          showLoadingMessage(message, false);
         }
-        showLoadingMessage(message, false);
         break;
       }
       case Action.REPUBLISH: {
@@ -651,12 +301,14 @@ export default function Requirements() {
         break;
       }
       case Action.CANCEL_REQUIREMENT: {
-        if (requirement.state == RequirementState.SELECTED) {
-          //r3v get offerId
+        if (
+          requirement.state == RequirementState.SELECTED &&
+          requirement.offerId
+        ) {
           setDataModal({
             type: ModalTypes.CANCEL_PURCHASE_ORDER,
             data: {
-              offerId: "",
+              offerId: requirement.offerId,
               requirementId: requirement.key,
               fromRequirementTable: true,
             },

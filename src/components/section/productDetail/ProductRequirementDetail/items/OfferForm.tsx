@@ -74,6 +74,7 @@ export default function OfferForm(props: OfferFormProps) {
     }
     if (props.requirement && props.requirement.user.uid == uid)
       setCantOfferMotive(CantOfferMotives.IS_CREATOR);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, props.requirement]);
 
   /************ */

@@ -9,7 +9,7 @@ import {
 import { UserState } from "../models/Redux";
 import { getBaseDataUserService } from "../services/requests/authService";
 import makeRequest from "./globalFunctions";
-import { RequirementType, Usage } from "./types";
+import { RequirementState, RequirementType, Usage } from "./types";
 
 export function transformDataToRequirement(
   data: any,
@@ -18,6 +18,7 @@ export function transformDataToRequirement(
   mainUser: UserState | BaseUser
 ) {
   const req: Requirement = data;
+  // req.state = RequirementState.FINISHED;
   req.deliveryTime = data.submission_date;
   req.type = type;
   req.warrantyTime = data.duration;
@@ -29,6 +30,9 @@ export function transformDataToRequirement(
   req.document = data.files;
   if (data.winOffer) {
     req.offerId = data.winOffer.uid;
+    req.offerUserId = data.winOffer.entityID;
+    if (data.winOffer.entityID != data.winOffer.userID)
+      req.offerSubUserId = data.winOffer.userID;
   }
   if (mainUser.uid != user.uid) {
     req.user = mainUser;
@@ -97,6 +101,9 @@ export async function transformFromGetRequirementByIdToRequirement(
     };
     if (data.winOffer) {
       req.offerId = data.winOffer.uid;
+      req.offerUserId = data.winOffer.entityID;
+      if (data.winOffer.entityID != data.winOffer.userID)
+        req.offerSubUserId = data.winOffer.userID;
     }
     return req;
   }

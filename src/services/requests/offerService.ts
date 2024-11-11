@@ -19,11 +19,11 @@ export function getOffersService(): HttpService {
   };
 }
 
-export function getOfferByIdService(): HttpService {
+export function getOfferByIdService(id: string): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getDetailOffer
-    }`,
+    }${id}`,
     type: "OF-GET-ID",
   };
 }
