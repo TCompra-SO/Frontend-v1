@@ -79,7 +79,7 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
         {
           key: "profile",
           label: (
-            <Space style={{ margin: "-10px 0" }}>
+            <Space>
               <ProfileMenu />
               {t("myProfile")}
             </Space>
@@ -88,7 +88,7 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
         {
           key: "control",
           label: (
-            <Space style={{ margin: "-10px 0" }}>
+            <Space>
               <ControlPanel />
               {t("controlPanel")}
             </Space>
@@ -97,7 +97,7 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
         {
           key: "logout",
           label: (
-            <Space style={{ margin: "-10px 0" }}>
+            <Space>
               <Logout />
               {t("logout")}
             </Space>
@@ -110,7 +110,7 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
         {
           key: "notification",
           label: (
-            <Space style={{ margin: "-10px 0" }} size={16}>
+            <Space style={{ margin: "-10px 0" }}>
               <Notification />
               {t("notifications")}
             </Space>

@@ -178,6 +178,6 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
   border: none;
 }
 
-.select-certificados .ant-select-selector {
+.btn-certificados .ant-select-selector {
   border-radius: 0.8rem;
 }

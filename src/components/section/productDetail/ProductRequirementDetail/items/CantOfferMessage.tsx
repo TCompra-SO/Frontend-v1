@@ -130,7 +130,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
       {props.motive == CantOfferMotives.ONLY_CERTIFIED && (
         <ButtonContainer
           style={{ height: "auto" }}
-          className="btn btn-default btn-sm"
+          className="btn btn-green btn-sm"
           icon={<i className="fa-regular fa-star"></i>}
           onClick={() => {}} // r3v
         >

@@ -83,9 +83,9 @@ export default function ViewDocsReceivedCertificate(
               </div>
               {!props.readOnly && (
                 <SelectContainer
-                  className="select-certificados"
+                  className="btn-certificados"
                   defaultValue={CertificationState.PENDING}
-                  style={{ height: "3rem" }}
+                  style={{ height: "3rem", marginRight: "4px" }}
                   options={[
                     { label: t("pending"), value: CertificationState.PENDING },
                     {
