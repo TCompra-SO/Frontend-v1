@@ -9,6 +9,7 @@ import {
 import GeneralTable from "../components/common/GeneralTable/GeneralTable.tsx";
 import useSocket from "../socket/useSocket.tsx";
 import { useTranslation } from "react-i18next";
+import PdfViewer from "../components/common/PdfViewer.tsx";
 
 export default function Home() {
   const { t } = useTranslation();

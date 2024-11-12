@@ -257,3 +257,18 @@ export function transformToDays(n: number, time: TimeMeasurement) {
       return n;
   }
 }
+
+// Return pdf src
+export function getPdfSrc(data: string) {
+  if (data) {
+    const byteCharacters = atob(data);
+    const byteNumbers = Array.from(byteCharacters, (char) =>
+      char.charCodeAt(0)
+    );
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "application/pdf" });
+    const url = URL.createObjectURL(blob);
+    return url;
+  }
+  return null;
+}
