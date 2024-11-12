@@ -129,6 +129,9 @@ export interface ModalUserInfo extends CommonModalType {
 
 export interface ModalAddCertificates extends CommonModalType {
   type: ModalTypes.ADD_CERTIFICATES;
+  data?: {
+    onDocumentAdded: () => void;
+  };
 }
 
 export interface ModalEditDocumentListToRequest extends CommonModalType {

@@ -124,7 +124,12 @@ export default function ModalContainer(props: ModalContainerProps) {
         return <UserInfoModal user={props.content.data.user} />;
       }
       case ModalTypes.ADD_CERTIFICATES: {
-        return <AddCertificatesModal />;
+        return (
+          <AddCertificatesModal
+            onDocumentAdded={props.content.data?.onDocumentAdded}
+            onClose={props.onClose}
+          />
+        );
       }
       case ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST: {
         return <EditDocumentListToRequestModal />;

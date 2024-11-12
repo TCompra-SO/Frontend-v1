@@ -9,7 +9,12 @@ import { checkDoc, checkImage } from "../../../utilities/globalFunctions";
 import showNotification from "../../../utilities/notification/showNotification";
 import { maxDocSizeMb, maxImageSizeMb } from "../../../utilities/globals";
 
-export default function AddCertificatesModal() {
+interface AddCertificatesModalProps {
+  onDocumentAdded?: () => void;
+  onClose: () => any;
+}
+
+export default function AddCertificatesModal(props: AddCertificatesModalProps) {
   const { notification } = App.useApp();
   const [docList, setDocList] = useState<(File | null)[]>([null]);
   const [nameList, setNameList] = useState<string[]>([""]);
@@ -105,6 +110,8 @@ export default function AddCertificatesModal() {
       }
     }
     console.log(uid);
+    if (props.onDocumentAdded) props.onDocumentAdded();
+    props.onClose();
   }
 
   return (
