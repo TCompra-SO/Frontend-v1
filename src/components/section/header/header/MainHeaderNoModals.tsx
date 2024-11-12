@@ -4,7 +4,7 @@ import Notification from "../items/Notification";
 import Chat from "../items/Chat";
 import UserName from "../items/UserName";
 import Logout from "../items/Logout";
-import { CSSProperties, useEffect, useState } from "react";
+import { CSSProperties, ReactNode, useEffect, useState } from "react";
 import ProfileMenu from "../items/ProfileMenu";
 import useWindowSize from "../../../../hooks/useWindowSize";
 import { windowSize } from "../../../../utilities/globals";
@@ -38,32 +38,50 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
   const [showMenuButtonStyle, setShowMenuButtonStyle] = useState<CSSProperties>(
     { display: "none" }
   );
+
+  const profileItem: ReactNode = (
+    <Space style={{ margin: "-10px 0" }}>
+      <ProfileMenu />
+      {t("myProfile")}
+    </Space>
+  );
+  const controlItem: ReactNode = (
+    <Space style={{ margin: "-10px 0" }}>
+      <ControlPanel />
+      {t("controlPanel")}
+    </Space>
+  );
+  const logoutItem: ReactNode = (
+    <Space style={{ margin: "-10px 0" }}>
+      <Logout />
+      {t("logout")}
+    </Space>
+  );
+  const notifItem: ReactNode = (
+    <Space style={{ margin: "-10px 0" }}>
+      <Notification forDropdown />
+      {t("notifications")}
+    </Space>
+  );
+  const chatItem: ReactNode = (
+    <Space style={{ margin: "-10px 0" }}>
+      <Chat forDropdown />
+      {t("chat")}
+    </Space>
+  );
+
   const [dropdownItems, setDropdownItems] = useState([
     {
       key: "profile",
-      label: (
-        <Space style={{ margin: "-10px 0" }}>
-          <ProfileMenu />
-          {t("myProfile")}
-        </Space>
-      ),
+      label: profileItem,
     },
     {
       key: "control",
-      label: (
-        <Space style={{ margin: "-10px 0" }}>
-          <ControlPanel />
-          {t("controlPanel")}
-        </Space>
-      ),
+      label: controlItem,
     },
     {
       key: "logout",
-      label: (
-        <Space style={{ margin: "-10px 0" }}>
-          <Logout /> {t("logout")}
-        </Space>
-      ),
+      label: logoutItem,
     },
   ]);
 
@@ -78,30 +96,15 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
       setDropdownItems([
         {
           key: "profile",
-          label: (
-            <Space>
-              <ProfileMenu />
-              {t("myProfile")}
-            </Space>
-          ),
+          label: profileItem,
         },
         {
           key: "control",
-          label: (
-            <Space>
-              <ControlPanel />
-              {t("controlPanel")}
-            </Space>
-          ),
+          label: controlItem,
         },
         {
           key: "logout",
-          label: (
-            <Space>
-              <Logout />
-              {t("logout")}
-            </Space>
-          ),
+          label: logoutItem,
         },
       ]);
     } else {
@@ -109,48 +112,23 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
       setDropdownItems([
         {
           key: "notification",
-          label: (
-            <Space style={{ margin: "-10px 0" }}>
-              <Notification />
-              {t("notifications")}
-            </Space>
-          ),
+          label: notifItem,
         },
         {
           key: "chat",
-          label: (
-            <Space style={{ margin: "-10px 0" }}>
-              <Chat />
-              {t("chat")}
-            </Space>
-          ),
+          label: chatItem,
         },
         {
           key: "profile",
-          label: (
-            <Space style={{ margin: "-10px 0" }} size={16}>
-              <ProfileMenu />
-              {t("myProfile")}
-            </Space>
-          ),
+          label: profileItem,
         },
         {
           key: "control",
-          label: (
-            <Space style={{ margin: "-10px 0" }}>
-              <ControlPanel />
-              {t("controlPanel")}
-            </Space>
-          ),
+          label: controlItem,
         },
         {
           key: "logout",
-          label: (
-            <Space style={{ margin: "-10px 0" }}>
-              <Logout />
-              {t("logout")}
-            </Space>
-          ),
+          label: logoutItem,
         },
       ]);
     }

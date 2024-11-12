@@ -181,3 +181,8 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
 .btn-certificados .ant-select-selector {
   border-radius: 0.8rem;
 }
+
+/* Remueve before */
+.no-before:before {
+  content: "";
+}
