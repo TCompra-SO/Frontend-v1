@@ -153,6 +153,13 @@ export interface ModalViewDocsSentCert extends CommonModalType {
   };
 }
 
+export interface ModalSelectDocsCert extends CommonModalType {
+  type: ModalTypes.SELECT_DOCS_CERT;
+  data: {
+    data: SelectDocsModalData;
+  };
+}
+
 export interface ModalNone extends CommonModalType {
   type: ModalTypes.NONE;
   data: Record<string, never>;
@@ -175,7 +182,14 @@ export type ModalContent =
   | ModalEditDocumentListToRequest
   | ModalViewDocsReceivedCert
   | ModalViewDocsSentCert
+  | ModalSelectDocsCert
   | ModalNone;
+
+export interface SelectDocsModalData {
+  userId: string;
+  userName: string;
+  text: string;
+}
 
 /********** Tables *************/
 

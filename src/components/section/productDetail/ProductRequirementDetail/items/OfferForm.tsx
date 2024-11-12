@@ -54,7 +54,7 @@ export default function OfferForm(props: OfferFormProps) {
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const { notification } = App.useApp();
   const [cantOfferMotive, setCantOfferMotive] = useState<CantOfferMotives>(
-    CantOfferMotives.NONE
+    CantOfferMotives.ONLY_CERTIFIED
   );
   const [checkedIGV, setCheckedIGV] = useState(false);
   const [checkedDelivery, setCheckedDelivery] = useState(false);

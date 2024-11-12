@@ -255,6 +255,8 @@ const resources = {
       onlyPremiumUserCanMakeAnOffer: "Only Premium users can make an offer",
       onlyCertifiedCompaniesCanMakeAnOffer: "Only certified companies can make an offer",
       noPermissionToMakeOffer: "You do not have permission to make an offer.",
+      GetYourCertificationFrom: "Get your certification from ",
+      mustSelectAtLeastOneDocument: "You must select at least one document",
       // Other
       yes: "Yes",
       no: "No",
@@ -368,6 +370,7 @@ const resources = {
       certified: "Certified",
       rejected: "Rejected",
       receivedDocuments: "Received documents",
+      sentDocuments: "Sent documents",
       certificate: "Certificate",
       reject: "Reject",
       certifiesSent: "Certificates sent",
@@ -403,7 +406,8 @@ const resources = {
       itHad: "It had ",
       goTo: "Go to ",
       controlPanel: "Control panel",
-      getCertified: "Get certified"
+      getCertified: "Get certified",
+      send: "Send"
     },
   },
   es: {
@@ -659,6 +663,8 @@ const resources = {
       onlyPremiumUserCanMakeAnOffer: "Solo usuarios Premium pueden ofertar",
       onlyCertifiedCompaniesCanMakeAnOffer: "Solo empresas certificadas pueden ofertar",
       noPermissionToMakeOffer: "No tienes permisos para ofertar",
+      GetYourCertificationFrom: "Certifícate con ",
+      mustSelectAtLeastOneDocument: "Debes seleccionar por lo menos un documento",
       // Other
       yes: "Sí",
       no: "No",
@@ -776,6 +782,7 @@ const resources = {
       certified: "Certificado",
       rejected: "Rechazado",
       receivedDocuments: "Documentos recibidos",
+      sentDocuments: "Documentos enviados",
       certificate: "Certificar",
       reject: "Rechazar",
       certifiesSent: "Certificados enviados",
@@ -811,7 +818,8 @@ const resources = {
       itHad: "Tuvo ",
       goTo: "Ir a ",
       controlPanel: "Panel de control",
-      getCertified: "Certifícate"
+      getCertified: "Certifícate",
+      send: "Enviar"
     },
   },
 };

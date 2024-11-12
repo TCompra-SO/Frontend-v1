@@ -2,13 +2,7 @@ import { useEffect, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import { mainModalScrollStyle } from "../utilities/globals";
-import {
-  ModalContent,
-  TableTypeCertificatesReceived,
-  TableTypeCertificatesSent,
-  TableTypeMyDocuments,
-  useApiParams,
-} from "../models/Interfaces";
+import { ModalContent, TableTypeMyDocuments } from "../models/Interfaces";
 import {
   Action,
   CertificationState,
