@@ -1,8 +1,8 @@
-import { App, Form, Upload } from "antd";
-import { RcFile } from "antd/lib/upload";
-import { useRef } from "react";
+import { App, Form, Upload, UploadFile } from "antd";
+import { RcFile, UploadChangeParam } from "antd/lib/upload";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { maxDocSizeMb } from "../../../utilities/globals";
+import { maxDocSizeMb, maxDocsQuantity } from "../../../utilities/globals";
 import { checkDoc } from "../../../utilities/globalFunctions";
 import showNotification from "../../../utilities/notification/showNotification";
 
@@ -14,12 +14,22 @@ export default function AddDocumentField({
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const fileInputRefDoc = useRef<HTMLDivElement>(null);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   function handleClick() {
     // Trigger the file input click event
     if (fileInputRefDoc.current) {
       fileInputRefDoc.current.click();
     }
+  }
+
+  function handleChange(info: UploadChangeParam<UploadFile<any>>) {
+    let newFileList = [...info.fileList];
+
+    // 1. Limit the number of uploaded files
+    // Only to show two recent uploaded files, and old ones will be replaced by the new
+    newFileList = newFileList.slice(-maxDocsQuantity);
+    setFileList(newFileList);
   }
 
   function checkDocBeforeUpload(file: RcFile) {
@@ -47,9 +57,10 @@ export default function AddDocumentField({
         </div>
         <Form.Item name="doc">
           <Upload
-            multiple={false}
+            multiple={!(maxDocsQuantity == 1)}
             accept=".pdf"
-            // onChange={handleChange}
+            onChange={handleChange}
+            fileList={fileList}
             listType="picture-card"
             style={{ display: "none" }}
             beforeUpload={checkDocBeforeUpload}

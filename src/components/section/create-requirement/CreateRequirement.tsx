@@ -221,6 +221,8 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   }
 
   function createRequirement(values: any) {
+    // console.log(values);
+    // return;
     setReqSuccess(ProcessFlag.NOT_INI);
     setFormDataDoc(null);
     setFormDataImg(null);

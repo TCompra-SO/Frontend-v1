@@ -174,7 +174,7 @@ export default function SelectDocumentsToSendCertificateModal(
 
                   <Checkbox
                     onChange={(e) => setCheckedDoc(e.target.checked, index)}
-                    value={checked[index]}
+                    checked={checked[index]}
                   ></Checkbox>
                 </div>
               </div>
