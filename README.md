@@ -4,6 +4,128 @@
 
 ### Common
 
+#### FormFields
+
+Campos para usarse en diferentes formularios.
+
+##### AboutMeField
+
+Campo para el atributo Sobre mi de empresas.
+
+_Props_
+
+| Nombre       | Tipo      | Descripción                                                                                   |
+| ------------ | --------- | --------------------------------------------------------------------------------------------- |
+| edit         | `boolean` | Indica si el campo está en modo edición.                                                      |
+| value        | `string`  | Valor del campo de texto.                                                                     |
+| fromMyPerfil | `boolean` | Determina si el campo es para el formulario de perfil personal (aparece un estilo diferente). |
+| onlyItem     | `boolean` | Si se establece como `true`, solo devuelve el componente `Form.Item` sin el contenedor extra. |
+
+##### AddDocumentField
+
+Campo para añadir documentos.
+
+_Props_
+
+| Nombre   | Tipo      | Descripción                                                                                       |
+| -------- | --------- | ------------------------------------------------------------------------------------------------- |
+| forOffer | `boolean` | Indica si el campo es para el formulario de ofertar. Si es `true`, se aplica un estilo diferente. |
+
+##### AddImagesField
+
+Campo para añadir imágenes.
+
+_Props_
+
+| Nombre   | Tipo      | Descripción                                                                                       |
+| -------- | --------- | ------------------------------------------------------------------------------------------------- |
+| forOffer | `boolean` | Indica si el campo es para el formulario de ofertar. Si es `true`, se aplica un estilo diferente. |
+
+##### AddressField
+
+Campo para la dirección del usuario.
+
+_Props_
+
+| Nombre       | Tipo      | Descripción                                                                                   |
+| ------------ | --------- | --------------------------------------------------------------------------------------------- |
+| value        | `string`  | Valor del campo de dirección.                                                                 |
+| edit         | `boolean` | Indica si el campo está en modo edición.                                                      |
+| fromMyPerfil | `boolean` | Determina si el campo es para el formulario de perfil personal (aparece un estilo diferente). |
+| onlyItem     | `boolean` | Si se establece como `true`, solo devuelve el componente `Form.Item` sin el contenedor extra. |
+
+##### BudgetField
+
+Campo para el presupuesto/cotización.
+
+##### CanOfferField
+
+Campo para seleccionar quién puede ofertar a un requerimiento.
+
+_Props_
+
+| Nombre             | Tipo                   | Descripción                                                                      |
+| ------------------ | ---------------------- | -------------------------------------------------------------------------------- |
+| type               | `RequirementType`      | Tipo de requerimiento (determina la lista de opciones disponibles).              |
+| handleOptionChange | `(value: any) => void` | Función que maneja el cambio de la opción seleccionada en el campo de selección. |
+
+##### CategoryField
+
+Campo para seleccionar el rubro.
+
+##### CurrencyField
+
+Campo para seleccionar la moneda.
+
+_Props_
+
+| Nombre   | Tipo      | Descripción                                                                            |
+| -------- | --------- | -------------------------------------------------------------------------------------- |
+| disabled | `boolean` | Indica si el campo de selección está deshabilitado.                                    |
+| onlyItem | `boolean` | Si se establece como `true`, se usa un placeholder diferente en el campo de selección. |
+
+##### DateField
+
+Campo para seleccionar una fecha.
+
+_Props_
+
+| Nombre       | Tipo                             | Descripción                                                                      |
+| ------------ | -------------------------------- | -------------------------------------------------------------------------------- |
+| disabledDate | `(date: dayjs.Dayjs) => boolean` | Función para deshabilitar fechas específicas en el selector de fechas.           |
+| name         | `string`                         | Nombre del campo, utilizado para el `label` y `name` del campo en el formulario. |
+
+##### DeliveryTimeField
+
+Campo para seleccionar el tiempo de entrega.
+
+_Props_
+
+| Nombre   | Tipo      | Descripción                                                                            |
+| -------- | --------- | -------------------------------------------------------------------------------------- |
+| onlyItem | `boolean` | Si se establece como `true`, se usa un placeholder diferente en el campo de selección. |
+
+##### DescriptionCRField
+
+Campo para la descripción de un requerimiento.
+
+##### DniField
+
+Campo para el DNI o RUC. Puede incluir un ícono para obtener el nombre de la persona.
+
+_Props_
+
+| Nombre        | Tipo         | Descripción                                                                                                        |
+| ------------- | ------------ | ------------------------------------------------------------------------------------------------------------------ |
+| getUserName   | `() => void` | Función que obtiene el nombre de la persona.                                                                       |
+| onChange      | `() => void` | Función que maneja los cambios en el campo de entrada.                                                             |
+| edit          | `boolean`    | Indica si el campo está en modo edición. Si es `true`, el campo se deshabilita y no se puede ejecutar getUserName. |
+| value         | `string`     | Valor del campo.                                                                                                   |
+| onlyItem      | `boolean`    | Si se establece como `true`, solo devuelve el componente `Form.Item` sin el contenedor extra.                      |
+| isDni         | `boolean`    | Determina si el campo es para un DNI (`true`) o un RUC (`false`).                                                  |
+| fromMyPerfil  | `boolean`    | Si es `true`, aplica un estilo diferente para el formulario de perfil personal.                                    |
+| includeSearch | `boolean`    | Si es `true`, incluye un ícono de búsqueda junto al campo de entrada.                                              |
+
 #### RequirementsTable
 
 Tabla para mostrar datos de requerimientos de diferentes tipos, incluyendo liquidaciones.
