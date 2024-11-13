@@ -257,6 +257,8 @@ const resources = {
       noPermissionToMakeOffer: "You do not have permission to make an offer.",
       GetYourCertificationFrom: "Get your certification from ",
       mustSelectAtLeastOneDocument: "You must select at least one document",
+      maxNumberImagesReached: "You've reached the maximum number of images allowed. Please remove some to upload more.",
+      maxNumberDocsReached: "You've reached the maximum number of documents allowed. Please remove some to upload more.",
       // Other
       yes: "Yes",
       no: "No",
@@ -665,6 +667,8 @@ const resources = {
       noPermissionToMakeOffer: "No tienes permisos para ofertar",
       GetYourCertificationFrom: "Certifícate con ",
       mustSelectAtLeastOneDocument: "Debes seleccionar por lo menos un documento",
+      maxNumberImagesReached: "Has alcanzado el número máximo de imágenes permitidas. Elimina algunas para subir más.",
+      maxNumberDocsReached: "Has alcanzado el número máximo de documentos permitidos. Elimina algunos para subir más.",
       // Other
       yes: "Sí",
       no: "No",

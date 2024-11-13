@@ -44,12 +44,12 @@ export default function AddImagesField({
     });
 
   function handleChange(info: UploadChangeParam<UploadFile<any>>) {
-    let newFileList = [...info.fileList];
+    // let newFileList = [...info.fileList];
 
     // 1. Limit the number of uploaded files
     // Only to show two recent uploaded files, and old ones will be replaced by the new
-    newFileList = newFileList.slice(-maxImagesQuantity);
-    setFileList(newFileList);
+    // newFileList = newFileList.slice(-maxImagesQuantity);
+    setFileList(info.fileList);
   }
 
   async function handlePreview(file: UploadFile) {
@@ -62,6 +62,10 @@ export default function AddImagesField({
   }
 
   function checkImageBeforeUpload(file: RcFile) {
+    if (fileList.length == maxImagesQuantity) {
+      showNotification(notification, "error", `${t("maxNumberImagesReached")}`);
+      return Upload.LIST_IGNORE;
+    }
     const { validImage, validSize } = checkImage(file);
     if (!validImage)
       showNotification(
@@ -95,6 +99,7 @@ export default function AddImagesField({
             multiple={true}
             onChange={handleChange}
             fileList={fileList}
+            maxCount={maxImagesQuantity}
             listType="picture-card"
             onPreview={handlePreview}
             style={{ display: "none" }}

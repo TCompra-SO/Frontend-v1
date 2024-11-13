@@ -24,15 +24,23 @@ export default function AddDocumentField({
   }
 
   function handleChange(info: UploadChangeParam<UploadFile<any>>) {
-    let newFileList = [...info.fileList];
+    // let newFileList = [...info.fileList];
 
     // 1. Limit the number of uploaded files
     // Only to show two recent uploaded files, and old ones will be replaced by the new
-    newFileList = newFileList.slice(-maxDocsQuantity);
-    setFileList(newFileList);
+    // newFileList = newFileList.slice(-maxDocsQuantity);
+    setFileList(info.fileList);
   }
 
   function checkDocBeforeUpload(file: RcFile) {
+    if (fileList.length == maxDocsQuantity && maxDocsQuantity > 1) {
+      showNotification(
+        notification,
+        "error",
+        `${file.name}${t("maxNumberDocsReached")}`
+      );
+      return Upload.LIST_IGNORE;
+    }
     const { validSize, validFile } = checkDoc(file);
     if (!validFile) showNotification(notification, "error", `${t("onlyPdfs")}`);
     else if (!validSize)
@@ -57,10 +65,11 @@ export default function AddDocumentField({
         </div>
         <Form.Item name="doc">
           <Upload
-            multiple={!(maxDocsQuantity == 1)}
+            multiple={true}
             accept=".pdf"
             onChange={handleChange}
             fileList={fileList}
+            maxCount={1}
             listType="picture-card"
             style={{ display: "none" }}
             beforeUpload={checkDocBeforeUpload}
