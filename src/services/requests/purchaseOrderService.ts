@@ -11,3 +11,12 @@ export function getReqIssuedPurchaseOrderByUserService(
     type: "PO-RE-IS-US",
   };
 }
+
+export function getPurchaseOrderPDFService(id: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.purchaseOrder
+    }${ApiRoutes.purchaseOrder.getpurchaseOrderPDF}${id}`,
+    type: "PO-PDF",
+  };
+}

@@ -87,6 +87,7 @@ export const ApiRoutes = {
     getPurchaseOrders: "getPurchaseOrders",
     getPurchaseOrderByUser: "getPurchaseOrderByUser/",
     getPurchaseOrderById: "getPurchaseOrderID/",
+    getpurchaseOrderPDF: "getpurchaseOrderPDF/",
   },
 };
 
