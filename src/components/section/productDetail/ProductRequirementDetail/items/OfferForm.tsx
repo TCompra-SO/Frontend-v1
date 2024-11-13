@@ -65,7 +65,10 @@ export default function OfferForm(props: OfferFormProps) {
   const [imgSuccess, setImgSuccess] = useState(ProcessFlag.NOT_INI);
   const [offerId, setofferId] = useState<string>("");
 
-  form.setFieldValue("currency", props.requirement?.coin);
+  useEffect(() => {
+    form.setFieldValue("currency", props.requirement?.coin);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form]);
 
   /** Verificar si el usuario puede ofertar */
 
@@ -323,12 +326,12 @@ export default function OfferForm(props: OfferFormProps) {
               </RowContainer>
               <RowContainer>
                 <LocationField onlyItem />
-                <DeliveryTimeField />
-                <CurrencyField disabled />
+                <DeliveryTimeField onlyItem />
+                <CurrencyField onlyItem disabled />
               </RowContainer>
               <RowContainer>
                 <WarrantyField required={true} />
-                <DurationField required={true} name={"duration"} />
+                <DurationField required={true} name={"duration"} onlyItem />
                 <SupportField />
                 <BudgetField />
               </RowContainer>

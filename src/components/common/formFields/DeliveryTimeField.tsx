@@ -5,7 +5,11 @@ import { ListsContext } from "../../../contexts/listsContext";
 import SelectContainer from "../../containers/SelectContainer";
 import { getListForSelectIdValueMap } from "../../../utilities/globalFunctions";
 
-export default function DeliveryTimeField() {
+interface DeliveryTimeFieldProps {
+  onlyItem?: boolean;
+}
+
+export default function DeliveryTimeField(props: DeliveryTimeFieldProps) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { deliveryTimeData } = context;
@@ -18,7 +22,7 @@ export default function DeliveryTimeField() {
       rules={[{ required: true }]}
     >
       <SelectContainer
-        placeholder={t("select")}
+        placeholder={t(props.onlyItem ? "deliveryTime" : "select")}
         className="form-control"
         options={getListForSelectIdValueMap(deliveryTimeData)}
       />
