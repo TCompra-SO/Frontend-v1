@@ -532,7 +532,7 @@ export default function Sidebar(props: SidebarProps) {
           />
         )}
       </div>
-      <div className="menu-tc-2 t-flex">
+      {/* <div className="menu-tc-2 t-flex">
         <ButtonContainer
           children={
             <>
@@ -551,19 +551,19 @@ export default function Sidebar(props: SidebarProps) {
           common
           className="btn btn-white wd-100"
         />
-      </div>
+      </div> */}
       <div className="menu-tc-3 t-flex">
         <ButtonContainer
           children={
             <>
-              <i className="fa-solid fa-question text-center i-btn"></i>{" "}
+              <i className="fa-solid fa-circle-question text-center i-btn"></i>{" "}
               {t("support")}
             </>
           }
           common
-          className={buttonClass}
+          className={"btn btn-white wd-100"}
         />
-        <ButtonContainer
+        {/* <ButtonContainer
           children={
             <>
               <i className="fa-regular fa-gear text-center i-btn"></i>{" "}
@@ -572,7 +572,7 @@ export default function Sidebar(props: SidebarProps) {
           }
           common
           className={buttonClass}
-        />
+        /> */}
       </div>
     </div>
   );
