@@ -29,10 +29,8 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
   const navigate = useNavigate();
   const { width } = useWindowSize();
   const [logoSrc, setLogoSrc] = useState("/src/assets/images/logo-white.svg");
-  const { isLoggedIn, typeID } = useSelector((state: MainState) => ({
-    isLoggedIn: state.user.isLoggedIn,
-    typeID: state.user.typeID,
-  }));
+  const typeID = useSelector((state: MainState) => state.user.typeID);
+  const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const [currentSection, setCurrentSection] = useState(pageRoutes.home);
   const logout = useLogout();
   const [showMenuButtonStyle, setShowMenuButtonStyle] = useState<CSSProperties>(
