@@ -1,6 +1,5 @@
 import { CSSProperties, useState } from "react";
 import ButtonContainer from "../../containers/ButtonContainer";
-import ImageContainer from "../../containers/ImageContainer";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { pageRoutes, pageSubRoutes } from "../../../utilities/routes";
