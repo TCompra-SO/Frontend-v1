@@ -437,7 +437,7 @@ export default function GeneralTable(props: GeneralTableProps) {
   }
 
   function getAllPurchaseOrdersTableColumns() {
-    if (props.content.type == TableTypes.PURCHASE_ORDER) {
+    if (props.content.type == TableTypes.ALL_PURCHASE_ORDERS) {
       columns = [
         NameColumn(
           props.content.type,

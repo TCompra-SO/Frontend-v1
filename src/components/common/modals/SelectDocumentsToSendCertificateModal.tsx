@@ -68,7 +68,7 @@ export default function SelectDocumentsToSendCertificateModal(
     dataToSend: apiParams.dataToSend,
   });
 
-  /** Para enviar documentos */
+  /** Para obtener lista de documentos */
 
   const [apiParamsDocs, setApiParamsDocs] = useState<useApiParams>({
     service: null,
