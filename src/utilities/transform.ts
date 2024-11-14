@@ -1,17 +1,24 @@
-import { BaseUser, FullUser, Requirement } from "../models/MainInterfaces";
+import {
+  BaseUser,
+  BasicRateData,
+  FullUser,
+  Offer,
+  PurchaseOrder,
+  Requirement,
+} from "../models/MainInterfaces";
 import { UserState } from "../models/Redux";
 import { getBaseDataUserService } from "../services/requests/authService";
 import makeRequest from "./globalFunctions";
 import { RequirementState, RequirementType, Usage } from "./types";
 
-export async function transformDataToRequirement(
+export function transformDataToRequirement(
   data: any,
   type: RequirementType,
   user: UserState | BaseUser,
   mainUser: UserState | BaseUser
 ) {
   const req: Requirement = data;
-  req.state = RequirementState.FINISHED;
+  // req.state = RequirementState.FINISHED;
   req.deliveryTime = data.submission_date;
   req.type = type;
   req.warrantyTime = data.duration;
@@ -19,28 +26,18 @@ export async function transformDataToRequirement(
   req.expirationDate = data.completion_date;
   req.paymentMethod = data.payment_methodID;
   req.allowedBidder = data.allowed_bidersID;
+  req.image = data.images;
+  req.document = data.files;
+  if (data.winOffer) {
+    req.offerId = data.winOffer.uid;
+    req.offerUserId = data.winOffer.entityID;
+    if (data.winOffer.entityID != data.winOffer.userID)
+      req.offerSubUserId = data.winOffer.userID;
+  }
   if (mainUser.uid != user.uid) {
     req.user = mainUser;
-    // req.user = {
-    //   document: "111111",
-    //   address: "address example",
-    //   phone: "9888888",
-    //   ...mainUser,
-    // };
     req.subUser = user;
-    // req.subUser = {
-    //   document: "111111",
-    //   address: "address example",
-    //   phone: "9888888",
-    //   ...user,
-    // };
   } else req.user = user;
-  // req.user = {
-  //   document: "111111",
-  //   address: "address example",
-  //   phone: "9888888",
-  //   ...user,
-  // };
   return req;
 }
 
@@ -95,14 +92,99 @@ export async function transformFromGetRequirementByIdToRequirement(
       allowedBidder: data.allowed_bidersID,
       publishDate: data.publish_date,
       state: data.stateID,
-
+      image: data.images,
+      document: data.files,
       user,
       subUser,
-
       numberOffers: data.number_offers,
       type,
     };
+    if (data.winOffer) {
+      req.offerId = data.winOffer.uid;
+      req.offerUserId = data.winOffer.entityID;
+      if (data.winOffer.entityID != data.winOffer.userID)
+        req.offerSubUserId = data.winOffer.userID;
+    }
     return req;
   }
   return null;
+}
+
+export function transformToOffer(
+  data: any,
+  type: RequirementType,
+  user: UserState | BaseUser,
+  mainUser?: UserState | BaseUser
+) {
+  const offer: Offer = data;
+  offer.key = data.uid;
+  offer.title = data.name;
+  offer.location = data.cityID;
+  offer.deliveryTime = data.deliveryTimeID;
+  offer.coin = data.currencyID;
+  offer.warrantyTime = data.timeMeasurementID;
+  offer.price = data.budget;
+  offer.igv = data.includesIGV;
+  offer.requirementId = data.requerimentID;
+  offer.state = data.stateID; //OfferState.CANCELED
+  offer.canceledByCreator = false;
+  offer.type = type;
+  offer.requirementTitle = data.requerimentTitle;
+  if (mainUser) {
+    offer.user = mainUser;
+    offer.subUser = user;
+  } else offer.user = user;
+  // if (mainUser.uid != user.uid) {
+  //   offer.user = mainUser;
+  //   offer.subUser = user;
+  // } else offer.user = user;
+  return offer;
+}
+
+export function transformToBasicRateData(data: any) {
+  const basicData: BasicRateData = data;
+  if (basicData.userId !== basicData.subUserId) return basicData;
+  else {
+    basicData.subUserId = undefined;
+    basicData.subUserName = undefined;
+    return basicData;
+  }
+}
+
+export function transformToPurchaseOrder(data: any) {
+  const purcOrder: PurchaseOrder = {
+    requirementTitle: data.requerimentTitle,
+    requirementId: data.requerimentID,
+    selectionDate: data.createDate,
+    state: data.state,
+    offerTitle: data.offerTitle,
+    offerId: data.offerID,
+    key: data.uid,
+    type: data.type,
+    filters: {
+      price: data.price_Filter,
+      deliveryTime: data.deliveryTime_Filter,
+      location: data.location_Filter,
+      warranty: data.warranty_Filter,
+    },
+    userClientId: data.userClientID,
+    userNameClient: data.userNameClient,
+    addressClient: data.addressClient,
+    documentClient: data.documentClient,
+    subUserClientId: data.subUserClientID,
+    userProviderId: data.userProviderID,
+    subUserProviderId: data.subUserProviderID,
+    addressProvider: data.addressProvider,
+    documentProvider: data.documentProvider,
+    emailProvider: data.emailProvider,
+    deliveryDate: data.deliveryDate,
+    price: data.price,
+    subTotal: data.subtotal,
+    igv: data.igv,
+    total: data.total,
+    subUserNameClient: data.nameSubUserClient,
+    userNameProvider: data.nameUserProvider,
+    subUserNameProvider: data.nameSubUserProvider,
+  };
+  return purcOrder;
 }

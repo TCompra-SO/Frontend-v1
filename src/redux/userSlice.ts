@@ -19,6 +19,7 @@ export const userInitialState: UserState = {
   customerCount: undefined,
   sellerCount: undefined,
   document: "",
+  isLoggedIn: undefined,
 };
 
 export const userSlice = createSlice({
@@ -30,7 +31,6 @@ export const userSlice = createSlice({
       if (action.payload.dataUser) {
         const { uid, name, email, type, typeID, planID } =
           action.payload.dataUser[0];
-        console.log(action.payload);
         state.token = token;
         state.typeEntity = type;
         state.name = name;
@@ -38,11 +38,12 @@ export const userSlice = createSlice({
         state.typeID = typeID;
         state.planID = planID;
         state.uid = uid;
+
         localStorage.setItem(userDataKey, encryptData(JSON.stringify(state)));
-      }
+        console.log(state.uid);
+      } else localStorage.removeItem(userDataKey);
     },
     setBaseUser: (state, action: { payload: BaseUser; type: string }) => {
-      console.log(action.payload);
       state.tenure = action.payload.tenure;
       state.customerScore = action.payload.customerScore;
       state.sellerScore = action.payload.sellerScore;
@@ -60,9 +61,18 @@ export const userSlice = createSlice({
     setFullUser: (state, action: { payload: UserState; type: string }) => {
       return { ...action.payload };
     },
+    setIsLoggedIn: (state, action) => {
+      state.isLoggedIn = action.payload;
+    },
   },
 });
 
-export const { setUser, setUid, setEmail, setBaseUser, setFullUser } =
-  userSlice.actions;
+export const {
+  setUser,
+  setUid,
+  setEmail,
+  setBaseUser,
+  setFullUser,
+  setIsLoggedIn,
+} = userSlice.actions;
 export default userSlice.reducer;

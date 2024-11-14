@@ -6,6 +6,7 @@ import {
   ModalContent,
   TableTypeCertificatesReceived,
   TableTypeCertificatesSent,
+  useApiParams,
 } from "../models/Interfaces";
 import {
   Action,
@@ -15,10 +16,15 @@ import {
 } from "../utilities/types";
 import { useTranslation } from "react-i18next";
 import { CertificateFile, CertificationItem } from "../models/MainInterfaces";
-import { getLastSegmentFromRoute } from "../utilities/globalFunctions";
+import {
+  equalServices,
+  getLastSegmentFromRoute,
+} from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
 import { pageSubRoutes } from "../utilities/routes";
 import { App } from "antd";
+import useApi from "../hooks/useApi";
+import showNotification from "../utilities/notification/showNotification";
 
 const cert: CertificateFile[] = [
   {
@@ -49,6 +55,7 @@ const cert2: CertificationItem[] = [
     companyDocument: "11111111-1",
     creationDate: "2024-09-12T20:36:45.673Z",
     state: CertificationState.CERTIFIED,
+    note: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
   },
   {
     companyID: "2222222",
@@ -68,7 +75,7 @@ const cert2: CertificationItem[] = [
 
 export default function Certificates() {
   const location = useLocation();
-  const { message } = App.useApp();
+  const { notification, message } = App.useApp();
   const { t } = useTranslation();
   const [type, setType] = useState(getLastSegmentFromRoute(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -85,6 +92,32 @@ export default function Certificates() {
     nameColumnHeader: t("name"),
     onButtonClick: handleOnButtonClick,
   });
+
+  // const [apiParams, setApiParams] = useState<useApiParams>({
+  //   service: getOffersService(),
+  //   method: "get",
+  // });
+
+  // const { loading, responseData, error, errorMsg, fetchData } = useApi({
+  //   service: apiParams.service,
+  //   method: apiParams.method,
+  //   dataToSend: apiParams.dataToSend,
+  // });
+
+  // useEffect(() => {
+  //   if (apiParams.service) fetchData();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [apiParams]);
+
+  // useEffect(() => {
+  //   if (responseData) {
+  //     if (equalServices(apiParams.service, getOffersService())) setData();
+  //   } else if (error) {
+  //     if (equalServices(apiParams.service, getOffersService()))
+  //       showNotification(notification, "error", errorMsg);
+  //   }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [responseData, error]);
 
   useEffect(() => {
     setType(getLastSegmentFromRoute(location.pathname));
@@ -181,6 +214,11 @@ export default function Certificates() {
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
         hideSearch={true}
+        // loading={
+        //   equalServices(apiParams.service, getRequirementsService())
+        //     ? loading
+        //     : undefined
+        // }
       />
     </>
   );

@@ -10,7 +10,6 @@ import { setUid, setUser, setEmail, setBaseUser } from "../redux/userSlice";
 import { DocType, ModalTypes, RegisterTypeId } from "../utilities/types";
 import { useNavigate } from "react-router-dom";
 import showNotification from "../utilities/notification/showNotification";
-import { setIsLoading } from "../redux/loadingSlice";
 import useApi from "../hooks/useApi";
 import {
   loginService,
@@ -34,9 +33,7 @@ import { equalServices } from "../utilities/globalFunctions";
 import ModalContainer from "../components/containers/ModalContainer";
 import { AxiosError } from "axios";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
-import { getBaseUserForUserSubUser } from "../services/complete/general";
-import { setMainUser } from "../redux/mainUserSlice";
-import { tokenKey } from "../utilities/globals";
+import { useLoadUserInfo } from "../hooks/authHook";
 
 const LoginType = {
   LOGIN: "login",
@@ -59,6 +56,7 @@ export default function Login(props: LoginProps) {
   const { passwordRules } = usePasswordRules(true);
   const { dniRules } = useDniRules(true);
   const { rucRules } = useRucRules(true);
+  const loadUserInfo = useLoadUserInfo();
   const [checkedTermsConditions, setCheckedTermsConditions] = useState(false);
   const [validDoc, setValidDoc] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -103,11 +101,6 @@ export default function Login(props: LoginProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
-
-  useEffect(() => {
-    dispatch(setIsLoading(loading));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
@@ -206,18 +199,9 @@ export default function Login(props: LoginProps) {
       props.onRegisterSuccess(docType);
     } else {
       dispatch(setUser(responseData));
-      const { user, subUser } = await getBaseUserForUserSubUser(
-        responseData.dataUser[0].uid,
-        true
-      );
-      if (user) {
-        dispatch(setBaseUser(subUser));
-        dispatch(setMainUser(user));
-      }
-
+      await loadUserInfo();
       showNotification(notification, "success", t("welcome"));
-      localStorage.setItem(tokenKey, responseData.token);
-      navigate(`${pageRoutes.myRequirements}`);
+      props.closeLoginModal();
     }
   }
 

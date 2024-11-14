@@ -9,12 +9,15 @@ import { defaultCountry, maxDocSizeMb, maxImageSizeMb } from "./globals";
 import {
   PurchaseOrderTableTypes,
   RequirementType,
+  TimeMeasurement,
   UserClass,
   UserRoles,
 } from "./types";
 import { pageRoutes, pageSubRoutes } from "./routes";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import dayjs from "dayjs";
+import i18next from "i18next";
+import httpErrorInterceptor from "../interceptors/httpErrorInterceptor";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -40,6 +43,7 @@ export function checkImage(image: File) {
 export function checkDoc(file: File) {
   const fileSizeMB = file.size / (1024 * 1024);
   return {
+    validFile: file.type === "application/pdf",
     validSize: fileSizeMB <= maxDocSizeMb,
   };
 }
@@ -57,6 +61,13 @@ export function equalServices(
 // Verifica si fecha es menor a hoy
 export function isDateEarlierThanToday(current: any) {
   return current && dayjs(current).isBefore(dayjs().startOf("day"));
+}
+
+// Verifica si fecha es menor a mañana
+export function isDateEarlierThanTomorrow(current: any) {
+  return (
+    current && dayjs(current).isBefore(dayjs().add(1, "day").startOf("day"))
+  );
 }
 
 // Transforma objeto de datos de lista en lista para select de Antd
@@ -122,6 +133,13 @@ export function getScore(score: number | undefined) {
   return score ? score.toFixed(0) : 0;
 }
 
+// Retorna el promedio del puntaje
+export function calculateFinalScore(scores: number[]) {
+  if (scores.length === 0) return 0;
+  const sum = scores.reduce((acc, num) => acc + num, 0);
+  return sum / scores.length;
+}
+
 // Abre documento en una nueva ventana
 export function openDocument(documentUrl: string) {
   window.open(
@@ -172,6 +190,13 @@ export function getLastSegmentFromRoute(pathname: string) {
   return pathSegments[pathSegments.length - 1];
 }
 
+export function getSectionFromRoute(pathname: string) {
+  const pathSegments = pathname.split("/");
+  if (pathSegments.length <= 1 || pathSegments[1] === "")
+    return pageRoutes.home;
+  return "/" + pathSegments[1];
+}
+
 // Retorna valor anidado para columna de tabla
 export function getNestedValue(dataIndex: string, record: any) {
   return dataIndex.split(".").reduce((acc, key) => acc && acc[key], record);
@@ -185,6 +210,7 @@ export default async function makeRequest<T = any>({
   token,
 }: useApiParams<T>) {
   let responseData: any | null = null;
+  let errorMsg: string | null = null;
   let error: AxiosError<any, any> | null = null;
 
   if (service) {
@@ -203,9 +229,10 @@ export default async function makeRequest<T = any>({
     } catch (err) {
       console.log("HTTP error:", err);
       error = err as AxiosError;
+      errorMsg = i18next.t(httpErrorInterceptor(err, service.type));
     }
   }
-  return { responseData, error };
+  return { responseData, error, errorMsg };
 }
 
 // Retorna la llave del nombre del tipo de requerimiento
@@ -216,7 +243,7 @@ export function getLabelFromRole(type: UserRoles) {
     case UserRoles.LEGAL:
       return "legal";
     case UserRoles.SELLER:
-      return "seller";
+      return "sellerRole";
     case UserRoles.BUYER:
       return "buyer";
     case UserRoles.SELLER_BUYER:
@@ -224,4 +251,31 @@ export function getLabelFromRole(type: UserRoles) {
     case UserRoles.NONE:
       return "none";
   }
+}
+
+// Transforma tiempo a días
+export function transformToDays(n: number, time: TimeMeasurement) {
+  switch (time) {
+    case TimeMeasurement.MONTHS:
+      return n * 30;
+    case TimeMeasurement.YEARS:
+      return n * 365;
+    default:
+      return n;
+  }
+}
+
+// Return pdf src
+export function getPdfSrc(data: string) {
+  if (data) {
+    const byteCharacters = atob(data);
+    const byteNumbers = Array.from(byteCharacters, (char) =>
+      char.charCodeAt(0)
+    );
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "application/pdf" });
+    const url = URL.createObjectURL(blob);
+    return url;
+  }
+  return null;
 }

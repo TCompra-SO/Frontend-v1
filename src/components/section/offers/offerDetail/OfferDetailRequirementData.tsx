@@ -48,7 +48,7 @@ export default function OfferDetailRequirementData(
               {props.user.name}{" "}
             </Tooltip>
           </div>
-          <SubUserName subUser={props.subUser} small />
+          <SubUserName subUserName={props.subUser?.name} small />
         </div>
       </div>
     </div>

@@ -9,7 +9,12 @@ import { checkDoc, checkImage } from "../../../utilities/globalFunctions";
 import showNotification from "../../../utilities/notification/showNotification";
 import { maxDocSizeMb, maxImageSizeMb } from "../../../utilities/globals";
 
-export default function AddCertificatesModal() {
+interface AddCertificatesModalProps {
+  onDocumentAdded?: () => void;
+  onClose: () => any;
+}
+
+export default function AddCertificatesModal(props: AddCertificatesModalProps) {
   const { notification } = App.useApp();
   const [docList, setDocList] = useState<(File | null)[]>([null]);
   const [nameList, setNameList] = useState<string[]>([""]);
@@ -53,7 +58,7 @@ export default function AddCertificatesModal() {
     const file = e.target.files?.[0];
     if (file) {
       const { validImage, validSize } = checkImage(file);
-      const { validSize: validSizeDoc } = checkDoc(file);
+      const { validSize: validSizeDoc, validFile } = checkDoc(file);
 
       if (validImage) {
         if (!validSize) {
@@ -64,7 +69,9 @@ export default function AddCertificatesModal() {
           );
           return;
         }
-      } else if (!validSizeDoc) {
+      } else if (!validFile)
+        showNotification(notification, "error", `${t("onlyPdfs")}`);
+      else if (!validSizeDoc) {
         showNotification(
           notification,
           "error",
@@ -77,11 +84,11 @@ export default function AddCertificatesModal() {
         newArray[index] = file;
         return newArray;
       });
-      setNameList((prev) => {
-        const newArray = [...prev];
-        newArray[index] = file.name;
-        return newArray;
-      });
+      // setNameList((prev) => {
+      //   const newArray = [...prev];
+      //   newArray[index] = file.name;
+      //   return newArray;
+      // });
     }
   }
 
@@ -103,6 +110,8 @@ export default function AddCertificatesModal() {
       }
     }
     console.log(uid);
+    if (props.onDocumentAdded) props.onDocumentAdded();
+    props.onClose();
   }
 
   return (
@@ -158,6 +167,11 @@ export default function AddCertificatesModal() {
                 onChange={(e) => handleInputChange(e, index)}
               />
               <div className="t-flex doc-botones">
+                {docList[index]?.name && (
+                  <div className="name-doc text-truncate wd-100">
+                    {docList[index]?.name}
+                  </div>
+                )}
                 <ButtonContainer
                   className="btn btn-opaco btn-sm wd-100"
                   onClick={(e) => handleClick(e, index)}
@@ -169,9 +183,13 @@ export default function AddCertificatesModal() {
                   {t("uploadFile")}
                 </ButtonContainer>
                 <ButtonContainer
-                  className="btn btn-black btn-sm wd-100"
+                  className="btn btn-black btn-sm btn-trash"
                   onClick={() => deleteBlock(index)}
                 >
+                  <i
+                    className="fa-regular fa-trash"
+                    style={{ marginRight: "5px" }}
+                  ></i>
                   {t("delete")}
                 </ButtonContainer>
               </div>

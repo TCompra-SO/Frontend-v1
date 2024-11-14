@@ -5,7 +5,11 @@ export const ApiMainRoutes = {
   requirements: "requeriments/",
   requirement: "requeriment/",
   image: "image/",
+  images: "images/",
+  documents: "documents/",
   offers: "offers/",
+  score: "score/",
+  purchaseOrder: "purchaseOrder/",
 };
 
 export const ApiRoutes = {
@@ -54,6 +58,10 @@ export const ApiRoutes = {
     getRequirement: "getRequeriment/",
     getRequirements: "getRequeriments/",
     create: "create/",
+    selectOffer: "selectOffer/",
+    getBasicRateData: "getBasicRateData/",
+    delete: "delete/",
+    republish: "republish/",
   },
   requirement: {
     create: "create/",
@@ -61,8 +69,27 @@ export const ApiRoutes = {
   image: {
     uploadAvatar: "upload-avatar",
   },
+  images: {
+    uploadImages: "upload-images",
+  },
+  documents: {
+    uploadDocuments: "upload-documents",
+  },
   offers: {
     create: "create/",
+    getOffers: "getOffers/",
+    getDetailOffer: "getDetailOffer/",
+    getOffersByRequirement: "getOffersByRequeriment/",
+    getBasicRateData: "getBasicRateData/",
+  },
+  score: {
+    registerScore: "registerScore/",
+  },
+  purchaseOrder: {
+    getPurchaseOrders: "getPurchaseOrders",
+    getPurchaseOrderByUser: "getPurchaseOrderByUser/",
+    getPurchaseOrderById: "getPurchaseOrderID/",
+    getpurchaseOrderPDF: "getpurchaseOrderPDF/",
   },
 };
 

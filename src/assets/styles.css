@@ -22,6 +22,14 @@ body {
   border-radius: 8px;
 }
 
+/* Solo en Firefox */
+@-moz-document url-prefix() {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+  }
+}
+
 .scroll-y {
   overflow-y: scroll;
 }
@@ -328,6 +336,7 @@ body {
 
 .user-opt {
   cursor: pointer;
+  line-height: 1;
 }
 
 .options-tc {
@@ -346,6 +355,7 @@ body {
 
 .avatar-l {
   width: 45px;
+  min-width: 45px;
   height: 45px;
   display: flex;
   align-items: center;
@@ -1358,7 +1368,7 @@ body {
   flex: 1;
 }
 .btn-certificados {
-  padding: 0.6rem 1rem;
+  /* padding: 0.6rem 1rem; */
   border-radius: 0.8rem;
   background: #fff;
   color: #92acbf;
@@ -1370,17 +1380,8 @@ body {
   background: #f8f8f8;
 }
 
-.select-certificados {
-  margin: 0.6rem 1rem;
-  border-radius: 0.8rem;
-  background: #fff;
-  color: #92acbf;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease-out;
-}
-.select-certificados:hover {
-  background: #f8f8f8;
+.btn-certificados > .ant-select-selector {
+  /* padding: 0 !important; */
 }
 
 /* Modal Perfil */
@@ -1568,207 +1569,236 @@ body {
   align-items: center;
 }
 
-/********** Antd's select **************************/
-
-.form-control .ant-select-selector {
-  border: 1px solid transparent !important;
-  background: transparent !important;
-}
-
-.ant-select.ant-select-in-form-item {
-  padding: 0;
-}
-
-.ant-select-focused .ant-select-selector {
-  border-color: none !important;
-  outline: 0 !important;
-  box-shadow: 0 0 0 0.25rem rgba(188, 19, 115, 0.25) !important;
-}
-
-.ant-select-single .ant-select-selector {
-  font-weight: 400;
-  color: #92acbf;
-  font-size: 1rem;
-}
-
-.ant-form-item-control-input-content > .ant-select {
-  height: 40.33px !important;
-}
-
-.form-control > .ant-select-selector {
-  text-align: left;
-}
-
-.ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
-  border: none;
-}
-
-.select-certificados .ant-select-selector {
+.name-doc {
+  color: rgb(59 76 86 / 70%);
+  background: #e4eaef;
+  padding: 0.56rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
   border-radius: 0.8rem;
 }
 
-/************** Antd general ********************/
-
-/* No espacio entre elementos de formulario */
-.ant-form-item {
-  margin-bottom: 0px;
+/* Estilos Index: Icompleto */
+.container-tc {
+  padding: 0 100px;
+}
+.j-conten {
+  justify-content: center;
+}
+.j-items {
+  align-items: center;
+}
+.gap-5 {
+  gap: 5px;
 }
 
-/* Modales */
-.ant-modal {
-  line-height: inherit !important;
+.header-menu {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
 }
-
-.ant-modal .ant-modal-body {
-  line-height: inherit !important;
-}
-
-.ant-modal .ant-modal-content {
-  background: transparent;
-  padding: 0;
-  border-radius: 2rem;
-}
-
-/* Focus en Input password */
-.ant-input-outlined:focus-within {
-  border-color: transparent !important;
-  outline: 0 !important;
-  box-shadow: 0 0 0 0.25rem rgba(188, 19, 115, 0.25) !important;
-}
-
-/* Focus en date picker */
-.ant-picker-outlined:focus-within {
-  border-color: transparent !important;
-  outline: 0 !important;
-  box-shadow: 0 0 0 0.25rem rgba(188, 19, 115, 0.25) !important;
-}
-
-/* Color de texto en input number */
-.ant-input-number .ant-input-number-input {
-  color: inherit;
-}
-
-.ant-picker .ant-picker-input > input {
-  color: inherit;
-  font-size: inherit;
-  font-family: "Rubik";
-}
-
-/* Button height */
-.ant-btn {
-  height: inherit;
-}
-
-/* Number input  */
-
-.ant-input-number {
-  width: 100%;
-}
-
-.ant-input-number .ant-input-number-input {
-  padding: 0;
-}
-
-.ant-input-number:focus-within {
-  border-color: none !important;
-  outline: 0 !important;
-  box-shadow: 0 0 0 0.25rem rgba(188, 19, 115, 0.25) !important;
-}
-
-/* Ocultar cuadro de Upload */
-.hide-upload .ant-upload-wrapper .ant-upload-select {
-  display: none;
-}
-
-/* Reduce tamaño de preview de Upload para tipo picture-card */
-.ant-upload-list-picture-card .ant-upload-list-item-container {
-  width: 70px !important;
-  height: 70px !important;
-}
-
-/* No mostrar nada cuando Form.Item no tiene contenido */
-.ant-form-item .ant-form-item-control-input {
-  min-height: 0;
-}
-
-/* Muestra sólo el primer error de validación */
-form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
-  display: none;
-}
-
-/* Cambiar hover de button */
-.ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
-  background: #990057;
+.section-slider {
+  background-image: url(images/back-01.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  background-position: center;
   color: #ffffff;
+  height: calc(100vh - 0px);
+  margin-top: -79px;
+  z-index: -1;
+}
+.section-slider::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  content: "";
+  background-color: #00000073;
+}
+.logo-header {
+  height: 48px;
 }
 
-/* Tamaño de fuente en tabla */
-.ant-table-wrapper .ant-table {
-  font-size: 16px;
+/* Requerimiento Detalles */
+.section-guia {
+  background-image: url(images/header-01.svg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  background-position: center;
+  color: #ffffff;
+  height: 300px;
 }
-
-/* No margin bottom al usar Typography  */
-.ant-typography {
-  margin-bottom: 0 !important;
+.header-requerimiento {
+  width: 100%;
+  max-width: calc(100% - 100px);
+  margin: auto 40px;
+  z-index: 9;
+  height: 100%;
+  justify-content: end;
 }
-
-/* Border radius de Popover */
-.ant-popover .ant-popover-inner {
-  border-radius: 0.7rem;
+.breadcrumb-req {
+  gap: 8px;
+  padding-bottom: 50px;
+  font-weight: 500;
 }
-
-.ant-modal .ant-modal-close {
-  border-radius: 50%;
+.ruta-req {
+  color: #fff;
+  opacity: 0.7;
+  text-decoration: none;
+  font-weight: 500;
 }
-
-/*****************************/
-
-/* Truncar texto */
-.text-truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
+.section-detalles {
+  background: #f3f7fa;
+  padding: 40px;
+}
+.img-slider-req {
+  width: 100%;
+  border-radius: 1.5rem;
+  height: 100%;
+  object-fit: cover;
+  object-position: right;
+}
+.datos-req {
+  font-size: 15px;
+  font-weight: 600;
+}
+.dato-detalle-1 {
+  flex-grow: 1;
   white-space: nowrap;
 }
-
-/* Pasar texto a siguiente línea */
-.long-text-wrap {
+.i-vi {
+  color: #bc1373;
+  margin-right: 2px;
+}
+.dato-detalle-2 {
+  color: rgb(81 8 57 / 70%);
+}
+.oferta-check {
+  background: rgb(188 19 115 / 5%);
+  color: #bc1373;
+  font-weight: 600;
+  padding: 20px;
+  border-radius: 0.9rem;
+  height: calc(100vh - 768px);
+}
+.section-galeria {
+  position: relative;
+  height: 328px;
+}
+.galeria-detalles {
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+.detalles-requ {
+  padding: 20px;
+}
+.det-c {
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.det-1 {
+  background: #300020;
+  color: #fff;
+  padding: 15px;
+  border-radius: 1rem;
+  font-weight: 600;
+}
+.det-2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #510839;
+  background: #fff;
+  padding: 15px;
+  border-radius: 1rem;
+  line-height: 0.9;
+}
+.det-3 {
+  background: #bc1373;
+  color: #fff;
+  padding: 15px;
+  border-radius: 1rem;
+  font-weight: 600;
+  line-height: 1;
+}
+.ub-1 {
+  font-size: 20px;
+}
+.ub-2 {
+  opacity: 0.7;
+  line-height: 1.3;
+}
+.det-2 span {
+  color: rgb(81 8 57 / 50%);
+  font-size: 14px;
+}
+.p-start-2 {
+  color: #f9a825;
+  font-size: 18px;
+}
+.tags-detalles {
+  font-weight: 500;
+}
+.c-descripcion {
+  text-align: justify;
   word-wrap: break-word;
-  word-break: break-all;
 }
-
-/* Rate stars */
-.ant-rate .ant-rate-star:not(:last-child) {
-  margin-inline-end: 3px;
-}
-
-/* Tablas */
-
-.card-white .ant-table-wrapper .ant-table-tbody > tr > td {
+.multimedia-nula {
   background: #f3f7fa;
-  border-bottom: 5px solid white;
-  padding: 5px 10px;
+  color: #92acbf;
+  font-weight: 600;
+  text-align: center;
+  padding: 20px;
+  border-radius: 0.9rem;
+  cursor: pointer;
+}
+.multimedia-files {
+  background: #ffe9f7;
+  color: #bc1373;
+  font-weight: 600;
+  text-align: center;
+  padding: 20px;
+  border-radius: 0.9rem;
+  cursor: pointer;
+  flex-grow: 1;
+}
+.name-file {
+  line-height: 0.7;
+}
+.aviso-h {
+  line-height: 1.2;
+  text-align: center;
+}
+.requ-oferta {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20%, 1fr));
+}
+.cbl-1 {
+  grid-column: 1 / span 3;
+}
+.cbl-2 {
+  grid-column: 4 / span 1;
+}
+.cbl-3 {
+  grid-column: 1 / span 2;
+}
+.cbl-4 {
+  grid-column: 3 / span 2;
+}
+.cbl-5 {
+  grid-column: 1 / span 1;
+}
+.cbl-6 {
+  grid-column: 2 / span 3;
 }
 
-.card-white td:first-child {
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
-}
-
-.card-white td:last-child {
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
-}
-
-/* Scrollbar */
-
-.custom-scroll::-webkit-scrollbar {
-  width: 5px;
-}
-.custom-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scroll::-webkit-scrollbar-thumb {
-  background-color: #b7bfc5;
-  border-radius: 35px;
-  border: 0px;
+.i-main {
+  width: 18px;
+  text-align: center;
+  opacity: 0.7;
 }

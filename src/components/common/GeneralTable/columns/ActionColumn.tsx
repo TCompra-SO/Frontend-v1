@@ -21,8 +21,8 @@ import { Offer } from "../../../../models/MainInterfaces";
 export default function ActionColumn(
   type: TableTypes,
   onButtonClick: (action: Action, data: any) => void,
-  extraParam: any = false,
-  hidden: boolean = false
+  hidden: boolean = false,
+  extraParam?: any
 ) {
   const { t } = useTranslation();
 
@@ -70,7 +70,7 @@ export default function ActionColumn(
                 ? type == TableTypes.OFFER
                   ? ActionByState[key].reduce<ItemType[]>(
                       (acc, action: Action) => {
-                        const canceledByCreator = (record as Offer)
+                        const canceledByCreator = (record as Offer) // r3v
                           .canceledByCreator;
                         if (action == Action.RATE_CANCELED && canceledByCreator)
                           return acc;

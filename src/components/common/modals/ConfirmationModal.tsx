@@ -6,11 +6,12 @@ interface ConfirmationModalProps {
   icon?: React.ReactNode;
   onClose: (e: React.SyntheticEvent<Element, Event>) => any;
   onAnswer: (ok: boolean) => any;
+  loading?: boolean;
 }
 export default function ConfirmationModal(props: ConfirmationModalProps) {
   function closeModal(e: React.SyntheticEvent<Element, Event>, ok: boolean) {
     props.onAnswer(ok);
-    props.onClose(e);
+    if (props.loading !== undefined) props.onClose(e);
   }
 
   const { t } = useTranslation();
@@ -28,6 +29,7 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
             onClick={(e) => closeModal(e, true)}
             children={t("acceptButton")}
             className="btn btn-default alert-boton"
+            loading={props.loading}
           />
           <ButtonContainer
             onClick={(e) => closeModal(e, false)}

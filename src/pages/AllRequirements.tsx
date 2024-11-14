@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import { ChangeEvent, useEffect, useState } from "react";
-import { TableTypeAllRequirements } from "../models/Interfaces";
+import { TableTypeAllRequirements, useApiParams } from "../models/Interfaces";
 import {
   Action,
   EntityType,
@@ -11,10 +11,14 @@ import {
 } from "../utilities/types";
 import { BasicRequirement, Requirement } from "../models/MainInterfaces";
 import {
+  equalServices,
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
+import useApi from "../hooks/useApi";
+import showNotification from "../utilities/notification/showNotification";
+import { App } from "antd";
 
 const requirements: Requirement[] = [
   {
@@ -651,6 +655,7 @@ const requirements: Requirement[] = [
 export default function AllRequirements() {
   const { t } = useTranslation();
   const location = useLocation();
+  const { notification, message } = App.useApp();
   const [type, setType] = useState(getRouteType(location.pathname));
   const [tableContent, setTableContent] = useState<TableTypeAllRequirements>({
     type: TableTypes.ALL_REQUIREMENTS,
@@ -659,6 +664,32 @@ export default function AllRequirements() {
     nameColumnHeader: t("goods"),
     onButtonClick: handleOnButtonClick,
   });
+
+  // const [apiParams, setApiParams] = useState<useApiParams>({
+  //   service: getOffersService(),
+  //   method: "get",
+  // });
+
+  // const { loading, responseData, error, errorMsg, fetchData } = useApi({
+  //   service: apiParams.service,
+  //   method: apiParams.method,
+  //   dataToSend: apiParams.dataToSend,
+  // });
+
+  // useEffect(() => {
+  //   if (apiParams.service) fetchData();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [apiParams]);
+
+  // useEffect(() => {
+  //   if (responseData) {
+  //     if (equalServices(apiParams.service, getOffersService())) setData();
+  //   } else if (error) {
+  //     if (equalServices(apiParams.service, getOffersService()))
+  //       showNotification(notification, "error", errorMsg);
+  //   }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [responseData, error]);
 
   useEffect(() => {
     setType(getRouteType(location.pathname));
@@ -690,6 +721,11 @@ export default function AllRequirements() {
       subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
       table={tableContent}
       onSearch={handleSearch}
+      // loading={
+      //   equalServices(apiParams.service, getRequirementsService())
+      //     ? loading
+      //     : undefined
+      // }
     />
   );
 }

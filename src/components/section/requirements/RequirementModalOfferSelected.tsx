@@ -1,30 +1,83 @@
 import TextAreaContainer from "../../containers/TextAreaContainer";
 import { Col, Flex, Row } from "antd";
 import { Offer, Requirement } from "../../../models/MainInterfaces";
-import { SyntheticEvent, useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { requirementDetailContext } from "../../../contexts/requirementDetailContext";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import { Lengths } from "../../../utilities/lengths";
 import SelectContainer from "../../containers/SelectContainer";
 import { filterLabels } from "../../../utilities/colors";
+import { SelectOfferRequest } from "../../../models/Requests";
+import useApi from "../../../hooks/useApi";
+import { useApiParams } from "../../../models/Interfaces";
+import { selectOfferService } from "../../../services/requests/requirementService";
+import showNotification from "../../../utilities/notification/showNotification";
+import { App } from "antd";
 
 interface RequirementModalOfferSelectedProps {
   offer: Offer;
   requirement: Requirement;
-  onClose: (e: SyntheticEvent<Element, Event>) => any;
+  onClose: () => any;
+  onSucces: (offerId: string) => void;
 }
 
 export default function RequirementModalOfferSelected(
   props: RequirementModalOfferSelectedProps
 ) {
   const { t } = useTranslation();
+  const { notification } = App.useApp();
   const { filters, filterNames } = useContext(requirementDetailContext);
+  const [text, setText] = useState<string>("");
+  const [apiParams, setApiParams] = useState<useApiParams<SelectOfferRequest>>({
+    service: null,
+    method: "get",
+  });
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi<SelectOfferRequest>({
+      service: apiParams.service,
+      method: apiParams.method,
+      dataToSend: apiParams.dataToSend,
+    });
 
-  function selectOffer(e: SyntheticEvent<Element, Event>) {
-    console.log(props.offer.key, props.requirement.key);
-    console.log(filters);
-    props.onClose(e);
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      showNotification(notification, "success", t("offerSelectedSuccessfully"));
+      props.onClose();
+      if (apiParams.dataToSend?.offerID)
+        props.onSucces(apiParams.dataToSend.offerID);
+    } else if (error) {
+      showNotification(notification, "error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
+
+  function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    setText(e.target.value);
+  }
+
+  function selectOffer() {
+    const notes = text.trim();
+    const data: SelectOfferRequest = {
+      requerimentID: props.requirement.key,
+      offerID: props.offer.key,
+      price_Filter: filters.price,
+      deliveryTime_Filter: filters.deliveryTime,
+      location_Filter: filters.location,
+      warranty_Filter: filters.warranty,
+    };
+    if (notes) data.observation = notes;
+    console.log(data);
+    setApiParams({
+      service: selectOfferService(),
+      method: "post",
+      dataToSend: data,
+    });
   }
 
   return (
@@ -111,6 +164,7 @@ export default function RequirementModalOfferSelected(
             autoSize
             placeholder={t("notes")}
             maxLength={Lengths.selectOfferObs.max}
+            onChange={handleTextChange}
           />
         </div>
         <div className="t-flex gap-15 wd-100 alert-btn">
@@ -118,6 +172,7 @@ export default function RequirementModalOfferSelected(
             children={t("acceptButton")}
             className="btn btn-default alert-boton"
             onClick={selectOffer}
+            loading={loading}
           />
           <ButtonContainer
             children={t("cancelButton")}

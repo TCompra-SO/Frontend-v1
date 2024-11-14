@@ -30,3 +30,39 @@ export function getRequirementByIdService(
     type: showErrorMessage ? "RE-GET-ID" : "",
   };
 }
+
+export function selectOfferService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.requirements
+    }${ApiRoutes.requirements.selectOffer}`,
+    type: "RE-SE-OF",
+  };
+}
+
+export function getBasicRateDataReqService(id: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.requirements
+    }${ApiRoutes.requirements.getBasicRateData}${id}`,
+    type: "RE-BA-RA",
+  };
+}
+
+export function deleteRequirementService(id: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.requirements
+    }${ApiRoutes.requirements.delete}${id}`,
+    type: "RE-DEL",
+  };
+}
+
+export function republishRequirementService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.requirements
+    }${ApiRoutes.requirements.republish}`,
+    type: "RE-REP",
+  };
+}

@@ -1,4 +1,4 @@
-import { RegisterTypeId, UserRoles } from "../utilities/types";
+import { CommonFilter, RegisterTypeId, UserRoles } from "../utilities/types";
 
 export interface LoginRequest {
   email: string;
@@ -117,4 +117,27 @@ export interface CreateOfferRequest {
   includesDelivery: boolean;
   requerimentID: string;
   userID: string;
+}
+
+export interface RegisterScoreRequest {
+  typeScore: "Client" | "Provider";
+  uidEntity: string; // calificado
+  uidUser: string; // calificador
+  score: number;
+  comments?: string;
+}
+
+export interface SelectOfferRequest {
+  requerimentID: string;
+  offerID: string;
+  observation?: string;
+  price_Filter: CommonFilter;
+  deliveryTime_Filter: number;
+  location_Filter: number;
+  warranty_Filter: CommonFilter;
+}
+
+export interface RepublishRequest {
+  uid: string;
+  completion_date: string;
 }

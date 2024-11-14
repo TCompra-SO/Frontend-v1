@@ -1,13 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import { mainModalScrollStyle } from "../utilities/globals";
-import {
-  ModalContent,
-  TableTypeCertificatesReceived,
-  TableTypeCertificatesSent,
-  TableTypeMyDocuments,
-} from "../models/Interfaces";
+import { ModalContent, TableTypeMyDocuments } from "../models/Interfaces";
 import {
   Action,
   CertificationState,
@@ -16,9 +11,11 @@ import {
 } from "../utilities/types";
 import { useTranslation } from "react-i18next";
 import { CertificateFile, CertificationItem } from "../models/MainInterfaces";
-import { openDocument } from "../utilities/globalFunctions";
+import { equalServices, openDocument } from "../utilities/globalFunctions";
 import ButtonContainer from "../components/containers/ButtonContainer";
-import { Row } from "antd";
+import { App, Row } from "antd";
+import useApi from "../hooks/useApi";
+import showNotification from "../utilities/notification/showNotification";
 
 const cert: CertificateFile[] = [
   {
@@ -44,22 +41,45 @@ const cert: CertificateFile[] = [
 
 export default function CertificatesDocs() {
   const { t } = useTranslation();
+  const { notification, message } = App.useApp();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
   });
-  const [tableContent] = useState<
-    | TableTypeMyDocuments
-    | TableTypeCertificatesReceived
-    | TableTypeCertificatesSent
-  >({
+  const [tableContent] = useState<TableTypeMyDocuments>({
     type: TableTypes.MY_DOCUMENTS,
     data: cert,
     hiddenColumns: [],
     nameColumnHeader: t("name"),
     onButtonClick: handleOnButtonClick,
   });
+
+  // const [apiParams, setApiParams] = useState<useApiParams>({
+  //   service: getOffersService(),
+  //   method: "get",
+  // });
+
+  // const { loading, responseData, error, errorMsg, fetchData } = useApi({
+  //   service: apiParams.service,
+  //   method: apiParams.method,
+  //   dataToSend: apiParams.dataToSend,
+  // });
+
+  // useEffect(() => {
+  //   if (apiParams.service) fetchData();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [apiParams]);
+
+  // useEffect(() => {
+  //   if (responseData) {
+  //     if (equalServices(apiParams.service, getOffersService())) setData();
+  //   } else if (error) {
+  //     if (equalServices(apiParams.service, getOffersService()))
+  //       showNotification(notification, "error", errorMsg);
+  //   }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [responseData, error]);
 
   function handleCloseModal() {
     setIsOpenModal(false);
@@ -82,11 +102,8 @@ export default function CertificatesDocs() {
     }
   }
 
-  function handleOnButtonClick(
-    action: Action,
-    obj: CertificateFile | CertificationItem
-  ) {
-    const certificate = obj as CertificateFile;
+  function handleOnButtonClick(action: Action, certificate: CertificateFile) {
+    // const certificate = obj as CertificateFile;
     switch (action) {
       case Action.VIEW_DOCUMENT:
         openDocument(certificate.url);
@@ -133,6 +150,11 @@ export default function CertificatesDocs() {
             </ButtonContainer>
           </Row>
         }
+        // loading={
+        //   equalServices(apiParams.service, getRequirementsService())
+        //     ? loading
+        //     : undefined
+        // }
       />
     </>
   );

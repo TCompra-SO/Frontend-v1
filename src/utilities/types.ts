@@ -93,6 +93,7 @@ export enum ModalTypes {
   EDIT_DOCUMENT_LIST_TO_REQUEST = 14,
   VIEW_DOCS_RECEIVED_CERT = 15,
   VIEW_DOCS_SENT_CERT = 16,
+  SELECT_DOCS_CERT = 17,
 }
 
 export const ModalWidth: {
@@ -115,6 +116,7 @@ export const ModalWidth: {
   [ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST]: 600,
   [ModalTypes.VIEW_DOCS_RECEIVED_CERT]: 800,
   [ModalTypes.VIEW_DOCS_SENT_CERT]: 800,
+  [ModalTypes.SELECT_DOCS_CERT]: 800,
 };
 
 /***** Acciones *****/
@@ -193,7 +195,7 @@ export const ActionByStateRequirement: {
   [RequirementState.CANCELED]: [Action.DELETE, Action.REPUBLISH],
   [RequirementState.DISPUTE]: [Action.SHOW_SUMMARY],
   [RequirementState.EXPIRED]: [Action.DELETE, Action.REPUBLISH],
-  [RequirementState.FINISHED]: [Action.SHOW_SUMMARY],
+  [RequirementState.FINISHED]: [Action.SHOW_SUMMARY], //, Action.FINISH],
   [RequirementState.PUBLISHED]: [Action.DELETE, Action.CANCEL_REQUIREMENT],
   [RequirementState.SELECTED]: [Action.CANCEL_REQUIREMENT, Action.FINISH],
   [RequirementState.ELIMINATED]: [],
@@ -382,4 +384,25 @@ export enum CertificationState {
 export enum ImageRequestLabels {
   AVATAR = "image",
   UID = "uid",
+  IMAGES = "images",
+  DOCUMENTS = "documents",
+}
+
+export enum ProcessFlag {
+  NOT_INI = 0,
+  FIN_SUCCESS = 1,
+  FIN_UNSUCCESS = 2,
+}
+
+export enum CantOfferMotives {
+  NONE = 0,
+  ALREADY_MADE_OFFER = 1,
+  NOT_LOGGED_IN = 2,
+  OTHER_USER_IN_COMPANY_MADE_OFFER = 3,
+  IS_CREATOR = 4,
+  IS_MAIN_CREATOR = 5,
+  CHANGED_STATE = 6,
+  ONLY_PREMIUM = 7,
+  ONLY_CERTIFIED = 8,
+  NO_ALLOWED_ROLE = 9,
 }

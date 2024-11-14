@@ -2,8 +2,8 @@ import { Navigate } from "react-router-dom";
 import { ReactNode, useEffect, useState } from "react";
 import { MainState } from "../../models/Redux";
 import { useSelector } from "react-redux";
-import { pageRoutes } from "../../utilities/routes";
 import { UserRoles } from "../../utilities/types";
+import { navigateToAfterLoggingOut } from "../../utilities/globals";
 
 interface AuthRoleGuardProps {
   children: ReactNode;
@@ -17,23 +17,27 @@ export default function AuthRoleGuard({
   allowedRoles,
 }: AuthRoleGuardProps) {
   const [isWaiting, setIsWaiting] = useState(true);
-  const uid = useSelector((state: MainState) => state.user.uid);
+  const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const typeId = useSelector((state: MainState) => state.user.typeID);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsWaiting(false);
-    }, 300); // espera para obtener datos del usuario
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setIsWaiting(false);
+  //   }, 300); // espera para obtener datos del usuario
 
-    return () => clearTimeout(timer);
-  }, []);
+  //   return () => clearTimeout(timer);
+  // }, []);
+
+  useEffect(() => {
+    if (isLoggedIn !== undefined) setIsWaiting(false);
+  }, [isLoggedIn]);
 
   if (isWaiting) {
     return null;
   }
 
-  if (!uid || typeId == UserRoles.NONE || !allowedRoles[typeId]) {
-    return <Navigate to={pageRoutes.home} />;
+  if (!allowedRoles[typeId]) {
+    return <Navigate to={navigateToAfterLoggingOut} />;
   }
 
   return <>{children}</>;

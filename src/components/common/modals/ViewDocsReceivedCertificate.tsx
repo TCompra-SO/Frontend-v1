@@ -42,7 +42,9 @@ export default function ViewDocsReceivedCertificate(
         <i className="fa-regular fa-file-certificate sub-icon-cert"></i>
         <div className="sub-titulo sub-calificar">
           <div>{t("certificates")}</div>
-          <div className="calificar-detalle">{t("receivedDocuments")}</div>
+          <div className="calificar-detalle">
+            {t(props.readOnly ? "sentDocuments" : "receivedDocuments")}
+          </div>
         </div>
       </div>
       <div className="t-flex gap-15 preguntas">
@@ -83,9 +85,9 @@ export default function ViewDocsReceivedCertificate(
               </div>
               {!props.readOnly && (
                 <SelectContainer
-                  className="select-certificados"
+                  className="btn-certificados"
                   defaultValue={CertificationState.PENDING}
-                  style={{ height: "3rem" }}
+                  style={{ height: "3rem", marginRight: "4px" }}
                   options={[
                     { label: t("pending"), value: CertificationState.PENDING },
                     {

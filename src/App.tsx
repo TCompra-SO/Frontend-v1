@@ -4,6 +4,7 @@ import { App as AntdApp, ConfigProvider, theme } from "antd";
 import LoadingCond from "./pages/utils/LoadingCond.tsx";
 import LoadingPage from "./pages/utils/LoadingPage.tsx";
 import "./assets/styles.css";
+import "./assets/custom.css";
 import "./assets/responsive.css";
 import {
   darkColor,
@@ -17,13 +18,13 @@ import enUs from "antd/locale/en_US";
 import i18n from "./utilities/i18n.ts";
 import { pageRoutes, pageSubRoutes } from "./utilities/routes.ts";
 import Sidebar from "./components/section/sidebar/Sidebar.tsx";
-import MainHeader from "./components/section/header/header/MainHeader.tsx";
 import { ListsProvider } from "./contexts/listsContext.tsx";
 import AuthRoleGuard from "./components/guards/AuthRoleGuard.tsx";
 import { RolesForSection, RolesForSubSection } from "./utilities/roles.ts";
-import { loadUserInfo } from "./services/complete/authServiceComplete.ts";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "./redux/loadingSlice.ts";
+import { useLoadUserInfo } from "./hooks/authHook.ts";
+import MainHeader from "./components/section/header/MainHeader.tsx";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
@@ -61,9 +62,6 @@ function MainLayout({ children }: { children: React.ReactNode }) {
         <MainHeader onShowMenu={handleShowMenu} />
 
         <div className="tc-datos scroll-y">{children}</div>
-        {/* <Footer style={{ textAlign: "center" }}>
-        TCompra ©{new Date().getFullYear()} Soluciones Online S. A. C.
-      </Footer> */}
       </div>
     </div>
   );
@@ -71,6 +69,7 @@ function MainLayout({ children }: { children: React.ReactNode }) {
 
 function App() {
   const dispatch = useDispatch();
+  const loadUserInfo = useLoadUserInfo();
   dispatch(setIsLoading(true));
 
   useEffect(() => {
@@ -90,10 +89,11 @@ function App() {
           algorithm: theme.defaultAlgorithm,
           token: {
             colorPrimary: primaryColor,
-            // borderRadius: 16,
             colorBgContainer: mainBackgroundColor,
             fontFamily: "Rubik",
+            fontSize: 16,
           },
+
           components: {
             Table: {
               headerColor: tableHeaderTextColor,
@@ -120,7 +120,19 @@ function App() {
                 path={`${pageRoutes.home}`}
                 element={
                   <Suspense fallback={<LoadingPage />}>
+                    <MainHeader />
                     <Home></Home>
+                  </Suspense>
+                }
+              />
+              <Route
+                path={`${pageRoutes.productDetail}/:requirementId`}
+                element={
+                  <Suspense fallback={<LoadingPage />}>
+                    <AuthRoleGuard allowedRoles={RolesForSection.productDetail}>
+                      <MainHeader />
+                      <ProductDetail />
+                    </AuthRoleGuard>
                   </Suspense>
                 }
               />
@@ -131,16 +143,6 @@ function App() {
                   <MainLayout>
                     <Suspense fallback={<LoadingPage />}>
                       <Routes>
-                        <Route
-                          path={`${pageRoutes.productDetail}/:requirementId`}
-                          element={
-                            <AuthRoleGuard
-                              allowedRoles={RolesForSection.productDetail}
-                            >
-                              <ProductDetail />
-                            </AuthRoleGuard>
-                          }
-                        />
                         <Route
                           path={`${pageRoutes.profile}`}
                           element={

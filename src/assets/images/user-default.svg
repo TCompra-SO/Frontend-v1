@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Capa_2" data-name="Capa 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 214.31 214.31">
+  <defs>
+    <style>
+      .cls-1 {
+        opacity: .2;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4 {
+        fill: #3b4c56;
+      }
+
+      .cls-5 {
+        opacity: .3;
+      }
+
+      .cls-2 {
+        opacity: .05;
+      }
+
+      .cls-6, .cls-3 {
+        opacity: .1;
+      }
+
+      .cls-7 {
+        clip-path: url(#clippath);
+      }
+
+      .cls-8 {
+        fill: none;
+      }
+
+      .cls-9 {
+        fill: #f3f7fa;
+      }
+    </style>
+    <clipPath id="clippath">
+      <rect class="cls-8" width="214.31" height="214.31"/>
+    </clipPath>
+  </defs>
+  <g id="Capa_1-2" data-name="Capa 1">
+    <g>
+      <g class="cls-7">
+        <rect class="cls-9" width="214.31" height="214.31"/>
+        <g class="cls-5">
+          <circle class="cls-2" cx="213.78" cy="213.64" r="67.09"/>
+          <circle class="cls-3" cx="213.78" cy="213.64" r="46.45"/>
+          <circle class="cls-1" cx="213.78" cy="213.64" r="25.8"/>
+        </g>
+        <g class="cls-5">
+          <circle class="cls-2" cx=".67" cy=".67" r="67.09"/>
+          <circle class="cls-3" cx=".67" cy=".67" r="46.45"/>
+          <circle class="cls-1" cx=".67" cy=".67" r="25.8"/>
+        </g>
+      </g>
+      <g class="cls-6">
+        <path class="cls-4" d="m159.66,159.03c0,4.49-3.64,8.13-8.12,8.13H62.78c-4.49,0-8.12-3.64-8.12-8.13,0-22.44,18.19-40.62,40.62-40.62h23.75c22.44,0,40.63,18.19,40.63,40.62Zm-11.42-3.12c-1.56-14.73-14.07-26.25-29.21-26.25h-23.75c-15.14,0-27.65,11.52-29.21,26.25h82.17Zm-71.09-78.75c0-16.57,13.43-30,30-30s30,13.43,30,30-13.43,30-30,30-30-13.43-30-30Zm11.25,0c0,10.34,8.41,18.75,18.75,18.75s18.75-8.41,18.75-18.75-8.41-18.75-18.75-18.75-18.75,8.41-18.75,18.75Z"/>
+      </g>
+    </g>
+  </g>
+</svg>

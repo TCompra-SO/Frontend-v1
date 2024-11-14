@@ -10,7 +10,6 @@ import {
   PurchaseOrderTableTypes,
 } from "../utilities/types";
 import {
-  BaseUser,
   OfferItemSubUser,
   Offer,
   PurchaseOrder,
@@ -24,6 +23,7 @@ import {
   BasicPurchaseOrder,
   CertificateFile,
   CertificationItem,
+  BasicRateData,
 } from "./MainInterfaces";
 import { SubUserProfile } from "./Responses";
 
@@ -61,9 +61,7 @@ export interface ModalOfferSummary extends CommonModalType {
 export interface ModalRateCanceled extends CommonModalType {
   type: ModalTypes.RATE_CANCELED;
   data: {
-    user: BaseUser;
-    subUser: BaseUser | undefined;
-    requirementOfferTitle: string;
+    basicRateData: BasicRateData;
     type: RequirementType;
     isOffer: boolean;
   };
@@ -72,9 +70,7 @@ export interface ModalRateCanceled extends CommonModalType {
 export interface ModalRateUser extends CommonModalType {
   type: ModalTypes.RATE_USER;
   data: {
-    user: BaseUser;
-    subUser: BaseUser | undefined;
-    requirementOfferTitle: string;
+    basicRateData: BasicRateData;
     type: RequirementType;
     isOffer: boolean;
   };
@@ -82,12 +78,16 @@ export interface ModalRateUser extends CommonModalType {
 
 export interface ModalRepublishRequirement extends CommonModalType {
   type: ModalTypes.REPUBLISH_REQUIREMENT;
-  data: { requirementId: string };
+  data: { requirementId: string; type: RequirementType };
 }
 
 export interface ModalSelectOffer extends CommonModalType {
   type: ModalTypes.SELECT_OFFER;
-  data: { offer: Offer; requirement: Requirement };
+  data: {
+    offer: Offer;
+    requirement: Requirement;
+    onSuccess: (offerId: string) => void;
+  };
 }
 
 export interface ModalValidateCode extends CommonModalType {
@@ -101,6 +101,7 @@ export interface ModalConfirmation extends CommonModalType {
     text: string;
     icon?: ReactNode;
     onAnswer: (ok: boolean) => void;
+    loading?: boolean;
   };
 }
 
@@ -129,6 +130,9 @@ export interface ModalUserInfo extends CommonModalType {
 
 export interface ModalAddCertificates extends CommonModalType {
   type: ModalTypes.ADD_CERTIFICATES;
+  data?: {
+    onDocumentAdded: () => void;
+  };
 }
 
 export interface ModalEditDocumentListToRequest extends CommonModalType {
@@ -150,6 +154,13 @@ export interface ModalViewDocsSentCert extends CommonModalType {
     docs: CertificateFile[];
     data: CertificationItem;
     readonly?: boolean;
+  };
+}
+
+export interface ModalSelectDocsCert extends CommonModalType {
+  type: ModalTypes.SELECT_DOCS_CERT;
+  data: {
+    data: SelectDocsModalData;
   };
 }
 
@@ -175,7 +186,14 @@ export type ModalContent =
   | ModalEditDocumentListToRequest
   | ModalViewDocsReceivedCert
   | ModalViewDocsSentCert
+  | ModalSelectDocsCert
   | ModalNone;
+
+export interface SelectDocsModalData {
+  userId: string;
+  userName: string;
+  text: string;
+}
 
 /********** Tables *************/
 

@@ -16,6 +16,7 @@ import UserInfoModal from "../common/modals/UserInfoModal";
 import AddCertificatesModal from "../common/modals/AddCertificatesModal";
 import EditDocumentListToRequestModal from "../common/modals/EditDocumentListToRequestModal";
 import ViewDocsReceivedCertificate from "../common/modals/ViewDocsReceivedCertificate";
+import SelectDocumentsToSendCertificateModal from "../common/modals/SelectDocumentsToSendCertificateModal";
 
 interface ModalContainerProps extends ModalProps {
   content: ModalContent;
@@ -23,7 +24,7 @@ interface ModalContainerProps extends ModalProps {
   showFooter?: boolean;
   className?: string;
   maskClosable?: boolean;
-  onClose: (e: React.SyntheticEvent<Element, Event>) => any;
+  onClose: (e?: React.SyntheticEvent<Element, Event>) => any;
 }
 
 export default function ModalContainer(props: ModalContainerProps) {
@@ -55,6 +56,7 @@ export default function ModalContainer(props: ModalContainerProps) {
           <RequirementModalOfferSelected
             offer={props.content.data.offer}
             requirement={props.content.data.requirement}
+            onSucces={props.content.data.onSuccess}
             onClose={props.onClose}
           />
         );
@@ -72,15 +74,14 @@ export default function ModalContainer(props: ModalContainerProps) {
           <RequirementModalRepublish
             requirementId={props.content.data.requirementId}
             onClose={props.onClose}
+            type={props.content.data.type}
           />
         );
       }
       case ModalTypes.RATE_CANCELED: {
         return (
           <RatingCanceledModal
-            user={props.content.data.user}
-            subUser={props.content.data.subUser}
-            requirementOfferTitle={props.content.data.requirementOfferTitle}
+            basicRateData={props.content.data.basicRateData}
             type={props.content.data.type}
             isOffer={props.content.data.isOffer}
             onClose={props.onClose}
@@ -91,9 +92,7 @@ export default function ModalContainer(props: ModalContainerProps) {
         return (
           <RatingModal
             onClose={props.onClose}
-            user={props.content.data.user}
-            subUser={props.content.data.subUser}
-            requirementOfferTitle={props.content.data.requirementOfferTitle}
+            basicRateData={props.content.data.basicRateData}
             type={props.content.data.type}
             isOffer={props.content.data.isOffer}
           />
@@ -105,6 +104,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             text={props.content.data.text}
             onClose={props.onClose}
             onAnswer={props.content.data.onAnswer}
+            loading={props.content.data.loading}
             icon={props.content.data.icon}
           />
         );
@@ -126,7 +126,12 @@ export default function ModalContainer(props: ModalContainerProps) {
         return <UserInfoModal user={props.content.data.user} />;
       }
       case ModalTypes.ADD_CERTIFICATES: {
-        return <AddCertificatesModal />;
+        return (
+          <AddCertificatesModal
+            onDocumentAdded={props.content.data?.onDocumentAdded}
+            onClose={props.onClose}
+          />
+        );
       }
       case ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST: {
         return <EditDocumentListToRequestModal />;
@@ -138,6 +143,13 @@ export default function ModalContainer(props: ModalContainerProps) {
             data={props.content.data.data}
             docs={props.content.data.docs}
             readOnly={props.content.data.readonly}
+          />
+        );
+      }
+      case ModalTypes.SELECT_DOCS_CERT: {
+        return (
+          <SelectDocumentsToSendCertificateModal
+            data={props.content.data.data}
           />
         );
       }

@@ -35,13 +35,18 @@ import TypeColumn from "./columns/TypeColumn";
 import ViewColumn from "./columns/ViewColumn";
 import DocumentColumn from "./columns/DocumentColumn";
 import { getLabelFromPurchaseOrderType } from "../../../utilities/globalFunctions";
+import { useNavigate } from "react-router-dom";
+import { pageRoutes } from "../../../utilities/routes";
 
 interface GeneralTableProps {
   content: TableType;
+  loading?: boolean;
+  onRowAction?: boolean;
 }
 
 export default function GeneralTable(props: GeneralTableProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const pageSizeOptions = pageSizeOptionsSt;
   let columns: Array<
     | ColumnType<Offer>
@@ -86,6 +91,12 @@ export default function GeneralTable(props: GeneralTableProps) {
         | BasicRequirement
         | BasicOffer
         | BasicPurchaseOrder
+      >
+    | ColumnType<
+        | SubUserProfile
+        | BaseRequirementOffer
+        | BasicPurchaseOrder
+        | CertificateFile
       >
     | ColumnType<
         | Requirement
@@ -138,7 +149,18 @@ export default function GeneralTable(props: GeneralTableProps) {
       getRequirementTableColumns();
       return (
         <Table
+          onRow={
+            props.onRowAction
+              ? (record: Requirement) => {
+                  return {
+                    onClick: () =>
+                      navigate(`${pageRoutes.productDetail}/${record.key}`),
+                  };
+                }
+              : undefined
+          }
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<Requirement>>}
           {...tableProps}
         ></Table>
@@ -148,6 +170,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<Offer>>}
           {...tableProps}
         ></Table>
@@ -157,6 +180,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<PurchaseOrder>>}
           {...tableProps}
         ></Table>
@@ -166,6 +190,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<SubUserProfile>>}
           {...tableProps}
         ></Table>
@@ -175,6 +200,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<RequirementItemSubUser>>}
           {...tableProps}
         ></Table>
@@ -184,6 +210,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<OfferItemSubUser>>}
           {...tableProps}
         ></Table>
@@ -193,6 +220,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<PurchaseOrderItemSubUser>>}
           {...tableProps}
         ></Table>
@@ -202,6 +230,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<BasicRequirement>>}
           {...tableProps}
         ></Table>
@@ -211,6 +240,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<BasicOffer>>}
           {...tableProps}
         ></Table>
@@ -220,6 +250,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<BasicPurchaseOrder>>}
           {...tableProps}
         ></Table>
@@ -229,6 +260,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<CertificateFile>>}
           {...tableProps}
         ></Table>
@@ -238,6 +270,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<CertificationItem>>}
           {...tableProps}
         ></Table>
@@ -247,6 +280,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       return (
         <Table
           dataSource={props.content.data}
+          loading={props.loading}
           columns={columns as Array<ColumnType<CertificationItem>>}
           {...tableProps}
         ></Table>
@@ -278,7 +312,6 @@ export default function GeneralTable(props: GeneralTableProps) {
       ActionColumn(
         props.content.type,
         props.content.onButtonClick,
-        null,
         visibility[TableColumns.ACTION]
       ),
     ];
@@ -311,33 +344,39 @@ export default function GeneralTable(props: GeneralTableProps) {
   }
 
   function getPurchaseOrderTableColumns() {
-    columns = [
-      NameColumn(
-        props.content.type,
-        props.content.nameColumnHeader,
-        visibility[TableColumns.NAME]
-      ),
-      GeneralColumnString(
-        t("requirement"),
-        "requirementTitle",
-        true,
-        130,
-        visibility[TableColumns.REQUIREMENT]
-      ),
-      GeneralDateColumn(
-        t("selectionDateAbbrev"),
-        "selectionDate",
-        visibility[TableColumns.SELECTION_DATE]
-      ),
-      TypeColumn(visibility[TableColumns.TYPE]),
-      StateColumn(props.content.type, visibility[TableColumns.STATE]),
-      ActionColumn(
-        props.content.type,
-        props.content.onButtonClick,
-        visibility[TableColumns.ACTION]
-      ),
-    ];
-    return columns;
+    if (props.content.type == TableTypes.PURCHASE_ORDER) {
+      columns = [
+        NameColumn(
+          props.content.type,
+          props.content.nameColumnHeader,
+          visibility[TableColumns.NAME],
+          props.content.subType
+        ),
+
+        GeneralColumnString(
+          t("requirement"),
+          "requirementTitle",
+          true,
+          130,
+          visibility[TableColumns.REQUIREMENT]
+        ),
+        GeneralDateColumn(
+          t("selectionDateAbbrev"),
+          "selectionDate",
+          visibility[TableColumns.SELECTION_DATE]
+        ),
+        TypeColumn(visibility[TableColumns.TYPE]),
+        StateColumn(props.content.type, visibility[TableColumns.STATE]),
+        ActionColumn(
+          props.content.type,
+          props.content.onButtonClick,
+          visibility[TableColumns.ACTION],
+          props.content.subType
+        ),
+      ];
+      return columns;
+    }
+    return [];
   }
 
   function getAllRequirementsTableColumns() {
@@ -398,44 +437,48 @@ export default function GeneralTable(props: GeneralTableProps) {
   }
 
   function getAllPurchaseOrdersTableColumns() {
-    columns = [
-      NameColumn(
-        props.content.type,
-        props.content.nameColumnHeader,
-        visibility[TableColumns.NAME]
-      ),
-      GeneralColumnString(
-        t("requirement"),
-        "requirementTitle",
-        true,
-        130,
-        visibility[TableColumns.REQUIREMENT]
-      ),
-      GeneralColumnString(
-        t("offer"),
-        "offerTitle",
-        true,
-        130,
-        visibility[TableColumns.OFFER]
-      ),
-      GeneralDateColumn(
-        t("publishDateAbbrev"),
-        "publishDate",
-        visibility[TableColumns.PUBLISH_DATE]
-      ),
-      TypeColumn(visibility[TableColumns.TYPE]),
-      DocumentColumn(
-        props.content.onButtonClick,
-        visibility[TableColumns.DOCUMENT]
-      ),
-      StateColumn(props.content.type, visibility[TableColumns.STATE]),
-      ViewColumn(
-        TableTypes.ALL_PURCHASE_ORDERS,
-        props.content.onButtonClick,
-        visibility[TableColumns.VIEW]
-      ),
-    ];
-    return columns;
+    if (props.content.type == TableTypes.ALL_PURCHASE_ORDERS) {
+      columns = [
+        NameColumn(
+          props.content.type,
+          props.content.nameColumnHeader,
+          visibility[TableColumns.NAME]
+        ),
+        GeneralColumnString(
+          t("requirement"),
+          "requirementTitle",
+          true,
+          130,
+          visibility[TableColumns.REQUIREMENT]
+        ),
+        GeneralColumnString(
+          t("offer"),
+          "offerTitle",
+          true,
+          130,
+          visibility[TableColumns.OFFER]
+        ),
+        GeneralDateColumn(
+          t("publishDateAbbrev"),
+          "publishDate",
+          visibility[TableColumns.PUBLISH_DATE]
+        ),
+        TypeColumn(visibility[TableColumns.TYPE]),
+        DocumentColumn(
+          props.content.onButtonClick,
+          visibility[TableColumns.DOCUMENT]
+        ),
+        StateColumn(props.content.type, visibility[TableColumns.STATE]),
+        ViewColumn(
+          TableTypes.ALL_PURCHASE_ORDERS,
+          props.content.onButtonClick,
+          visibility[TableColumns.VIEW]
+        ),
+      ];
+
+      return columns;
+    }
+    return [];
   }
 
   function getUsersTableColumns() {
@@ -607,13 +650,14 @@ export default function GeneralTable(props: GeneralTableProps) {
 
   function getMyDocumentsCertificateColumns() {
     columns = [
-      GeneralColumnString(
-        t("name"),
-        "name",
-        true,
-        130,
-        visibility[TableColumns.NAME]
-      ),
+      // GeneralColumnString(
+      //   t("name"),
+      //   "name",
+      //   true,
+      //   130,
+      //   visibility[TableColumns.NAME]
+      // ),
+      NameColumn(props.content.type, t("name"), visibility[TableColumns.NAME]),
       GeneralColumnString(
         t("document"),
         "documentName",

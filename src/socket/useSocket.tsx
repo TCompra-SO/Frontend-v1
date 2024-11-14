@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
-import { ApiMainRoutes, ApiRoutes } from "../utilities/routes";
 import { transformDataToRequirement } from "../utilities/transform";
 import { EntityType, RequirementType } from "../utilities/types";
 import { BaseUser, Requirement } from "../models/MainInterfaces";
@@ -19,19 +18,22 @@ const user: BaseUser = {
   tenure: 3,
   customerCount: 0,
   sellerCount: 0,
+  document: "1111222",
 };
 
 export default function useSocket() {
-  const [requeriments, setRequeriments] = useState<Requirement[]>([]);
+  const [requirements, setRequirements] = useState<Requirement[]>([]);
+  const [loading, setLoading] = useState(false);
   const socketAPI = io(import.meta.env.VITE_SOCKET_URL);
 
   useEffect(() => {
     async function fetchData() {
+      setLoading(true);
       const { responseData }: any = await makeRequest({
         service: getRequirementsService(),
         method: "get",
       });
-      console.log(responseData);
+      // console.log(responseData);
       if (responseData) {
         const data = await Promise.all(
           responseData.data.map(
@@ -44,10 +46,12 @@ export default function useSocket() {
               )
           )
         );
-        setRequeriments(data);
+        setRequirements(data);
       }
+      setLoading(false);
 
       socketAPI.on("getRequeriments", async () => {
+        setLoading(true);
         const { responseData }: any = await makeRequest({
           service: getRequirementsService(),
           method: "get",
@@ -64,8 +68,9 @@ export default function useSocket() {
                 )
             )
           );
-          setRequeriments(data);
+          setRequirements(data);
         }
+        setLoading(false);
       });
     }
 
@@ -76,5 +81,5 @@ export default function useSocket() {
       socketAPI.off("getRequeriments");
     };
   }, []);
-  return requeriments;
+  return { requirements, loading };
 }

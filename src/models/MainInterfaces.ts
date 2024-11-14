@@ -31,6 +31,9 @@ export interface BasicRequirement extends BaseRequirementOffer {
   price: number;
   numberOffers: number;
   state: RequirementState;
+  offerId?: string;
+  offerUserId?: string;
+  offerSubUserId?: string;
 }
 
 export interface Requirement extends BasicRequirement {
@@ -70,11 +73,31 @@ export interface Offer extends BasicOffer {
   deliveryDate?: string;
   delivered?: boolean;
   canceledByCreator?: boolean;
+  includesDelivery?: boolean;
 }
 
 export interface BasicPurchaseOrder extends BaseInterface {
-  user: User;
-  subUser?: User;
+  userClientId: string;
+  userNameClient: string;
+  subUserClientId: string;
+  subUserNameClient: string;
+  addressClient: string;
+  documentClient: string;
+
+  userProviderId: string;
+  userNameProvider: string;
+  subUserProviderId: string;
+  subUserNameProvider: string;
+  addressProvider: string;
+  documentProvider: string;
+  emailProvider: string;
+
+  deliveryDate: string;
+  price: number;
+  subTotal: number;
+  igv: number;
+  total: number;
+
   requirementTitle: string;
   requirementId: string;
   selectionDate: string;
@@ -98,6 +121,7 @@ export interface BaseUser {
   name: string;
   document: string;
   image?: string;
+  avatar?: string;
   email: string;
   tenure?: number;
   customerScore?: number;
@@ -178,4 +202,14 @@ export interface PlanData {
   services: number;
   sales: number;
   offers: number;
+}
+
+export interface BasicRateData {
+  uid: string;
+  title: string;
+  userId: string;
+  userName: string;
+  userImage?: string;
+  subUserId?: string;
+  subUserName?: string;
 }

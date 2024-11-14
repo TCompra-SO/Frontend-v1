@@ -161,7 +161,7 @@ const reqs: RequirementItemSubUser[] = [
     expirationDate: "2024-10-12T16:36:45.673Z",
     numberOffers: 2,
     state: RequirementState.PUBLISHED,
-    key: "1",
+    key: "2",
     title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
     type: RequirementType.GOOD,
     coin: 1,
@@ -172,7 +172,7 @@ const reqs: RequirementItemSubUser[] = [
     expirationDate: "2024-10-12T16:36:45.673Z",
     numberOffers: 2,
     state: RequirementState.PUBLISHED,
-    key: "1",
+    key: "3",
     title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
     type: RequirementType.GOOD,
     coin: 1,
@@ -183,7 +183,7 @@ const reqs: RequirementItemSubUser[] = [
     expirationDate: "2024-10-12T16:36:45.673Z",
     numberOffers: 2,
     state: RequirementState.PUBLISHED,
-    key: "1",
+    key: "4",
     title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
     type: RequirementType.GOOD,
     coin: 1,
@@ -194,7 +194,7 @@ const reqs: RequirementItemSubUser[] = [
     expirationDate: "2024-10-12T16:36:45.673Z",
     numberOffers: 2,
     state: RequirementState.PUBLISHED,
-    key: "1",
+    key: "5",
     title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
     type: RequirementType.GOOD,
     coin: 1,
@@ -205,7 +205,7 @@ const reqs: RequirementItemSubUser[] = [
     expirationDate: "2024-10-12T16:36:45.673Z",
     numberOffers: 2,
     state: RequirementState.PUBLISHED,
-    key: "1",
+    key: "6",
     title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
     type: RequirementType.GOOD,
     coin: 1,
@@ -216,7 +216,7 @@ const reqs: RequirementItemSubUser[] = [
     expirationDate: "2024-10-12T16:36:45.673Z",
     numberOffers: 2,
     state: RequirementState.PUBLISHED,
-    key: "1",
+    key: "7",
     title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
     type: RequirementType.GOOD,
     coin: 1,
@@ -483,6 +483,11 @@ export default function Users() {
             </ButtonContainer>
           </div>
         }
+        // loading={
+        //   equalServices(apiParams.service, getRequirementsService())
+        //     ? loading
+        //     : undefined
+        // }
       />
     </>
   );

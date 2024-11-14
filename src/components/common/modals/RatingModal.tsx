@@ -2,24 +2,29 @@ import { App, Tooltip } from "antd";
 import { RequirementType, YesNo, UserClass } from "../../../utilities/types";
 import SelectContainer from "../../containers/SelectContainer";
 import RatingContainer from "../../containers/RatingContainer";
-import { BaseUser } from "../../../models/MainInterfaces";
-import { getUserClass } from "../../../utilities/globalFunctions";
+import { BasicRateData } from "../../../models/MainInterfaces";
+import {
+  calculateFinalScore,
+  getUserClass,
+} from "../../../utilities/globalFunctions";
 import ButtonContainer from "../../containers/ButtonContainer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import showNotification from "../../../utilities/notification/showNotification";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
 import FrontImage from "../FrontImage";
 import SubUserName from "../SubUserName";
+import { useApiParams } from "../../../models/Interfaces";
+import { RegisterScoreRequest } from "../../../models/Requests";
+import useApi from "../../../hooks/useApi";
+import { registerScoreService } from "../../../services/requests/scoreService";
 
 interface RatingModalProps {
-  user: BaseUser;
-  subUser: BaseUser | undefined;
-  requirementOfferTitle: string;
+  basicRateData: BasicRateData;
   type: RequirementType;
   isOffer: boolean;
-  onClose: (e: React.SyntheticEvent<Element, Event>) => any;
+  onClose: () => any;
 }
 
 export default function RatingModal(props: RatingModalProps) {
@@ -85,6 +90,34 @@ export default function RatingModal(props: RatingModalProps) {
     ],
   };
 
+  const [apiParams, setApiParams] = useState<
+    useApiParams<RegisterScoreRequest>
+  >({
+    service: null,
+    method: "get",
+  });
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi<RegisterScoreRequest>({
+      service: apiParams.service,
+      method: apiParams.method,
+      dataToSend: apiParams.dataToSend,
+    });
+
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      showNotification(notification, "success", t("scoreSavedSuccessfully"));
+      props.onClose();
+    } else if (error) {
+      showNotification(notification, "error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
+
   function onScoreChange(position: number, score: number) {
     const copy = scores;
     copy[position] = score;
@@ -95,17 +128,25 @@ export default function RatingModal(props: RatingModalProps) {
     setAnswer(answer);
   }
 
-  function closeModal(e: React.SyntheticEvent<Element, Event>) {
-    props.onClose(e);
-  }
-
-  function rateUser(e: React.SyntheticEvent<Element, Event>) {
+  function rateUser() {
     if (answer === null || scores[0] == 0 || scores[1] == 0 || scores[2] == 0) {
       showNotification(notification, "info", t("mustAnswerAllQuestions"));
       return;
     }
-    console.log(props.user.uid, uid, scores, answer);
-    props.onClose(e);
+
+    const data: RegisterScoreRequest = {
+      typeScore: userClass == UserClass.CUSTOMER ? "Client" : "Provider",
+      uidEntity: props.basicRateData.userId,
+      uidUser: uid,
+      score: calculateFinalScore(scores),
+      comments: "",
+    };
+    console.log(data);
+    setApiParams({
+      service: registerScoreService(),
+      method: "post",
+      dataToSend: data,
+    });
   }
 
   return (
@@ -124,20 +165,27 @@ export default function RatingModal(props: RatingModalProps) {
         <div className="card-ofertas">
           <div className="t-flex">
             <div className="t-flex oferta-titulo">
-              <FrontImage small image={props.user.image} isUser={true} />
+              <FrontImage
+                small
+                image={props.basicRateData.userImage}
+                isUser={true}
+              />
               <div className="oferta-usuario">
                 <div className="oferta-datos  m-0">
-                  <Tooltip title={props.user.name}>
+                  <Tooltip title={props.basicRateData.userName}>
                     <div className="usuario-name text-truncate">
-                      {props.user.name}
+                      {props.basicRateData.userName}
                     </div>
                   </Tooltip>
-                  <SubUserName small subUser={props.subUser} />
+                  <SubUserName
+                    small
+                    subUserName={props.basicRateData.subUserName}
+                  />
                 </div>
                 <div className="t-flex oferta-descripcion">
-                  <Tooltip title={props.requirementOfferTitle}>
+                  <Tooltip title={props.basicRateData.title}>
                     <div className="text-truncate detalles-oferta">
-                      {props.requirementOfferTitle}
+                      {props.basicRateData.title}
                     </div>
                   </Tooltip>
                 </div>
@@ -194,11 +242,12 @@ export default function RatingModal(props: RatingModalProps) {
             children={t("submit")}
             className="btn btn-default wd-100"
             onClick={rateUser}
+            loading={loading}
           />
           <ButtonContainer
             children={t("cancelButton")}
             className="btn btn-second wd-100"
-            onClick={closeModal}
+            onClick={props.onClose}
           />
         </div>
       </div>

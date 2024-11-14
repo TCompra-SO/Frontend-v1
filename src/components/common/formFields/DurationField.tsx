@@ -6,6 +6,7 @@ import { TimeMeasurement } from "../../../utilities/types";
 interface DurationFieldProps {
   required: boolean;
   name: string;
+  onlyItem?: boolean;
 }
 
 export default function DurationField(props: DurationFieldProps) {
@@ -19,7 +20,7 @@ export default function DurationField(props: DurationFieldProps) {
       rules={[{ required: props.required }]}
     >
       <SelectContainer
-        placeholder={t("select")}
+        placeholder={t(props.onlyItem ? "duration" : "select")}
         className="form-control"
         style={{ width: "100%" }}
         options={[

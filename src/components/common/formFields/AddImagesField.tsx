@@ -10,16 +10,17 @@ import {
 import { RcFile, UploadChangeParam } from "antd/lib/upload";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  maxImageSizeMb,
-  maxImagesQuantity,
-} from "../../../../utilities/globals";
-import { checkImage } from "../../../../utilities/globalFunctions";
-import showNotification from "../../../../utilities/notification/showNotification";
+import { maxImageSizeMb, maxImagesQuantity } from "../../../utilities/globals";
+import { checkImage } from "../../../utilities/globalFunctions";
+import showNotification from "../../../utilities/notification/showNotification";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
-export default function AddImagesRC() {
+export default function AddImagesField({
+  forOffer = false,
+}: {
+  forOffer?: boolean;
+}) {
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -43,12 +44,12 @@ export default function AddImagesRC() {
     });
 
   function handleChange(info: UploadChangeParam<UploadFile<any>>) {
-    let newFileList = [...info.fileList];
+    // let newFileList = [...info.fileList];
 
     // 1. Limit the number of uploaded files
     // Only to show two recent uploaded files, and old ones will be replaced by the new
-    newFileList = newFileList.slice(-maxImagesQuantity);
-    setFileList(newFileList);
+    // newFileList = newFileList.slice(-maxImagesQuantity);
+    setFileList(info.fileList);
   }
 
   async function handlePreview(file: UploadFile) {
@@ -61,6 +62,10 @@ export default function AddImagesRC() {
   }
 
   function checkImageBeforeUpload(file: RcFile) {
+    if (fileList.length == maxImagesQuantity) {
+      showNotification(notification, "error", `${t("maxNumberImagesReached")}`);
+      return Upload.LIST_IGNORE;
+    }
     const { validImage, validSize } = checkImage(file);
     if (!validImage)
       showNotification(
@@ -80,10 +85,10 @@ export default function AddImagesRC() {
 
   return (
     <>
-      <div className="hide-upload">
+      <div className="hide-upload" style={forOffer ? { width: "100%" } : {}}>
         <div
-          className="multimedia-subir"
-          style={{ marginBottom: "15px" }}
+          className={forOffer ? "multimedia-files" : "multimedia-subir"}
+          style={forOffer ? {} : { marginBottom: "15px" }}
           onClick={handleClick}
         >
           <i className="fa-regular fa-images"></i> {t("addImages")}
@@ -94,6 +99,7 @@ export default function AddImagesRC() {
             multiple={true}
             onChange={handleChange}
             fileList={fileList}
+            maxCount={maxImagesQuantity}
             listType="picture-card"
             onPreview={handlePreview}
             style={{ display: "none" }}

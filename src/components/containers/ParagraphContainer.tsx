@@ -4,5 +4,5 @@ import { ParagraphProps } from "antd/lib/typography/Paragraph";
 interface ParagraphContainerProps extends ParagraphProps {}
 
 export default function ParagraphContainer(props: ParagraphContainerProps) {
-  return <Paragraph {...props}>{props.children}</Paragraph>;
+  return <Paragraph {...props} />;
 }

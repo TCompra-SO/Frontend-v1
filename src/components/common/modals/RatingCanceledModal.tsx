@@ -1,5 +1,5 @@
 import { App, Tooltip } from "antd";
-import { BaseUser } from "../../../models/MainInterfaces";
+import { BasicRateData } from "../../../models/MainInterfaces";
 import {
   Action,
   ActionLabel,
@@ -7,44 +7,87 @@ import {
   UserClass,
 } from "../../../utilities/types";
 import RatingContainer from "../../containers/RatingContainer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ButtonContainer from "../../containers/ButtonContainer";
-import { getUserClass } from "../../../utilities/globalFunctions";
+import {
+  calculateFinalScore,
+  getUserClass,
+} from "../../../utilities/globalFunctions";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
 import showNotification from "../../../utilities/notification/showNotification";
 import FrontImage from "../FrontImage";
 import SubUserName from "../SubUserName";
+import { useApiParams } from "../../../models/Interfaces";
+import { RegisterScoreRequest } from "../../../models/Requests";
+import useApi from "../../../hooks/useApi";
+import { registerScoreService } from "../../../services/requests/scoreService";
 
 interface RatingCanceledModalProps {
-  user: BaseUser;
-  subUser: BaseUser | undefined;
-  requirementOfferTitle: string;
+  basicRateData: BasicRateData;
   type: RequirementType;
   isOffer: boolean;
-  onClose: (e: React.SyntheticEvent<Element, Event>) => any;
+  onClose: () => any;
 }
 
 export default function RatingCanceledModal(props: RatingCanceledModalProps) {
   const { t } = useTranslation();
   const [score, setScore] = useState(0);
   const { notification } = App.useApp();
-  const uid = useSelector((state: MainState) => state.mainUser.uid);
-
+  const uid = useSelector((state: MainState) => state.user.uid);
   const userClass: UserClass = getUserClass(props.isOffer, props.type);
+
+  const [apiParams, setApiParams] = useState<
+    useApiParams<RegisterScoreRequest>
+  >({
+    service: null,
+    method: "get",
+  });
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi<RegisterScoreRequest>({
+      service: apiParams.service,
+      method: apiParams.method,
+      dataToSend: apiParams.dataToSend,
+    });
+
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      showNotification(notification, "success", t("scoreSavedSuccessfully"));
+      props.onClose();
+    } else if (error) {
+      showNotification(notification, "error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
 
   function onScoreChange(score: number) {
     setScore(score);
   }
 
-  function saveScore(e: React.SyntheticEvent<Element, Event>) {
+  function saveScore() {
     if (score == 0) {
       showNotification(notification, "info", t("mustAnswerQuestion"));
       return;
     }
-    console.log(score, props.user.uid, "uid", uid);
-    props.onClose(e);
+
+    const data: RegisterScoreRequest = {
+      typeScore: userClass == UserClass.CUSTOMER ? "Client" : "Provider",
+      uidEntity: props.basicRateData.userId,
+      uidUser: uid,
+      score: calculateFinalScore([score]),
+    };
+
+    setApiParams({
+      service: registerScoreService(),
+      method: "post",
+      dataToSend: data,
+    });
   }
 
   return (
@@ -59,20 +102,27 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
         <div className="card-ofertas">
           <div className="t-flex">
             <div className="t-flex oferta-titulo">
-              <FrontImage small image={props.user.image} isUser={true} />
+              <FrontImage
+                small
+                image={props.basicRateData.userImage}
+                isUser={true}
+              />
               <div className="oferta-usuario">
                 <div className="oferta-datos m-0">
-                  <Tooltip title={props.user.name}>
+                  <Tooltip title={props.basicRateData.userName}>
                     <div className="usuario-name text-truncate">
-                      {props.user.name}
+                      {props.basicRateData.userName}
                     </div>
                   </Tooltip>
-                  <SubUserName small subUser={props.subUser} />
+                  <SubUserName
+                    small
+                    subUserName={props.basicRateData.subUserName}
+                  />
                 </div>
                 <div className="t-flex oferta-descripcion">
-                  <Tooltip title={props.requirementOfferTitle}>
+                  <Tooltip title={props.basicRateData.title}>
                     <div className="text-truncate detalles-oferta">
-                      {props.requirementOfferTitle}
+                      {props.basicRateData.title}
                     </div>
                   </Tooltip>
                 </div>
@@ -93,6 +143,7 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
         <div className="t-flex gap-15">
           <ButtonContainer
             onClick={saveScore}
+            loading={loading}
             children={t("submit")}
             className="btn btn-default wd-100"
           />
@@ -103,23 +154,6 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
           />
         </div>
       </div>
-      {/* <Flex align="center" style={style} justify="center">
-        <b>
-          {`${
-            userClass == UserClass.CUSTOMER
-              ? `${t("customer").toUpperCase()}:`
-              : `${t("seller").toUpperCase()}:`
-          } ${props.user.name}`}
-        </b>
-      </Flex>
-      <Flex align="center" justify="center" style={style}>
-        {props.isOffer
-          ? `${t("offer").toUpperCase()}: `
-          : props.type == RequirementType.SALE
-          ? `${t("sale").toUpperCase()}: `
-          : `${t("requirement").toUpperCase()}: `}
-        {props.requirementOfferTitle}
-      </Flex> */}
     </div>
   );
 }

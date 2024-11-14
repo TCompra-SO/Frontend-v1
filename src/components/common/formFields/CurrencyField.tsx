@@ -5,7 +5,12 @@ import { ListsContext } from "../../../contexts/listsContext";
 import SelectContainer from "../../containers/SelectContainer";
 import { getListForSelectIdValueMap } from "../../../utilities/globalFunctions";
 
-export default function CurrencyField() {
+interface CurrencyFieldProps {
+  disabled?: boolean;
+  onlyItem?: boolean;
+}
+
+export default function CurrencyField(props: CurrencyFieldProps) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { currencyData } = context;
@@ -18,9 +23,10 @@ export default function CurrencyField() {
       rules={[{ required: true }]}
     >
       <SelectContainer
-        placeholder={t("select")}
+        placeholder={t(props.onlyItem ? "currency" : "select")}
         className="form-control"
         options={getListForSelectIdValueMap(currencyData)}
+        disabled={props.disabled}
       />
     </Form.Item>
   );
