@@ -45,3 +45,21 @@ export function getBasicRateDataOfferService(id: string): HttpService {
     type: "OF-BA-RA",
   };
 }
+
+export function getOffersByEntityService(id: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+      ApiRoutes.offers.getOffersByEntity
+    }${id}`,
+    type: "OF-GET-ENT",
+  };
+}
+
+export function getOffersBySubUserService(id: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+      ApiRoutes.offers.getOffersBySubUser
+    }${id}`,
+    type: "OF-GET-SUB",
+  };
+}

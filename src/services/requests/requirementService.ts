@@ -66,3 +66,21 @@ export function republishRequirementService(): HttpService {
     type: "RE-REP",
   };
 }
+
+export function getRequirementsByEntity(id: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.requirements
+    }${ApiRoutes.requirements.getRequirementsByEntity}${id}`,
+    type: "RE-GET-ENT",
+  };
+}
+
+export function getRequirementsBySubUser(id: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.requirements
+    }${ApiRoutes.requirements.getRequirementsBySubUser}${id}`,
+    type: "RE-GET-SUB",
+  };
+}
