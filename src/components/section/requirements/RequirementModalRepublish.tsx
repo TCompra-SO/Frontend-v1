@@ -70,7 +70,7 @@ export default function RequirementModalRepublish(
     setNewDate(date);
   }
 
-  function republishRequirement(e: React.SyntheticEvent<Element, Event>) {
+  function republishRequirement() {
     if (!newDate) {
       showNotification(notification, "error", t("enterAValidDate"));
       return;
