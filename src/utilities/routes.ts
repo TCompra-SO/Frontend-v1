@@ -60,6 +60,8 @@ export const ApiRoutes = {
     create: "create/",
     selectOffer: "selectOffer/",
     getBasicRateData: "getBasicRateData/",
+    delete: "delete/",
+    republish: "republish/",
   },
   requirement: {
     create: "create/",

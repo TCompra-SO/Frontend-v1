@@ -74,6 +74,7 @@ export default function ModalContainer(props: ModalContainerProps) {
           <RequirementModalRepublish
             requirementId={props.content.data.requirementId}
             onClose={props.onClose}
+            type={props.content.data.type}
           />
         );
       }
@@ -103,6 +104,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             text={props.content.data.text}
             onClose={props.onClose}
             onAnswer={props.content.data.onAnswer}
+            loading={props.content.data.loading}
             icon={props.content.data.icon}
           />
         );

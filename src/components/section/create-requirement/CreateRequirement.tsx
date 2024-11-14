@@ -18,7 +18,7 @@ import { useApiParams } from "../../../models/Interfaces";
 import useApi from "../../../hooks/useApi";
 import {
   equalServices,
-  isDateEarlierThanToday,
+  isDateEarlierThanTomorrow,
 } from "../../../utilities/globalFunctions";
 import { createRequirementService } from "../../../services/requests/requirementService";
 import showNotification from "../../../utilities/notification/showNotification";
@@ -433,7 +433,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
               <LabelForCreateRequirement label={"expirationDate"} />
               <DateField
                 name={"expirationDate"}
-                disabledDate={isDateEarlierThanToday}
+                disabledDate={isDateEarlierThanTomorrow}
               />
             </Col>
             <Col xs={24} sm={24} md={6} lg={6} xl={6}>

@@ -136,3 +136,8 @@ export interface SelectOfferRequest {
   location_Filter: number;
   warranty_Filter: CommonFilter;
 }
+
+export interface RepublishRequest {
+  uid: string;
+  completion_date: string;
+}

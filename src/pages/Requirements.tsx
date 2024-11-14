@@ -18,7 +18,10 @@ import { useTranslation } from "react-i18next";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import { mainModalScrollStyle } from "../utilities/globals";
 import useApi from "../hooks/useApi";
-import { getRequirementsService } from "../services/requests/requirementService";
+import {
+  deleteRequirementService,
+  getRequirementsService,
+} from "../services/requests/requirementService";
 import {
   transformDataToRequirement,
   transformToBaseUser,
@@ -60,14 +63,14 @@ export default function Requirements() {
   });
   const [tableContent, setTableContent] = useState<TableTypeRequirement>({
     type: TableTypes.REQUIREMENT,
-    data: [], //requirements
+    data: [],
     subType: type,
     hiddenColumns: [TableColumns.CATEGORY],
     nameColumnHeader: t(getLabelFromRequirementType(type)),
     onButtonClick: handleOnButtonClick,
   });
 
-  // Obtener lista inicialmente y obtener ofertas
+  /* Obtener lista inicialmente y obtener ofertas */
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: getRequirementsService(),
     method: "get",
@@ -125,6 +128,7 @@ export default function Requirements() {
   }, [loading]);
 
   /* Obtener datos para culminar */
+
   const [apiParamsRate, setApiParamsRate] = useState<useApiParams>({
     service: null,
     method: "get",
@@ -160,6 +164,53 @@ export default function Requirements() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataRate, errorRate]);
+
+  /* Para eliminar */
+
+  const [apiParamsDelete, setApiParamsDelete] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingDelete,
+    responseData: responseDataDelete,
+    error: errorDelete,
+    errorMsg: errorMsgDelete,
+    fetchData: fetchDataDelete,
+  } = useApi({
+    service: apiParamsDelete.service,
+    method: apiParamsDelete.method,
+    dataToSend: apiParamsDelete.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingDelete);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingDelete]);
+
+  useEffect(() => {
+    if (apiParamsDelete.service) fetchDataDelete();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsDelete]);
+
+  useEffect(() => {
+    if (responseDataDelete) {
+      showNotification(
+        notification,
+        "success",
+        t(
+          type == RequirementType.SALE
+            ? "saleDeletedSuccessfully"
+            : "requirementDeletedSuccessfully"
+        )
+      );
+      handleCloseModal();
+    } else if (errorDelete) {
+      showNotification(notification, "error", errorMsgDelete);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataDelete, errorDelete]);
 
   /** Funciones */
 
@@ -268,10 +319,9 @@ export default function Requirements() {
         break;
       }
       case Action.REPUBLISH: {
-        // r3v
         setDataModal({
           type: ModalTypes.REPUBLISH_REQUIREMENT,
-          data: { requirementId: requirement.key },
+          data: { requirementId: requirement.key, type: requirement.type },
         });
         setIsOpenModal(true);
         break;
@@ -285,10 +335,10 @@ export default function Requirements() {
         break;
       }
       case Action.DELETE: {
-        // r3v
         setDataModal({
           type: ModalTypes.CONFIRM,
           data: {
+            loading: loadingDelete,
             onAnswer: (ok: boolean) => {
               if (!ok) return;
               deleteRequirement(requirement.key);
@@ -323,6 +373,10 @@ export default function Requirements() {
 
   function deleteRequirement(requirementId: string) {
     console.log("eliminarreq", requirementId);
+    setApiParamsDelete({
+      service: deleteRequirementService(requirementId),
+      method: "get",
+    });
   }
 
   function handleSearch(e: ChangeEvent<HTMLInputElement>) {

@@ -78,7 +78,7 @@ export interface ModalRateUser extends CommonModalType {
 
 export interface ModalRepublishRequirement extends CommonModalType {
   type: ModalTypes.REPUBLISH_REQUIREMENT;
-  data: { requirementId: string };
+  data: { requirementId: string; type: RequirementType };
 }
 
 export interface ModalSelectOffer extends CommonModalType {
@@ -101,6 +101,7 @@ export interface ModalConfirmation extends CommonModalType {
     text: string;
     icon?: ReactNode;
     onAnswer: (ok: boolean) => void;
+    loading?: boolean;
   };
 }
 

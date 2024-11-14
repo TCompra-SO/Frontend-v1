@@ -63,6 +63,13 @@ export function isDateEarlierThanToday(current: any) {
   return current && dayjs(current).isBefore(dayjs().startOf("day"));
 }
 
+// Verifica si fecha es menor a mañana
+export function isDateEarlierThanTomorrow(current: any) {
+  return (
+    current && dayjs(current).isBefore(dayjs().add(1, "day").startOf("day"))
+  );
+}
+
 // Transforma objeto de datos de lista en lista para select de Antd
 export function getListForSelectIdValueMap(data: IdValueMap) {
   return Object.entries(data).map(([id, { value }]) => ({

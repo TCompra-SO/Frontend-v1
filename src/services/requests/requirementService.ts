@@ -48,3 +48,21 @@ export function getBasicRateDataReqService(id: string): HttpService {
     type: "RE-BA-RA",
   };
 }
+
+export function deleteRequirementService(id: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.requirements
+    }${ApiRoutes.requirements.delete}${id}`,
+    type: "RE-DEL",
+  };
+}
+
+export function republishRequirementService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.requirements
+    }${ApiRoutes.requirements.republish}`,
+    type: "RE-REP",
+  };
+}
