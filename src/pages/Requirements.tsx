@@ -372,7 +372,6 @@ export default function Requirements() {
   }
 
   function deleteRequirement(requirementId: string) {
-    console.log("eliminarreq", requirementId);
     setApiParamsDelete({
       service: deleteRequirementService(requirementId),
       method: "get",

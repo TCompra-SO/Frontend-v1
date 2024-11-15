@@ -16,7 +16,10 @@ import {
   getRouteType,
 } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
-import { getOffersBySubUserService } from "../services/requests/offerService";
+import {
+  deleteOfferService,
+  getOffersBySubUserService,
+} from "../services/requests/offerService";
 import useApi from "../hooks/useApi";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
@@ -53,6 +56,8 @@ export default function Offers() {
     onButtonClick: handleOnButtonClick,
   });
 
+  /** Cargar datos iniciales */
+
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: getOffersBySubUserService(dataUser.uid),
     method: "get",
@@ -79,6 +84,47 @@ export default function Offers() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
+
+  /* Para eliminar */
+
+  const [apiParamsDelete, setApiParamsDelete] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingDelete,
+    responseData: responseDataDelete,
+    error: errorDelete,
+    errorMsg: errorMsgDelete,
+    fetchData: fetchDataDelete,
+  } = useApi({
+    service: apiParamsDelete.service,
+    method: apiParamsDelete.method,
+    dataToSend: apiParamsDelete.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingDelete);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingDelete]);
+
+  useEffect(() => {
+    if (apiParamsDelete.service) fetchDataDelete();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsDelete]);
+
+  useEffect(() => {
+    if (responseDataDelete) {
+      showNotification(notification, "success", t("offerDeletedSuccessfully"));
+      handleCloseModal();
+    } else if (errorDelete) {
+      showNotification(notification, "error", errorMsgDelete);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataDelete, errorDelete]);
+
+  /********** */
 
   useEffect(() => {
     setType(getRouteType(location.pathname));
@@ -157,6 +203,10 @@ export default function Offers() {
 
   function deleteOffer(offerId: string) {
     console.log("deleteOffer", offerId);
+    setApiParamsDelete({
+      service: deleteOfferService(offerId),
+      method: "get",
+    });
   }
 
   function goToChat(offer: Offer) {
@@ -197,6 +247,7 @@ export default function Offers() {
         setDataModal({
           type: ModalTypes.CONFIRM,
           data: {
+            loading: loadingDelete,
             onAnswer: (ok: boolean) => {
               if (!ok) return;
               deleteOffer(offer.key);

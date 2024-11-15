@@ -265,6 +265,7 @@ const resources = {
       saleRepublishedSuccessfully: "Sale republished successfully",
       requirementRepublishedSuccessfully: "Requirement republished successfully",
       selectNewDateForRepublishment: "Select a new expiration date",
+      offerDeletedSuccessfully: "Offer deleted successfully",
       // Other
       yes: "Yes",
       no: "No",
@@ -681,6 +682,7 @@ const resources = {
       saleRepublishedSuccessfully: "Liquidación republicada exitosamente",
       requirementRepublishedSuccessfully: "Requerimiento republicado exitosamente",
       selectNewDateForRepublishment: "Selecciona una nueva fecha de expiración",
+      offerDeletedSuccessfully: "Oferta eliminada exitosamente",
       // Other
       yes: "Sí",
       no: "No",

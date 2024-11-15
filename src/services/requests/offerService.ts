@@ -65,3 +65,12 @@ export function getOffersBySubUserService(id: string): HttpService {
     type: "OF-GET-SUB",
   };
 }
+
+export function deleteOfferService(id: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+      ApiRoutes.offers.delete
+    }${id}`,
+    type: "OF-DEL",
+  };
+}
