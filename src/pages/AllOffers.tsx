@@ -10,8 +10,8 @@ import {
   TableTypes,
   TimeMeasurement,
 } from "../utilities/types";
-import { BasicOffer, Offer } from "../models/MainInterfaces";
-import {
+import { BaseUser, BasicOffer, Offer } from "../models/MainInterfaces";
+import makeRequest, {
   equalServices,
   getLabelFromRequirementType,
   getRouteType,
@@ -20,6 +20,11 @@ import { useLocation } from "react-router-dom";
 import useApi from "../hooks/useApi";
 import { App } from "antd";
 import showNotification from "../utilities/notification/showNotification";
+import { getOffersByEntityService } from "../services/requests/offerService";
+import { useSelector } from "react-redux";
+import { MainState } from "../models/Redux";
+import { transformToBaseUser, transformToOffer } from "../utilities/transform";
+import { getBaseDataUserService } from "../services/requests/authService";
 
 const offerList: Offer[] = [
   {
@@ -390,40 +395,47 @@ export default function AllOffers() {
   const { t } = useTranslation();
   const location = useLocation();
   const { notification, message } = App.useApp();
+  const dataUser = useSelector((state: MainState) => state.user);
+  const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const [type, setType] = useState(getRouteType(location.pathname));
   const [tableContent, setTableContent] = useState<TableTypeAllOffers>({
     type: TableTypes.ALL_OFFERS,
-    data: offerList, //[]
+    data: [],
     hiddenColumns: [],
-    nameColumnHeader: t("goods"),
+    nameColumnHeader: t("offers"),
     onButtonClick: handleOnButtonClick,
   });
 
-  // const [apiParams, setApiParams] = useState<useApiParams>({
-  //   service: getOffersService(),
-  //   method: "get",
-  // });
+  /** Obtener datos de tabla */
 
-  // const { loading, responseData, error, errorMsg, fetchData } = useApi({
-  //   service: apiParams.service,
-  //   method: apiParams.method,
-  //   dataToSend: apiParams.dataToSend,
-  // });
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: getOffersByEntityService(dataUser.uid),
+    method: "get",
+  });
 
-  // useEffect(() => {
-  //   if (apiParams.service) fetchData();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [apiParams]);
+  const { loading, responseData, error, errorMsg, fetchData } = useApi({
+    service: apiParams.service,
+    method: apiParams.method,
+    dataToSend: apiParams.dataToSend,
+  });
 
-  // useEffect(() => {
-  //   if (responseData) {
-  //     if (equalServices(apiParams.service, getOffersService())) setData();
-  //   } else if (error) {
-  //     if (equalServices(apiParams.service, getOffersService()))
-  //       showNotification(notification, "error", errorMsg);
-  //   }
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [responseData, error]);
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      if (equalServices(apiParams.service, getOffersByEntityService("")))
+        setData();
+    } else if (error) {
+      if (equalServices(apiParams.service, getOffersByEntityService("")))
+        showNotification(notification, "error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
+
+  /******** */
 
   useEffect(() => {
     setType(getRouteType(location.pathname));
@@ -434,10 +446,40 @@ export default function AllOffers() {
       return {
         ...prev,
         subType: type,
-        data: offerList,
       };
     });
   }, [type]);
+
+  /** Funciones */
+
+  async function setData() {
+    if (responseData) {
+      const subUsers: { [key: string]: BaseUser } = {};
+      const data = await Promise.all(
+        responseData.data.map(async (e: any) => {
+          if (!Object.prototype.hasOwnProperty.call(subUsers, e.userID)) {
+            const { responseData }: any = await makeRequest({
+              service: getBaseDataUserService(e.userID),
+              method: "get",
+            });
+            const { subUser } = transformToBaseUser(responseData.data[0]);
+            subUsers[e.userID] = subUser;
+          }
+          return transformToOffer(e, type, subUsers[e.userID], mainDataUser);
+        })
+      );
+      console.log(data);
+      setTableContent({
+        type: TableTypes.ALL_OFFERS,
+        data: data,
+        hiddenColumns: [],
+        nameColumnHeader: t("offers"),
+        onButtonClick: handleOnButtonClick,
+      });
+    } else if (error) {
+      console.log(error);
+    }
+  }
 
   function handleSearch(e: ChangeEvent<HTMLInputElement>) {
     console.log(e.target.value);
