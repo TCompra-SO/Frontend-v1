@@ -396,7 +396,6 @@ export default function AllOffers() {
   const location = useLocation();
   const { notification, message } = App.useApp();
   const dataUser = useSelector((state: MainState) => state.user);
-  const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const [type, setType] = useState(getRouteType(location.pathname));
   const [tableContent, setTableContent] = useState<TableTypeAllOffers>({
     type: TableTypes.ALL_OFFERS,
@@ -465,7 +464,7 @@ export default function AllOffers() {
             const { subUser } = transformToBaseUser(responseData.data[0]);
             subUsers[e.userID] = subUser;
           }
-          return transformToOffer(e, type, subUsers[e.userID], mainDataUser);
+          return transformToOffer(e, type, subUsers[e.userID], dataUser);
         })
       );
       console.log(data);
@@ -495,11 +494,11 @@ export default function AllOffers() {
       subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
       table={tableContent}
       onSearch={handleSearch}
-      // loading={
-      //   equalServices(apiParams.service, getRequirementsService())
-      //     ? loading
-      //     : undefined
-      // }
+      loading={
+        equalServices(apiParams.service, getOffersByEntityService(""))
+          ? loading
+          : undefined
+      }
     />
   );
 }

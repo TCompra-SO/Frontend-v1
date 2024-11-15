@@ -9,8 +9,12 @@ import {
   RequirementType,
   TableTypes,
 } from "../utilities/types";
-import { BasicRequirement, Requirement } from "../models/MainInterfaces";
 import {
+  BaseUser,
+  BasicRequirement,
+  Requirement,
+} from "../models/MainInterfaces";
+import makeRequest, {
   equalServices,
   getLabelFromRequirementType,
   getRouteType,
@@ -19,6 +23,14 @@ import { useLocation } from "react-router-dom";
 import useApi from "../hooks/useApi";
 import showNotification from "../utilities/notification/showNotification";
 import { App } from "antd";
+import { getRequirementsByEntityService } from "../services/requests/requirementService";
+import { useSelector } from "react-redux";
+import { MainState } from "../models/Redux";
+import { getBaseDataUserService } from "../services/requests/authService";
+import {
+  transformDataToRequirement,
+  transformToBaseUser,
+} from "../utilities/transform";
 
 const requirements: Requirement[] = [
   {
@@ -656,40 +668,46 @@ export default function AllRequirements() {
   const { t } = useTranslation();
   const location = useLocation();
   const { notification, message } = App.useApp();
+  const dataUser = useSelector((state: MainState) => state.user);
   const [type, setType] = useState(getRouteType(location.pathname));
   const [tableContent, setTableContent] = useState<TableTypeAllRequirements>({
     type: TableTypes.ALL_REQUIREMENTS,
-    data: requirements, //[]
+    data: [],
     hiddenColumns: [],
-    nameColumnHeader: t("goods"),
+    nameColumnHeader: t(getLabelFromRequirementType(type)),
     onButtonClick: handleOnButtonClick,
   });
 
-  // const [apiParams, setApiParams] = useState<useApiParams>({
-  //   service: getOffersService(),
-  //   method: "get",
-  // });
+  /** Obtener datos de tabla */
 
-  // const { loading, responseData, error, errorMsg, fetchData } = useApi({
-  //   service: apiParams.service,
-  //   method: apiParams.method,
-  //   dataToSend: apiParams.dataToSend,
-  // });
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: getRequirementsByEntityService(dataUser.uid),
+    method: "get",
+  });
 
-  // useEffect(() => {
-  //   if (apiParams.service) fetchData();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [apiParams]);
+  const { loading, responseData, error, errorMsg, fetchData } = useApi({
+    service: apiParams.service,
+    method: apiParams.method,
+    dataToSend: apiParams.dataToSend,
+  });
 
-  // useEffect(() => {
-  //   if (responseData) {
-  //     if (equalServices(apiParams.service, getOffersService())) setData();
-  //   } else if (error) {
-  //     if (equalServices(apiParams.service, getOffersService()))
-  //       showNotification(notification, "error", errorMsg);
-  //   }
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [responseData, error]);
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      if (equalServices(apiParams.service, getRequirementsByEntityService("")))
+        setData();
+    } else if (error) {
+      if (equalServices(apiParams.service, getRequirementsByEntityService("")))
+        showNotification(notification, "error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
+
+  /******** */
 
   useEffect(() => {
     setType(getRouteType(location.pathname));
@@ -703,7 +721,44 @@ export default function AllRequirements() {
         nameColumnHeader: t(getLabelFromRequirementType(type)),
       };
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
+
+  /** Funciones */
+
+  async function setData() {
+    if (responseData) {
+      const subUsers: { [key: string]: BaseUser } = {};
+      const data = await Promise.all(
+        responseData.data.map(async (e: any) => {
+          if (!Object.prototype.hasOwnProperty.call(subUsers, e.userID)) {
+            const { responseData }: any = await makeRequest({
+              service: getBaseDataUserService(e.userID),
+              method: "get",
+            });
+            const { subUser } = transformToBaseUser(responseData.data[0]);
+            subUsers[e.userID] = subUser;
+          }
+          return transformDataToRequirement(
+            e,
+            type,
+            subUsers[e.userID],
+            dataUser
+          );
+        })
+      );
+
+      setTableContent({
+        type: TableTypes.ALL_REQUIREMENTS,
+        data: data,
+        hiddenColumns: [],
+        nameColumnHeader: t(getLabelFromRequirementType(type)),
+        onButtonClick: handleOnButtonClick,
+      });
+    } else if (error) {
+      console.log(error);
+    }
+  }
 
   function handleSearch(e: ChangeEvent<HTMLInputElement>) {
     console.log(e.target.value);
@@ -721,11 +776,11 @@ export default function AllRequirements() {
       subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
       table={tableContent}
       onSearch={handleSearch}
-      // loading={
-      //   equalServices(apiParams.service, getRequirementsService())
-      //     ? loading
-      //     : undefined
-      // }
+      loading={
+        equalServices(apiParams.service, getRequirementsByEntityService(""))
+          ? loading
+          : undefined
+      }
     />
   );
 }
