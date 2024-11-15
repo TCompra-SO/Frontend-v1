@@ -16,7 +16,31 @@ export function getPurchaseOrderPDFService(id: string): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.purchaseOrder
-    }${ApiRoutes.purchaseOrder.getpurchaseOrderPDF}${id}`,
+    }${ApiRoutes.purchaseOrder.getPurchaseOrderPDF}${id}`,
     type: "PO-PDF",
+  };
+}
+
+// Para cuentas principales (empresa y persona). Incluye órdenes de subusuarios
+export function getPurchaseOrdersByClientEntityService(
+  id: string
+): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.purchaseOrder
+    }${ApiRoutes.purchaseOrder.getPurchaseOrdersByClient}${id}`,
+    type: "PO-GET-ENT-C",
+  };
+}
+
+// Para cuentas principales (empresa y persona). Incluye órdenes de subusuarios
+export function getPurchaseOrdersByProviderEntityService(
+  id: string
+): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.purchaseOrder
+    }${ApiRoutes.purchaseOrder.getPurchaseOrdersByProvider}${id}`,
+    type: "PO-GET-ENT-P",
   };
 }

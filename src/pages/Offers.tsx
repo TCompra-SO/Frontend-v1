@@ -16,7 +16,7 @@ import {
   getRouteType,
 } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
-import { getOffersService } from "../services/requests/offerService";
+import { getOffersBySubUserService } from "../services/requests/offerService";
 import useApi from "../hooks/useApi";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
@@ -54,7 +54,7 @@ export default function Offers() {
   });
 
   const [apiParams, setApiParams] = useState<useApiParams>({
-    service: getOffersService(),
+    service: getOffersBySubUserService(dataUser.uid),
     method: "get",
   });
 
@@ -71,9 +71,10 @@ export default function Offers() {
 
   useEffect(() => {
     if (responseData) {
-      if (equalServices(apiParams.service, getOffersService())) setData();
+      if (equalServices(apiParams.service, getOffersBySubUserService("")))
+        setData();
     } else if (error) {
-      if (equalServices(apiParams.service, getOffersService()))
+      if (equalServices(apiParams.service, getOffersBySubUserService("")))
         showNotification(notification, "error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -265,7 +266,7 @@ export default function Offers() {
         table={tableContent}
         onSearch={handleSearch}
         loading={
-          equalServices(apiParams.service, getOffersService())
+          equalServices(apiParams.service, getOffersBySubUserService(""))
             ? loading
             : undefined
         }

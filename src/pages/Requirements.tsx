@@ -20,7 +20,7 @@ import { mainModalScrollStyle } from "../utilities/globals";
 import useApi from "../hooks/useApi";
 import {
   deleteRequirementService,
-  getRequirementsService,
+  getRequirementsBySubUserService,
 } from "../services/requests/requirementService";
 import {
   transformDataToRequirement,
@@ -72,7 +72,7 @@ export default function Requirements() {
 
   /* Obtener lista inicialmente y obtener ofertas */
   const [apiParams, setApiParams] = useState<useApiParams>({
-    service: getRequirementsService(),
+    service: getRequirementsBySubUserService(dataUser.uid),
     method: "get",
   });
 
@@ -104,7 +104,7 @@ export default function Requirements() {
 
   useEffect(() => {
     if (responseData) {
-      if (equalServices(apiParams.service, getRequirementsService()))
+      if (equalServices(apiParams.service, getRequirementsBySubUserService("")))
         setTableData();
       else if (
         equalServices(apiParams.service, getOffersByRequirementIdService(""))
@@ -112,7 +112,7 @@ export default function Requirements() {
         openDetailedRequirement(responseData);
     } else if (error) {
       if (
-        equalServices(apiParams.service, getRequirementsService()) ||
+        equalServices(apiParams.service, getRequirementsBySubUserService("")) ||
         equalServices(apiParams.service, getOffersByRequirementIdService(""))
       )
         showNotification(notification, "error", errorMsg);
@@ -408,7 +408,7 @@ export default function Requirements() {
         table={tableContent}
         onSearch={handleSearch}
         loading={
-          equalServices(apiParams.service, getRequirementsService())
+          equalServices(apiParams.service, getRequirementsBySubUserService(""))
             ? loading
             : undefined
         }
