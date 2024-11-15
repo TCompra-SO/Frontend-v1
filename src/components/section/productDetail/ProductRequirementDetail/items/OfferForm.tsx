@@ -54,7 +54,7 @@ export default function OfferForm(props: OfferFormProps) {
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const { notification } = App.useApp();
   const [cantOfferMotive, setCantOfferMotive] = useState<CantOfferMotives>(
-    CantOfferMotives.ONLY_CERTIFIED
+    CantOfferMotives.NONE
   );
   const [checkedIGV, setCheckedIGV] = useState(false);
   const [checkedDelivery, setCheckedDelivery] = useState(false);
@@ -68,7 +68,7 @@ export default function OfferForm(props: OfferFormProps) {
   useEffect(() => {
     form.setFieldValue("currency", props.requirement?.coin);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form]);
+  }, [props.requirement]);
 
   /** Verificar si el usuario puede ofertar */
 
@@ -81,7 +81,7 @@ export default function OfferForm(props: OfferFormProps) {
     }
     if (props.requirement && props.requirement.user.uid == uid)
       setCantOfferMotive(CantOfferMotives.IS_CREATOR);
-    setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED);
+    // setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, props.requirement]);
 
