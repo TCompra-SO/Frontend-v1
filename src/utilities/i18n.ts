@@ -266,6 +266,8 @@ const resources = {
       requirementRepublishedSuccessfully: "Requirement republished successfully",
       selectNewDateForRepublishment: "Select a new expiration date",
       offerDeletedSuccessfully: "Offer deleted successfully",
+      pendingCertificationMsg: "Please wait for the approval of your documents for certification",
+      rejectedCertificationMsg: "Your documents for certification have been rejected. Please review them and submit them again",
       // Other
       yes: "Yes",
       no: "No",
@@ -683,6 +685,8 @@ const resources = {
       requirementRepublishedSuccessfully: "Requerimiento republicado exitosamente",
       selectNewDateForRepublishment: "Selecciona una nueva fecha de expiración",
       offerDeletedSuccessfully: "Oferta eliminada exitosamente",
+      rejectedCertificationMsg: "Los documentos enviados para certificación han sido rechazados. Revise los requisitos y vuelva a enviarlos"
+      pendingCertificationMsg: "Por favor, espere la aprobación de sus documentos para ser certificado",
       // Other
       yes: "Sí",
       no: "No",
