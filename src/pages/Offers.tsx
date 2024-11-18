@@ -196,7 +196,7 @@ export default function Offers() {
         onButtonClick: handleOnButtonClick,
       });
     } else if (error) {
-      console.log(error);
+      showNotification(notification, "error", errorMsg);
     }
   }
 

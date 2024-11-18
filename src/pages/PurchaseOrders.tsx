@@ -76,6 +76,10 @@ export default function PurchaseOrders() {
     onButtonClick: handleOnButtonClick,
   });
 
+  useEffect(() => {
+    setType(getPurchaseOrderType(location.pathname));
+  }, [location]);
+
   /** Para obtener datos iniciales y datos de proveedor/cliente */
 
   const [apiParams, setApiParams] = useState<useApiParams>({
@@ -89,14 +93,13 @@ export default function PurchaseOrders() {
   });
 
   useEffect(() => {
-    setType(getPurchaseOrderType(location.pathname));
-  }, [location]);
-
-  useEffect(() => {
     switch (type) {
       case PurchaseOrderTableTypes.ISSUED:
         setApiParams({
-          service: getPurchaseOrdersByClientEntityService(uid, UserRoles.BUYER),
+          service: getPurchaseOrdersByClientEntityService(
+            uid,
+            role == UserRoles.ADMIN ? UserRoles.BUYER : role
+          ),
           method: "get",
         });
         break;
@@ -104,7 +107,7 @@ export default function PurchaseOrders() {
         setApiParams({
           service: getPurchaseOrdersByProviderEntityService(
             uid,
-            UserRoles.BUYER
+            role == UserRoles.ADMIN ? UserRoles.BUYER : role
           ),
           method: "get",
         });
@@ -122,6 +125,7 @@ export default function PurchaseOrders() {
         });
         break;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
   useEffect(() => {
@@ -307,7 +311,7 @@ export default function PurchaseOrders() {
         onButtonClick: handleOnButtonClick,
       });
     } else if (error) {
-      console.log(error);
+      showNotification(notification, "error", errorMsg);
     }
   }
 

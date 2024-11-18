@@ -126,7 +126,7 @@ export default function AllRequirements() {
         onButtonClick: handleOnButtonClick,
       });
     } else if (error) {
-      console.log(error);
+      showNotification(notification, "error", errorMsg);
     }
   }
 
