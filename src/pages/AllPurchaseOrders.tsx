@@ -11,6 +11,7 @@ import { BasicPurchaseOrder } from "../models/MainInterfaces";
 import {
   getLabelFromPurchaseOrderType,
   getPurchaseOrderType,
+  openPurchaseOrderPdf,
 } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
 import { App } from "antd";
@@ -18,10 +19,13 @@ import useApi from "../hooks/useApi";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import {
+  getPurchaseOrderPDFService,
   getPurchaseOrdersByClientEntityService,
   getPurchaseOrdersByProviderEntityService,
 } from "../services/requests/purchaseOrderService";
-import showNotification from "../utilities/notification/showNotification";
+import showNotification, {
+  showLoadingMessage,
+} from "../utilities/notification/showNotification";
 import { transformToPurchaseOrder } from "../utilities/transform";
 
 export default function AllOffers() {
@@ -29,7 +33,7 @@ export default function AllOffers() {
   const location = useLocation();
   const uid = useSelector((state: MainState) => state.user.uid);
   const role = useSelector((state: MainState) => state.user.typeID);
-  const { notification } = App.useApp();
+  const { notification, message } = App.useApp();
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
   const [tableContent, setTableContent] = useState<TableTypeAllPurchaseOrders>({
     type: TableTypes.ALL_PURCHASE_ORDERS,
@@ -101,6 +105,44 @@ export default function AllOffers() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
+  /* Para descargar pdf de orden de compra */
+
+  const [apiParamsPdf, setApiParamsPdf] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingPdf,
+    responseData: responseDataPdf,
+    error: errorPdf,
+    errorMsg: errorMsgPdf,
+    fetchData: fetchDataPdf,
+  } = useApi({
+    service: apiParamsPdf.service,
+    method: apiParamsPdf.method,
+    dataToSend: apiParamsPdf.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingPdf);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingPdf]);
+
+  useEffect(() => {
+    if (apiParamsPdf.service) fetchDataPdf();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsPdf]);
+
+  useEffect(() => {
+    if (responseDataPdf) {
+      openPurchaseOrderPdf(responseDataPdf);
+    } else if (errorPdf) {
+      showNotification(notification, "error", errorMsgPdf);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataPdf, errorPdf]);
+
   /** Funciones */
 
   async function setTableData() {
@@ -108,7 +150,6 @@ export default function AllOffers() {
       const data = responseData.data.map((po: any) =>
         transformToPurchaseOrder(po)
       );
-      console.log(data);
       setTableContent({
         type: TableTypes.ALL_PURCHASE_ORDERS,
         data,
@@ -129,7 +170,17 @@ export default function AllOffers() {
   function handleOnButtonClick(
     action: Action,
     purchaseOrder: BasicPurchaseOrder
-  ) {}
+  ) {
+    console.log(action, purchaseOrder);
+    switch (action) {
+      case Action.DOWNLOAD_PURCHASE_ORDER:
+        setApiParamsPdf({
+          service: getPurchaseOrderPDFService(purchaseOrder.key),
+          method: "get",
+        });
+        break;
+    }
+  }
 
   return (
     <TablePageContent

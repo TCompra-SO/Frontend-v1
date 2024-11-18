@@ -27,8 +27,8 @@ import showNotification, {
 } from "../utilities/notification/showNotification";
 import makeRequest, {
   getLabelFromPurchaseOrderType,
-  getPdfSrc,
   getPurchaseOrderType,
+  openPurchaseOrderPdf,
 } from "../utilities/globalFunctions";
 import {
   transformToBaseUser,
@@ -385,17 +385,6 @@ export default function PurchaseOrders() {
       } else showNotification(notification, "error", t("errorOccurred"));
     } else showNotification(notification, "error", t("errorOccurred"));
     showLoadingMessage(message, false);
-  }
-
-  function openPurchaseOrderPdf(responseData: any) {
-    const pdfSrc = getPdfSrc(responseData.data);
-    if (pdfSrc) {
-      window.open(
-        pdfSrc,
-        "_blank",
-        "width=800,height=1000,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes"
-      );
-    }
   }
 
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
