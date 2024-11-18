@@ -5,6 +5,7 @@ import {
   PurchaseOrderTableTypes,
   RequirementType,
   TableTypes,
+  UserRoles,
 } from "../utilities/types";
 import { useTranslation } from "react-i18next";
 import {
@@ -25,7 +26,6 @@ import showNotification, {
   showLoadingMessage,
 } from "../utilities/notification/showNotification";
 import makeRequest, {
-  equalServices,
   getLabelFromPurchaseOrderType,
   getPdfSrc,
   getPurchaseOrderType,
@@ -41,7 +41,8 @@ import { mainModalScrollStyle } from "../utilities/globals";
 import { useLocation } from "react-router-dom";
 import {
   getPurchaseOrderPDFService,
-  getReqIssuedPurchaseOrderByUserService,
+  getPurchaseOrdersByClientEntityService,
+  getPurchaseOrdersByProviderEntityService,
 } from "../services/requests/purchaseOrderService";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
@@ -56,6 +57,7 @@ export default function PurchaseOrders() {
   const { t } = useTranslation();
   const location = useLocation();
   const uid = useSelector((state: MainState) => state.user.uid);
+  const role = useSelector((state: MainState) => state.user.typeID);
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
   const { notification, message } = App.useApp();
   const [currentPurchaseOrder, setCurrentPurchaseOrder] =
@@ -77,7 +79,7 @@ export default function PurchaseOrders() {
   /** Para obtener datos iniciales y datos de proveedor/cliente */
 
   const [apiParams, setApiParams] = useState<useApiParams>({
-    service: getReqIssuedPurchaseOrderByUserService(uid),
+    service: null,
     method: "get",
   });
   const { loading, responseData, error, errorMsg, fetchData } = useApi({
@@ -91,12 +93,35 @@ export default function PurchaseOrders() {
   }, [location]);
 
   useEffect(() => {
-    setTableContent((prev) => {
-      return {
-        ...prev,
-        subType: type,
-      };
-    });
+    switch (type) {
+      case PurchaseOrderTableTypes.ISSUED:
+        setApiParams({
+          service: getPurchaseOrdersByClientEntityService(uid, UserRoles.BUYER),
+          method: "get",
+        });
+        break;
+      case PurchaseOrderTableTypes.RECEIVED:
+        setApiParams({
+          service: getPurchaseOrdersByProviderEntityService(
+            uid,
+            UserRoles.BUYER
+          ),
+          method: "get",
+        });
+        break;
+      case PurchaseOrderTableTypes.ISSUED_SALES:
+        setApiParams({
+          service: null,
+          method: "get",
+        });
+        break;
+      case PurchaseOrderTableTypes.RECEIVED_SALES:
+        setApiParams({
+          service: null,
+          method: "get",
+        });
+        break;
+    }
   }, [type]);
 
   useEffect(() => {
@@ -105,28 +130,51 @@ export default function PurchaseOrders() {
   }, [apiParams]);
 
   useEffect(() => {
-    if (equalServices(apiParams.service, getUserService("")))
-      showLoadingMessage(message, loading);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
-
-  useEffect(() => {
     if (responseData) {
-      if (
-        equalServices(
-          apiParams.service,
-          getReqIssuedPurchaseOrderByUserService("")
-        )
-      )
-        setTableData();
-      else if (equalServices(apiParams.service, getUserService("")))
-        showUserInfo(responseData);
+      setTableData();
     } else if (error) {
       showNotification(notification, "error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
+
+  /* Obtener datos para user */
+
+  const [apiParamsUser, setApiParamsUser] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingUser,
+    responseData: responseDataUser,
+    error: errorUser,
+    errorMsg: errorMsgUser,
+    fetchData: fetchDataUser,
+  } = useApi({
+    service: apiParamsUser.service,
+    method: apiParamsUser.method,
+    dataToSend: apiParamsUser.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingUser);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingUser]);
+
+  useEffect(() => {
+    if (apiParamsUser.service) fetchDataUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsUser]);
+
+  useEffect(() => {
+    if (responseDataUser) {
+      showUserInfo(responseData);
+    } else if (errorUser) {
+      showNotification(notification, "error", errorMsgUser);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataUser, errorUser]);
 
   /* Obtener datos para culminar */
 
@@ -351,13 +399,13 @@ export default function PurchaseOrders() {
 
     switch (action) {
       case Action.VIEW_CUSTOMER:
-        setApiParams({
+        setApiParamsUser({
           service: getUserService(purchaseOrder.userClientId),
           method: "get",
         });
         break;
       case Action.VIEW_SUPPLIER:
-        setApiParams({
+        setApiParamsUser({
           service: getUserService(purchaseOrder.userProviderId),
           method: "get",
         });
@@ -429,11 +477,7 @@ export default function PurchaseOrders() {
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
         onSearch={handleSearch}
-        // loading={
-        //   equalServices(apiParams.service, getRequirementsService())
-        //     ? loading
-        //     : undefined
-        // }
+        loading={loading}
       />
     </>
   );
