@@ -25,7 +25,7 @@ import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import {
   transformToBasicRateData,
-  transformToOffer,
+  transformToOfferFromGetOffersByEntityOrSubUser,
 } from "../utilities/transform";
 import showNotification, {
   showLoadingMessage,
@@ -58,7 +58,7 @@ export default function Offers() {
 
   /** Cargar datos iniciales */
 
-  const [apiParams, setApiParams] = useState<useApiParams>({
+  const [apiParams] = useState<useApiParams>({
     service: getOffersBySubUserService(dataUser.uid),
     method: "get",
   });
@@ -179,9 +179,12 @@ export default function Offers() {
   async function setData() {
     if (responseData) {
       const data = responseData.data.map((e: any) =>
-        dataUser.uid == mainDataUser.uid
-          ? transformToOffer(e, type, dataUser)
-          : transformToOffer(e, type, dataUser, mainDataUser)
+        transformToOfferFromGetOffersByEntityOrSubUser(
+          e,
+          type,
+          dataUser,
+          mainDataUser
+        )
       );
 
       setTableContent({
@@ -230,6 +233,7 @@ export default function Offers() {
   }
 
   function handleOnButtonClick(action: Action, offer: Offer) {
+    console.log(offer);
     setCurrentAction(action);
     switch (action) {
       case Action.OFFER_DETAIL:
@@ -244,6 +248,7 @@ export default function Offers() {
 
       case Action.DELETE: {
         // r3v
+
         setDataModal({
           type: ModalTypes.CONFIRM,
           data: {

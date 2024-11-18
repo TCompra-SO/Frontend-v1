@@ -216,17 +216,14 @@ export default function Requirements() {
 
   async function setTableData() {
     if (responseData) {
-      const data = await Promise.all(
-        responseData.data.map(async (e: any) =>
-          transformDataToRequirement(
-            e,
-            RequirementType.GOOD,
-            dataUser,
-            mainDataUser
-          )
+      const data = responseData.data.map((e: any) =>
+        transformDataToRequirement(
+          e,
+          RequirementType.GOOD,
+          dataUser,
+          mainDataUser
         )
       );
-
       setTableContent({
         type: TableTypes.REQUIREMENT,
         data,
@@ -282,6 +279,7 @@ export default function Requirements() {
   }
 
   async function handleOnButtonClick(action: Action, requirement: Requirement) {
+    console.log(requirement);
     setRequirement(requirement);
 
     switch (action) {

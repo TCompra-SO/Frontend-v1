@@ -418,7 +418,8 @@ const resources = {
       goTo: "Go to ",
       controlPanel: "Control panel",
       getCertified: "Get certified",
-      send: "Send"
+      send: "Send",
+      subUser: "Subuser"
     },
   },
   es: {
@@ -685,7 +686,7 @@ const resources = {
       requirementRepublishedSuccessfully: "Requerimiento republicado exitosamente",
       selectNewDateForRepublishment: "Selecciona una nueva fecha de expiración",
       offerDeletedSuccessfully: "Oferta eliminada exitosamente",
-      rejectedCertificationMsg: "Los documentos enviados para certificación han sido rechazados. Revise los requisitos y vuelva a enviarlos"
+      rejectedCertificationMsg: "Los documentos enviados para certificación han sido rechazados. Revise los requisitos y vuelva a enviarlos",
       pendingCertificationMsg: "Por favor, espere la aprobación de sus documentos para ser certificado",
       // Other
       yes: "Sí",
@@ -841,7 +842,8 @@ const resources = {
       goTo: "Ir a ",
       controlPanel: "Panel de control",
       getCertified: "Certifícate",
-      send: "Enviar"
+      send: "Enviar",
+      subUser: "Subusuario"
     },
   },
 };
