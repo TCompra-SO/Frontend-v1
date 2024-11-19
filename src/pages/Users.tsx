@@ -38,117 +38,6 @@ import {
 } from "../models/MainInterfaces";
 import { transformToSubUserBase } from "../utilities/transform";
 
-const users: SubUserProfile[] = [
-  {
-    uid: "user1",
-    name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
-    email: "john.doejohn.doejohn.doejohn.doe@example.com",
-    document: "123456789",
-    // typeEntity: EntityType.COMPANY,
-    // tenure: 2,
-    // customerScore: 3.5,
-    // sellerScore: 1.5,
-    address: "Calle San Agustin 107 - Cercado - Arequipa",
-    // userType: 0,
-    phone: "90909090",
-    cityID: 1,
-    companyID: "xxxxxxxxxxxxx",
-    createdAt: "2024-10-12T16:36:45.673Z",
-    numGoods: 10,
-    numServices: 2,
-    numSales: 5,
-    numOffers: 0,
-    numPurchaseOrders: 0,
-    customerScore: 0,
-    sellerScore: 0,
-    customerCount: 0,
-    sellerCount: 0,
-    typeEntity: EntityType.COMPANY,
-    typeID: UserRoles.BUYER,
-  },
-  {
-    uid: "user2",
-    name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
-    email: "aaaaaaaaa@example.com",
-    document: "123456789",
-    // typeEntity: EntityType.COMPANY,
-    // tenure: 2,
-    // customerScore: 3.5,
-    // sellerScore: 1.5,
-    address: "Calle San Agustin 107 - Cercado - Arequipa",
-    // userType: 0,
-    phone: "90909090",
-    cityID: 1,
-    companyID: "xxxxxxxxxxxxx",
-    createdAt: "2024-10-12T09:36:45.673Z",
-    numGoods: 23,
-    numServices: 90,
-    numSales: 235,
-    numOffers: 0,
-    numPurchaseOrders: 0,
-    customerScore: 0,
-    sellerScore: 0,
-    customerCount: 0,
-    sellerCount: 0,
-    typeEntity: EntityType.COMPANY,
-    typeID: UserRoles.LEGAL,
-  },
-  {
-    uid: "user3",
-    name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
-    email: "mmmmmmmm@example.com",
-    document: "123456789",
-    // typeEntity: EntityType.COMPANY,
-    // tenure: 2,
-    // customerScore: 3.5,
-    // sellerScore: 1.5,
-    address: "Calle San Agustin 107 - Cercado - Arequipa",
-    // userType: 0,
-    phone: "90909090",
-    cityID: 1,
-    companyID: "xxxxxxxxxxxxx",
-    createdAt: "2024-01-12T20:36:45.673Z",
-    numGoods: 1,
-    numServices: 0,
-    numSales: 8,
-    numOffers: 0,
-    numPurchaseOrders: 0,
-    customerScore: 0,
-    sellerScore: 0,
-    customerCount: 0,
-    sellerCount: 0,
-    typeEntity: EntityType.COMPANY,
-    typeID: UserRoles.SELLER,
-  },
-  {
-    uid: "user4",
-    name: "aaaaaaaaaaaaaa S. A. C.",
-    email: "ccccccccc@example.com",
-    document: "123456789",
-    // typeEntity: EntityType.COMPANY,
-    // tenure: 2,
-    // customerScore: 3.5,
-    // sellerScore: 1.5,
-    address: "Calle San Agustin 107 - Cercado - Arequipa",
-    // userType: 0,
-    phone: "90909090",
-    cityID: 1,
-    companyID: "xxxxxxxxxxxxx",
-    createdAt: "2024-05-12T20:36:45.673Z",
-    numGoods: 100,
-    numServices: 35,
-    numSales: 84,
-    numOffers: 0,
-    numPurchaseOrders: 0,
-    customerScore: 0,
-    sellerScore: 0,
-    customerCount: 0,
-    sellerCount: 0,
-    typeEntity: EntityType.COMPANY,
-    typeID: UserRoles.SELLER_BUYER,
-  },
-];
-
 const reqs: RequirementItemSubUser[] = [
   {
     price: 0,
@@ -398,7 +287,6 @@ export default function Users() {
     if (responseDataUser) {
       if (equalServices(apiParamsUser.service, getSubUserService(""))) {
         setUserDataEdit(responseDataUser);
-        console.log(responseDataUser, userDataEdit);
         handleOpenModal();
       }
     } else if (errorUser) {
@@ -448,7 +336,6 @@ export default function Users() {
   }
 
   function handleOnActionClick(action: Action, user: SubUserBase) {
-    console.log(action, user);
     setAction(action);
     switch (action) {
       case Action.EDIT_USER:
