@@ -46,6 +46,7 @@ export function getBasicRateDataOfferService(id: string): HttpService {
   };
 }
 
+// Para cuentas principales (empresa y persona). Incluye ofertas de subusuarios
 export function getOffersByEntityService(id: string): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
@@ -55,11 +56,21 @@ export function getOffersByEntityService(id: string): HttpService {
   };
 }
 
+// Para subusuarios + cuentas principales. No incluye ofertas de subusuarios
 export function getOffersBySubUserService(id: string): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getOffersBySubUser
     }${id}`,
     type: "OF-GET-SUB",
+  };
+}
+
+export function deleteOfferService(id: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+      ApiRoutes.offers.delete
+    }${id}`,
+    type: "OF-DEL",
   };
 }

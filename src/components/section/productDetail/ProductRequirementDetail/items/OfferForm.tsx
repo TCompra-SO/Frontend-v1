@@ -22,9 +22,12 @@ import { useApiParams } from "../../../../../models/Interfaces";
 import useApi from "../../../../../hooks/useApi";
 import { createOfferService } from "../../../../../services/requests/offerService";
 import {
+  CanOfferType,
   CantOfferMotives,
+  CertificationState,
   ImageRequestLabels,
   ProcessFlag,
+  RequirementState,
 } from "../../../../../utilities/types";
 import { uploadDocsOfferService } from "../../../../../services/requests/documentService";
 import { uploadImagesOfferService } from "../../../../../services/requests/imageService";
@@ -54,7 +57,7 @@ export default function OfferForm(props: OfferFormProps) {
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const { notification } = App.useApp();
   const [cantOfferMotive, setCantOfferMotive] = useState<CantOfferMotives>(
-    CantOfferMotives.ONLY_CERTIFIED
+    CantOfferMotives.NONE
   );
   const [checkedIGV, setCheckedIGV] = useState(false);
   const [checkedDelivery, setCheckedDelivery] = useState(false);
@@ -64,24 +67,41 @@ export default function OfferForm(props: OfferFormProps) {
   const [docSuccess, setDocSuccess] = useState(ProcessFlag.NOT_INI);
   const [imgSuccess, setImgSuccess] = useState(ProcessFlag.NOT_INI);
   const [offerId, setofferId] = useState<string>("");
+  const [isPremium] = useState(false); // r3v
 
   useEffect(() => {
     form.setFieldValue("currency", props.requirement?.coin);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form]);
+  }, [props.requirement]);
 
   /** Verificar si el usuario puede ofertar */
 
   useEffect(() => {
     if (!isLoggedIn) {
       setCantOfferMotive(CantOfferMotives.NOT_LOGGED_IN);
-      return;
+    } else if (props.requirement && props.requirement.user.uid == uid) {
+      setCantOfferMotive(CantOfferMotives.IS_CREATOR);
+    } else if (
+      props.requirement &&
+      props.requirement.state != RequirementState.PUBLISHED
+    ) {
+      setCantOfferMotive(CantOfferMotives.CHANGED_STATE);
+    } else if (
+      props.requirement &&
+      props.requirement.allowedBidder == CanOfferType.PREMIUM &&
+      !isPremium
+    ) {
+      setCantOfferMotive(CantOfferMotives.ONLY_PREMIUM);
+    } else if (
+      props.requirement &&
+      props.requirement.allowedBidder == CanOfferType.CERTIFIED_COMPANY
+    ) {
+      setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED); //r3v
     } else {
       setCantOfferMotive(CantOfferMotives.NONE);
     }
-    if (props.requirement && props.requirement.user.uid == uid)
-      setCantOfferMotive(CantOfferMotives.IS_CREATOR);
-    setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED);
+    // setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, props.requirement]);
 
@@ -377,6 +397,7 @@ export default function OfferForm(props: OfferFormProps) {
           offerId={offerId}
           motive={cantOfferMotive}
           requirement={props.requirement}
+          isPremium={isPremium}
         />
       )}
     </div>

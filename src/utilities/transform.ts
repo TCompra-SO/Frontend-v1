@@ -15,10 +15,12 @@ export function transformDataToRequirement(
   data: any,
   type: RequirementType,
   user: UserState | BaseUser,
-  mainUser: UserState | BaseUser
+  mainUser: UserState | BaseUser,
+  includeAlwaysSubUser?: boolean
 ) {
   const req: Requirement = data;
   // req.state = RequirementState.FINISHED;
+  req.subUser = undefined;
   req.deliveryTime = data.submission_date;
   req.type = type;
   req.warrantyTime = data.duration;
@@ -34,7 +36,10 @@ export function transformDataToRequirement(
     if (data.winOffer.entityID != data.winOffer.userID)
       req.offerSubUserId = data.winOffer.userID;
   }
-  if (mainUser.uid != user.uid) {
+  if (includeAlwaysSubUser) {
+    req.user = mainUser;
+    req.subUser = user;
+  } else if (mainUser.uid != user.uid) {
     req.user = mainUser;
     req.subUser = user;
   } else req.user = user;
@@ -138,6 +143,29 @@ export function transformToOffer(
   //   offer.user = mainUser;
   //   offer.subUser = user;
   // } else offer.user = user;
+  return offer;
+}
+
+export function transformToOfferFromGetOffersByEntityOrSubUser(
+  data: any,
+  type: RequirementType,
+  user: UserState | BaseUser,
+  mainUser: UserState | BaseUser,
+  includeAlwaysSubUser?: boolean
+) {
+  const offer: Offer = data;
+  offer.subUser = undefined;
+  offer.canceledByCreator = false;
+  offer.type = type;
+
+  if (includeAlwaysSubUser) {
+    offer.user = mainUser;
+    offer.subUser = user;
+  } else if (mainUser.uid != user.uid) {
+    offer.user = mainUser;
+    offer.subUser = user;
+  } else offer.user = user;
+
   return offer;
 }
 

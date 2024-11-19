@@ -279,3 +279,15 @@ export function getPdfSrc(data: string) {
   }
   return null;
 }
+
+// Mostrar pdf de orden de compra
+export function openPurchaseOrderPdf(responseData: any) {
+  const pdfSrc = getPdfSrc(responseData.data);
+  if (pdfSrc) {
+    window.open(
+      pdfSrc,
+      "_blank",
+      "width=800,height=1000,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes"
+    );
+  }
+}

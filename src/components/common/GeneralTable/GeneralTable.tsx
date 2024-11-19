@@ -386,7 +386,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         props.content.nameColumnHeader,
         visibility[TableColumns.NAME]
       ),
-      GeneralColumnString(t("user"), "user.name", true),
+      GeneralColumnString(t("user"), "subUser.name", true),
       GeneralDateColumn(
         t("dateColumn"),
         "publishDate",
@@ -418,7 +418,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         props.content.nameColumnHeader,
         visibility[TableColumns.NAME]
       ),
-      GeneralColumnString(t("user"), "user.name", true),
+      GeneralColumnString(t("user"), "subUser.name", true),
       RequirementColumn(true, visibility[TableColumns.REQUIREMENT]),
       GeneralDateColumn(
         t("dateColumn"),

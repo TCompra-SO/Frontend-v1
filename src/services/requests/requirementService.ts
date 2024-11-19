@@ -67,7 +67,8 @@ export function republishRequirementService(): HttpService {
   };
 }
 
-export function getRequirementsByEntity(id: string): HttpService {
+// Para cuentas principales (empresa y persona). Incluye requerimientos de subusuarios
+export function getRequirementsByEntityService(id: string): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements
@@ -76,7 +77,8 @@ export function getRequirementsByEntity(id: string): HttpService {
   };
 }
 
-export function getRequirementsBySubUser(id: string): HttpService {
+// Para subusuarios + cuentas principales. No incluye requerimientos de subusuarios
+export function getRequirementsBySubUserService(id: string): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements

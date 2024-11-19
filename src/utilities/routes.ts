@@ -83,8 +83,6 @@ export const ApiRoutes = {
     getDetailOffer: "getDetailOffer/",
     getOffersByRequirement: "getOffersByRequeriment/",
     getBasicRateData: "getBasicRateData/",
-    getOffersByEntity: "getOffersByEntity/",
-    getOffersBySubUser: "getOffersBySubUser/",
   },
   score: {
     registerScore: "registerScore/",
@@ -93,7 +91,9 @@ export const ApiRoutes = {
     getPurchaseOrders: "getPurchaseOrders",
     getPurchaseOrderByUser: "getPurchaseOrderByUser/",
     getPurchaseOrderById: "getPurchaseOrderID/",
-    getpurchaseOrderPDF: "getpurchaseOrderPDF/",
+    getPurchaseOrderPDF: "getpurchaseOrderPDF/",
+    getPurchaseOrdersByProvider: "getPurchaseOrdersByProvider/",
+    getPurchaseOrdersByClient: "getPurchaseOrdersByClient/",
   },
 };
 
