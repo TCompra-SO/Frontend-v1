@@ -63,7 +63,6 @@ export default function AllOffers() {
     hiddenColumns: [],
     nameColumnHeader: t("user"),
     onButtonClick: handleOnButtonClick,
-    getLoadingPdf: () => false,
   });
 
   useEffect(() => {
@@ -185,6 +184,7 @@ export default function AllOffers() {
   });
 
   useEffect(() => {
+    console.log(loadingPdf);
     showLoadingMessage(message, loadingPdf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingPdf]);
@@ -217,7 +217,6 @@ export default function AllOffers() {
         hiddenColumns: [],
         nameColumnHeader: t("user"),
         onButtonClick: handleOnButtonClick,
-        getLoadingPdf: () => loadingPdf,
       });
     } catch (error) {
       showNotification(notification, "error", t("errorOccurred"));
@@ -269,15 +268,19 @@ export default function AllOffers() {
   }
 
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
-    console.log(action, purchaseOrder);
+    const prevId = currentPurchaseOrder?.key;
     setCurrentPurchaseOrder(purchaseOrder);
 
     switch (action) {
       case Action.DOWNLOAD_PURCHASE_ORDER:
-        setApiParamsPdf({
-          service: getPurchaseOrderPDFService(purchaseOrder.key),
-          method: "get",
-        });
+        console.log(loadingPdf);
+        if (!loadingPdf) {
+          console.log("down");
+          setApiParamsPdf({
+            service: getPurchaseOrderPDFService(purchaseOrder.key),
+            method: "get",
+          });
+        } else showNotification(notification, "warning", "ddddddd");
         break;
       case Action.VIEW_PURCHASE_ORDER:
         setApiParamsHist({

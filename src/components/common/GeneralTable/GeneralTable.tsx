@@ -466,7 +466,6 @@ export default function GeneralTable(props: GeneralTableProps) {
         TypeColumn(visibility[TableColumns.TYPE]),
         DocumentColumn(
           props.content.onButtonClick,
-          props.content.getLoadingPdf,
           visibility[TableColumns.DOCUMENT]
         ),
         StateColumn(props.content.type, visibility[TableColumns.STATE]),

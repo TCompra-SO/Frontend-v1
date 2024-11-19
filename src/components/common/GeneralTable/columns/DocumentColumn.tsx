@@ -9,7 +9,6 @@ import { Action } from "../../../../utilities/types";
 
 export default function DocumentColumn(
   onButtonClick: (action: Action, data: any) => void,
-  getLoading: () => boolean,
   hidden: boolean = false
 ) {
   const { t } = useTranslation();
@@ -22,11 +21,9 @@ export default function DocumentColumn(
     width: "130px",
     hidden,
     render: (record) => {
-      const isLoading = getLoading();
       return (
         <div className="t-flex c-ofertas" style={{ padding: "7px 0" }}>
           <ButtonContainer
-            disabled={isLoading}
             onClick={() =>
               onButtonClick(Action.DOWNLOAD_PURCHASE_ORDER, record)
             }

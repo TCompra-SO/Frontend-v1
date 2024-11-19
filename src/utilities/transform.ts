@@ -185,7 +185,7 @@ export function transformToPurchaseOrder(data: any) {
     requirementTitle: data.requerimentTitle,
     requirementId: data.requerimentID,
     selectionDate: data.createDate,
-    state: data.state,
+    state: data.stateID,
     offerTitle: data.offerTitle,
     offerId: data.offerID,
     key: data.uid,

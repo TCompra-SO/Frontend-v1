@@ -257,7 +257,6 @@ export interface TableTypeAllPurchaseOrders extends TableHiddenColumns {
   type: TableTypes.ALL_PURCHASE_ORDERS;
   subType: PurchaseOrderTableTypes;
   data: BasicPurchaseOrder[];
-  getLoadingPdf: () => boolean;
 }
 
 export interface TableTypeMyDocuments extends TableHiddenColumns {
