@@ -25,7 +25,7 @@ import {
   CertificationItem,
   BasicRateData,
 } from "./MainInterfaces";
-import { SubUserProfile } from "./Responses";
+import { SubUserBase } from "./Responses";
 
 /******** Modals *******/
 
@@ -225,7 +225,7 @@ export interface TableTypePurchaseOrder extends TableHiddenColumns {
 
 export interface TableTypeUsers extends TableHiddenColumns {
   type: TableTypes.USERS;
-  data: SubUserProfile[];
+  data: SubUserBase[];
 }
 
 export interface TableTypeRequirementSubUser extends TableHiddenColumns {

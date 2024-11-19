@@ -7,9 +7,10 @@ import {
   Requirement,
 } from "../models/MainInterfaces";
 import { UserState } from "../models/Redux";
+import { SubUserBase } from "../models/Responses";
 import { getBaseDataUserService } from "../services/requests/authService";
 import makeRequest from "./globalFunctions";
-import { RequirementState, RequirementType, Usage } from "./types";
+import { EntityType, RequirementType, Usage } from "./types";
 
 export function transformDataToRequirement(
   data: any,
@@ -215,4 +216,22 @@ export function transformToPurchaseOrder(data: any) {
     subUserNameProvider: data.nameSubUserProvider,
   };
   return purcOrder;
+}
+
+export function transformToSubUserBase(data: any) {
+  const subUser: SubUserBase = {
+    typeID: data.typeID,
+    createdAt: data.createdAt,
+    numGoods: 0,
+    numServices: 0,
+    numSales: 0,
+    numOffers: 0,
+    numPurchaseOrders: 0,
+    uid: data.Uid,
+    name: "aaaaaaaaaa",
+    document: "434343",
+    email: data.email,
+    typeEntity: EntityType.SUBUSER,
+  };
+  return subUser;
 }

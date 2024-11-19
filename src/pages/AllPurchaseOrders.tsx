@@ -146,7 +146,7 @@ export default function AllOffers() {
   /** Funciones */
 
   async function setTableData() {
-    if (responseData) {
+    try {
       const data = responseData.data.map((po: any) =>
         transformToPurchaseOrder(po)
       );
@@ -158,8 +158,8 @@ export default function AllOffers() {
         nameColumnHeader: t("user"),
         onButtonClick: handleOnButtonClick,
       });
-    } else if (error) {
-      showNotification(notification, "error", errorMsg);
+    } catch (error) {
+      showNotification(notification, "error", t("errorOccurred"));
     }
   }
 

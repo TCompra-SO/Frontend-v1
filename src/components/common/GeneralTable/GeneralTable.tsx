@@ -28,7 +28,7 @@ import {
 } from "../../../models/MainInterfaces";
 import { ColumnType } from "antd/es/table";
 import { useTranslation } from "react-i18next";
-import { SubUserProfile } from "../../../models/Responses";
+import { SubUserBase } from "../../../models/Responses";
 import GeneralColumnString from "./columns/GeneralColumnString";
 import GeneralColumnNumber from "./columns/GeneralColumnNumber";
 import TypeColumn from "./columns/TypeColumn";
@@ -55,20 +55,20 @@ export default function GeneralTable(props: GeneralTableProps) {
     | ColumnType<BasicOffer>
     | ColumnType<BasicRequirement>
     | ColumnType<BasicPurchaseOrder>
-    | ColumnType<SubUserProfile>
+    | ColumnType<SubUserBase>
     | ColumnType<RequirementItemSubUser>
     | ColumnType<CertificateFile>
     | ColumnType<CertificationItem>
-    | ColumnType<SubUserProfile | Requirement>
+    | ColumnType<SubUserBase | Requirement>
     | ColumnType<Offer | Requirement>
     | ColumnType<Offer | PurchaseOrder>
     | ColumnType<PurchaseOrderItemSubUser | PurchaseOrder>
     | ColumnType<Offer | PurchaseOrder | Requirement>
-    | ColumnType<Offer | Requirement | SubUserProfile>
-    | ColumnType<Offer | PurchaseOrder | SubUserProfile>
-    | ColumnType<Offer | PurchaseOrder | Requirement | SubUserProfile>
+    | ColumnType<Offer | Requirement | SubUserBase>
+    | ColumnType<Offer | PurchaseOrder | SubUserBase>
+    | ColumnType<Offer | PurchaseOrder | Requirement | SubUserBase>
     | ColumnType<Offer | Requirement | RequirementItemSubUser>
-    | ColumnType<SubUserProfile | PurchaseOrder | BaseRequirementOffer>
+    | ColumnType<SubUserBase | PurchaseOrder | BaseRequirementOffer>
     | ColumnType<Requirement | Offer | PurchaseOrder | RequirementItemSubUser>
     | ColumnType<
         RequirementItemSubUser | OfferItemSubUser | PurchaseOrderItemSubUser
@@ -93,7 +93,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         | BasicPurchaseOrder
       >
     | ColumnType<
-        | SubUserProfile
+        | SubUserBase
         | BaseRequirementOffer
         | BasicPurchaseOrder
         | CertificateFile
@@ -191,7 +191,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         <Table
           dataSource={props.content.data}
           loading={props.loading}
-          columns={columns as Array<ColumnType<SubUserProfile>>}
+          columns={columns as Array<ColumnType<SubUserBase>>}
           {...tableProps}
         ></Table>
       );

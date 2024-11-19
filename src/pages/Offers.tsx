@@ -177,7 +177,7 @@ export default function Offers() {
   }, [responseDataRate, errorRate]);
 
   async function setData() {
-    if (responseData) {
+    try {
       const data = responseData.data.map((e: any) =>
         transformToOfferFromGetOffersByEntityOrSubUser(
           e,
@@ -195,8 +195,8 @@ export default function Offers() {
         nameColumnHeader: t("offers"),
         onButtonClick: handleOnButtonClick,
       });
-    } else if (error) {
-      showNotification(notification, "error", errorMsg);
+    } catch (error) {
+      showNotification(notification, "error", t("errorOccurred"));
     }
   }
 

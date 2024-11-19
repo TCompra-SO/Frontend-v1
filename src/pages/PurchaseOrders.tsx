@@ -297,7 +297,7 @@ export default function PurchaseOrders() {
   /** Funciones */
 
   async function setTableData() {
-    if (responseData) {
+    try {
       const data = responseData.data.map((po: any) =>
         transformToPurchaseOrder(po)
       );
@@ -310,8 +310,8 @@ export default function PurchaseOrders() {
         nameColumnHeader: t("user"),
         onButtonClick: handleOnButtonClick,
       });
-    } else if (error) {
-      showNotification(notification, "error", errorMsg);
+    } catch (error) {
+      showNotification(notification, "error", t("errorOccurred"));
     }
   }
 

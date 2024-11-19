@@ -11,7 +11,7 @@ import {
 } from "../../../../utilities/types";
 import { useContext } from "react";
 import { ListsContext } from "../../../../contexts/listsContext";
-import { SubUserProfile } from "../../../../models/Responses";
+import { SubUserBase } from "../../../../models/Responses";
 import { getLabelFromRole } from "../../../../utilities/globalFunctions";
 import { useTranslation } from "react-i18next";
 
@@ -57,7 +57,7 @@ export default function NameColumn(
   }
 
   const col: ColumnType<
-    SubUserProfile | BaseRequirementOffer | BasicPurchaseOrder | CertificateFile
+    SubUserBase | BaseRequirementOffer | BasicPurchaseOrder | CertificateFile
   > = {
     title: nameColumnHeader,
     dataIndex,
@@ -75,8 +75,8 @@ export default function NameColumn(
         const bTitle = (b as BaseRequirementOffer).title;
         return aTitle.localeCompare(bTitle);
       } else if (type === TableTypes.USERS) {
-        const aName = (a as SubUserProfile).name;
-        const bName = (b as SubUserProfile).name;
+        const aName = (a as SubUserBase).name;
+        const bName = (b as SubUserBase).name;
         return aName.localeCompare(bName);
       } else if (type === TableTypes.MY_DOCUMENTS) {
         const aName = (a as CertificateFile).name;
@@ -125,7 +125,7 @@ export default function NameColumn(
                 type === TableTypes.ALL_OFFERS ||
                 type === TableTypes.ALL_REQUIREMENTS) &&
                 (record as BaseRequirementOffer).title}
-              {type === TableTypes.USERS && (record as SubUserProfile).name}
+              {type === TableTypes.USERS && (record as SubUserBase).name}
               {type === TableTypes.MY_DOCUMENTS &&
                 (record as CertificateFile).name}
               {type === TableTypes.PURCHASE_ORDER &&
@@ -148,7 +148,7 @@ export default function NameColumn(
                   ? categoryData[(record as Requirement).category]?.value
                   : null}
                 {type == TableTypes.USERS &&
-                  t(getLabelFromRole((record as SubUserProfile).typeID))}
+                  t(getLabelFromRole((record as SubUserBase).typeID))}
               </div>
             )}
           </div>

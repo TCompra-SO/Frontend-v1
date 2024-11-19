@@ -84,7 +84,7 @@ export default function AllOffers() {
   /** Funciones */
 
   async function setData() {
-    if (responseData) {
+    try {
       const subUsers: { [key: string]: BaseUser } = {};
       const data = await Promise.all(
         responseData.data.map(async (e: any) => {
@@ -136,8 +136,8 @@ export default function AllOffers() {
         nameColumnHeader: t("offers"),
         onButtonClick: handleOnButtonClick,
       });
-    } else if (error) {
-      showNotification(notification, "error", errorMsg);
+    } catch (error) {
+      showNotification(notification, "error", t("errorOccurred"));
     }
   }
 

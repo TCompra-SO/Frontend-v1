@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Action, TableTypes } from "../../../../utilities/types";
-import { SubUserProfile } from "../../../../models/Responses";
+import { SubUserBase } from "../../../../models/Responses";
 import {
   OfferItemSubUser,
   PurchaseOrderItemSubUser,
@@ -9,7 +9,7 @@ import {
 import GeneralTable from "../../../common/GeneralTable/GeneralTable";
 
 interface SubUserTableModalProps {
-  user: SubUserProfile | null;
+  user: SubUserBase | null;
   content:
     | {
         tableType: TableTypes.REQUIREMENT_SUBUSER;

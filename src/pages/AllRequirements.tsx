@@ -86,7 +86,7 @@ export default function AllRequirements() {
   /** Funciones */
 
   async function setData() {
-    if (responseData) {
+    try {
       const subUsers: { [key: string]: BaseUser } = {};
       const data = await Promise.all(
         responseData.data.map(async (e: any) => {
@@ -125,8 +125,8 @@ export default function AllRequirements() {
         nameColumnHeader: t(getLabelFromRequirementType(type)),
         onButtonClick: handleOnButtonClick,
       });
-    } else if (error) {
-      showNotification(notification, "error", errorMsg);
+    } catch (error) {
+      showNotification(notification, "error", t("errorOccurred"));
     }
   }
 

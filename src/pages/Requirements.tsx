@@ -70,7 +70,8 @@ export default function Requirements() {
     onButtonClick: handleOnButtonClick,
   });
 
-  /* Obtener lista inicialmente y obtener ofertas */
+  /* Obtener lista inicialmente */
+
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: getRequirementsBySubUserService(dataUser.uid),
     method: "get",
@@ -215,7 +216,7 @@ export default function Requirements() {
   /** Funciones */
 
   async function setTableData() {
-    if (responseData) {
+    try {
       const data = responseData.data.map((e: any) =>
         transformDataToRequirement(
           e,
@@ -232,8 +233,8 @@ export default function Requirements() {
         nameColumnHeader: t("goods"),
         onButtonClick: handleOnButtonClick,
       });
-    } else if (error) {
-      showNotification(notification, "error", errorMsg);
+    } catch (error) {
+      showNotification(notification, "error", t("errorOccurred"));
     }
   }
 

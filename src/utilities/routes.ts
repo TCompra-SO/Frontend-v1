@@ -53,6 +53,7 @@ export const ApiRoutes = {
     changeRole: "changeRole/",
     changeStatus: "changeStatus/",
     getUser: "getUser/",
+    getSubUsersByEntity: "getSubUsersByEntity/",
   },
   requirements: {
     getRequirement: "getRequeriment/",

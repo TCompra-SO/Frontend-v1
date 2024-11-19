@@ -18,19 +18,25 @@ import { TableTypeUsers, useApiParams } from "../models/Interfaces";
 import { mainModalScrollStyle } from "../utilities/globals";
 import ButtonContainer from "../components/containers/ButtonContainer";
 import useApi from "../hooks/useApi";
-import { getSubUserService } from "../services/requests/subUserService";
+import {
+  getSubUsersByEntityService,
+  getSubUserService,
+} from "../services/requests/subUserService";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { equalServices } from "../utilities/globalFunctions";
-import showNotification from "../utilities/notification/showNotification";
+import showNotification, {
+  showLoadingMessage,
+} from "../utilities/notification/showNotification";
 import { App } from "antd";
-import { SubUserProfile } from "../models/Responses";
+import { SubUserBase, SubUserProfile } from "../models/Responses";
 import SubUserTableModal from "../components/section/users/subUserTables/SubUserTableModal";
 import {
   OfferItemSubUser,
   PurchaseOrderItemSubUser,
   RequirementItemSubUser,
 } from "../models/MainInterfaces";
+import { transformToSubUserBase } from "../utilities/transform";
 
 const users: SubUserProfile[] = [
   {
@@ -316,48 +322,113 @@ const purc: PurchaseOrderItemSubUser[] = [
 
 export default function Users() {
   const { t } = useTranslation();
-  const { notification } = App.useApp();
+  const { notification, message } = App.useApp();
   const token = useSelector((state: MainState) => state.user.token);
+  const uid = useSelector((state: MainState) => state.user.uid);
   const [action, setAction] = useState<Action>(Action.ADD_USER);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [userData, setUserData] = useState<SubUserProfile | null>(null);
+  const [userData, setUserData] = useState<SubUserBase | null>(null);
+  const [userDataEdit, setUserDataEdit] = useState<SubUserProfile | null>(null);
 
-  const [tableContent] = useState<TableTypeUsers>({
+  const [tableContent, setTableContent] = useState<TableTypeUsers>({
     type: TableTypes.USERS,
-    data: users,
+    data: [],
     hiddenColumns: [],
     nameColumnHeader: t("user"),
     onButtonClick: handleOnActionClick,
   });
-  const [apiParams, setApiParams] = useState<useApiParams>({
-    service: null,
+
+  /** Obtener lista de subusuarios */
+
+  const [apiParams] = useState<useApiParams>({
+    service: getSubUsersByEntityService(uid),
     method: "get",
-    // token,
   });
-  const { responseData, error, errorMsg, fetchData } = useApi({
+
+  const { loading, responseData, error, errorMsg, fetchData } = useApi({
     service: apiParams.service,
     method: apiParams.method,
-    token: apiParams.token,
+    dataToSend: apiParams.dataToSend,
   });
+
+  useEffect(() => {
+    if (responseData) {
+      setTableData();
+    } else if (error) {
+      showNotification(notification, "error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
 
+  /** Obtener datos de subusuario */
+
+  const [apiParamsUser, setApiParamsUser] = useState<useApiParams>({
+    service: null,
+    method: "get",
+    // token,
+  });
+  const {
+    loading: loadingUser,
+    responseData: responseDataUser,
+    error: errorUser,
+    errorMsg: errorMsgUser,
+    fetchData: fetchDataUser,
+  } = useApi({
+    service: apiParamsUser.service,
+    method: apiParamsUser.method,
+    token: apiParamsUser.token,
+  });
+
   useEffect(() => {
-    if (responseData) {
-      if (equalServices(apiParams.service, getSubUserService(""))) {
-        setUserData(responseData);
-        console.log(responseData, userData);
+    showLoadingMessage(message, loadingUser);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingUser]);
+
+  useEffect(() => {
+    if (apiParamsUser.service) fetchDataUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsUser]);
+
+  useEffect(() => {
+    if (responseDataUser) {
+      if (equalServices(apiParamsUser.service, getSubUserService(""))) {
+        setUserDataEdit(responseDataUser);
+        console.log(responseDataUser, userDataEdit);
         handleOpenModal();
       }
-    } else if (error) {
-      showNotification(notification, "error", errorMsg);
+    } else if (errorUser) {
+      showNotification(notification, "error", errorMsgUser);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseData, error]);
+  }, [responseDataUser, errorUser]);
+
+  /** Funciones */
+
+  async function setTableData() {
+    try {
+      let data: SubUserBase[] = [];
+      if (responseData.data.length > 0) {
+        data = responseData.data[0].auth_users.map((e: any) =>
+          transformToSubUserBase(e)
+        );
+      }
+      setTableContent({
+        type: TableTypes.USERS,
+        data,
+        hiddenColumns: [],
+        nameColumnHeader: t("user"),
+        onButtonClick: handleOnActionClick,
+      });
+    } catch (error) {
+      showNotification(notification, "error", t("errorOccurred"));
+    }
+  }
 
   function openModalAddUser() {
     setAction(Action.ADD_USER);
@@ -376,13 +447,13 @@ export default function Users() {
     console.log(e.target.value);
   }
 
-  function handleOnActionClick(action: Action, user: SubUserProfile) {
+  function handleOnActionClick(action: Action, user: SubUserBase) {
     console.log(action, user);
     setAction(action);
     switch (action) {
       case Action.EDIT_USER:
-        setApiParams({
-          service: getSubUserService("WpIPS18MYqNWegvx5REP"), // r3v user.uid
+        setApiParamsUser({
+          service: getSubUserService(user.uid),
           method: "get",
           token,
         });
@@ -411,7 +482,7 @@ export default function Users() {
           <AddUserModal
             onClose={handleCloseModal}
             edit={true}
-            userData={userData}
+            userData={userDataEdit}
           />
         );
       case Action.VIEW_REQUIREMENTS:
@@ -483,11 +554,7 @@ export default function Users() {
             </ButtonContainer>
           </div>
         }
-        // loading={
-        //   equalServices(apiParams.service, getRequirementsService())
-        //     ? loading
-        //     : undefined
-        // }
+        loading={loading}
       />
     </>
   );
