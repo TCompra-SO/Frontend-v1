@@ -110,7 +110,7 @@ export default function AddUserModal(props: AddUserModalProps) {
   /** useEffects */
 
   useEffect(() => {
-    if (props.userData?.document) {
+    if (props.edit && props.userData?.document) {
       form.setFieldsValue({ document: props.userData?.document });
     }
   }, [props.userData?.document, form]);
