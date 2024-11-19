@@ -83,6 +83,9 @@ export const ApiRoutes = {
     getDetailOffer: "getDetailOffer/",
     getOffersByRequirement: "getOffersByRequeriment/",
     getBasicRateData: "getBasicRateData/",
+    getOffersByEntity: "getOffersByEntity/",
+    getOffersBySubUser: "getOffersBySubUser/",
+    delete: "delete/",
   },
   score: {
     registerScore: "registerScore/",
