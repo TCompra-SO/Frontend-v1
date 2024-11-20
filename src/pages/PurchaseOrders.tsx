@@ -321,7 +321,6 @@ export default function PurchaseOrders() {
 
   function openRateModal(responseData: any) {
     const data = transformToBasicRateData(responseData.data[0]);
-    console.log(currentPurchaseOrder);
     if (currentPurchaseOrder) {
       setDataModal({
         type: ModalTypes.RATE_USER,

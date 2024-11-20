@@ -5,14 +5,9 @@ import AddUserModal from "../components/section/users/addUser/AddUserModal";
 import { useTranslation } from "react-i18next";
 import {
   Action,
-  EntityType,
-  OfferState,
-  PurchaseOrderState,
   PurchaseOrderTableTypes,
-  RequirementState,
   RequirementType,
   TableTypes,
-  UserRoles,
 } from "../utilities/types";
 import { TableTypeUsers, useApiParams } from "../models/Interfaces";
 import { mainModalScrollStyle } from "../utilities/globals";
@@ -36,178 +31,15 @@ import {
   PurchaseOrderItemSubUser,
   RequirementItemSubUser,
 } from "../models/MainInterfaces";
-import { transformToSubUserBase } from "../utilities/transform";
-
-const reqs: RequirementItemSubUser[] = [
-  {
-    price: 0,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    expirationDate: "2024-10-12T16:36:45.673Z",
-    numberOffers: 2,
-    state: RequirementState.PUBLISHED,
-    key: "1",
-    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
-    type: RequirementType.GOOD,
-    coin: 1,
-  },
-  {
-    price: 0,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    expirationDate: "2024-10-12T16:36:45.673Z",
-    numberOffers: 2,
-    state: RequirementState.PUBLISHED,
-    key: "2",
-    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
-    type: RequirementType.GOOD,
-    coin: 1,
-  },
-  {
-    price: 0,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    expirationDate: "2024-10-12T16:36:45.673Z",
-    numberOffers: 2,
-    state: RequirementState.PUBLISHED,
-    key: "3",
-    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
-    type: RequirementType.GOOD,
-    coin: 1,
-  },
-  {
-    price: 0,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    expirationDate: "2024-10-12T16:36:45.673Z",
-    numberOffers: 2,
-    state: RequirementState.PUBLISHED,
-    key: "4",
-    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
-    type: RequirementType.GOOD,
-    coin: 1,
-  },
-  {
-    price: 0,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    expirationDate: "2024-10-12T16:36:45.673Z",
-    numberOffers: 2,
-    state: RequirementState.PUBLISHED,
-    key: "5",
-    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
-    type: RequirementType.GOOD,
-    coin: 1,
-  },
-  {
-    price: 0,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    expirationDate: "2024-10-12T16:36:45.673Z",
-    numberOffers: 2,
-    state: RequirementState.PUBLISHED,
-    key: "6",
-    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
-    type: RequirementType.GOOD,
-    coin: 1,
-  },
-  {
-    price: 123,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    expirationDate: "2024-10-12T16:36:45.673Z",
-    numberOffers: 2,
-    state: RequirementState.PUBLISHED,
-    key: "7",
-    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
-    type: RequirementType.GOOD,
-    coin: 1,
-  },
-];
-
-const offers: OfferItemSubUser[] = [
-  {
-    requirementTitle: "Requirement title fdskfhjkshf js hfjksfh sjffhjs jsf",
-    price: 23,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    state: OfferState.ACTIVE,
-    coin: 2,
-    key: "1",
-    title: "Offer title fjdfh jfhsjhf js",
-    type: RequirementType.GOOD,
-  },
-  {
-    requirementTitle: "Requirement title fdskfhjkshf js hfjksfh sjffhjs jsf",
-    price: 23,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    state: OfferState.ACTIVE,
-    coin: 2,
-    key: "1",
-    title: "Offer title fjdfh jfhsjhf js",
-    type: RequirementType.SALE,
-  },
-  {
-    requirementTitle: "Requirement title fdskfhjkshf js hfjksfh sjffhjs jsf",
-    price: 23,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    state: OfferState.ACTIVE,
-    coin: 2,
-    key: "1",
-    title: "Offer title fjdfh jfhsjhf js",
-    type: RequirementType.GOOD,
-  },
-  {
-    requirementTitle: "Requirement title fdskfhjkshf js hfjksfh sjffhjs jsf",
-    price: 434343,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    state: OfferState.ACTIVE,
-    coin: 2,
-    key: "1",
-    title: "Offer title fjdfh jfhsjhf js",
-    type: RequirementType.GOOD,
-  },
-];
-
-const purc: PurchaseOrderItemSubUser[] = [
-  {
-    requirementTitle: "req title fdfsf fs f sf sf sfs",
-    offerTitle: "Offer title fkjsfjsjk fjkfsfsfds",
-    selectionDate: "2024-10-12T16:36:45.673Z",
-    state: PurchaseOrderState.PENDING,
-    key: "1",
-    type: RequirementType.SERVICE,
-    subType: PurchaseOrderTableTypes.ISSUED,
-  },
-  {
-    requirementTitle: "req title fdfsf fs f sf sf sfs",
-    offerTitle: "Offer title fkjsfjsjk fjkfsfsfds",
-    selectionDate: "2024-10-12T16:36:45.673Z",
-    state: PurchaseOrderState.PENDING,
-    key: "1",
-    type: RequirementType.SERVICE,
-    subType: PurchaseOrderTableTypes.ISSUED,
-  },
-  {
-    requirementTitle: "req title fdfsf fs f sf sf sfs",
-    offerTitle: "Offer title fkjsfjsjk fjkfsfsfds",
-    selectionDate: "2024-10-12T16:36:45.673Z",
-    state: PurchaseOrderState.PENDING,
-    key: "1",
-    type: RequirementType.SERVICE,
-    subType: PurchaseOrderTableTypes.ISSUED_SALES,
-  },
-  {
-    requirementTitle: "req title fdfsf fs f sf sf sfs",
-    offerTitle: "Offer title fkjsfjsjk fjkfsfsfds",
-    selectionDate: "2024-10-12T16:36:45.673Z",
-    state: PurchaseOrderState.PENDING,
-    key: "1",
-    type: RequirementType.GOOD,
-    subType: PurchaseOrderTableTypes.RECEIVED,
-  },
-  {
-    requirementTitle: "req title fdfsf fs f sf sf sfs",
-    offerTitle: "Offer title fkjsfjsjk fjkfsfsfds",
-    selectionDate: "2024-10-12T16:36:45.673Z",
-    state: PurchaseOrderState.PENDING,
-    key: "1",
-    type: RequirementType.SALE,
-    subType: PurchaseOrderTableTypes.RECEIVED_SALES,
-  },
-];
+import {
+  transformDataToOfferItemSubUser,
+  transformDataToRequirementItemSubUser,
+  transformToPurchaseOrderItemSubUser,
+  transformToSubUserBase,
+} from "../utilities/transform";
+import { getRequirementsBySubUserService } from "../services/requests/requirementService";
+import { getOffersBySubUserService } from "../services/requests/offerService";
+import { getPurchaseOrdersByClientEntityService } from "../services/requests/purchaseOrderService";
 
 export default function Users() {
   const { t } = useTranslation();
@@ -218,7 +50,9 @@ export default function Users() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [userData, setUserData] = useState<SubUserBase | null>(null);
   const [userDataEdit, setUserDataEdit] = useState<SubUserProfile | null>(null);
-
+  const [reqList, setReqList] = useState<RequirementItemSubUser[]>([]);
+  const [offerList, setOfferList] = useState<OfferItemSubUser[]>([]);
+  const [orderList, setOrderList] = useState<PurchaseOrderItemSubUser[]>([]);
   const [tableContent, setTableContent] = useState<TableTypeUsers>({
     type: TableTypes.USERS,
     data: [],
@@ -296,6 +130,120 @@ export default function Users() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataUser, errorUser]);
 
+  /** Obtener lista de requerimientos */
+
+  const [apiParamsReq, setApiParamsReq] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingReq,
+    responseData: responseDataReq,
+    error: errorReq,
+    errorMsg: errorMsgReq,
+    fetchData: fetchDataReq,
+  } = useApi({
+    service: apiParamsReq.service,
+    method: apiParamsReq.method,
+    dataToSend: apiParamsReq.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingReq);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingReq]);
+
+  useEffect(() => {
+    if (apiParamsReq.service) fetchDataReq();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsReq]);
+
+  useEffect(() => {
+    if (responseDataReq) {
+      setModalTableDataReq();
+    } else if (errorReq) {
+      showNotification(notification, "error", errorMsgReq);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataReq, errorReq]);
+
+  const [apiParamsOffer, setApiParamsOffer] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  /** Obtener lista de ofertas */
+
+  const {
+    loading: loadingOffer,
+    responseData: responseDataOffer,
+    error: errorOffer,
+    errorMsg: errorMsgOffer,
+    fetchData: fetchDataOffer,
+  } = useApi({
+    service: apiParamsOffer.service,
+    method: apiParamsOffer.method,
+    dataToSend: apiParamsOffer.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingOffer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingOffer]);
+
+  useEffect(() => {
+    if (apiParamsOffer.service) fetchDataOffer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsOffer]);
+
+  useEffect(() => {
+    if (responseDataOffer) {
+      setModalTableDataOffer();
+    } else if (errorOffer) {
+      showNotification(notification, "error", errorMsgOffer);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataOffer, errorOffer]);
+
+  /** Obtener lista de órdenes de compra */
+
+  const [apiParamsOrder, setApiParamsOrder] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingOrder,
+    responseData: responseDataOrder,
+    error: errorOrder,
+    errorMsg: errorMsgOrder,
+    fetchData: fetchDataOrder,
+  } = useApi({
+    service: apiParamsOrder.service,
+    method: apiParamsOrder.method,
+    dataToSend: apiParamsOrder.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingOrder);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingOrder]);
+
+  useEffect(() => {
+    if (apiParamsOrder.service) fetchDataOrder();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsOrder]);
+
+  useEffect(() => {
+    if (responseDataOrder) {
+      setModalTableDataOrder();
+    } else if (errorOrder) {
+      showNotification(notification, "error", errorMsgOrder);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataOrder, errorOrder]);
+
   /** Funciones */
 
   async function setTableData() {
@@ -313,6 +261,44 @@ export default function Users() {
         nameColumnHeader: t("user"),
         onButtonClick: handleOnActionClick,
       });
+    } catch (error) {
+      showNotification(notification, "error", t("errorOccurred"));
+    }
+  }
+
+  function setModalTableDataReq() {
+    try {
+      const data: RequirementItemSubUser[] = responseDataReq.data.map(
+        (e: any) =>
+          transformDataToRequirementItemSubUser(e, RequirementType.GOOD) // r3v
+      );
+      setReqList(data);
+      handleOpenModal();
+    } catch (error) {
+      showNotification(notification, "error", t("errorOccurred"));
+    }
+  }
+
+  function setModalTableDataOffer() {
+    try {
+      const data: OfferItemSubUser[] = responseDataOffer.data.map(
+        (e: any) => transformDataToOfferItemSubUser(e, RequirementType.GOOD) // r3v
+      );
+      setOfferList(data);
+      handleOpenModal();
+    } catch (error) {
+      showNotification(notification, "error", t("errorOccurred"));
+    }
+  }
+
+  function setModalTableDataOrder() {
+    try {
+      const data: PurchaseOrderItemSubUser[] = responseDataOrder.data.map(
+        (e: any) =>
+          transformToPurchaseOrderItemSubUser(e, PurchaseOrderTableTypes.ISSUED) // r3v
+      );
+      setOrderList(data);
+      handleOpenModal();
     } catch (error) {
       showNotification(notification, "error", t("errorOccurred"));
     }
@@ -347,15 +333,27 @@ export default function Users() {
         break;
       case Action.VIEW_REQUIREMENTS:
         setUserData(user);
-        handleOpenModal();
+        setApiParamsReq({
+          service: getRequirementsBySubUserService(user.uid),
+          method: "get",
+        });
         break;
       case Action.VIEW_OFFERS:
         setUserData(user);
-        handleOpenModal();
+        setApiParamsOffer({
+          service: getOffersBySubUserService(user.uid),
+          method: "get",
+        });
         break;
       case Action.VIEW_PURCHASE_ORDERS:
         setUserData(user);
-        handleOpenModal();
+        setApiParamsOrder({
+          service: getPurchaseOrdersByClientEntityService(
+            user.uid,
+            user.typeID
+          ),
+          method: "get",
+        });
         break;
     }
   }
@@ -377,7 +375,7 @@ export default function Users() {
           <SubUserTableModal
             content={{
               tableType: TableTypes.REQUIREMENT_SUBUSER,
-              tableContent: reqs,
+              tableContent: reqList,
             }}
             user={userData}
           />
@@ -387,7 +385,7 @@ export default function Users() {
           <SubUserTableModal
             content={{
               tableType: TableTypes.OFFER_SUBUSER,
-              tableContent: offers,
+              tableContent: offerList,
             }}
             user={userData}
           />
@@ -397,7 +395,7 @@ export default function Users() {
           <SubUserTableModal
             content={{
               tableType: TableTypes.PURCHASE_ORDER_SUBUSER,
-              tableContent: purc,
+              tableContent: orderList,
             }}
             user={userData}
           />

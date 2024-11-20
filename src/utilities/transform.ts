@@ -3,14 +3,22 @@ import {
   BasicRateData,
   FullUser,
   Offer,
+  OfferItemSubUser,
   PurchaseOrder,
+  PurchaseOrderItemSubUser,
   Requirement,
+  RequirementItemSubUser,
 } from "../models/MainInterfaces";
 import { UserState } from "../models/Redux";
 import { SubUserBase } from "../models/Responses";
 import { getBaseDataUserService } from "../services/requests/authService";
 import makeRequest from "./globalFunctions";
-import { EntityType, RequirementType, Usage } from "./types";
+import {
+  EntityType,
+  PurchaseOrderTableTypes,
+  RequirementType,
+  Usage,
+} from "./types";
 
 export function transformDataToRequirement(
   data: any,
@@ -44,6 +52,24 @@ export function transformDataToRequirement(
     req.user = mainUser;
     req.subUser = user;
   } else req.user = user;
+  return req;
+}
+
+export function transformDataToRequirementItemSubUser(
+  data: any,
+  type: RequirementType
+) {
+  const req: RequirementItemSubUser = {
+    price: data.price,
+    publishDate: data.publishDate,
+    expirationDate: data.completion_date,
+    numberOffers: data.numberOffers,
+    state: data.state,
+    coin: data.coin,
+    title: data.title,
+    key: data.key,
+    type,
+  };
   return req;
 }
 
@@ -170,6 +196,23 @@ export function transformToOfferFromGetOffersByEntityOrSubUser(
   return offer;
 }
 
+export function transformDataToOfferItemSubUser(
+  data: any,
+  type: RequirementType
+) {
+  const req: OfferItemSubUser = {
+    requirementTitle: data.requirementTitle,
+    price: data.price,
+    publishDate: data.publishDate,
+    state: data.state,
+    coin: data.coin,
+    title: data.title,
+    key: data.key,
+    type,
+  };
+  return req;
+}
+
 export function transformToBasicRateData(data: any) {
   const basicData: BasicRateData = data;
   if (basicData.userId !== basicData.subUserId) return basicData;
@@ -215,6 +258,23 @@ export function transformToPurchaseOrder(data: any) {
     userNameProvider: data.nameUserProvider,
     subUserNameProvider: data.nameSubUserProvider,
   };
+  return purcOrder;
+}
+
+export function transformToPurchaseOrderItemSubUser(
+  data: any,
+  subType: PurchaseOrderTableTypes
+) {
+  const purcOrder: PurchaseOrderItemSubUser = {
+    requirementTitle: data.requerimentTitle,
+    offerTitle: data.offerTitle,
+    selectionDate: data.createDate,
+    state: data.stateID,
+    subType,
+    key: data.uid,
+    type: data.type,
+  };
+  console.log(purcOrder, data);
   return purcOrder;
 }
 
