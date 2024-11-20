@@ -28,6 +28,8 @@ import {
   ImageRequestLabels,
   ProcessFlag,
   RequirementState,
+  RequirementType,
+  UserRoles,
 } from "../../../../../utilities/types";
 import { uploadDocsOfferService } from "../../../../../services/requests/documentService";
 import { uploadImagesOfferService } from "../../../../../services/requests/imageService";
@@ -55,6 +57,7 @@ export default function OfferForm(props: OfferFormProps) {
   const email = useSelector((state: MainState) => state.user.email);
   const uid = useSelector((state: MainState) => state.user.uid);
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
+  const role = useSelector((state: MainState) => state.user.typeID);
   const { notification } = App.useApp();
   const [cantOfferMotive, setCantOfferMotive] = useState<CantOfferMotives>(
     CantOfferMotives.NONE
@@ -67,7 +70,7 @@ export default function OfferForm(props: OfferFormProps) {
   const [docSuccess, setDocSuccess] = useState(ProcessFlag.NOT_INI);
   const [imgSuccess, setImgSuccess] = useState(ProcessFlag.NOT_INI);
   const [offerId, setofferId] = useState<string>("");
-  const [isPremium] = useState(false); // r3v
+  const [isPremium] = useState(true); // r3v
 
   useEffect(() => {
     form.setFieldValue("currency", props.requirement?.coin);
@@ -81,6 +84,15 @@ export default function OfferForm(props: OfferFormProps) {
       setCantOfferMotive(CantOfferMotives.NOT_LOGGED_IN);
     } else if (props.requirement && props.requirement.user.uid == uid) {
       setCantOfferMotive(CantOfferMotives.IS_CREATOR);
+    } else if (
+      role == UserRoles.LEGAL ||
+      role == UserRoles.NONE ||
+      (role == UserRoles.BUYER &&
+        props.requirement?.type != RequirementType.SALE) ||
+      (role == UserRoles.SELLER &&
+        props.requirement?.type == RequirementType.SALE) // r3v
+    ) {
+      setCantOfferMotive(CantOfferMotives.NO_ALLOWED_ROLE);
     } else if (
       props.requirement &&
       props.requirement.state != RequirementState.PUBLISHED
@@ -96,7 +108,7 @@ export default function OfferForm(props: OfferFormProps) {
       props.requirement &&
       props.requirement.allowedBidder == CanOfferType.CERTIFIED_COMPANY
     ) {
-      setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED); //r3v
+      setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED); //r3v verificar si el usuario está certificado con la empresa
     } else {
       setCantOfferMotive(CantOfferMotives.NONE);
     }
@@ -398,6 +410,7 @@ export default function OfferForm(props: OfferFormProps) {
           motive={cantOfferMotive}
           requirement={props.requirement}
           isPremium={isPremium}
+          isCertified={CertificationState.NONE} //r3v
         />
       )}
     </div>

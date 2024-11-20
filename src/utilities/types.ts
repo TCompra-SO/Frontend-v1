@@ -406,4 +406,5 @@ export enum CantOfferMotives {
   ONLY_PREMIUM = 7,
   ONLY_CERTIFIED = 8,
   NO_ALLOWED_ROLE = 9,
+  OTHER_USER_IN_COMPANY_IS_CREATOR = 10,
 }

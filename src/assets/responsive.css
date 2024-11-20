@@ -101,6 +101,48 @@
   .detalles-estd {
     font-size: 16px;
   }
+
+  .ti-1 {
+    font-size: 16px !important;
+  }
+  .ti-2 {
+    font-size: 12px !important;
+  }
+  .slider-desc {
+    width: calc(100% - 20px) !important;
+    padding: 0 10px !important;
+  }
+  .list-requ {
+    text-align: left;
+  }
+  .col-publicidad {
+    grid-template-columns: repeat(auto-fill, minmax(50%, 1fr)) !important;
+  }
+  .col-publicidad-2 {
+    display: flex !important;
+  }
+  .calificacion-emp {
+    font-size: 14px;
+  }
+  .empresa-cantidad {
+    font-size: 14px;
+  }
+  .em-1,
+  .em-2 {
+    grid-template-columns: repeat(auto-fill, minmax(50%, 1fr)) !important;
+  }
+  .filter-in {
+    grid-template-columns: repeat(auto-fill, minmax(50%, 1fr)) !important;
+  }
+  .f-empresa {
+    grid-column: 1 / span 1 !important;
+  }
+  .filter-in > button {
+    grid-column: 1 / span 1 !important;
+  }
+  .em-b {
+    grid-column: 1 / span 1 !important;
+  }
 }
 
 @media (max-width: 476px) {
@@ -114,7 +156,7 @@
     width: calc(100% - 60px) !important;
   }
   .card-white {
-    padding: 25px;
+    padding: 20px;
   }
   .tc-datos {
     height: calc(100vh - 118px);
@@ -260,6 +302,46 @@
   .form-oferta {
     gap: 10px;
   }
+
+  .ht-s3 {
+    width: 100% !important;
+    gap: 0;
+  }
+  .icon-home {
+    min-width: 45px;
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+  }
+  .list-requ {
+    font-size: 20px;
+  }
+  .about-1 {
+    font-size: 22px;
+    line-height: 1.4;
+  }
+  .about-2 {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  .icon-empresa-d {
+    font-size: 20px;
+    width: 45px;
+    height: 45px;
+    min-width: 45px;
+  }
+  .datos-empresa-2 {
+    padding: 20px !important;
+  }
+  .footer-s1 {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .footer-s1 > img {
+    width: 100%;
+    height: auto;
+  }
 }
 
 @media (max-width: 576px) {
@@ -279,6 +361,16 @@
   .card-blue,
   .card-teal,
   .card-black,
+  .card-red,
+  .card-gray-m,
+  .card-green {
+    width: 100% !important;
+  }
+  .card-red,
+  .card-gray-m,
+  .card-green {
+    font-size: 17px;
+  }
   .card-red,
   .card-gray-m,
   .card-green {
@@ -342,7 +434,7 @@
     margin: auto 30px;
   }
   .section-detalles {
-    padding: 30px;
+    padding: 20px !important;
     gap: 15px;
   }
 
@@ -389,6 +481,88 @@
   }
   .oferta-check {
     height: auto;
+  }
+
+  .slider-desc {
+    height: 330px;
+    width: calc(100% - 50px);
+    padding: 0 25px;
+  }
+  .count-req {
+    flex-direction: column;
+    flex: 1;
+  }
+  .col-documento-2 {
+    text-align: center;
+  }
+  .section-slider {
+    height: 420px;
+  }
+  .home-t > h2 {
+    font-size: 18px;
+    line-height: 1.4;
+  }
+  .home-t > h3 {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  .ti-1 {
+    font-size: 18px;
+  }
+  .ti-2 {
+    font-size: 14px;
+  }
+  .ht-s1,
+  .ht-s2 {
+    width: 100%;
+  }
+  .ht-s3 {
+    width: 80%;
+  }
+  .col-publicidad-2 {
+    grid-template-columns: repeat(auto-fill, minmax(33%, 1fr)) !important;
+  }
+  .datos-conacto-2 {
+    flex-direction: column;
+    gap: 5px;
+  }
+  .em-1,
+  .em-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(35%, 1fr));
+  }
+  .requerimiento-2 {
+    flex-direction: column;
+    align-items: center;
+  }
+  .portada-detalle-2 {
+    width: 100% !important;
+  }
+  .filter-in {
+    grid-template-columns: repeat(auto-fill, minmax(35%, 1fr));
+  }
+  .f-empresa {
+    grid-column: 1 / span 2;
+  }
+  .filter-in > button {
+    grid-column: 1 / span 2;
+  }
+  .footer-s2 {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+  }
+  .em-b {
+    grid-column: 1 / span 2;
+  }
+  .cbl-4 {
+    padding: 20px !important;
+  }
+  .about-me,
+  .certificado-estado-1,
+  .certificado-estado-2,
+  .certificado-estado-3 {
+    font-size: 16px;
   }
 }
 
@@ -473,6 +647,44 @@
     flex-direction: column;
     text-align: center;
   }
+
+  .home-1,
+  .home-2 {
+    grid-column: 1 / span 5;
+  }
+  .col-publicidad {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(35%, 1fr));
+  }
+  .col-publicidad-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
+  }
+  .img-empresa {
+    width: 100px;
+    max-width: 100px;
+    height: 100px;
+  }
+  .section-detalles {
+    padding: 30px;
+  }
+  .requerimiento-2 {
+    padding: 20px;
+    gap: 10px;
+  }
+  .portada-detalle-2 {
+    width: 132px;
+    height: 132px;
+  }
+  .req-det {
+    gap: 5px;
+  }
+  .tags-req {
+    gap: 5px;
+  }
+  .cbl-4 {
+    padding: 25px;
+  }
 }
 
 /* Estilos para pantallas grandes (escritorios) */
@@ -509,10 +721,30 @@
   .uf-2 > .btn {
     flex-grow: 1;
   }
+  .card-empresa {
+    flex-direction: column;
+  }
+  .empresa-about {
+    width: 100%;
+  }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1024px) {
   .card-d4 {
     flex-direction: column;
+  }
+  .tpub-1,
+  .tpub-3 {
+    font-size: 22px;
+  }
+  .tpub-2 {
+    font-size: 16px;
+  }
+  .back-pub-1,
+  .back-pub-2,
+  .back-pub-3,
+  .back-pub-4,
+  .back-pub-5 {
+    padding: 25px;
   }
 }

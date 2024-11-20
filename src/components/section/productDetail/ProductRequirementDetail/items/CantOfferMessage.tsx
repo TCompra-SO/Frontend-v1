@@ -22,6 +22,7 @@ interface CantOfferMessageProps {
   motive: CantOfferMotives;
   requirement: Requirement | undefined;
   isPremium?: boolean;
+  isCertified?: CertificationState;
 }
 
 export default function CantOfferMessage(props: CantOfferMessageProps) {
@@ -31,9 +32,6 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
   const [mainText, setMainText] = useState("");
   const [optionalText, setOptionalText] = useState("");
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [isCertified] = useState<CertificationState>(
-    CertificationState.CERTIFIED
-  ); // r3v
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
@@ -84,7 +82,13 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
         setOptionalText("");
         break;
       case CantOfferMotives.IS_MAIN_CREATOR:
-        setMainText(t("aSubUserHasAlreadyMadeAnOffer"));
+        setMainText(
+          t(
+            props.requirement?.type == RequirementType.SALE
+              ? "requirementBelongsToEmployee"
+              : "saleBelongsToEmployee"
+          )
+        );
         setOptionalText(
           `${t("itHad")} (${props.requirement?.numberOffers}) ${t(
             "offers"
@@ -97,12 +101,12 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
         break;
       case CantOfferMotives.ONLY_CERTIFIED:
         setMainText(t("onlyCertifiedCompaniesCanMakeAnOffer"));
-        switch (isCertified) {
+        switch (props.isCertified) {
           case CertificationState.PENDING:
-            setOptionalText("pendingCertificationMsg");
+            setOptionalText(t("pendingCertificationMsg"));
             break;
           case CertificationState.REJECTED:
-            setOptionalText("rejectedCertificationMsg");
+            setOptionalText(t("rejectedCertificationMsg"));
             break;
           default:
             setOptionalText("");
@@ -112,6 +116,15 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
         setMainText(t("noPermissionToMakeOffer"));
         setOptionalText("");
         break;
+      case CantOfferMotives.OTHER_USER_IN_COMPANY_IS_CREATOR:
+        setMainText(
+          t(
+            props.requirement?.type == RequirementType.SALE
+              ? "requirementBelongsToEmployee"
+              : "saleBelongsToEmployee"
+          )
+        );
+        setOptionalText("");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.motive]);
@@ -188,7 +201,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
         {props.motive == CantOfferMotives.ONLY_CERTIFIED &&
           entityType == EntityType.COMPANY &&
           props.isPremium &&
-          isCertified == CertificationState.NONE && (
+          props.isCertified == CertificationState.NONE && (
             <ButtonContainer
               style={{ height: "auto" }}
               className="btn btn-green btn-sm"

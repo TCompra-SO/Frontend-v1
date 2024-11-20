@@ -53,31 +53,31 @@ export default function StateColumn(type: TableTypes, hidden: boolean = false) {
           type == TableTypes.ALL_REQUIREMENTS
         ) {
           const state = (record as BasicRequirement).state;
-          label = t(RequirementStateMeta[state].label);
-          className = `cont-estado ${RequirementStateMeta[state].class}`;
+          label = t(RequirementStateMeta[state]?.label);
+          className = `cont-estado ${RequirementStateMeta[state]?.class}`;
         } else if (
           type == TableTypes.OFFER ||
           type == TableTypes.OFFER_SUBUSER ||
           type == TableTypes.ALL_OFFERS
         ) {
           const state = (record as BasicOffer).state;
-          label = t(OfferStateMeta[state].label);
-          className = `cont-estado ${OfferStateMeta[state].class}`;
+          label = t(OfferStateMeta[state]?.label);
+          className = `cont-estado ${OfferStateMeta[state]?.class}`;
         } else if (
           type == TableTypes.PURCHASE_ORDER ||
           type == TableTypes.PURCHASE_ORDER_SUBUSER ||
           type == TableTypes.ALL_PURCHASE_ORDERS
         ) {
           const state = (record as BasicPurchaseOrder).state;
-          label = t(PurchaseOrderStateMeta[state].label);
-          className = `cont-estado ${PurchaseOrderStateMeta[state].class}`;
+          label = t(PurchaseOrderStateMeta[state]?.label);
+          className = `cont-estado ${PurchaseOrderStateMeta[state]?.class}`;
         } else if (
           type == TableTypes.SENT_CERT ||
           type == TableTypes.RECEIVED_CERT
         ) {
           const state = (record as CertificationItem).state;
-          label = t(CertificationStateMeta[state].label);
-          className = `cont-estado ${CertificationStateMeta[state].class}`;
+          label = t(CertificationStateMeta[state]?.label);
+          className = `cont-estado ${CertificationStateMeta[state]?.class}`;
         }
       } catch (e) {
         console.log(e);

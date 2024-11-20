@@ -71,7 +71,7 @@ export default function ActionColumn(
             items:
               type != TableTypes.PURCHASE_ORDER
                 ? type == TableTypes.OFFER
-                  ? ActionByState[key].reduce<ItemType[]>(
+                  ? ActionByState[key]?.reduce<ItemType[]>(
                       (acc, action: Action) => {
                         const canceledByCreator = (record as Offer) // r3v
                           .canceledByCreator;
@@ -87,14 +87,14 @@ export default function ActionColumn(
                       },
                       []
                     )
-                  : ActionByState[key].map((action: Action) => {
+                  : ActionByState[key]?.map((action: Action) => {
                       return {
                         key: action,
                         label: t(ActionLabel[action]),
                         onClick: () => onButtonClick(action, record),
                       };
                     })
-                : ActionByState[key].reduce<ItemType[]>(
+                : ActionByState[key]?.reduce<ItemType[]>(
                     (acc, action: Action) => {
                       if (
                         action == Action.VIEW_HISTORY &&

@@ -268,6 +268,8 @@ const resources = {
       offerDeletedSuccessfully: "Offer deleted successfully",
       pendingCertificationMsg: "Please wait for the approval of your documents for certification",
       rejectedCertificationMsg: "Your documents for certification have been rejected. Please review them and submit them again",
+      requirementBelongsToEmployee: "Requirement belongs to another employee",
+      saleBelongsToEmployee: "Sale belongs to another employee",
       // Other
       yes: "Yes",
       no: "No",
@@ -688,6 +690,8 @@ const resources = {
       offerDeletedSuccessfully: "Oferta eliminada exitosamente",
       rejectedCertificationMsg: "Los documentos enviados para certificación han sido rechazados. Revise los requisitos y vuelva a enviarlos",
       pendingCertificationMsg: "Por favor, espere la aprobación de sus documentos para ser certificado",
+      requirementBelongsToEmployee: "El requerimiento pertenece a otro trabajador de la empresa",
+      saleBelongsToEmployee: "La liquidación pertenece a otro trabajador de la empresa",
       // Other
       yes: "Sí",
       no: "No",
