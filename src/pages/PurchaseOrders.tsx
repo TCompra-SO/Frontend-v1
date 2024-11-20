@@ -13,7 +13,7 @@ import {
   TableTypePurchaseOrder,
   useApiParams,
 } from "../models/Interfaces";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import useApi from "../hooks/useApi";
@@ -52,6 +52,7 @@ import {
 } from "../services/requests/offerService";
 import { getBasicRateDataReqService } from "../services/requests/requirementService";
 import { getRequirementById } from "../services/complete/general";
+import { LoadingPdfContext } from "../contexts/loadingPdfContext";
 
 export default function PurchaseOrders() {
   const { t } = useTranslation();
@@ -59,6 +60,7 @@ export default function PurchaseOrders() {
   const uid = useSelector((state: MainState) => state.user.uid);
   const role = useSelector((state: MainState) => state.user.typeID);
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
+  const { updateMyPurchaseOrdersLoadingPdf } = useContext(LoadingPdfContext);
   const { notification, message } = App.useApp();
   const [currentPurchaseOrder, setCurrentPurchaseOrder] =
     useState<PurchaseOrder | null>(null);
@@ -276,6 +278,7 @@ export default function PurchaseOrders() {
   });
 
   useEffect(() => {
+    updateMyPurchaseOrdersLoadingPdf(loadingPdf);
     showLoadingMessage(message, loadingPdf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingPdf]);

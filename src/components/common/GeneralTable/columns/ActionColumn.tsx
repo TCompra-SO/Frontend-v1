@@ -16,6 +16,8 @@ import { useTranslation } from "react-i18next";
 import { allItems } from "../../../../utilities/globals";
 import { ItemType } from "antd/es/menu/interface";
 import { Offer } from "../../../../models/MainInterfaces";
+import { LoadingPdfContext } from "../../../../contexts/loadingPdfContext";
+import { useContext } from "react";
 
 // extraParam tiene diferentes significados según el tipo de tabla
 export default function ActionColumn(
@@ -25,6 +27,7 @@ export default function ActionColumn(
   extraParam?: any
 ) {
   const { t } = useTranslation();
+  const { myPurchaseOrdersLoadingPdf } = useContext(LoadingPdfContext);
 
   const col: ColumnType<any> = {
     title: t("actionColumn"),
@@ -111,10 +114,15 @@ export default function ActionColumn(
                           extraParam == PurchaseOrderTableTypes.RECEIVED_SALES)
                       )
                         return acc;
+
                       acc.push({
                         key: action,
                         label: t(ActionLabel[action]),
                         onClick: () => onButtonClick(action, record),
+                        disabled:
+                          action == Action.DOWNLOAD_PURCHASE_ORDER
+                            ? myPurchaseOrdersLoadingPdf
+                            : undefined,
                       });
                       return acc;
                     },
