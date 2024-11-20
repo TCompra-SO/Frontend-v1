@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import TablePageContent from "../components/section/table-page/TablePageContent";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import {
   ModalContent,
   TableTypeAllPurchaseOrders,
@@ -41,12 +41,15 @@ import { getRequirementById } from "../services/complete/general";
 import { getBaseDataUserService } from "../services/requests/authService";
 import ModalContainer from "../components/containers/ModalContainer";
 import { mainModalScrollStyle } from "../utilities/globals";
+import { LoadingPdfContext } from "../contexts/loadingPdfContext";
 
 export default function AllOffers() {
   const { t } = useTranslation();
   const location = useLocation();
   const uid = useSelector((state: MainState) => state.user.uid);
   const role = useSelector((state: MainState) => state.user.typeID);
+  const { updateAllPurchaseOrdersLoadingPdf } = useContext(LoadingPdfContext);
+
   const { notification, message } = App.useApp();
   const [currentPurchaseOrder, setCurrentPurchaseOrder] =
     useState<PurchaseOrder | null>(null);
@@ -184,7 +187,7 @@ export default function AllOffers() {
   });
 
   useEffect(() => {
-    console.log(loadingPdf);
+    updateAllPurchaseOrdersLoadingPdf(loadingPdf);
     showLoadingMessage(message, loadingPdf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingPdf]);
@@ -268,19 +271,15 @@ export default function AllOffers() {
   }
 
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
-    const prevId = currentPurchaseOrder?.key;
     setCurrentPurchaseOrder(purchaseOrder);
 
     switch (action) {
       case Action.DOWNLOAD_PURCHASE_ORDER:
-        console.log(loadingPdf);
-        if (!loadingPdf) {
-          console.log("down");
+        if (!loadingPdf)
           setApiParamsPdf({
             service: getPurchaseOrderPDFService(purchaseOrder.key),
             method: "get",
           });
-        } else showNotification(notification, "warning", "ddddddd");
         break;
       case Action.VIEW_PURCHASE_ORDER:
         setApiParamsHist({

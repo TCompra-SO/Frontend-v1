@@ -274,7 +274,6 @@ export function transformToPurchaseOrderItemSubUser(
     key: data.uid,
     type: data.type,
   };
-  console.log(purcOrder, data);
   return purcOrder;
 }
 

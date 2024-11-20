@@ -1580,49 +1580,6 @@ body {
   border-radius: 0.8rem;
 }
 
-/* Estilos Index: Icompleto */
-.container-tc {
-  padding: 0 100px;
-}
-.j-conten {
-  justify-content: center;
-}
-.j-items {
-  align-items: center;
-}
-.gap-5 {
-  gap: 5px;
-}
-
-.header-menu {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-}
-.section-slider {
-  background-image: url(images/back-01.jpg);
-  background-repeat: no-repeat;
-  background-size: cover;
-  position: relative;
-  background-position: center;
-  color: #ffffff;
-  height: calc(100vh - 0px);
-  margin-top: -79px;
-  z-index: -1;
-}
-.section-slider::before {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  content: "";
-  background-color: #00000073;
-}
-.logo-header {
-  height: 48px;
-}
-
 /* Requerimiento Detalles */
 .section-guia {
   background-image: url(images/header-01.svg);

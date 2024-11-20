@@ -465,6 +465,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         ),
         TypeColumn(visibility[TableColumns.TYPE]),
         DocumentColumn(
+          TableTypes.ALL_PURCHASE_ORDERS,
           props.content.onButtonClick,
           visibility[TableColumns.DOCUMENT]
         ),
@@ -632,8 +633,8 @@ export default function GeneralTable(props: GeneralTableProps) {
       ),
       TypeColumn(visibility[TableColumns.TYPE]),
       DocumentColumn(
+        props.content.type,
         props.content.onButtonClick,
-
         visibility[TableColumns.DOCUMENT]
       ),
       StateColumn(
