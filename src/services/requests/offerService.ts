@@ -74,3 +74,12 @@ export function deleteOfferService(id: string): HttpService {
     type: "OF-DEL",
   };
 }
+
+export function culminateOfferService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+      ApiRoutes.offers.culminate
+    }`,
+    type: "OF-CUL",
+  };
+}

@@ -50,8 +50,8 @@ export default function RequirementOfferFilters(
 
   useEffect(() => {
     updateFilters(initialValues, {
-      location: "",
-      deliveryTime: "",
+      location: t("all"),
+      deliveryTime: t("all"),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialValues]);

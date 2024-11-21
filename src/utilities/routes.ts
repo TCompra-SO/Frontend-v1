@@ -65,6 +65,7 @@ export const ApiRoutes = {
     republish: "republish/",
     getRequirementsBySubUser: "getRequerimentsBySubUser/",
     getRequirementsByEntity: "getRequerimentsByEntity/",
+    culminate: "culminate/",
   },
   requirement: {
     create: "create/",
@@ -87,6 +88,7 @@ export const ApiRoutes = {
     getOffersByEntity: "getOffersByEntity/",
     getOffersBySubUser: "getOffersBySubUser/",
     delete: "delete/",
+    culminate: "culminate/",
   },
   score: {
     registerScore: "registerScore/",

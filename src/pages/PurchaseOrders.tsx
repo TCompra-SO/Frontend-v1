@@ -331,8 +331,12 @@ export default function PurchaseOrders() {
           basicRateData: data,
           type: currentPurchaseOrder.type,
           isOffer:
-            type == PurchaseOrderTableTypes.ISSUED ||
+            type == PurchaseOrderTableTypes.ISSUED || // r3v para otros dos casos
             type == PurchaseOrderTableTypes.RECEIVED_SALES,
+          requirementOrOfferId:
+            type == PurchaseOrderTableTypes.ISSUED
+              ? currentPurchaseOrder.requirementId
+              : currentPurchaseOrder.offerId,
         },
       });
       setIsOpenModal(true);

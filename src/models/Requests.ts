@@ -141,3 +141,11 @@ export interface RepublishRequest {
   uid: string;
   completion_date: string;
 }
+
+export interface CulminateRequest {
+  delivered: boolean;
+  score: number;
+  comments?: string;
+  requerimentID?: string;
+  offerID?: string;
+}

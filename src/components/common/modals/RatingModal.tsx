@@ -16,15 +16,21 @@ import { MainState } from "../../../models/Redux";
 import FrontImage from "../FrontImage";
 import SubUserName from "../SubUserName";
 import { useApiParams } from "../../../models/Interfaces";
-import { RegisterScoreRequest } from "../../../models/Requests";
+import {
+  CulminateRequest,
+  RegisterScoreRequest,
+} from "../../../models/Requests";
 import useApi from "../../../hooks/useApi";
 import { registerScoreService } from "../../../services/requests/scoreService";
+import { culminateRequirementService } from "../../../services/requests/requirementService";
+import { culminateOfferService } from "../../../services/requests/offerService";
 
 interface RatingModalProps {
   basicRateData: BasicRateData;
   type: RequirementType;
-  isOffer: boolean;
+  isOffer: boolean; // indica si a quien se califica es creador de una oferta o no
   onClose: () => any;
+  requirementOrOfferId: string;
 }
 
 export default function RatingModal(props: RatingModalProps) {
@@ -90,14 +96,12 @@ export default function RatingModal(props: RatingModalProps) {
     ],
   };
 
-  const [apiParams, setApiParams] = useState<
-    useApiParams<RegisterScoreRequest>
-  >({
+  const [apiParams, setApiParams] = useState<useApiParams<CulminateRequest>>({
     service: null,
     method: "get",
   });
   const { loading, responseData, error, errorMsg, fetchData } =
-    useApi<RegisterScoreRequest>({
+    useApi<CulminateRequest>({
       service: apiParams.service,
       method: apiParams.method,
       dataToSend: apiParams.dataToSend,
@@ -134,16 +138,27 @@ export default function RatingModal(props: RatingModalProps) {
       return;
     }
 
-    const data: RegisterScoreRequest = {
-      typeScore: userClass == UserClass.CUSTOMER ? "Client" : "Provider",
-      uidEntity: props.basicRateData.userId,
-      uidUser: uid,
+    // const data: RegisterScoreRequest = {
+    //   typeScore: userClass == UserClass.CUSTOMER ? "Client" : "Provider",
+    //   uidEntity: props.basicRateData.userId,
+    //   uidUser: uid,
+    //   score: calculateFinalScore(scores),
+    //   comments: "",
+    // };
+
+    const data: CulminateRequest = {
+      delivered: answer == YesNo.YES,
       score: calculateFinalScore(scores),
-      comments: "",
     };
+
+    if (props.isOffer) data.requerimentID = props.requirementOrOfferId;
+    else data.offerID = props.requirementOrOfferId;
+
     console.log(data);
     setApiParams({
-      service: registerScoreService(),
+      service: props.isOffer
+        ? culminateRequirementService()
+        : culminateOfferService(),
       method: "post",
       dataToSend: data,
     });

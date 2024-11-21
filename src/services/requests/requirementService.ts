@@ -86,3 +86,12 @@ export function getRequirementsBySubUserService(id: string): HttpService {
     type: "RE-GET-SUB",
   };
 }
+
+export function culminateRequirementService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.requirements
+    }${ApiRoutes.requirements.culminate}`,
+    type: "RE-CUL",
+  };
+}

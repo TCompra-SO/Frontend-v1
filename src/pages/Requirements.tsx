@@ -273,6 +273,7 @@ export default function Requirements() {
           basicRateData: data,
           type: requirement.type,
           isOffer: true,
+          requirementOrOfferId: requirement.key,
         },
       });
       setIsOpenModal(true);

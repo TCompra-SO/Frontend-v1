@@ -42,6 +42,7 @@ export default function Offers() {
   const [type, setType] = useState(getRouteType(location.pathname));
   const [currentAction, setCurrentAction] = useState<Action>(Action.CANCEL);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [offer, setOffer] = useState<Offer>();
 
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -218,23 +219,28 @@ export default function Offers() {
 
   function openRateModal(responseData: any) {
     const data = transformToBasicRateData(responseData.data[0]);
-    setDataModal({
-      type:
-        currentAction == Action.FINISH
-          ? ModalTypes.RATE_USER
-          : ModalTypes.RATE_CANCELED,
-      data: {
-        basicRateData: data,
-        type,
-        isOffer: false,
-      },
-    });
-    setIsOpenModal(true);
+    if (offer) {
+      setDataModal({
+        type:
+          currentAction == Action.FINISH
+            ? ModalTypes.RATE_USER
+            : ModalTypes.RATE_CANCELED,
+        data: {
+          basicRateData: data,
+          type,
+          isOffer: false,
+          requirementOrOfferId: offer?.key,
+        },
+      });
+      setIsOpenModal(true);
+    }
   }
 
   function handleOnButtonClick(action: Action, offer: Offer) {
     console.log(offer);
     setCurrentAction(action);
+    setOffer(offer);
+
     switch (action) {
       case Action.OFFER_DETAIL:
         setDataModal({

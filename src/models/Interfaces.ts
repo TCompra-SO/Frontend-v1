@@ -64,6 +64,7 @@ export interface ModalRateCanceled extends CommonModalType {
     basicRateData: BasicRateData;
     type: RequirementType;
     isOffer: boolean;
+    requirementOrOfferId?: string;
   };
 }
 
@@ -73,6 +74,7 @@ export interface ModalRateUser extends CommonModalType {
     basicRateData: BasicRateData;
     type: RequirementType;
     isOffer: boolean;
+    requirementOrOfferId: string;
   };
 }
 
