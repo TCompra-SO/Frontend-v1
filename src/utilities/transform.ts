@@ -273,6 +273,14 @@ export function transformToPurchaseOrderItemSubUser(
     subType,
     key: data.uid,
     type: data.type,
+    requirementId: data.requerimentID,
+    offerId: data.offerID,
+    filters: {
+      price: data.price_Filter,
+      deliveryTime: data.deliveryTime_Filter,
+      location: data.location_Filter,
+      warranty: data.warranty_Filter,
+    },
   };
   return purcOrder;
 }

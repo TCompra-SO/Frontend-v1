@@ -378,6 +378,9 @@ export default function Users() {
               tableContent: reqList,
             }}
             user={userData}
+            onTabChange={handleTabChange}
+            loading={loadingReq}
+            tableType={TableTypes.REQUIREMENT_SUBUSER}
           />
         );
       case Action.VIEW_OFFERS:
@@ -388,6 +391,9 @@ export default function Users() {
               tableContent: offerList,
             }}
             user={userData}
+            onTabChange={handleTabChange}
+            loading={loadingOffer}
+            tableType={TableTypes.OFFER_SUBUSER}
           />
         );
       case Action.VIEW_PURCHASE_ORDERS:
@@ -398,10 +404,40 @@ export default function Users() {
               tableContent: orderList,
             }}
             user={userData}
+            onTabChange={handleTabChange}
+            loading={loadingOrder}
+            tableType={TableTypes.PURCHASE_ORDER_SUBUSER}
           />
         );
       default:
         return null;
+    }
+  }
+
+  function handleTabChange(tabId: string) {
+    if (userData) {
+      if (action == Action.VIEW_REQUIREMENTS) {
+        switch (Number(tabId)) {
+          case RequirementType.GOOD:
+            setApiParamsReq({
+              service: getRequirementsBySubUserService(userData.uid), // r3v para servicios y liquidaciones
+              method: "get",
+            });
+            break;
+          case RequirementType.SERVICE:
+            setApiParamsReq({
+              service: getRequirementsBySubUserService(userData.uid),
+              method: "get",
+            });
+            break;
+          case RequirementType.SALE:
+            setApiParamsReq({
+              service: getRequirementsBySubUserService(userData.uid),
+              method: "get",
+            });
+            break;
+        }
+      }
     }
   }
 

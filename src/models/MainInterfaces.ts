@@ -76,7 +76,22 @@ export interface Offer extends BasicOffer {
   includesDelivery?: boolean;
 }
 
-export interface BasicPurchaseOrder extends BaseInterface {
+export interface BasicPurchaseOrderItemSubUser extends BaseInterface {
+  requirementTitle: string;
+  offerTitle: string;
+  selectionDate: string;
+  state: PurchaseOrderState;
+  requirementId: string;
+  offerId: string;
+}
+
+export interface PurchaseOrderItemSubUser
+  extends BasicPurchaseOrderItemSubUser {
+  subType: PurchaseOrderTableTypes;
+  filters: OfferFilters;
+}
+
+export interface BasicPurchaseOrder extends BasicPurchaseOrderItemSubUser {
   userClientId: string;
   userNameClient: string;
   subUserClientId: string;
@@ -97,13 +112,6 @@ export interface BasicPurchaseOrder extends BaseInterface {
   subTotal: number;
   igv: number;
   total: number;
-
-  requirementTitle: string;
-  requirementId: string;
-  selectionDate: string;
-  state: PurchaseOrderState;
-  offerTitle: string;
-  offerId: string;
 }
 
 export interface PurchaseOrder extends BasicPurchaseOrder {
@@ -157,14 +165,6 @@ export interface OfferItemSubUser extends BaseRequirementOffer {
   publishDate: string;
   state: OfferState;
   coin: number;
-}
-
-export interface PurchaseOrderItemSubUser extends BaseInterface {
-  requirementTitle: string;
-  offerTitle: string;
-  selectionDate: string;
-  state: PurchaseOrderState;
-  subType: PurchaseOrderTableTypes;
 }
 
 export interface CertificateFile {
