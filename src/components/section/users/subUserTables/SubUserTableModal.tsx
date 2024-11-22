@@ -177,6 +177,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
 
   async function openDetailedRequirement(responseData: any) {
     showLoadingMessage(message, true);
+    updateSubUserRequirementsViewOffers(true);
     if (
       currentPurchaseOrder &&
       responseData.data &&
@@ -212,6 +213,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
       } else showNotification(notification, "error", t("errorOccurred"));
     } else showNotification(notification, "error", t("errorOccurred"));
     showLoadingMessage(message, false);
+    updateSubUserRequirementsViewOffers(false);
   }
 
   function handleOnButtonClick(action: Action, data: any) {

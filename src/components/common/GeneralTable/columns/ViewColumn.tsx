@@ -54,7 +54,7 @@ export default function ViewColumn(
             disabled={
               type == TableTypes.ALL_REQUIREMENTS
                 ? allRequirementsViewOffers
-                : type == TableTypes.REQUIREMENT_SUBUSER
+                : type == TableTypes.PURCHASE_ORDER_SUBUSER
                 ? subUserRequirementsViewOffers
                 : undefined
             }
