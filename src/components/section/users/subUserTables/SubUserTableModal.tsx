@@ -35,6 +35,8 @@ import {
   transformToOffer,
 } from "../../../../utilities/transform";
 import { mainModalScrollStyle } from "../../../../utilities/globals";
+import { useNavigate } from "react-router-dom";
+import { pageRoutes } from "../../../../utilities/routes";
 
 interface SubUserTableModalProps {
   user: SubUserBase | null;
@@ -58,6 +60,7 @@ interface SubUserTableModalProps {
 
 export default function SubUserTableModal(props: SubUserTableModalProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { notification, message } = App.useApp();
   const [currentPurchaseOrder, setCurrentPurchaseOrder] =
     useState<PurchaseOrderItemSubUser | null>(null);
@@ -235,6 +238,11 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
           method: "get",
         });
         break;
+      }
+      case Action.VIEW_REQUIREMENT: {
+        navigate(
+          `${pageRoutes.productDetail}/${(data as RequirementItemSubUser).key}`
+        );
       }
     }
   }

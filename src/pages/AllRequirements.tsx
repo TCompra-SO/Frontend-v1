@@ -9,7 +9,7 @@ import makeRequest, {
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useApi from "../hooks/useApi";
 import showNotification from "../utilities/notification/showNotification";
 import { App } from "antd";
@@ -21,9 +21,11 @@ import {
   transformDataToRequirement,
   transformToBaseUser,
 } from "../utilities/transform";
+import { pageRoutes } from "../utilities/routes";
 
 export default function AllRequirements() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const location = useLocation();
   const { notification } = App.useApp();
   const dataUser = useSelector((state: MainState) => state.user);
@@ -135,7 +137,8 @@ export default function AllRequirements() {
   }
 
   function handleOnButtonClick(action: Action, requirement: BasicRequirement) {
-    console.log(action, requirement);
+    if (action == Action.VIEW_REQUIREMENT)
+      navigate(`${pageRoutes.productDetail}/${requirement.key}`);
   }
 
   return (
