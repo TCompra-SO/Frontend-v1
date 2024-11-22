@@ -139,12 +139,16 @@ export default function NameColumn(
                   ? (record as BasicPurchaseOrder).subUserNameProvider
                   : (record as BasicPurchaseOrder).subUserNameClient)}
             </div>
-            {(type == TableTypes.REQUIREMENT || type == TableTypes.USERS) && (
+            {(type == TableTypes.REQUIREMENT ||
+              type == TableTypes.USERS ||
+              type == TableTypes.ALL_REQUIREMENTS) && (
               <div
                 className="text-truncate info-categoria"
                 style={{ textAlign: "left" }}
               >
-                {type == TableTypes.REQUIREMENT && categoryData
+                {(type == TableTypes.REQUIREMENT ||
+                  type == TableTypes.ALL_REQUIREMENTS) &&
+                categoryData
                   ? categoryData[(record as Requirement).category]?.value
                   : null}
                 {type == TableTypes.USERS &&

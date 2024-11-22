@@ -31,7 +31,10 @@ export default function OffersColumn(
         <div className="t-flex c-ofertas">
           <ButtonContainer
             className="oferta-cant"
-            style={{ cursor: "pointer", borderColor: "transparent" }}
+            style={{
+              cursor: type == TableTypes.REQUIREMENT ? "pointer" : "default",
+              borderColor: "transparent",
+            }}
             onClick={() => onButtonClick(Action.SHOW_OFFERS, record)}
             disabled={
               type == TableTypes.REQUIREMENT

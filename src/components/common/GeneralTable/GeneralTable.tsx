@@ -392,13 +392,18 @@ export default function GeneralTable(props: GeneralTableProps) {
         "publishDate",
         visibility[TableColumns.PUBLISH_DATE]
       ),
-      CategoryColumn(props.content.type, visibility[TableColumns.CATEGORY]),
+      // CategoryColumn(props.content.type, visibility[TableColumns.CATEGORY]),
       LocationColumn(visibility[TableColumns.LOCATION]),
 
       PriceColumn(visibility[TableColumns.PRICE]),
-      OffersColumn(
-        props.content.type,
-        props.content.onButtonClick,
+      // OffersColumn(
+      //   props.content.type,
+      //   props.content.onButtonClick,
+      //   visibility[TableColumns.OFFERS]
+      // ),
+      GeneralColumnNumber(
+        t("offers"),
+        "numberOffers",
         visibility[TableColumns.OFFERS]
       ),
       StateColumn(props.content.type, visibility[TableColumns.STATE]),
