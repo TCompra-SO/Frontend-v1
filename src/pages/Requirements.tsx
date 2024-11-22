@@ -8,7 +8,7 @@ import {
   TableTypes,
 } from "../utilities/types";
 import { Offer, Requirement } from "../models/MainInterfaces";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import {
   ModalContent,
   TableTypeRequirement,
@@ -46,6 +46,7 @@ import {
   getOffersByRequirementIdService,
 } from "../services/requests/offerService";
 import { getBaseDataUserService } from "../services/requests/authService";
+import { LoadingDataContext } from "../contexts/loadingDataContext";
 
 export default function Requirements() {
   const { t } = useTranslation();
@@ -56,6 +57,8 @@ export default function Requirements() {
   const [requirement, setRequirement] = useState<Requirement>();
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
+  const { updateMyRequirementsLoadingViewOffers } =
+    useContext(LoadingDataContext);
 
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -122,9 +125,10 @@ export default function Requirements() {
   }, [responseData, error]);
 
   useEffect(() => {
-    if (equalServices(apiParams.service, getOffersByRequirementIdService("")))
+    if (equalServices(apiParams.service, getOffersByRequirementIdService(""))) {
+      updateMyRequirementsLoadingViewOffers(loading);
       showLoadingMessage(message, loading);
-
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 

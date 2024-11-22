@@ -2,6 +2,8 @@ import { ColumnType } from "antd/es/table";
 import ButtonContainer from "../../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import { Action, TableTypes } from "../../../../utilities/types";
+import { useContext } from "react";
+import { LoadingDataContext } from "../../../../contexts/loadingDataContext";
 
 export default function ViewColumn(
   type: TableTypes,
@@ -9,6 +11,8 @@ export default function ViewColumn(
   hidden: boolean = false
 ) {
   const { t } = useTranslation();
+  const { allRequirementsViewOffers, subUserRequirementsViewOffers } =
+    useContext(LoadingDataContext);
 
   const col: ColumnType<any> = {
     title: t("actionColumn"),
@@ -46,6 +50,13 @@ export default function ViewColumn(
               <>
                 {t("view")} <i className="fa-solid fa-eye"></i>
               </>
+            }
+            disabled={
+              type == TableTypes.ALL_REQUIREMENTS
+                ? allRequirementsViewOffers
+                : type == TableTypes.REQUIREMENT_SUBUSER
+                ? subUserRequirementsViewOffers
+                : undefined
             }
           />
         </div>
