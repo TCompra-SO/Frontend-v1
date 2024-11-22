@@ -95,6 +95,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             basicRateData={props.content.data.basicRateData}
             type={props.content.data.type}
             isOffer={props.content.data.isOffer}
+            requirementOrOfferId={props.content.data.requirementOrOfferId}
           />
         );
       }

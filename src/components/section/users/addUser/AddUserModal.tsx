@@ -107,6 +107,14 @@ export default function AddUserModal(props: AddUserModalProps) {
     dataToSend: apiParamsChangeRole.dataToSend,
   });
 
+  /** useEffects */
+
+  useEffect(() => {
+    if (props.edit && props.userData?.document) {
+      form.setFieldsValue({ document: props.userData?.document });
+    }
+  }, [props.userData?.document, form]);
+
   useEffect(() => {
     if (apiParams.service) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -183,6 +191,8 @@ export default function AddUserModal(props: AddUserModalProps) {
     checkUpdates();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passSuccess, roleSuccess, profileSuccess]);
+
+  /** Funciones */
 
   function getNameReniecSuccess() {
     form.setFieldValue("fullname", responseData.data);

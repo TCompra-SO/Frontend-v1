@@ -3,22 +3,33 @@ import {
   BasicRateData,
   FullUser,
   Offer,
+  OfferItemSubUser,
   PurchaseOrder,
+  PurchaseOrderItemSubUser,
   Requirement,
+  RequirementItemSubUser,
 } from "../models/MainInterfaces";
 import { UserState } from "../models/Redux";
+import { SubUserBase } from "../models/Responses";
 import { getBaseDataUserService } from "../services/requests/authService";
 import makeRequest from "./globalFunctions";
-import { RequirementState, RequirementType, Usage } from "./types";
+import {
+  EntityType,
+  PurchaseOrderTableTypes,
+  RequirementType,
+  Usage,
+} from "./types";
 
 export function transformDataToRequirement(
   data: any,
   type: RequirementType,
   user: UserState | BaseUser,
-  mainUser: UserState | BaseUser
+  mainUser: UserState | BaseUser,
+  includeAlwaysSubUser?: boolean
 ) {
   const req: Requirement = data;
   // req.state = RequirementState.FINISHED;
+  req.subUser = undefined;
   req.deliveryTime = data.submission_date;
   req.type = type;
   req.warrantyTime = data.duration;
@@ -34,10 +45,31 @@ export function transformDataToRequirement(
     if (data.winOffer.entityID != data.winOffer.userID)
       req.offerSubUserId = data.winOffer.userID;
   }
-  if (mainUser.uid != user.uid) {
+  if (includeAlwaysSubUser) {
+    req.user = mainUser;
+    req.subUser = user;
+  } else if (mainUser.uid != user.uid) {
     req.user = mainUser;
     req.subUser = user;
   } else req.user = user;
+  return req;
+}
+
+export function transformDataToRequirementItemSubUser(
+  data: any,
+  type: RequirementType
+) {
+  const req: RequirementItemSubUser = {
+    price: data.price,
+    publishDate: data.publishDate,
+    expirationDate: data.completion_date,
+    numberOffers: data.numberOffers,
+    state: data.state,
+    coin: data.coin,
+    title: data.title,
+    key: data.key,
+    type,
+  };
   return req;
 }
 
@@ -141,6 +173,46 @@ export function transformToOffer(
   return offer;
 }
 
+export function transformToOfferFromGetOffersByEntityOrSubUser(
+  data: any,
+  type: RequirementType,
+  user: UserState | BaseUser,
+  mainUser: UserState | BaseUser,
+  includeAlwaysSubUser?: boolean
+) {
+  const offer: Offer = data;
+  offer.subUser = undefined;
+  offer.canceledByCreator = false;
+  offer.type = type;
+
+  if (includeAlwaysSubUser) {
+    offer.user = mainUser;
+    offer.subUser = user;
+  } else if (mainUser.uid != user.uid) {
+    offer.user = mainUser;
+    offer.subUser = user;
+  } else offer.user = user;
+
+  return offer;
+}
+
+export function transformDataToOfferItemSubUser(
+  data: any,
+  type: RequirementType
+) {
+  const req: OfferItemSubUser = {
+    requirementTitle: data.requirementTitle,
+    price: data.price,
+    publishDate: data.publishDate,
+    state: data.state,
+    coin: data.coin,
+    title: data.title,
+    key: data.key,
+    type,
+  };
+  return req;
+}
+
 export function transformToBasicRateData(data: any) {
   const basicData: BasicRateData = data;
   if (basicData.userId !== basicData.subUserId) return basicData;
@@ -156,7 +228,7 @@ export function transformToPurchaseOrder(data: any) {
     requirementTitle: data.requerimentTitle,
     requirementId: data.requerimentID,
     selectionDate: data.createDate,
-    state: data.state,
+    state: data.stateID,
     offerTitle: data.offerTitle,
     offerId: data.offerID,
     key: data.uid,
@@ -187,4 +259,46 @@ export function transformToPurchaseOrder(data: any) {
     subUserNameProvider: data.nameSubUserProvider,
   };
   return purcOrder;
+}
+
+export function transformToPurchaseOrderItemSubUser(
+  data: any,
+  subType: PurchaseOrderTableTypes
+) {
+  const purcOrder: PurchaseOrderItemSubUser = {
+    requirementTitle: data.requerimentTitle,
+    offerTitle: data.offerTitle,
+    selectionDate: data.createDate,
+    state: data.stateID,
+    subType,
+    key: data.uid,
+    type: data.type,
+    requirementId: data.requerimentID,
+    offerId: data.offerID,
+    filters: {
+      price: data.price_Filter,
+      deliveryTime: data.deliveryTime_Filter,
+      location: data.location_Filter,
+      warranty: data.warranty_Filter,
+    },
+  };
+  return purcOrder;
+}
+
+export function transformToSubUserBase(data: any) {
+  const subUser: SubUserBase = {
+    typeID: data.typeID,
+    createdAt: data.createdAt,
+    numGoods: 0,
+    numServices: 0,
+    numSales: 0,
+    numOffers: 0,
+    numPurchaseOrders: 0,
+    uid: data.Uid,
+    name: "aaaaaaaaaa",
+    document: "434343",
+    email: data.email,
+    typeEntity: EntityType.SUBUSER,
+  };
+  return subUser;
 }

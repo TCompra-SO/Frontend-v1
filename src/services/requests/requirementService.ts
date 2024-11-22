@@ -66,3 +66,32 @@ export function republishRequirementService(): HttpService {
     type: "RE-REP",
   };
 }
+
+// Para cuentas principales (empresa y persona). Incluye requerimientos de subusuarios
+export function getRequirementsByEntityService(id: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.requirements
+    }${ApiRoutes.requirements.getRequirementsByEntity}${id}`,
+    type: "RE-GET-ENT",
+  };
+}
+
+// Para subusuarios + cuentas principales. No incluye requerimientos de subusuarios
+export function getRequirementsBySubUserService(id: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.requirements
+    }${ApiRoutes.requirements.getRequirementsBySubUser}${id}`,
+    type: "RE-GET-SUB",
+  };
+}
+
+export function culminateRequirementService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.requirements
+    }${ApiRoutes.requirements.culminate}`,
+    type: "RE-CUL",
+  };
+}

@@ -1,363 +1,308 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import NoContentModalContainer from "../components/containers/NoContentModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import AddUserModal from "../components/section/users/addUser/AddUserModal";
 import { useTranslation } from "react-i18next";
 import {
   Action,
-  EntityType,
-  OfferState,
-  PurchaseOrderState,
   PurchaseOrderTableTypes,
-  RequirementState,
   RequirementType,
   TableTypes,
-  UserRoles,
 } from "../utilities/types";
 import { TableTypeUsers, useApiParams } from "../models/Interfaces";
 import { mainModalScrollStyle } from "../utilities/globals";
 import ButtonContainer from "../components/containers/ButtonContainer";
 import useApi from "../hooks/useApi";
-import { getSubUserService } from "../services/requests/subUserService";
+import {
+  getSubUsersByEntityService,
+  getSubUserService,
+} from "../services/requests/subUserService";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { equalServices } from "../utilities/globalFunctions";
-import showNotification from "../utilities/notification/showNotification";
+import showNotification, {
+  showLoadingMessage,
+} from "../utilities/notification/showNotification";
 import { App } from "antd";
-import { SubUserProfile } from "../models/Responses";
+import { SubUserBase, SubUserProfile } from "../models/Responses";
 import SubUserTableModal from "../components/section/users/subUserTables/SubUserTableModal";
 import {
   OfferItemSubUser,
   PurchaseOrderItemSubUser,
   RequirementItemSubUser,
 } from "../models/MainInterfaces";
-
-const users: SubUserProfile[] = [
-  {
-    uid: "user1",
-    name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
-    email: "john.doejohn.doejohn.doejohn.doe@example.com",
-    document: "123456789",
-    // typeEntity: EntityType.COMPANY,
-    // tenure: 2,
-    // customerScore: 3.5,
-    // sellerScore: 1.5,
-    address: "Calle San Agustin 107 - Cercado - Arequipa",
-    // userType: 0,
-    phone: "90909090",
-    cityID: 1,
-    companyID: "xxxxxxxxxxxxx",
-    createdAt: "2024-10-12T16:36:45.673Z",
-    numGoods: 10,
-    numServices: 2,
-    numSales: 5,
-    numOffers: 0,
-    numPurchaseOrders: 0,
-    customerScore: 0,
-    sellerScore: 0,
-    customerCount: 0,
-    sellerCount: 0,
-    typeEntity: EntityType.COMPANY,
-    typeID: UserRoles.BUYER,
-  },
-  {
-    uid: "user2",
-    name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
-    email: "aaaaaaaaa@example.com",
-    document: "123456789",
-    // typeEntity: EntityType.COMPANY,
-    // tenure: 2,
-    // customerScore: 3.5,
-    // sellerScore: 1.5,
-    address: "Calle San Agustin 107 - Cercado - Arequipa",
-    // userType: 0,
-    phone: "90909090",
-    cityID: 1,
-    companyID: "xxxxxxxxxxxxx",
-    createdAt: "2024-10-12T09:36:45.673Z",
-    numGoods: 23,
-    numServices: 90,
-    numSales: 235,
-    numOffers: 0,
-    numPurchaseOrders: 0,
-    customerScore: 0,
-    sellerScore: 0,
-    customerCount: 0,
-    sellerCount: 0,
-    typeEntity: EntityType.COMPANY,
-    typeID: UserRoles.LEGAL,
-  },
-  {
-    uid: "user3",
-    name: "Soluciones Online Soluciones Online Soluciones Online S. A. C.",
-    email: "mmmmmmmm@example.com",
-    document: "123456789",
-    // typeEntity: EntityType.COMPANY,
-    // tenure: 2,
-    // customerScore: 3.5,
-    // sellerScore: 1.5,
-    address: "Calle San Agustin 107 - Cercado - Arequipa",
-    // userType: 0,
-    phone: "90909090",
-    cityID: 1,
-    companyID: "xxxxxxxxxxxxx",
-    createdAt: "2024-01-12T20:36:45.673Z",
-    numGoods: 1,
-    numServices: 0,
-    numSales: 8,
-    numOffers: 0,
-    numPurchaseOrders: 0,
-    customerScore: 0,
-    sellerScore: 0,
-    customerCount: 0,
-    sellerCount: 0,
-    typeEntity: EntityType.COMPANY,
-    typeID: UserRoles.SELLER,
-  },
-  {
-    uid: "user4",
-    name: "aaaaaaaaaaaaaa S. A. C.",
-    email: "ccccccccc@example.com",
-    document: "123456789",
-    // typeEntity: EntityType.COMPANY,
-    // tenure: 2,
-    // customerScore: 3.5,
-    // sellerScore: 1.5,
-    address: "Calle San Agustin 107 - Cercado - Arequipa",
-    // userType: 0,
-    phone: "90909090",
-    cityID: 1,
-    companyID: "xxxxxxxxxxxxx",
-    createdAt: "2024-05-12T20:36:45.673Z",
-    numGoods: 100,
-    numServices: 35,
-    numSales: 84,
-    numOffers: 0,
-    numPurchaseOrders: 0,
-    customerScore: 0,
-    sellerScore: 0,
-    customerCount: 0,
-    sellerCount: 0,
-    typeEntity: EntityType.COMPANY,
-    typeID: UserRoles.SELLER_BUYER,
-  },
-];
-
-const reqs: RequirementItemSubUser[] = [
-  {
-    price: 0,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    expirationDate: "2024-10-12T16:36:45.673Z",
-    numberOffers: 2,
-    state: RequirementState.PUBLISHED,
-    key: "1",
-    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
-    type: RequirementType.GOOD,
-    coin: 1,
-  },
-  {
-    price: 0,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    expirationDate: "2024-10-12T16:36:45.673Z",
-    numberOffers: 2,
-    state: RequirementState.PUBLISHED,
-    key: "2",
-    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
-    type: RequirementType.GOOD,
-    coin: 1,
-  },
-  {
-    price: 0,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    expirationDate: "2024-10-12T16:36:45.673Z",
-    numberOffers: 2,
-    state: RequirementState.PUBLISHED,
-    key: "3",
-    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
-    type: RequirementType.GOOD,
-    coin: 1,
-  },
-  {
-    price: 0,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    expirationDate: "2024-10-12T16:36:45.673Z",
-    numberOffers: 2,
-    state: RequirementState.PUBLISHED,
-    key: "4",
-    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
-    type: RequirementType.GOOD,
-    coin: 1,
-  },
-  {
-    price: 0,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    expirationDate: "2024-10-12T16:36:45.673Z",
-    numberOffers: 2,
-    state: RequirementState.PUBLISHED,
-    key: "5",
-    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
-    type: RequirementType.GOOD,
-    coin: 1,
-  },
-  {
-    price: 0,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    expirationDate: "2024-10-12T16:36:45.673Z",
-    numberOffers: 2,
-    state: RequirementState.PUBLISHED,
-    key: "6",
-    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
-    type: RequirementType.GOOD,
-    coin: 1,
-  },
-  {
-    price: 123,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    expirationDate: "2024-10-12T16:36:45.673Z",
-    numberOffers: 2,
-    state: RequirementState.PUBLISHED,
-    key: "7",
-    title: "Necesito xxx x x  x xx  xxxx xxx x x xxx x x x x xx x ",
-    type: RequirementType.GOOD,
-    coin: 1,
-  },
-];
-
-const offers: OfferItemSubUser[] = [
-  {
-    requirementTitle: "Requirement title fdskfhjkshf js hfjksfh sjffhjs jsf",
-    price: 23,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    state: OfferState.ACTIVE,
-    coin: 2,
-    key: "1",
-    title: "Offer title fjdfh jfhsjhf js",
-    type: RequirementType.GOOD,
-  },
-  {
-    requirementTitle: "Requirement title fdskfhjkshf js hfjksfh sjffhjs jsf",
-    price: 23,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    state: OfferState.ACTIVE,
-    coin: 2,
-    key: "1",
-    title: "Offer title fjdfh jfhsjhf js",
-    type: RequirementType.SALE,
-  },
-  {
-    requirementTitle: "Requirement title fdskfhjkshf js hfjksfh sjffhjs jsf",
-    price: 23,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    state: OfferState.ACTIVE,
-    coin: 2,
-    key: "1",
-    title: "Offer title fjdfh jfhsjhf js",
-    type: RequirementType.GOOD,
-  },
-  {
-    requirementTitle: "Requirement title fdskfhjkshf js hfjksfh sjffhjs jsf",
-    price: 434343,
-    publishDate: "2024-10-12T16:36:45.673Z",
-    state: OfferState.ACTIVE,
-    coin: 2,
-    key: "1",
-    title: "Offer title fjdfh jfhsjhf js",
-    type: RequirementType.GOOD,
-  },
-];
-
-const purc: PurchaseOrderItemSubUser[] = [
-  {
-    requirementTitle: "req title fdfsf fs f sf sf sfs",
-    offerTitle: "Offer title fkjsfjsjk fjkfsfsfds",
-    selectionDate: "2024-10-12T16:36:45.673Z",
-    state: PurchaseOrderState.PENDING,
-    key: "1",
-    type: RequirementType.SERVICE,
-    subType: PurchaseOrderTableTypes.ISSUED,
-  },
-  {
-    requirementTitle: "req title fdfsf fs f sf sf sfs",
-    offerTitle: "Offer title fkjsfjsjk fjkfsfsfds",
-    selectionDate: "2024-10-12T16:36:45.673Z",
-    state: PurchaseOrderState.PENDING,
-    key: "1",
-    type: RequirementType.SERVICE,
-    subType: PurchaseOrderTableTypes.ISSUED,
-  },
-  {
-    requirementTitle: "req title fdfsf fs f sf sf sfs",
-    offerTitle: "Offer title fkjsfjsjk fjkfsfsfds",
-    selectionDate: "2024-10-12T16:36:45.673Z",
-    state: PurchaseOrderState.PENDING,
-    key: "1",
-    type: RequirementType.SERVICE,
-    subType: PurchaseOrderTableTypes.ISSUED_SALES,
-  },
-  {
-    requirementTitle: "req title fdfsf fs f sf sf sfs",
-    offerTitle: "Offer title fkjsfjsjk fjkfsfsfds",
-    selectionDate: "2024-10-12T16:36:45.673Z",
-    state: PurchaseOrderState.PENDING,
-    key: "1",
-    type: RequirementType.GOOD,
-    subType: PurchaseOrderTableTypes.RECEIVED,
-  },
-  {
-    requirementTitle: "req title fdfsf fs f sf sf sfs",
-    offerTitle: "Offer title fkjsfjsjk fjkfsfsfds",
-    selectionDate: "2024-10-12T16:36:45.673Z",
-    state: PurchaseOrderState.PENDING,
-    key: "1",
-    type: RequirementType.SALE,
-    subType: PurchaseOrderTableTypes.RECEIVED_SALES,
-  },
-];
+import {
+  transformDataToOfferItemSubUser,
+  transformDataToRequirementItemSubUser,
+  transformToPurchaseOrderItemSubUser,
+  transformToSubUserBase,
+} from "../utilities/transform";
+import { getRequirementsBySubUserService } from "../services/requests/requirementService";
+import { getOffersBySubUserService } from "../services/requests/offerService";
+import { getPurchaseOrdersByClientEntityService } from "../services/requests/purchaseOrderService";
 
 export default function Users() {
   const { t } = useTranslation();
-  const { notification } = App.useApp();
+  const { notification, message } = App.useApp();
   const token = useSelector((state: MainState) => state.user.token);
+  const uid = useSelector((state: MainState) => state.user.uid);
   const [action, setAction] = useState<Action>(Action.ADD_USER);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [userData, setUserData] = useState<SubUserProfile | null>(null);
-
-  const [tableContent] = useState<TableTypeUsers>({
+  const [userData, setUserData] = useState<SubUserBase | null>(null);
+  const [userDataEdit, setUserDataEdit] = useState<SubUserProfile | null>(null);
+  const [reqList, setReqList] = useState<RequirementItemSubUser[]>([]);
+  const [offerList, setOfferList] = useState<OfferItemSubUser[]>([]);
+  const [orderList, setOrderList] = useState<PurchaseOrderItemSubUser[]>([]);
+  const [tableContent, setTableContent] = useState<TableTypeUsers>({
     type: TableTypes.USERS,
-    data: users,
+    data: [],
     hiddenColumns: [],
     nameColumnHeader: t("user"),
     onButtonClick: handleOnActionClick,
   });
-  const [apiParams, setApiParams] = useState<useApiParams>({
-    service: null,
+
+  /** Obtener lista de subusuarios */
+
+  const [apiParams] = useState<useApiParams>({
+    service: getSubUsersByEntityService(uid),
     method: "get",
-    // token,
   });
-  const { responseData, error, errorMsg, fetchData } = useApi({
+
+  const { loading, responseData, error, errorMsg, fetchData } = useApi({
     service: apiParams.service,
     method: apiParams.method,
-    token: apiParams.token,
+    dataToSend: apiParams.dataToSend,
   });
+
+  useEffect(() => {
+    if (responseData) {
+      setTableData();
+    } else if (error) {
+      showNotification(notification, "error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
 
+  /** Obtener datos de subusuario */
+
+  const [apiParamsUser, setApiParamsUser] = useState<useApiParams>({
+    service: null,
+    method: "get",
+    // token,
+  });
+  const {
+    loading: loadingUser,
+    responseData: responseDataUser,
+    error: errorUser,
+    errorMsg: errorMsgUser,
+    fetchData: fetchDataUser,
+  } = useApi({
+    service: apiParamsUser.service,
+    method: apiParamsUser.method,
+    token: apiParamsUser.token,
+  });
+
   useEffect(() => {
-    if (responseData) {
-      if (equalServices(apiParams.service, getSubUserService(""))) {
-        setUserData(responseData);
-        console.log(responseData, userData);
+    showLoadingMessage(message, loadingUser);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingUser]);
+
+  useEffect(() => {
+    if (apiParamsUser.service) fetchDataUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsUser]);
+
+  useEffect(() => {
+    if (responseDataUser) {
+      if (equalServices(apiParamsUser.service, getSubUserService(""))) {
+        setUserDataEdit(responseDataUser);
         handleOpenModal();
       }
-    } else if (error) {
-      showNotification(notification, "error", errorMsg);
+    } else if (errorUser) {
+      showNotification(notification, "error", errorMsgUser);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseData, error]);
+  }, [responseDataUser, errorUser]);
+
+  /** Obtener lista de requerimientos */
+
+  const [apiParamsReq, setApiParamsReq] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingReq,
+    responseData: responseDataReq,
+    error: errorReq,
+    errorMsg: errorMsgReq,
+    fetchData: fetchDataReq,
+  } = useApi({
+    service: apiParamsReq.service,
+    method: apiParamsReq.method,
+    dataToSend: apiParamsReq.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingReq);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingReq]);
+
+  useEffect(() => {
+    if (apiParamsReq.service) fetchDataReq();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsReq]);
+
+  useEffect(() => {
+    if (responseDataReq) {
+      setModalTableDataReq();
+    } else if (errorReq) {
+      showNotification(notification, "error", errorMsgReq);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataReq, errorReq]);
+
+  const [apiParamsOffer, setApiParamsOffer] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  /** Obtener lista de ofertas */
+
+  const {
+    loading: loadingOffer,
+    responseData: responseDataOffer,
+    error: errorOffer,
+    errorMsg: errorMsgOffer,
+    fetchData: fetchDataOffer,
+  } = useApi({
+    service: apiParamsOffer.service,
+    method: apiParamsOffer.method,
+    dataToSend: apiParamsOffer.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingOffer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingOffer]);
+
+  useEffect(() => {
+    if (apiParamsOffer.service) fetchDataOffer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsOffer]);
+
+  useEffect(() => {
+    if (responseDataOffer) {
+      setModalTableDataOffer();
+    } else if (errorOffer) {
+      showNotification(notification, "error", errorMsgOffer);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataOffer, errorOffer]);
+
+  /** Obtener lista de órdenes de compra */
+
+  const [apiParamsOrder, setApiParamsOrder] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingOrder,
+    responseData: responseDataOrder,
+    error: errorOrder,
+    errorMsg: errorMsgOrder,
+    fetchData: fetchDataOrder,
+  } = useApi({
+    service: apiParamsOrder.service,
+    method: apiParamsOrder.method,
+    dataToSend: apiParamsOrder.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingOrder);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingOrder]);
+
+  useEffect(() => {
+    if (apiParamsOrder.service) fetchDataOrder();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsOrder]);
+
+  useEffect(() => {
+    if (responseDataOrder) {
+      setModalTableDataOrder();
+    } else if (errorOrder) {
+      showNotification(notification, "error", errorMsgOrder);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataOrder, errorOrder]);
+
+  /** Funciones */
+
+  async function setTableData() {
+    try {
+      let data: SubUserBase[] = [];
+      if (responseData.data.length > 0) {
+        data = responseData.data[0].auth_users.map((e: any) =>
+          transformToSubUserBase(e)
+        );
+      }
+      setTableContent({
+        type: TableTypes.USERS,
+        data,
+        hiddenColumns: [],
+        nameColumnHeader: t("user"),
+        onButtonClick: handleOnActionClick,
+      });
+    } catch (error) {
+      showNotification(notification, "error", t("errorOccurred"));
+    }
+  }
+
+  function setModalTableDataReq() {
+    try {
+      const data: RequirementItemSubUser[] = responseDataReq.data.map(
+        (e: any) =>
+          transformDataToRequirementItemSubUser(e, RequirementType.GOOD) // r3v
+      );
+      setReqList(data);
+      handleOpenModal();
+    } catch (error) {
+      showNotification(notification, "error", t("errorOccurred"));
+    }
+  }
+
+  function setModalTableDataOffer() {
+    try {
+      const data: OfferItemSubUser[] = responseDataOffer.data.map(
+        (e: any) => transformDataToOfferItemSubUser(e, RequirementType.GOOD) // r3v
+      );
+      setOfferList(data);
+      handleOpenModal();
+    } catch (error) {
+      showNotification(notification, "error", t("errorOccurred"));
+    }
+  }
+
+  function setModalTableDataOrder() {
+    try {
+      const data: PurchaseOrderItemSubUser[] = responseDataOrder.data.map(
+        (e: any) =>
+          transformToPurchaseOrderItemSubUser(e, PurchaseOrderTableTypes.ISSUED) // r3v
+      );
+      setOrderList(data);
+      handleOpenModal();
+    } catch (error) {
+      showNotification(notification, "error", t("errorOccurred"));
+    }
+  }
 
   function openModalAddUser() {
     setAction(Action.ADD_USER);
@@ -376,28 +321,39 @@ export default function Users() {
     console.log(e.target.value);
   }
 
-  function handleOnActionClick(action: Action, user: SubUserProfile) {
-    console.log(action, user);
+  function handleOnActionClick(action: Action, user: SubUserBase) {
     setAction(action);
     switch (action) {
       case Action.EDIT_USER:
-        setApiParams({
-          service: getSubUserService("WpIPS18MYqNWegvx5REP"), // r3v user.uid
+        setApiParamsUser({
+          service: getSubUserService(user.uid),
           method: "get",
           token,
         });
         break;
       case Action.VIEW_REQUIREMENTS:
         setUserData(user);
-        handleOpenModal();
+        setApiParamsReq({
+          service: getRequirementsBySubUserService(user.uid),
+          method: "get",
+        });
         break;
       case Action.VIEW_OFFERS:
         setUserData(user);
-        handleOpenModal();
+        setApiParamsOffer({
+          service: getOffersBySubUserService(user.uid),
+          method: "get",
+        });
         break;
       case Action.VIEW_PURCHASE_ORDERS:
         setUserData(user);
-        handleOpenModal();
+        setApiParamsOrder({
+          service: getPurchaseOrdersByClientEntityService(
+            user.uid,
+            user.typeID
+          ),
+          method: "get",
+        });
         break;
     }
   }
@@ -411,7 +367,7 @@ export default function Users() {
           <AddUserModal
             onClose={handleCloseModal}
             edit={true}
-            userData={userData}
+            userData={userDataEdit}
           />
         );
       case Action.VIEW_REQUIREMENTS:
@@ -419,9 +375,12 @@ export default function Users() {
           <SubUserTableModal
             content={{
               tableType: TableTypes.REQUIREMENT_SUBUSER,
-              tableContent: reqs,
+              tableContent: reqList,
             }}
             user={userData}
+            onTabChange={handleTabChange}
+            loading={loadingReq}
+            tableType={TableTypes.REQUIREMENT_SUBUSER}
           />
         );
       case Action.VIEW_OFFERS:
@@ -429,9 +388,12 @@ export default function Users() {
           <SubUserTableModal
             content={{
               tableType: TableTypes.OFFER_SUBUSER,
-              tableContent: offers,
+              tableContent: offerList,
             }}
             user={userData}
+            onTabChange={handleTabChange}
+            loading={loadingOffer}
+            tableType={TableTypes.OFFER_SUBUSER}
           />
         );
       case Action.VIEW_PURCHASE_ORDERS:
@@ -439,13 +401,43 @@ export default function Users() {
           <SubUserTableModal
             content={{
               tableType: TableTypes.PURCHASE_ORDER_SUBUSER,
-              tableContent: purc,
+              tableContent: orderList,
             }}
             user={userData}
+            onTabChange={handleTabChange}
+            loading={loadingOrder}
+            tableType={TableTypes.PURCHASE_ORDER_SUBUSER}
           />
         );
       default:
         return null;
+    }
+  }
+
+  function handleTabChange(tabId: string) {
+    if (userData) {
+      if (action == Action.VIEW_REQUIREMENTS) {
+        switch (Number(tabId)) {
+          case RequirementType.GOOD:
+            setApiParamsReq({
+              service: getRequirementsBySubUserService(userData.uid), // r3v para servicios y liquidaciones
+              method: "get",
+            });
+            break;
+          case RequirementType.SERVICE:
+            setApiParamsReq({
+              service: getRequirementsBySubUserService(userData.uid),
+              method: "get",
+            });
+            break;
+          case RequirementType.SALE:
+            setApiParamsReq({
+              service: getRequirementsBySubUserService(userData.uid),
+              method: "get",
+            });
+            break;
+        }
+      }
     }
   }
 
@@ -483,11 +475,7 @@ export default function Users() {
             </ButtonContainer>
           </div>
         }
-        // loading={
-        //   equalServices(apiParams.service, getRequirementsService())
-        //     ? loading
-        //     : undefined
-        // }
+        loading={loading}
       />
     </>
   );

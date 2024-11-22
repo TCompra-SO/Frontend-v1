@@ -265,6 +265,11 @@ const resources = {
       saleRepublishedSuccessfully: "Sale republished successfully",
       requirementRepublishedSuccessfully: "Requirement republished successfully",
       selectNewDateForRepublishment: "Select a new expiration date",
+      offerDeletedSuccessfully: "Offer deleted successfully",
+      pendingCertificationMsg: "Please wait for the approval of your documents for certification",
+      rejectedCertificationMsg: "Your documents for certification have been rejected. Please review them and submit them again",
+      requirementBelongsToEmployee: "Requirement belongs to another employee",
+      saleBelongsToEmployee: "Sale belongs to another employee",
       // Other
       yes: "Yes",
       no: "No",
@@ -415,7 +420,8 @@ const resources = {
       goTo: "Go to ",
       controlPanel: "Control panel",
       getCertified: "Get certified",
-      send: "Send"
+      send: "Send",
+      subUser: "Subuser"
     },
   },
   es: {
@@ -681,6 +687,11 @@ const resources = {
       saleRepublishedSuccessfully: "Liquidación republicada exitosamente",
       requirementRepublishedSuccessfully: "Requerimiento republicado exitosamente",
       selectNewDateForRepublishment: "Selecciona una nueva fecha de expiración",
+      offerDeletedSuccessfully: "Oferta eliminada exitosamente",
+      rejectedCertificationMsg: "Los documentos enviados para certificación han sido rechazados. Revise los requisitos y vuelva a enviarlos",
+      pendingCertificationMsg: "Por favor, espere la aprobación de sus documentos para ser certificado",
+      requirementBelongsToEmployee: "El requerimiento pertenece a otro trabajador de la empresa",
+      saleBelongsToEmployee: "La liquidación pertenece a otro trabajador de la empresa",
       // Other
       yes: "Sí",
       no: "No",
@@ -835,7 +846,8 @@ const resources = {
       goTo: "Ir a ",
       controlPanel: "Panel de control",
       getCertified: "Certifícate",
-      send: "Enviar"
+      send: "Enviar",
+      subUser: "Subusuario"
     },
   },
 };

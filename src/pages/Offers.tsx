@@ -16,13 +16,16 @@ import {
   getRouteType,
 } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
-import { getOffersService } from "../services/requests/offerService";
+import {
+  deleteOfferService,
+  getOffersBySubUserService,
+} from "../services/requests/offerService";
 import useApi from "../hooks/useApi";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import {
   transformToBasicRateData,
-  transformToOffer,
+  transformToOfferFromGetOffersByEntityOrSubUser,
 } from "../utilities/transform";
 import showNotification, {
   showLoadingMessage,
@@ -39,6 +42,7 @@ export default function Offers() {
   const [type, setType] = useState(getRouteType(location.pathname));
   const [currentAction, setCurrentAction] = useState<Action>(Action.CANCEL);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [offer, setOffer] = useState<Offer>();
 
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -53,8 +57,10 @@ export default function Offers() {
     onButtonClick: handleOnButtonClick,
   });
 
-  const [apiParams, setApiParams] = useState<useApiParams>({
-    service: getOffersService(),
+  /** Cargar datos iniciales */
+
+  const [apiParams] = useState<useApiParams>({
+    service: getOffersBySubUserService(dataUser.uid),
     method: "get",
   });
 
@@ -71,13 +77,55 @@ export default function Offers() {
 
   useEffect(() => {
     if (responseData) {
-      if (equalServices(apiParams.service, getOffersService())) setData();
+      if (equalServices(apiParams.service, getOffersBySubUserService("")))
+        setData();
     } else if (error) {
-      if (equalServices(apiParams.service, getOffersService()))
+      if (equalServices(apiParams.service, getOffersBySubUserService("")))
         showNotification(notification, "error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
+
+  /* Para eliminar */
+
+  const [apiParamsDelete, setApiParamsDelete] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingDelete,
+    responseData: responseDataDelete,
+    error: errorDelete,
+    errorMsg: errorMsgDelete,
+    fetchData: fetchDataDelete,
+  } = useApi({
+    service: apiParamsDelete.service,
+    method: apiParamsDelete.method,
+    dataToSend: apiParamsDelete.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingDelete);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingDelete]);
+
+  useEffect(() => {
+    if (apiParamsDelete.service) fetchDataDelete();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsDelete]);
+
+  useEffect(() => {
+    if (responseDataDelete) {
+      showNotification(notification, "success", t("offerDeletedSuccessfully"));
+      handleCloseModal();
+    } else if (errorDelete) {
+      showNotification(notification, "error", errorMsgDelete);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataDelete, errorDelete]);
+
+  /********** */
 
   useEffect(() => {
     setType(getRouteType(location.pathname));
@@ -130,11 +178,14 @@ export default function Offers() {
   }, [responseDataRate, errorRate]);
 
   async function setData() {
-    if (responseData) {
+    try {
       const data = responseData.data.map((e: any) =>
-        dataUser.uid == mainDataUser.uid
-          ? transformToOffer(e, type, dataUser)
-          : transformToOffer(e, type, dataUser, mainDataUser)
+        transformToOfferFromGetOffersByEntityOrSubUser(
+          e,
+          type,
+          dataUser,
+          mainDataUser
+        )
       );
 
       setTableContent({
@@ -145,8 +196,8 @@ export default function Offers() {
         nameColumnHeader: t("offers"),
         onButtonClick: handleOnButtonClick,
       });
-    } else if (error) {
-      console.log(error);
+    } catch (error) {
+      showNotification(notification, "error", t("errorOccurred"));
     }
   }
 
@@ -156,6 +207,10 @@ export default function Offers() {
 
   function deleteOffer(offerId: string) {
     console.log("deleteOffer", offerId);
+    setApiParamsDelete({
+      service: deleteOfferService(offerId),
+      method: "get",
+    });
   }
 
   function goToChat(offer: Offer) {
@@ -164,22 +219,28 @@ export default function Offers() {
 
   function openRateModal(responseData: any) {
     const data = transformToBasicRateData(responseData.data[0]);
-    setDataModal({
-      type:
-        currentAction == Action.FINISH
-          ? ModalTypes.RATE_USER
-          : ModalTypes.RATE_CANCELED,
-      data: {
-        basicRateData: data,
-        type,
-        isOffer: false,
-      },
-    });
-    setIsOpenModal(true);
+    if (offer) {
+      setDataModal({
+        type:
+          currentAction == Action.FINISH
+            ? ModalTypes.RATE_USER
+            : ModalTypes.RATE_CANCELED,
+        data: {
+          basicRateData: data,
+          type,
+          isOffer: false,
+          requirementOrOfferId: offer?.key,
+        },
+      });
+      setIsOpenModal(true);
+    }
   }
 
   function handleOnButtonClick(action: Action, offer: Offer) {
+    console.log(offer);
     setCurrentAction(action);
+    setOffer(offer);
+
     switch (action) {
       case Action.OFFER_DETAIL:
         setDataModal({
@@ -193,9 +254,11 @@ export default function Offers() {
 
       case Action.DELETE: {
         // r3v
+
         setDataModal({
           type: ModalTypes.CONFIRM,
           data: {
+            loading: loadingDelete,
             onAnswer: (ok: boolean) => {
               if (!ok) return;
               deleteOffer(offer.key);
@@ -265,7 +328,7 @@ export default function Offers() {
         table={tableContent}
         onSearch={handleSearch}
         loading={
-          equalServices(apiParams.service, getOffersService())
+          equalServices(apiParams.service, getOffersBySubUserService(""))
             ? loading
             : undefined
         }

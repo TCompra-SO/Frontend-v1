@@ -5,13 +5,18 @@ import {
   PurchaseOrder,
   PurchaseOrderItemSubUser,
 } from "../../../../models/MainInterfaces";
-import { Action } from "../../../../utilities/types";
+import { Action, TableTypes } from "../../../../utilities/types";
+import { useContext } from "react";
+import { LoadingPdfContext } from "../../../../contexts/loadingPdfContext";
 
 export default function DocumentColumn(
+  type: TableTypes,
   onButtonClick: (action: Action, data: any) => void,
   hidden: boolean = false
 ) {
   const { t } = useTranslation();
+  const { allPurchaseOrdersLoadingPdf, subUserPurchaseOrdersLoadingPdf } =
+    useContext(LoadingPdfContext);
 
   const col: ColumnType<PurchaseOrderItemSubUser | PurchaseOrder> = {
     title: t("document"),
@@ -29,6 +34,11 @@ export default function DocumentColumn(
             }
             className="btn btn-border-default btn-sm t-flex seleccionar-tb"
             children={<i className="fa-solid fa-file"></i>}
+            disabled={
+              type == TableTypes.ALL_PURCHASE_ORDERS
+                ? allPurchaseOrdersLoadingPdf
+                : subUserPurchaseOrdersLoadingPdf
+            }
           />
         </div>
       );

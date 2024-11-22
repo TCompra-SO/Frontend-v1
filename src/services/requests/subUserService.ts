@@ -36,3 +36,12 @@ export function updateProfileSubUserService(): HttpService {
     type: "SU-UP-PR",
   };
 }
+
+export function getSubUsersByEntityService(id: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.subUser}${
+      ApiRoutes.subUser.getSubUsersByEntity
+    }${id}`,
+    type: "SU-GET-ENT",
+  };
+}

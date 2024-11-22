@@ -16,6 +16,8 @@ import { useTranslation } from "react-i18next";
 import { allItems } from "../../../../utilities/globals";
 import { ItemType } from "antd/es/menu/interface";
 import { Offer } from "../../../../models/MainInterfaces";
+import { LoadingPdfContext } from "../../../../contexts/loadingPdfContext";
+import { useContext } from "react";
 
 // extraParam tiene diferentes significados según el tipo de tabla
 export default function ActionColumn(
@@ -25,6 +27,7 @@ export default function ActionColumn(
   extraParam?: any
 ) {
   const { t } = useTranslation();
+  const { myPurchaseOrdersLoadingPdf } = useContext(LoadingPdfContext);
 
   const col: ColumnType<any> = {
     title: t("actionColumn"),
@@ -68,7 +71,7 @@ export default function ActionColumn(
             items:
               type != TableTypes.PURCHASE_ORDER
                 ? type == TableTypes.OFFER
-                  ? ActionByState[key].reduce<ItemType[]>(
+                  ? ActionByState[key]?.reduce<ItemType[]>(
                       (acc, action: Action) => {
                         const canceledByCreator = (record as Offer) // r3v
                           .canceledByCreator;
@@ -84,14 +87,14 @@ export default function ActionColumn(
                       },
                       []
                     )
-                  : ActionByState[key].map((action: Action) => {
+                  : ActionByState[key]?.map((action: Action) => {
                       return {
                         key: action,
                         label: t(ActionLabel[action]),
                         onClick: () => onButtonClick(action, record),
                       };
                     })
-                : ActionByState[key].reduce<ItemType[]>(
+                : ActionByState[key]?.reduce<ItemType[]>(
                     (acc, action: Action) => {
                       if (
                         action == Action.VIEW_HISTORY &&
@@ -111,10 +114,15 @@ export default function ActionColumn(
                           extraParam == PurchaseOrderTableTypes.RECEIVED_SALES)
                       )
                         return acc;
+
                       acc.push({
                         key: action,
                         label: t(ActionLabel[action]),
                         onClick: () => onButtonClick(action, record),
+                        disabled:
+                          action == Action.DOWNLOAD_PURCHASE_ORDER
+                            ? myPurchaseOrdersLoadingPdf
+                            : undefined,
                       });
                       return acc;
                     },

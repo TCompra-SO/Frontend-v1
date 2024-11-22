@@ -5,6 +5,7 @@ import {
   PurchaseOrderTableTypes,
   RequirementType,
   TableTypes,
+  UserRoles,
 } from "../utilities/types";
 import { useTranslation } from "react-i18next";
 import {
@@ -12,7 +13,7 @@ import {
   TableTypePurchaseOrder,
   useApiParams,
 } from "../models/Interfaces";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import useApi from "../hooks/useApi";
@@ -25,10 +26,9 @@ import showNotification, {
   showLoadingMessage,
 } from "../utilities/notification/showNotification";
 import makeRequest, {
-  equalServices,
   getLabelFromPurchaseOrderType,
-  getPdfSrc,
   getPurchaseOrderType,
+  openPurchaseOrderPdf,
 } from "../utilities/globalFunctions";
 import {
   transformToBaseUser,
@@ -41,7 +41,8 @@ import { mainModalScrollStyle } from "../utilities/globals";
 import { useLocation } from "react-router-dom";
 import {
   getPurchaseOrderPDFService,
-  getReqIssuedPurchaseOrderByUserService,
+  getPurchaseOrdersByClientEntityService,
+  getPurchaseOrdersByProviderEntityService,
 } from "../services/requests/purchaseOrderService";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
@@ -51,12 +52,15 @@ import {
 } from "../services/requests/offerService";
 import { getBasicRateDataReqService } from "../services/requests/requirementService";
 import { getRequirementById } from "../services/complete/general";
+import { LoadingPdfContext } from "../contexts/loadingPdfContext";
 
 export default function PurchaseOrders() {
   const { t } = useTranslation();
   const location = useLocation();
   const uid = useSelector((state: MainState) => state.user.uid);
+  const role = useSelector((state: MainState) => state.user.typeID);
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
+  const { updateMyPurchaseOrdersLoadingPdf } = useContext(LoadingPdfContext);
   const { notification, message } = App.useApp();
   const [currentPurchaseOrder, setCurrentPurchaseOrder] =
     useState<PurchaseOrder | null>(null);
@@ -74,10 +78,14 @@ export default function PurchaseOrders() {
     onButtonClick: handleOnButtonClick,
   });
 
+  useEffect(() => {
+    setType(getPurchaseOrderType(location.pathname));
+  }, [location]);
+
   /** Para obtener datos iniciales y datos de proveedor/cliente */
 
   const [apiParams, setApiParams] = useState<useApiParams>({
-    service: getReqIssuedPurchaseOrderByUserService(uid),
+    service: null,
     method: "get",
   });
   const { loading, responseData, error, errorMsg, fetchData } = useApi({
@@ -87,16 +95,39 @@ export default function PurchaseOrders() {
   });
 
   useEffect(() => {
-    setType(getPurchaseOrderType(location.pathname));
-  }, [location]);
-
-  useEffect(() => {
-    setTableContent((prev) => {
-      return {
-        ...prev,
-        subType: type,
-      };
-    });
+    switch (type) {
+      case PurchaseOrderTableTypes.ISSUED:
+        setApiParams({
+          service: getPurchaseOrdersByClientEntityService(
+            uid,
+            role == UserRoles.ADMIN ? UserRoles.BUYER : role
+          ),
+          method: "get",
+        });
+        break;
+      case PurchaseOrderTableTypes.RECEIVED:
+        setApiParams({
+          service: getPurchaseOrdersByProviderEntityService(
+            uid,
+            role == UserRoles.ADMIN ? UserRoles.BUYER : role
+          ),
+          method: "get",
+        });
+        break;
+      case PurchaseOrderTableTypes.ISSUED_SALES:
+        setApiParams({
+          service: null,
+          method: "get",
+        });
+        break;
+      case PurchaseOrderTableTypes.RECEIVED_SALES:
+        setApiParams({
+          service: null,
+          method: "get",
+        });
+        break;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
   useEffect(() => {
@@ -105,28 +136,51 @@ export default function PurchaseOrders() {
   }, [apiParams]);
 
   useEffect(() => {
-    if (equalServices(apiParams.service, getUserService("")))
-      showLoadingMessage(message, loading);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
-
-  useEffect(() => {
     if (responseData) {
-      if (
-        equalServices(
-          apiParams.service,
-          getReqIssuedPurchaseOrderByUserService("")
-        )
-      )
-        setTableData();
-      else if (equalServices(apiParams.service, getUserService("")))
-        showUserInfo(responseData);
+      setTableData();
     } else if (error) {
       showNotification(notification, "error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
+
+  /* Obtener datos para user */
+
+  const [apiParamsUser, setApiParamsUser] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingUser,
+    responseData: responseDataUser,
+    error: errorUser,
+    errorMsg: errorMsgUser,
+    fetchData: fetchDataUser,
+  } = useApi({
+    service: apiParamsUser.service,
+    method: apiParamsUser.method,
+    dataToSend: apiParamsUser.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingUser);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingUser]);
+
+  useEffect(() => {
+    if (apiParamsUser.service) fetchDataUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsUser]);
+
+  useEffect(() => {
+    if (responseDataUser) {
+      showUserInfo(responseData);
+    } else if (errorUser) {
+      showNotification(notification, "error", errorMsgUser);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataUser, errorUser]);
 
   /* Obtener datos para culminar */
 
@@ -224,6 +278,7 @@ export default function PurchaseOrders() {
   });
 
   useEffect(() => {
+    updateMyPurchaseOrdersLoadingPdf(loadingPdf);
     showLoadingMessage(message, loadingPdf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingPdf]);
@@ -245,7 +300,7 @@ export default function PurchaseOrders() {
   /** Funciones */
 
   async function setTableData() {
-    if (responseData) {
+    try {
       const data = responseData.data.map((po: any) =>
         transformToPurchaseOrder(po)
       );
@@ -258,8 +313,8 @@ export default function PurchaseOrders() {
         nameColumnHeader: t("user"),
         onButtonClick: handleOnButtonClick,
       });
-    } else if (error) {
-      console.log(error);
+    } catch (error) {
+      showNotification(notification, "error", t("errorOccurred"));
     }
   }
 
@@ -269,7 +324,6 @@ export default function PurchaseOrders() {
 
   function openRateModal(responseData: any) {
     const data = transformToBasicRateData(responseData.data[0]);
-    console.log(currentPurchaseOrder);
     if (currentPurchaseOrder) {
       setDataModal({
         type: ModalTypes.RATE_USER,
@@ -277,8 +331,12 @@ export default function PurchaseOrders() {
           basicRateData: data,
           type: currentPurchaseOrder.type,
           isOffer:
-            type == PurchaseOrderTableTypes.ISSUED ||
+            type == PurchaseOrderTableTypes.ISSUED || // r3v para otros dos casos
             type == PurchaseOrderTableTypes.RECEIVED_SALES,
+          requirementOrOfferId:
+            type == PurchaseOrderTableTypes.ISSUED
+              ? currentPurchaseOrder.requirementId
+              : currentPurchaseOrder.offerId,
         },
       });
       setIsOpenModal(true);
@@ -335,29 +393,18 @@ export default function PurchaseOrders() {
     showLoadingMessage(message, false);
   }
 
-  function openPurchaseOrderPdf(responseData: any) {
-    const pdfSrc = getPdfSrc(responseData.data);
-    if (pdfSrc) {
-      window.open(
-        pdfSrc,
-        "_blank",
-        "width=800,height=1000,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes"
-      );
-    }
-  }
-
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
     setCurrentPurchaseOrder(purchaseOrder);
 
     switch (action) {
       case Action.VIEW_CUSTOMER:
-        setApiParams({
+        setApiParamsUser({
           service: getUserService(purchaseOrder.userClientId),
           method: "get",
         });
         break;
       case Action.VIEW_SUPPLIER:
-        setApiParams({
+        setApiParamsUser({
           service: getUserService(purchaseOrder.userProviderId),
           method: "get",
         });
@@ -429,11 +476,7 @@ export default function PurchaseOrders() {
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
         onSearch={handleSearch}
-        // loading={
-        //   equalServices(apiParams.service, getRequirementsService())
-        //     ? loading
-        //     : undefined
-        // }
+        loading={loading}
       />
     </>
   );

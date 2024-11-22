@@ -337,9 +337,9 @@ export enum RegisterTypeId {
 }
 
 export enum CanOfferType {
-  ALL = 0,
-  PREMIUM = 1,
-  CERTIFIED_COMPANY = 2,
+  ALL = 1,
+  PREMIUM = 2,
+  CERTIFIED_COMPANY = 3,
 }
 
 export enum TimeMeasurement {
@@ -376,6 +376,7 @@ export enum PurchaseOrderTableTypes {
 }
 
 export enum CertificationState {
+  NONE = 0,
   CERTIFIED = 1,
   REJECTED = 2,
   PENDING = 3,
@@ -405,4 +406,5 @@ export enum CantOfferMotives {
   ONLY_PREMIUM = 7,
   ONLY_CERTIFIED = 8,
   NO_ALLOWED_ROLE = 9,
+  OTHER_USER_IN_COMPANY_IS_CREATOR = 10,
 }

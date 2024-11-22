@@ -2,6 +2,8 @@ import { useTranslation } from "react-i18next";
 import ButtonContainer from "../../../../containers/ButtonContainer";
 import {
   CantOfferMotives,
+  CertificationState,
+  EntityType,
   ModalTypes,
   RequirementType,
 } from "../../../../../utilities/types";
@@ -12,16 +14,21 @@ import { pageRoutes } from "../../../../../utilities/routes";
 import ModalContainer from "../../../../containers/ModalContainer";
 import { ModalContent } from "../../../../../models/Interfaces";
 import { mainModalScrollStyle } from "../../../../../utilities/globals";
+import { MainState } from "../../../../../models/Redux";
+import { useSelector } from "react-redux";
 
 interface CantOfferMessageProps {
   offerId: string;
   motive: CantOfferMotives;
   requirement: Requirement | undefined;
+  isPremium?: boolean;
+  isCertified?: CertificationState;
 }
 
 export default function CantOfferMessage(props: CantOfferMessageProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const entityType = useSelector((state: MainState) => state.user.typeEntity);
   const [mainText, setMainText] = useState("");
   const [optionalText, setOptionalText] = useState("");
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -53,7 +60,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
                 }) ${t("offers")}`
           }`
         );
-        setOptionalText("ss");
+        setOptionalText("");
         break;
       case CantOfferMotives.CHANGED_STATE:
         setMainText(
@@ -65,7 +72,9 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
           }`
         );
         setOptionalText(
-          `${t("itHad")} (${props.requirement?.numberOffers}) ${t("offers")}`
+          `${t("itHad")} (${props.requirement?.numberOffers}) ${t(
+            "offers"
+          ).toLowerCase()}`
         );
         break;
       case CantOfferMotives.OTHER_USER_IN_COMPANY_MADE_OFFER:
@@ -73,9 +82,17 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
         setOptionalText("");
         break;
       case CantOfferMotives.IS_MAIN_CREATOR:
-        setMainText(t("aSubUserHasAlreadyMadeAnOffer"));
+        setMainText(
+          t(
+            props.requirement?.type == RequirementType.SALE
+              ? "requirementBelongsToEmployee"
+              : "saleBelongsToEmployee"
+          )
+        );
         setOptionalText(
-          `${t("itHad")} (${props.requirement?.numberOffers}) ${t("offers")}`
+          `${t("itHad")} (${props.requirement?.numberOffers}) ${t(
+            "offers"
+          ).toLowerCase()}`
         );
         break;
       case CantOfferMotives.ONLY_PREMIUM:
@@ -83,13 +100,31 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
         setOptionalText("");
         break;
       case CantOfferMotives.ONLY_CERTIFIED:
-        setMainText(t("onlyCertifiedCompaniesCanMakeAnOffer")); // r3v
-        setOptionalText("");
+        setMainText(t("onlyCertifiedCompaniesCanMakeAnOffer"));
+        switch (props.isCertified) {
+          case CertificationState.PENDING:
+            setOptionalText(t("pendingCertificationMsg"));
+            break;
+          case CertificationState.REJECTED:
+            setOptionalText(t("rejectedCertificationMsg"));
+            break;
+          default:
+            setOptionalText("");
+        }
         break;
       case CantOfferMotives.NO_ALLOWED_ROLE:
         setMainText(t("noPermissionToMakeOffer"));
         setOptionalText("");
         break;
+      case CantOfferMotives.OTHER_USER_IN_COMPANY_IS_CREATOR:
+        setMainText(
+          t(
+            props.requirement?.type == RequirementType.SALE
+              ? "requirementBelongsToEmployee"
+              : "saleBelongsToEmployee"
+          )
+        );
+        setOptionalText("");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.motive]);
@@ -163,16 +198,19 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
             {t("goTo") + t("controlPanel")}
           </ButtonContainer>
         )}
-        {props.motive == CantOfferMotives.ONLY_CERTIFIED && (
-          <ButtonContainer
-            style={{ height: "auto" }}
-            className="btn btn-green btn-sm"
-            icon={<i className="fa-regular fa-star"></i>}
-            onClick={openGetCertifiedModal} // r3v
-          >
-            {t("getCertified")}
-          </ButtonContainer>
-        )}
+        {props.motive == CantOfferMotives.ONLY_CERTIFIED &&
+          entityType == EntityType.COMPANY &&
+          props.isPremium &&
+          props.isCertified == CertificationState.NONE && (
+            <ButtonContainer
+              style={{ height: "auto" }}
+              className="btn btn-green btn-sm"
+              icon={<i className="fa-regular fa-star"></i>}
+              onClick={openGetCertifiedModal}
+            >
+              {t("getCertified")}
+            </ButtonContainer>
+          )}
       </div>
     </>
   );

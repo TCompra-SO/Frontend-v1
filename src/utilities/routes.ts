@@ -53,6 +53,7 @@ export const ApiRoutes = {
     changeRole: "changeRole/",
     changeStatus: "changeStatus/",
     getUser: "getUser/",
+    getSubUsersByEntity: "getSubUsersByEntity/",
   },
   requirements: {
     getRequirement: "getRequeriment/",
@@ -64,6 +65,7 @@ export const ApiRoutes = {
     republish: "republish/",
     getRequirementsBySubUser: "getRequerimentsBySubUser/",
     getRequirementsByEntity: "getRequerimentsByEntity/",
+    culminate: "culminate/",
   },
   requirement: {
     create: "create/",
@@ -85,6 +87,8 @@ export const ApiRoutes = {
     getBasicRateData: "getBasicRateData/",
     getOffersByEntity: "getOffersByEntity/",
     getOffersBySubUser: "getOffersBySubUser/",
+    delete: "delete/",
+    culminate: "culminate/",
   },
   score: {
     registerScore: "registerScore/",
@@ -93,7 +97,9 @@ export const ApiRoutes = {
     getPurchaseOrders: "getPurchaseOrders",
     getPurchaseOrderByUser: "getPurchaseOrderByUser/",
     getPurchaseOrderById: "getPurchaseOrderID/",
-    getpurchaseOrderPDF: "getpurchaseOrderPDF/",
+    getPurchaseOrderPDF: "getpurchaseOrderPDF/",
+    getPurchaseOrdersByProvider: "getPurchaseOrdersByProvider/",
+    getPurchaseOrdersByClient: "getPurchaseOrdersByClient/",
   },
 };
 

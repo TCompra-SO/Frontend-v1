@@ -20,7 +20,7 @@ import { mainModalScrollStyle } from "../utilities/globals";
 import useApi from "../hooks/useApi";
 import {
   deleteRequirementService,
-  getRequirementsService,
+  getRequirementsBySubUserService,
 } from "../services/requests/requirementService";
 import {
   transformDataToRequirement,
@@ -70,9 +70,10 @@ export default function Requirements() {
     onButtonClick: handleOnButtonClick,
   });
 
-  /* Obtener lista inicialmente y obtener ofertas */
+  /* Obtener lista inicialmente */
+
   const [apiParams, setApiParams] = useState<useApiParams>({
-    service: getRequirementsService(),
+    service: getRequirementsBySubUserService(dataUser.uid),
     method: "get",
   });
 
@@ -104,7 +105,7 @@ export default function Requirements() {
 
   useEffect(() => {
     if (responseData) {
-      if (equalServices(apiParams.service, getRequirementsService()))
+      if (equalServices(apiParams.service, getRequirementsBySubUserService("")))
         setTableData();
       else if (
         equalServices(apiParams.service, getOffersByRequirementIdService(""))
@@ -112,7 +113,7 @@ export default function Requirements() {
         openDetailedRequirement(responseData);
     } else if (error) {
       if (
-        equalServices(apiParams.service, getRequirementsService()) ||
+        equalServices(apiParams.service, getRequirementsBySubUserService("")) ||
         equalServices(apiParams.service, getOffersByRequirementIdService(""))
       )
         showNotification(notification, "error", errorMsg);
@@ -215,18 +216,15 @@ export default function Requirements() {
   /** Funciones */
 
   async function setTableData() {
-    if (responseData) {
-      const data = await Promise.all(
-        responseData.data.map(async (e: any) =>
-          transformDataToRequirement(
-            e,
-            RequirementType.GOOD,
-            dataUser,
-            mainDataUser
-          )
+    try {
+      const data = responseData.data.map((e: any) =>
+        transformDataToRequirement(
+          e,
+          RequirementType.GOOD,
+          dataUser,
+          mainDataUser
         )
       );
-
       setTableContent({
         type: TableTypes.REQUIREMENT,
         data,
@@ -235,8 +233,8 @@ export default function Requirements() {
         nameColumnHeader: t("goods"),
         onButtonClick: handleOnButtonClick,
       });
-    } else if (error) {
-      console.log(error);
+    } catch (error) {
+      showNotification(notification, "error", t("errorOccurred"));
     }
   }
 
@@ -275,6 +273,7 @@ export default function Requirements() {
           basicRateData: data,
           type: requirement.type,
           isOffer: true,
+          requirementOrOfferId: requirement.key,
         },
       });
       setIsOpenModal(true);
@@ -282,6 +281,7 @@ export default function Requirements() {
   }
 
   async function handleOnButtonClick(action: Action, requirement: Requirement) {
+    console.log(requirement);
     setRequirement(requirement);
 
     switch (action) {
@@ -372,7 +372,6 @@ export default function Requirements() {
   }
 
   function deleteRequirement(requirementId: string) {
-    console.log("eliminarreq", requirementId);
     setApiParamsDelete({
       service: deleteRequirementService(requirementId),
       method: "get",
@@ -408,7 +407,7 @@ export default function Requirements() {
         table={tableContent}
         onSearch={handleSearch}
         loading={
-          equalServices(apiParams.service, getRequirementsService())
+          equalServices(apiParams.service, getRequirementsBySubUserService(""))
             ? loading
             : undefined
         }
