@@ -13,6 +13,7 @@ import { transformFromGetRequirementByIdToRequirement } from "../utilities/trans
 import { RequirementType } from "../utilities/types";
 import ProductRequirementDetail from "../components/section/productDetail/ProductRequirementDetail/ProductRequirementDetail";
 import ProductDetailHeader from "../components/section/productDetail/ProductDetailHeader";
+import Footer from "../components/section/footer/Footer";
 
 export default function ProductDetail() {
   // const { t } = useTranslation();
@@ -84,6 +85,7 @@ export default function ProductDetail() {
     <>
       <ProductDetailHeader reqTitle={requirement?.title} />
       <ProductRequirementDetail requirement={requirement} />
+      <Footer />
     </>
   );
 }

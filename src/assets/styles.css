@@ -1777,7 +1777,7 @@ body {
   border-bottom: 1px solid rgba(255, 255, 255, 0.25);
 }
 .section-slider {
-  background-image: url(../img/back-01.jpg);
+  background-image: url(images/back-01.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;

@@ -217,18 +217,21 @@ const resources = {
       userUpdatedSuccessfully: "User updated successfully",
       createRequirementSuccess: "Requirement created successfully",
       createSaleSuccess: "Sale created successfully",
-      createRequirementSuccessNoDocOrImages: "Requirement created successfully, but there were errors uploading files and/or images",
-      createSaleSuccessNoDocOrImages: "Sale created successfully, but there were errors uploading files and/or images",
+      createRequirementSuccessNoDocOrImages:
+        "Requirement created successfully, but there were errors uploading files and/or images",
+      createSaleSuccessNoDocOrImages:
+        "Sale created successfully, but there were errors uploading files and/or images",
       listOfDocumentsToRequest: "List of documents to request",
       editListOfDocumentsToRequest: "Edit list of documents to request",
       certifyYourCompany: "Certify your company",
       improveYourCompanysImage: "Improve significantly your company's image.",
-      cantOfferToYourOwnRequirement:"You cannot offer to your own requirement",
+      cantOfferToYourOwnRequirement: "You cannot offer to your own requirement",
       alreadyMadeOffer: "You have already made an offer on this requirement",
       requirementNotFound: "The requirement could not be found",
       errorOccurredLoginAgain: "An error occurred. Log in again",
       offerCreatedSuccessfully: "Offer created successfully",
-      offerCreatedSuccessfullyNoDocOrImages: "Offer created successfully, but there were errors uploading files and/or images",
+      offerCreatedSuccessfullyNoDocOrImages:
+        "Offer created successfully, but there were errors uploading files and/or images",
       imageUpdatedSuccessfully: "Image updated successfully",
       errorOccurredUploadingDocs: "An error occurred while uploading files",
       errorOccurredUploadingImgs: "An error occurred while uploading images",
@@ -243,33 +246,52 @@ const resources = {
       offerWasAlreadySelected: "An offer was already selected",
       cantOfferToRequirement: "No offer can be selected for this requirement",
       cantOfferToSale: "No offer can be selected for this sale",
-      ifYouWantToEliminateYourOfferClickOnDelete: "If you want to delete your offer, click on Delete",
+      ifYouWantToEliminateYourOfferClickOnDelete:
+        "If you want to delete your offer, click on Delete",
       deleteOffer: "Delete offer",
       mustLoginToOffer: "You must log in to make an offer",
       yourRequirementHas: "Your requirement has ",
       yourSaleHas: "Your sale has ",
-      thisRequirementIsNoLongerAvailable: "This requirement is no longer available",
+      thisRequirementIsNoLongerAvailable:
+        "This requirement is no longer available",
       thisSaleIsNoLongerAvailable: "This sale is no longer available",
-      otherEmployeeHasAlreadyMadeAnOffer: "Other employee has already made an offer",
+      otherEmployeeHasAlreadyMadeAnOffer:
+        "Other employee has already made an offer",
       aSubUserHasAlreadyMadeAnOffer: "A subuser has already made an offer",
       onlyPremiumUserCanMakeAnOffer: "Only Premium users can make an offer",
-      onlyCertifiedCompaniesCanMakeAnOffer: "Only certified companies can make an offer",
+      onlyCertifiedCompaniesCanMakeAnOffer:
+        "Only certified companies can make an offer",
       noPermissionToMakeOffer: "You do not have permission to make an offer.",
       GetYourCertificationFrom: "Get your certification from ",
       mustSelectAtLeastOneDocument: "You must select at least one document",
-      maxNumberImagesReached: "You've reached the maximum number of images allowed. Please remove some to upload more.",
-      maxNumberDocsReached: "You've reached the maximum number of documents allowed. Please remove some to upload more.",
+      maxNumberImagesReached:
+        "You've reached the maximum number of images allowed. Please remove some to upload more.",
+      maxNumberDocsReached:
+        "You've reached the maximum number of documents allowed. Please remove some to upload more.",
       requirementDeletedSuccessfully: "Requirement deleted successfully",
       saleDeletedSuccessfully: "Sale deleted successfully",
       enterAValidDate: "Enter a valid date",
       saleRepublishedSuccessfully: "Sale republished successfully",
-      requirementRepublishedSuccessfully: "Requirement republished successfully",
+      requirementRepublishedSuccessfully:
+        "Requirement republished successfully",
       selectNewDateForRepublishment: "Select a new expiration date",
       offerDeletedSuccessfully: "Offer deleted successfully",
-      pendingCertificationMsg: "Please wait for the approval of your documents for certification",
-      rejectedCertificationMsg: "Your documents for certification have been rejected. Please review them and submit them again",
+      pendingCertificationMsg:
+        "Please wait for the approval of your documents for certification",
+      rejectedCertificationMsg:
+        "Your documents for certification have been rejected. Please review them and submit them again",
       requirementBelongsToEmployee: "Requirement belongs to another employee",
       saleBelongsToEmployee: "Sale belongs to another employee",
+      homeTitle: "The first platform for Requirements and Offers in Peru",
+      homeSubtitle: "We Facilitate the Purchase and Sale of Goods and Services",
+      allRightsReserved: "All rights reserved",
+      immerseYourselfInBusiness: "Immerse yourself in the new era of business",
+      exchangeGoodsAndServices: "Exchange goods and services",
+      findYourBestSupplier: "Find your best supplier",
+      supliersOnlineReady:
+        "More than 10,000 online suppliers ready to meet your requirements",
+      createOpportunityFreeIncome:
+        "Create an opportunity & Generate free income",
       // Other
       yes: "Yes",
       no: "No",
@@ -421,7 +443,18 @@ const resources = {
       controlPanel: "Control panel",
       getCertified: "Get certified",
       send: "Send",
-      subUser: "Subuser"
+      subUser: "Subuser",
+      FAQ: "FAQ",
+      aboutUs: "About us",
+      membership: "Membership",
+      viewPlans: "View plans",
+      howToSell: "How to sell?",
+      howToBuy: "How to buy?",
+      needTo: "Need to",
+      buy: "buy",
+      lotsAndStocks: "Lots & Stocks",
+      liquidateYour: "Liquidate your",
+      advertising: "Advertising"
     },
   },
   es: {
@@ -639,18 +672,22 @@ const resources = {
       userUpdatedSuccessfully: "Usuario actualizado exitosamente",
       createRequirementSuccess: "Requerimiento creado exitosamente",
       createSaleSuccess: "Liquidación creada exitosamente",
-      createRequirementSuccessNoDocOrImages: "Requerimiento creado exitosamente, pero hubo errores al subir archivos y/o imágenes",
-      createSaleSuccessNoDocOrImages: "Liquidación creada exitosamente, pero hubo errores al subir archivos y/o imágenes",
+      createRequirementSuccessNoDocOrImages:
+        "Requerimiento creado exitosamente, pero hubo errores al subir archivos y/o imágenes",
+      createSaleSuccessNoDocOrImages:
+        "Liquidación creada exitosamente, pero hubo errores al subir archivos y/o imágenes",
       listOfDocumentsToRequest: "Lista de documentos a solicitar",
       editListOfDocumentsToRequest: "Editar lista de documentos a solicitar",
       certifyYourCompany: "Certifica tu empresa",
       improveYourCompanysImage: "Mejora notablemente la imagen de tu empresa.",
-      cantOfferToYourOwnRequirement:"No puedes ofertar a tu propio requerimiento",
+      cantOfferToYourOwnRequirement:
+        "No puedes ofertar a tu propio requerimiento",
       alreadyMadeOffer: "Ya haz realizado una oferta a este requerimiento",
       requirementNotFound: "No se ha podido encontrar el requerimiento",
       errorOccurredLoginAgain: "Se produjo un error. Inicie sesión nuevamente",
       offerCreatedSuccessfully: "Oferta creada exitosamente",
-      offerCreatedSuccessfullyNoDocOrImages: "Oferta creada exitosamente, pero hubo errores al subir archivos y/o imágenes",
+      offerCreatedSuccessfullyNoDocOrImages:
+        "Oferta creada exitosamente, pero hubo errores al subir archivos y/o imágenes",
       imageUpdatedSuccessfully: "Imagen actualizada exitosamente",
       errorOccurredUploadingDocs: "Se produjo un error al subir los archivos",
       errorOccurredUploadingImgs: "Se produjo un error al subir las imágenes",
@@ -663,35 +700,58 @@ const resources = {
       reqOfferNotFound: "Requerimiento u oferta no encontrada",
       saleOfferNotFound: "Liquidación u oferta no encontrada",
       offerWasAlreadySelected: "Una oferta ya fue seleccionada",
-      cantOfferToRequirement: "No se puede seleccionar una oferta para este requerimiento",
-      cantOfferToSale: "No se puede seleccionar una oferta para esta liquidación",
-      ifYouWantToEliminateYourOfferClickOnDelete: "Si quieres borrar tu oferta, haz click en Eliminar",
+      cantOfferToRequirement:
+        "No se puede seleccionar una oferta para este requerimiento",
+      cantOfferToSale:
+        "No se puede seleccionar una oferta para esta liquidación",
+      ifYouWantToEliminateYourOfferClickOnDelete:
+        "Si quieres borrar tu oferta, haz click en Eliminar",
       deleteOffer: "Eliminar oferta",
       mustLoginToOffer: "Debes iniciar sesión para ofertar",
       yourRequirementHas: "Tu requerimiento tiene ",
       yourSaleHas: "Tu liquidación tiene ",
-      thisRequirementIsNoLongerAvailable: "Este requerimiento ya no está disponible",
+      thisRequirementIsNoLongerAvailable:
+        "Este requerimiento ya no está disponible",
       thisSaleIsNoLongerAvailable: "Esta liquidación ya no está disponible",
       otherEmployeeHasAlreadyMadeAnOffer: "Otro trabajador ya hizo una oferta",
       aSubUserHasAlreadyMadeAnOffer: "Un subusuario ya hizo una oferta",
       onlyPremiumUserCanMakeAnOffer: "Solo usuarios Premium pueden ofertar",
-      onlyCertifiedCompaniesCanMakeAnOffer: "Solo empresas certificadas pueden ofertar",
+      onlyCertifiedCompaniesCanMakeAnOffer:
+        "Solo empresas certificadas pueden ofertar",
       noPermissionToMakeOffer: "No tienes permisos para ofertar",
       GetYourCertificationFrom: "Certifícate con ",
-      mustSelectAtLeastOneDocument: "Debes seleccionar por lo menos un documento",
-      maxNumberImagesReached: "Has alcanzado el número máximo de imágenes permitidas. Elimina algunas para subir más.",
-      maxNumberDocsReached: "Has alcanzado el número máximo de documentos permitidos. Elimina algunos para subir más.",
+      mustSelectAtLeastOneDocument:
+        "Debes seleccionar por lo menos un documento",
+      maxNumberImagesReached:
+        "Has alcanzado el número máximo de imágenes permitidas. Elimina algunas para subir más.",
+      maxNumberDocsReached:
+        "Has alcanzado el número máximo de documentos permitidos. Elimina algunos para subir más.",
       requirementDeletedSuccessfully: "Requerimiento eliminado exitosamente",
       saleDeletedSuccessfully: "Liquidación eliminada exitosamente",
       enterAValidDate: "Ingresa una fecha válida",
       saleRepublishedSuccessfully: "Liquidación republicada exitosamente",
-      requirementRepublishedSuccessfully: "Requerimiento republicado exitosamente",
+      requirementRepublishedSuccessfully:
+        "Requerimiento republicado exitosamente",
       selectNewDateForRepublishment: "Selecciona una nueva fecha de expiración",
       offerDeletedSuccessfully: "Oferta eliminada exitosamente",
-      rejectedCertificationMsg: "Los documentos enviados para certificación han sido rechazados. Revise los requisitos y vuelva a enviarlos",
-      pendingCertificationMsg: "Por favor, espere la aprobación de sus documentos para ser certificado",
-      requirementBelongsToEmployee: "El requerimiento pertenece a otro trabajador de la empresa",
-      saleBelongsToEmployee: "La liquidación pertenece a otro trabajador de la empresa",
+      rejectedCertificationMsg:
+        "Los documentos enviados para certificación han sido rechazados. Revise los requisitos y vuelva a enviarlos",
+      pendingCertificationMsg:
+        "Por favor, espere la aprobación de sus documentos para ser certificado",
+      requirementBelongsToEmployee:
+        "El requerimiento pertenece a otro trabajador de la empresa",
+      saleBelongsToEmployee:
+        "La liquidación pertenece a otro trabajador de la empresa",
+      homeTitle: "La primera plataforma de Requerimientos y Ofertas del Perú",
+      homeSubtitle: "Facilitamos la Compra y Venta de Bienes y Servicios",
+      allRightsReserved: "Todos los derechos reservados",
+      immerseYourselfInBusiness: "Sumérgete en la nueva era de los negocios",
+      exchangeGoodsAndServices: "Intercambia bienes y servicios",
+      findYourBestSupplier: "Encuentra tu mejor proveedor",
+      supliersOnlineReady:
+        "Más de 10,000 proveedores en línea listos para atender tus requerimientos",
+      createOpportunityFreeIncome:
+        "Crea una oportunidad & Genera ingresos gratis",
       // Other
       yes: "Sí",
       no: "No",
@@ -847,7 +907,18 @@ const resources = {
       controlPanel: "Panel de control",
       getCertified: "Certifícate",
       send: "Enviar",
-      subUser: "Subusuario"
+      subUser: "Subusuario",
+      FAQ: "Preguntas frecuentes",
+      aboutUs: "Nosotros",
+      membership: "Membresía",
+      viewPlans: "Ver planes",
+      howToSell: "¿Cómo comprar?",
+      howToBuy: "¿Cómo vender?",
+      needTo: "Necesitas",
+      buy: "comprar",
+      lotsAndStocks: "Lots & Stocks",
+      liquidateYour: "Liquida tus",
+      advertising: "Publicidad"
     },
   },
 };
