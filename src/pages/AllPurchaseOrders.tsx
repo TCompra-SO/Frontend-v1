@@ -48,7 +48,8 @@ export default function AllOffers() {
   const location = useLocation();
   const uid = useSelector((state: MainState) => state.user.uid);
   const role = useSelector((state: MainState) => state.user.typeID);
-  const { updateAllPurchaseOrdersLoadingPdf } = useContext(LoadingDataContext);
+  const { updateAllPurchaseOrdersLoadingPdf, updateAllRequirementsViewOffers } =
+    useContext(LoadingDataContext);
 
   const { notification, message } = App.useApp();
   const [currentPurchaseOrder, setCurrentPurchaseOrder] =
@@ -149,6 +150,7 @@ export default function AllOffers() {
   });
 
   useEffect(() => {
+    updateAllRequirementsViewOffers(loadingHist);
     showLoadingMessage(message, loadingHist);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingHist]);
@@ -231,7 +233,7 @@ export default function AllOffers() {
   }
 
   async function openDetailedRequirement(responseData: any) {
-    console.log(responseData);
+    updateAllRequirementsViewOffers(true);
     showLoadingMessage(message, true);
     if (
       currentPurchaseOrder &&
@@ -268,6 +270,7 @@ export default function AllOffers() {
       } else showNotification(notification, "error", t("errorOccurred"));
     } else showNotification(notification, "error", t("errorOccurred"));
     showLoadingMessage(message, false);
+    updateAllRequirementsViewOffers(false);
   }
 
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
