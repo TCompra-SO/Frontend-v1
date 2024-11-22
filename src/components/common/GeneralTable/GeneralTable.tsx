@@ -484,7 +484,7 @@ export default function GeneralTable(props: GeneralTableProps) {
 
   function getUsersTableColumns() {
     columns = [
-      ImageColumn(true, visibility[TableColumns.IMAGE]),
+      // ImageColumn(true, visibility[TableColumns.IMAGE]),
       NameColumn(
         props.content.type,
         props.content.nameColumnHeader,

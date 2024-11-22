@@ -41,14 +41,14 @@ import { getRequirementById } from "../services/complete/general";
 import { getBaseDataUserService } from "../services/requests/authService";
 import ModalContainer from "../components/containers/ModalContainer";
 import { mainModalScrollStyle } from "../utilities/globals";
-import { LoadingPdfContext } from "../contexts/loadingPdfContext";
+import { LoadingDataContext } from "../contexts/loadingDataContext";
 
 export default function AllOffers() {
   const { t } = useTranslation();
   const location = useLocation();
   const uid = useSelector((state: MainState) => state.user.uid);
   const role = useSelector((state: MainState) => state.user.typeID);
-  const { updateAllPurchaseOrdersLoadingPdf } = useContext(LoadingPdfContext);
+  const { updateAllPurchaseOrdersLoadingPdf } = useContext(LoadingDataContext);
 
   const { notification, message } = App.useApp();
   const [currentPurchaseOrder, setCurrentPurchaseOrder] =

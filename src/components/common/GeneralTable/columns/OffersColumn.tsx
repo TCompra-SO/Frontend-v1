@@ -5,6 +5,9 @@ import {
 } from "../../../../models/MainInterfaces";
 import { Action, TableTypes } from "../../../../utilities/types";
 import { useTranslation } from "react-i18next";
+import { useContext } from "react";
+import { LoadingDataContext } from "../../../../contexts/loadingDataContext";
+import ButtonContainer from "../../../containers/ButtonContainer";
 
 export default function OffersColumn(
   type: TableTypes,
@@ -12,6 +15,7 @@ export default function OffersColumn(
   hidden: boolean = false
 ) {
   const { t } = useTranslation();
+  const { myRequirementsLoadingViewOffers } = useContext(LoadingDataContext);
 
   const col: ColumnType<Requirement | BasicRequirement> = {
     title: t("offersColumn"),
@@ -25,13 +29,18 @@ export default function OffersColumn(
     render: (_, record) => {
       return (
         <div className="t-flex c-ofertas">
-          <div
+          <ButtonContainer
             className="oferta-cant"
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", borderColor: "transparent" }}
             onClick={() => onButtonClick(Action.SHOW_OFFERS, record)}
+            disabled={
+              type == TableTypes.REQUIREMENT
+                ? myRequirementsLoadingViewOffers
+                : undefined
+            }
           >
             {record.numberOffers}
-          </div>
+          </ButtonContainer>
         </div>
       );
     },

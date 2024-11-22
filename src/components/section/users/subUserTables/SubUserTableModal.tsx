@@ -15,7 +15,7 @@ import {
 } from "../../../../models/MainInterfaces";
 import GeneralTable from "../../../common/GeneralTable/GeneralTable";
 import { useContext, useEffect, useState } from "react";
-import { LoadingPdfContext } from "../../../../contexts/loadingPdfContext";
+import { LoadingDataContext } from "../../../../contexts/loadingDataContext";
 import { ModalContent, useApiParams } from "../../../../models/Interfaces";
 import useApi from "../../../../hooks/useApi";
 import showNotification, {
@@ -61,8 +61,10 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
   const { notification, message } = App.useApp();
   const [currentPurchaseOrder, setCurrentPurchaseOrder] =
     useState<PurchaseOrderItemSubUser | null>(null);
-  const { updateSubUserPurchaseOrdersLoadingPdf } =
-    useContext(LoadingPdfContext);
+  const {
+    updateSubUserPurchaseOrdersLoadingPdf,
+    updateSubUserRequirementsViewOffers,
+  } = useContext(LoadingDataContext);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -152,6 +154,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
   });
 
   useEffect(() => {
+    updateSubUserRequirementsViewOffers(loadingHist);
     showLoadingMessage(message, loadingHist);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingHist]);

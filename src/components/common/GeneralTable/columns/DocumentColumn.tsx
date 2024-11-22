@@ -7,7 +7,7 @@ import {
 } from "../../../../models/MainInterfaces";
 import { Action, TableTypes } from "../../../../utilities/types";
 import { useContext } from "react";
-import { LoadingPdfContext } from "../../../../contexts/loadingPdfContext";
+import { LoadingDataContext } from "../../../../contexts/loadingDataContext";
 
 export default function DocumentColumn(
   type: TableTypes,
@@ -16,7 +16,7 @@ export default function DocumentColumn(
 ) {
   const { t } = useTranslation();
   const { allPurchaseOrdersLoadingPdf, subUserPurchaseOrdersLoadingPdf } =
-    useContext(LoadingPdfContext);
+    useContext(LoadingDataContext);
 
   const col: ColumnType<PurchaseOrderItemSubUser | PurchaseOrder> = {
     title: t("document"),
@@ -37,7 +37,9 @@ export default function DocumentColumn(
             disabled={
               type == TableTypes.ALL_PURCHASE_ORDERS
                 ? allPurchaseOrdersLoadingPdf
-                : subUserPurchaseOrdersLoadingPdf
+                : type == TableTypes.PURCHASE_ORDER_SUBUSER
+                ? subUserPurchaseOrdersLoadingPdf
+                : undefined
             }
           />
         </div>

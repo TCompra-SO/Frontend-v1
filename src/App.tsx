@@ -25,7 +25,7 @@ import { useDispatch } from "react-redux";
 import { setIsLoading } from "./redux/loadingSlice.ts";
 import { useLoadUserInfo } from "./hooks/authHook.ts";
 import MainHeader from "./components/section/header/MainHeader.tsx";
-import { LoadingPdfProvider } from "./contexts/loadingPdfContext.tsx";
+import { LoadingDataProvider } from "./contexts/loadingDataContext.tsx";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
@@ -141,7 +141,7 @@ function App() {
               <Route
                 path="*"
                 element={
-                  <LoadingPdfProvider>
+                  <LoadingDataProvider>
                     <MainLayout>
                       <Suspense fallback={<LoadingPage />}>
                         <Routes>
@@ -516,7 +516,7 @@ function App() {
                         </Routes>
                       </Suspense>
                     </MainLayout>
-                  </LoadingPdfProvider>
+                  </LoadingDataProvider>
                 }
               />
             </Routes>
