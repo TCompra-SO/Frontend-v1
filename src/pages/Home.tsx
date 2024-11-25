@@ -6,7 +6,6 @@ import {
   TableColumns,
   TableTypes,
 } from "../utilities/types.ts";
-import GeneralTable from "../components/common/GeneralTable/GeneralTable.tsx";
 import useSocket from "../socket/useSocket.tsx";
 import { useTranslation } from "react-i18next";
 import Search from "../components/section/home/Search.tsx";
@@ -15,10 +14,10 @@ import Ads from "../components/section/home/Ads.tsx";
 import CompanyFilter from "../components/section/home/CompanyFilter.tsx";
 import CompanyData from "../components/section/home/CompanyData/CompanyData.tsx";
 import { HomeProvider } from "../contexts/Homecontext.tsx";
+import HomeTable from "../components/section/home/HomeTable/HomeTable.tsx";
 
 export default function Home() {
   const { t } = useTranslation();
-
   const { requirements: tableData, loading: loadingTable } = useSocket();
   const [tableContent, setTableContent] = useState<TableTypeRequirement>({
     type: TableTypes.REQUIREMENT,
@@ -48,13 +47,10 @@ export default function Home() {
         <div className="t-flex f-column gap-20 home-1">
           <CompanyFilter />
           <CompanyData />
-          <div className="table-responsive">
-            <GeneralTable
-              content={tableContent}
-              loading={loadingTable}
-              onRowAction
-            />
+          <div className="titulo req-t">
+            {t("homeTableFirstHalf")} <span>{t("homeTableSecondHalf")}</span>
           </div>
+          <HomeTable content={tableContent} loadingTable={loadingTable} />
         </div>
         <Ads />
       </div>

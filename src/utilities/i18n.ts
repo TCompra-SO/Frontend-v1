@@ -292,7 +292,9 @@ const resources = {
         "More than 10,000 online suppliers ready to meet your requirements",
       createOpportunityFreeIncome:
         "Create an opportunity & Generate free income",
-        youAreCertifiedWithThisCompany: "You are certified with this company",
+      youAreCertifiedWithThisCompany: "You are certified with this company",
+      homeTableFirstHalf: "Requirements that",
+      homeTableSecondHalf: "Best Suit You",
       // Other
       yes: "Yes",
       no: "No",
@@ -459,7 +461,12 @@ const resources = {
       companyFilter: "Company filter",
       companyName: "Company name",
       supplierScore: "Supplier score",
-      customerScore: "Customer score"
+      customerScore: "Customer score",
+      filters: "Filters",
+      resetFilters: "Reset",
+      keywords: "Keywords",
+      rangeStart: "Start",
+      rangeEnd: "End"
     },
   },
   es: {
@@ -757,7 +764,9 @@ const resources = {
         "Más de 10,000 proveedores en línea listos para atender tus requerimientos",
       createOpportunityFreeIncome:
         "Crea una oportunidad & Genera ingresos gratis",
-        youAreCertifiedWithThisCompany: "Te has certificado con esta empresa",
+      youAreCertifiedWithThisCompany: "Te has certificado con esta empresa",
+      homeTableFirstHalf: "Requerimientos que",
+      homeTableSecondHalf: "Mejor se Adaptan a Ti",
       // Other
       yes: "Sí",
       no: "No",
@@ -928,7 +937,12 @@ const resources = {
       companyFilter: "Filtro de empresas",
       companyName: "Nombre de empresa",
       supplierScore: "Calificación de proveedor",
-      customerScore: "Calificación de cliente"
+      customerScore: "Calificación de cliente",
+      filters: "Filtros",
+      resetFilters: "Limpiar",
+      keywords: "Palabras clave",
+      rangeStart: "Inicio",
+      rangeEnd: "Fin"
     },
   },
 };
