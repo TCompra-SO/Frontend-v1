@@ -6,7 +6,7 @@ import {
 } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
-import { ListsContext } from "../../../../contexts/listsContext";
+import { ListsContext } from "../../../../contexts/ListsContext";
 import { Coins } from "../../../../utilities/types";
 
 export default function PriceColumn(hidden: boolean = false) {

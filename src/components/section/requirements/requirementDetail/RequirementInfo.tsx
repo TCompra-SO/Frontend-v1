@@ -1,6 +1,6 @@
 import { Requirement } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
-import { ListsContext } from "../../../../contexts/listsContext";
+import { ListsContext } from "../../../../contexts/ListsContext";
 import { useContext } from "react";
 import dayjs from "dayjs";
 import { dateFormat } from "../../../../utilities/globals";

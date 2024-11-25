@@ -10,7 +10,7 @@ import {
   TableTypes,
 } from "../../../../utilities/types";
 import { useContext } from "react";
-import { ListsContext } from "../../../../contexts/listsContext";
+import { ListsContext } from "../../../../contexts/ListsContext";
 import { SubUserBase } from "../../../../models/Responses";
 import { getLabelFromRole } from "../../../../utilities/globalFunctions";
 import { useTranslation } from "react-i18next";

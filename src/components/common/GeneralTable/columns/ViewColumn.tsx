@@ -3,7 +3,7 @@ import ButtonContainer from "../../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import { Action, TableTypes } from "../../../../utilities/types";
 import { useContext } from "react";
-import { LoadingDataContext } from "../../../../contexts/loadingDataContext";
+import { LoadingDataContext } from "../../../../contexts/LoadingDataContext";
 
 export default function ViewColumn(
   type: TableTypes,

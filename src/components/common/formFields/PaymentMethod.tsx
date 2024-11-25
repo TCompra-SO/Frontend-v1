@@ -2,7 +2,7 @@ import { Form } from "antd";
 
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
-import { ListsContext } from "../../../contexts/listsContext";
+import { ListsContext } from "../../../contexts/ListsContext";
 import SelectContainer from "../../containers/SelectContainer";
 import { getListForSelectIdValueMap } from "../../../utilities/globalFunctions";
 

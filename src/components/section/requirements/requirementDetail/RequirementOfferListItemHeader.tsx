@@ -12,6 +12,7 @@ import {
   RequirementState,
   RequirementType,
   EntityType,
+  RateStartCountType,
 } from "../../../../utilities/types";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
@@ -181,7 +182,7 @@ export default function RequirementOfferListItemHeader({
                     ? props.offer.user.sellerCount
                     : props.offer.user.customerCount
                 }
-                forOffer
+                type={RateStartCountType.OFFER_LIST}
               />
             </div>
             <div className="t-flex oferta-descripcion">

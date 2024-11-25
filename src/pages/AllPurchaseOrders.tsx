@@ -41,7 +41,7 @@ import { getRequirementById } from "../services/complete/general";
 import { getBaseDataUserService } from "../services/requests/authService";
 import ModalContainer from "../components/containers/ModalContainer";
 import { mainModalScrollStyle } from "../utilities/globals";
-import { LoadingDataContext } from "../contexts/loadingDataContext";
+import { LoadingDataContext } from "../contexts/LoadingDataContext";
 
 export default function AllOffers() {
   const { t } = useTranslation();

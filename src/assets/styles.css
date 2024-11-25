@@ -454,7 +454,7 @@ body {
 
 .image-box {
   width: 60%;
-  background-image: url("images/login.jpg");
+  background-image: url(images/login.jpg);
   background-size: cover;
   background-position: center;
 }
@@ -1298,7 +1298,7 @@ body {
   background-color: #fff !important;
 }
 .img-bg-certificado {
-  background-image: url(/src/assets/images/certificado-modal.svg);
+  background-image: url(images/certificado-modal.svg);
   background-size: 20%;
   background-repeat: no-repeat;
   background-position: top right;
@@ -1870,7 +1870,7 @@ body {
 .back-filter {
   color: #3b4c56;
   font-weight: 500;
-  background-image: url(../img/back-search.svg);
+  background-image: url(images/back-search.svg);
   background-size: 16%;
   background-repeat: no-repeat;
   background-position: top right;
@@ -2046,7 +2046,7 @@ body {
 .back-pub-1 {
   background-color: #0a2534;
   color: #fff;
-  background-image: url(../img/back-publicidad.svg);
+  background-image: url(images/back-publicidad.svg);
   background-size: 40%;
   background-repeat: no-repeat;
   background-position: top right;
@@ -2055,7 +2055,7 @@ body {
 .back-pub-2 {
   background-color: #510839;
   color: #fff;
-  background-image: url(../img/back-publicidad.svg);
+  background-image: url(images/back-publicidad.svg);
   background-size: 40%;
   background-repeat: no-repeat;
   background-position: top right;
@@ -2064,7 +2064,7 @@ body {
 .back-pub-3 {
   background-color: #bc1373;
   color: #fff;
-  background-image: url(../img/back-publicidad.svg);
+  background-image: url(images/back-publicidad.svg);
   background-size: 40%;
   background-repeat: no-repeat;
   background-position: top right;
@@ -2073,7 +2073,7 @@ body {
 .back-pub-4 {
   background-color: #fe9b2a;
   color: #fff;
-  background-image: url(../img/back-publicidad.svg);
+  background-image: url(images/back-publicidad.svg);
   background-size: 40%;
   background-repeat: no-repeat;
   background-position: top right;
@@ -2082,7 +2082,7 @@ body {
 .back-pub-5 {
   background-color: #3b4c56;
   color: #fff;
-  background-image: url(../img/back-publicidad.svg);
+  background-image: url(images/back-publicidad.svg);
   background-size: 40%;
   background-repeat: no-repeat;
   background-position: top right;
@@ -2091,7 +2091,7 @@ body {
 .back-pub-6 {
   background-color: #bc1373;
   color: #fff;
-  background-image: url(../img/back-publicidad.svg);
+  background-image: url(images/back-publicidad.svg);
   background-size: 40%;
   background-repeat: no-repeat;
   background-position: top right;

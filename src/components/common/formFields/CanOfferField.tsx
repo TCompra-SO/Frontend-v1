@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Form } from "antd";
 import { useContext } from "react";
 import { RequirementType } from "../../../utilities/types";
-import { ListsContext } from "../../../contexts/listsContext";
+import { ListsContext } from "../../../contexts/ListsContext";
 import SelectContainer from "../../containers/SelectContainer";
 import { getListForSelectIdValueMap } from "../../../utilities/globalFunctions";
 import { certifiedCompaniesOpt } from "../../../utilities/globals";

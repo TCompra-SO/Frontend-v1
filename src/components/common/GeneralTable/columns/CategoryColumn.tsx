@@ -6,7 +6,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { TableTypes } from "../../../../utilities/types";
 import { useContext } from "react";
-import { ListsContext } from "../../../../contexts/listsContext";
+import { ListsContext } from "../../../../contexts/ListsContext";
 
 export default function CategoryColumn(
   type: TableTypes,

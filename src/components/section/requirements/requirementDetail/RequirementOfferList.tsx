@@ -8,7 +8,7 @@ import {
   OfferState,
   RequirementState,
 } from "../../../../utilities/types";
-import { requirementDetailContext } from "../../../../contexts/requirementDetailContext";
+import { requirementDetailContext } from "../../../../contexts/RequirementDetailContext";
 import { allSelect } from "../../../../utilities/globals";
 import { transformToDays } from "../../../../utilities/globalFunctions";
 
@@ -29,7 +29,6 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
   }, [props.offers]);
 
   useEffect(() => {
-    console.log("aaaaaaa", filters);
     setOffersCopy(() => {
       let prev = [...props.offers];
       // Ubicación y tiempo de entrega

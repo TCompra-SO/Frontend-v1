@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { FullUser } from "../../../models/MainInterfaces";
 import { useContext } from "react";
-import { ListsContext } from "../../../contexts/listsContext";
+import { ListsContext } from "../../../contexts/ListsContext";
 import { Tooltip } from "antd";
 
 interface UserInfoModalProps {
@@ -12,6 +12,7 @@ export default function UserInfoModal(props: UserInfoModalProps) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { categoryData } = context;
+  console.log(props.user);
 
   return (
     <div className="modal-card">

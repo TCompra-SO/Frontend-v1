@@ -9,9 +9,9 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { CommonFilter } from "../../../../utilities/types";
 import { IdValueObj, OfferFilters } from "../../../../models/Interfaces";
-import { requirementDetailContext } from "../../../../contexts/requirementDetailContext";
+import { requirementDetailContext } from "../../../../contexts/RequirementDetailContext";
 import { useTranslation } from "react-i18next";
-import { ListsContext } from "../../../../contexts/listsContext";
+import { ListsContext } from "../../../../contexts/ListsContext";
 import { getListForSelectIdValueMap } from "../../../../utilities/globalFunctions";
 import { filterLabels } from "../../../../utilities/colors";
 

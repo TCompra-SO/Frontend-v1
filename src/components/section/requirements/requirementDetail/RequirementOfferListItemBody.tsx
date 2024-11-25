@@ -3,7 +3,7 @@ import { dateFormat, defaultCountry } from "../../../../utilities/globals";
 
 import { useTranslation } from "react-i18next";
 import { TimeMeasurement, EntityType } from "../../../../utilities/types";
-import { ListsContext } from "../../../../contexts/listsContext";
+import { ListsContext } from "../../../../contexts/ListsContext";
 import { useContext, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { IdValueMap, IdValueObj } from "../../../../models/Interfaces";

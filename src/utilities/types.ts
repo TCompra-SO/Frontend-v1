@@ -407,3 +407,8 @@ export enum CantOfferMotives {
   NO_ALLOWED_ROLE = 9,
   OTHER_USER_IN_COMPANY_IS_CREATOR = 10,
 }
+
+export enum RateStartCountType {
+  OFFER_LIST = 1,
+  COMPANY_DATA_HOME = 2,
+}

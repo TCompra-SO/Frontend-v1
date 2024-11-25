@@ -12,6 +12,8 @@ import { useTranslation } from "react-i18next";
 import Search from "../components/section/home/Search.tsx";
 import Footer from "../components/section/footer/Footer.tsx";
 import Ads from "../components/section/home/Ads.tsx";
+import CompanyFilter from "../components/section/home/CompanyFilter.tsx";
+import CompanyData from "../components/section/home/CompanyData/CompanyData.tsx";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -43,6 +45,8 @@ export default function Home() {
       <Search />
       <div className="t-flex f-column gap-20 section-detalles home-det">
         <div className="t-flex f-column gap-20 home-1">
+          <CompanyFilter />
+          <CompanyData />
           <div className="table-responsive">
             <GeneralTable
               content={tableContent}

@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { FullUser, PlanData } from "../models/MainInterfaces";
 import { EntityType, ImageRequestLabels } from "../utilities/types";
 import { useContext, useEffect, useRef, useState } from "react";
-import { ListsContext } from "../contexts/listsContext";
+import { ListsContext } from "../contexts/ListsContext";
 import PhoneField from "../components/common/formFields/PhoneField";
 import LocationField from "../components/common/formFields/LocationField";
 import AddressField from "../components/common/formFields/AddressField";
@@ -126,7 +126,6 @@ export default function MyProfile() {
         specialty: user.specialty,
         aboutMe: user.aboutMe,
       });
-    console.log(form.getFieldsValue());
     if (user?.avatar) setImageSrc(user.avatar);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

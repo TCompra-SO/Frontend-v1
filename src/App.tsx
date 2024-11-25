@@ -18,14 +18,14 @@ import enUs from "antd/locale/en_US";
 import i18n from "./utilities/i18n.ts";
 import { pageRoutes, pageSubRoutes } from "./utilities/routes.ts";
 import Sidebar from "./components/section/sidebar/Sidebar.tsx";
-import { ListsProvider } from "./contexts/listsContext.tsx";
+import { ListsProvider } from "./contexts/ListsContext.tsx";
 import AuthRoleGuard from "./components/guards/AuthRoleGuard.tsx";
 import { RolesForSection, RolesForSubSection } from "./utilities/roles.ts";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "./redux/loadingSlice.ts";
 import { useLoadUserInfo } from "./hooks/authHook.ts";
 import MainHeader from "./components/section/header/MainHeader.tsx";
-import { LoadingDataProvider } from "./contexts/loadingDataContext.tsx";
+import { LoadingDataProvider } from "./contexts/LoadingDataContext.tsx";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));

@@ -454,7 +454,11 @@ const resources = {
       buy: "buy",
       lotsAndStocks: "Lots & Stocks",
       liquidateYour: "Liquidate your",
-      advertising: "Advertising"
+      advertising: "Advertising",
+      companyFilter: "Company filter",
+      companyName: "Company name",
+      supplierScore: "Supplier score",
+      customerScore: "Customer score"
     },
   },
   es: {
@@ -918,7 +922,11 @@ const resources = {
       buy: "comprar",
       lotsAndStocks: "Lots & Stocks",
       liquidateYour: "Liquida tus",
-      advertising: "Publicidad"
+      advertising: "Publicidad",
+      companyFilter: "Filtro de empresas",
+      companyName: "Nombre de empresa",
+      supplierScore: "Calificación de proveedor",
+      customerScore: "Calificación de cliente"
     },
   },
 };

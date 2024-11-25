@@ -5,7 +5,7 @@ import { EntityType, RequirementType } from "../../../../../utilities/types";
 import { useContext } from "react";
 import dayjs from "dayjs";
 import { dateFormat, defaultCountry } from "../../../../../utilities/globals";
-import { ListsContext } from "../../../../../contexts/listsContext";
+import { ListsContext } from "../../../../../contexts/ListsContext";
 
 interface UserDataRequirementProps {
   user: BaseUser | undefined;

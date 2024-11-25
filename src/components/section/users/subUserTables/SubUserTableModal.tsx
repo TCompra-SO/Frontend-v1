@@ -15,7 +15,7 @@ import {
 } from "../../../../models/MainInterfaces";
 import GeneralTable from "../../../common/GeneralTable/GeneralTable";
 import { useContext, useEffect, useState } from "react";
-import { LoadingDataContext } from "../../../../contexts/loadingDataContext";
+import { LoadingDataContext } from "../../../../contexts/LoadingDataContext";
 import { ModalContent, useApiParams } from "../../../../models/Interfaces";
 import useApi from "../../../../hooks/useApi";
 import showNotification, {

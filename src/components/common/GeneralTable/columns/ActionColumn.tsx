@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 import { allItems } from "../../../../utilities/globals";
 import { ItemType } from "antd/es/menu/interface";
 import { Offer } from "../../../../models/MainInterfaces";
-import { LoadingDataContext } from "../../../../contexts/loadingDataContext";
+import { LoadingDataContext } from "../../../../contexts/LoadingDataContext";
 import { useContext } from "react";
 
 // extraParam tiene diferentes significados según el tipo de tabla

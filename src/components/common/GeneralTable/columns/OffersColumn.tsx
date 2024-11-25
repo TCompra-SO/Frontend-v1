@@ -6,7 +6,7 @@ import {
 import { Action, TableTypes } from "../../../../utilities/types";
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
-import { LoadingDataContext } from "../../../../contexts/loadingDataContext";
+import { LoadingDataContext } from "../../../../contexts/LoadingDataContext";
 import ButtonContainer from "../../../containers/ButtonContainer";
 
 export default function OffersColumn(

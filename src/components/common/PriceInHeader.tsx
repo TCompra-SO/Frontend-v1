@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ListsContext } from "../../contexts/listsContext";
+import { ListsContext } from "../../contexts/ListsContext";
 import { Coins } from "../../utilities/types";
 
 interface PriceInHeaderProps {

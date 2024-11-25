@@ -38,17 +38,19 @@ export default function Ads() {
       <div className="titulo req-t">{t("advertising")}</div>
       <div className="t-flex f-column gap-20 col-publicidad-2">
         <img
-          src="img/publicidad-01.jpg"
+          src="/src/assets/images/publicidad-01.jpg"
           alt="Publicidad"
           className="wd-100 pub-emp"
         />
+        <a href="https://enlinea.indecopi.gob.pe/miraaquienlecompras">
+          <img
+            src="/src/assets/images/publicidad-02.jpg"
+            alt="Publicidad"
+            className="wd-100 pub-emp"
+          />
+        </a>
         <img
-          src="img/publicidad-02.jpg"
-          alt="Publicidad"
-          className="wd-100 pub-emp"
-        />
-        <img
-          src="img/publicidad-03.jpg"
+          src="/src/assets/images/publicidad-03.jpg"
           alt="Publicidad"
           className="wd-100 pub-emp"
         />

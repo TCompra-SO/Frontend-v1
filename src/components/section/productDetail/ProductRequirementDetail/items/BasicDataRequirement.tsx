@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Requirement } from "../../../../../models/MainInterfaces";
-import { ListsContext } from "../../../../../contexts/listsContext";
+import { ListsContext } from "../../../../../contexts/ListsContext";
 import { useContext, useRef } from "react";
 import { defaultCountry } from "../../../../../utilities/globals";
 import { Coins } from "../../../../../utilities/types";
