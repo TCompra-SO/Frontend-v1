@@ -79,6 +79,7 @@ export function transformToFullUser(response: any) {
   user.activeAccount = response.active_account;
   user.specialty = response.specialtyID;
   user.aboutMe = response.about_me;
+  user.tenure = response.age;
   return user;
 }
 

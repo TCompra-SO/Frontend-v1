@@ -292,6 +292,7 @@ const resources = {
         "More than 10,000 online suppliers ready to meet your requirements",
       createOpportunityFreeIncome:
         "Create an opportunity & Generate free income",
+        youAreCertifiedWithThisCompany: "You are certified with this company",
       // Other
       yes: "Yes",
       no: "No",
@@ -756,6 +757,7 @@ const resources = {
         "Más de 10,000 proveedores en línea listos para atender tus requerimientos",
       createOpportunityFreeIncome:
         "Crea una oportunidad & Genera ingresos gratis",
+        youAreCertifiedWithThisCompany: "Te has certificado con esta empresa",
       // Other
       yes: "Sí",
       no: "No",

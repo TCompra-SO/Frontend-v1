@@ -134,7 +134,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
   }
 
   function deleteOffer() {
-    console.log("deleting", props.offerId);
+    console.log("deleting", props.offerId); //r3v
   }
 
   function openGetCertifiedModal() {

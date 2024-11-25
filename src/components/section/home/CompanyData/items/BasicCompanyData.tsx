@@ -3,6 +3,7 @@ import { defaultUserImage } from "../../../../../utilities/globals";
 import { FullUser } from "../../../../../models/MainInterfaces";
 import RateStarCount from "../../../../common/RateStarCount";
 import { RateStartCountType } from "../../../../../utilities/types";
+import { Tooltip } from "antd";
 
 interface BasicCompanyDataProps {
   user: FullUser;
@@ -36,9 +37,11 @@ export default function BasicCompanyData(props: BasicCompanyDataProps) {
             </div>
             <div className="oferta-usuario col-documento">
               <div className="text-truncate dato-contact1">{t("address")}</div>
-              <div className="text-truncate dato-contact2">
-                {props.user.address}
-              </div>
+              <Tooltip title={props.user.address}>
+                <div className="text-truncate dato-contact2">
+                  {props.user.address}
+                </div>
+              </Tooltip>
             </div>
           </div>
           <div className="t-flex oferta-titulo d-contacto">
@@ -47,9 +50,11 @@ export default function BasicCompanyData(props: BasicCompanyDataProps) {
             </div>
             <div className="oferta-usuario col-documento">
               <div className="text-truncate dato-contact1">{t("phone")}</div>
-              <div className="text-truncate dato-contact2">
-                {props.user.phone}
-              </div>
+              <Tooltip title={props.user.phone}>
+                <div className="text-truncate dato-contact2">
+                  {props.user.phone}
+                </div>
+              </Tooltip>
             </div>
           </div>
           <div className="t-flex oferta-titulo d-contacto">
@@ -58,9 +63,11 @@ export default function BasicCompanyData(props: BasicCompanyDataProps) {
             </div>
             <div className="oferta-usuario col-documento">
               <div className="text-truncate dato-contact1">{t("email")}</div>
-              <div className="text-truncate dato-contact2">
-                {props.user.email}
-              </div>
+              <Tooltip title={props.user.email}>
+                <div className="text-truncate dato-contact2">
+                  {props.user.email}
+                </div>
+              </Tooltip>
             </div>
           </div>
         </div>

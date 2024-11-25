@@ -14,6 +14,7 @@ import Footer from "../components/section/footer/Footer.tsx";
 import Ads from "../components/section/home/Ads.tsx";
 import CompanyFilter from "../components/section/home/CompanyFilter.tsx";
 import CompanyData from "../components/section/home/CompanyData/CompanyData.tsx";
+import { HomeProvider } from "../contexts/Homecontext.tsx";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -41,7 +42,7 @@ export default function Home() {
   }, [tableData]);
 
   return (
-    <>
+    <HomeProvider>
       <Search />
       <div className="t-flex f-column gap-20 section-detalles home-det">
         <div className="t-flex f-column gap-20 home-1">
@@ -58,6 +59,6 @@ export default function Home() {
         <Ads />
       </div>
       <Footer />
-    </>
+    </HomeProvider>
   );
 }

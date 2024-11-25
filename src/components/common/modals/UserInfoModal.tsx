@@ -12,7 +12,6 @@ export default function UserInfoModal(props: UserInfoModalProps) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { categoryData } = context;
-  console.log(props.user);
 
   return (
     <div className="modal-card">
