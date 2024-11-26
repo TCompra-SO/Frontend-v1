@@ -62,7 +62,7 @@ export default function CompanyData() {
   /** Funciones */
 
   function setData() {
-    const user = transformToFullUser(responseDataUser.data[0]);
+    const user = transformToFullUser(responseDataUser.data);
     setUser(user);
   }
 

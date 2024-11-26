@@ -38,7 +38,7 @@ export async function getFullUser(uid: string) {
   });
 
   return {
-    user: responseData ? transformToFullUser(responseData.data[0]) : null,
+    user: responseData ? transformToFullUser(responseData.data) : null,
     error,
     errorMsg,
   };

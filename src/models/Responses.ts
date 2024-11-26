@@ -8,7 +8,10 @@ export interface SubUserBase extends BaseUser {
   numServices: number;
   numSales: number;
   numOffers: number;
-  numPurchaseOrders: number;
+  numPurchaseOrdersProvider: number;
+  numPurchaseOrdersClient: number;
+  numSellingOrdersProvider: number;
+  numSellingOrdersClient: number;
 }
 
 export interface SubUserProfile extends SubUserBase {

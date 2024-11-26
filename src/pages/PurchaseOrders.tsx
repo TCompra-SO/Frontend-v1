@@ -344,7 +344,7 @@ export default function PurchaseOrders() {
   }
 
   function showUserInfo() {
-    const user = transformToFullUser(responseDataUser.data[0]);
+    const user = transformToFullUser(responseDataUser.data);
     setDataModal({
       type: ModalTypes.USER_INFO,
       data: {

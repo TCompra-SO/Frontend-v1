@@ -167,7 +167,7 @@ export default function MyProfile() {
   }, [responseDataImage, errorImage]);
 
   function setFormData(responseData: any) {
-    const user = transformToFullUser(responseData.data[0]);
+    const user = transformToFullUser(responseData.data);
     setUser(user);
     setPlan(planData1);
     if (user.image) setImageSrc(user.image);

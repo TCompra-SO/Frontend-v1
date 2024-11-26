@@ -250,9 +250,7 @@ export default function Users() {
     try {
       let data: SubUserBase[] = [];
       if (responseData.data.length > 0) {
-        data = responseData.data[0].auth_users.map((e: any) =>
-          transformToSubUserBase(e)
-        );
+        data = responseData.data.map((e: any) => transformToSubUserBase(e));
       }
       setTableContent({
         type: TableTypes.USERS,
@@ -263,6 +261,7 @@ export default function Users() {
       });
     } catch (error) {
       showNotification(notification, "error", t("errorOccurred"));
+      console.log(error);
     }
   }
 
