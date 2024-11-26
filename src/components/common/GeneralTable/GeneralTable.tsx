@@ -38,6 +38,7 @@ import { getLabelFromPurchaseOrderType } from "../../../utilities/globalFunction
 import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../../../utilities/routes";
 import RequirementInfo from "../../section/requirements/requirementDetail/RequirementInfo";
+import { useState } from "react";
 
 interface GeneralTableProps {
   content: TableType;
@@ -147,6 +148,7 @@ export default function GeneralTable(props: GeneralTableProps) {
 
   switch (props.content.type) {
     case TableTypes.HOME:
+      const [expandedRowKey, setExpandedRowKey] = useState<string | null>(null);
       getHomeTableColumns();
       return (
         <Table
@@ -169,7 +171,11 @@ export default function GeneralTable(props: GeneralTableProps) {
               return <RequirementInfo requirement={rec} forHome />;
             },
             expandRowByClick: true,
-            columnWidth: 0,
+            showExpandColumn: false,
+            onExpand: (expanded, record) => {
+              setExpandedRowKey(expanded ? record.key : null);
+            },
+            expandedRowKeys: expandedRowKey ? [expandedRowKey] : [],
           }}
           {...tableProps}
         ></Table>
@@ -764,7 +770,6 @@ export default function GeneralTable(props: GeneralTableProps) {
   function getHomeTableColumns() {
     columns = [
       ImageColumn(false, visibility[TableColumns.IMAGE]),
-      Table.EXPAND_COLUMN,
       NameColumn(
         TableTypes.REQUIREMENT,
         props.content.nameColumnHeader,
@@ -782,7 +787,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       ),
       PriceColumn(visibility[TableColumns.PRICE], true),
       OffersColumn(
-        TableTypes.REQUIREMENT,
+        TableTypes.HOME,
         props.content.onButtonClick,
         visibility[TableColumns.OFFERS],
         true
