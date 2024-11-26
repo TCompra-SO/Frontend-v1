@@ -37,6 +37,7 @@ import DocumentColumn from "./columns/DocumentColumn";
 import { getLabelFromPurchaseOrderType } from "../../../utilities/globalFunctions";
 import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../../../utilities/routes";
+import RequirementInfo from "../../section/requirements/requirementDetail/RequirementInfo";
 
 interface GeneralTableProps {
   content: TableType;
@@ -145,8 +146,8 @@ export default function GeneralTable(props: GeneralTableProps) {
   };
 
   switch (props.content.type) {
-    case TableTypes.REQUIREMENT:
-      getRequirementTableColumns();
+    case TableTypes.HOME:
+      getHomeTableColumns();
       return (
         <Table
           onRow={
@@ -159,6 +160,24 @@ export default function GeneralTable(props: GeneralTableProps) {
                 }
               : undefined
           }
+          dataSource={props.content.data}
+          loading={props.loading}
+          columns={columns as Array<ColumnType<Requirement>>}
+          expandable={{
+            expandedRowRender: (record) => {
+              const rec = record as Requirement;
+              return <RequirementInfo requirement={rec} forHome />;
+            },
+            expandRowByClick: true,
+            columnWidth: 0,
+          }}
+          {...tableProps}
+        ></Table>
+      );
+    case TableTypes.REQUIREMENT:
+      getRequirementTableColumns();
+      return (
+        <Table
           dataSource={props.content.data}
           loading={props.loading}
           columns={columns as Array<ColumnType<Requirement>>}
@@ -735,6 +754,41 @@ export default function GeneralTable(props: GeneralTableProps) {
       StateColumn(props.content.type, visibility[TableColumns.STATE]),
       ViewColumn(
         TableTypes.SENT_CERT,
+        props.content.onButtonClick,
+        visibility[TableColumns.VIEW]
+      ),
+    ];
+    return columns;
+  }
+
+  function getHomeTableColumns() {
+    columns = [
+      ImageColumn(false, visibility[TableColumns.IMAGE]),
+      Table.EXPAND_COLUMN,
+      NameColumn(
+        TableTypes.REQUIREMENT,
+        props.content.nameColumnHeader,
+        visibility[TableColumns.NAME],
+        null,
+        true
+      ),
+      CategoryColumn(TableTypes.REQUIREMENT, visibility[TableColumns.CATEGORY]),
+      LocationColumn(visibility[TableColumns.LOCATION], true),
+      GeneralDateColumn(
+        t("dateColumn"),
+        "publishDate",
+        visibility[TableColumns.PUBLISH_DATE],
+        true
+      ),
+      PriceColumn(visibility[TableColumns.PRICE], true),
+      OffersColumn(
+        TableTypes.REQUIREMENT,
+        props.content.onButtonClick,
+        visibility[TableColumns.OFFERS],
+        true
+      ),
+      ViewColumn(
+        TableTypes.REQUIREMENT,
         props.content.onButtonClick,
         visibility[TableColumns.VIEW]
       ),

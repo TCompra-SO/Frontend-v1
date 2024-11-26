@@ -12,7 +12,8 @@ import ButtonContainer from "../../../containers/ButtonContainer";
 export default function OffersColumn(
   type: TableTypes,
   onButtonClick: (action: Action, data: any) => void,
-  hidden: boolean = false
+  hidden: boolean = false,
+  noSorter?: boolean
 ) {
   const { t } = useTranslation();
   const { myRequirementsLoadingViewOffers } = useContext(LoadingDataContext);
@@ -22,7 +23,7 @@ export default function OffersColumn(
     dataIndex: "numberOffers",
     key: "offers",
     align: "center",
-    sorter: (a, b) => a.numberOffers - b.numberOffers,
+    sorter: noSorter ? undefined : (a, b) => a.numberOffers - b.numberOffers,
     showSorterTooltip: false,
     width: "75px",
     hidden,

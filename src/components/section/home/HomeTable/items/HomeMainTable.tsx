@@ -13,7 +13,7 @@ export default function HomeMainTable(props: HomeMainTableProps) {
         <GeneralTable
           content={props.content}
           loading={props.loadingTable}
-          onRowAction
+          // onRowAction
         />
       </div>
     </div>

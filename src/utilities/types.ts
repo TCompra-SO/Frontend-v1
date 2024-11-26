@@ -64,6 +64,7 @@ export enum TableTypes {
   MY_DOCUMENTS = 11,
   SENT_CERT = 12,
   RECEIVED_CERT = 13,
+  HOME = 14,
 }
 
 export enum EntityType {

@@ -235,42 +235,55 @@ export default function AllOffers() {
   async function openDetailedRequirement(responseData: any) {
     updateAllRequirementsViewOffers(true);
     showLoadingMessage(message, true);
-    if (
-      currentPurchaseOrder &&
-      responseData.data &&
-      Array.isArray(responseData.data)
-    ) {
-      const { requirement } = await getRequirementById(
-        currentPurchaseOrder.requirementId,
-        currentPurchaseOrder.type
-      );
-      if (requirement) {
-        const offerArray: Offer[] = await Promise.all(
-          responseData.data.map(async (item: any) => {
-            const { responseData }: any = await makeRequest({
-              service: getBaseDataUserService(item.userID),
-              method: "get",
-            });
-            const { user, subUser } = transformToBaseUser(responseData.data[0]);
-            return subUser
-              ? transformToOffer(item, currentPurchaseOrder.type, subUser, user)
-              : transformToOffer(item, currentPurchaseOrder.type, user);
-          })
+    try {
+      if (
+        currentPurchaseOrder &&
+        responseData.data &&
+        Array.isArray(responseData.data)
+      ) {
+        const { requirement } = await getRequirementById(
+          currentPurchaseOrder.requirementId,
+          currentPurchaseOrder.type
         );
-        setDataModal({
-          type: ModalTypes.DETAILED_REQUIREMENT,
-          data: {
-            offerList: offerArray,
-            requirement: requirement,
-            forPurchaseOrder: true,
-            filters: currentPurchaseOrder.filters,
-          },
-        });
-        setIsOpenModal(true);
+        if (requirement) {
+          const offerArray: Offer[] = await Promise.all(
+            responseData.data.map(async (item: any) => {
+              const { responseData }: any = await makeRequest({
+                service: getBaseDataUserService(item.userID),
+                method: "get",
+              });
+              const { user, subUser } = transformToBaseUser(
+                responseData.data[0]
+              );
+              return subUser
+                ? transformToOffer(
+                    item,
+                    currentPurchaseOrder.type,
+                    subUser,
+                    user
+                  )
+                : transformToOffer(item, currentPurchaseOrder.type, user);
+            })
+          );
+          setDataModal({
+            type: ModalTypes.DETAILED_REQUIREMENT,
+            data: {
+              offerList: offerArray,
+              requirement: requirement,
+              forPurchaseOrder: true,
+              filters: currentPurchaseOrder.filters,
+            },
+          });
+          setIsOpenModal(true);
+        } else showNotification(notification, "error", t("errorOccurred"));
       } else showNotification(notification, "error", t("errorOccurred"));
-    } else showNotification(notification, "error", t("errorOccurred"));
-    showLoadingMessage(message, false);
-    updateAllRequirementsViewOffers(false);
+    } catch (error) {
+      console.log(error);
+      showNotification(notification, "error", t("errorOccurred"));
+    } finally {
+      showLoadingMessage(message, false);
+      updateAllRequirementsViewOffers(false);
+    }
   }
 
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {

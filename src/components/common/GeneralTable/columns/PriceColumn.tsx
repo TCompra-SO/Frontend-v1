@@ -9,7 +9,10 @@ import { useContext } from "react";
 import { ListsContext } from "../../../../contexts/ListsContext";
 import { Coins } from "../../../../utilities/types";
 
-export default function PriceColumn(hidden: boolean = false) {
+export default function PriceColumn(
+  hidden: boolean = false,
+  noSorter?: boolean
+) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { currencyData } = context;
@@ -28,7 +31,7 @@ export default function PriceColumn(hidden: boolean = false) {
         {record.price}
       </div>
     ),
-    sorter: (a, b) => a.price - b.price,
+    sorter: noSorter ? undefined : (a, b) => a.price - b.price,
     showSorterTooltip: false,
     width: "130px",
   };

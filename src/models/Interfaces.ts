@@ -276,6 +276,12 @@ export interface TableTypeCertificatesReceived extends TableHiddenColumns {
   data: CertificationItem[];
 }
 
+export interface TableTypeHome extends TableHiddenColumns {
+  type: TableTypes.HOME;
+  subType: RequirementType;
+  data: Requirement[];
+}
+
 export type TableType =
   | TableTypeRequirement
   | TableTypeOffer
@@ -289,7 +295,8 @@ export type TableType =
   | TableTypeAllPurchaseOrders
   | TableTypeMyDocuments
   | TableTypeCertificatesReceived
-  | TableTypeCertificatesSent;
+  | TableTypeCertificatesSent
+  | TableTypeHome;
 
 /********************* */
 

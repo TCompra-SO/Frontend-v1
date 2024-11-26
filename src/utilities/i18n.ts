@@ -14,7 +14,8 @@ const resources = {
       goodRate: "Good",
       excellentRate: "Excellent",
       // Column names
-      actionColumn: "Actions",
+      actionsColumn: "Actions",
+      actionColumn: "Action",
       categoryColumn: "Category",
       dateColumn: "Date",
       imageColumn: "Image",
@@ -479,7 +480,8 @@ const resources = {
       goodRate: "Bueno",
       excellentRate: "Excelente",
       // Column names
-      actionColumn: "Acciones",
+      actionsColumn: "Accciones",
+      actionColumn: "Acción",
       categoryColumn: "Rubro",
       dateColumn: "Fecha",
       imageColumn: "Imagen",

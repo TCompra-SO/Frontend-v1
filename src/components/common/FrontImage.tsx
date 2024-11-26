@@ -12,6 +12,7 @@ interface FrontImageProps {
   image: string | string[] | undefined;
   isUser: boolean;
   small?: boolean;
+  forHome?: boolean;
 }
 
 export default function FrontImage(props: FrontImageProps) {
@@ -46,7 +47,13 @@ export default function FrontImage(props: FrontImageProps) {
       <ImagePreviewGroupContainer ref={childRef} image={imgList} />
       <img
         src={src}
-        className={props.small ? "img-oferta" : "portada-detalle"}
+        className={
+          props.small
+            ? "img-oferta"
+            : props.forHome
+            ? "portada-detalle-2"
+            : "portada-detalle"
+        }
         onClick={handleOpenPreview}
         style={{
           cursor: props.image && props.image.length > 0 ? "pointer" : undefined,

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 
-import { TableTypeRequirement } from "../models/Interfaces.ts";
+import { TableTypeHome, TableTypeRequirement } from "../models/Interfaces.ts";
 import {
+  Action,
   RequirementType,
   TableColumns,
   TableTypes,
@@ -15,22 +16,25 @@ import CompanyFilter from "../components/section/home/CompanyFilter.tsx";
 import CompanyData from "../components/section/home/CompanyData/CompanyData.tsx";
 import { HomeProvider } from "../contexts/Homecontext.tsx";
 import HomeTable from "../components/section/home/HomeTable/HomeTable.tsx";
+import { Requirement } from "../models/MainInterfaces.ts";
+import { useNavigate } from "react-router-dom";
+import { pageRoutes } from "../utilities/routes.ts";
 
 export default function Home() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { requirements: tableData, loading: loadingTable } = useSocket();
-  const [tableContent, setTableContent] = useState<TableTypeRequirement>({
-    type: TableTypes.REQUIREMENT,
+  const [tableContent, setTableContent] = useState<TableTypeHome>({
+    type: TableTypes.HOME,
     data: tableData,
     subType: RequirementType.GOOD,
-    hiddenColumns: [
-      TableColumns.CATEGORY,
-      TableColumns.OFFERS,
-      TableColumns.ACTION,
-      TableColumns.STATE,
-    ],
+    hiddenColumns: [TableColumns.CATEGORY],
     nameColumnHeader: t("goods"),
-    onButtonClick: () => {},
+    onButtonClick: (action: Action, req: Requirement) => {
+      console.log("ssssss", action);
+      if (action == Action.VIEW_REQUIREMENT)
+        navigate(`${pageRoutes.productDetail}/${req.key}`);
+    },
   });
 
   useEffect(() => {

@@ -30,7 +30,7 @@ export default function ActionColumn(
   const { myPurchaseOrdersLoadingPdf } = useContext(LoadingDataContext);
 
   const col: ColumnType<any> = {
-    title: t("actionColumn"),
+    title: t("actionsColumn"),
     key: "action",
     align: "center",
     showSorterTooltip: false,

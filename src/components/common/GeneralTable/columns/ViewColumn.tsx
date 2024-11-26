@@ -19,11 +19,13 @@ export default function ViewColumn(
     key: "action",
     align: "center",
     showSorterTooltip: false,
-    width: "130px",
+    width: "100px",
+    fixed: "right",
     hidden,
     render: (record) => {
       let action: Action = Action.VIEW_REQUIREMENTS;
       switch (type) {
+        case TableTypes.REQUIREMENT:
         case TableTypes.ALL_REQUIREMENTS:
         case TableTypes.REQUIREMENT_SUBUSER:
           action = Action.VIEW_REQUIREMENT;
