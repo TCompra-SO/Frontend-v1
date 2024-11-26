@@ -64,7 +64,7 @@ export default function UserDataRequirement(props: UserDataRequirementProps) {
               <i className="fas fa-angle-right i-vi"></i> {t("sellerRole")}:
             </div>
             <div className="dato-detalle-2 text-truncate">
-              {props.user?.name}
+              {props.subUser?.name}
             </div>
           </div>
         )}

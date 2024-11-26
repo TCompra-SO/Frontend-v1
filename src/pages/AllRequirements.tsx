@@ -118,7 +118,6 @@ export default function AllRequirements() {
           }
         })
       );
-      console.log(data);
 
       setTableContent({
         type: TableTypes.ALL_REQUIREMENTS,

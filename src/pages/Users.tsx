@@ -120,7 +120,11 @@ export default function Users() {
   useEffect(() => {
     if (responseDataUser) {
       if (equalServices(apiParamsUser.service, getSubUserService(""))) {
-        setUserDataEdit(responseDataUser);
+        setUserDataEdit({
+          email: userData?.email,
+          typeID: userData?.typeID,
+          ...responseDataUser,
+        });
         handleOpenModal();
       }
     } else if (errorUser) {
@@ -322,6 +326,7 @@ export default function Users() {
 
   function handleOnActionClick(action: Action, user: SubUserBase) {
     setAction(action);
+    setUserData(user);
     switch (action) {
       case Action.EDIT_USER:
         setApiParamsUser({
@@ -331,21 +336,18 @@ export default function Users() {
         });
         break;
       case Action.VIEW_REQUIREMENTS:
-        setUserData(user);
         setApiParamsReq({
           service: getRequirementsBySubUserService(user.uid),
           method: "get",
         });
         break;
       case Action.VIEW_OFFERS:
-        setUserData(user);
         setApiParamsOffer({
           service: getOffersBySubUserService(user.uid),
           method: "get",
         });
         break;
       case Action.VIEW_PURCHASE_ORDERS:
-        setUserData(user);
         setApiParamsOrder({
           service: getPurchaseOrdersByClientEntityService(
             user.uid,
