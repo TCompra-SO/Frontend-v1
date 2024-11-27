@@ -112,7 +112,7 @@ export default function RequirementOfferFilters(
             >
               <Col xs={12} sm={12} md={6} lg={6} xl={6}>
                 <Flex vertical align="center">
-                  <b style={{ color: "#92acbf" }}>{t("priceColumn")}</b>
+                  <b style={{ color: "#92acbf" }}>{t("price")}</b>
                   <Form.Item
                     name="price"
                     style={{
