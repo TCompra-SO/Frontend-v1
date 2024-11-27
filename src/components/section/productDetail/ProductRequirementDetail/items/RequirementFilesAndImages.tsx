@@ -18,7 +18,6 @@ export default function RequirementFilesAndImages(
   const childRef = useRef<ImagePreviewGroupContainerRef>(null);
 
   function handleOpenPreview() {
-    console.log("opening");
     if (props.images && props.images.length > 0)
       if (childRef.current) {
         childRef.current.openPreview();

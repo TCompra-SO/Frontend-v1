@@ -197,7 +197,7 @@ export function ListsProvider({ children }: ListsProviderProps) {
         setPaymentMethodList(
           paymentMethodResponseData.methods.reduce(
             (acc: IdValueMap, { id, value }: IdValueObj) => {
-              acc[id] = { value };
+              if (id != 5) acc[id] = { value }; // Descartar intercambio temporalmente
               return acc;
             },
             {}

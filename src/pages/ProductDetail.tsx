@@ -76,7 +76,6 @@ export default function ProductDetail() {
       response.data[0],
       RequirementType.GOOD
     );
-    console.log(response, req);
     if (req) setRequirement(req);
     else navigate(pageRoutes.home);
   }

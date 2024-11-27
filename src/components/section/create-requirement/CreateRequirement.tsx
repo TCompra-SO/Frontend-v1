@@ -250,14 +250,16 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     };
 
     if (type == RequirementType.GOOD || type == RequirementType.SERVICE) {
-      data.warranty = values.warranty;
-      data.durationID = values.duration;
+      if (values.warranty && values.duration) {
+        data.warranty = values.warranty;
+        data.durationID = values.duration;
+      }
     }
 
     if (type == RequirementType.SALE)
       data.used = values.itemCondition == Usage.USED;
 
-    console.log(data);
+    console.log(values, data);
     setApiParams({
       service:
         type == RequirementType.SALE
@@ -451,14 +453,11 @@ export default function CreateRequirement(props: CreateRequirementProps) {
               <>
                 <Col xs={24} sm={24} md={6} lg={6} xl={6}>
                   <LabelForCreateRequirement label={"warranty"} />
-                  <WarrantyField required={type == RequirementType.GOOD} />
+                  <WarrantyField required={false} />
                 </Col>
                 <Col xs={24} sm={24} md={6} lg={6} xl={6}>
                   <LabelForCreateRequirement label={"duration"} />
-                  <DurationField
-                    required={type == RequirementType.GOOD}
-                    name="duration"
-                  />
+                  <DurationField required={false} name="duration" />
                 </Col>
               </>
             )}
