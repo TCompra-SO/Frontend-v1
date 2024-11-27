@@ -365,7 +365,7 @@ export default function OfferForm(props: OfferFormProps) {
                 <WarrantyField required={true} />
                 <DurationField required={true} name={"duration"} onlyItem />
                 <SupportField />
-                <BudgetField />
+                <BudgetField required />
               </RowContainer>
               <div className="t-flex gap-15 archivos-up">
                 <AddImagesField forOffer />

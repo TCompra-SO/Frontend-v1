@@ -2,7 +2,11 @@ import { useTranslation } from "react-i18next";
 import { Form } from "antd";
 import InputNumberContainer from "../../containers/InputNumberContainer";
 
-export default function BudgetField() {
+interface BudgetFieldProps {
+  required: boolean;
+}
+
+export default function BudgetField(props: BudgetFieldProps) {
   const { t } = useTranslation();
 
   return (
@@ -10,7 +14,7 @@ export default function BudgetField() {
       label={t("budget")}
       name="budget"
       labelCol={{ span: 0 }}
-      rules={[{ required: true }]}
+      rules={[{ required: props.required }]}
     >
       <InputNumberContainer
         min={0}
