@@ -250,7 +250,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     };
 
     if (type == RequirementType.GOOD || type == RequirementType.SERVICE) {
-      if (values.warranty && values.duration) {
+      if (values.warranty && values.duration !== undefined) {
         data.warranty = values.warranty;
         data.durationID = values.duration;
       }
