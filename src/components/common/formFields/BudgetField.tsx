@@ -1,20 +1,23 @@
 import { useTranslation } from "react-i18next";
 import { Form } from "antd";
 import InputNumberContainer from "../../containers/InputNumberContainer";
+import { useBudgetRules } from "../../../hooks/validators";
 
 interface BudgetFieldProps {
   required: boolean;
+  greaterThanZero?: boolean;
 }
 
 export default function BudgetField(props: BudgetFieldProps) {
   const { t } = useTranslation();
+  const { budgetRules } = useBudgetRules(props.required, props.greaterThanZero);
 
   return (
     <Form.Item
       label={t("budget")}
       name="budget"
       labelCol={{ span: 0 }}
-      rules={[{ required: props.required }]}
+      rules={budgetRules}
     >
       <InputNumberContainer
         min={0}

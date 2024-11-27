@@ -246,15 +246,19 @@ export default function OfferForm(props: OfferFormProps) {
         cityID: values.location,
         deliveryTimeID: values.deliveryTime,
         currencyID: values.currency,
-        warranty: values.warranty,
-        timeMeasurementID: values.duration,
-        support: values.support,
         budget: values.budget,
         includesIGV: checkedIGV,
         includesDelivery: checkedDelivery,
         requerimentID: props.requirement.key,
         userID: uid,
       };
+
+      if (values.warranty && values.duration) {
+        data.warranty = values.warranty;
+        data.timeMeasurementID = values.duration;
+      }
+
+      if (values.support) data.support = values.support;
 
       if (values.images && values.images.fileList.length > 0) {
         const formData = new FormData();
@@ -362,10 +366,10 @@ export default function OfferForm(props: OfferFormProps) {
                 <CurrencyField onlyItem disabled />
               </RowContainer>
               <RowContainer>
-                <WarrantyField required={true} />
-                <DurationField required={true} name={"duration"} onlyItem />
+                <WarrantyField required={false} />
+                <DurationField required={false} name={"duration"} onlyItem />
                 <SupportField />
-                <BudgetField required />
+                <BudgetField required greaterThanZero />
               </RowContainer>
               <div className="t-flex gap-15 archivos-up">
                 <AddImagesField forOffer />

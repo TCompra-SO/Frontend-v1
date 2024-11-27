@@ -296,6 +296,7 @@ const resources = {
       youAreCertifiedWithThisCompany: "You are certified with this company",
       homeTableFirstHalf: "Requirements that",
       homeTableSecondHalf: "Best Suit You",
+      budgetGreaterThanZero: "Budget must be greater than 0",
       // Other
       yes: "Yes",
       no: "No",
@@ -467,7 +468,8 @@ const resources = {
       resetFilters: "Reset",
       keywords: "Keywords",
       rangeStart: "Start",
-      rangeEnd: "End"
+      rangeEnd: "End",
+      price: "Price"
     },
   },
   es: {
@@ -769,6 +771,7 @@ const resources = {
       youAreCertifiedWithThisCompany: "Te has certificado con esta empresa",
       homeTableFirstHalf: "Requerimientos que",
       homeTableSecondHalf: "Mejor se Adaptan a Ti",
+      budgetGreaterThanZero: "Presupuesto debe ser mayor a 0",
       // Other
       yes: "Sí",
       no: "No",
@@ -944,7 +947,8 @@ const resources = {
       resetFilters: "Limpiar",
       keywords: "Palabras clave",
       rangeStart: "Inicio",
-      rangeEnd: "Fin"
+      rangeEnd: "Fin",
+      price: "Precio"
     },
   },
 };
