@@ -7,33 +7,15 @@ interface NoContentModalContainerProps extends ModalProps {
 export default function NoContentModalContainer(
   props: NoContentModalContainerProps
 ) {
-  if (props.showFooter)
-    return (
-      <Modal
-        {...props}
-        destroyOnClose
-        // closable={props.closable !== undefined ? props.closable : false}
-        closable={true}
-        centered
-        maskClosable={
-          props.maskClosable !== undefined ? props.maskClosable : true
-        }
-        onCancel={props.onClose}
-      ></Modal>
-    );
-  else
-    return (
-      <Modal
-        {...props}
-        destroyOnClose
-        centered
-        // closable={props.closable !== undefined ? props.closable : false}
-        closable={true}
-        footer={null}
-        maskClosable={
-          props.maskClosable !== undefined ? props.maskClosable : true
-        }
-        onCancel={props.onClose}
-      ></Modal>
-    );
+  const modalProps: ModalProps = {
+    ...props,
+    destroyOnClose: true,
+    closable: props.closable ?? true,
+    centered: true,
+    maskClosable: props.maskClosable ?? true,
+    onCancel: props.onClose,
+  };
+
+  if (props.showFooter) return <Modal {...modalProps}></Modal>;
+  else return <Modal {...modalProps} footer={null}></Modal>;
 }

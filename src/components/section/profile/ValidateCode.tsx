@@ -65,7 +65,7 @@ const stepsForgotPass: StepsItemContent[] = [
     title: "password",
     status: "wait",
     icon: <EditOutlined />,
-    text: "inputNewPassword",
+    text: "inputVerificationCode",
     showInput: true,
   },
   {
@@ -293,6 +293,7 @@ export default function ValidateCode({
       destroyOnClose
       open={isOpen}
       closable={false}
+      maskClosable={false}
       showFooter={false}
       width={600}
     >
