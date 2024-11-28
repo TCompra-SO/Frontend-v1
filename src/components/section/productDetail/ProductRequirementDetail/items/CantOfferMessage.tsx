@@ -95,8 +95,8 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
         setMainText(
           t(
             props.requirement?.type == RequirementType.SALE
-              ? "saleBelongsToEmployee"
-              : "requirementBelongsToEmployee"
+              ? "saleBelongsToSubUser"
+              : "requirementBelongsToSubUser"
           )
         );
         setOptionalText(

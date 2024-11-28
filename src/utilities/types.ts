@@ -410,9 +410,9 @@ export enum CantOfferMotives {
   NO_ALLOWED_ROLE = 9,
 
   IS_CREATOR = 4, //
-  MAIN_ACCOUNT_IS_CREATOR = 5,
-  OTHER_USER_IN_COMPANY_IS_CREATOR = 10,
-  SUBUSER_IS_CREATOR = 13,
+  MAIN_ACCOUNT_IS_CREATOR = 5, // corregir
+  OTHER_USER_IN_COMPANY_IS_CREATOR = 10, //
+  SUBUSER_IS_CREATOR = 13, //
 }
 
 export enum CodeResponseCanOffer {

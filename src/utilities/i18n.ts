@@ -285,6 +285,8 @@ const resources = {
         "Your documents for certification have been rejected. Please review them and submit them again",
       requirementBelongsToEmployee: "Requirement belongs to another employee",
       saleBelongsToEmployee: "Sale belongs to another employee",
+      requirementBelongsToSubUser: "Requirement belongs to an employee",
+      saleBelongsToSubUser: "Sale belongs to an employee",
       requirementBelongsToCompany: "Requirement belongs to your company",
       saleBelongsToCompany: "Sale belongs to your company",
       homeTitle: "The first platform for Requirements and Offers in Peru",
@@ -735,7 +737,7 @@ const resources = {
       thisSaleIsNoLongerAvailable: "Esta liquidación ya no está disponible",
       otherEmployeeHasAlreadyMadeAnOffer: "Otro trabajador de la empresa ya hizo una oferta",
       companyHasAlreadyMadeAnOffer: "Tu empresa ya hizo una oferta",
-      aSubUserHasAlreadyMadeAnOffer: "Un trabajdor ya hizo una oferta",
+      aSubUserHasAlreadyMadeAnOffer: "Un trabajador ya hizo una oferta",
       onlyPremiumUserCanMakeAnOffer: "Solo usuarios Premium pueden ofertar",
       onlyCertifiedCompaniesCanMakeAnOffer:
         "Solo empresas certificadas pueden ofertar",
@@ -763,6 +765,8 @@ const resources = {
         "El requerimiento pertenece a otro trabajador de la empresa",
       saleBelongsToEmployee:
         "La liquidación pertenece a otro trabajador de la empresa",
+      requirementBelongsToSubUser: "El requerimiento pertenece a un trabajador",
+      saleBelongsToSubUser: "La liquidación pertenece a un trabajador",
       requirementBelongsToCompany:
         "El requerimiento pertenece tu empresa",
       saleBelongsToCompany:

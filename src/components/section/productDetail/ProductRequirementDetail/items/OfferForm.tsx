@@ -225,20 +225,20 @@ export default function OfferForm(props: OfferFormProps) {
         (props.requirement.subUser && props.requirement.subUser.uid == uid)) // requerimiento fue creado por subusuario
     ) {
       setCantOfferMotive(CantOfferMotives.IS_CREATOR);
-    } else if (
-      entityType == EntityType.SUBUSER &&
-      props.requirement &&
-      !props.requirement.subUser && // requerimiento no fue creado por subusuario
-      props.requirement.user.uid == mainUserUid
-    ) {
-      setCantOfferMotive(CantOfferMotives.MAIN_ACCOUNT_IS_CREATOR);
-    } else if (
-      entityType != EntityType.SUBUSER &&
-      props.requirement &&
-      props.requirement.subUser &&
-      props.requirement.user.uid == uid
-    ) {
-      setCantOfferMotive(CantOfferMotives.SUBUSER_IS_CREATOR);
+      // } else if (
+      //   entityType == EntityType.SUBUSER &&
+      //   props.requirement &&
+      //   !props.requirement.subUser && // requerimiento no fue creado por subusuario
+      //   props.requirement.user.uid == mainUserUid
+      // ) {
+      //   setCantOfferMotive(CantOfferMotives.MAIN_ACCOUNT_IS_CREATOR);
+      // } else if (
+      //   entityType != EntityType.SUBUSER &&
+      //   props.requirement &&
+      //   props.requirement.subUser &&
+      //   props.requirement.user.uid == uid
+      // ) {
+      //   setCantOfferMotive(CantOfferMotives.SUBUSER_IS_CREATOR);
     } else if (
       role == UserRoles.LEGAL ||
       role == UserRoles.NONE ||
@@ -284,7 +284,9 @@ export default function OfferForm(props: OfferFormProps) {
               break;
             case CodeResponseCanOffer.OTHER_USER_IN_COMPANY_IS_CREATOR:
               setCantOfferMotive(
-                CantOfferMotives.OTHER_USER_IN_COMPANY_IS_CREATOR
+                entityType == EntityType.SUBUSER
+                  ? CantOfferMotives.OTHER_USER_IN_COMPANY_IS_CREATOR
+                  : CantOfferMotives.SUBUSER_IS_CREATOR
               );
               break;
             case CodeResponseCanOffer.IS_CREATOR:
