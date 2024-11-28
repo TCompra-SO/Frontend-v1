@@ -111,14 +111,14 @@ export const pageRoutes = {
   myRequirements: "/mis-requerimientos",
   myOffers: "/mis-ofertas",
   myPurchaseOrders: "/mis-ordenes-de-compra",
-  mySellingOrders: "/mis-ordenes-de-venta",
+  mySalesOrders: "/mis-ordenes-de-venta",
   chat: "/chat",
   users: "/usuarios",
   allRequirements: "/all-requerimientos",
   allOffers: "/all-ofertas",
   certificates: "/certificados",
   allPurchaseOrders: "/all-ordenes-de-compra",
-  allSellingOrders: "/all-ordenes-de-venta",
+  allSalesOrders: "/all-ordenes-de-venta",
   statistics: "/statistics",
 };
 

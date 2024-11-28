@@ -31,10 +31,12 @@ const Home = lazy(() => import("./pages/Home.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
 const Offers = lazy(() => import("./pages/Offers.tsx"));
 const PurchaseOrders = lazy(() => import("./pages/PurchaseOrders.tsx"));
+const SalesOrders = lazy(() => import("./pages/SalesOrders.tsx"));
 const Users = lazy(() => import("./pages/Users.tsx"));
 const AllRequirements = lazy(() => import("./pages/AllRequirements.tsx"));
 const AllOffers = lazy(() => import("./pages/AllOffers.tsx"));
 const AllPurchaseOrders = lazy(() => import("./pages/AllPurchaseOrders.tsx"));
+const AllSalesOrders = lazy(() => import("./pages/AllSalesOrders.tsx"));
 const Certificates = lazy(() => import("./pages/Certificates.tsx"));
 const CertificatesDocs = lazy(() => import("./pages/CertificatesDocs.tsx"));
 const Statistics = lazy(() => import("./pages/Statistics.tsx"));
@@ -276,31 +278,42 @@ function App() {
                                 </AuthRoleGuard>
                               }
                             />
+                          </Route>
+                          <Route path={`${pageRoutes.mySalesOrders}`}>
                             <Route
-                              path={`${pageSubRoutes.issuedSales}`}
+                              path=""
+                              element={
+                                <Navigate
+                                  to={`${pageRoutes.mySalesOrders}/${pageSubRoutes.issued}`}
+                                  replace
+                                />
+                              }
+                            />
+                            <Route
+                              path={`${pageSubRoutes.issued}`}
                               element={
                                 <AuthRoleGuard
                                   allowedRoles={
                                     RolesForSubSection[
-                                      pageRoutes.myPurchaseOrders
-                                    ][pageSubRoutes.issuedSales]
+                                      pageRoutes.mySalesOrders
+                                    ][pageSubRoutes.issued]
                                   }
                                 >
-                                  <PurchaseOrders />
+                                  <SalesOrders />
                                 </AuthRoleGuard>
                               }
                             />
                             <Route
-                              path={`${pageSubRoutes.receivedSales}`}
+                              path={`${pageSubRoutes.received}`}
                               element={
                                 <AuthRoleGuard
                                   allowedRoles={
                                     RolesForSubSection[
-                                      pageRoutes.myPurchaseOrders
-                                    ][pageSubRoutes.receivedSales]
+                                      pageRoutes.mySalesOrders
+                                    ][pageSubRoutes.received]
                                   }
                                 >
-                                  <PurchaseOrders />
+                                  <SalesOrders />
                                 </AuthRoleGuard>
                               }
                             />
@@ -431,27 +444,34 @@ function App() {
                                 </AuthRoleGuard>
                               }
                             />
+                          </Route>
+                          <Route path={`${pageRoutes.allSalesOrders}`}>
                             <Route
-                              path={`${pageSubRoutes.issuedSales}`}
+                              path=""
+                              element={
+                                <Navigate
+                                  to={`${pageRoutes.allSalesOrders}/${pageSubRoutes.issued}`}
+                                  replace
+                                />
+                              }
+                            />
+                            <Route
+                              path={`${pageSubRoutes.issued}`}
                               element={
                                 <AuthRoleGuard
-                                  allowedRoles={
-                                    RolesForSection.allPurchaseOrders
-                                  }
+                                  allowedRoles={RolesForSection.allSalesOrders}
                                 >
-                                  <AllPurchaseOrders />
+                                  <AllSalesOrders />
                                 </AuthRoleGuard>
                               }
                             />
                             <Route
-                              path={`${pageSubRoutes.receivedSales}`}
+                              path={`${pageSubRoutes.received}`}
                               element={
                                 <AuthRoleGuard
-                                  allowedRoles={
-                                    RolesForSection.allPurchaseOrders
-                                  }
+                                  allowedRoles={RolesForSection.allSalesOrders}
                                 >
-                                  <AllPurchaseOrders />
+                                  <AllSalesOrders />
                                 </AuthRoleGuard>
                               }
                             />

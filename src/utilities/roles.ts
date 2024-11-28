@@ -36,7 +36,14 @@ export const RolesForSection: {
     [UserRoles.SELLER]: true,
     [UserRoles.SELLER_BUYER]: true,
   },
-  mySellingOrders: undefined,
+  mySalesOrders: {
+    [UserRoles.NONE]: false,
+    [UserRoles.ADMIN]: true,
+    [UserRoles.BUYER]: true,
+    [UserRoles.LEGAL]: false,
+    [UserRoles.SELLER]: true,
+    [UserRoles.SELLER_BUYER]: true,
+  },
   users: {
     [UserRoles.ADMIN]: true,
     [UserRoles.NONE]: false,
@@ -93,9 +100,14 @@ export const RolesForSection: {
     [UserRoles.BUYER]: false,
     [UserRoles.LEGAL]: false,
   },
-  
-  
-  allSellingOrders: undefined
+  allSalesOrders: {
+    [UserRoles.NONE]: false,
+    [UserRoles.ADMIN]: true,
+    [UserRoles.SELLER_BUYER]: false,
+    [UserRoles.SELLER]: false,
+    [UserRoles.BUYER]: false,
+    [UserRoles.LEGAL]: false,
+  },
   statistics: {
     [UserRoles.NONE]: false,
     [UserRoles.ADMIN]: true,
@@ -119,14 +131,7 @@ export const RolesForSubSection: {
 } = {
   [pageRoutes.myPurchaseOrders]: {
     [pageSubRoutes.issued]: {
-      [UserRoles.NONE]: false,
-      [UserRoles.ADMIN]: true,
-      [UserRoles.BUYER]: true,
-      [UserRoles.LEGAL]: false,
-      [UserRoles.SELLER]: false,
-      [UserRoles.SELLER_BUYER]: true,
-    },
-    [pageSubRoutes.issuedSales]: {
+      // requerimiento: comprador emite órdenes de compra
       [UserRoles.NONE]: false,
       [UserRoles.ADMIN]: true,
       [UserRoles.BUYER]: true,
@@ -135,6 +140,7 @@ export const RolesForSubSection: {
       [UserRoles.SELLER_BUYER]: true,
     },
     [pageSubRoutes.received]: {
+      // requerimiento: vendedor recibe órdenes de compra
       [UserRoles.NONE]: false,
       [UserRoles.ADMIN]: true,
       [UserRoles.BUYER]: false,
@@ -142,12 +148,24 @@ export const RolesForSubSection: {
       [UserRoles.SELLER]: true,
       [UserRoles.SELLER_BUYER]: true,
     },
-    [pageSubRoutes.receivedSales]: {
+  },
+  [pageRoutes.mySalesOrders]: {
+    [pageSubRoutes.issued]: {
+      // liquidación: vendedor emite órdenes de venta
       [UserRoles.NONE]: false,
       [UserRoles.ADMIN]: true,
       [UserRoles.BUYER]: false,
       [UserRoles.LEGAL]: false,
       [UserRoles.SELLER]: true,
+      [UserRoles.SELLER_BUYER]: true,
+    },
+    [pageSubRoutes.received]: {
+      // liquidación: comprador receive órdenes de venta
+      [UserRoles.NONE]: false,
+      [UserRoles.ADMIN]: true,
+      [UserRoles.BUYER]: true,
+      [UserRoles.LEGAL]: false,
+      [UserRoles.SELLER]: false,
       [UserRoles.SELLER_BUYER]: true,
     },
   },

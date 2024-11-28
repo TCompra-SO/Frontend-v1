@@ -43,7 +43,7 @@ import ModalContainer from "../components/containers/ModalContainer";
 import { mainModalScrollStyle } from "../utilities/globals";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
 
-export default function AllPurchaseOrders() {
+export default function AllSalesOrders() {
   const { t } = useTranslation();
   const location = useLocation();
   const uid = useSelector((state: MainState) => state.user.uid);
