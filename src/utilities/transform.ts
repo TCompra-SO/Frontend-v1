@@ -289,7 +289,7 @@ export function transformToPurchaseOrderItemSubUser(
 export function transformToSubUserBase(data: any) {
   const subUser: SubUserBase = {
     typeID: data.typeID,
-    createdAt: data.createdAt,
+    createdAt: data.createDate,
     numGoods: data.numProducts,
     numServices: data.numServices,
     numSales: data.numLiquidations,

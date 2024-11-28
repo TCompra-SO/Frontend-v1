@@ -16,6 +16,7 @@ export default function MoreDetailedRequirement(
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { paymentMethodData, currencyData, deliveryTimeData } = context;
+  // console.log(props.requirement);
 
   return (
     <div className="card-white cbl-3">
@@ -36,16 +37,23 @@ export default function MoreDetailedRequirement(
           {props.requirement?.coin &&
             currencyData[props.requirement?.coin]?.value}
         </div>
-        <div className="badge-grey-border">
-          {t("warranty")}: {props.requirement?.warranty}{" "}
-          {props.requirement
-            ? props.requirement?.warrantyTime == TimeMeasurement.DAYS
-              ? t("days")
-              : props.requirement.warrantyTime == TimeMeasurement.MONTHS
-              ? t("months")
-              : t("years")
-            : ""}
-        </div>
+        {props.requirement?.warranty &&
+        props.requirement?.warrantyTime !== undefined ? (
+          <div className="badge-grey-border">
+            {t("warranty")}: {props.requirement?.warranty}{" "}
+            {props.requirement
+              ? props.requirement?.warrantyTime == TimeMeasurement.DAYS
+                ? t("days")
+                : props.requirement.warrantyTime == TimeMeasurement.MONTHS
+                ? t("months")
+                : t("years")
+              : ""}
+          </div>
+        ) : (
+          <div className="badge-grey-border">
+            {t("warranty")}: {t("no")}
+          </div>
+        )}
         <div className="badge-grey-border">
           {t("deliveryTime")}:{" "}
           {props.requirement &&

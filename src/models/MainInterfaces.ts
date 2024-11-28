@@ -62,8 +62,8 @@ export interface BasicOffer extends BaseRequirementOffer {
 
 export interface Offer extends BasicOffer {
   description?: string;
-  warranty: number;
-  warrantyTime: TimeMeasurement;
+  warranty?: number;
+  warrantyTime?: TimeMeasurement;
   deliveryTime: number;
   location: number;
   image?: string[];

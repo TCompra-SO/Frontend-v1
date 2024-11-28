@@ -206,6 +206,10 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reqSuccess, imgSuccess, docSuccess]);
 
+  useEffect(() => {
+    form.setFieldsValue({ budget: 0 });
+  }, [form]);
+
   function changeTab(newtype: RequirementType) {
     if (newtype != type) {
       setType(newtype);
@@ -223,6 +227,8 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   function createRequirement(values: any) {
     // console.log(values, values.images.fileList.length);
     // return;
+    form.setFieldsValue({ budget: 0 });
+
     setReqSuccess(ProcessFlag.NOT_INI);
     setFormDataDoc(null);
     setFormDataImg(null);
@@ -234,7 +240,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       description: values.description.trim(),
       categoryID: values.category,
       cityID: values.location,
-      budget: values.budget,
+      budget: values.budget ?? 0,
       currencyID: values.currency,
       payment_methodID: values.paymentMethod,
       completion_date: dayjs(values.expirationDate).toISOString(),
@@ -244,14 +250,16 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     };
 
     if (type == RequirementType.GOOD || type == RequirementType.SERVICE) {
-      data.warranty = values.warranty;
-      data.durationID = values.duration;
+      if (values.warranty && values.duration !== undefined) {
+        data.warranty = values.warranty;
+        data.durationID = values.duration;
+      }
     }
 
     if (type == RequirementType.SALE)
       data.used = values.itemCondition == Usage.USED;
 
-    console.log(data);
+    console.log(values, data);
     setApiParams({
       service:
         type == RequirementType.SALE
@@ -416,7 +424,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
             </Col>
             <Col xs={24} sm={24} md={6} lg={6} xl={6}>
               <LabelForCreateRequirement label={"budget"} />
-              <BudgetField />
+              <BudgetField required={false} />
             </Col>
             <Col xs={24} sm={24} md={6} lg={6} xl={6}>
               <LabelForCreateRequirement label={"currency"} />
@@ -445,14 +453,11 @@ export default function CreateRequirement(props: CreateRequirementProps) {
               <>
                 <Col xs={24} sm={24} md={6} lg={6} xl={6}>
                   <LabelForCreateRequirement label={"warranty"} />
-                  <WarrantyField required={type == RequirementType.GOOD} />
+                  <WarrantyField required={false} />
                 </Col>
                 <Col xs={24} sm={24} md={6} lg={6} xl={6}>
                   <LabelForCreateRequirement label={"duration"} />
-                  <DurationField
-                    required={type == RequirementType.GOOD}
-                    name="duration"
-                  />
+                  <DurationField required={false} name="duration" />
                 </Col>
               </>
             )}

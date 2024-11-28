@@ -1,4 +1,8 @@
-import { UserRoles } from "../utilities/types";
+import {
+  CantOfferMotives,
+  CodeResponseCanOffer,
+  UserRoles,
+} from "../utilities/types";
 import { BaseUser } from "./MainInterfaces";
 
 export interface SubUserBase extends BaseUser {
@@ -19,4 +23,9 @@ export interface SubUserProfile extends SubUserBase {
   cityID: number;
   companyID: string;
   phone: string;
+}
+
+export interface CanOfferResponse {
+  codeResponse: CodeResponseCanOffer;
+  offerID?: string;
 }

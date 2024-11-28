@@ -257,8 +257,10 @@ const resources = {
         "This requirement is no longer available",
       thisSaleIsNoLongerAvailable: "This sale is no longer available",
       otherEmployeeHasAlreadyMadeAnOffer:
-        "Other employee has already made an offer",
-      aSubUserHasAlreadyMadeAnOffer: "A subuser has already made an offer",
+        "Another employee from your company has already made an offer",
+      companyHasAlreadyMadeAnOffer:
+        "Your company has already made an offer",
+      aSubUserHasAlreadyMadeAnOffer: "An employee has already made an offer",
       onlyPremiumUserCanMakeAnOffer: "Only Premium users can make an offer",
       onlyCertifiedCompaniesCanMakeAnOffer:
         "Only certified companies can make an offer",
@@ -283,6 +285,8 @@ const resources = {
         "Your documents for certification have been rejected. Please review them and submit them again",
       requirementBelongsToEmployee: "Requirement belongs to another employee",
       saleBelongsToEmployee: "Sale belongs to another employee",
+      requirementBelongsToCompany: "Requirement belongs to your company",
+      saleBelongsToCompany: "Sale belongs to your company",
       homeTitle: "The first platform for Requirements and Offers in Peru",
       homeSubtitle: "We Facilitate the Purchase and Sale of Goods and Services",
       allRightsReserved: "All rights reserved",
@@ -296,6 +300,7 @@ const resources = {
       youAreCertifiedWithThisCompany: "You are certified with this company",
       homeTableFirstHalf: "Requirements that",
       homeTableSecondHalf: "Best Suit You",
+      budgetGreaterThanZero: "Budget must be greater than 0",
       // Other
       yes: "Yes",
       no: "No",
@@ -467,7 +472,8 @@ const resources = {
       resetFilters: "Reset",
       keywords: "Keywords",
       rangeStart: "Start",
-      rangeEnd: "End"
+      rangeEnd: "End",
+      price: "Price"
     },
   },
   es: {
@@ -727,8 +733,9 @@ const resources = {
       thisRequirementIsNoLongerAvailable:
         "Este requerimiento ya no está disponible",
       thisSaleIsNoLongerAvailable: "Esta liquidación ya no está disponible",
-      otherEmployeeHasAlreadyMadeAnOffer: "Otro trabajador ya hizo una oferta",
-      aSubUserHasAlreadyMadeAnOffer: "Un subusuario ya hizo una oferta",
+      otherEmployeeHasAlreadyMadeAnOffer: "Otro trabajador de la empresa ya hizo una oferta",
+      companyHasAlreadyMadeAnOffer: "Tu empresa ya hizo una oferta",
+      aSubUserHasAlreadyMadeAnOffer: "Un trabajdor ya hizo una oferta",
       onlyPremiumUserCanMakeAnOffer: "Solo usuarios Premium pueden ofertar",
       onlyCertifiedCompaniesCanMakeAnOffer:
         "Solo empresas certificadas pueden ofertar",
@@ -756,6 +763,10 @@ const resources = {
         "El requerimiento pertenece a otro trabajador de la empresa",
       saleBelongsToEmployee:
         "La liquidación pertenece a otro trabajador de la empresa",
+      requirementBelongsToCompany:
+        "El requerimiento pertenece tu empresa",
+      saleBelongsToCompany:
+        "La liquidación pertenece a tu empresa",
       homeTitle: "La primera plataforma de Requerimientos y Ofertas del Perú",
       homeSubtitle: "Facilitamos la Compra y Venta de Bienes y Servicios",
       allRightsReserved: "Todos los derechos reservados",
@@ -769,6 +780,7 @@ const resources = {
       youAreCertifiedWithThisCompany: "Te has certificado con esta empresa",
       homeTableFirstHalf: "Requerimientos que",
       homeTableSecondHalf: "Mejor se Adaptan a Ti",
+      budgetGreaterThanZero: "Presupuesto debe ser mayor a 0",
       // Other
       yes: "Sí",
       no: "No",
@@ -944,7 +956,8 @@ const resources = {
       resetFilters: "Limpiar",
       keywords: "Palabras clave",
       rangeStart: "Inicio",
-      rangeEnd: "Fin"
+      rangeEnd: "Fin",
+      price: "Precio"
     },
   },
 };

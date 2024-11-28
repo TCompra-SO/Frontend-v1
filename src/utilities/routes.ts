@@ -89,6 +89,7 @@ export const ApiRoutes = {
     getOffersBySubUser: "getOffersBySubUser/",
     delete: "delete/",
     culminate: "culminate/",
+    getValidation: "getValidation/",
   },
   score: {
     registerScore: "registerScore/",

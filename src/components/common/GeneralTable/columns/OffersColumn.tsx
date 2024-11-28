@@ -25,7 +25,7 @@ export default function OffersColumn(
     align: "center",
     sorter: noSorter ? undefined : (a, b) => a.numberOffers - b.numberOffers,
     showSorterTooltip: false,
-    width: "75px",
+    width: "92px",
     hidden,
     render: (_, record) => {
       return (

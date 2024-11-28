@@ -55,14 +55,20 @@ export default function RequirementOfferListItemBody(
           </div>
         )}
 
-        <div className="tag-gray">
-          {t("warranty")}: {props.offer.warranty}{" "}
-          {props.offer.warrantyTime == TimeMeasurement.DAYS
-            ? t("days")
-            : props.offer.warrantyTime == TimeMeasurement.MONTHS
-            ? t("months")
-            : t("years")}
-        </div>
+        {props.offer.warranty && props.offer.warrantyTime !== undefined ? (
+          <div className="tag-gray">
+            {t("warranty")}: {props.offer.warranty}{" "}
+            {props.offer.warrantyTime == TimeMeasurement.DAYS
+              ? t("days")
+              : props.offer.warrantyTime == TimeMeasurement.MONTHS
+              ? t("months")
+              : t("years")}
+          </div>
+        ) : (
+          <div className="tag-gray">
+            {t("warranty")}: {t("no")}
+          </div>
+        )}
         {props.showUserData && (
           <div className="tag-gray">
             {props.offer.subUser

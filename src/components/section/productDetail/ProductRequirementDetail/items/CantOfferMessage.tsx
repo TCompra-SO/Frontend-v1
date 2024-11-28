@@ -16,6 +16,7 @@ import { ModalContent } from "../../../../../models/Interfaces";
 import { mainModalScrollStyle } from "../../../../../utilities/globals";
 import { MainState } from "../../../../../models/Redux";
 import { useSelector } from "react-redux";
+import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
 
 interface CantOfferMessageProps {
   offerId: string;
@@ -23,6 +24,7 @@ interface CantOfferMessageProps {
   requirement: Requirement | undefined;
   isPremium?: boolean;
   isCertified?: CertificationState;
+  loading?: boolean;
 }
 
 export default function CantOfferMessage(props: CantOfferMessageProps) {
@@ -77,16 +79,24 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
           ).toLowerCase()}`
         );
         break;
+      case CantOfferMotives.MAIN_ACCOUNT_MADE_OFFER:
+        setMainText(t("companyHasAlreadyMadeAnOffer"));
+        setOptionalText("");
+        break;
       case CantOfferMotives.OTHER_USER_IN_COMPANY_MADE_OFFER:
         setMainText(t("otherEmployeeHasAlreadyMadeAnOffer"));
         setOptionalText("");
         break;
-      case CantOfferMotives.IS_MAIN_CREATOR:
+      case CantOfferMotives.SUBUSER_MADE_OFFER:
+        setMainText(t("aSubUserHasAlreadyMadeAnOffer"));
+        setOptionalText("");
+        break;
+      case CantOfferMotives.SUBUSER_IS_CREATOR:
         setMainText(
           t(
             props.requirement?.type == RequirementType.SALE
-              ? "requirementBelongsToEmployee"
-              : "saleBelongsToEmployee"
+              ? "saleBelongsToEmployee"
+              : "requirementBelongsToEmployee"
           )
         );
         setOptionalText(
@@ -120,11 +130,22 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
         setMainText(
           t(
             props.requirement?.type == RequirementType.SALE
-              ? "requirementBelongsToEmployee"
-              : "saleBelongsToEmployee"
+              ? "saleBelongsToEmployee"
+              : "requirementBelongsToEmployee"
           )
         );
         setOptionalText("");
+        break;
+      case CantOfferMotives.MAIN_ACCOUNT_IS_CREATOR:
+        setMainText(
+          t(
+            props.requirement?.type == RequirementType.SALE
+              ? "saleBelongsToCompany"
+              : "requirementBelongsToCompany"
+          )
+        );
+        setOptionalText("");
+        break;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.motive]);
@@ -162,55 +183,63 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
       />
 
       <div className="t-flex f-column j-conten j-items oferta-check gap-10">
-        <i className="fa-regular fa-circle-exclamation fa-3x"></i>
-        <div className="aviso-h">
-          <div className="cantidad-estd">{mainText}</div>
-          {optionalText && <div className="detalles-estd">{optionalText}</div>}
-        </div>
-        {props.motive == CantOfferMotives.ALREADY_MADE_OFFER && (
-          <ButtonContainer
-            style={{ height: "auto" }}
-            className="btn btn-default btn-sm"
-            icon={<i className="fa-regular fa-trash"></i>}
-            onClick={deleteOffer}
-          >
-            {t("deleteOffer")}
-          </ButtonContainer>
+        {props.loading ? (
+          <SimpleLoading style={{ width: "15vw" }} />
+        ) : (
+          <>
+            <i className="fa-regular fa-circle-exclamation fa-3x"></i>
+            <div className="aviso-h">
+              <div className="cantidad-estd">{mainText}</div>
+              {optionalText && (
+                <div className="detalles-estd">{optionalText}</div>
+              )}
+            </div>
+            {props.motive == CantOfferMotives.ALREADY_MADE_OFFER && (
+              <ButtonContainer
+                style={{ height: "auto" }}
+                className="btn btn-default btn-sm"
+                icon={<i className="fa-regular fa-trash"></i>}
+                onClick={deleteOffer}
+              >
+                {t("deleteOffer")}
+              </ButtonContainer>
+            )}
+            {props.motive == CantOfferMotives.CHANGED_STATE && (
+              <ButtonContainer
+                style={{ height: "auto" }}
+                className="btn btn-default btn-sm"
+                icon={<i className="fa-regular fa-house"></i>}
+                onClick={() => navigate(pageRoutes.home)}
+              >
+                {t("goTo") + t("home")}
+              </ButtonContainer>
+            )}
+            {(props.motive == CantOfferMotives.IS_CREATOR ||
+              props.motive == CantOfferMotives.SUBUSER_IS_CREATOR) && (
+              <ButtonContainer
+                style={{ height: "auto" }}
+                className="btn btn-default btn-sm"
+                icon={<i className="fa-regular fa-columns"></i>}
+                onClick={() => navigate(pageRoutes.home)} // r3v
+              >
+                {t("goTo") + t("controlPanel")}
+              </ButtonContainer>
+            )}
+            {props.motive == CantOfferMotives.ONLY_CERTIFIED &&
+              entityType == EntityType.COMPANY &&
+              props.isPremium &&
+              props.isCertified == CertificationState.NONE && (
+                <ButtonContainer
+                  style={{ height: "auto" }}
+                  className="btn btn-green btn-sm"
+                  icon={<i className="fa-regular fa-star"></i>}
+                  onClick={openGetCertifiedModal}
+                >
+                  {t("getCertified")}
+                </ButtonContainer>
+              )}
+          </>
         )}
-        {props.motive == CantOfferMotives.CHANGED_STATE && (
-          <ButtonContainer
-            style={{ height: "auto" }}
-            className="btn btn-default btn-sm"
-            icon={<i className="fa-regular fa-house"></i>}
-            onClick={() => navigate(pageRoutes.home)}
-          >
-            {t("goTo") + t("home")}
-          </ButtonContainer>
-        )}
-        {(props.motive == CantOfferMotives.IS_CREATOR ||
-          props.motive == CantOfferMotives.IS_MAIN_CREATOR) && (
-          <ButtonContainer
-            style={{ height: "auto" }}
-            className="btn btn-default btn-sm"
-            icon={<i className="fa-regular fa-columns"></i>}
-            onClick={() => navigate(pageRoutes.home)} // r3v
-          >
-            {t("goTo") + t("controlPanel")}
-          </ButtonContainer>
-        )}
-        {props.motive == CantOfferMotives.ONLY_CERTIFIED &&
-          entityType == EntityType.COMPANY &&
-          props.isPremium &&
-          props.isCertified == CertificationState.NONE && (
-            <ButtonContainer
-              style={{ height: "auto" }}
-              className="btn btn-green btn-sm"
-              icon={<i className="fa-regular fa-star"></i>}
-              onClick={openGetCertifiedModal}
-            >
-              {t("getCertified")}
-            </ButtonContainer>
-          )}
       </div>
     </>
   );

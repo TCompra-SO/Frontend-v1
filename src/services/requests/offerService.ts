@@ -83,3 +83,15 @@ export function culminateOfferService(): HttpService {
     type: "OF-CUL",
   };
 }
+
+export function getValidationOfferService(
+  userId: string,
+  requirementId: string
+): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+      ApiRoutes.offers.getValidation
+    }${userId}/${requirementId}`,
+    type: "OF-VAL",
+  };
+}

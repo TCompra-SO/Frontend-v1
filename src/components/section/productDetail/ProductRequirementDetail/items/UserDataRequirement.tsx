@@ -82,7 +82,7 @@ export default function UserDataRequirement(props: UserDataRequirementProps) {
           <div className="dato-detalle-1">
             <i className="fas fa-angle-right i-vi"></i> {t("location")}:
           </div>
-          <div className="dato-detalle-2">
+          <div className="dato-detalle-2 text-truncate">
             {props.requirement &&
               countryData &&
               countryData[defaultCountry] &&
@@ -100,7 +100,7 @@ export default function UserDataRequirement(props: UserDataRequirementProps) {
           <div className="dato-detalle-1">
             <i className="fas fa-angle-right i-vi"></i> {t("category")}:
           </div>
-          <div className="dato-detalle-2">
+          <div className="dato-detalle-2 text-truncate">
             {props.requirement &&
               categoryData &&
               categoryData[props.requirement?.category]?.value}
