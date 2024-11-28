@@ -320,7 +320,7 @@ export default function AllSalesOrders() {
         style={mainModalScrollStyle}
       />
       <TablePageContent
-        title={t("purchaseOrders")}
+        title={t("salesOrders")}
         titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
         subtitle={`${t("listOf")} ${t(
           getLabelFromPurchaseOrderType(type, true, false)

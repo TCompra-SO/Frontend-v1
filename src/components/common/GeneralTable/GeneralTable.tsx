@@ -201,6 +201,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         ></Table>
       );
     case TableTypes.PURCHASE_ORDER:
+    case TableTypes.SALES_ORDER:
       getPurchaseOrderTableColumns();
       return (
         <Table
@@ -271,6 +272,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         ></Table>
       );
     case TableTypes.ALL_PURCHASE_ORDERS:
+    case TableTypes.ALL_SALES_ORDERS:
       getAllPurchaseOrdersTableColumns();
       return (
         <Table
@@ -369,7 +371,10 @@ export default function GeneralTable(props: GeneralTableProps) {
   }
 
   function getPurchaseOrderTableColumns() {
-    if (props.content.type == TableTypes.PURCHASE_ORDER) {
+    if (
+      props.content.type == TableTypes.PURCHASE_ORDER ||
+      props.content.type == TableTypes.SALES_ORDER
+    ) {
       columns = [
         NameColumn(
           props.content.type,
@@ -467,7 +472,10 @@ export default function GeneralTable(props: GeneralTableProps) {
   }
 
   function getAllPurchaseOrdersTableColumns() {
-    if (props.content.type == TableTypes.ALL_PURCHASE_ORDERS) {
+    if (
+      props.content.type == TableTypes.ALL_PURCHASE_ORDERS ||
+      props.content.type == TableTypes.ALL_SALES_ORDERS
+    ) {
       columns = [
         NameColumn(
           props.content.type,
@@ -495,13 +503,13 @@ export default function GeneralTable(props: GeneralTableProps) {
         ),
         TypeColumn(visibility[TableColumns.TYPE]),
         DocumentColumn(
-          TableTypes.ALL_PURCHASE_ORDERS,
+          props.content.type,
           props.content.onButtonClick,
           visibility[TableColumns.DOCUMENT]
         ),
         StateColumn(props.content.type, visibility[TableColumns.STATE]),
         ViewColumn(
-          TableTypes.ALL_PURCHASE_ORDERS,
+          props.content.type,
           props.content.onButtonClick,
           visibility[TableColumns.VIEW]
         ),

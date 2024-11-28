@@ -36,6 +36,7 @@ export default function ViewColumn(
           break;
         case TableTypes.ALL_PURCHASE_ORDERS:
         case TableTypes.PURCHASE_ORDER_SUBUSER:
+        case TableTypes.ALL_SALES_ORDERS:
           action = Action.VIEW_PURCHASE_ORDER;
           break;
         case TableTypes.SENT_CERT:
@@ -56,7 +57,8 @@ export default function ViewColumn(
             disabled={
               type == TableTypes.PURCHASE_ORDER_SUBUSER
                 ? subUserRequirementsViewOffers
-                : type == TableTypes.ALL_PURCHASE_ORDERS
+                : type == TableTypes.ALL_PURCHASE_ORDERS ||
+                  TableTypes.ALL_SALES_ORDERS
                 ? allRequirementsViewOffers
                 : undefined
             }

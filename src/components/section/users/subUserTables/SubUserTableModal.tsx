@@ -88,14 +88,6 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
       key: PurchaseOrderTableTypes.RECEIVED.toString(),
       label: t("receivedPl"),
     },
-    {
-      key: PurchaseOrderTableTypes.ISSUED_SALES.toString(),
-      label: `${t("issuedPl")} - ${t("salesAbbrev")}`,
-    },
-    {
-      key: PurchaseOrderTableTypes.RECEIVED_SALES.toString(),
-      label: `${t("receivedPl")} - ${t("salesAbbrev")}`,
-    },
   ];
 
   /* Para descargar pdf de orden de compra */

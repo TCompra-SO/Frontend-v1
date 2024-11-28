@@ -56,6 +56,8 @@ export default function ActionColumn(
           break;
         case TableTypes.ALL_PURCHASE_ORDERS:
         case TableTypes.PURCHASE_ORDER:
+        case TableTypes.SALES_ORDER:
+        case TableTypes.ALL_SALES_ORDERS:
           ActionByState = ActionByStatePurchaseOrder;
           key = record.state;
           break;
@@ -69,7 +71,8 @@ export default function ActionColumn(
           trigger={["click"]}
           menu={{
             items: ActionByState[key]
-              ? type != TableTypes.PURCHASE_ORDER
+              ? type != TableTypes.PURCHASE_ORDER &&
+                type != TableTypes.SALES_ORDER
                 ? type == TableTypes.OFFER
                   ? ActionByState[key].reduce<ItemType[]>(
                       (acc, action: Action) => {
@@ -94,24 +97,53 @@ export default function ActionColumn(
                         onClick: () => onButtonClick(action, record),
                       };
                     })
-                : ActionByState[key].reduce<ItemType[]>(
+                : type == TableTypes.PURCHASE_ORDER
+                ? ActionByState[key].reduce<ItemType[]>(
                     (acc, action: Action) => {
                       if (
                         action == Action.VIEW_HISTORY &&
-                        (extraParam == PurchaseOrderTableTypes.RECEIVED ||
-                          extraParam == PurchaseOrderTableTypes.ISSUED_SALES)
+                        extraParam == PurchaseOrderTableTypes.RECEIVED
                       )
                         return acc;
                       if (
                         action == Action.VIEW_CUSTOMER &&
-                        (extraParam == PurchaseOrderTableTypes.ISSUED ||
-                          extraParam == PurchaseOrderTableTypes.ISSUED_SALES)
+                        extraParam == PurchaseOrderTableTypes.ISSUED
                       )
                         return acc;
                       if (
                         action == Action.VIEW_SUPPLIER &&
-                        (extraParam == PurchaseOrderTableTypes.RECEIVED ||
-                          extraParam == PurchaseOrderTableTypes.RECEIVED_SALES)
+                        extraParam == PurchaseOrderTableTypes.RECEIVED
+                      )
+                        return acc;
+
+                      acc.push({
+                        key: action,
+                        label: t(ActionLabel[action]),
+                        onClick: () => onButtonClick(action, record),
+                        disabled:
+                          action == Action.DOWNLOAD_PURCHASE_ORDER
+                            ? myPurchaseOrdersLoadingPdf
+                            : undefined,
+                      });
+                      return acc;
+                    },
+                    []
+                  )
+                : ActionByState[key].reduce<ItemType[]>( // órdenes de venta
+                    (acc, action: Action) => {
+                      if (
+                        action == Action.VIEW_HISTORY &&
+                        extraParam == PurchaseOrderTableTypes.RECEIVED
+                      )
+                        return acc;
+                      if (
+                        action == Action.VIEW_CUSTOMER &&
+                        extraParam == PurchaseOrderTableTypes.RECEIVED
+                      )
+                        return acc;
+                      if (
+                        action == Action.VIEW_SUPPLIER &&
+                        extraParam == PurchaseOrderTableTypes.ISSUED
                       )
                         return acc;
 

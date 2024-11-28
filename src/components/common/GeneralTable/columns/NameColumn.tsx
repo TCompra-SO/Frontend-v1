@@ -40,20 +40,24 @@ export default function NameColumn(
       dataIndex = "name";
       break;
     case TableTypes.PURCHASE_ORDER:
-      if (
-        extraParam == PurchaseOrderTableTypes.ISSUED ||
-        extraParam == PurchaseOrderTableTypes.ISSUED_SALES
-      )
+      if (extraParam == PurchaseOrderTableTypes.ISSUED)
         dataIndex = "userNameProvider";
       else dataIndex = "userNameClient";
       break;
     case TableTypes.ALL_PURCHASE_ORDERS:
-      if (
-        extraParam == PurchaseOrderTableTypes.ISSUED ||
-        extraParam == PurchaseOrderTableTypes.ISSUED_SALES
-      )
+      if (extraParam == PurchaseOrderTableTypes.ISSUED)
         dataIndex = "subUserNameProvider";
       else dataIndex = "subUserNameClient";
+      break;
+    case TableTypes.SALES_ORDER:
+      if (extraParam == PurchaseOrderTableTypes.ISSUED)
+        dataIndex = "userNameClient";
+      else dataIndex = "userNameProvider";
+      break;
+    case TableTypes.ALL_SALES_ORDERS:
+      if (extraParam == PurchaseOrderTableTypes.ISSUED)
+        dataIndex = "subUserNameClient";
+      else dataIndex = "subUserNameProvider";
       break;
   }
 
@@ -86,10 +90,7 @@ export default function NameColumn(
             const bName = (b as CertificateFile).name;
             return aName.localeCompare(bName);
           } else if (type == TableTypes.PURCHASE_ORDER) {
-            if (
-              extraParam == PurchaseOrderTableTypes.ISSUED ||
-              extraParam == PurchaseOrderTableTypes.ISSUED_SALES
-            ) {
+            if (extraParam == PurchaseOrderTableTypes.ISSUED) {
               const aName = (a as BasicPurchaseOrder).userNameProvider;
               const bName = (b as BasicPurchaseOrder).userNameProvider;
               return aName.localeCompare(bName);
@@ -99,16 +100,33 @@ export default function NameColumn(
               return aName.localeCompare(bName);
             }
           } else if (type == TableTypes.ALL_PURCHASE_ORDERS) {
-            if (
-              extraParam == PurchaseOrderTableTypes.ISSUED ||
-              extraParam == PurchaseOrderTableTypes.ISSUED_SALES
-            ) {
+            if (extraParam == PurchaseOrderTableTypes.ISSUED) {
               const aName = (a as BasicPurchaseOrder).subUserNameProvider;
               const bName = (b as BasicPurchaseOrder).subUserNameProvider;
               return aName.localeCompare(bName);
             } else {
               const aName = (a as BasicPurchaseOrder).subUserNameClient;
               const bName = (b as BasicPurchaseOrder).subUserNameClient;
+              return aName.localeCompare(bName);
+            }
+          } else if (type == TableTypes.SALES_ORDER) {
+            if (extraParam == PurchaseOrderTableTypes.ISSUED) {
+              const aName = (a as BasicPurchaseOrder).userNameClient;
+              const bName = (b as BasicPurchaseOrder).userNameClient;
+              return aName.localeCompare(bName);
+            } else {
+              const aName = (a as BasicPurchaseOrder).userNameProvider;
+              const bName = (b as BasicPurchaseOrder).userNameProvider;
+              return aName.localeCompare(bName);
+            }
+          } else if (type == TableTypes.ALL_SALES_ORDERS) {
+            if (extraParam == PurchaseOrderTableTypes.ISSUED) {
+              const aName = (a as BasicPurchaseOrder).subUserNameClient;
+              const bName = (b as BasicPurchaseOrder).subUserNameClient;
+              return aName.localeCompare(bName);
+            } else {
+              const aName = (a as BasicPurchaseOrder).subUserNameProvider;
+              const bName = (b as BasicPurchaseOrder).subUserNameProvider;
               return aName.localeCompare(bName);
             }
           }
@@ -132,15 +150,21 @@ export default function NameColumn(
               {type === TableTypes.MY_DOCUMENTS &&
                 (record as CertificateFile).name}
               {type === TableTypes.PURCHASE_ORDER &&
-                (extraParam == PurchaseOrderTableTypes.ISSUED ||
-                extraParam == PurchaseOrderTableTypes.ISSUED_SALES
+                (extraParam == PurchaseOrderTableTypes.ISSUED
                   ? (record as BasicPurchaseOrder).userNameProvider
                   : (record as BasicPurchaseOrder).userNameClient)}
               {type === TableTypes.ALL_PURCHASE_ORDERS &&
-                (extraParam == PurchaseOrderTableTypes.ISSUED ||
-                extraParam == PurchaseOrderTableTypes.ISSUED_SALES
+                (extraParam == PurchaseOrderTableTypes.ISSUED
                   ? (record as BasicPurchaseOrder).subUserNameProvider
                   : (record as BasicPurchaseOrder).subUserNameClient)}
+              {type === TableTypes.SALES_ORDER &&
+                (extraParam == PurchaseOrderTableTypes.ISSUED
+                  ? (record as BasicPurchaseOrder).userNameClient
+                  : (record as BasicPurchaseOrder).userNameProvider)}
+              {type === TableTypes.ALL_PURCHASE_ORDERS &&
+                (extraParam == PurchaseOrderTableTypes.ISSUED
+                  ? (record as BasicPurchaseOrder).subUserNameClient
+                  : (record as BasicPurchaseOrder).subUserNameProvider)}
             </div>
             {(type == TableTypes.REQUIREMENT ||
               type == TableTypes.USERS ||

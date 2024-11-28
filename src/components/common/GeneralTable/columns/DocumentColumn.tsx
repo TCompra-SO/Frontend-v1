@@ -35,7 +35,8 @@ export default function DocumentColumn(
             className="btn btn-border-default btn-sm t-flex seleccionar-tb"
             children={<i className="fa-solid fa-file"></i>}
             disabled={
-              type == TableTypes.ALL_PURCHASE_ORDERS
+              type == TableTypes.ALL_PURCHASE_ORDERS ||
+              type == TableTypes.ALL_SALES_ORDERS
                 ? allPurchaseOrdersLoadingPdf
                 : type == TableTypes.PURCHASE_ORDER_SUBUSER
                 ? subUserPurchaseOrdersLoadingPdf

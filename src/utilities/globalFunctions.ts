@@ -115,14 +115,8 @@ export function getLabelFromPurchaseOrderType(
   onlyTwoLabels: boolean = true
 ) {
   switch (type) {
-    case PurchaseOrderTableTypes.ISSUED_SALES:
-      if (!onlyTwoLabels) return "issuedPlSales";
-      return plural ? "issuedPl" : "issued";
     case PurchaseOrderTableTypes.ISSUED:
       return plural ? "issuedPl" : "issued";
-    case PurchaseOrderTableTypes.RECEIVED_SALES:
-      if (!onlyTwoLabels) return "receivedPlSales";
-      return plural ? "receivedPl" : "received";
     case PurchaseOrderTableTypes.RECEIVED:
       return plural ? "receivedPl" : "received";
   }
@@ -168,12 +162,8 @@ export function getPurchaseOrderType(pathname: string) {
   switch (lastSegment) {
     case pageSubRoutes.issued:
       return PurchaseOrderTableTypes.ISSUED;
-    case pageSubRoutes.issuedSales:
-      return PurchaseOrderTableTypes.ISSUED_SALES;
     case pageSubRoutes.received:
       return PurchaseOrderTableTypes.RECEIVED;
-    case pageSubRoutes.receivedSales:
-      return PurchaseOrderTableTypes.RECEIVED_SALES;
     default:
       return PurchaseOrderTableTypes.ISSUED;
   }

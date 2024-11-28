@@ -100,18 +100,6 @@ export default function AllPurchaseOrders() {
           method: "get",
         });
         break;
-      case PurchaseOrderTableTypes.ISSUED_SALES:
-        setApiParams({
-          service: null,
-          method: "get",
-        });
-        break;
-      case PurchaseOrderTableTypes.RECEIVED_SALES:
-        setApiParams({
-          service: null,
-          method: "get",
-        });
-        break;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);

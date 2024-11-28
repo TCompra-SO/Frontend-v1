@@ -130,7 +130,5 @@ export const pageSubRoutes: Record<string, string> = {
   documents: "documentos",
   sent: "enviados",
   issued: "emitidos",
-  issuedSales: "enviados-liquidaciones",
   received: "recibidos",
-  receivedSales: "recibidos-liquidaciones",
 };

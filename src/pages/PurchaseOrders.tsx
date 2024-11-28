@@ -114,18 +114,6 @@ export default function PurchaseOrders() {
           method: "get",
         });
         break;
-      case PurchaseOrderTableTypes.ISSUED_SALES:
-        setApiParams({
-          service: null,
-          method: "get",
-        });
-        break;
-      case PurchaseOrderTableTypes.RECEIVED_SALES:
-        setApiParams({
-          service: null,
-          method: "get",
-        });
-        break;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
@@ -330,9 +318,8 @@ export default function PurchaseOrders() {
         data: {
           basicRateData: data,
           type: currentPurchaseOrder.type,
-          isOffer:
-            type == PurchaseOrderTableTypes.ISSUED || // r3v para otros dos casos
-            type == PurchaseOrderTableTypes.RECEIVED_SALES,
+          isOffer: type == PurchaseOrderTableTypes.ISSUED, // r3v para otros dos casos
+
           requirementOrOfferId:
             type == PurchaseOrderTableTypes.ISSUED
               ? currentPurchaseOrder.requirementId

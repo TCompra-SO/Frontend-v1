@@ -225,6 +225,12 @@ export interface TableTypePurchaseOrder extends TableHiddenColumns {
   data: PurchaseOrder[];
 }
 
+export interface TableTypeSalesOrder extends TableHiddenColumns {
+  type: TableTypes.SALES_ORDER;
+  subType: PurchaseOrderTableTypes;
+  data: PurchaseOrder[];
+}
+
 export interface TableTypeUsers extends TableHiddenColumns {
   type: TableTypes.USERS;
   data: SubUserBase[];
@@ -245,6 +251,11 @@ export interface TableTypePurchaseOrderSubUser extends TableHiddenColumns {
   data: PurchaseOrderItemSubUser[];
 }
 
+export interface TableTypeSalesOrderSubUser extends TableHiddenColumns {
+  type: TableTypes.SALES_ORDER_SUBUSER;
+  data: PurchaseOrderItemSubUser[];
+}
+
 export interface TableTypeAllRequirements extends TableHiddenColumns {
   type: TableTypes.ALL_REQUIREMENTS;
   data: BasicRequirement[];
@@ -257,6 +268,12 @@ export interface TableTypeAllOffers extends TableHiddenColumns {
 
 export interface TableTypeAllPurchaseOrders extends TableHiddenColumns {
   type: TableTypes.ALL_PURCHASE_ORDERS;
+  subType: PurchaseOrderTableTypes;
+  data: BasicPurchaseOrder[];
+}
+
+export interface TableTypeAllSalesOrders extends TableHiddenColumns {
+  type: TableTypes.ALL_SALES_ORDERS;
   subType: PurchaseOrderTableTypes;
   data: BasicPurchaseOrder[];
 }
@@ -286,13 +303,16 @@ export type TableType =
   | TableTypeRequirement
   | TableTypeOffer
   | TableTypePurchaseOrder
+  | TableTypeSalesOrder
   | TableTypeUsers
   | TableTypeRequirementSubUser
   | TableTypeOfferSubUser
   | TableTypePurchaseOrderSubUser
+  | TableTypeSalesOrderSubUser
   | TableTypeAllRequirements
   | TableTypeAllOffers
   | TableTypeAllPurchaseOrders
+  | TableTypeAllSalesOrders
   | TableTypeMyDocuments
   | TableTypeCertificatesReceived
   | TableTypeCertificatesSent

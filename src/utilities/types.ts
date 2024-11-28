@@ -54,13 +54,16 @@ export enum TableTypes {
   REQUIREMENT = 1,
   OFFER = 2,
   PURCHASE_ORDER = 3,
+  SALES_ORDER = 15,
   USERS = 4,
   REQUIREMENT_SUBUSER = 5,
   OFFER_SUBUSER = 6,
   PURCHASE_ORDER_SUBUSER = 7,
+  SALES_ORDER_SUBUSER = 17,
   ALL_REQUIREMENTS = 8,
   ALL_OFFERS = 9,
   ALL_PURCHASE_ORDERS = 10,
+  ALL_SALES_ORDERS = 16,
   MY_DOCUMENTS = 11,
   SENT_CERT = 12,
   RECEIVED_CERT = 13,
@@ -371,8 +374,6 @@ export enum UserRoles {
 export enum PurchaseOrderTableTypes {
   ISSUED = 0,
   RECEIVED = 1,
-  ISSUED_SALES = 2,
-  RECEIVED_SALES = 3,
 }
 
 export enum CertificationState {
