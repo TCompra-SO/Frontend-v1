@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import {
   ModalContent,
   TableTypePurchaseOrder,
+  TableTypeSalesOrder,
   useApiParams,
 } from "../models/Interfaces";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
@@ -69,8 +70,8 @@ export default function SalesOrders() {
     type: ModalTypes.NONE,
     data: {},
   });
-  const [tableContent, setTableContent] = useState<TableTypePurchaseOrder>({
-    type: TableTypes.PURCHASE_ORDER,
+  const [tableContent, setTableContent] = useState<TableTypeSalesOrder>({
+    type: TableTypes.SALES_ORDER,
     data: [],
     subType: type,
     hiddenColumns: [],
@@ -111,18 +112,6 @@ export default function SalesOrders() {
             uid,
             role == UserRoles.ADMIN ? UserRoles.BUYER : role
           ),
-          method: "get",
-        });
-        break;
-      case PurchaseOrderTableTypes.ISSUED_SALES:
-        setApiParams({
-          service: null,
-          method: "get",
-        });
-        break;
-      case PurchaseOrderTableTypes.RECEIVED_SALES:
-        setApiParams({
-          service: null,
           method: "get",
         });
         break;
@@ -305,13 +294,12 @@ export default function SalesOrders() {
         transformToPurchaseOrder(po)
       );
 
-      setTableContent({
-        type: TableTypes.PURCHASE_ORDER,
-        data,
-        subType: type,
-        hiddenColumns: [],
-        nameColumnHeader: t("user"),
-        onButtonClick: handleOnButtonClick,
+      setTableContent((prev) => {
+        return {
+          ...prev,
+          subType: type,
+          data,
+        };
       });
     } catch (error) {
       showNotification(notification, "error", t("errorOccurred"));
@@ -330,12 +318,10 @@ export default function SalesOrders() {
         data: {
           basicRateData: data,
           type: currentPurchaseOrder.type,
-          isOffer:
-            type == PurchaseOrderTableTypes.ISSUED || // r3v para otros dos casos
-            type == PurchaseOrderTableTypes.RECEIVED_SALES,
+          isOffer: type == PurchaseOrderTableTypes.ISSUED,
           requirementOrOfferId:
             type == PurchaseOrderTableTypes.ISSUED
-              ? currentPurchaseOrder.requirementId
+              ? currentPurchaseOrder.requirementId // creador de la liquidación
               : currentPurchaseOrder.offerId,
         },
       });
@@ -429,10 +415,8 @@ export default function SalesOrders() {
         });
         break;
       case Action.FINISH:
-        // if (tableSubType == PurchaseOrderTableTypes.RECEIVED_SALES) // buscar en ofertas liquidaciones r3v
-        // if (tableSubType == PurchaseOrderTableTypes.ISSUED_SALES) // buscar en liquidaciones
         if (type == PurchaseOrderTableTypes.ISSUED) {
-          // Buscar en oferta de requerimiento
+          // Buscar en oferta de liquidación
           if (purchaseOrder.type == RequirementType.GOOD)
             setApiParamsRate({
               service: getBasicRateDataOfferService(purchaseOrder.offerId),
@@ -441,7 +425,7 @@ export default function SalesOrders() {
           break;
         } else if (type == PurchaseOrderTableTypes.RECEIVED)
           if (purchaseOrder.type == RequirementType.GOOD)
-            // Buscar en requerimiento
+            // Buscar en liquidación
             setApiParamsRate({
               service: getBasicRateDataReqService(purchaseOrder.requirementId),
               method: "get",

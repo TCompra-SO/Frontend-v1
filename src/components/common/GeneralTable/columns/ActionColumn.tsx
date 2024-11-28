@@ -131,6 +131,7 @@ export default function ActionColumn(
                   )
                 : ActionByState[key].reduce<ItemType[]>( // órdenes de venta
                     (acc, action: Action) => {
+                      console.log("=====", extraParam);
                       if (
                         action == Action.VIEW_HISTORY &&
                         extraParam == PurchaseOrderTableTypes.RECEIVED

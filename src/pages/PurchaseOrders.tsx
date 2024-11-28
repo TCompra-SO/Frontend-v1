@@ -318,8 +318,7 @@ export default function PurchaseOrders() {
         data: {
           basicRateData: data,
           type: currentPurchaseOrder.type,
-          isOffer: type == PurchaseOrderTableTypes.ISSUED, // r3v para otros dos casos
-
+          isOffer: type == PurchaseOrderTableTypes.ISSUED,
           requirementOrOfferId:
             type == PurchaseOrderTableTypes.ISSUED
               ? currentPurchaseOrder.requirementId
@@ -416,8 +415,6 @@ export default function PurchaseOrders() {
         });
         break;
       case Action.FINISH:
-        // if (tableSubType == PurchaseOrderTableTypes.RECEIVED_SALES) // buscar en ofertas liquidaciones r3v
-        // if (tableSubType == PurchaseOrderTableTypes.ISSUED_SALES) // buscar en liquidaciones
         if (type == PurchaseOrderTableTypes.ISSUED) {
           // Buscar en oferta de requerimiento
           if (purchaseOrder.type == RequirementType.GOOD)

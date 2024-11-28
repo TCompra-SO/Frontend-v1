@@ -66,7 +66,9 @@ export default function StateColumn(type: TableTypes, hidden: boolean = false) {
         } else if (
           type == TableTypes.PURCHASE_ORDER ||
           type == TableTypes.PURCHASE_ORDER_SUBUSER ||
-          type == TableTypes.ALL_PURCHASE_ORDERS
+          type == TableTypes.ALL_PURCHASE_ORDERS ||
+          type == TableTypes.SALES_ORDER ||
+          type == TableTypes.ALL_SALES_ORDERS
         ) {
           const state = (record as BasicPurchaseOrder).state;
           label = t(PurchaseOrderStateMeta[state]?.label);
