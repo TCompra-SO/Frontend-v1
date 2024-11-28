@@ -20,10 +20,11 @@ export default function Sidebar(props: SidebarProps) {
   const menuReq: string = "menuReq";
   const menuOff: string = "menuOff";
   const menuPurch: string = "menuPurch";
+  const menuSales: string = "menuSales";
   const menuAllReq: string = "menuAllReq";
   const menuAllOff: string = "menuAllOff";
   const menuAllPurch: string = "menuAllPurch";
-  const menuAllSell: string = "menuAllSell";
+  const menuAllSales: string = "menuAllSales";
   const menuCert: string = "menuCert";
   const [menuVisibility, setMenuVisibility] = useState<{
     [key: string]: boolean;
@@ -188,7 +189,7 @@ export default function Sidebar(props: SidebarProps) {
               children={
                 <>
                   <i className="fa-regular fa-file-contract text-center i-btn"></i>{" "}
-                  {t("purchaseOrder")}{" "}
+                  {t("myPurchaseOrdersAbb")}{" "}
                   <i className="fa-solid fa-chevron-down i-sub text-center"></i>
                 </>
               }
@@ -224,29 +225,50 @@ export default function Sidebar(props: SidebarProps) {
                 <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
                 {t("receivedPl")}
               </ButtonContainer>
+            </div>
+          </>
+        )}
+        {RolesForSection.mySalesOrders[typeID] && (
+          <>
+            <ButtonContainer
+              children={
+                <>
+                  <i className="fa-regular fa-file-contract text-center i-btn"></i>{" "}
+                  {t("mySalesOrdersAbb")}{" "}
+                  <i className="fa-solid fa-chevron-down i-sub text-center"></i>
+                </>
+              }
+              common
+              className={buttonClass}
+              onClick={() => toggleMenu(menuSales)}
+            />
+            <div
+              className="sub-menu t-flex"
+              style={{ display: menuVisibility[menuSales] ? "block" : "none" }}
+            >
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
                 onClick={() =>
                   redirectTo(
-                    `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issuedSales}`
+                    `${pageRoutes.mySalesOrders}/${pageSubRoutes.issued}`
                   )
                 }
               >
                 <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
-                {`${t("issuedPl")} - ${t("salesAbbrev")}`}
+                {t("issuedPl")}
               </ButtonContainer>
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
                 onClick={() =>
                   redirectTo(
-                    `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.receivedSales}`
+                    `${pageRoutes.mySalesOrders}/${pageSubRoutes.received}`
                   )
                 }
               >
                 <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
-                {`${t("receivedPl")} - ${t("salesAbbrev")}`}
+                {t("receivedPl")}
               </ButtonContainer>
             </div>
           </>
@@ -452,7 +474,7 @@ export default function Sidebar(props: SidebarProps) {
                     className="fa-regular fa-money-check-pen text-center"
                     style={{ width: "25px" }}
                   ></i>{" "}
-                  {t("finishedPurchaseOrders")}{" "}
+                  {t("purchaseOrders")}{" "}
                   <i className="fa-solid fa-chevron-down i-sub text-center"></i>
                 </>
               }
@@ -490,29 +512,55 @@ export default function Sidebar(props: SidebarProps) {
                 <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
                 {t("receivedPl")}
               </ButtonContainer>
+            </div>
+          </>
+        )}
+        {RolesForSection.allSalesOrders[typeID] && (
+          <>
+            <ButtonContainer
+              children={
+                <>
+                  <i
+                    className="fa-regular fa-money-check-pen text-center"
+                    style={{ width: "25px" }}
+                  ></i>{" "}
+                  {t("salesOrders")}{" "}
+                  <i className="fa-solid fa-chevron-down i-sub text-center"></i>
+                </>
+              }
+              common
+              className={buttonClass}
+              onClick={() => toggleMenu(menuAllSales)}
+            />
+            <div
+              className="sub-menu t-flex"
+              style={{
+                display: menuVisibility[menuAllSales] ? "block" : "none",
+              }}
+            >
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
                 onClick={() =>
                   redirectTo(
-                    `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.issuedSales}`
+                    `${pageRoutes.allSalesOrders}/${pageSubRoutes.issued}`
                   )
                 }
               >
                 <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
-                {`${t("issuedPl")} - ${t("salesAbbrev")}`}
+                {t("issuedPl")}
               </ButtonContainer>
               <ButtonContainer
                 className="btn btn-transparent wd-100 text-left"
                 common
                 onClick={() =>
                   redirectTo(
-                    `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.receivedSales}`
+                    `${pageRoutes.allSalesOrders}/${pageSubRoutes.received}`
                   )
                 }
               >
                 <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
-                {`${t("receivedPl")} - ${t("salesAbbrev")}`}
+                {t("receivedPl")}
               </ButtonContainer>
             </div>
           </>
