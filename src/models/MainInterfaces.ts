@@ -148,6 +148,14 @@ export interface FullUser extends User {
   planID: number;
   specialty?: string;
   aboutMe?: string;
+  numGoods: number;
+  numServices: number;
+  numSales: number;
+  numOffers: number;
+  numPurchaseOrdersProvider: number;
+  numPurchaseOrdersClient: number;
+  numSellingOrdersProvider: number;
+  numSellingOrdersClient: number;
 }
 
 export interface RequirementItemSubUser extends BaseRequirementOffer {

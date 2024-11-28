@@ -121,8 +121,8 @@ export default function Users() {
     if (responseDataUser) {
       if (equalServices(apiParamsUser.service, getSubUserService(""))) {
         setUserDataEdit({
-          email: userData?.email,
-          typeID: userData?.typeID,
+          // email: userData?.email,
+          // typeID: userData?.typeID,
           ...responseDataUser,
         });
         handleOpenModal();
@@ -327,6 +327,7 @@ export default function Users() {
   function handleOnActionClick(action: Action, user: SubUserBase) {
     setAction(action);
     setUserData(user);
+    console.log(user);
     switch (action) {
       case Action.EDIT_USER:
         setApiParamsUser({

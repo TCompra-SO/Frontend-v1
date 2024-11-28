@@ -343,7 +343,7 @@ export default function MyProfile() {
             </div>
             <div className="oferta-usuario col-documento">
               <div className="text-truncate doc-name dato-cantidad1">
-                {plan?.goods}
+                {user?.numGoods}
               </div>
               <div className="text-truncate detalles-oferta dato-cantidad2">
                 {t("goods")}
@@ -356,7 +356,7 @@ export default function MyProfile() {
             </div>
             <div className="oferta-usuario col-documento">
               <div className="text-truncate doc-name dato-cantidad1">
-                {plan?.services}
+                {user?.numServices}
               </div>
               <div className="text-truncate detalles-oferta dato-cantidad2">
                 {t("services")}
@@ -369,7 +369,7 @@ export default function MyProfile() {
             </div>
             <div className="oferta-usuario col-documento">
               <div className="text-truncate doc-name dato-cantidad1">
-                {plan?.sales}
+                {user?.numSales}
               </div>
               <div className="text-truncate detalles-oferta dato-cantidad2">
                 {t("sales")}
@@ -382,7 +382,7 @@ export default function MyProfile() {
             </div>
             <div className="oferta-usuario col-documento">
               <div className="text-truncate doc-name dato-cantidad1">
-                {plan?.offers}
+                {user?.numOffers}
               </div>
               <div className="text-truncate detalles-oferta dato-cantidad2">
                 {t("offers")}
