@@ -23,6 +23,7 @@ export default function Sidebar(props: SidebarProps) {
   const menuAllReq: string = "menuAllReq";
   const menuAllOff: string = "menuAllOff";
   const menuAllPurch: string = "menuAllPurch";
+  const menuAllSell: string = "menuAllSell";
   const menuCert: string = "menuCert";
   const [menuVisibility, setMenuVisibility] = useState<{
     [key: string]: boolean;
@@ -54,9 +55,8 @@ export default function Sidebar(props: SidebarProps) {
       <div>
         <img
           src="/src/assets/images/logo-white.svg"
-          style={{ width: "100%" }}
-          // preview={false}
-          // onClick={() => redirectTo(pageRoutes.home)}
+          style={{ width: "100%", cursor: "pointer" }}
+          onClick={() => redirectTo(pageRoutes.home)}
         ></img>
       </div>
 

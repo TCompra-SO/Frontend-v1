@@ -206,7 +206,6 @@ export default function Offers() {
   }
 
   function deleteOffer(offerId: string) {
-    console.log("deleteOffer", offerId);
     setApiParamsDelete({
       service: deleteOfferService(offerId),
       method: "get",
@@ -253,8 +252,6 @@ export default function Offers() {
         break;
 
       case Action.DELETE: {
-        // r3v
-
         setDataModal({
           type: ModalTypes.CONFIRM,
           data: {

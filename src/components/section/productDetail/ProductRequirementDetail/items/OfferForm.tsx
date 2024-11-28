@@ -90,12 +90,8 @@ export default function OfferForm(props: OfferFormProps) {
   /** Verificar si el usuario puede ofertar */
 
   useEffect(() => {
-    async function firstCheck() {
-      setLoadingForm(true);
-      await checkIfUserCanOffer();
-      setLoadingForm(false);
-    }
-    firstCheck();
+    checkIfUserCanOffer();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, props.requirement]);
 
@@ -217,6 +213,7 @@ export default function OfferForm(props: OfferFormProps) {
   /** Funciones */
 
   async function checkIfUserCanOffer() {
+    // setLoadingForm(true);
     if (!isLoggedIn) {
       setCantOfferMotive(CantOfferMotives.NOT_LOGGED_IN);
     } else if (
@@ -296,7 +293,7 @@ export default function OfferForm(props: OfferFormProps) {
               setCantOfferMotive(CantOfferMotives.MAIN_ACCOUNT_IS_CREATOR);
               break;
             case CodeResponseCanOffer.NONE:
-              setCantOfferMotive(CantOfferMotives.NONE);
+            // setCantOfferMotive(CantOfferMotives.NONE);
           }
         }
 
@@ -304,6 +301,8 @@ export default function OfferForm(props: OfferFormProps) {
           setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED); //r3v verificar si el usuario está certificado con la empresa
       }
     }
+    setCantOfferMotive(CantOfferMotives.NONE_FINISH);
+    setLoadingForm(false);
   }
 
   function createOffer(values: any) {
@@ -403,6 +402,10 @@ export default function OfferForm(props: OfferFormProps) {
     console.log("chat", props.requirement?.key);
   }
 
+  function handleDeleteSuccess() {
+    checkIfUserCanOffer();
+  }
+
   return (
     <div className="card-white cbl-6">
       <div className="t-flex mr-sub-2">
@@ -411,7 +414,7 @@ export default function OfferForm(props: OfferFormProps) {
           <div>{t("offerFormTitle")}</div>
         </div>
       </div>
-      {cantOfferMotive == CantOfferMotives.NONE ? (
+      {cantOfferMotive == CantOfferMotives.NONE_FINISH ? (
         reqSuccess != ProcessFlag.NOT_INI &&
         docSuccess != ProcessFlag.NOT_INI &&
         imgSuccess != ProcessFlag.NOT_INI ? (
@@ -419,6 +422,7 @@ export default function OfferForm(props: OfferFormProps) {
             offerId={offerId}
             motive={CantOfferMotives.ALREADY_MADE_OFFER}
             requirement={props.requirement}
+            onDeleteSuccess={handleDeleteSuccess}
           />
         ) : (
           <Form
@@ -491,6 +495,7 @@ export default function OfferForm(props: OfferFormProps) {
           isPremium={isPremium}
           isCertified={CertificationState.NONE} //r3v
           loading={loadingForm}
+          onDeleteSuccess={handleDeleteSuccess}
         />
       )}
     </div>

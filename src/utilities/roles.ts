@@ -36,6 +36,7 @@ export const RolesForSection: {
     [UserRoles.SELLER]: true,
     [UserRoles.SELLER_BUYER]: true,
   },
+  mySellingOrders: undefined,
   users: {
     [UserRoles.ADMIN]: true,
     [UserRoles.NONE]: false,
@@ -92,6 +93,9 @@ export const RolesForSection: {
     [UserRoles.BUYER]: false,
     [UserRoles.LEGAL]: false,
   },
+  
+  
+  allSellingOrders: undefined
   statistics: {
     [UserRoles.NONE]: false,
     [UserRoles.ADMIN]: true,

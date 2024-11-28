@@ -397,6 +397,7 @@ export enum ProcessFlag {
 
 export enum CantOfferMotives {
   NONE = 0,
+  NONE_FINISH = 14,
 
   ALREADY_MADE_OFFER = 1, //
   MAIN_ACCOUNT_MADE_OFFER = 11, //

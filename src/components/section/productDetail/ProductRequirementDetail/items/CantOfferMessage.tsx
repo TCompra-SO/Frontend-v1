@@ -12,11 +12,17 @@ import { Requirement } from "../../../../../models/MainInterfaces";
 import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../../../../../utilities/routes";
 import ModalContainer from "../../../../containers/ModalContainer";
-import { ModalContent } from "../../../../../models/Interfaces";
+import { ModalContent, useApiParams } from "../../../../../models/Interfaces";
 import { mainModalScrollStyle } from "../../../../../utilities/globals";
 import { MainState } from "../../../../../models/Redux";
 import { useSelector } from "react-redux";
 import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
+import { deleteOfferService } from "../../../../../services/requests/offerService";
+import showNotification, {
+  showLoadingMessage,
+} from "../../../../../utilities/notification/showNotification";
+import { App } from "antd";
+import useApi from "../../../../../hooks/useApi";
 
 interface CantOfferMessageProps {
   offerId: string;
@@ -25,11 +31,13 @@ interface CantOfferMessageProps {
   isPremium?: boolean;
   isCertified?: CertificationState;
   loading?: boolean;
+  onDeleteSuccess: () => void;
 }
 
 export default function CantOfferMessage(props: CantOfferMessageProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { notification, message } = App.useApp();
   const entityType = useSelector((state: MainState) => state.user.typeEntity);
   const [mainText, setMainText] = useState("");
   const [optionalText, setOptionalText] = useState("");
@@ -38,6 +46,50 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
     type: ModalTypes.NONE,
     data: {},
   });
+
+  console.log(props.motive);
+
+  /* Para eliminar */
+
+  const [apiParamsDelete, setApiParamsDelete] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingDelete,
+    responseData: responseDataDelete,
+    error: errorDelete,
+    errorMsg: errorMsgDelete,
+    fetchData: fetchDataDelete,
+  } = useApi({
+    service: apiParamsDelete.service,
+    method: apiParamsDelete.method,
+    dataToSend: apiParamsDelete.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingDelete);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingDelete]);
+
+  useEffect(() => {
+    if (apiParamsDelete.service) fetchDataDelete();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsDelete]);
+
+  useEffect(() => {
+    if (responseDataDelete) {
+      showNotification(notification, "success", t("offerDeletedSuccessfully"));
+      handleCloseModal();
+      props.onDeleteSuccess();
+    } else if (errorDelete) {
+      showNotification(notification, "error", errorMsgDelete);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataDelete, errorDelete]);
+
+  /** Texto a mostrar */
 
   useEffect(() => {
     switch (props.motive) {
@@ -155,7 +207,22 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
   }
 
   function deleteOffer() {
-    console.log("deleting", props.offerId); //r3v
+    console.log("deleting", props.offerId);
+    setDataModal({
+      type: ModalTypes.CONFIRM,
+      data: {
+        loading: loadingDelete,
+        onAnswer: (ok: boolean) => {
+          if (!ok) return;
+          setApiParamsDelete({
+            service: deleteOfferService(props.offerId),
+            method: "get",
+          });
+        },
+        text: t("deleteOfferConfirmation"),
+      },
+    });
+    setIsOpenModal(true);
   }
 
   function openGetCertifiedModal() {
@@ -200,6 +267,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
                 className="btn btn-default btn-sm"
                 icon={<i className="fa-regular fa-trash"></i>}
                 onClick={deleteOffer}
+                loading={loadingDelete}
               >
                 {t("deleteOffer")}
               </ButtonContainer>
