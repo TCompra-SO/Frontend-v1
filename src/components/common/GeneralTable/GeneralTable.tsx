@@ -37,6 +37,8 @@ import DocumentColumn from "./columns/DocumentColumn";
 import { getLabelFromPurchaseOrderType } from "../../../utilities/globalFunctions";
 import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../../../utilities/routes";
+import RequirementInfo from "../../section/requirements/requirementDetail/RequirementInfo";
+import { useState } from "react";
 
 interface GeneralTableProps {
   content: TableType;
@@ -145,8 +147,9 @@ export default function GeneralTable(props: GeneralTableProps) {
   };
 
   switch (props.content.type) {
-    case TableTypes.REQUIREMENT:
-      getRequirementTableColumns();
+    case TableTypes.HOME:
+      const [expandedRowKey, setExpandedRowKey] = useState<string | null>(null);
+      getHomeTableColumns();
       return (
         <Table
           onRow={
@@ -159,6 +162,28 @@ export default function GeneralTable(props: GeneralTableProps) {
                 }
               : undefined
           }
+          dataSource={props.content.data}
+          loading={props.loading}
+          columns={columns as Array<ColumnType<Requirement>>}
+          expandable={{
+            expandedRowRender: (record) => {
+              const rec = record as Requirement;
+              return <RequirementInfo requirement={rec} forHome />;
+            },
+            expandRowByClick: true,
+            showExpandColumn: false,
+            onExpand: (expanded, record) => {
+              setExpandedRowKey(expanded ? record.key : null);
+            },
+            expandedRowKeys: expandedRowKey ? [expandedRowKey] : [],
+          }}
+          {...tableProps}
+        ></Table>
+      );
+    case TableTypes.REQUIREMENT:
+      getRequirementTableColumns();
+      return (
+        <Table
           dataSource={props.content.data}
           loading={props.loading}
           columns={columns as Array<ColumnType<Requirement>>}
@@ -176,6 +201,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         ></Table>
       );
     case TableTypes.PURCHASE_ORDER:
+    case TableTypes.SALES_ORDER:
       getPurchaseOrderTableColumns();
       return (
         <Table
@@ -246,6 +272,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         ></Table>
       );
     case TableTypes.ALL_PURCHASE_ORDERS:
+    case TableTypes.ALL_SALES_ORDERS:
       getAllPurchaseOrdersTableColumns();
       return (
         <Table
@@ -344,7 +371,10 @@ export default function GeneralTable(props: GeneralTableProps) {
   }
 
   function getPurchaseOrderTableColumns() {
-    if (props.content.type == TableTypes.PURCHASE_ORDER) {
+    if (
+      props.content.type == TableTypes.PURCHASE_ORDER ||
+      props.content.type == TableTypes.SALES_ORDER
+    ) {
       columns = [
         NameColumn(
           props.content.type,
@@ -392,13 +422,18 @@ export default function GeneralTable(props: GeneralTableProps) {
         "publishDate",
         visibility[TableColumns.PUBLISH_DATE]
       ),
-      CategoryColumn(props.content.type, visibility[TableColumns.CATEGORY]),
+      // CategoryColumn(props.content.type, visibility[TableColumns.CATEGORY]),
       LocationColumn(visibility[TableColumns.LOCATION]),
 
       PriceColumn(visibility[TableColumns.PRICE]),
-      OffersColumn(
-        props.content.type,
-        props.content.onButtonClick,
+      // OffersColumn(
+      //   props.content.type,
+      //   props.content.onButtonClick,
+      //   visibility[TableColumns.OFFERS]
+      // ),
+      GeneralColumnNumber(
+        t("offers"),
+        "numberOffers",
         visibility[TableColumns.OFFERS]
       ),
       StateColumn(props.content.type, visibility[TableColumns.STATE]),
@@ -437,7 +472,10 @@ export default function GeneralTable(props: GeneralTableProps) {
   }
 
   function getAllPurchaseOrdersTableColumns() {
-    if (props.content.type == TableTypes.ALL_PURCHASE_ORDERS) {
+    if (
+      props.content.type == TableTypes.ALL_PURCHASE_ORDERS ||
+      props.content.type == TableTypes.ALL_SALES_ORDERS
+    ) {
       columns = [
         NameColumn(
           props.content.type,
@@ -465,13 +503,13 @@ export default function GeneralTable(props: GeneralTableProps) {
         ),
         TypeColumn(visibility[TableColumns.TYPE]),
         DocumentColumn(
-          TableTypes.ALL_PURCHASE_ORDERS,
+          props.content.type,
           props.content.onButtonClick,
           visibility[TableColumns.DOCUMENT]
         ),
         StateColumn(props.content.type, visibility[TableColumns.STATE]),
         ViewColumn(
-          TableTypes.ALL_PURCHASE_ORDERS,
+          props.content.type,
           props.content.onButtonClick,
           visibility[TableColumns.VIEW]
         ),
@@ -730,6 +768,40 @@ export default function GeneralTable(props: GeneralTableProps) {
       StateColumn(props.content.type, visibility[TableColumns.STATE]),
       ViewColumn(
         TableTypes.SENT_CERT,
+        props.content.onButtonClick,
+        visibility[TableColumns.VIEW]
+      ),
+    ];
+    return columns;
+  }
+
+  function getHomeTableColumns() {
+    columns = [
+      ImageColumn(false, visibility[TableColumns.IMAGE]),
+      NameColumn(
+        TableTypes.REQUIREMENT,
+        props.content.nameColumnHeader,
+        visibility[TableColumns.NAME],
+        null,
+        true
+      ),
+      CategoryColumn(TableTypes.REQUIREMENT, visibility[TableColumns.CATEGORY]),
+      LocationColumn(visibility[TableColumns.LOCATION], true),
+      GeneralDateColumn(
+        t("dateColumn"),
+        "publishDate",
+        visibility[TableColumns.PUBLISH_DATE],
+        true
+      ),
+      PriceColumn(visibility[TableColumns.PRICE], true),
+      OffersColumn(
+        TableTypes.HOME,
+        props.content.onButtonClick,
+        visibility[TableColumns.OFFERS],
+        true
+      ),
+      ViewColumn(
+        TableTypes.REQUIREMENT,
         props.content.onButtonClick,
         visibility[TableColumns.VIEW]
       ),

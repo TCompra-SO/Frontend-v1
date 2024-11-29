@@ -54,16 +54,20 @@ export enum TableTypes {
   REQUIREMENT = 1,
   OFFER = 2,
   PURCHASE_ORDER = 3,
+  SALES_ORDER = 15,
   USERS = 4,
   REQUIREMENT_SUBUSER = 5,
   OFFER_SUBUSER = 6,
   PURCHASE_ORDER_SUBUSER = 7,
+  SALES_ORDER_SUBUSER = 17,
   ALL_REQUIREMENTS = 8,
   ALL_OFFERS = 9,
   ALL_PURCHASE_ORDERS = 10,
+  ALL_SALES_ORDERS = 16,
   MY_DOCUMENTS = 11,
   SENT_CERT = 12,
   RECEIVED_CERT = 13,
+  HOME = 14,
 }
 
 export enum EntityType {
@@ -151,6 +155,7 @@ export enum Action {
   ADD_CERTIFICATES = 28,
   EDIT_DOCUMENT_LIST_TO_REQUEST = 29,
   VIEW = 30,
+  VIEw_SALES_ORDERS = 31,
 }
 
 export const ActionLabel: {
@@ -186,6 +191,7 @@ export const ActionLabel: {
   [Action.ADD_CERTIFICATES]: "addCertificates",
   [Action.EDIT_DOCUMENT_LIST_TO_REQUEST]: "listOfDocumentsToRequest",
   [Action.VIEW]: "view",
+  [Action.VIEw_SALES_ORDERS]: "viewSalesOrders",
 };
 
 export const ActionByStateRequirement: {
@@ -257,6 +263,7 @@ export const ActionSubUsers: {
     Action.VIEW_REQUIREMENTS,
     Action.VIEW_OFFERS,
     Action.VIEW_PURCHASE_ORDERS,
+    Action.VIEw_SALES_ORDERS,
     Action.EDIT_USER,
   ],
 };
@@ -370,8 +377,6 @@ export enum UserRoles {
 export enum PurchaseOrderTableTypes {
   ISSUED = 0,
   RECEIVED = 1,
-  ISSUED_SALES = 2,
-  RECEIVED_SALES = 3,
 }
 
 export enum CertificationState {
@@ -396,14 +401,36 @@ export enum ProcessFlag {
 
 export enum CantOfferMotives {
   NONE = 0,
-  ALREADY_MADE_OFFER = 1,
+  NONE_FINISH = 14,
+
+  ALREADY_MADE_OFFER = 1, //
+  MAIN_ACCOUNT_MADE_OFFER = 11, //
+  OTHER_USER_IN_COMPANY_MADE_OFFER = 3, // a corregir
+  SUBUSER_MADE_OFFER = 12, //
+
   NOT_LOGGED_IN = 2,
-  OTHER_USER_IN_COMPANY_MADE_OFFER = 3,
-  IS_CREATOR = 4,
-  IS_MAIN_CREATOR = 5,
   CHANGED_STATE = 6,
   ONLY_PREMIUM = 7,
   ONLY_CERTIFIED = 8,
   NO_ALLOWED_ROLE = 9,
-  OTHER_USER_IN_COMPANY_IS_CREATOR = 10,
+
+  IS_CREATOR = 4, //
+  MAIN_ACCOUNT_IS_CREATOR = 5, // corregir
+  OTHER_USER_IN_COMPANY_IS_CREATOR = 10, //
+  SUBUSER_IS_CREATOR = 13, //
+}
+
+export enum CodeResponseCanOffer {
+  ALREADY_MADE_OFFER = 1,
+  MAIN_ACCOUNT_MADE_OFFER = 2,
+  OTHER_USER_IN_COMPANY_MADE_OFFER = 3,
+  NONE = 4,
+  IS_CREATOR = 5,
+  MAIN_ACCOUNT_IS_CREATOR = 6,
+  OTHER_USER_IN_COMPANY_IS_CREATOR = 7,
+}
+
+export enum RateStartCountType {
+  OFFER_LIST = 1,
+  COMPANY_DATA_HOME = 2,
 }

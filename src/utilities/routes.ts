@@ -89,6 +89,7 @@ export const ApiRoutes = {
     getOffersBySubUser: "getOffersBySubUser/",
     delete: "delete/",
     culminate: "culminate/",
+    getValidation: "getValidation/",
   },
   score: {
     registerScore: "registerScore/",
@@ -110,12 +111,14 @@ export const pageRoutes = {
   myRequirements: "/mis-requerimientos",
   myOffers: "/mis-ofertas",
   myPurchaseOrders: "/mis-ordenes-de-compra",
+  mySalesOrders: "/mis-ordenes-de-venta",
   chat: "/chat",
   users: "/usuarios",
   allRequirements: "/all-requerimientos",
   allOffers: "/all-ofertas",
   certificates: "/certificados",
   allPurchaseOrders: "/all-ordenes-de-compra",
+  allSalesOrders: "/all-ordenes-de-venta",
   statistics: "/statistics",
 };
 
@@ -127,7 +130,5 @@ export const pageSubRoutes: Record<string, string> = {
   documents: "documentos",
   sent: "enviados",
   issued: "emitidos",
-  issuedSales: "enviados-liquidaciones",
   received: "recibidos",
-  receivedSales: "recibidos-liquidaciones",
 };

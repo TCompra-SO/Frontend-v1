@@ -1,4 +1,4 @@
-import { Tooltip } from "antd";
+import { Flex, Tooltip } from "antd";
 import SubUserName from "../../../common/SubUserName";
 import { getLabelFromRequirementType } from "../../../../utilities/globalFunctions";
 import { useTranslation } from "react-i18next";
@@ -13,6 +13,7 @@ interface RequirementInfoNoTagsProps {
   subUser?: BaseUser;
   type: RequirementType;
   description?: string;
+  forHome?: boolean;
 }
 
 export default function RequirementInfoNoTags(
@@ -22,35 +23,40 @@ export default function RequirementInfoNoTags(
 
   return (
     <>
-      <h2 className="titulo-req">
-        <Tooltip title={props.title}>{props.title}</Tooltip>
+      <h2 className={props.forHome ? "titulo-req-2" : "titulo-req"}>
+        <Tooltip title={props.forHome ? props.user.name : props.title}>
+          {props.forHome ? props.user.name : props.title}{" "}
+        </Tooltip>
+        {props.forHome && <SubUserName subUserName={props.subUser?.name} />}
       </h2>
 
-      <div className="t-flex tags-req">
-        <Tooltip title={props.user.name}>
-          <div className="badge-default text-truncate">{props.user.name}</div>
-        </Tooltip>
-        <SubUserName subUserName={props.subUser?.name} />
-        <div className="badge-second">
-          {t(getLabelFromRequirementType(props.type))}
+      {!props.forHome && (
+        <div className="t-flex tags-req">
+          <Tooltip title={props.user.name}>
+            <div className="badge-default text-truncate">{props.user.name}</div>
+          </Tooltip>
+          <SubUserName subUserName={props.subUser?.name} />
+          <div className="badge-second">
+            {t(getLabelFromRequirementType(props.type))}
+          </div>
+          <RateStarCount
+            score={
+              props.type == RequirementType.SALE
+                ? props.user.sellerScore
+                : props.user.customerScore
+            }
+            count={
+              props.type == RequirementType.SALE
+                ? props.user.sellerCount
+                : props.user.customerCount
+            }
+          />
         </div>
-        <RateStarCount
-          score={
-            props.type == RequirementType.SALE
-              ? props.user.sellerScore
-              : props.user.customerScore
-          }
-          count={
-            props.type == RequirementType.SALE
-              ? props.user.sellerCount
-              : props.user.customerCount
-          }
-        />
-      </div>
+      )}
 
       <DescriptionParagraph
         text={props.description}
-        className="info-req-no-clamp"
+        className={props.forHome ? "ofer-req-2-no-clamp" : "info-req-no-clamp"}
       />
     </>
   );

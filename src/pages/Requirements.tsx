@@ -46,7 +46,7 @@ import {
   getOffersByRequirementIdService,
 } from "../services/requests/offerService";
 import { getBaseDataUserService } from "../services/requests/authService";
-import { LoadingDataContext } from "../contexts/loadingDataContext";
+import { LoadingDataContext } from "../contexts/LoadingDataContext";
 
 export default function Requirements() {
   const { t } = useTranslation();

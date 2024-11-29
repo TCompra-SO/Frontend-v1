@@ -186,3 +186,8 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
 .no-before:before {
   content: "";
 }
+
+/* Para home table, remueve padding para centrar div */
+.ant-table-wrapper .ant-table-expanded-row-fixed {
+  padding: 11px 0px;
+}

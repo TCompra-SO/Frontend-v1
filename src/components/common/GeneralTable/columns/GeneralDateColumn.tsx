@@ -5,7 +5,8 @@ import { dateFormat } from "../../../../utilities/globals";
 export default function GeneralDateColumn(
   nameColumn: string,
   dataIndex: string,
-  hidden: boolean = false
+  hidden: boolean = false,
+  noSorter?: boolean
 ) {
   const col: ColumnType<any> = {
     title: nameColumn,
@@ -16,8 +17,9 @@ export default function GeneralDateColumn(
     ellipsis: true,
     width: "110px",
     hidden,
-    sorter: (a, b) =>
-      dayjs(a[dataIndex]).isBefore(dayjs(b[dataIndex])) ? -1 : 1,
+    sorter: noSorter
+      ? undefined
+      : (a, b) => (dayjs(a[dataIndex]).isBefore(dayjs(b[dataIndex])) ? -1 : 1),
 
     render: (_, record) => {
       const value: dayjs.Dayjs = dayjs(record[dataIndex]);

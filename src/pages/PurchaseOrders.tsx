@@ -52,7 +52,7 @@ import {
 } from "../services/requests/offerService";
 import { getBasicRateDataReqService } from "../services/requests/requirementService";
 import { getRequirementById } from "../services/complete/general";
-import { LoadingDataContext } from "../contexts/loadingDataContext";
+import { LoadingDataContext } from "../contexts/LoadingDataContext";
 
 export default function PurchaseOrders() {
   const { t } = useTranslation();
@@ -114,18 +114,6 @@ export default function PurchaseOrders() {
           method: "get",
         });
         break;
-      case PurchaseOrderTableTypes.ISSUED_SALES:
-        setApiParams({
-          service: null,
-          method: "get",
-        });
-        break;
-      case PurchaseOrderTableTypes.RECEIVED_SALES:
-        setApiParams({
-          service: null,
-          method: "get",
-        });
-        break;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
@@ -175,7 +163,7 @@ export default function PurchaseOrders() {
 
   useEffect(() => {
     if (responseDataUser) {
-      showUserInfo(responseData);
+      showUserInfo();
     } else if (errorUser) {
       showNotification(notification, "error", errorMsgUser);
     }
@@ -213,7 +201,7 @@ export default function PurchaseOrders() {
 
   useEffect(() => {
     if (responseDataRate) {
-      openRateModal(responseDataRate);
+      openRateModal();
     } else if (errorRate) {
       showNotification(notification, "error", errorMsgRate);
     }
@@ -251,7 +239,7 @@ export default function PurchaseOrders() {
 
   useEffect(() => {
     if (responseDataHist) {
-      openDetailedRequirement(responseDataHist);
+      openDetailedRequirement();
     } else if (errorHist) {
       showNotification(notification, "error", errorMsgHist);
     }
@@ -322,17 +310,15 @@ export default function PurchaseOrders() {
     setIsOpenModal(false);
   }
 
-  function openRateModal(responseData: any) {
-    const data = transformToBasicRateData(responseData.data[0]);
+  function openRateModal() {
+    const data = transformToBasicRateData(responseDataRate.data[0]);
     if (currentPurchaseOrder) {
       setDataModal({
         type: ModalTypes.RATE_USER,
         data: {
           basicRateData: data,
           type: currentPurchaseOrder.type,
-          isOffer:
-            type == PurchaseOrderTableTypes.ISSUED || // r3v para otros dos casos
-            type == PurchaseOrderTableTypes.RECEIVED_SALES,
+          isOffer: type == PurchaseOrderTableTypes.ISSUED,
           requirementOrOfferId:
             type == PurchaseOrderTableTypes.ISSUED
               ? currentPurchaseOrder.requirementId
@@ -343,8 +329,8 @@ export default function PurchaseOrders() {
     }
   }
 
-  function showUserInfo(responseData: any) {
-    const user = transformToFullUser(responseData.data[0]);
+  function showUserInfo() {
+    const user = transformToFullUser(responseDataUser.data);
     setDataModal({
       type: ModalTypes.USER_INFO,
       data: {
@@ -354,43 +340,56 @@ export default function PurchaseOrders() {
     setIsOpenModal(true);
   }
 
-  async function openDetailedRequirement(responseData: any) {
+  async function openDetailedRequirement() {
     showLoadingMessage(message, true);
-    if (
-      currentPurchaseOrder &&
-      responseData.data &&
-      Array.isArray(responseData.data)
-    ) {
-      const { requirement } = await getRequirementById(
-        currentPurchaseOrder.requirementId,
-        currentPurchaseOrder.type
-      );
-      if (requirement) {
-        const offerArray: Offer[] = await Promise.all(
-          responseData.data.map(async (item: any) => {
-            const { responseData }: any = await makeRequest({
-              service: getBaseDataUserService(item.userID),
-              method: "get",
-            });
-            const { user, subUser } = transformToBaseUser(responseData.data[0]);
-            return subUser
-              ? transformToOffer(item, currentPurchaseOrder.type, subUser, user)
-              : transformToOffer(item, currentPurchaseOrder.type, user);
-          })
+    try {
+      if (
+        currentPurchaseOrder &&
+        responseDataHist.data &&
+        Array.isArray(responseDataHist.data)
+      ) {
+        const { requirement } = await getRequirementById(
+          currentPurchaseOrder.requirementId,
+          currentPurchaseOrder.type
         );
-        setDataModal({
-          type: ModalTypes.DETAILED_REQUIREMENT,
-          data: {
-            offerList: offerArray,
-            requirement: requirement,
-            forPurchaseOrder: true,
-            filters: currentPurchaseOrder.filters,
-          },
-        });
-        setIsOpenModal(true);
+        if (requirement) {
+          const offerArray: Offer[] = await Promise.all(
+            responseDataHist.data.map(async (item: any) => {
+              const { responseData }: any = await makeRequest({
+                service: getBaseDataUserService(item.userID),
+                method: "get",
+              });
+              const { user, subUser } = transformToBaseUser(
+                responseData.data[0]
+              );
+              return subUser
+                ? transformToOffer(
+                    item,
+                    currentPurchaseOrder.type,
+                    subUser,
+                    user
+                  )
+                : transformToOffer(item, currentPurchaseOrder.type, user);
+            })
+          );
+          setDataModal({
+            type: ModalTypes.DETAILED_REQUIREMENT,
+            data: {
+              offerList: offerArray,
+              requirement: requirement,
+              forPurchaseOrder: true,
+              filters: currentPurchaseOrder.filters,
+            },
+          });
+          setIsOpenModal(true);
+        } else showNotification(notification, "error", t("errorOccurred"));
       } else showNotification(notification, "error", t("errorOccurred"));
-    } else showNotification(notification, "error", t("errorOccurred"));
-    showLoadingMessage(message, false);
+    } catch (e) {
+      showNotification(notification, "error", t("errorOccurred"));
+      console.log(e);
+    } finally {
+      showLoadingMessage(message, false);
+    }
   }
 
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
@@ -416,8 +415,6 @@ export default function PurchaseOrders() {
         });
         break;
       case Action.FINISH:
-        // if (tableSubType == PurchaseOrderTableTypes.RECEIVED_SALES) // buscar en ofertas liquidaciones r3v
-        // if (tableSubType == PurchaseOrderTableTypes.ISSUED_SALES) // buscar en liquidaciones
         if (type == PurchaseOrderTableTypes.ISSUED) {
           // Buscar en oferta de requerimiento
           if (purchaseOrder.type == RequirementType.GOOD)

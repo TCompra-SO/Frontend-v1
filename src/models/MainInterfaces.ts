@@ -62,8 +62,8 @@ export interface BasicOffer extends BaseRequirementOffer {
 
 export interface Offer extends BasicOffer {
   description?: string;
-  warranty: number;
-  warrantyTime: TimeMeasurement;
+  warranty?: number;
+  warrantyTime?: TimeMeasurement;
   deliveryTime: number;
   location: number;
   image?: string[];
@@ -148,6 +148,14 @@ export interface FullUser extends User {
   planID: number;
   specialty?: string;
   aboutMe?: string;
+  numGoods: number;
+  numServices: number;
+  numSales: number;
+  numOffers: number;
+  numPurchaseOrdersProvider: number;
+  numPurchaseOrdersClient: number;
+  numSellingOrdersProvider: number;
+  numSellingOrdersClient: number;
 }
 
 export interface RequirementItemSubUser extends BaseRequirementOffer {

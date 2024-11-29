@@ -8,7 +8,7 @@ import {
   OfferState,
   RequirementState,
 } from "../../../../utilities/types";
-import { requirementDetailContext } from "../../../../contexts/requirementDetailContext";
+import { requirementDetailContext } from "../../../../contexts/RequirementDetailContext";
 import { allSelect } from "../../../../utilities/globals";
 import { transformToDays } from "../../../../utilities/globalFunctions";
 
@@ -29,7 +29,6 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
   }, [props.offers]);
 
   useEffect(() => {
-    console.log("aaaaaaa", filters);
     setOffersCopy(() => {
       let prev = [...props.offers];
       // Ubicación y tiempo de entrega
@@ -57,17 +56,29 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
       else if (filters.price == CommonFilter.DESC)
         prev.sort((a, b) => b.price - a.price);
       if (filters.warranty == CommonFilter.ASC)
-        prev.sort(
-          (a, b) =>
-            transformToDays(a.warranty, a.warrantyTime) -
-            transformToDays(b.warranty, b.warrantyTime)
-        );
+        prev.sort((a, b) => {
+          const aVal =
+            a.warranty && a.warrantyTime !== undefined
+              ? transformToDays(a.warranty, a.warrantyTime)
+              : -Infinity;
+          const bVal =
+            b.warranty && b.warrantyTime !== undefined
+              ? transformToDays(b.warranty, b.warrantyTime)
+              : -Infinity;
+          return aVal - bVal;
+        });
       else if (filters.warranty == CommonFilter.DESC)
-        prev.sort(
-          (a, b) =>
-            transformToDays(b.warranty, b.warrantyTime) -
-            transformToDays(a.warranty, a.warrantyTime)
-        );
+        prev.sort((a, b) => {
+          const aVal =
+            a.warranty && a.warrantyTime !== undefined
+              ? transformToDays(a.warranty, a.warrantyTime)
+              : Infinity;
+          const bVal =
+            b.warranty && b.warrantyTime !== undefined
+              ? transformToDays(b.warranty, b.warrantyTime)
+              : Infinity;
+          return bVal - aVal;
+        });
       return prev;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

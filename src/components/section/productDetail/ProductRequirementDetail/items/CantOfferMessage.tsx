@@ -12,10 +12,17 @@ import { Requirement } from "../../../../../models/MainInterfaces";
 import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../../../../../utilities/routes";
 import ModalContainer from "../../../../containers/ModalContainer";
-import { ModalContent } from "../../../../../models/Interfaces";
+import { ModalContent, useApiParams } from "../../../../../models/Interfaces";
 import { mainModalScrollStyle } from "../../../../../utilities/globals";
 import { MainState } from "../../../../../models/Redux";
 import { useSelector } from "react-redux";
+import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
+import { deleteOfferService } from "../../../../../services/requests/offerService";
+import showNotification, {
+  showLoadingMessage,
+} from "../../../../../utilities/notification/showNotification";
+import { App } from "antd";
+import useApi from "../../../../../hooks/useApi";
 
 interface CantOfferMessageProps {
   offerId: string;
@@ -23,11 +30,14 @@ interface CantOfferMessageProps {
   requirement: Requirement | undefined;
   isPremium?: boolean;
   isCertified?: CertificationState;
+  loading?: boolean;
+  onDeleteSuccess: () => void;
 }
 
 export default function CantOfferMessage(props: CantOfferMessageProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { notification, message } = App.useApp();
   const entityType = useSelector((state: MainState) => state.user.typeEntity);
   const [mainText, setMainText] = useState("");
   const [optionalText, setOptionalText] = useState("");
@@ -36,6 +46,50 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
     type: ModalTypes.NONE,
     data: {},
   });
+
+  console.log(props.motive);
+
+  /* Para eliminar */
+
+  const [apiParamsDelete, setApiParamsDelete] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingDelete,
+    responseData: responseDataDelete,
+    error: errorDelete,
+    errorMsg: errorMsgDelete,
+    fetchData: fetchDataDelete,
+  } = useApi({
+    service: apiParamsDelete.service,
+    method: apiParamsDelete.method,
+    dataToSend: apiParamsDelete.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingDelete);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingDelete]);
+
+  useEffect(() => {
+    if (apiParamsDelete.service) fetchDataDelete();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsDelete]);
+
+  useEffect(() => {
+    if (responseDataDelete) {
+      showNotification(notification, "success", t("offerDeletedSuccessfully"));
+      handleCloseModal();
+      props.onDeleteSuccess();
+    } else if (errorDelete) {
+      showNotification(notification, "error", errorMsgDelete);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataDelete, errorDelete]);
+
+  /** Texto a mostrar */
 
   useEffect(() => {
     switch (props.motive) {
@@ -77,16 +131,24 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
           ).toLowerCase()}`
         );
         break;
+      case CantOfferMotives.MAIN_ACCOUNT_MADE_OFFER:
+        setMainText(t("companyHasAlreadyMadeAnOffer"));
+        setOptionalText("");
+        break;
       case CantOfferMotives.OTHER_USER_IN_COMPANY_MADE_OFFER:
         setMainText(t("otherEmployeeHasAlreadyMadeAnOffer"));
         setOptionalText("");
         break;
-      case CantOfferMotives.IS_MAIN_CREATOR:
+      case CantOfferMotives.SUBUSER_MADE_OFFER:
+        setMainText(t("aSubUserHasAlreadyMadeAnOffer"));
+        setOptionalText("");
+        break;
+      case CantOfferMotives.SUBUSER_IS_CREATOR:
         setMainText(
           t(
             props.requirement?.type == RequirementType.SALE
-              ? "requirementBelongsToEmployee"
-              : "saleBelongsToEmployee"
+              ? "saleBelongsToSubUser"
+              : "requirementBelongsToSubUser"
           )
         );
         setOptionalText(
@@ -120,11 +182,22 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
         setMainText(
           t(
             props.requirement?.type == RequirementType.SALE
-              ? "requirementBelongsToEmployee"
-              : "saleBelongsToEmployee"
+              ? "saleBelongsToEmployee"
+              : "requirementBelongsToEmployee"
           )
         );
         setOptionalText("");
+        break;
+      case CantOfferMotives.MAIN_ACCOUNT_IS_CREATOR:
+        setMainText(
+          t(
+            props.requirement?.type == RequirementType.SALE
+              ? "saleBelongsToCompany"
+              : "requirementBelongsToCompany"
+          )
+        );
+        setOptionalText("");
+        break;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.motive]);
@@ -135,6 +208,21 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
 
   function deleteOffer() {
     console.log("deleting", props.offerId);
+    setDataModal({
+      type: ModalTypes.CONFIRM,
+      data: {
+        loading: loadingDelete,
+        onAnswer: (ok: boolean) => {
+          if (!ok) return;
+          setApiParamsDelete({
+            service: deleteOfferService(props.offerId),
+            method: "get",
+          });
+        },
+        text: t("deleteOfferConfirmation"),
+      },
+    });
+    setIsOpenModal(true);
   }
 
   function openGetCertifiedModal() {
@@ -162,55 +250,64 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
       />
 
       <div className="t-flex f-column j-conten j-items oferta-check gap-10">
-        <i className="fa-regular fa-circle-exclamation fa-3x"></i>
-        <div className="aviso-h">
-          <div className="cantidad-estd">{mainText}</div>
-          {optionalText && <div className="detalles-estd">{optionalText}</div>}
-        </div>
-        {props.motive == CantOfferMotives.ALREADY_MADE_OFFER && (
-          <ButtonContainer
-            style={{ height: "auto" }}
-            className="btn btn-default btn-sm"
-            icon={<i className="fa-regular fa-trash"></i>}
-            onClick={deleteOffer}
-          >
-            {t("deleteOffer")}
-          </ButtonContainer>
+        {props.loading ? (
+          <SimpleLoading style={{ width: "15vw" }} />
+        ) : (
+          <>
+            <i className="fa-regular fa-circle-exclamation fa-3x"></i>
+            <div className="aviso-h">
+              <div className="cantidad-estd">{mainText}</div>
+              {optionalText && (
+                <div className="detalles-estd">{optionalText}</div>
+              )}
+            </div>
+            {props.motive == CantOfferMotives.ALREADY_MADE_OFFER && (
+              <ButtonContainer
+                style={{ height: "auto" }}
+                className="btn btn-default btn-sm"
+                icon={<i className="fa-regular fa-trash"></i>}
+                onClick={deleteOffer}
+                loading={loadingDelete}
+              >
+                {t("deleteOffer")}
+              </ButtonContainer>
+            )}
+            {props.motive == CantOfferMotives.CHANGED_STATE && (
+              <ButtonContainer
+                style={{ height: "auto" }}
+                className="btn btn-default btn-sm"
+                icon={<i className="fa-regular fa-house"></i>}
+                onClick={() => navigate(pageRoutes.home)}
+              >
+                {t("goTo") + t("home")}
+              </ButtonContainer>
+            )}
+            {(props.motive == CantOfferMotives.IS_CREATOR ||
+              props.motive == CantOfferMotives.SUBUSER_IS_CREATOR) && (
+              <ButtonContainer
+                style={{ height: "auto" }}
+                className="btn btn-default btn-sm"
+                icon={<i className="fa-regular fa-columns"></i>}
+                onClick={() => navigate(pageRoutes.home)} // r3v
+              >
+                {t("goTo") + t("controlPanel")}
+              </ButtonContainer>
+            )}
+            {props.motive == CantOfferMotives.ONLY_CERTIFIED &&
+              entityType == EntityType.COMPANY &&
+              props.isPremium &&
+              props.isCertified == CertificationState.NONE && (
+                <ButtonContainer
+                  style={{ height: "auto" }}
+                  className="btn btn-green btn-sm"
+                  icon={<i className="fa-regular fa-star"></i>}
+                  onClick={openGetCertifiedModal}
+                >
+                  {t("getCertified")}
+                </ButtonContainer>
+              )}
+          </>
         )}
-        {props.motive == CantOfferMotives.CHANGED_STATE && (
-          <ButtonContainer
-            style={{ height: "auto" }}
-            className="btn btn-default btn-sm"
-            icon={<i className="fa-regular fa-house"></i>}
-            onClick={() => navigate(pageRoutes.home)}
-          >
-            {t("goTo") + t("home")}
-          </ButtonContainer>
-        )}
-        {(props.motive == CantOfferMotives.IS_CREATOR ||
-          props.motive == CantOfferMotives.IS_MAIN_CREATOR) && (
-          <ButtonContainer
-            style={{ height: "auto" }}
-            className="btn btn-default btn-sm"
-            icon={<i className="fa-regular fa-columns"></i>}
-            onClick={() => navigate(pageRoutes.home)} // r3v
-          >
-            {t("goTo") + t("controlPanel")}
-          </ButtonContainer>
-        )}
-        {props.motive == CantOfferMotives.ONLY_CERTIFIED &&
-          entityType == EntityType.COMPANY &&
-          props.isPremium &&
-          props.isCertified == CertificationState.NONE && (
-            <ButtonContainer
-              style={{ height: "auto" }}
-              className="btn btn-green btn-sm"
-              icon={<i className="fa-regular fa-star"></i>}
-              onClick={openGetCertifiedModal}
-            >
-              {t("getCertified")}
-            </ButtonContainer>
-          )}
       </div>
     </>
   );

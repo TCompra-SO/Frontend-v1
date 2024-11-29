@@ -79,6 +79,9 @@ export function transformToFullUser(response: any) {
   user.activeAccount = response.active_account;
   user.specialty = response.specialtyID;
   user.aboutMe = response.about_me;
+  user.tenure = response.age;
+  user.numGoods = response.numProducts;
+  user.numSales = response.numLiquidations;
   return user;
 }
 
@@ -289,16 +292,19 @@ export function transformToSubUserBase(data: any) {
   const subUser: SubUserBase = {
     typeID: data.typeID,
     createdAt: data.createdAt,
-    numGoods: 0,
-    numServices: 0,
-    numSales: 0,
-    numOffers: 0,
-    numPurchaseOrders: 0,
-    uid: data.Uid,
-    name: "aaaaaaaaaa",
-    document: "434343",
+    numGoods: data.numProducts,
+    numServices: data.numServices,
+    numSales: data.numLiquidations,
+    numOffers: data.numOffers,
+    uid: data.userID,
+    name: data.name,
+    document: data.document,
     email: data.email,
     typeEntity: EntityType.SUBUSER,
+    numPurchaseOrdersProvider: data.numPurchaseOrdersProvider,
+    numPurchaseOrdersClient: data.numPurchaseOrdersClient,
+    numSellingOrdersProvider: data.numSellingOrdersProvider,
+    numSellingOrdersClient: data.numSellingOrdersClient,
   };
   return subUser;
 }

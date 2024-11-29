@@ -18,7 +18,6 @@ export default function RequirementFilesAndImages(
   const childRef = useRef<ImagePreviewGroupContainerRef>(null);
 
   function handleOpenPreview() {
-    console.log("opening");
     if (props.images && props.images.length > 0)
       if (childRef.current) {
         childRef.current.openPreview();
@@ -46,7 +45,9 @@ export default function RequirementFilesAndImages(
             onClick={handleOpenPreview}
           >
             <i className="fa-regular fa-images fa-2x"></i>
-            <div className="name-file">{t("images")}</div>
+            <div className="name-file">
+              {t("images")} ({props.images.length})
+            </div>
           </div>
         ) : (
           <div className="multimedia-nula t-flex j-conten f-column gap-10">
@@ -61,7 +62,9 @@ export default function RequirementFilesAndImages(
             onClick={showDocument}
           >
             <i className="fa-regular fa-file-lines fa-2x"></i>
-            <div className="name-file">{t("documents")}</div>
+            <div className="name-file">
+              {t("documents")} ({props.docs.length})
+            </div>
           </div>
         ) : (
           <div className="multimedia-nula t-flex j-conten f-column gap-10">

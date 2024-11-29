@@ -1,4 +1,4 @@
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import NoContentModalContainer from "../components/containers/NoContentModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import AddUserModal from "../components/section/users/addUser/AddUserModal";
@@ -120,7 +120,11 @@ export default function Users() {
   useEffect(() => {
     if (responseDataUser) {
       if (equalServices(apiParamsUser.service, getSubUserService(""))) {
-        setUserDataEdit(responseDataUser);
+        setUserDataEdit({
+          // email: userData?.email,
+          // typeID: userData?.typeID,
+          ...responseDataUser,
+        });
         handleOpenModal();
       }
     } else if (errorUser) {
@@ -244,15 +248,51 @@ export default function Users() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataOrder, errorOrder]);
 
+  /** Obtener lista de órdenes de venta */
+
+  const [apiParamsSales, setApiParamsSales] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingSales,
+    responseData: responseDataSales,
+    error: errorSales,
+    errorMsg: errorMsgSales,
+    fetchData: fetchDataSales,
+  } = useApi({
+    service: apiParamsSales.service,
+    method: apiParamsSales.method,
+    dataToSend: apiParamsSales.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingSales);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingSales]);
+
+  useEffect(() => {
+    if (apiParamsSales.service) fetchDataSales();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsSales]);
+
+  useEffect(() => {
+    if (responseDataSales) {
+      setModalTableDataOrder();
+    } else if (errorSales) {
+      showNotification(notification, "error", errorMsgSales);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataSales, errorSales]);
+
   /** Funciones */
 
   async function setTableData() {
     try {
       let data: SubUserBase[] = [];
       if (responseData.data.length > 0) {
-        data = responseData.data[0].auth_users.map((e: any) =>
-          transformToSubUserBase(e)
-        );
+        data = responseData.data.map((e: any) => transformToSubUserBase(e));
       }
       setTableContent({
         type: TableTypes.USERS,
@@ -263,6 +303,7 @@ export default function Users() {
       });
     } catch (error) {
       showNotification(notification, "error", t("errorOccurred"));
+      console.log(error);
     }
   }
 
@@ -323,6 +364,8 @@ export default function Users() {
 
   function handleOnActionClick(action: Action, user: SubUserBase) {
     setAction(action);
+    setUserData(user);
+    console.log(user);
     switch (action) {
       case Action.EDIT_USER:
         setApiParamsUser({
@@ -332,23 +375,30 @@ export default function Users() {
         });
         break;
       case Action.VIEW_REQUIREMENTS:
-        setUserData(user);
         setApiParamsReq({
           service: getRequirementsBySubUserService(user.uid),
           method: "get",
         });
         break;
       case Action.VIEW_OFFERS:
-        setUserData(user);
         setApiParamsOffer({
           service: getOffersBySubUserService(user.uid),
           method: "get",
         });
         break;
       case Action.VIEW_PURCHASE_ORDERS:
-        setUserData(user);
         setApiParamsOrder({
           service: getPurchaseOrdersByClientEntityService(
+            user.uid,
+            user.typeID
+          ),
+          method: "get",
+        });
+        break;
+      case Action.VIEw_SALES_ORDERS:
+        setApiParamsSales({
+          service: getPurchaseOrdersByClientEntityService(
+            // r3v
             user.uid,
             user.typeID
           ),
@@ -409,15 +459,28 @@ export default function Users() {
             tableType={TableTypes.PURCHASE_ORDER_SUBUSER}
           />
         );
+      case Action.VIEw_SALES_ORDERS:
+        return (
+          <SubUserTableModal
+            content={{
+              tableType: TableTypes.PURCHASE_ORDER_SUBUSER,
+              tableContent: orderList,
+            }}
+            user={userData}
+            onTabChange={handleTabChange}
+            loading={loadingOrder}
+            tableType={TableTypes.SALES_ORDER_SUBUSER}
+          />
+        );
       default:
         return null;
     }
   }
 
-  function handleTabChange(tabId: string) {
+  function handleTabChange(tabId: RequirementType | PurchaseOrderTableTypes) {
     if (userData) {
       if (action == Action.VIEW_REQUIREMENTS) {
-        switch (Number(tabId)) {
+        switch (tabId) {
           case RequirementType.GOOD:
             setApiParamsReq({
               service: getRequirementsBySubUserService(userData.uid), // r3v para servicios y liquidaciones
@@ -446,11 +509,7 @@ export default function Users() {
       <NoContentModalContainer
         open={isOpenModal}
         width={
-          action == Action.VIEW_REQUIREMENTS ||
-          action == Action.VIEW_OFFERS ||
-          action == Action.VIEW_PURCHASE_ORDERS
-            ? 1100
-            : 800
+          action == Action.ADD_USER || action == Action.EDIT_USER ? 800 : 1100
         }
         style={mainModalScrollStyle}
         onClose={handleCloseModal}

@@ -2,7 +2,7 @@ import { Form } from "antd";
 import SelectContainer from "../../containers/SelectContainer";
 import { useTranslation } from "react-i18next";
 import { ReactNode, useContext } from "react";
-import { ListsContext } from "../../../contexts/listsContext";
+import { ListsContext } from "../../../contexts/ListsContext";
 import { getCityListForSelect } from "../../../utilities/globalFunctions";
 
 interface LocationFieldProps {

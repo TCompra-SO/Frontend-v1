@@ -6,9 +6,8 @@ import {
   RegisterRequest,
 } from "../models/Requests";
 import { useDispatch } from "react-redux";
-import { setUid, setUser, setEmail, setBaseUser } from "../redux/userSlice";
+import { setUid, setUser, setEmail } from "../redux/userSlice";
 import { DocType, ModalTypes, RegisterTypeId } from "../utilities/types";
-import { useNavigate } from "react-router-dom";
 import showNotification from "../utilities/notification/showNotification";
 import useApi from "../hooks/useApi";
 import {
@@ -18,7 +17,6 @@ import {
 import { useApiParams } from "../models/Interfaces";
 
 import { useTranslation } from "react-i18next";
-import { pageRoutes } from "../utilities/routes";
 import {
   useDniRules,
   useEmailRules,
@@ -48,7 +46,6 @@ interface LoginProps {
 }
 
 export default function Login(props: LoginProps) {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { notification } = App.useApp();

@@ -23,6 +23,7 @@ export default function ProductRequirementDetail(
         <UserDataRequirement
           user={props.requirement?.user}
           requirement={props.requirement}
+          subUser={props.requirement?.subUser}
         />
         <MoreDetailedRequirement requirement={props.requirement} />
         <RequirementDescription description={props.requirement?.description} />

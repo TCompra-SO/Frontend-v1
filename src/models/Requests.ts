@@ -109,9 +109,9 @@ export interface CreateOfferRequest {
   cityID: number;
   deliveryTimeID: number;
   currencyID: number;
-  warranty: number;
-  timeMeasurementID: number;
-  support: number;
+  warranty?: number;
+  timeMeasurementID?: number;
+  support?: number;
   budget: number;
   includesIGV: boolean;
   includesDelivery: boolean;

@@ -2,7 +2,7 @@ import { Rule, RuleObject } from "antd/lib/form";
 import { useTranslation } from "react-i18next";
 import { Lengths } from "../utilities/lengths";
 import { useContext, useState } from "react";
-import { ListsContext } from "../contexts/listsContext";
+import { ListsContext } from "../contexts/ListsContext";
 
 export function useNumberValidator() {
   const { t } = useTranslation();
@@ -14,6 +14,22 @@ export function useNumberValidator() {
     return Promise.resolve();
   }
   return validateNumber;
+}
+
+export function usePositiveNumberValidator() {
+  const { t } = useTranslation();
+
+  function validatePositiveNumber(_: RuleObject, value: string) {
+    if (value && isNaN(Number(value))) {
+      return Promise.reject(t("validNumber"));
+    }
+    const numberValue = Number(value);
+    if (numberValue <= 0) {
+      return Promise.reject(t("budgetGreaterThanZero"));
+    }
+    return Promise.resolve();
+  }
+  return validatePositiveNumber;
 }
 
 export function useNoBlankSpacesValidator() {
@@ -276,4 +292,24 @@ export function useTenureRules(required: boolean) {
     // },
   ]);
   return { tenureRules };
+}
+
+export function useBudgetRules(required: boolean, greaterThanZero?: boolean) {
+  const validatePositiveNumberValidator = usePositiveNumberValidator();
+
+  const [budgetRules] = useState<Rule[]>(
+    greaterThanZero
+      ? [
+          {
+            required,
+          },
+          { validator: validatePositiveNumberValidator },
+        ]
+      : [
+          {
+            required,
+          },
+        ]
+  );
+  return { budgetRules };
 }

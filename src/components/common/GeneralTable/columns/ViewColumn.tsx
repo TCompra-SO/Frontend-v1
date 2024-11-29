@@ -3,7 +3,7 @@ import ButtonContainer from "../../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import { Action, TableTypes } from "../../../../utilities/types";
 import { useContext } from "react";
-import { LoadingDataContext } from "../../../../contexts/loadingDataContext";
+import { LoadingDataContext } from "../../../../contexts/LoadingDataContext";
 
 export default function ViewColumn(
   type: TableTypes,
@@ -11,7 +11,7 @@ export default function ViewColumn(
   hidden: boolean = false
 ) {
   const { t } = useTranslation();
-  const { allRequirementsViewOffers, subUserRequirementsViewOffers } =
+  const { subUserRequirementsViewOffers, allRequirementsViewOffers } =
     useContext(LoadingDataContext);
 
   const col: ColumnType<any> = {
@@ -19,11 +19,13 @@ export default function ViewColumn(
     key: "action",
     align: "center",
     showSorterTooltip: false,
-    width: "130px",
+    width: "100px",
+    fixed: "right",
     hidden,
     render: (record) => {
       let action: Action = Action.VIEW_REQUIREMENTS;
       switch (type) {
+        case TableTypes.REQUIREMENT:
         case TableTypes.ALL_REQUIREMENTS:
         case TableTypes.REQUIREMENT_SUBUSER:
           action = Action.VIEW_REQUIREMENT;
@@ -34,6 +36,7 @@ export default function ViewColumn(
           break;
         case TableTypes.ALL_PURCHASE_ORDERS:
         case TableTypes.PURCHASE_ORDER_SUBUSER:
+        case TableTypes.ALL_SALES_ORDERS:
           action = Action.VIEW_PURCHASE_ORDER;
           break;
         case TableTypes.SENT_CERT:
@@ -52,10 +55,11 @@ export default function ViewColumn(
               </>
             }
             disabled={
-              type == TableTypes.ALL_REQUIREMENTS
-                ? allRequirementsViewOffers
-                : type == TableTypes.REQUIREMENT_SUBUSER
+              type == TableTypes.PURCHASE_ORDER_SUBUSER
                 ? subUserRequirementsViewOffers
+                : type == TableTypes.ALL_PURCHASE_ORDERS ||
+                  TableTypes.ALL_SALES_ORDERS
+                ? allRequirementsViewOffers
                 : undefined
             }
           />

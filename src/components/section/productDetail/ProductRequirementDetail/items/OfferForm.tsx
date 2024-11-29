@@ -20,11 +20,16 @@ import { ReactNode, useEffect, useState } from "react";
 import showNotification from "../../../../../utilities/notification/showNotification";
 import { useApiParams } from "../../../../../models/Interfaces";
 import useApi from "../../../../../hooks/useApi";
-import { createOfferService } from "../../../../../services/requests/offerService";
+import {
+  createOfferService,
+  getValidationOfferService,
+} from "../../../../../services/requests/offerService";
 import {
   CanOfferType,
   CantOfferMotives,
   CertificationState,
+  CodeResponseCanOffer,
+  EntityType,
   ImageRequestLabels,
   ProcessFlag,
   RequirementState,
@@ -36,6 +41,8 @@ import { uploadImagesOfferService } from "../../../../../services/requests/image
 import React from "react";
 import CantOfferMessage from "./CantOfferMessage";
 import { Requirement } from "../../../../../models/MainInterfaces";
+import makeRequest from "../../../../../utilities/globalFunctions";
+import { CanOfferResponse } from "../../../../../models/Responses";
 
 function RowContainer({ children }: { children: ReactNode }) {
   return (
@@ -56,6 +63,8 @@ export default function OfferForm(props: OfferFormProps) {
   const [form] = Form.useForm();
   const email = useSelector((state: MainState) => state.user.email);
   const uid = useSelector((state: MainState) => state.user.uid);
+  const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
+  const entityType = useSelector((state: MainState) => state.user.typeEntity);
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const role = useSelector((state: MainState) => state.user.typeID);
   const { notification } = App.useApp();
@@ -69,7 +78,8 @@ export default function OfferForm(props: OfferFormProps) {
   const [reqSuccess, setReqSuccess] = useState(ProcessFlag.NOT_INI);
   const [docSuccess, setDocSuccess] = useState(ProcessFlag.NOT_INI);
   const [imgSuccess, setImgSuccess] = useState(ProcessFlag.NOT_INI);
-  const [offerId, setofferId] = useState<string>("");
+  const [offerId, setOfferId] = useState<string>("");
+  const [loadingForm, setLoadingForm] = useState(true);
   const [isPremium] = useState(true); // r3v
 
   useEffect(() => {
@@ -80,44 +90,12 @@ export default function OfferForm(props: OfferFormProps) {
   /** Verificar si el usuario puede ofertar */
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      setCantOfferMotive(CantOfferMotives.NOT_LOGGED_IN);
-    } else if (props.requirement && props.requirement.user.uid == uid) {
-      setCantOfferMotive(CantOfferMotives.IS_CREATOR);
-    } else if (
-      role == UserRoles.LEGAL ||
-      role == UserRoles.NONE ||
-      (role == UserRoles.BUYER &&
-        props.requirement?.type != RequirementType.SALE) ||
-      (role == UserRoles.SELLER &&
-        props.requirement?.type == RequirementType.SALE) // r3v
-    ) {
-      setCantOfferMotive(CantOfferMotives.NO_ALLOWED_ROLE);
-    } else if (
-      props.requirement &&
-      props.requirement.state != RequirementState.PUBLISHED
-    ) {
-      setCantOfferMotive(CantOfferMotives.CHANGED_STATE);
-    } else if (
-      props.requirement &&
-      props.requirement.allowedBidder == CanOfferType.PREMIUM &&
-      !isPremium
-    ) {
-      setCantOfferMotive(CantOfferMotives.ONLY_PREMIUM);
-    } else if (
-      props.requirement &&
-      props.requirement.allowedBidder == CanOfferType.CERTIFIED_COMPANY
-    ) {
-      setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED); //r3v verificar si el usuario está certificado con la empresa
-    } else {
-      setCantOfferMotive(CantOfferMotives.NONE);
-    }
-    // setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED);
+    checkIfUserCanOffer();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, props.requirement]);
 
-  /************ */
+  /* Para crear oferta */
 
   const [apiParams, setApiParams] = useState<useApiParams<CreateOfferRequest>>({
     service: null,
@@ -130,7 +108,26 @@ export default function OfferForm(props: OfferFormProps) {
       dataToSend: apiParams.dataToSend,
     });
 
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      setReqSuccess(ProcessFlag.FIN_SUCCESS);
+      console.log(responseData);
+      setOfferId(responseData.data?.uid);
+      uploadImgsAndDocs(responseData.data?.uid);
+    } else if (error) {
+      setReqSuccess(ProcessFlag.FIN_UNSUCCESS);
+      showNotification(notification, "error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
+
   /* Para imagenes */
+
   const [apiParamsImg, setApiParamsImg] = useState<useApiParams<FormData>>({
     service: null,
     method: "get",
@@ -165,24 +162,6 @@ export default function OfferForm(props: OfferFormProps) {
     dataToSend: apiParamsDoc.dataToSend,
     token: apiParamsDoc.token,
   });
-
-  useEffect(() => {
-    if (apiParams.service) fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParams]);
-
-  useEffect(() => {
-    if (responseData) {
-      setReqSuccess(ProcessFlag.FIN_SUCCESS);
-      console.log(responseData);
-      setofferId(responseData.data?.uid);
-      uploadImgsAndDocs(responseData.data?.uid);
-    } else if (error) {
-      setReqSuccess(ProcessFlag.FIN_UNSUCCESS);
-      showNotification(notification, "error", errorMsg);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseData, error]);
 
   useEffect(() => {
     if (responseDataImg) {
@@ -231,13 +210,108 @@ export default function OfferForm(props: OfferFormProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reqSuccess, imgSuccess, docSuccess]);
 
+  /** Funciones */
+
+  async function checkIfUserCanOffer() {
+    // setLoadingForm(true);
+    if (!isLoggedIn) {
+      setCantOfferMotive(CantOfferMotives.NOT_LOGGED_IN);
+    } else if (
+      props.requirement &&
+      ((!props.requirement.subUser && props.requirement.user.uid == uid) || // requerimiento no fue creado por subusuario
+        (props.requirement.subUser && props.requirement.subUser.uid == uid)) // requerimiento fue creado por subusuario
+    ) {
+      setCantOfferMotive(CantOfferMotives.IS_CREATOR);
+      // } else if (
+      //   entityType == EntityType.SUBUSER &&
+      //   props.requirement &&
+      //   !props.requirement.subUser && // requerimiento no fue creado por subusuario
+      //   props.requirement.user.uid == mainUserUid
+      // ) {
+      //   setCantOfferMotive(CantOfferMotives.MAIN_ACCOUNT_IS_CREATOR);
+      // } else if (
+      //   entityType != EntityType.SUBUSER &&
+      //   props.requirement &&
+      //   props.requirement.subUser &&
+      //   props.requirement.user.uid == uid
+      // ) {
+      //   setCantOfferMotive(CantOfferMotives.SUBUSER_IS_CREATOR);
+    } else if (
+      role == UserRoles.LEGAL ||
+      role == UserRoles.NONE ||
+      (role == UserRoles.BUYER &&
+        props.requirement?.type != RequirementType.SALE) ||
+      (role == UserRoles.SELLER &&
+        props.requirement?.type == RequirementType.SALE) // r3v
+    ) {
+      setCantOfferMotive(CantOfferMotives.NO_ALLOWED_ROLE);
+    } else if (
+      props.requirement &&
+      props.requirement.state != RequirementState.PUBLISHED
+    ) {
+      setCantOfferMotive(CantOfferMotives.CHANGED_STATE);
+    } else if (
+      props.requirement &&
+      props.requirement.allowedBidder == CanOfferType.PREMIUM &&
+      !isPremium
+    ) {
+      setCantOfferMotive(CantOfferMotives.ONLY_PREMIUM);
+    } else {
+      if (props.requirement) {
+        const { responseData }: any = await makeRequest({
+          service: getValidationOfferService(uid, props.requirement.key),
+          method: "get",
+        });
+        if (responseData) {
+          const car: CanOfferResponse = responseData.data;
+          setOfferId(car.offerID ?? "");
+          switch (car.codeResponse) {
+            case CodeResponseCanOffer.ALREADY_MADE_OFFER:
+              setCantOfferMotive(CantOfferMotives.ALREADY_MADE_OFFER);
+              break;
+            case CodeResponseCanOffer.MAIN_ACCOUNT_MADE_OFFER:
+              setCantOfferMotive(CantOfferMotives.MAIN_ACCOUNT_MADE_OFFER);
+              break;
+            case CodeResponseCanOffer.OTHER_USER_IN_COMPANY_MADE_OFFER:
+              setCantOfferMotive(
+                entityType == EntityType.SUBUSER
+                  ? CantOfferMotives.OTHER_USER_IN_COMPANY_MADE_OFFER
+                  : CantOfferMotives.SUBUSER_MADE_OFFER
+              );
+              break;
+            case CodeResponseCanOffer.OTHER_USER_IN_COMPANY_IS_CREATOR:
+              setCantOfferMotive(
+                entityType == EntityType.SUBUSER
+                  ? CantOfferMotives.OTHER_USER_IN_COMPANY_IS_CREATOR
+                  : CantOfferMotives.SUBUSER_IS_CREATOR
+              );
+              break;
+            case CodeResponseCanOffer.IS_CREATOR:
+              setCantOfferMotive(CantOfferMotives.IS_CREATOR);
+              break;
+            case CodeResponseCanOffer.MAIN_ACCOUNT_IS_CREATOR:
+              setCantOfferMotive(CantOfferMotives.MAIN_ACCOUNT_IS_CREATOR);
+              break;
+            case CodeResponseCanOffer.NONE:
+            // setCantOfferMotive(CantOfferMotives.NONE);
+          }
+        }
+
+        if (props.requirement.allowedBidder == CanOfferType.CERTIFIED_COMPANY)
+          setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED); //r3v verificar si el usuario está certificado con la empresa
+      }
+    }
+    setCantOfferMotive(CantOfferMotives.NONE_FINISH);
+    setLoadingForm(false);
+  }
+
   function createOffer(values: any) {
     setReqSuccess(ProcessFlag.NOT_INI);
     setFormDataDoc(null);
     setFormDataImg(null);
     setDocSuccess(ProcessFlag.NOT_INI);
     setImgSuccess(ProcessFlag.NOT_INI);
-
+    console.log(values);
     if (props.requirement) {
       const data: CreateOfferRequest = {
         name: values.title.trim(),
@@ -246,15 +320,19 @@ export default function OfferForm(props: OfferFormProps) {
         cityID: values.location,
         deliveryTimeID: values.deliveryTime,
         currencyID: values.currency,
-        warranty: values.warranty,
-        timeMeasurementID: values.duration,
-        support: values.support,
         budget: values.budget,
         includesIGV: checkedIGV,
         includesDelivery: checkedDelivery,
         requerimentID: props.requirement.key,
         userID: uid,
       };
+
+      if (values.warranty && values.duration !== undefined) {
+        data.warranty = values.warranty;
+        data.timeMeasurementID = values.duration;
+      }
+
+      if (values.support) data.support = values.support;
 
       if (values.images && values.images.fileList.length > 0) {
         const formData = new FormData();
@@ -324,6 +402,10 @@ export default function OfferForm(props: OfferFormProps) {
     console.log("chat", props.requirement?.key);
   }
 
+  function handleDeleteSuccess() {
+    checkIfUserCanOffer();
+  }
+
   return (
     <div className="card-white cbl-6">
       <div className="t-flex mr-sub-2">
@@ -332,7 +414,7 @@ export default function OfferForm(props: OfferFormProps) {
           <div>{t("offerFormTitle")}</div>
         </div>
       </div>
-      {cantOfferMotive == CantOfferMotives.NONE ? (
+      {cantOfferMotive == CantOfferMotives.NONE_FINISH ? (
         reqSuccess != ProcessFlag.NOT_INI &&
         docSuccess != ProcessFlag.NOT_INI &&
         imgSuccess != ProcessFlag.NOT_INI ? (
@@ -340,6 +422,7 @@ export default function OfferForm(props: OfferFormProps) {
             offerId={offerId}
             motive={CantOfferMotives.ALREADY_MADE_OFFER}
             requirement={props.requirement}
+            onDeleteSuccess={handleDeleteSuccess}
           />
         ) : (
           <Form
@@ -362,10 +445,10 @@ export default function OfferForm(props: OfferFormProps) {
                 <CurrencyField onlyItem disabled />
               </RowContainer>
               <RowContainer>
-                <WarrantyField required={true} />
-                <DurationField required={true} name={"duration"} onlyItem />
+                <WarrantyField required={false} />
+                <DurationField required={false} name={"duration"} onlyItem />
                 <SupportField />
-                <BudgetField />
+                <BudgetField required greaterThanZero />
               </RowContainer>
               <div className="t-flex gap-15 archivos-up">
                 <AddImagesField forOffer />
@@ -411,6 +494,8 @@ export default function OfferForm(props: OfferFormProps) {
           requirement={props.requirement}
           isPremium={isPremium}
           isCertified={CertificationState.NONE} //r3v
+          loading={loadingForm}
+          onDeleteSuccess={handleDeleteSuccess}
         />
       )}
     </div>

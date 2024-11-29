@@ -2,7 +2,7 @@ import TextAreaContainer from "../../containers/TextAreaContainer";
 import { Col, Flex, Row } from "antd";
 import { Offer, Requirement } from "../../../models/MainInterfaces";
 import { useContext, useEffect, useState } from "react";
-import { requirementDetailContext } from "../../../contexts/requirementDetailContext";
+import { requirementDetailContext } from "../../../contexts/RequirementDetailContext";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import { Lengths } from "../../../utilities/lengths";

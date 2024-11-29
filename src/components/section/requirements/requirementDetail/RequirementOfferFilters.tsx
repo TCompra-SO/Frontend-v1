@@ -9,9 +9,9 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { CommonFilter } from "../../../../utilities/types";
 import { IdValueObj, OfferFilters } from "../../../../models/Interfaces";
-import { requirementDetailContext } from "../../../../contexts/requirementDetailContext";
+import { requirementDetailContext } from "../../../../contexts/RequirementDetailContext";
 import { useTranslation } from "react-i18next";
-import { ListsContext } from "../../../../contexts/listsContext";
+import { ListsContext } from "../../../../contexts/ListsContext";
 import { getListForSelectIdValueMap } from "../../../../utilities/globalFunctions";
 import { filterLabels } from "../../../../utilities/colors";
 
@@ -112,7 +112,7 @@ export default function RequirementOfferFilters(
             >
               <Col xs={12} sm={12} md={6} lg={6} xl={6}>
                 <Flex vertical align="center">
-                  <b style={{ color: "#92acbf" }}>{t("priceColumn")}</b>
+                  <b style={{ color: "#92acbf" }}>{t("price")}</b>
                   <Form.Item
                     name="price"
                     style={{

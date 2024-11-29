@@ -2,11 +2,14 @@ import { ColumnType } from "antd/es/table";
 import { BasicRequirement } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
 import { useContext, useEffect, useState } from "react";
-import { ListsContext } from "../../../../contexts/listsContext";
+import { ListsContext } from "../../../../contexts/ListsContext";
 import { defaultCountry } from "../../../../utilities/globals";
 import { IdValueMap, IdValueObj } from "../../../../models/Interfaces";
 
-export default function LocationColumn(hidden: boolean = false) {
+export default function LocationColumn(
+  hidden: boolean = false,
+  noSorter?: boolean
+) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { countryData } = context;
@@ -30,8 +33,10 @@ export default function LocationColumn(hidden: boolean = false) {
     dataIndex: "location",
     key: "location",
     align: "center",
-    sorter: (a, b) =>
-      cities[a.location]?.value.localeCompare(cities[b.location]?.value),
+    sorter: noSorter
+      ? undefined
+      : (a, b) =>
+          cities[a.location]?.value.localeCompare(cities[b.location]?.value),
     showSorterTooltip: false,
     width: "130px",
     hidden,

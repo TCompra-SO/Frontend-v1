@@ -25,7 +25,7 @@ import {
   equalServices,
   getListForSelectIdValueMap,
 } from "../utilities/globalFunctions";
-import { ListsContext } from "../contexts/listsContext";
+import { ListsContext } from "../contexts/ListsContext";
 import PhoneField from "../components/common/formFields/PhoneField";
 import AddressField from "../components/common/formFields/AddressField";
 import TenureField from "../components/common/formFields/TenureField";

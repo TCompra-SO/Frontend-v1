@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { FullUser } from "../../../models/MainInterfaces";
 import { useContext } from "react";
-import { ListsContext } from "../../../contexts/listsContext";
+import { ListsContext } from "../../../contexts/ListsContext";
 import { Tooltip } from "antd";
 
 interface UserInfoModalProps {

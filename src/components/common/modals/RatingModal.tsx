@@ -16,12 +16,8 @@ import { MainState } from "../../../models/Redux";
 import FrontImage from "../FrontImage";
 import SubUserName from "../SubUserName";
 import { useApiParams } from "../../../models/Interfaces";
-import {
-  CulminateRequest,
-  RegisterScoreRequest,
-} from "../../../models/Requests";
+import { CulminateRequest } from "../../../models/Requests";
 import useApi from "../../../hooks/useApi";
-import { registerScoreService } from "../../../services/requests/scoreService";
 import { culminateRequirementService } from "../../../services/requests/requirementService";
 import { culminateOfferService } from "../../../services/requests/offerService";
 

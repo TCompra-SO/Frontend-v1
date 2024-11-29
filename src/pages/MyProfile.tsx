@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { FullUser, PlanData } from "../models/MainInterfaces";
 import { EntityType, ImageRequestLabels } from "../utilities/types";
 import { useContext, useEffect, useRef, useState } from "react";
-import { ListsContext } from "../contexts/listsContext";
+import { ListsContext } from "../contexts/ListsContext";
 import PhoneField from "../components/common/formFields/PhoneField";
 import LocationField from "../components/common/formFields/LocationField";
 import AddressField from "../components/common/formFields/AddressField";
@@ -126,7 +126,6 @@ export default function MyProfile() {
         specialty: user.specialty,
         aboutMe: user.aboutMe,
       });
-    console.log(form.getFieldsValue());
     if (user?.avatar) setImageSrc(user.avatar);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -168,7 +167,7 @@ export default function MyProfile() {
   }, [responseDataImage, errorImage]);
 
   function setFormData(responseData: any) {
-    const user = transformToFullUser(responseData.data[0]);
+    const user = transformToFullUser(responseData.data);
     setUser(user);
     setPlan(planData1);
     if (user.image) setImageSrc(user.image);
@@ -344,7 +343,7 @@ export default function MyProfile() {
             </div>
             <div className="oferta-usuario col-documento">
               <div className="text-truncate doc-name dato-cantidad1">
-                {plan?.goods}
+                {user?.numGoods}
               </div>
               <div className="text-truncate detalles-oferta dato-cantidad2">
                 {t("goods")}
@@ -357,7 +356,7 @@ export default function MyProfile() {
             </div>
             <div className="oferta-usuario col-documento">
               <div className="text-truncate doc-name dato-cantidad1">
-                {plan?.services}
+                {user?.numServices}
               </div>
               <div className="text-truncate detalles-oferta dato-cantidad2">
                 {t("services")}
@@ -370,7 +369,7 @@ export default function MyProfile() {
             </div>
             <div className="oferta-usuario col-documento">
               <div className="text-truncate doc-name dato-cantidad1">
-                {plan?.sales}
+                {user?.numSales}
               </div>
               <div className="text-truncate detalles-oferta dato-cantidad2">
                 {t("sales")}
@@ -383,7 +382,7 @@ export default function MyProfile() {
             </div>
             <div className="oferta-usuario col-documento">
               <div className="text-truncate doc-name dato-cantidad1">
-                {plan?.offers}
+                {user?.numOffers}
               </div>
               <div className="text-truncate detalles-oferta dato-cantidad2">
                 {t("offers")}

@@ -4,7 +4,7 @@ import FrontImage from "../../../common/FrontImage";
 import RequirementInfoNoTags from "../../requirements/requirementDetail/RequirementInfoNoTags";
 import { useContext, useEffect, useState } from "react";
 import { IdValueMap, IdValueObj } from "../../../../models/Interfaces";
-import { ListsContext } from "../../../../contexts/listsContext";
+import { ListsContext } from "../../../../contexts/ListsContext";
 import { dateFormat, defaultCountry } from "../../../../utilities/globals";
 import dayjs from "dayjs";
 import PriceInHeader from "../../../common/PriceInHeader";

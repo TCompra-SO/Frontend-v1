@@ -2,11 +2,12 @@ import { Tooltip } from "antd";
 import { getScore } from "../../utilities/globalFunctions";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import { RateStartCountType } from "../../utilities/types";
 
 interface RateStarCountProps {
   score: number | undefined;
   count: number | undefined;
-  forOffer?: boolean;
+  type?: RateStartCountType;
 }
 
 export default function RateStarCount(props: RateStarCountProps) {
@@ -25,15 +26,24 @@ export default function RateStarCount(props: RateStarCountProps) {
     else if (Number(newScore) > 4) label = t("excellentRate");
   }
 
-  if (props.forOffer)
+  if (props.type)
     return (
       <div className="usuario-puntuacion">
         <i className="fa-solid fa-star user-start"></i>
         <Tooltip title={label}>
           <div className="valor-start-2">{newScore}</div>
         </Tooltip>
-
-        <b className="user-cantidad">({props.count ?? 0})</b>
+        <b
+          className={
+            props.type == RateStartCountType.OFFER_LIST
+              ? "user-cantidad"
+              : props.type == RateStartCountType.COMPANY_DATA_HOME
+              ? "empresa-cantidad"
+              : ""
+          }
+        >
+          ({props.count ?? 0})
+        </b>
       </div>
     );
 
