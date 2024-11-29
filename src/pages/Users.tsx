@@ -469,7 +469,7 @@ export default function Users() {
             user={userData}
             onTabChange={handleTabChange}
             loading={loadingOrder}
-            tableType={TableTypes.PURCHASE_ORDER_SUBUSER}
+            tableType={TableTypes.SALES_ORDER_SUBUSER}
           />
         );
       default:
@@ -477,10 +477,10 @@ export default function Users() {
     }
   }
 
-  function handleTabChange(tabId: string) {
+  function handleTabChange(tabId: RequirementType | PurchaseOrderTableTypes) {
     if (userData) {
       if (action == Action.VIEW_REQUIREMENTS) {
-        switch (Number(tabId)) {
+        switch (tabId) {
           case RequirementType.GOOD:
             setApiParamsReq({
               service: getRequirementsBySubUserService(userData.uid), // r3v para servicios y liquidaciones

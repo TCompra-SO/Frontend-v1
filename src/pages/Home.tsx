@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { TableTypeHome, TableTypeRequirement } from "../models/Interfaces.ts";
+import { TableTypeHome } from "../models/Interfaces.ts";
 import {
   Action,
   RequirementType,

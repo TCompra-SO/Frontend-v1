@@ -21,7 +21,7 @@ import useApi from "../../../../hooks/useApi";
 import showNotification, {
   showLoadingMessage,
 } from "../../../../utilities/notification/showNotification";
-import { App, Tabs } from "antd";
+import { App } from "antd";
 import makeRequest, {
   openPurchaseOrderPdf,
 } from "../../../../utilities/globalFunctions";
@@ -37,6 +37,7 @@ import {
 import { mainModalScrollStyle } from "../../../../utilities/globals";
 import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../../../../utilities/routes";
+import ButtonContainer from "../../../containers/ButtonContainer";
 
 interface SubUserTableModalProps {
   user: SubUserBase | null;
@@ -53,7 +54,7 @@ interface SubUserTableModalProps {
         tableType: TableTypes.PURCHASE_ORDER_SUBUSER;
         tableContent: PurchaseOrderItemSubUser[];
       };
-  onTabChange: (tabId: string) => void;
+  onTabChange: (tabId: RequirementType | PurchaseOrderTableTypes) => void;
   loading: boolean;
   tableType: TableTypes;
 }
@@ -62,6 +63,9 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { notification, message } = App.useApp();
+  const [subType, setSubType] = useState<
+    RequirementType | PurchaseOrderTableTypes
+  >(RequirementType.GOOD);
   const [currentPurchaseOrder, setCurrentPurchaseOrder] =
     useState<PurchaseOrderItemSubUser | null>(null);
   const {
@@ -74,21 +78,16 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
     data: {},
   });
 
-  /** Tabs */
+  /** Determinar subType */
 
-  const reqOfferTabs = [
-    { key: RequirementType.GOOD.toString(), label: t("goods") },
-    { key: RequirementType.SERVICE.toString(), label: t("services") },
-    { key: RequirementType.SALE.toString(), label: t("sales") },
-  ];
-
-  const purchaseOrderTabs = [
-    { key: PurchaseOrderTableTypes.ISSUED.toString(), label: t("issuedPl") },
-    {
-      key: PurchaseOrderTableTypes.RECEIVED.toString(),
-      label: t("receivedPl"),
-    },
-  ];
+  useEffect(() => {
+    if (
+      props.tableType == TableTypes.SALES_ORDER_SUBUSER ||
+      props.tableType == TableTypes.PURCHASE_ORDER_SUBUSER
+    )
+      setSubType(PurchaseOrderTableTypes.ISSUED);
+    else setSubType(RequirementType.GOOD);
+  }, [props.tableType]);
 
   /* Para descargar pdf de orden de compra */
 
@@ -239,6 +238,13 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
     }
   }
 
+  function changeSubType(
+    newSubType: RequirementType | PurchaseOrderTableTypes
+  ) {
+    setSubType(newSubType);
+    props.onTabChange(newSubType);
+  }
+
   return (
     <>
       <ModalContainer
@@ -253,14 +259,17 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
           <i className="fa-regular fa-dolly sub-icon m-0"></i>
           <div className="sub-titulo sub-calificar">
             <div>
-              {props.content.tableType == TableTypes.REQUIREMENT_SUBUSER && (
+              {props.tableType == TableTypes.REQUIREMENT_SUBUSER && (
                 <>{t("requirements")}</>
               )}
-              {props.content.tableType == TableTypes.OFFER_SUBUSER && (
+              {props.tableType == TableTypes.OFFER_SUBUSER && (
                 <>{t("offers")}</>
               )}
-              {props.content.tableType == TableTypes.PURCHASE_ORDER_SUBUSER && (
+              {props.tableType == TableTypes.PURCHASE_ORDER_SUBUSER && (
                 <>{t("purchaseOrders")}</>
+              )}
+              {props.tableType == TableTypes.SALES_ORDER_SUBUSER && (
+                <>{t("salesOrders")}</>
               )}
             </div>
             <div className="calificar-detalle">{props.user?.name}</div>
@@ -269,22 +278,76 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
             </div>
           </div>
         </div>
-        <Tabs
-          defaultActiveKey={
-            props.tableType == TableTypes.REQUIREMENT_SUBUSER ||
-            props.tableType == TableTypes.OFFER_SUBUSER
-              ? RequirementType.GOOD.toString()
-              : PurchaseOrderTableTypes.ISSUED.toString()
-          }
-          onChange={props.onTabChange}
-          type="card"
-          items={
-            props.tableType == TableTypes.REQUIREMENT_SUBUSER ||
-            props.tableType == TableTypes.OFFER_SUBUSER
-              ? reqOfferTabs
-              : purchaseOrderTabs
-          }
-        />
+        <div className="t-flex mr-sub">
+          {props.tableType == TableTypes.OFFER_SUBUSER ||
+          props.tableType == TableTypes.REQUIREMENT_SUBUSER ? (
+            <>
+              <ButtonContainer
+                common
+                className={`btn btn-grey wd-33 ${
+                  subType == RequirementType.GOOD ? "active" : ""
+                }`}
+                onClick={() => {
+                  changeSubType(RequirementType.GOOD);
+                }}
+              >
+                <i className="fa-regular fa-dolly"></i>{" "}
+                <span className="req-btn-info">{t("goods")}</span>
+              </ButtonContainer>
+              <ButtonContainer
+                common
+                className={`btn btn-grey wd-33 ${
+                  subType == RequirementType.SERVICE ? "active" : ""
+                }`}
+                onClick={() => {
+                  changeSubType(RequirementType.SERVICE);
+                }}
+              >
+                <i className="fa-regular fa-hand-holding-magic"></i>{" "}
+                <span className="req-btn-info">{t("services")}</span>
+              </ButtonContainer>
+              <ButtonContainer
+                common
+                className={`btn btn-grey wd-33 ${
+                  subType == RequirementType.SALE ? "active" : ""
+                }`}
+                onClick={() => {
+                  changeSubType(RequirementType.SALE);
+                }}
+              >
+                <i className="fa-regular fa-basket-shopping"></i>{" "}
+                <span className="req-btn-info">{t("sales")}</span>
+              </ButtonContainer>
+            </>
+          ) : (
+            <>
+              <ButtonContainer
+                common
+                className={`btn btn-grey wd-50 ${
+                  subType == PurchaseOrderTableTypes.ISSUED ? "active" : ""
+                }`}
+                onClick={() => {
+                  changeSubType(PurchaseOrderTableTypes.ISSUED);
+                }}
+              >
+                <i className="fa-regular fa-hand-holding-magic"></i>{" "}
+                <span className="req-btn-info">{t("issuedPl")}</span>
+              </ButtonContainer>
+              <ButtonContainer
+                common
+                className={`btn btn-grey wd-50 ${
+                  subType == PurchaseOrderTableTypes.RECEIVED ? "active" : ""
+                }`}
+                onClick={() => {
+                  changeSubType(PurchaseOrderTableTypes.RECEIVED);
+                }}
+              >
+                <i className="fa-regular fa-basket-shopping"></i>{" "}
+                <span className="req-btn-info">{t("receivedPl")}</span>
+              </ButtonContainer>
+            </>
+          )}
+        </div>
         <div className="detalle-oferta">
           {props.content.tableType == TableTypes.REQUIREMENT_SUBUSER && (
             <div className="card-white" style={{ padding: 0 }}>
