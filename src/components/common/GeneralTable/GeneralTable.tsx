@@ -50,6 +50,7 @@ export default function GeneralTable(props: GeneralTableProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const pageSizeOptions = pageSizeOptionsSt;
+
   let columns: Array<
     | ColumnType<Offer>
     | ColumnType<Requirement>
@@ -147,7 +148,8 @@ export default function GeneralTable(props: GeneralTableProps) {
   };
 
   switch (props.content.type) {
-    case TableTypes.HOME:
+    case TableTypes.HOME: {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       const [expandedRowKey, setExpandedRowKey] = useState<string | null>(null);
       getHomeTableColumns();
       return (
@@ -180,6 +182,7 @@ export default function GeneralTable(props: GeneralTableProps) {
           {...tableProps}
         ></Table>
       );
+    }
     case TableTypes.REQUIREMENT:
       getRequirementTableColumns();
       return (
