@@ -155,6 +155,7 @@ export enum Action {
   ADD_CERTIFICATES = 28,
   EDIT_DOCUMENT_LIST_TO_REQUEST = 29,
   VIEW = 30,
+  VIEw_SALES_ORDERS = 31,
 }
 
 export const ActionLabel: {
@@ -190,6 +191,7 @@ export const ActionLabel: {
   [Action.ADD_CERTIFICATES]: "addCertificates",
   [Action.EDIT_DOCUMENT_LIST_TO_REQUEST]: "listOfDocumentsToRequest",
   [Action.VIEW]: "view",
+  [Action.VIEw_SALES_ORDERS]: "viewSalesOrders",
 };
 
 export const ActionByStateRequirement: {
@@ -261,6 +263,7 @@ export const ActionSubUsers: {
     Action.VIEW_REQUIREMENTS,
     Action.VIEW_OFFERS,
     Action.VIEW_PURCHASE_ORDERS,
+    Action.VIEw_SALES_ORDERS,
     Action.EDIT_USER,
   ],
 };

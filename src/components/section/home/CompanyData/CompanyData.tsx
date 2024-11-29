@@ -67,18 +67,22 @@ export default function CompanyData() {
   }
 
   return (
-    <div className="t-flex f-column gap-15">
-      {!loadingUser && user ? (
-        <>
-          <BasicCompanyData user={user} />
-          <DetailedCompanyData user={user} />
-          <CertificationData state={CertificationState.NONE} />
-        </>
-      ) : (
-        <Flex justify="center" align="center">
-          <SimpleLoading style={{ width: "15vw" }} />
-        </Flex>
-      )}
-    </div>
+    <>
+      {userId ? (
+        <div className="t-flex f-column gap-15">
+          {!loadingUser && user ? (
+            <>
+              <BasicCompanyData user={user} />
+              <DetailedCompanyData user={user} />
+              <CertificationData state={CertificationState.NONE} />
+            </>
+          ) : (
+            <Flex justify="center" align="center">
+              <SimpleLoading style={{ width: "15vw" }} />
+            </Flex>
+          )}
+        </div>
+      ) : null}
+    </>
   );
 }

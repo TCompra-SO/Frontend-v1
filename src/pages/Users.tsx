@@ -248,6 +248,44 @@ export default function Users() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataOrder, errorOrder]);
 
+  /** Obtener lista de órdenes de venta */
+
+  const [apiParamsSales, setApiParamsSales] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingSales,
+    responseData: responseDataSales,
+    error: errorSales,
+    errorMsg: errorMsgSales,
+    fetchData: fetchDataSales,
+  } = useApi({
+    service: apiParamsSales.service,
+    method: apiParamsSales.method,
+    dataToSend: apiParamsSales.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingSales);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingSales]);
+
+  useEffect(() => {
+    if (apiParamsSales.service) fetchDataSales();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsSales]);
+
+  useEffect(() => {
+    if (responseDataSales) {
+      setModalTableDataOrder();
+    } else if (errorSales) {
+      showNotification(notification, "error", errorMsgSales);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataSales, errorSales]);
+
   /** Funciones */
 
   async function setTableData() {
@@ -357,6 +395,16 @@ export default function Users() {
           method: "get",
         });
         break;
+      case Action.VIEw_SALES_ORDERS:
+        setApiParamsSales({
+          service: getPurchaseOrdersByClientEntityService(
+            // r3v
+            user.uid,
+            user.typeID
+          ),
+          method: "get",
+        });
+        break;
     }
   }
 
@@ -411,6 +459,19 @@ export default function Users() {
             tableType={TableTypes.PURCHASE_ORDER_SUBUSER}
           />
         );
+      case Action.VIEw_SALES_ORDERS:
+        return (
+          <SubUserTableModal
+            content={{
+              tableType: TableTypes.PURCHASE_ORDER_SUBUSER,
+              tableContent: orderList,
+            }}
+            user={userData}
+            onTabChange={handleTabChange}
+            loading={loadingOrder}
+            tableType={TableTypes.PURCHASE_ORDER_SUBUSER}
+          />
+        );
       default:
         return null;
     }
@@ -448,11 +509,7 @@ export default function Users() {
       <NoContentModalContainer
         open={isOpenModal}
         width={
-          action == Action.VIEW_REQUIREMENTS ||
-          action == Action.VIEW_OFFERS ||
-          action == Action.VIEW_PURCHASE_ORDERS
-            ? 1100
-            : 800
+          action == Action.ADD_USER || action == Action.EDIT_USER ? 800 : 1100
         }
         style={mainModalScrollStyle}
         onClose={handleCloseModal}
