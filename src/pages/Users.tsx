@@ -39,7 +39,10 @@ import {
 } from "../utilities/transform";
 import { getRequirementsBySubUserService } from "../services/requests/requirementService";
 import { getOffersBySubUserService } from "../services/requests/offerService";
-import { getPurchaseOrdersByClientEntityService } from "../services/requests/purchaseOrderService";
+import {
+  getPurchaseOrdersByClientEntityService,
+  getPurchaseOrdersByProviderEntityService,
+} from "../services/requests/purchaseOrderService";
 
 export default function Users() {
   const { t } = useTranslation();
@@ -365,7 +368,6 @@ export default function Users() {
   function handleOnActionClick(action: Action, user: SubUserBase) {
     setAction(action);
     setUserData(user);
-    console.log(user);
     switch (action) {
       case Action.EDIT_USER:
         setApiParamsUser({
@@ -496,6 +498,70 @@ export default function Users() {
           case RequirementType.SALE:
             setApiParamsReq({
               service: getRequirementsBySubUserService(userData.uid),
+              method: "get",
+            });
+            break;
+        }
+      } else if (action == Action.VIEW_OFFERS) {
+        switch (tabId) {
+          case RequirementType.GOOD:
+            setApiParamsOffer({
+              service: getOffersBySubUserService(userData.uid), // r3v para servicios y liquidaciones
+              method: "get",
+            });
+            break;
+          case RequirementType.SERVICE:
+            setApiParamsOffer({
+              service: getOffersBySubUserService(userData.uid),
+              method: "get",
+            });
+            break;
+          case RequirementType.SALE:
+            setApiParamsOffer({
+              service: getOffersBySubUserService(userData.uid),
+              method: "get",
+            });
+            break;
+        }
+      } else if (action == Action.VIEW_PURCHASE_ORDERS) {
+        switch (tabId) {
+          case PurchaseOrderTableTypes.ISSUED:
+            setApiParamsOrder({
+              service: getPurchaseOrdersByClientEntityService(
+                userData.uid,
+                userData.typeID
+              ),
+              method: "get",
+            });
+            break;
+          case PurchaseOrderTableTypes.RECEIVED:
+            setApiParamsOrder({
+              service: getPurchaseOrdersByProviderEntityService(
+                userData.uid,
+                userData.typeID
+              ),
+              method: "get",
+            });
+            break;
+        }
+      } else if (action == Action.VIEw_SALES_ORDERS) {
+        // r3v cambiar a liq
+        switch (tabId) {
+          case PurchaseOrderTableTypes.ISSUED:
+            setApiParamsOrder({
+              service: getPurchaseOrdersByClientEntityService(
+                userData.uid,
+                userData.typeID
+              ),
+              method: "get",
+            });
+            break;
+          case PurchaseOrderTableTypes.RECEIVED:
+            setApiParamsOrder({
+              service: getPurchaseOrdersByProviderEntityService(
+                userData.uid,
+                userData.typeID
+              ),
               method: "get",
             });
             break;

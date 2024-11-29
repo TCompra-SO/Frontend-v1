@@ -171,43 +171,79 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
 
   async function openDetailedRequirement(responseData: any) {
     showLoadingMessage(message, true);
-    updateSubUserRequirementsViewOffers(true);
-    if (
-      currentPurchaseOrder &&
-      responseData.data &&
-      Array.isArray(responseData.data)
-    ) {
-      const { requirement } = await getRequirementById(
-        currentPurchaseOrder.requirementId,
-        currentPurchaseOrder.type
-      );
-      if (requirement) {
-        const offerArray: Offer[] = await Promise.all(
-          responseData.data.map(async (item: any) => {
-            const { responseData }: any = await makeRequest({
-              service: getBaseDataUserService(item.userID),
+    updateSubUserRequirementsViewOffers(true); // r3v falta caso liquidaciones
+    try {
+      if (
+        currentPurchaseOrder &&
+        responseData.data &&
+        Array.isArray(responseData.data)
+      ) {
+        const { requirement } = await getRequirementById(
+          currentPurchaseOrder.requirementId,
+          currentPurchaseOrder.type
+        );
+        if (requirement) {
+          let offerArray: Offer[] = [];
+
+          if (subType == PurchaseOrderTableTypes.ISSUED) {
+            offerArray = await Promise.all(
+              responseData.data.map(async (item: any) => {
+                const { responseData }: any = await makeRequest({
+                  service: getBaseDataUserService(item.userID),
+                  method: "get",
+                });
+                const { user, subUser } = transformToBaseUser(
+                  responseData.data[0]
+                );
+                return subUser
+                  ? transformToOffer(
+                      item,
+                      currentPurchaseOrder.type,
+                      subUser,
+                      user
+                    )
+                  : transformToOffer(item, currentPurchaseOrder.type, user);
+              })
+            );
+          } else if (subType == PurchaseOrderTableTypes.RECEIVED) {
+            const temp = responseData.data.find((item: any) => {
+              console.log(item);
+              return item.userID == props.user?.uid;
+            });
+            const { responseData: resp }: any = await makeRequest({
+              service: getBaseDataUserService(temp.userID),
               method: "get",
             });
-            const { user, subUser } = transformToBaseUser(responseData.data[0]);
-            return subUser
-              ? transformToOffer(item, currentPurchaseOrder.type, subUser, user)
-              : transformToOffer(item, currentPurchaseOrder.type, user);
-          })
-        );
-        setDataModal({
-          type: ModalTypes.DETAILED_REQUIREMENT,
-          data: {
-            offerList: offerArray,
-            requirement: requirement,
-            forPurchaseOrder: true,
-            filters: currentPurchaseOrder.filters,
-          },
-        });
-        setIsOpenModal(true);
+            const { user, subUser } = transformToBaseUser(resp.data[0]);
+            offerArray = [
+              subUser
+                ? transformToOffer(
+                    temp,
+                    currentPurchaseOrder.type,
+                    subUser,
+                    user
+                  )
+                : transformToOffer(temp, currentPurchaseOrder.type, user),
+            ];
+          }
+          setDataModal({
+            type: ModalTypes.DETAILED_REQUIREMENT,
+            data: {
+              offerList: offerArray,
+              requirement: requirement,
+              forPurchaseOrder: true,
+              filters: currentPurchaseOrder.filters,
+            },
+          });
+          setIsOpenModal(true);
+        } else showNotification(notification, "error", t("errorOccurred"));
       } else showNotification(notification, "error", t("errorOccurred"));
-    } else showNotification(notification, "error", t("errorOccurred"));
-    showLoadingMessage(message, false);
-    updateSubUserRequirementsViewOffers(false);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      showLoadingMessage(message, false);
+      updateSubUserRequirementsViewOffers(false);
+    }
   }
 
   function handleOnButtonClick(action: Action, data: any) {
@@ -241,8 +277,10 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
   function changeSubType(
     newSubType: RequirementType | PurchaseOrderTableTypes
   ) {
-    setSubType(newSubType);
-    props.onTabChange(newSubType);
+    if (subType != newSubType) {
+      setSubType(newSubType);
+      props.onTabChange(newSubType);
+    }
   }
 
   return (
