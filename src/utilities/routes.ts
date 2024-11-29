@@ -74,10 +74,12 @@ export const ApiRoutes = {
     uploadAvatar: "upload-avatar",
   },
   images: {
-    uploadImages: "upload-images",
+    uploadImagesReq: "uploadImagesRequeriment",
+    uploadImagesOffer: "uploadImagesOffer",
   },
   documents: {
-    uploadDocuments: "upload-documents",
+    uploadDocumentsReq: "uploadDocumentsRequeriment",
+    uploadDocumentsOffer: "uploadDocumentsOffer",
   },
   offers: {
     create: "create/",

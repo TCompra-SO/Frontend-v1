@@ -13,7 +13,7 @@ export function uploadAvatarService(): HttpService {
 export function uploadImagesRequirementService(): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.images}${
-      ApiRoutes.images.uploadImages
+      ApiRoutes.images.uploadImagesReq
     }`,
     type: "IM-REQ-UP",
   };
@@ -22,7 +22,7 @@ export function uploadImagesRequirementService(): HttpService {
 export function uploadImagesOfferService(): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.images}${
-      ApiRoutes.images.uploadImages
+      ApiRoutes.images.uploadImagesOffer
     }`,
     type: "IM-OFF-UP",
   };
