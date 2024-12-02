@@ -165,6 +165,8 @@ export function transformToOffer(
   offer.canceledByCreator = false;
   offer.type = type;
   offer.requirementTitle = data.requerimentTitle;
+  offer.image = data.images;
+  offer.document = data.files;
   if (mainUser) {
     offer.user = mainUser;
     offer.subUser = user;

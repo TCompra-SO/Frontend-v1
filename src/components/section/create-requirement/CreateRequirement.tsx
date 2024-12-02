@@ -276,7 +276,6 @@ export default function CreateRequirement(props: CreateRequirementProps) {
           formData.append(ImageRequestLabels.IMAGES, file.originFileObj);
         }
       });
-
       setFormDataImg(formData);
     }
 
@@ -287,7 +286,6 @@ export default function CreateRequirement(props: CreateRequirementProps) {
           formDataDoc.append(ImageRequestLabels.DOCUMENTS, file.originFileObj);
         }
       });
-
       setFormDataDoc(formDataDoc);
     }
   }

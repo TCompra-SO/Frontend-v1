@@ -63,7 +63,6 @@ export default function OfferForm(props: OfferFormProps) {
   const [form] = Form.useForm();
   const email = useSelector((state: MainState) => state.user.email);
   const uid = useSelector((state: MainState) => state.user.uid);
-  const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
   const entityType = useSelector((state: MainState) => state.user.typeEntity);
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const role = useSelector((state: MainState) => state.user.typeID);
@@ -145,7 +144,23 @@ export default function OfferForm(props: OfferFormProps) {
     token: apiParamsImg.token,
   });
 
+  useEffect(() => {
+    if (apiParamsImg.service) fetchDataImg(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsImg]);
+
+  useEffect(() => {
+    if (responseDataImg) {
+      setImgSuccess(ProcessFlag.FIN_SUCCESS);
+    } else if (errorImg) {
+      setImgSuccess(ProcessFlag.FIN_UNSUCCESS);
+      showNotification(notification, "error", errorMsgImg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataImg, errorImg]);
+
   /* Para documentos */
+
   const [apiParamsDoc, setApiParamsDoc] = useState<useApiParams<FormData>>({
     service: null,
     method: "get",
@@ -164,14 +179,9 @@ export default function OfferForm(props: OfferFormProps) {
   });
 
   useEffect(() => {
-    if (responseDataImg) {
-      setImgSuccess(ProcessFlag.FIN_SUCCESS);
-    } else if (errorImg) {
-      setImgSuccess(ProcessFlag.FIN_UNSUCCESS);
-      showNotification(notification, "error", errorMsgImg);
-    }
+    if (apiParamsDoc.service) fetchDataDoc(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataImg, errorImg]);
+  }, [apiParamsDoc]);
 
   useEffect(() => {
     if (responseDataDoc) {
@@ -222,20 +232,6 @@ export default function OfferForm(props: OfferFormProps) {
         (props.requirement.subUser && props.requirement.subUser.uid == uid)) // requerimiento fue creado por subusuario
     ) {
       setCantOfferMotive(CantOfferMotives.IS_CREATOR);
-      // } else if (
-      //   entityType == EntityType.SUBUSER &&
-      //   props.requirement &&
-      //   !props.requirement.subUser && // requerimiento no fue creado por subusuario
-      //   props.requirement.user.uid == mainUserUid
-      // ) {
-      //   setCantOfferMotive(CantOfferMotives.MAIN_ACCOUNT_IS_CREATOR);
-      // } else if (
-      //   entityType != EntityType.SUBUSER &&
-      //   props.requirement &&
-      //   props.requirement.subUser &&
-      //   props.requirement.user.uid == uid
-      // ) {
-      //   setCantOfferMotive(CantOfferMotives.SUBUSER_IS_CREATOR);
     } else if (
       role == UserRoles.LEGAL ||
       role == UserRoles.NONE ||
@@ -341,8 +337,6 @@ export default function OfferForm(props: OfferFormProps) {
             formData.append(ImageRequestLabels.IMAGES, file.originFileObj);
           }
         });
-        formData.append(ImageRequestLabels.UID, uid);
-
         setFormDataImg(formData);
       }
 
@@ -356,7 +350,6 @@ export default function OfferForm(props: OfferFormProps) {
             );
           }
         });
-        formDataDoc.append(ImageRequestLabels.UID, uid);
         setFormDataDoc(formDataDoc);
       }
 
@@ -380,18 +373,24 @@ export default function OfferForm(props: OfferFormProps) {
       if (!formDataDoc && !formDataImg) {
         return;
       }
-      if (formDataDoc)
+      if (formDataDoc) {
+        const data: FormData = formDataDoc;
+        data.append(ImageRequestLabels.UID, offerIdResponse);
         setApiParamsDoc({
           service: uploadDocsOfferService(),
           method: "post",
-          dataToSend: formDataDoc,
+          dataToSend: data,
         });
-      if (formDataImg)
+      }
+      if (formDataImg) {
+        const data: FormData = formDataImg;
+        data.append(ImageRequestLabels.UID, offerIdResponse);
         setApiParamsImg({
           service: uploadImagesOfferService(),
           method: "post",
           dataToSend: formDataImg,
         });
+      }
     } else {
       setDocSuccess(ProcessFlag.FIN_UNSUCCESS);
       setImgSuccess(ProcessFlag.FIN_UNSUCCESS);
