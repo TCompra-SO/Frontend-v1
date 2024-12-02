@@ -47,8 +47,6 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
     data: {},
   });
 
-  console.log(props.motive);
-
   /* Para eliminar */
 
   const [apiParamsDelete, setApiParamsDelete] = useState<useApiParams>({

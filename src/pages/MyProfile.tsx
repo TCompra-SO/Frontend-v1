@@ -30,18 +30,11 @@ import showNotification from "../utilities/notification/showNotification";
 import { equalServices } from "../utilities/globalFunctions";
 import { transformToFullUser } from "../utilities/transform";
 import { uploadAvatarService } from "../services/requests/imageService";
-
-const planData1: PlanData = {
-  goods: 9982,
-  services: 1213,
-  sales: 34,
-  offers: 1394,
-};
+import { getSubUserService } from "../services/requests/subUserService";
 
 export default function MyProfile() {
   const { t } = useTranslation();
   const [user, setUser] = useState<FullUser>();
-  const [plan, setPlan] = useState<PlanData>();
   const context = useContext(ListsContext);
   const { categoryData } = context;
   const fileInputRef = useRef<InputRef>(null);
@@ -52,6 +45,7 @@ export default function MyProfile() {
   const handleChangeImage = useHandleChangeImage(notification);
   const [token] = useState(useSelector((state: MainState) => state.user.token));
   const uid = useSelector((state: MainState) => state.user.uid);
+  const entityType = useSelector((state: MainState) => state.user.typeEntity);
 
   const [apiParams, setApiParams] = useState<
     useApiParams<NewPasswordRequest | FormData>
@@ -107,11 +101,14 @@ export default function MyProfile() {
 
   useEffect(() => {
     setApiParams({
-      service: getUserService(uid),
+      service:
+        entityType == EntityType.SUBUSER
+          ? getSubUserService(uid)
+          : getUserService(uid),
       method: "get",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [entityType]);
 
   useEffect(() => {
     if (user)
@@ -149,7 +146,10 @@ export default function MyProfile() {
     if (responseData) {
       if (equalServices(apiParams.service, newPasswordService()))
         changePasswordSuccess();
-      else if (equalServices(apiParams.service, getUserService("")))
+      else if (
+        equalServices(apiParams.service, getUserService("")) ||
+        equalServices(apiParams.service, getSubUserService(""))
+      )
         setFormData(responseData);
     } else if (error) {
       showNotification(notification, "error", errorMsg);
@@ -169,7 +169,6 @@ export default function MyProfile() {
   function setFormData(responseData: any) {
     const user = transformToFullUser(responseData.data);
     setUser(user);
-    setPlan(planData1);
     if (user.image) setImageSrc(user.image);
   }
 
