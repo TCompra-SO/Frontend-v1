@@ -1,7 +1,6 @@
 import { ColumnType } from "antd/es/table";
-import { Requirement } from "../../../../models/MainInterfaces";
+import { Requirement, SubUserBase } from "../../../../models/MainInterfaces";
 import AvatarImage from "../../AvatarImage";
-import { SubUserBase } from "../../../../models/Responses";
 
 export default function ImageColumn(isUser: boolean, hidden: boolean = false) {
   const col: ColumnType<Requirement | SubUserBase> = {

@@ -8,6 +8,7 @@ import {
   TableTypes,
   CommonFilter,
   PurchaseOrderTableTypes,
+  CodeResponseCanOffer,
 } from "../utilities/types";
 import {
   OfferItemSubUser,
@@ -24,8 +25,8 @@ import {
   CertificateFile,
   CertificationItem,
   BasicRateData,
+  SubUserBase,
 } from "./MainInterfaces";
-import { SubUserBase } from "./Responses";
 
 /******** Modals *******/
 
@@ -399,4 +400,9 @@ export interface OfferFilters {
 export interface ListItem {
   key: string;
   value: string;
+}
+
+export interface CanOfferResponse {
+  codeResponse: CodeResponseCanOffer;
+  offerID?: string;
 }

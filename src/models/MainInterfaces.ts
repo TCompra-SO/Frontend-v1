@@ -118,12 +118,6 @@ export interface PurchaseOrder extends BasicPurchaseOrder {
   filters?: OfferFilters;
 }
 
-export interface User extends BaseUser {
-  document: string;
-  address: string;
-  phone: string;
-}
-
 export interface BaseUser {
   uid: string;
   name: string;
@@ -137,6 +131,11 @@ export interface BaseUser {
   customerCount?: number;
   sellerCount?: number;
   typeEntity: EntityType;
+}
+
+export interface User extends BaseUser {
+  address: string;
+  phone: string;
 }
 
 export interface FullUser extends User {
@@ -156,6 +155,26 @@ export interface FullUser extends User {
   numPurchaseOrdersClient: number;
   numSellingOrdersProvider: number;
   numSellingOrdersClient: number;
+}
+
+export interface SubUserBase extends BaseUser {
+  typeID: UserRoles;
+  createdAt: string;
+  numGoods: number;
+  numServices: number;
+  numSales: number;
+  numOffers: number;
+  numPurchaseOrdersProvider: number;
+  numPurchaseOrdersClient: number;
+  numSellingOrdersProvider: number;
+  numSellingOrdersClient: number;
+}
+
+export interface SubUserProfile extends SubUserBase {
+  address: string;
+  cityID: number;
+  companyID: string;
+  phone: string;
 }
 
 export interface RequirementItemSubUser extends BaseRequirementOffer {

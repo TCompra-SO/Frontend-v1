@@ -8,9 +8,10 @@ import {
   PurchaseOrderItemSubUser,
   Requirement,
   RequirementItemSubUser,
+  SubUserBase,
+  SubUserProfile,
 } from "../models/MainInterfaces";
 import { UserState } from "../models/Redux";
-import { SubUserBase } from "../models/Responses";
 import { getBaseDataUserService } from "../services/requests/authService";
 import makeRequest from "./globalFunctions";
 import {
@@ -307,6 +308,17 @@ export function transformToSubUserBase(data: any) {
     numPurchaseOrdersClient: data.numPurchaseOrdersClient,
     numSellingOrdersProvider: data.numSellingOrdersProvider,
     numSellingOrdersClient: data.numSellingOrdersClient,
+  };
+  return subUser;
+}
+
+export function transformToSubUserProfile(data: any) {
+  const subUser: SubUserProfile = {
+    ...transformToSubUserBase(data),
+    address: data.address,
+    cityID: data.cityID,
+    companyID: data.companyID,
+    phone: data.phone,
   };
   return subUser;
 }

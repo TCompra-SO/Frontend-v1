@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { FullUser, PlanData } from "../models/MainInterfaces";
+import { FullUser, SubUserProfile } from "../models/MainInterfaces";
 import { EntityType, ImageRequestLabels } from "../utilities/types";
 import { useContext, useEffect, useRef, useState } from "react";
 import { ListsContext } from "../contexts/ListsContext";
@@ -28,13 +28,17 @@ import {
 } from "../services/requests/authService";
 import showNotification from "../utilities/notification/showNotification";
 import { equalServices } from "../utilities/globalFunctions";
-import { transformToFullUser } from "../utilities/transform";
+import {
+  transformToFullUser,
+  transformToSubUserProfile,
+} from "../utilities/transform";
 import { uploadAvatarService } from "../services/requests/imageService";
 import { getSubUserService } from "../services/requests/subUserService";
 
 export default function MyProfile() {
   const { t } = useTranslation();
-  const [user, setUser] = useState<FullUser>();
+  const [user, setUser] = useState<FullUser | SubUserProfile>();
+  const [mainUser, setMainUser] = useState<FullUser>();
   const context = useContext(ListsContext);
   const { categoryData } = context;
   const fileInputRef = useRef<InputRef>(null);
@@ -45,95 +49,23 @@ export default function MyProfile() {
   const handleChangeImage = useHandleChangeImage(notification);
   const [token] = useState(useSelector((state: MainState) => state.user.token));
   const uid = useSelector((state: MainState) => state.user.uid);
+  const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const entityType = useSelector((state: MainState) => state.user.typeEntity);
 
-  const [apiParams, setApiParams] = useState<
-    useApiParams<NewPasswordRequest | FormData>
-  >({
+  /** Cambiar contraseña y obtener datos iniciales */
+
+  const [apiParams, setApiParams] = useState<useApiParams<NewPasswordRequest>>({
     service: null,
     method: "get",
     token,
   });
-  const { loading, responseData, error, errorMsg, fetchData } = useApi<
-    NewPasswordRequest | FormData
-  >({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-    token: apiParams.token,
-  });
-
-  const [apiParamsImage, setApiParamsImage] = useState<useApiParams<FormData>>({
-    service: null,
-    method: "get",
-    token,
-  });
-  const {
-    loading: loadingImage,
-    responseData: responseDataImage,
-    error: errorImage,
-    errorMsg: errorMsgImage,
-    fetchData: fetchDataImage,
-  } = useApi<NewPasswordRequest | FormData>({
-    service: apiParamsImage.service,
-    method: apiParamsImage.method,
-    dataToSend: apiParamsImage.dataToSend,
-    token: apiParamsImage.token,
-  });
-
-  // const [apiParamsForm, setApiParamsForm] = useState<useApiParams<any>>({ /* r3v */
-  //   service: null,
-  //   method: "get",
-  //   token,
-  // });
-  // const {
-  //   loading: loadingForm,
-  //   responseData: responseDataForm,
-  //   error: errorForm,
-  //   errorMsg: errorMsgForm,
-  //   fetchData: fetchDataForm,
-  // } = useApi<NewPasswordRequest | FormData>({
-  //   service: apiParamsForm.service,
-  //   method: apiParamsForm.method,
-  //   dataToSend: apiParamsForm.dataToSend,
-  //   token: apiParamsForm.token,
-  // });
-
-  useEffect(() => {
-    setApiParams({
-      service:
-        entityType == EntityType.SUBUSER
-          ? getSubUserService(uid)
-          : getUserService(uid),
-      method: "get",
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi<NewPasswordRequest>({
+      service: apiParams.service,
+      method: apiParams.method,
+      dataToSend: apiParams.dataToSend,
+      token: apiParams.token,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [entityType]);
-
-  useEffect(() => {
-    if (user)
-      form.setFieldsValue({
-        address: user.address,
-        name: user.name,
-        location: user.cityID,
-        phone: user.phone,
-        email: user.email,
-        document: user.document,
-        tenure: user.tenure,
-        specialty: user.specialty,
-        aboutMe: user.aboutMe,
-      });
-    if (user?.avatar) setImageSrc(user.avatar);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
-
-  useEffect(() => {
-    if (apiParamsImage.service) {
-      fetchDataImage(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsImage]);
 
   useEffect(() => {
     if (apiParams.service) {
@@ -157,6 +89,33 @@ export default function MyProfile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
+  /** Cambiar imagen */
+
+  const [apiParamsImage, setApiParamsImage] = useState<useApiParams<FormData>>({
+    service: null,
+    method: "get",
+    token,
+  });
+  const {
+    loading: loadingImage,
+    responseData: responseDataImage,
+    error: errorImage,
+    errorMsg: errorMsgImage,
+    fetchData: fetchDataImage,
+  } = useApi<NewPasswordRequest | FormData>({
+    service: apiParamsImage.service,
+    method: apiParamsImage.method,
+    dataToSend: apiParamsImage.dataToSend,
+    token: apiParamsImage.token,
+  });
+
+  useEffect(() => {
+    if (apiParamsImage.service) {
+      fetchDataImage(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsImage]);
+
   useEffect(() => {
     if (responseDataImage) {
       showNotification(notification, "success", t("imageUpdatedSuccessfully"));
@@ -166,10 +125,101 @@ export default function MyProfile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataImage, errorImage]);
 
+  /** Obtener datos de usuario principal */
+
+  const [apiParamsMainUser, setApiParamsMainUser] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const { responseData: responseDataMainUser, fetchData: fetchDataMainUser } =
+    useApi({
+      service: apiParamsMainUser.service,
+      method: apiParamsMainUser.method,
+      dataToSend: apiParamsMainUser.dataToSend,
+    });
+
+  useEffect(() => {
+    if (apiParamsMainUser.service) fetchDataMainUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsMainUser]);
+
+  useEffect(() => {
+    if (responseDataMainUser) {
+      setMainUser(transformToFullUser(responseDataMainUser.data));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataMainUser]);
+
+  // const [apiParamsForm, setApiParamsForm] = useState<useApiParams<any>>({ /* r3v */
+  //   service: null,
+  //   method: "get",
+  //   token,
+  // });
+  // const {
+  //   loading: loadingForm,
+  //   responseData: responseDataForm,
+  //   error: errorForm,
+  //   errorMsg: errorMsgForm,
+  //   fetchData: fetchDataForm,
+  // } = useApi<NewPasswordRequest | FormData>({
+  //   service: apiParamsForm.service,
+  //   method: apiParamsForm.method,
+  //   dataToSend: apiParamsForm.dataToSend,
+  //   token: apiParamsForm.token,
+  // });
+
+  /** Acciones iniciales */
+
+  useEffect(() => {
+    setApiParams({
+      service:
+        entityType == EntityType.SUBUSER
+          ? getSubUserService(uid)
+          : getUserService(uid),
+      method: "get",
+    });
+    if (entityType == EntityType.SUBUSER)
+      setApiParamsMainUser({
+        service: getUserService(mainUid),
+        method: "get",
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entityType]);
+
+  useEffect(() => {
+    if (user) {
+      form.setFieldsValue({
+        address: user.address,
+        name: user.name,
+        location: user.cityID,
+        phone: user.phone,
+        email: user.email,
+        document: user.document,
+      });
+      if (entityType == EntityType.COMPANY) {
+        const comp = user as FullUser;
+        form.setFieldsValue({
+          tenure: comp.tenure,
+          specialty: comp.specialty,
+          aboutMe: comp.aboutMe,
+        });
+      }
+    }
+    if (user?.avatar) setImageSrc(user.avatar);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  /** Funciones */
+
   function setFormData(responseData: any) {
-    const user = transformToFullUser(responseData.data);
-    setUser(user);
-    if (user.image) setImageSrc(user.image);
+    if (entityType == EntityType.SUBUSER) {
+      setUser(transformToSubUserProfile(responseData));
+    } else {
+      const user = transformToFullUser(responseData.data);
+      setUser(user);
+    }
+    if (user?.image) setImageSrc(user.image);
   }
 
   function handleClick() {
@@ -236,16 +286,18 @@ export default function MyProfile() {
       </div>
       <div className="t-flex gap-15 f-column">
         <div className="t-flex gap-15 perfil-user">
-          <div className="card-white imagen-perfil">
-            <img src={imageSrc} className="imagen-p" />
-            <ButtonContainer
-              className="bnt-filter"
-              onClick={handleClick}
-              loading={loadingImage}
-            >
-              {t("uploadImage")} <i className="fa-regular fa-images"></i>
-            </ButtonContainer>
-          </div>
+          {entityType != EntityType.SUBUSER && (
+            <div className="card-white imagen-perfil">
+              <img src={imageSrc} className="imagen-p" />
+              <ButtonContainer
+                className="bnt-filter"
+                onClick={handleClick}
+                loading={loadingImage}
+              >
+                {t("uploadImage")} <i className="fa-regular fa-images"></i>
+              </ButtonContainer>
+            </div>
+          )}
 
           <div className="t-flex gap-15 card-datos">
             <div className="card-white card-d1">
@@ -302,7 +354,10 @@ export default function MyProfile() {
                     {t("category")} 1
                   </div>
                   <div className="text-truncate detalles-oferta">
-                    {user && categoryData[user?.categories[0]]?.value}
+                    {entityType == EntityType.SUBUSER
+                      ? mainUser && categoryData[mainUser.categories[0]]?.value
+                      : user &&
+                        categoryData[(user as FullUser).categories[0]]?.value}
                   </div>
                 </div>
               </div>
@@ -315,7 +370,10 @@ export default function MyProfile() {
                     {t("category")} 2
                   </div>
                   <div className="text-truncate detalles-oferta">
-                    {user && categoryData[user?.categories[1]]?.value}
+                    {entityType == EntityType.SUBUSER
+                      ? mainUser && categoryData[mainUser.categories[1]]?.value
+                      : user &&
+                        categoryData[(user as FullUser).categories[1]]?.value}
                   </div>
                 </div>
               </div>
@@ -328,7 +386,10 @@ export default function MyProfile() {
                     {t("category")} 3
                   </div>
                   <div className="text-truncate detalles-oferta">
-                    {user && categoryData[user?.categories[2]]?.value}
+                    {entityType == EntityType.SUBUSER
+                      ? mainUser && categoryData[mainUser.categories[2]]?.value
+                      : user &&
+                        categoryData[(user as FullUser).categories[2]]?.value}
                   </div>
                 </div>
               </div>
@@ -454,36 +515,42 @@ export default function MyProfile() {
               </div>
             </Form>
           </div>
-          <div className="card-white card-pass">
-            <div className="t-flex mr-sub-2">
-              <i className="fa-regular fa-user-lock sub-icon m-0"></i>
-              <div className="sub-titulo sub-calificar">
-                <div>{t("password")}</div>
+          {entityType != EntityType.SUBUSER && (
+            <div className="card-white card-pass">
+              <div className="t-flex mr-sub-2">
+                <i className="fa-regular fa-user-lock sub-icon m-0"></i>
+                <div className="sub-titulo sub-calificar">
+                  <div>{t("password")}</div>
+                </div>
               </div>
+              <Form
+                form={passwordForm}
+                colon={false}
+                requiredMark={false}
+                onFinish={saveMyPassword}
+              >
+                <div className="t-flex gap-15 f-column">
+                  <PasswordField fromMyPerfil name="password1" />
+                  <PasswordField
+                    fromMyPerfil
+                    name="password2"
+                    confirmPassword
+                  />
+                  <ButtonContainer
+                    className="btn btn-default wd-100"
+                    htmlType="submit"
+                    loading={
+                      equalServices(apiParams.service, newPasswordService())
+                        ? loading
+                        : undefined
+                    }
+                  >
+                    {t("saveButton")}
+                  </ButtonContainer>
+                </div>
+              </Form>
             </div>
-            <Form
-              form={passwordForm}
-              colon={false}
-              requiredMark={false}
-              onFinish={saveMyPassword}
-            >
-              <div className="t-flex gap-15 f-column">
-                <PasswordField fromMyPerfil name="password1" />
-                <PasswordField fromMyPerfil name="password2" confirmPassword />
-                <ButtonContainer
-                  className="btn btn-default wd-100"
-                  htmlType="submit"
-                  loading={
-                    equalServices(apiParams.service, newPasswordService())
-                      ? loading
-                      : undefined
-                  }
-                >
-                  {t("saveButton")}
-                </ButtonContainer>
-              </div>
-            </Form>
-          </div>
+          )}
         </div>
       </div>
     </>

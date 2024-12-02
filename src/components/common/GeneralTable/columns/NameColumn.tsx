@@ -4,6 +4,7 @@ import {
   BasicPurchaseOrder,
   CertificateFile,
   Requirement,
+  SubUserBase,
 } from "../../../../models/MainInterfaces";
 import {
   PurchaseOrderTableTypes,
@@ -11,7 +12,6 @@ import {
 } from "../../../../utilities/types";
 import { useContext } from "react";
 import { ListsContext } from "../../../../contexts/ListsContext";
-import { SubUserBase } from "../../../../models/Responses";
 import { getLabelFromRole } from "../../../../utilities/globalFunctions";
 import { useTranslation } from "react-i18next";
 

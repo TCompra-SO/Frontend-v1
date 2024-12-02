@@ -29,8 +29,8 @@ import { useSelector } from "react-redux";
 import { MainState } from "../../../../models/Redux";
 import { equalServices } from "../../../../utilities/globalFunctions";
 import PasswordField from "../../../common/formFields/PasswordField";
-import { SubUserProfile } from "../../../../models/Responses";
 import { newPasswordService } from "../../../../services/requests/authService";
+import { SubUserProfile } from "../../../../models/MainInterfaces";
 
 interface AddUserModalProps {
   onClose: () => void;

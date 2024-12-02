@@ -18,7 +18,10 @@ import AddDocumentField from "../../../../common/formFields/AddDocumentField";
 import { CreateOfferRequest } from "../../../../../models/Requests";
 import { ReactNode, useEffect, useState } from "react";
 import showNotification from "../../../../../utilities/notification/showNotification";
-import { useApiParams } from "../../../../../models/Interfaces";
+import {
+  CanOfferResponse,
+  useApiParams,
+} from "../../../../../models/Interfaces";
 import useApi from "../../../../../hooks/useApi";
 import {
   createOfferService,
@@ -42,7 +45,7 @@ import React from "react";
 import CantOfferMessage from "./CantOfferMessage";
 import { Requirement } from "../../../../../models/MainInterfaces";
 import makeRequest from "../../../../../utilities/globalFunctions";
-import { CanOfferResponse } from "../../../../../models/Responses";
+
 import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
 
 function RowContainer({ children }: { children: ReactNode }) {

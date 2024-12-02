@@ -6,12 +6,12 @@ import {
   RequirementType,
   TableTypes,
 } from "../../../../utilities/types";
-import { SubUserBase } from "../../../../models/Responses";
 import {
   Offer,
   OfferItemSubUser,
   PurchaseOrderItemSubUser,
   RequirementItemSubUser,
+  SubUserBase,
 } from "../../../../models/MainInterfaces";
 import GeneralTable from "../../../common/GeneralTable/GeneralTable";
 import { useContext, useEffect, useState } from "react";

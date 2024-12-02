@@ -24,18 +24,20 @@ import showNotification, {
   showLoadingMessage,
 } from "../utilities/notification/showNotification";
 import { App } from "antd";
-import { SubUserBase, SubUserProfile } from "../models/Responses";
 import SubUserTableModal from "../components/section/users/subUserTables/SubUserTableModal";
 import {
   OfferItemSubUser,
   PurchaseOrderItemSubUser,
   RequirementItemSubUser,
+  SubUserBase,
+  SubUserProfile,
 } from "../models/MainInterfaces";
 import {
   transformDataToOfferItemSubUser,
   transformDataToRequirementItemSubUser,
   transformToPurchaseOrderItemSubUser,
   transformToSubUserBase,
+  transformToSubUserProfile,
 } from "../utilities/transform";
 import { getRequirementsBySubUserService } from "../services/requests/requirementService";
 import { getOffersBySubUserService } from "../services/requests/offerService";
@@ -123,11 +125,7 @@ export default function Users() {
   useEffect(() => {
     if (responseDataUser) {
       if (equalServices(apiParamsUser.service, getSubUserService(""))) {
-        setUserDataEdit({
-          // email: userData?.email,
-          // typeID: userData?.typeID,
-          ...responseDataUser,
-        });
+        setUserDataEdit(transformToSubUserProfile(responseDataUser));
         handleOpenModal();
       }
     } else if (errorUser) {

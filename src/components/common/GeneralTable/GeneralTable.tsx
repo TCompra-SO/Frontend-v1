@@ -25,10 +25,10 @@ import {
   BaseRequirementOffer,
   CertificateFile,
   CertificationItem,
+  SubUserBase,
 } from "../../../models/MainInterfaces";
 import { ColumnType } from "antd/es/table";
 import { useTranslation } from "react-i18next";
-import { SubUserBase } from "../../../models/Responses";
 import GeneralColumnString from "./columns/GeneralColumnString";
 import GeneralColumnNumber from "./columns/GeneralColumnNumber";
 import TypeColumn from "./columns/TypeColumn";
