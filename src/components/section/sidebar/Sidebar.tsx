@@ -1,11 +1,15 @@
-import { CSSProperties, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { pageRoutes, pageSubRoutes } from "../../../utilities/routes";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
 import { RolesForSection } from "../../../utilities/roles";
+import {
+  getLastSegmentFromRoute,
+  getSectionFromRoute,
+} from "../../../utilities/globalFunctions";
 
 interface SidebarProps {
   showMenu: boolean;
@@ -14,6 +18,7 @@ interface SidebarProps {
 
 export default function Sidebar(props: SidebarProps) {
   const { t } = useTranslation();
+  const location = useLocation();
   const navigate = useNavigate();
   const typeID = useSelector((state: MainState) => state.user.typeID);
   const [menuStyle] = useState<CSSProperties>({ display: "block" });
@@ -26,10 +31,23 @@ export default function Sidebar(props: SidebarProps) {
   const menuAllPurch: string = "menuAllPurch";
   const menuAllSales: string = "menuAllSales";
   const menuCert: string = "menuCert";
+  const buttonClass: string = "btn btn-transparent wd-100 text-left";
   const [menuVisibility, setMenuVisibility] = useState<{
     [key: string]: boolean;
   }>({});
-  const buttonClass: string = "btn btn-transparent wd-100 text-left";
+  const [menuFocus, setMenuFocus] = useState<{
+    [key: string]: string;
+  }>({});
+
+  useEffect(() => {
+    console.log(location.pathname);
+    console.log(
+      getSectionFromRoute(location.pathname),
+      getLastSegmentFromRoute(location.pathname)
+    );
+  }, [location]);
+
+  /** Funciones */
 
   function toggleMenu(menuId: string) {
     setMenuVisibility((prevVisibility) => ({
@@ -38,7 +56,18 @@ export default function Sidebar(props: SidebarProps) {
     }));
   }
 
+  function focusMenu(menuId: string) {
+    setMenuFocus((prev) => {
+      const updatedMenuFocus: { [key: string]: string } = {};
+      for (const key in prev) {
+        updatedMenuFocus[key] = key === menuId ? "focus" : "";
+      }
+      return updatedMenuFocus;
+    });
+  }
+
   function redirectTo(route: string) {
+    focusMenu(route);
     navigate(route);
   }
 
@@ -71,7 +100,7 @@ export default function Sidebar(props: SidebarProps) {
               </>
             }
             common
-            className={buttonClass}
+            className={`${buttonClass} ${menuFocus[pageRoutes.profile]}`}
             onClick={() => redirectTo(`${pageRoutes.profile}`)}
           />
         )}
@@ -94,7 +123,11 @@ export default function Sidebar(props: SidebarProps) {
               style={{ display: menuVisibility[menuReq] ? "block" : "none" }}
             >
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[
+                    `${pageRoutes.myRequirements}/${pageSubRoutes.goods}`
+                  ]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(
@@ -106,7 +139,11 @@ export default function Sidebar(props: SidebarProps) {
                 {t("goods")}
               </ButtonContainer>
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[
+                    `${pageRoutes.myRequirements}/${pageSubRoutes.services}`
+                  ]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(
@@ -118,7 +155,11 @@ export default function Sidebar(props: SidebarProps) {
                 {t("services")}
               </ButtonContainer>
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[
+                    `${pageRoutes.myRequirements}/${pageSubRoutes.sales}`
+                  ]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(
@@ -151,7 +192,9 @@ export default function Sidebar(props: SidebarProps) {
               style={{ display: menuVisibility[menuOff] ? "block" : "none" }}
             >
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[`${pageRoutes.myOffers}/${pageSubRoutes.goods}`]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(`${pageRoutes.myOffers}/${pageSubRoutes.goods}`)
@@ -161,7 +204,9 @@ export default function Sidebar(props: SidebarProps) {
                 {t("goods")}
               </ButtonContainer>
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[`${pageRoutes.myOffers}/${pageSubRoutes.services}`]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(`${pageRoutes.myOffers}/${pageSubRoutes.services}`)
@@ -171,7 +216,9 @@ export default function Sidebar(props: SidebarProps) {
                 {t("services")}
               </ButtonContainer>
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[`${pageRoutes.myOffers}/${pageSubRoutes.sales}`]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(`${pageRoutes.myOffers}/${pageSubRoutes.sales}`)
@@ -202,7 +249,11 @@ export default function Sidebar(props: SidebarProps) {
               style={{ display: menuVisibility[menuPurch] ? "block" : "none" }}
             >
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[
+                    `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issued}`
+                  ]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(
@@ -214,7 +265,11 @@ export default function Sidebar(props: SidebarProps) {
                 {t("issuedPl")}
               </ButtonContainer>
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[
+                    `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.received}`
+                  ]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(
@@ -247,7 +302,11 @@ export default function Sidebar(props: SidebarProps) {
               style={{ display: menuVisibility[menuSales] ? "block" : "none" }}
             >
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[
+                    `${pageRoutes.mySalesOrders}/${pageSubRoutes.issued}`
+                  ]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(
@@ -259,7 +318,11 @@ export default function Sidebar(props: SidebarProps) {
                 {t("issuedPl")}
               </ButtonContainer>
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[
+                    `${pageRoutes.mySalesOrders}/${pageSubRoutes.received}`
+                  ]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(
@@ -295,7 +358,7 @@ export default function Sidebar(props: SidebarProps) {
                 </>
               }
               common
-              className={buttonClass}
+              className={`${buttonClass} ${menuFocus[pageRoutes.users]}`}
               onClick={() => redirectTo(`${pageRoutes.users}`)}
             />
           </>
@@ -319,7 +382,11 @@ export default function Sidebar(props: SidebarProps) {
               style={{ display: menuVisibility[menuAllReq] ? "block" : "none" }}
             >
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[
+                    `${pageRoutes.allRequirements}/${pageSubRoutes.goods}`
+                  ]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(
@@ -331,7 +398,11 @@ export default function Sidebar(props: SidebarProps) {
                 {t("goods")}
               </ButtonContainer>
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[
+                    `${pageRoutes.allRequirements}/${pageSubRoutes.services}`
+                  ]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(
@@ -343,7 +414,11 @@ export default function Sidebar(props: SidebarProps) {
                 {t("services")}
               </ButtonContainer>
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[
+                    `${pageRoutes.allRequirements}/${pageSubRoutes.sales}`
+                  ]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(
@@ -376,7 +451,9 @@ export default function Sidebar(props: SidebarProps) {
               style={{ display: menuVisibility[menuAllOff] ? "block" : "none" }}
             >
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[`${pageRoutes.allOffers}/${pageSubRoutes.goods}`]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(`${pageRoutes.allOffers}/${pageSubRoutes.goods}`)
@@ -386,7 +463,9 @@ export default function Sidebar(props: SidebarProps) {
                 {t("goods")}
               </ButtonContainer>
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[`${pageRoutes.allOffers}/${pageSubRoutes.services}`]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(
@@ -398,7 +477,9 @@ export default function Sidebar(props: SidebarProps) {
                 {t("services")}
               </ButtonContainer>
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[`${pageRoutes.allOffers}/${pageSubRoutes.sales}`]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(`${pageRoutes.allOffers}/${pageSubRoutes.sales}`)
@@ -429,7 +510,11 @@ export default function Sidebar(props: SidebarProps) {
               style={{ display: menuVisibility[menuCert] ? "block" : "none" }}
             >
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[
+                    `${pageRoutes.certificates}/${pageSubRoutes.documents}`
+                  ]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(
@@ -441,7 +526,9 @@ export default function Sidebar(props: SidebarProps) {
                 {t("myDocuments")}
               </ButtonContainer>
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[`${pageRoutes.certificates}/${pageSubRoutes.sent}`]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(`${pageRoutes.certificates}/${pageSubRoutes.sent}`)
@@ -451,7 +538,11 @@ export default function Sidebar(props: SidebarProps) {
                 {t("sentPl")}
               </ButtonContainer>
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[
+                    `${pageRoutes.certificates}/${pageSubRoutes.received}`
+                  ]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(
@@ -489,7 +580,11 @@ export default function Sidebar(props: SidebarProps) {
               }}
             >
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[
+                    `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.issued}`
+                  ]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(
@@ -501,7 +596,11 @@ export default function Sidebar(props: SidebarProps) {
                 {t("issuedPl")}
               </ButtonContainer>
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[
+                    `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.received}`
+                  ]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(
@@ -539,7 +638,11 @@ export default function Sidebar(props: SidebarProps) {
               }}
             >
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[
+                    `${pageRoutes.allSalesOrders}/${pageSubRoutes.issued}`
+                  ]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(
@@ -551,7 +654,11 @@ export default function Sidebar(props: SidebarProps) {
                 {t("issuedPl")}
               </ButtonContainer>
               <ButtonContainer
-                className="btn btn-transparent wd-100 text-left"
+                className={`${buttonClass} ${
+                  menuFocus[
+                    `${pageRoutes.allSalesOrders}/${pageSubRoutes.received}`
+                  ]
+                }`}
                 common
                 onClick={() =>
                   redirectTo(
@@ -574,7 +681,7 @@ export default function Sidebar(props: SidebarProps) {
               </>
             }
             common
-            className={buttonClass}
+            className={`${buttonClass} ${menuFocus[pageRoutes.statistics]}`}
             onClick={() => redirectTo(`${pageRoutes.statistics}`)}
           />
         )}

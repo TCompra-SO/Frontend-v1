@@ -111,8 +111,7 @@ export function getLabelFromRequirementType(
 // Retorna la llave del nombre del tipo de orden de compra
 export function getLabelFromPurchaseOrderType(
   type: PurchaseOrderTableTypes,
-  plural: boolean = false,
-  onlyTwoLabels: boolean = true
+  plural: boolean = false
 ) {
   switch (type) {
     case PurchaseOrderTableTypes.ISSUED:
