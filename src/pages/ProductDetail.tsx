@@ -16,7 +16,6 @@ import ProductDetailHeader from "../components/section/productDetail/ProductDeta
 import Footer from "../components/section/footer/Footer";
 
 export default function ProductDetail() {
-  // const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { requirementId } = useParams<Params>();

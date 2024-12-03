@@ -223,6 +223,8 @@ export default function OfferForm(props: OfferFormProps) {
           t("offerCreatedSuccessfullyNoDocOrImages")
         );
       }
+      form.resetFields();
+      form.setFieldValue("currency", props.requirement?.coin);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reqSuccess, imgSuccess, docSuccess]);
@@ -230,6 +232,7 @@ export default function OfferForm(props: OfferFormProps) {
   /** Funciones */
 
   async function checkIfUserCanOffer() {
+    setCantOfferMotive(CantOfferMotives.INI);
     setLoadingForm(true);
 
     if (!isLoggedIn) {
@@ -319,7 +322,7 @@ export default function OfferForm(props: OfferFormProps) {
         }
       }
     }
-
+    console.log("aaaaaaa");
     setCantOfferMotive(CantOfferMotives.NONE);
   }
 
@@ -380,7 +383,6 @@ export default function OfferForm(props: OfferFormProps) {
   }
 
   function submit(data: CreateOfferRequest) {
-    console.log(data);
     setApiParams({
       service: createOfferService(),
       method: "post",
@@ -424,6 +426,14 @@ export default function OfferForm(props: OfferFormProps) {
   }
 
   function handleDeleteSuccess() {
+    setFormDataImg(null);
+    setFormDataDoc(null);
+    setReqSuccess(ProcessFlag.NOT_INI);
+    setDocSuccess(ProcessFlag.NOT_INI);
+    setImgSuccess(ProcessFlag.NOT_INI);
+    setOfferId("");
+    setCheckedIGV(false);
+    setCheckedDelivery(false);
     checkIfUserCanOffer();
   }
 
