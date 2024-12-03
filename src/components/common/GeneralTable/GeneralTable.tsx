@@ -734,7 +734,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         visibility[TableColumns.DOCUMENT]
       ),
       GeneralDateColumn(
-        t("date"),
+        t("dateColumn"),
         "creationDate",
         visibility[TableColumns.CREATION_DATE]
       ),
@@ -764,7 +764,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         visibility[TableColumns.DOCUMENT]
       ),
       GeneralDateColumn(
-        t("date"),
+        t("dateColumn"),
         "creationDate",
         visibility[TableColumns.CREATION_DATE]
       ),

@@ -84,7 +84,7 @@ export default function ViewDocsReceivedCertificate(
                   </div>
                 </div>
               </div>
-              {!props.readOnly && (
+              {/* {!props.readOnly && (
                 <SelectContainer
                   className="btn-certificados"
                   defaultValue={CertificationState.PENDING}
@@ -108,7 +108,7 @@ export default function ViewDocsReceivedCertificate(
                   <i className="fa-regular fa-circle-xmark estado-red"></i>
                 ) : (
                   <i className="fa-regular fa-clock estado-gray"></i>
-                ))}
+                ))} */}
             </div>
           </div>
         ))}
