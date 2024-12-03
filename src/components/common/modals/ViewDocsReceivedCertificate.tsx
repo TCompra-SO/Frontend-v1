@@ -14,6 +14,7 @@ interface ViewDocsReceivedCertificateProps {
   data: CertificationItem;
   docs: CertificateFile[];
   readOnly?: boolean;
+  onClose: () => any;
 }
 
 export default function ViewDocsReceivedCertificate(
@@ -114,18 +115,18 @@ export default function ViewDocsReceivedCertificate(
         <div className="t-flex gap-15 wd-100 alert-btn">
           <ButtonContainer
             className="btn alert-boton btn-green"
-            onClick={() => submit(false)}
+            onClick={() => (props.readOnly ? props.onClose() : submit(false))}
           >
-            {t("certify")}
+            {t(props.readOnly ? "acceptButton" : "certify")}
           </ButtonContainer>
-          {/* </div>
-        <div className="text-right "> */}
-          <ButtonContainer
-            className="btn alert-boton btn-green-o"
-            onClick={() => submit(true)}
-          >
-            {t("reject")}
-          </ButtonContainer>
+          {!props.readOnly && (
+            <ButtonContainer
+              className="btn alert-boton btn-green-o"
+              onClick={() => submit(true)}
+            >
+              {t("reject")}
+            </ButtonContainer>
+          )}
         </div>
       </div>
     </div>

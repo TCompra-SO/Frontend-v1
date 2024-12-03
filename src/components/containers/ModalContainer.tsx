@@ -144,6 +144,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             data={props.content.data.data}
             docs={props.content.data.docs}
             readOnly={props.content.data.readonly}
+            onClose={props.onClose}
           />
         );
       }

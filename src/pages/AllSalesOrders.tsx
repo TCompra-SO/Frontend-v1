@@ -10,11 +10,13 @@ import {
   Action,
   ModalTypes,
   PurchaseOrderTableTypes,
+  RequirementType,
   TableTypes,
 } from "../utilities/types";
 import { PurchaseOrder, Offer } from "../models/MainInterfaces";
 import makeRequest, {
   getLabelFromPurchaseOrderType,
+  getLabelFromRequirementType,
   getPurchaseOrderType,
   openPurchaseOrderPdf,
 } from "../utilities/globalFunctions";
@@ -308,10 +310,12 @@ export default function AllSalesOrders() {
         style={mainModalScrollStyle}
       />
       <TablePageContent
-        title={t("salesOrders")}
+        title={`${t("salesOrders")} - ${t(
+          getLabelFromRequirementType(RequirementType.SALE, true)
+        )}`}
         titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
         subtitle={`${t("listOf")} ${t(
-          getLabelFromPurchaseOrderType(type, true, false)
+          getLabelFromPurchaseOrderType(type, true)
         )}`}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}

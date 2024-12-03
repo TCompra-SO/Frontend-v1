@@ -18,7 +18,7 @@ import {
   RequirementStateMeta,
 } from "../../../../utilities/colors";
 import { useTranslation } from "react-i18next";
-import { TableTypes } from "../../../../utilities/types";
+import { CertificationState, TableTypes } from "../../../../utilities/types";
 
 export default function StateColumn(type: TableTypes, hidden: boolean = false) {
   const { t } = useTranslation();
@@ -42,6 +42,31 @@ export default function StateColumn(type: TableTypes, hidden: boolean = false) {
     showSorterTooltip: false,
     width: "113px",
     hidden,
+    filters:
+      type == TableTypes.SENT_CERT || type == TableTypes.RECEIVED_CERT
+        ? [
+            {
+              text: t(
+                CertificationStateMeta[CertificationState.CERTIFIED].label
+              ),
+              value: CertificationState.CERTIFIED,
+            },
+            {
+              text: t(CertificationStateMeta[CertificationState.PENDING].label),
+              value: CertificationState.PENDING,
+            },
+            {
+              text: t(
+                CertificationStateMeta[CertificationState.REJECTED].label
+              ),
+              value: CertificationState.REJECTED,
+            },
+          ]
+        : undefined,
+    onFilter:
+      type == TableTypes.SENT_CERT || type == TableTypes.RECEIVED_CERT
+        ? (value, record) => record.state == value
+        : undefined,
     render: (_, record) => {
       let label: string = "";
       let className: string = "";

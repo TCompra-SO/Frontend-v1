@@ -162,6 +162,10 @@ export const CertificationStateMeta: {
     class: "es-atendido",
     label: "pending",
   },
+  [CertificationState.NONE]: {
+    class: "es-eliminado",
+    label: "none",
+  },
 };
 
 export const filterLabels: {
