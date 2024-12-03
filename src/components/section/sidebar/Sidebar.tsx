@@ -11,6 +11,53 @@ import {
   getSectionFromRoute,
 } from "../../../utilities/globalFunctions";
 
+const menuToggles: {
+  [key in (typeof pageRoutes)[keyof typeof pageRoutes]]: {
+    menuId: string;
+    hasSubsection: boolean;
+  };
+} = {
+  [pageRoutes.home]: { menuId: "home-menu", hasSubsection: false },
+  [pageRoutes.profile]: { menuId: "profile-menu", hasSubsection: false },
+  [pageRoutes.productDetail]: {
+    menuId: "productDetail-menu",
+    hasSubsection: false,
+  },
+  [pageRoutes.myRequirements]: {
+    menuId: "myRequirements-menu",
+    hasSubsection: true,
+  },
+  [pageRoutes.myOffers]: { menuId: "myOffers-menu", hasSubsection: true },
+  [pageRoutes.myPurchaseOrders]: {
+    menuId: "myPurchaseOrders-menu",
+    hasSubsection: true,
+  },
+  [pageRoutes.mySalesOrders]: {
+    menuId: "mySalesOrders-menu",
+    hasSubsection: true,
+  },
+  [pageRoutes.chat]: { menuId: "chat-menu", hasSubsection: false },
+  [pageRoutes.users]: { menuId: "users-menu", hasSubsection: false },
+  [pageRoutes.allRequirements]: {
+    menuId: "allRequirements-menu",
+    hasSubsection: true,
+  },
+  [pageRoutes.allOffers]: { menuId: "allOffers-menu", hasSubsection: true },
+  [pageRoutes.certificates]: {
+    menuId: "certificates-menu",
+    hasSubsection: true,
+  },
+  [pageRoutes.allPurchaseOrders]: {
+    menuId: "allPurchaseOrders-menu",
+    hasSubsection: true,
+  },
+  [pageRoutes.allSalesOrders]: {
+    menuId: "allSalesOrders-menu",
+    hasSubsection: true,
+  },
+  [pageRoutes.statistics]: { menuId: "statistics-menu", hasSubsection: false },
+};
+
 interface SidebarProps {
   showMenu: boolean;
   onShowMenu: (show: boolean) => void;
@@ -22,15 +69,7 @@ export default function Sidebar(props: SidebarProps) {
   const navigate = useNavigate();
   const typeID = useSelector((state: MainState) => state.user.typeID);
   const [menuStyle] = useState<CSSProperties>({ display: "block" });
-  const menuReq: string = "menuReq";
-  const menuOff: string = "menuOff";
-  const menuPurch: string = "menuPurch";
-  const menuSales: string = "menuSales";
-  const menuAllReq: string = "menuAllReq";
-  const menuAllOff: string = "menuAllOff";
-  const menuAllPurch: string = "menuAllPurch";
-  const menuAllSales: string = "menuAllSales";
-  const menuCert: string = "menuCert";
+  const [focusExists, setFocusExists] = useState(false);
   const buttonClass: string = "btn btn-transparent wd-100 text-left";
   const [menuVisibility, setMenuVisibility] = useState<{
     [key: string]: boolean;
@@ -39,28 +78,42 @@ export default function Sidebar(props: SidebarProps) {
     [key: string]: string;
   }>({});
 
+  /** Mostrar en sidebar sección actual */
+
   useEffect(() => {
-    console.log(location.pathname);
-    console.log(
-      getSectionFromRoute(location.pathname),
-      getLastSegmentFromRoute(location.pathname)
-    );
+    if (!focusExists) {
+      const section = getSectionFromRoute(location.pathname);
+      const segment = getLastSegmentFromRoute(location.pathname);
+      if (section in menuToggles) {
+        if (menuToggles[section]?.hasSubsection) toggleMenu(section, true);
+        focusMenu(
+          `${section}${
+            menuToggles[section]?.hasSubsection ? `/${segment}` : ""
+          }`
+        );
+      }
+      setFocusExists(true);
+    }
   }, [location]);
 
   /** Funciones */
 
-  function toggleMenu(menuId: string) {
-    setMenuVisibility((prevVisibility) => ({
-      ...prevVisibility,
-      [menuId]: !prevVisibility[menuId],
-    }));
+  function toggleMenu(menuId: string, firstRender?: boolean) {
+    setFocusExists(true);
+    setMenuVisibility((prevVisibility) => {
+      return {
+        ...prevVisibility,
+        [menuId]: firstRender ? true : !prevVisibility[menuId],
+      };
+    });
   }
 
   function focusMenu(menuId: string) {
     setMenuFocus((prev) => {
       const updatedMenuFocus: { [key: string]: string } = {};
+      updatedMenuFocus[menuId] = "focus";
       for (const key in prev) {
-        updatedMenuFocus[key] = key === menuId ? "focus" : "";
+        if (key !== menuId) updatedMenuFocus[key] = "";
       }
       return updatedMenuFocus;
     });
@@ -116,11 +169,15 @@ export default function Sidebar(props: SidebarProps) {
               }
               common
               className={buttonClass}
-              onClick={() => toggleMenu(menuReq)}
+              onClick={() => toggleMenu(pageRoutes.myRequirements)}
             />
             <div
               className="sub-menu t-flex"
-              style={{ display: menuVisibility[menuReq] ? "block" : "none" }}
+              style={{
+                display: menuVisibility[pageRoutes.myRequirements]
+                  ? "block"
+                  : "none",
+              }}
             >
               <ButtonContainer
                 className={`${buttonClass} ${
@@ -185,11 +242,13 @@ export default function Sidebar(props: SidebarProps) {
               }
               common
               className={buttonClass}
-              onClick={() => toggleMenu(menuOff)}
+              onClick={() => toggleMenu(pageRoutes.myOffers)}
             />
             <div
               className="sub-menu t-flex"
-              style={{ display: menuVisibility[menuOff] ? "block" : "none" }}
+              style={{
+                display: menuVisibility[pageRoutes.myOffers] ? "block" : "none",
+              }}
             >
               <ButtonContainer
                 className={`${buttonClass} ${
@@ -242,11 +301,15 @@ export default function Sidebar(props: SidebarProps) {
               }
               common
               className={buttonClass}
-              onClick={() => toggleMenu(menuPurch)}
+              onClick={() => toggleMenu(pageRoutes.myPurchaseOrders)}
             />
             <div
               className="sub-menu t-flex"
-              style={{ display: menuVisibility[menuPurch] ? "block" : "none" }}
+              style={{
+                display: menuVisibility[pageRoutes.myPurchaseOrders]
+                  ? "block"
+                  : "none",
+              }}
             >
               <ButtonContainer
                 className={`${buttonClass} ${
@@ -295,11 +358,15 @@ export default function Sidebar(props: SidebarProps) {
               }
               common
               className={buttonClass}
-              onClick={() => toggleMenu(menuSales)}
+              onClick={() => toggleMenu(pageRoutes.mySalesOrders)}
             />
             <div
               className="sub-menu t-flex"
-              style={{ display: menuVisibility[menuSales] ? "block" : "none" }}
+              style={{
+                display: menuVisibility[pageRoutes.mySalesOrders]
+                  ? "block"
+                  : "none",
+              }}
             >
               <ButtonContainer
                 className={`${buttonClass} ${
@@ -375,11 +442,15 @@ export default function Sidebar(props: SidebarProps) {
               }
               common
               className={buttonClass}
-              onClick={() => toggleMenu(menuAllReq)}
+              onClick={() => toggleMenu(pageRoutes.allRequirements)}
             />
             <div
               className="sub-menu t-flex"
-              style={{ display: menuVisibility[menuAllReq] ? "block" : "none" }}
+              style={{
+                display: menuVisibility[pageRoutes.allRequirements]
+                  ? "block"
+                  : "none",
+              }}
             >
               <ButtonContainer
                 className={`${buttonClass} ${
@@ -444,11 +515,15 @@ export default function Sidebar(props: SidebarProps) {
               }
               common
               className={buttonClass}
-              onClick={() => toggleMenu(menuAllOff)}
+              onClick={() => toggleMenu(pageRoutes.allOffers)}
             />
             <div
               className="sub-menu t-flex"
-              style={{ display: menuVisibility[menuAllOff] ? "block" : "none" }}
+              style={{
+                display: menuVisibility[pageRoutes.allOffers]
+                  ? "block"
+                  : "none",
+              }}
             >
               <ButtonContainer
                 className={`${buttonClass} ${
@@ -503,11 +578,15 @@ export default function Sidebar(props: SidebarProps) {
               }
               common
               className={buttonClass}
-              onClick={() => toggleMenu(menuCert)}
+              onClick={() => toggleMenu(pageRoutes.certificates)}
             />
             <div
               className="sub-menu t-flex"
-              style={{ display: menuVisibility[menuCert] ? "block" : "none" }}
+              style={{
+                display: menuVisibility[pageRoutes.certificates]
+                  ? "block"
+                  : "none",
+              }}
             >
               <ButtonContainer
                 className={`${buttonClass} ${
@@ -571,12 +650,14 @@ export default function Sidebar(props: SidebarProps) {
               }
               common
               className={buttonClass}
-              onClick={() => toggleMenu(menuAllPurch)}
+              onClick={() => toggleMenu(pageRoutes.allPurchaseOrders)}
             />
             <div
               className="sub-menu t-flex"
               style={{
-                display: menuVisibility[menuAllPurch] ? "block" : "none",
+                display: menuVisibility[pageRoutes.allPurchaseOrders]
+                  ? "block"
+                  : "none",
               }}
             >
               <ButtonContainer
@@ -629,12 +710,14 @@ export default function Sidebar(props: SidebarProps) {
               }
               common
               className={buttonClass}
-              onClick={() => toggleMenu(menuAllSales)}
+              onClick={() => toggleMenu(pageRoutes.allSalesOrders)}
             />
             <div
               className="sub-menu t-flex"
               style={{
-                display: menuVisibility[menuAllSales] ? "block" : "none",
+                display: menuVisibility[pageRoutes.allSalesOrders]
+                  ? "block"
+                  : "none",
               }}
             >
               <ButtonContainer
