@@ -308,6 +308,8 @@ const resources = {
       homeTableFirstHalf: "Requirements that",
       homeTableSecondHalf: "Best Suit You",
       budgetGreaterThanZero: "Budget must be greater than 0",
+      keepsYouConnected: "keeps you connected",
+      chatText: "Chat with your customers and suppliers for better interactivity",
       // Other
       yes: "Yes",
       no: "No",
@@ -481,7 +483,9 @@ const resources = {
       rangeStart: "Start",
       rangeEnd: "End",
       price: "Price",
-      noChats: "No chats"
+      noChats: "No chats",
+      archive: "Archive",
+      appName: "TCompra"
     },
   },
   es: {
@@ -798,6 +802,8 @@ const resources = {
       homeTableFirstHalf: "Requerimientos que",
       homeTableSecondHalf: "Mejor se Adaptan a Ti",
       budgetGreaterThanZero: "Presupuesto debe ser mayor a 0",
+      keepsYouConnected: "te mantiene conectado",
+      chatText: "Conversa con tus clientes y proveedores para una mejor interactividad",
       // Other
       yes: "Sí",
       no: "No",
@@ -975,8 +981,9 @@ const resources = {
       rangeStart: "Inicio",
       rangeEnd: "Fin",
       price: "Precio",
-      noChats: "Sin chats"
-
+      noChats: "Sin chats",
+      archive: "Archivar",
+      appName: "TCompra"
     },
   },
 };
