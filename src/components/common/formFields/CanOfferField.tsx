@@ -25,6 +25,8 @@ export default function CanOfferField(props: CanOfferFieldProps) {
       rules={[{ required: true }]}
     >
       <SelectContainer
+        mode="multiple"
+        showSearch={false}
         placeholder={t("select")}
         className="form-control"
         onChange={props.handleOptionChange}

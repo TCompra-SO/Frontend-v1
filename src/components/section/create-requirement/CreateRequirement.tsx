@@ -225,8 +225,6 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   }
 
   function createRequirement(values: any) {
-    // console.log(values, values.images.fileList.length);
-    // return;
     form.setFieldsValue({ budget: 0 });
 
     setReqSuccess(ProcessFlag.NOT_INI);
@@ -245,7 +243,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       payment_methodID: values.paymentMethod,
       completion_date: dayjs(values.expirationDate).toISOString(),
       submission_dateID: values.deliveryTime,
-      allowed_bidersID: values.canOffer,
+      allowed_bidersID: values.canOffer[0], // r3v
       userID: uid,
     };
 
