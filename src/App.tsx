@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { App as AntdApp, ConfigProvider, theme } from "antd";
 import LoadingCond from "./pages/utils/LoadingCond.tsx";
 import LoadingPage from "./pages/utils/LoadingPage.tsx";
@@ -26,6 +26,7 @@ import { setIsLoading } from "./redux/loadingSlice.ts";
 import { useLoadUserInfo } from "./hooks/authHook.ts";
 import MainHeader from "./components/section/header/MainHeader.tsx";
 import { LoadingDataProvider } from "./contexts/LoadingDataContext.tsx";
+import { getSectionFromRoute } from "./utilities/globalFunctions.ts";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
@@ -33,6 +34,7 @@ const Offers = lazy(() => import("./pages/Offers.tsx"));
 const PurchaseOrders = lazy(() => import("./pages/PurchaseOrders.tsx"));
 const SalesOrders = lazy(() => import("./pages/SalesOrders.tsx"));
 const Users = lazy(() => import("./pages/Users.tsx"));
+const Chat = lazy(() => import("./pages/Chat.tsx"));
 const AllRequirements = lazy(() => import("./pages/AllRequirements.tsx"));
 const AllOffers = lazy(() => import("./pages/AllOffers.tsx"));
 const AllPurchaseOrders = lazy(() => import("./pages/AllPurchaseOrders.tsx"));
@@ -51,6 +53,7 @@ const CreateRequirementFloatButton = lazy(
 const currentLanguage = i18n.language;
 
 function MainLayout({ children }: { children: React.ReactNode }) {
+  const location = useLocation();
   const [showMenu, setShowMenu] = useState(false);
 
   function handleShowMenu(show: boolean) {
@@ -64,7 +67,15 @@ function MainLayout({ children }: { children: React.ReactNode }) {
       <div className="col-datos">
         <MainHeader onShowMenu={handleShowMenu} />
 
-        <div className="tc-datos scroll-y">{children}</div>
+        <div
+          className={
+            getSectionFromRoute(location.pathname) == pageRoutes.chat
+              ? "tc-chat"
+              : "tc-datos scroll-y"
+          }
+        >
+          {children}
+        </div>
       </div>
     </div>
   );
@@ -139,7 +150,6 @@ function App() {
                   </Suspense>
                 }
               />
-
               <Route
                 path="*"
                 element={
@@ -524,6 +534,16 @@ function App() {
                                 allowedRoles={RolesForSection.statistics}
                               >
                                 <Statistics />
+                              </AuthRoleGuard>
+                            }
+                          />
+                          <Route
+                            path={`${pageRoutes.chat}`}
+                            element={
+                              <AuthRoleGuard
+                                allowedRoles={RolesForSection.chat}
+                              >
+                                <Chat />
                               </AuthRoleGuard>
                             }
                           />

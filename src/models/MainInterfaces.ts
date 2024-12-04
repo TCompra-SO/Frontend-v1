@@ -240,3 +240,13 @@ export interface BasicRateData {
   subUserId?: string;
   subUserName?: string;
 }
+
+export interface ChatListData {
+  userImage?: string;
+  userName: string;
+  userId: string;
+  title: string;
+  lastMessage: string;
+  lastDate: string;
+  numUnreadMessages?: number;
+}

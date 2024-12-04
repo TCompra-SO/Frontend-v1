@@ -1,9 +1,9 @@
 import { createContext, ReactNode, useState } from "react";
 
 interface LoadingDataContextType {
-  myPurchaseOrdersLoadingPdf: boolean;
-  subUserPurchaseOrdersLoadingPdf: boolean;
-  allPurchaseOrdersLoadingPdf: boolean;
+  detailedRequirementModalQueue: boolean;
+  detailedOfferModalQueue: boolean;
+  viewHistoryModalQueue: boolean;
   updateMyPurchaseOrdersLoadingPdf: (val: boolean) => void;
   updateSubUserPurchaseOrdersLoadingPdf: (val: boolean) => void;
   updateAllPurchaseOrdersLoadingPdf: (val: boolean) => void;

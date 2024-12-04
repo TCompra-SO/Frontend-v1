@@ -11,11 +11,6 @@ export const mainUserInitialState: UserState = {
   typeID: UserRoles.ADMIN,
   planID: 0,
   typeEntity: EntityType.COMPANY,
-  tenure: undefined,
-  customerScore: undefined,
-  sellerScore: undefined,
-  customerCount: undefined,
-  sellerCount: undefined,
   document: "",
 };
 
@@ -35,6 +30,7 @@ export const mainUserSlice = createSlice({
       state.sellerCount = action.payload.sellerCount;
       state.typeEntity = action.payload.typeEntity;
       state.document = action.payload.document;
+      state.image = action.payload.image;
     },
     setFullMainUser: (_, action: { payload: UserState; type: string }) => {
       return { ...action.payload };

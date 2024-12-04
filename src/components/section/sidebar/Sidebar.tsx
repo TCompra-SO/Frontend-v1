@@ -13,49 +13,40 @@ import {
 
 const menuToggles: {
   [key in (typeof pageRoutes)[keyof typeof pageRoutes]]: {
-    menuId: string;
     hasSubsection: boolean;
   };
 } = {
-  [pageRoutes.home]: { menuId: "home-menu", hasSubsection: false },
-  [pageRoutes.profile]: { menuId: "profile-menu", hasSubsection: false },
+  [pageRoutes.home]: { hasSubsection: false },
+  [pageRoutes.profile]: { hasSubsection: false },
   [pageRoutes.productDetail]: {
-    menuId: "productDetail-menu",
     hasSubsection: false,
   },
   [pageRoutes.myRequirements]: {
-    menuId: "myRequirements-menu",
     hasSubsection: true,
   },
-  [pageRoutes.myOffers]: { menuId: "myOffers-menu", hasSubsection: true },
+  [pageRoutes.myOffers]: { hasSubsection: true },
   [pageRoutes.myPurchaseOrders]: {
-    menuId: "myPurchaseOrders-menu",
     hasSubsection: true,
   },
   [pageRoutes.mySalesOrders]: {
-    menuId: "mySalesOrders-menu",
     hasSubsection: true,
   },
-  [pageRoutes.chat]: { menuId: "chat-menu", hasSubsection: false },
-  [pageRoutes.users]: { menuId: "users-menu", hasSubsection: false },
+  [pageRoutes.chat]: { hasSubsection: false },
+  [pageRoutes.users]: { hasSubsection: false },
   [pageRoutes.allRequirements]: {
-    menuId: "allRequirements-menu",
     hasSubsection: true,
   },
-  [pageRoutes.allOffers]: { menuId: "allOffers-menu", hasSubsection: true },
+  [pageRoutes.allOffers]: { hasSubsection: true },
   [pageRoutes.certificates]: {
-    menuId: "certificates-menu",
     hasSubsection: true,
   },
   [pageRoutes.allPurchaseOrders]: {
-    menuId: "allPurchaseOrders-menu",
     hasSubsection: true,
   },
   [pageRoutes.allSalesOrders]: {
-    menuId: "allSalesOrders-menu",
     hasSubsection: true,
   },
-  [pageRoutes.statistics]: { menuId: "statistics-menu", hasSubsection: false },
+  [pageRoutes.statistics]: { hasSubsection: false },
 };
 
 interface SidebarProps {
@@ -94,6 +85,7 @@ export default function Sidebar(props: SidebarProps) {
       }
       setFocusExists(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   /** Funciones */
@@ -408,11 +400,12 @@ export default function Sidebar(props: SidebarProps) {
             children={
               <>
                 <i className="fa-regular fa-comment text-center i-btn"></i>{" "}
-                {t("chat")} <div className="chat-notf">10</div>
+                {t("chatSection")} <div className="chat-notf">10</div>
               </>
             }
             common
-            className={buttonClass}
+            className={`${buttonClass} ${menuFocus[pageRoutes.chat]}`}
+            onClick={() => redirectTo(`${pageRoutes.chat}`)}
           />
         )}
         {RolesForSection.users[typeID] && (

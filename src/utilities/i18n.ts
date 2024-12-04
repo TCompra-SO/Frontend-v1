@@ -175,6 +175,7 @@ const resources = {
       salesOrder: "Sales order",
       salesOrders: "Sales orders",
       mySalesOrders: "My sales orders",
+      chatSection: "Business chat",
       // Validation
       noBlankSpaces: "Enter a valid value",
       validNumber: "Enter a valid number",
@@ -479,7 +480,8 @@ const resources = {
       keywords: "Keywords",
       rangeStart: "Start",
       rangeEnd: "End",
-      price: "Price"
+      price: "Price",
+      noChats: "No chats"
     },
   },
   es: {
@@ -656,6 +658,7 @@ const resources = {
       salesOrders: "Órdenes de venta",
       mySalesOrders: "Mis órdenes de venta",
       mySalesOrdersAbb: "Mis órds. de venta",
+      chatSection: "Chat corporativo",
       // Validation
       noBlankSpaces: "Ingrese un valor válido",
       validNumber: "Ingrese un número válido",
@@ -971,7 +974,9 @@ const resources = {
       keywords: "Palabras clave",
       rangeStart: "Inicio",
       rangeEnd: "Fin",
-      price: "Precio"
+      price: "Precio",
+      noChats: "Sin chats"
+
     },
   },
 };

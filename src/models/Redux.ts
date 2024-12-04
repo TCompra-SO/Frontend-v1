@@ -16,6 +16,7 @@ export interface UserState {
   typeEntity: EntityType;
   document: string;
   isLoggedIn?: boolean;
+  image?: string;
 }
 
 export interface LoadingState {
