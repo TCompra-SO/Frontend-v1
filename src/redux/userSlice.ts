@@ -58,7 +58,7 @@ export const userSlice = createSlice({
     setEmail: (state, action) => {
       state.email = action.payload;
     },
-    setFullUser: (state, action: { payload: UserState; type: string }) => {
+    setFullUser: (_, action: { payload: UserState; type: string }) => {
       return { ...action.payload };
     },
     setIsLoggedIn: (state, action) => {

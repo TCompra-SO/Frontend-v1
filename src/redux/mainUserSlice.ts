@@ -36,7 +36,7 @@ export const mainUserSlice = createSlice({
       state.typeEntity = action.payload.typeEntity;
       state.document = action.payload.document;
     },
-    setFullMainUser: (state, action: { payload: UserState; type: string }) => {
+    setFullMainUser: (_, action: { payload: UserState; type: string }) => {
       return { ...action.payload };
     },
   },
