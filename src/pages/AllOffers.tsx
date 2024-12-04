@@ -29,6 +29,7 @@ export default function AllOffers() {
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const dataUser = useSelector((state: MainState) => state.user);
   const [type, setType] = useState(getRouteType(location.pathname));
+  const [loadingTable, setLoadingTable] = useState(true);
   const [tableContent, setTableContent] = useState<TableTypeAllOffers>({
     type: TableTypes.ALL_OFFERS,
     data: [],
@@ -60,8 +61,10 @@ export default function AllOffers() {
       if (equalServices(apiParams.service, getOffersByEntityService("")))
         setData();
     } else if (error) {
-      if (equalServices(apiParams.service, getOffersByEntityService("")))
+      if (equalServices(apiParams.service, getOffersByEntityService(""))) {
+        setLoadingTable(false);
         showNotification(notification, "error", errorMsg);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -86,6 +89,8 @@ export default function AllOffers() {
   async function setData() {
     try {
       const subUsers: { [key: string]: BaseUser } = {};
+      const pendingRequests: { [key: string]: Promise<any> } = {};
+
       const data = await Promise.all(
         responseData.data.map(async (e: any) => {
           if (e.subUser == dataUser.uid) {
@@ -97,13 +102,22 @@ export default function AllOffers() {
               true
             );
           } else {
+            // Check if we already have data for the subUser in cache
             if (!Object.prototype.hasOwnProperty.call(subUsers, e.subUser)) {
-              const { responseData }: any = await makeRequest({
-                service: getBaseDataUserService(e.subUser),
-                method: "get",
-              });
-              const { subUser } = transformToBaseUser(responseData.data[0]);
-              subUsers[e.subUser] = subUser;
+              // If there's no request in progress for this subUser, initiate one
+              if (!pendingRequests[e.subUser]) {
+                pendingRequests[e.subUser] = makeRequest({
+                  service: getBaseDataUserService(e.subUser),
+                  method: "get",
+                }).then(({ responseData }: any) => {
+                  const { subUser } = transformToBaseUser(responseData.data[0]);
+                  subUsers[e.subUser] = subUser;
+                  // Clean up the pending request after it resolves
+                  delete pendingRequests[e.subUser];
+                });
+              }
+              // Wait for the request to resolve if it's already in progress
+              await pendingRequests[e.subUser];
             }
             return transformToOfferFromGetOffersByEntityOrSubUser(
               e,
@@ -112,23 +126,9 @@ export default function AllOffers() {
               dataUser
             );
           }
-          // if (!Object.prototype.hasOwnProperty.call(subUsers, e.user)) {
-          //   const { responseData }: any = await makeRequest({
-          //     service: getBaseDataUserService(e.user),
-          //     method: "get",
-          //   });
-          //   const { subUser } = transformToBaseUser(responseData.data[0]);
-          //   subUsers[e.user] = subUser;
-          // }
-          // return transformToOfferFromGetOffersByEntityOrSubUser(
-          //   e,
-          //   type,
-          //   subUsers[e.user],
-          //   dataUser
-          // );
         })
       );
-      console.log(data);
+
       setTableContent({
         type: TableTypes.ALL_OFFERS,
         data: data,
@@ -138,6 +138,8 @@ export default function AllOffers() {
       });
     } catch (error) {
       showNotification(notification, "error", t("errorOccurred"));
+    } finally {
+      setLoadingTable(false);
     }
   }
 
@@ -155,11 +157,7 @@ export default function AllOffers() {
       subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
       table={tableContent}
       onSearch={handleSearch}
-      loading={
-        equalServices(apiParams.service, getOffersByEntityService(""))
-          ? loading
-          : undefined
-      }
+      loading={loadingTable}
     />
   );
 }
