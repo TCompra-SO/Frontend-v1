@@ -120,6 +120,7 @@ export default function MyProfile() {
     if (responseDataImage) {
       showNotification(notification, "success", t("imageUpdatedSuccessfully"));
     } else if (errorImage) {
+      setImageSrc(defaultUserImage);
       showNotification(notification, "error", errorMsgImage);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
