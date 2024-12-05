@@ -468,7 +468,7 @@ export default function PurchaseOrders() {
         title={t("myPurchaseOrders")}
         titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
         subtitle={`${t("listOf")} ${t(
-          getLabelFromPurchaseOrderType(type, true, false)
+          getLabelFromPurchaseOrderType(type, true)
         )}`}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}

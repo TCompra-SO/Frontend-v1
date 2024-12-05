@@ -1,93 +1,71 @@
 import { createContext, ReactNode, useState } from "react";
 
-interface LoadingDataContextType {
-  detailedRequirementModalQueue: boolean;
-  detailedOfferModalQueue: boolean;
-  viewHistoryModalQueue: boolean;
-  updateMyPurchaseOrdersLoadingPdf: (val: boolean) => void;
-  updateSubUserPurchaseOrdersLoadingPdf: (val: boolean) => void;
-  updateAllPurchaseOrdersLoadingPdf: (val: boolean) => void;
-
-  myRequirementsLoadingViewOffers: boolean;
-  subUserRequirementsViewOffers: boolean;
-  allRequirementsViewOffers: boolean;
-  updateMyRequirementsLoadingViewOffers: (val: boolean) => void;
-  updateSubUserRequirementsViewOffers: (val: boolean) => void;
-  updateAllRequirementsViewOffers: (val: boolean) => void;
+interface DetailedRequirementModalDataType {
+  requirementId: string;
 }
 
-export const LoadingDataContext = createContext<LoadingDataContextType>({
-  myPurchaseOrdersLoadingPdf: false,
-  subUserPurchaseOrdersLoadingPdf: false,
-  allPurchaseOrdersLoadingPdf: false,
-  updateMyPurchaseOrdersLoadingPdf: () => {},
-  updateSubUserPurchaseOrdersLoadingPdf: () => {},
-  updateAllPurchaseOrdersLoadingPdf: () => {},
+interface DetailedOfferModalDataType {
+  offerId: string;
+}
 
-  myRequirementsLoadingViewOffers: false,
-  subUserRequirementsViewOffers: false,
-  allRequirementsViewOffers: false,
-  updateMyRequirementsLoadingViewOffers: () => {},
-  updateSubUserRequirementsViewOffers: () => {},
-  updateAllRequirementsViewOffers: () => {},
+interface ViewHistoryModalDataType {
+  requirementId: string;
+}
+
+interface ModalsContextType {
+  detailedRequirementModalData: DetailedRequirementModalDataType;
+  detailedOfferModalData: DetailedOfferModalDataType;
+  viewHistoryModalData: ViewHistoryModalDataType;
+  updateDetailedRequirementModalData: (
+    val: DetailedRequirementModalDataType
+  ) => void;
+  updateDetailedOfferModalData: (val: DetailedOfferModalDataType) => void;
+  updateViewHistoryModalData: (val: ViewHistoryModalDataType) => void;
+}
+
+export const ModalsContext = createContext<ModalsContextType>({
+  detailedRequirementModalData: { requirementId: "" },
+  detailedOfferModalData: { offerId: "" },
+  viewHistoryModalData: { requirementId: "" },
+  updateDetailedRequirementModalData: () => {},
+  updateDetailedOfferModalData: () => {},
+  updateViewHistoryModalData: () => {},
 });
 
-export function LoadingDataProvider({ children }: { children: ReactNode }) {
-  const [myPurchaseOrdersLoadingPdf, setMyPurchaseOrdersLoadingPdf] =
-    useState(false);
-  const [subUserPurchaseOrdersLoadingPdf, setSubUserPurchaseOrdersLoadingPdf] =
-    useState(false);
-  const [allPurchaseOrdersLoadingPdf, setAllPurchaseOrdersLoadingPdf] =
-    useState(false);
-  const [myRequirementsLoadingViewOffers, setMyRequirementsLoadingViewOffers] =
-    useState(false);
-  const [subUserRequirementsViewOffers, setSubUserRequirementsViewOffers] =
-    useState(false);
-  const [allRequirementsViewOffers, setAllRequirementsViewOffers] =
-    useState(false);
+export function ModalsProvider({ children }: { children: ReactNode }) {
+  const [detailedRequirementModalData, setDetailedRequirementModalData] =
+    useState<DetailedRequirementModalDataType>({ requirementId: "" });
+  const [detailedOfferModalData, setDetailedOfferModalData] =
+    useState<DetailedOfferModalDataType>({ offerId: "" });
+  const [viewHistoryModalData, setViewHistoryModalData] =
+    useState<ViewHistoryModalDataType>({ requirementId: "" });
 
-  function updateMyPurchaseOrdersLoadingPdf(val: boolean) {
-    setMyPurchaseOrdersLoadingPdf(val);
+  function updateDetailedRequirementModalData(
+    val: DetailedRequirementModalDataType
+  ) {
+    setDetailedRequirementModalData(val);
   }
 
-  function updateSubUserPurchaseOrdersLoadingPdf(val: boolean) {
-    setSubUserPurchaseOrdersLoadingPdf(val);
+  function updateDetailedOfferModalData(val: DetailedOfferModalDataType) {
+    setDetailedOfferModalData(val);
   }
 
-  function updateAllPurchaseOrdersLoadingPdf(val: boolean) {
-    setAllPurchaseOrdersLoadingPdf(val);
-  }
-
-  function updateMyRequirementsLoadingViewOffers(val: boolean) {
-    setMyRequirementsLoadingViewOffers(val);
-  }
-
-  function updateSubUserRequirementsViewOffers(val: boolean) {
-    setSubUserRequirementsViewOffers(val);
-  }
-
-  function updateAllRequirementsViewOffers(val: boolean) {
-    setAllRequirementsViewOffers(val);
+  function updateViewHistoryModalData(val: ViewHistoryModalDataType) {
+    setViewHistoryModalData(val);
   }
 
   return (
-    <LoadingDataContext.Provider
+    <ModalsContext.Provider
       value={{
-        myPurchaseOrdersLoadingPdf,
-        subUserPurchaseOrdersLoadingPdf,
-        allPurchaseOrdersLoadingPdf,
-        myRequirementsLoadingViewOffers,
-        subUserRequirementsViewOffers,
-        allRequirementsViewOffers,
-        updateMyPurchaseOrdersLoadingPdf,
-        updateSubUserPurchaseOrdersLoadingPdf,
-        updateAllPurchaseOrdersLoadingPdf,
-        updateMyRequirementsLoadingViewOffers,
-        updateSubUserRequirementsViewOffers,
-        updateAllRequirementsViewOffers,
+        detailedRequirementModalData,
+        detailedOfferModalData,
+        viewHistoryModalData,
+        updateDetailedRequirementModalData,
+        updateDetailedOfferModalData,
+        updateViewHistoryModalData,
       }}
     >
       {children}
-    </LoadingDataContext.Provider>
+    </ModalsContext.Provider>
   );
 }
