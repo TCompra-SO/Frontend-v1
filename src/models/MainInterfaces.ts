@@ -252,3 +252,12 @@ export interface ChatListData {
   lastDate: string;
   numUnreadMessages?: number;
 }
+
+export interface ChatMessage {
+  isInputMsg: boolean;
+  message?: string;
+  time: string;
+  read: boolean;
+  images?: string[];
+  documents?: string[];
+}

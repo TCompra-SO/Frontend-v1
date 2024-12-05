@@ -485,7 +485,8 @@ const resources = {
       price: "Price",
       noChats: "No chats",
       archive: "Archive",
-      appName: "TCompra"
+      appName: "TCompra",
+      message: "Message"
     },
   },
   es: {
@@ -983,7 +984,8 @@ const resources = {
       price: "Precio",
       noChats: "Sin chats",
       archive: "Archivar",
-      appName: "TCompra"
+      appName: "TCompra",
+      message: "Mensaje"
     },
   },
 };
