@@ -312,6 +312,10 @@ const resources = {
       chatText: "Chat with your customers and suppliers for better interactivity",
       requirementCanceledSuccessfully: "Requirement canceled successfully",
       saleCanceledSuccessfully: "Sale canceled successfully",
+      cantCancelRequirementSupplierFinished: "Requirement cannot be canceled because the supplier has already completed their part of the process",
+      cantCancelSaleClientFinished: "Sale cannot be canceled because the client has already completed their part of the process",
+      cantCancelOfferClientFinished: "Offer cannot be canceled because the client has already completed their part of the process",
+      cantCancelOfferSupplierFinished: "Offer cannot be canceled because the supplier has already completed their part of the process",
       // Other
       yes: "Yes",
       no: "No",
@@ -809,6 +813,10 @@ const resources = {
       chatText: "Conversa con tus clientes y proveedores para una mejor interactividad",
       requirementCanceledSuccessfully: "Requerimiento cancelado exitosamente",
       saleCanceledSuccessfully: "Liquidación cancelada exitosamente",
+      cantCancelRequirementSupplierFinished: "No se puede cancelar el requerimiento porque el proveedor ya ha completado su parte del proceso",
+      cantCancelSaleClientFinished: "No se puede cancelar la liquidación porque el cliente ya ha completado su parte del proceso",
+      cantCancelOfferClientFinished: "No se puede cancelar la oferta porque el cliente ya ha completado su parte del proceso",
+      cantCancelOfferSupplierFinished: "No se puede cancelar la oferta porque el proveedor ya ha completado su parte del proceso",
       // Other
       yes: "Sí",
       no: "No",

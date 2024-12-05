@@ -12,7 +12,10 @@ import {
 import { uploadDocsRequirementService } from "../services/requests/documentService";
 import { uploadImagesRequirementService } from "../services/requests/imageService";
 import { createOfferService } from "../services/requests/offerService";
-import { selectOfferService } from "../services/requests/requirementService";
+import {
+  cancelRequirementService,
+  selectOfferService,
+} from "../services/requests/requirementService";
 import { registerScoreService } from "../services/requests/scoreService";
 import {
   changeRoleSubUserService,
@@ -212,6 +215,12 @@ export default function httpErrorInterceptor(error: any, type: string): string {
         case 405:
           erroMsg = "cantOfferToRequirement";
           break;
+      }
+      break;
+    case cancelRequirementService().type:
+      switch (code) {
+        case 400:
+          erroMsg = "cantCancelRequirementSupplierFinished";
       }
       break;
     case "": // No mostrar mensaje
