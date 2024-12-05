@@ -165,6 +165,7 @@ export default function Chat() {
 
   function handleClickOnChatItem(item: ChatListData) {
     setCurrentChat(item);
+    setIsChatOpened(true);
     console.log(item);
   }
 

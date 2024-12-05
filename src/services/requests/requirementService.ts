@@ -95,3 +95,12 @@ export function culminateRequirementService(): HttpService {
     type: "RE-CUL",
   };
 }
+
+export function cancelRequirementService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.requirements
+    }${ApiRoutes.requirements.cancel}`,
+    type: "RE-CAN",
+  };
+}

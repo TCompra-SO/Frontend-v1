@@ -66,6 +66,7 @@ export const ApiRoutes = {
     getRequirementsBySubUser: "getRequerimentsBySubUser/",
     getRequirementsByEntity: "getRequerimentsByEntity/",
     culminate: "culminate/",
+    cancel: "canceled/",
   },
   requirement: {
     create: "create/",

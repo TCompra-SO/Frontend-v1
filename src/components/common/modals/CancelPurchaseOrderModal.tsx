@@ -1,14 +1,15 @@
 import { App } from "antd";
 import TextAreaContainer from "../../containers/TextAreaContainer";
-import { SyntheticEvent, useState } from "react";
+import { useEffect, useState } from "react";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import { Lengths } from "../../../utilities/lengths";
 import showNotification from "../../../utilities/notification/showNotification";
 import { Action, ActionLabel } from "../../../utilities/types";
+import { useCancelRequirement } from "../../../hooks/requirementHook";
 
 interface CancelPurchaseOrderModalProps {
-  onClose: (e: SyntheticEvent<Element, Event>) => any;
+  onClose: () => any;
   offerId: string;
   requirementId: string;
   fromRequirementTable: boolean;
@@ -20,13 +21,17 @@ export default function CancelPurchaseOrderModal(
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const [text, setText] = useState<string>("");
+  const { cancelRequirement, loadingCancel } = useCancelRequirement();
+
+  useEffect(() => {
+    if (loadingCancel === false) props.onClose();
+  }, [loadingCancel]);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
   };
 
-  function cancelPurchaseOrder(e: SyntheticEvent<Element, Event>) {
-    console.log(props.offerId, props.requirementId, text.trim());
+  function cancelPurchaseOrder() {
     if (!text) {
       showNotification(
         notification,
@@ -35,7 +40,7 @@ export default function CancelPurchaseOrderModal(
       );
       return;
     }
-    props.onClose(e);
+    cancelRequirement(props.requirementId, text.trim());
   }
 
   return (
@@ -58,7 +63,6 @@ export default function CancelPurchaseOrderModal(
         <div className="t-flex wd-100">
           <TextAreaContainer
             // rows={4}
-
             placeholder={t("reason")}
             maxLength={Lengths.reasonCancellation.max}
             onChange={handleTextChange}
@@ -71,6 +75,7 @@ export default function CancelPurchaseOrderModal(
             children={t("acceptButton")}
             onClick={cancelPurchaseOrder}
             className="btn btn-default alert-boton"
+            loading={loadingCancel}
           />
           <ButtonContainer
             children={t("cancelButton")}

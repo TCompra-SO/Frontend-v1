@@ -47,6 +47,7 @@ import {
 } from "../services/requests/offerService";
 import { getBaseDataUserService } from "../services/requests/authService";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
+import { useCancelRequirement } from "../hooks/requirementHook";
 
 export default function Requirements() {
   const { t } = useTranslation();
@@ -57,6 +58,7 @@ export default function Requirements() {
   const [requirement, setRequirement] = useState<Requirement>();
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
+  const { cancelRequirement } = useCancelRequirement();
   const { updateMyRequirementsLoadingViewOffers } =
     useContext(LoadingDataContext);
 
@@ -384,10 +386,6 @@ export default function Requirements() {
 
   function handleSearch(e: ChangeEvent<HTMLInputElement>) {
     console.log(e.target.value);
-  }
-
-  function cancelRequirement(requirementId: string) {
-    console.log("cancelRequirement", requirementId);
   }
 
   function handleCloseModal() {

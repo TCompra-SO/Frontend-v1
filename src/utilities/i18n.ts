@@ -310,6 +310,8 @@ const resources = {
       budgetGreaterThanZero: "Budget must be greater than 0",
       keepsYouConnected: "keeps you connected",
       chatText: "Chat with your customers and suppliers for better interactivity",
+      requirementCanceledSuccessfully: "Requirement canceled successfully",
+      saleCanceledSuccessfully: "Sale canceled successfully",
       // Other
       yes: "Yes",
       no: "No",
@@ -805,6 +807,8 @@ const resources = {
       budgetGreaterThanZero: "Presupuesto debe ser mayor a 0",
       keepsYouConnected: "te mantiene conectado",
       chatText: "Conversa con tus clientes y proveedores para una mejor interactividad",
+      requirementCanceledSuccessfully: "Requerimiento cancelado exitosamente",
+      saleCanceledSuccessfully: "Liquidación cancelada exitosamente",
       // Other
       yes: "Sí",
       no: "No",

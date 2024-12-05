@@ -11,7 +11,7 @@ export default function useApi<T = any>({
   token,
 }: useApiParams<T>) {
   const { t } = useTranslation();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean | undefined>(undefined);
   const [responseData, setResponseData] = useState<any | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [error, setError] = useState<AxiosError<any, any> | null>(null);
