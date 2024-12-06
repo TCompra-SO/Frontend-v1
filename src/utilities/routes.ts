@@ -125,7 +125,7 @@ export const pageRoutes = {
   statistics: "/statistics",
 };
 
-export const pageSubRoutes: Record<string, string> = {
+export const pageSubRoutes = {
   goods: "bienes",
   services: "servicios",
   sales: "liquidaciones",

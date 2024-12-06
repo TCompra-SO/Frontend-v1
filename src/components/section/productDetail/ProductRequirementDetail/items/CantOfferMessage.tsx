@@ -7,10 +7,10 @@ import {
   ModalTypes,
   RequirementType,
 } from "../../../../../utilities/types";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Requirement } from "../../../../../models/MainInterfaces";
 import { useNavigate } from "react-router-dom";
-import { pageRoutes } from "../../../../../utilities/routes";
+import { pageRoutes, pageSubRoutes } from "../../../../../utilities/routes";
 import ModalContainer from "../../../../containers/ModalContainer";
 import { ModalContent, useApiParams } from "../../../../../models/Interfaces";
 import { mainModalScrollStyle } from "../../../../../utilities/globals";
@@ -23,6 +23,7 @@ import showNotification, {
 } from "../../../../../utilities/notification/showNotification";
 import { App } from "antd";
 import useApi from "../../../../../hooks/useApi";
+import { ModalsContext } from "../../../../../contexts/ModalsContext";
 
 interface CantOfferMessageProps {
   offerId: string;
@@ -39,6 +40,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
   const navigate = useNavigate();
   const { notification, message } = App.useApp();
   const entityType = useSelector((state: MainState) => state.user.typeEntity);
+  const { updateDetailedRequirementModalData } = useContext(ModalsContext);
   const [mainText, setMainText] = useState("");
   const [optionalText, setOptionalText] = useState("");
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -237,6 +239,26 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
     setIsOpenModal(true);
   }
 
+  function seeRequirementDetails() {
+    if (props.requirement) {
+      if (props.motive == CantOfferMotives.IS_CREATOR) {
+        updateDetailedRequirementModalData({
+          requirement: props.requirement,
+        });
+        navigate(
+          pageRoutes.myRequirements +
+            "/" +
+            (props.requirement.type == RequirementType.GOOD
+              ? pageSubRoutes.goods
+              : props.requirement.type == RequirementType.SERVICE
+              ? pageSubRoutes.services
+              : pageSubRoutes.sales)
+        );
+      } else if (props.motive == CantOfferMotives.SUBUSER_IS_CREATOR) {
+      }
+    }
+  }
+
   return (
     <>
       <ModalContainer
@@ -286,7 +308,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
                 style={{ height: "auto" }}
                 className="btn btn-default btn-sm"
                 icon={<i className="fa-regular fa-columns"></i>}
-                onClick={() => navigate(pageRoutes.home)} // r3v
+                onClick={() => seeRequirementDetails()}
               >
                 {t("goTo") + t("controlPanel")}
               </ButtonContainer>

@@ -1,7 +1,8 @@
 import { createContext, ReactNode, useState } from "react";
+import { Requirement } from "../models/MainInterfaces";
 
 interface DetailedRequirementModalDataType {
-  requirementId: string;
+  requirement: Requirement | null;
 }
 
 interface DetailedOfferModalDataType {
@@ -24,7 +25,7 @@ interface ModalsContextType {
 }
 
 export const ModalsContext = createContext<ModalsContextType>({
-  detailedRequirementModalData: { requirementId: "" },
+  detailedRequirementModalData: { requirement: null },
   detailedOfferModalData: { offerId: "" },
   viewHistoryModalData: { requirementId: "" },
   updateDetailedRequirementModalData: () => {},
@@ -34,7 +35,7 @@ export const ModalsContext = createContext<ModalsContextType>({
 
 export function ModalsProvider({ children }: { children: ReactNode }) {
   const [detailedRequirementModalData, setDetailedRequirementModalData] =
-    useState<DetailedRequirementModalDataType>({ requirementId: "" });
+    useState<DetailedRequirementModalDataType>({ requirement: null });
   const [detailedOfferModalData, setDetailedOfferModalData] =
     useState<DetailedOfferModalDataType>({ offerId: "" });
   const [viewHistoryModalData, setViewHistoryModalData] =

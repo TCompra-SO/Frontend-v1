@@ -47,17 +47,24 @@ import {
 } from "../services/requests/offerService";
 import { getBaseDataUserService } from "../services/requests/authService";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
-import { useCancelRequirement } from "../hooks/requirementHook";
+import {
+  useCancelRequirement,
+  useGetOffersByRequirementId,
+} from "../hooks/requirementHook";
+import { ModalsContext } from "../contexts/ModalsContext";
 
 export default function Requirements() {
   const { t } = useTranslation();
   const { notification, message } = App.useApp();
   const location = useLocation();
+  const { detailedRequirementModalData } = useContext(ModalsContext);
   const [type, setType] = useState(getRouteType(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [requirement, setRequirement] = useState<Requirement>();
+  const [requirement, setRequirement] = useState<Requirement | null>(null);
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
+  const { getOffersByRequirementId, responseDataGetOffersByRequirementId } =
+    useGetOffersByRequirementId();
   const { cancelRequirement } = useCancelRequirement();
   const { updateMyRequirementsLoadingViewOffers } =
     useContext(LoadingDataContext);
@@ -74,6 +81,22 @@ export default function Requirements() {
     nameColumnHeader: t(getLabelFromRequirementType(type)),
     onButtonClick: handleOnButtonClick,
   });
+
+  /** Verificar si hay una solicitud pendiente */
+  useEffect(() => {
+    if (detailedRequirementModalData.requirement) {
+      getOffersByRequirementId(detailedRequirementModalData.requirement.key);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (responseDataGetOffersByRequirementId) {
+      openDetailedRequirement(
+        responseDataGetOffersByRequirementId,
+        detailedRequirementModalData.requirement
+      );
+    }
+  }, [responseDataGetOffersByRequirementId]);
 
   /* Obtener lista inicialmente */
 
@@ -115,7 +138,7 @@ export default function Requirements() {
       else if (
         equalServices(apiParams.service, getOffersByRequirementIdService(""))
       )
-        openDetailedRequirement(responseData);
+        openDetailedRequirement(responseData, requirement);
     } else if (error) {
       if (
         equalServices(apiParams.service, getRequirementsBySubUserService("")) ||
@@ -244,8 +267,12 @@ export default function Requirements() {
     }
   }
 
-  async function openDetailedRequirement(responseData: any) {
+  async function openDetailedRequirement(
+    responseData: any,
+    requirement: Requirement | null
+  ) {
     if (requirement && responseData.data && Array.isArray(responseData.data)) {
+      console.log("sssssaa");
       const offerArray: Offer[] = await Promise.all(
         responseData.data.map(async (item: any) => {
           const { responseData }: any = await makeRequest({
