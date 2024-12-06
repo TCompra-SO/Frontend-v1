@@ -163,7 +163,7 @@ export function transformToOffer(
   offer.igv = data.includesIGV;
   offer.requirementId = data.requerimentID;
   offer.state = data.stateID; //OfferState.CANCELED
-  offer.canceledByCreator = false;
+  offer.canceledByCreator = data.canceledByCreator;
   offer.type = type;
   offer.requirementTitle = data.requerimentTitle;
   offer.image = data.images;
@@ -188,7 +188,6 @@ export function transformToOfferFromGetOffersByEntityOrSubUser(
 ) {
   const offer: Offer = data;
   offer.subUser = undefined;
-  offer.canceledByCreator = false;
   offer.type = type;
 
   if (includeAlwaysSubUser) {

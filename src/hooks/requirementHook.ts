@@ -159,6 +159,10 @@ export function useGetOffersByRequirementId() {
   }, [apiParams]);
 
   useEffect(() => {
+    // if (responseData) {
+
+    // }
+    // else
     if (error) {
       showNotification(notification, "error", errorMsg);
     }

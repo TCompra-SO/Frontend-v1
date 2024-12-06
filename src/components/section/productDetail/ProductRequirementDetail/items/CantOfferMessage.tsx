@@ -244,6 +244,8 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
       if (props.motive == CantOfferMotives.IS_CREATOR) {
         updateDetailedRequirementModalData({
           requirement: props.requirement,
+          requirementId: props.requirement.key,
+          requirementType: props.requirement.type,
         });
         navigate(
           pageRoutes.myRequirements +

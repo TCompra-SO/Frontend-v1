@@ -54,7 +54,7 @@ export default function CancelPurchaseOrderModal(
     }
     if (props.fromRequirementTable)
       cancelRequirement(props.requirementId, text.trim());
-    else cancelOffer(props.offerId, !props.canceledByCreator, text.trim()); // r3v
+    else cancelOffer(props.offerId, props.canceledByCreator, text.trim());
   }
 
   return (
