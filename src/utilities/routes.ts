@@ -93,6 +93,7 @@ export const ApiRoutes = {
     delete: "delete/",
     culminate: "culminate/",
     getValidation: "getValidation/",
+    cancel: "canceled/",
   },
   score: {
     registerScore: "registerScore/",

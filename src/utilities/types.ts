@@ -384,6 +384,7 @@ export enum CertificationState {
   CERTIFIED = 1,
   REJECTED = 2,
   PENDING = 3,
+  RESENT = 4,
 }
 
 export enum ImageRequestLabels {

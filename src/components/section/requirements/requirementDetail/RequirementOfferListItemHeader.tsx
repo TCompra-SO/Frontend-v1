@@ -93,6 +93,7 @@ export default function RequirementOfferListItemHeader({
               offerId: props.offer.key,
               requirementId: props.showStateAndActions.requirement.key,
               fromRequirementTable: false,
+              canceledByCreator: false,
             },
           });
           setIsOpenModal(true);

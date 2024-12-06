@@ -316,6 +316,7 @@ const resources = {
       cantCancelSaleClientFinished: "Sale cannot be canceled because the client has already completed their part of the process",
       cantCancelOfferClientFinished: "Offer cannot be canceled because the client has already completed their part of the process",
       cantCancelOfferSupplierFinished: "Offer cannot be canceled because the supplier has already completed their part of the process",
+      offerCanceledSuccessfully: "Offer canceled successfully",
       // Other
       yes: "Yes",
       no: "No",
@@ -817,6 +818,7 @@ const resources = {
       cantCancelSaleClientFinished: "No se puede cancelar la liquidación porque el cliente ya ha completado su parte del proceso",
       cantCancelOfferClientFinished: "No se puede cancelar la oferta porque el cliente ya ha completado su parte del proceso",
       cantCancelOfferSupplierFinished: "No se puede cancelar la oferta porque el proveedor ya ha completado su parte del proceso",
+      offerCanceledSuccessfully: "Oferta cancelada exitosamente",
       // Other
       yes: "Sí",
       no: "No",

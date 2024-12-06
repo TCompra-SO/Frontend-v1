@@ -6,13 +6,17 @@ import { useTranslation } from "react-i18next";
 import { Lengths } from "../../../utilities/lengths";
 import showNotification from "../../../utilities/notification/showNotification";
 import { Action, ActionLabel } from "../../../utilities/types";
-import { useCancelRequirement } from "../../../hooks/requirementHook";
+import {
+  useCancelOffer,
+  useCancelRequirement,
+} from "../../../hooks/requirementHook";
 
 interface CancelPurchaseOrderModalProps {
   onClose: () => any;
   offerId: string;
   requirementId: string;
   fromRequirementTable: boolean;
+  canceledByCreator: boolean;
 }
 
 export default function CancelPurchaseOrderModal(
@@ -21,11 +25,19 @@ export default function CancelPurchaseOrderModal(
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const [text, setText] = useState<string>("");
-  const { cancelRequirement, loadingCancel } = useCancelRequirement();
+  const { cancelRequirement, loadingCancelRequirement } =
+    useCancelRequirement();
+  const { cancelOffer, loadingCancelOffer } = useCancelOffer();
 
   useEffect(() => {
-    if (loadingCancel === false) props.onClose();
-  }, [loadingCancel]);
+    if (loadingCancelOffer === false) props.onClose();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingCancelOffer]);
+
+  useEffect(() => {
+    if (loadingCancelRequirement === false) props.onClose();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingCancelRequirement]);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
@@ -40,7 +52,9 @@ export default function CancelPurchaseOrderModal(
       );
       return;
     }
-    cancelRequirement(props.requirementId, text.trim());
+    if (props.fromRequirementTable)
+      cancelRequirement(props.requirementId, text.trim());
+    else cancelOffer(props.offerId, !props.canceledByCreator, text.trim()); // r3v
   }
 
   return (
@@ -75,7 +89,7 @@ export default function CancelPurchaseOrderModal(
             children={t("acceptButton")}
             onClick={cancelPurchaseOrder}
             className="btn btn-default alert-boton"
-            loading={loadingCancel}
+            loading={loadingCancelRequirement || loadingCancelOffer}
           />
           <ButtonContainer
             children={t("cancelButton")}

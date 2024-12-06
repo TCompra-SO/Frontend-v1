@@ -10,7 +10,6 @@ import {
 import { useTranslation } from "react-i18next";
 import {
   ModalContent,
-  TableTypePurchaseOrder,
   TableTypeSalesOrder,
   useApiParams,
 } from "../models/Interfaces";
@@ -445,6 +444,7 @@ export default function SalesOrders() {
             offerId: purchaseOrder.offerId,
             requirementId: purchaseOrder.requirementId,
             fromRequirementTable: false,
+            canceledByCreator: type == PurchaseOrderTableTypes.ISSUED,
           },
         });
         setIsOpenModal(true);

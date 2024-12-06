@@ -444,6 +444,7 @@ export default function PurchaseOrders() {
             offerId: purchaseOrder.offerId,
             requirementId: purchaseOrder.requirementId,
             fromRequirementTable: false,
+            canceledByCreator: type == PurchaseOrderTableTypes.RECEIVED,
           },
         });
         setIsOpenModal(true);

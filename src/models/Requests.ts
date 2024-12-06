@@ -150,7 +150,13 @@ export interface CulminateRequest {
   offerID?: string;
 }
 
-export interface CancelRequirement {
+export interface CancelRequirementRequest {
   requerimentID: string;
   reason?: string;
+}
+
+export interface CancelOfferRequest {
+  offerID: string;
+  reason?: string;
+  canceledByCreator: boolean;
 }

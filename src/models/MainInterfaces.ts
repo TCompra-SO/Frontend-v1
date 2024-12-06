@@ -202,7 +202,7 @@ export interface CertificateFile {
 }
 
 export interface CertificationItem {
-  companyID: string;
+  companyId: string;
   companyName: string;
   companyDocument: string;
   creationDate: string;

@@ -383,7 +383,6 @@ export default function Requirements() {
         break;
       }
       case Action.CANCEL_REQUIREMENT: {
-        // r3v
         if (
           requirement.state == RequirementState.SELECTED &&
           requirement.offerId
@@ -394,6 +393,7 @@ export default function Requirements() {
               offerId: requirement.offerId,
               requirementId: requirement.key,
               fromRequirementTable: true,
+              canceledByCreator: false,
             },
           });
           setIsOpenModal(true);

@@ -48,6 +48,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             offerId={props.content.data.offerId}
             requirementId={props.content.data.requirementId}
             fromRequirementTable={props.content.data.fromRequirementTable}
+            canceledByCreator={props.content.data.canceledByCreator}
           />
         );
       }

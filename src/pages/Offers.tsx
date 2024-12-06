@@ -268,7 +268,7 @@ export default function Offers() {
       }
 
       case Action.CHAT: {
-        goToChat(offer);
+        goToChat(offer); //r3v
         break;
       }
 
@@ -281,13 +281,13 @@ export default function Offers() {
       }
 
       case Action.CANCEL_OFFER: {
-        // r3v
         setDataModal({
           type: ModalTypes.CANCEL_PURCHASE_ORDER,
           data: {
             offerId: offer.key,
             requirementId: offer.requirementId,
             fromRequirementTable: false,
+            canceledByCreator: true,
           },
         });
         setIsOpenModal(true);

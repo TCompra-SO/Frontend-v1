@@ -5,10 +5,16 @@ import showNotification, {
   showLoadingMessage,
 } from "../utilities/notification/showNotification";
 import { App } from "antd";
-import { CancelRequirement } from "../models/Requests";
+import {
+  CancelOfferRequest,
+  CancelRequirementRequest,
+} from "../models/Requests";
 import { cancelRequirementService } from "../services/requests/requirementService";
 import { useTranslation } from "react-i18next";
-import { getOffersByRequirementIdService } from "../services/requests/offerService";
+import {
+  cancelOfferService,
+  getOffersByRequirementIdService,
+} from "../services/requests/offerService";
 
 export function useCancelRequirement() {
   const { t } = useTranslation();
@@ -25,7 +31,7 @@ export function useCancelRequirement() {
     error: errorCancel,
     errorMsg: errorMsgCancel,
     fetchData: fetchDataCancel,
-  } = useApi<CancelRequirement>({
+  } = useApi<CancelRequirementRequest>({
     service: apiParamsCancel.service,
     method: apiParamsCancel.method,
     dataToSend: apiParamsCancel.dataToSend,
@@ -55,7 +61,7 @@ export function useCancelRequirement() {
   }, [responseDataCancel, errorCancel]);
 
   function cancelRequirement(reqId: string, motive?: string) {
-    const data: CancelRequirement = {
+    const data: CancelRequirementRequest = {
       requerimentID: reqId,
       reason: motive,
     };
@@ -66,7 +72,66 @@ export function useCancelRequirement() {
     });
   }
 
-  return { cancelRequirement, loadingCancel };
+  return { cancelRequirement, loadingCancelRequirement: loadingCancel };
+}
+
+export function useCancelOffer() {
+  const { t } = useTranslation();
+  const { notification, message } = App.useApp();
+
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi<CancelOfferRequest>({
+      service: apiParams.service,
+      method: apiParams.method,
+      dataToSend: apiParams.dataToSend,
+    });
+
+  useEffect(() => {
+    showLoadingMessage(message, loading);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
+
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      showNotification(notification, "success", t("offerCanceledSuccessfully"));
+    } else if (error) {
+      showNotification(notification, "error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
+
+  function cancelOffer(
+    offerId: string,
+    canceledByCreator: boolean,
+    motive?: string
+  ) {
+    const data: CancelOfferRequest = {
+      offerID: offerId,
+      reason: motive,
+      canceledByCreator,
+    };
+    setApiParams({
+      service: cancelOfferService(),
+      method: "post",
+      dataToSend: data,
+    });
+  }
+
+  return {
+    cancelOffer,
+    loadingCancelOffer: loading,
+    responseDataCancelOffer: responseData,
+  };
 }
 
 export function useGetOffersByRequirementId() {
