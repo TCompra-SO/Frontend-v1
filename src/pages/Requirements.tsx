@@ -7,7 +7,7 @@ import {
   RequirementType,
   TableTypes,
 } from "../utilities/types";
-import { Offer, Requirement } from "../models/MainInterfaces";
+import { Requirement } from "../models/MainInterfaces";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import {
   ModalContent,
@@ -24,12 +24,10 @@ import {
 } from "../services/requests/requirementService";
 import {
   transformDataToRequirement,
-  transformToBaseUser,
   transformToBasicRateData,
-  transformToOffer,
 } from "../utilities/transform";
 import { useLocation } from "react-router-dom";
-import makeRequest, {
+import {
   equalServices,
   getLabelFromRequirementType,
   getRouteType,
@@ -45,7 +43,6 @@ import {
   getBasicRateDataOfferService,
   getOffersByRequirementIdService,
 } from "../services/requests/offerService";
-import { getBaseDataUserService } from "../services/requests/authService";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import {
   useCancelRequirement,
@@ -63,7 +60,7 @@ export default function Requirements() {
   const [requirement, setRequirement] = useState<Requirement | null>(null);
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
-  const { getOffersByRequirementId, responseDataGetOffersByRequirementId } =
+  const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
   const { cancelRequirement } = useCancelRequirement();
   const { updateMyRequirementsLoadingViewOffers } =
@@ -85,18 +82,21 @@ export default function Requirements() {
   /** Verificar si hay una solicitud pendiente */
   useEffect(() => {
     if (detailedRequirementModalData.requirement) {
-      getOffersByRequirementId(detailedRequirementModalData.requirement.key);
+      getOffersByRequirementId(
+        detailedRequirementModalData.requirement.key,
+        detailedRequirementModalData.requirementType,
+        false,
+        detailedRequirementModalData.requirement
+      );
     }
   }, []);
 
   useEffect(() => {
-    if (responseDataGetOffersByRequirementId) {
-      openDetailedRequirement(
-        responseDataGetOffersByRequirementId,
-        detailedRequirementModalData.requirement
-      );
+    if (modalDataOffersByRequirementId.type !== ModalTypes.NONE) {
+      setDataModal(modalDataOffersByRequirementId);
+      setIsOpenModal(true);
     }
-  }, [responseDataGetOffersByRequirementId]);
+  }, [modalDataOffersByRequirementId]);
 
   /* Obtener lista inicialmente */
 
@@ -138,7 +138,14 @@ export default function Requirements() {
       else if (
         equalServices(apiParams.service, getOffersByRequirementIdService(""))
       )
-        openDetailedRequirement(responseData, requirement);
+        if (requirement)
+          // openDetailedRequirement(responseData, requirement);
+          getOffersByRequirementId(
+            requirement.key,
+            requirement.type,
+            false,
+            requirement
+          );
     } else if (error) {
       if (
         equalServices(apiParams.service, getRequirementsBySubUserService("")) ||
@@ -264,36 +271,6 @@ export default function Requirements() {
       });
     } catch (error) {
       showNotification(notification, "error", t("errorOccurred"));
-    }
-  }
-
-  async function openDetailedRequirement(
-    responseData: any,
-    requirement: Requirement | null
-  ) {
-    if (requirement && responseData.data && Array.isArray(responseData.data)) {
-      console.log("sssssaa");
-      const offerArray: Offer[] = await Promise.all(
-        responseData.data.map(async (item: any) => {
-          const { responseData }: any = await makeRequest({
-            service: getBaseDataUserService(item.userID),
-            method: "get",
-          });
-          const { user, subUser } = transformToBaseUser(responseData.data[0]);
-          return subUser
-            ? transformToOffer(item, type, subUser, user)
-            : transformToOffer(item, type, user);
-        })
-      );
-      setDataModal({
-        type: ModalTypes.DETAILED_REQUIREMENT,
-        data: {
-          offerList: offerArray,
-          requirement: requirement,
-          forPurchaseOrder: false,
-        },
-      });
-      setIsOpenModal(true);
     }
   }
 

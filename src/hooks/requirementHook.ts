@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useApiParams } from "../models/Interfaces";
+import { ModalContent, OfferFilters, useApiParams } from "../models/Interfaces";
 import useApi from "./useApi";
 import showNotification, {
   showLoadingMessage,
@@ -15,6 +15,12 @@ import {
   cancelOfferService,
   getOffersByRequirementIdService,
 } from "../services/requests/offerService";
+import { ModalTypes, RequirementType } from "../utilities/types";
+import { Offer, Requirement } from "../models/MainInterfaces";
+import { getRequirementById } from "../services/complete/general";
+import makeRequest from "../utilities/globalFunctions";
+import { transformToBaseUser, transformToOffer } from "../utilities/transform";
+import { getBaseDataUserService } from "../services/requests/authService";
 
 export function useCancelRequirement() {
   const { t } = useTranslation();
@@ -136,7 +142,23 @@ export function useCancelOffer() {
 
 export function useGetOffersByRequirementId() {
   const { notification, message } = App.useApp();
-
+  const [requirementData, setRequirementData] = useState<{
+    requirement: Requirement | null | undefined;
+    type: RequirementType;
+    requirementId: string;
+    filters: OfferFilters | undefined;
+    forPurchaseOrder: boolean;
+  }>({
+    requirement: null,
+    type: RequirementType.GOOD,
+    requirementId: "",
+    filters: undefined,
+    forPurchaseOrder: false,
+  });
+  const [dataModal, setDataModal] = useState<ModalContent>({
+    type: ModalTypes.NONE,
+    data: {},
+  });
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: null,
     method: "get",
@@ -159,17 +181,83 @@ export function useGetOffersByRequirementId() {
   }, [apiParams]);
 
   useEffect(() => {
-    // if (responseData) {
-
-    // }
-    // else
-    if (error) {
-      showNotification(notification, "error", errorMsg);
+    async function process() {
+      try {
+        if (responseData && requirementData.requirementId) {
+          showLoadingMessage(message, true);
+          let fetchedRequirement: Requirement | null = null;
+          if (!requirementData.requirement) {
+            const { requirement: iniFetchedRequirement } =
+              await getRequirementById(
+                requirementData.requirementId,
+                requirementData.type
+              );
+            fetchedRequirement = iniFetchedRequirement;
+          } else {
+            if (requirementData.requirement || fetchedRequirement) {
+              const offerArray: Offer[] = await Promise.all(
+                responseData.data.map(async (item: any) => {
+                  const { responseData: responseDataU }: any =
+                    await makeRequest({
+                      service: getBaseDataUserService(item.userID),
+                      method: "get",
+                    });
+                  const { user, subUser } = transformToBaseUser(
+                    responseDataU.data[0]
+                  );
+                  return subUser
+                    ? transformToOffer(
+                        item,
+                        requirementData.type,
+                        subUser,
+                        user
+                      )
+                    : transformToOffer(item, requirementData.type, user);
+                })
+              );
+              setDataModal({
+                type: ModalTypes.DETAILED_REQUIREMENT,
+                data: {
+                  offerList: offerArray,
+                  requirement:
+                    requirementData.requirement ?? fetchedRequirement,
+                  forPurchaseOrder: requirementData.forPurchaseOrder,
+                  filters: requirementData.filters,
+                },
+              });
+            } else showNotification(notification, "error", errorMsg);
+          }
+        } else if (error) {
+          showNotification(notification, "error", errorMsg);
+        }
+      } catch (error) {
+        showNotification(notification, "error", errorMsg);
+      } finally {
+        showLoadingMessage(message, false);
+      }
     }
+    process();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [error]);
+  }, [error, responseData, requirementData]);
 
-  function getOffersByRequirementId(reqId: string) {
+  function getOffersByRequirementId(
+    reqId: string,
+    typeReq: RequirementType,
+    forPurchaseOrder: boolean,
+    req?: Requirement,
+    filters?: OfferFilters
+  ) {
+    setDataModal({
+      type: ModalTypes.NONE,
+      data: {},
+    });
+    setRequirementData({
+      requirementId: reqId,
+      type: typeReq,
+      requirement: req,
+      filters,
+      forPurchaseOrder,
+    });
     setApiParams({
       service: getOffersByRequirementIdService(reqId),
       method: "get",
@@ -180,5 +268,6 @@ export function useGetOffersByRequirementId() {
     getOffersByRequirementId,
     loadingGetOffersByRequirementId: loading,
     responseDataGetOffersByRequirementId: responseData,
+    modalDataOffersByRequirementId: dataModal,
   };
 }
