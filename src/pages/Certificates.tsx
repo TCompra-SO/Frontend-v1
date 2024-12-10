@@ -6,7 +6,6 @@ import {
   ModalContent,
   TableTypeCertificatesReceived,
   TableTypeCertificatesSent,
-  useApiParams,
 } from "../models/Interfaces";
 import {
   Action,
@@ -16,15 +15,10 @@ import {
 } from "../utilities/types";
 import { useTranslation } from "react-i18next";
 import { CertificateFile, CertificationItem } from "../models/MainInterfaces";
-import {
-  equalServices,
-  getLastSegmentFromRoute,
-} from "../utilities/globalFunctions";
+import { getLastSegmentFromRoute } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
 import { pageSubRoutes } from "../utilities/routes";
 import { App } from "antd";
-import useApi from "../hooks/useApi";
-import showNotification from "../utilities/notification/showNotification";
 
 const cert: CertificateFile[] = [
   {
@@ -75,7 +69,7 @@ const cert2: CertificationItem[] = [
 
 export default function Certificates() {
   const location = useLocation();
-  const { notification, message } = App.useApp();
+  // const { notification, message } = App.useApp();
   const { t } = useTranslation();
   const [type, setType] = useState(getLastSegmentFromRoute(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);

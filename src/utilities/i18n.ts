@@ -493,7 +493,8 @@ const resources = {
       noChats: "No chats",
       archive: "Archive",
       appName: "TCompra",
-      message: "Message"
+      message: "Message",
+      resend: "Resent"
     },
   },
   es: {
@@ -999,7 +1000,8 @@ const resources = {
       noChats: "Sin chats",
       archive: "Archivar",
       appName: "TCompra",
-      message: "Mensaje"
+      message: "Mensaje",
+      resend: "Reenviar"
     },
   },
 };
