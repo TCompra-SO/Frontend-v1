@@ -181,7 +181,6 @@ export function useGetOffersByRequirementId() {
     service: null,
     method: "get",
   });
-
   const { loading, responseData, error, errorMsg, fetchData } = useApi({
     service: apiParams.service,
     method: apiParams.method,
@@ -196,9 +195,9 @@ export function useGetOffersByRequirementId() {
   useEffect(() => {
     async function process() {
       try {
-        // Obtener filtros para órdenes en caso de que no existan
-        let filters: OfferFilters | undefined = undefined;
         if (responseData && requirementData.requirementId) {
+          // Obtener filtros para órdenes en caso de que no existan
+          let filters: OfferFilters | undefined = undefined;
           if (
             requirementData.forPurchaseOrder &&
             requirementData.purchaseOrderId &&
@@ -336,6 +335,8 @@ export function useGetOffersByRequirementId() {
 }
 
 export function useShowDetailOffer() {
+  const { notification, message } = App.useApp();
+  const{t}=useTranslation()
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
@@ -344,6 +345,43 @@ export function useShowDetailOffer() {
     service: null,
     method: "get",
   });
+  const { loading, responseData, error, errorMsg, fetchData } = useApi({
+    service: apiParams.service,
+    method: apiParams.method,
+    dataToSend: apiParams.dataToSend,
+  });
+
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    async function process() {
+      try {
+        if (responseData ) {
+              setDataModal({
+                type: ModalTypes.DETAILED_REQUIREMENT,
+                data: {
+                  offerList: offerArray,
+                  requirement: requirementData.requirement,
+                  forPurchaseOrder: requirementData.forPurchaseOrder,
+                  filters: requirementData.filters ?? filters,
+                },
+              });
+        } else if (error) {
+          showNotification(notification, "error", errorMsg);
+        }
+      } catch (error) {
+        showNotification(notification, "error", t("errorOccurred"));
+      } finally {
+          showLoadingMessage(message, false);
+        }
+      }
+    }
+    process();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error, responseData]);
 
   function getOfferDetail(offerId: string, offerData?: Offer) {
     setDataModal({
@@ -355,7 +393,19 @@ export function useShowDetailOffer() {
         service: getOfferByIdService(offerId),
         method: "get",
       });
+    else
+      setDataModal({
+        type: ModalTypes.OFFER_DETAIL,
+        data: {
+          offer: offerData,
+        },
+      });
   }
+
+  return {
+    getOfferDetail,
+    modalDataOfferDetail: dataModal,
+  };
 }
 
 export function useCulminate() {

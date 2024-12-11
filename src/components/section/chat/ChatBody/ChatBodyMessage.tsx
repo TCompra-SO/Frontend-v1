@@ -58,8 +58,8 @@ export default function ChatBodyMessage(props: ChatBodyMessageProps) {
                 }`
               : props.message.documents
               ? props.message.isInputMsg
-                ? "mensaje-entrada-doc"
-                : "mensaje-salida-doc"
+                ? "mensaje-entrada-doc text-right"
+                : "mensaje-salida-doc text-right"
               : props.message.isInputMsg
               ? "mensaje-entrada"
               : "mensaje-salida"
@@ -79,12 +79,18 @@ export default function ChatBodyMessage(props: ChatBodyMessageProps) {
           ) : props.message.documents ? (
             props.message.documents.map((doc) => (
               <div
-                className="file-min-2"
+                className="file-min-2 gap-5"
                 onClick={() => openDocument(doc)}
                 style={{ cursor: "pointer" }}
                 key={doc}
               >
                 <i className="fa-regular fa-file-doc"></i>
+                <div
+                  className="text-truncate"
+                  style={{ fontSize: "14px", width: "200px" }}
+                >
+                  aaaaaaaaaaaaa ghjgjhggj ghghjg jjhg.pdf
+                </div>
               </div>
             ))
           ) : (

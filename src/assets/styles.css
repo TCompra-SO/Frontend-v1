@@ -2598,13 +2598,13 @@ body {
   text-shadow: 1px 1px 2px black, 0 0 1em black, 0 0 0.2em black;
 }
 .file-min-2 {
-  height: 55px !important;
-  width: 55px !important;
+  /* height: 55px !important;
+  width: 55px !important; */
   border-radius: 0.6rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 45px;
+  font-size: 30px;
 }
 .mensajes-contenedor {
   overflow: auto;
