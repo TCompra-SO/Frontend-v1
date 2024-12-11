@@ -348,9 +348,9 @@ export function useCulminate() {
         type: ModalTypes.RATE_USER,
         data: {
           basicRateData: data,
-          type: requirement.type,
-          isOffer: true,
-          requirementOrOfferId: requirement.key,
+          type: culminateData.type,
+          isOffer: culminateData.isOffer,
+          requirementOrOfferId: culminateData.requirementOrOfferId,
         },
       });
     } else if (error) {
