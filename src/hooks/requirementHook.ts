@@ -9,18 +9,26 @@ import {
   CancelOfferRequest,
   CancelRequirementRequest,
 } from "../models/Requests";
-import { cancelRequirementService } from "../services/requests/requirementService";
+import {
+  cancelRequirementService,
+  getBasicRateDataReqService,
+} from "../services/requests/requirementService";
 import { useTranslation } from "react-i18next";
 import {
   cancelOfferService,
+  getBasicRateDataOfferService,
   getOfferByIdService,
   getOffersByRequirementIdService,
 } from "../services/requests/offerService";
-import { ModalTypes, RequirementType } from "../utilities/types";
+import { Action, ModalTypes, RequirementType } from "../utilities/types";
 import { Offer, Requirement } from "../models/MainInterfaces";
 import { getRequirementById } from "../services/complete/general";
 import makeRequest from "../utilities/globalFunctions";
-import { transformToBaseUser, transformToOffer } from "../utilities/transform";
+import {
+  transformToBaseUser,
+  transformToBasicRateData,
+  transformToOffer,
+} from "../utilities/transform";
 import { getBaseDataUserService } from "../services/requests/authService";
 
 export function useCancelRequirement() {
@@ -293,5 +301,85 @@ export function useShowDetailOffer() {
         service: getOfferByIdService(offerId),
         method: "get",
       });
+  }
+}
+
+export function useCulminate() {
+  const { notification, message } = App.useApp();
+  const [culminateData, setCulminateData] = useState<{
+    type: RequirementType;
+    isOffer: boolean;
+    requirementOrOfferId: string;
+    action: Action;
+  }>({
+    type: RequirementType.GOOD,
+    isOffer: false,
+    requirementOrOfferId: "",
+    action: Action.FINISH,
+  });
+  const [dataModal, setDataModal] = useState<ModalContent>({
+    type: ModalTypes.NONE,
+    data: {},
+  });
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+  const { loading, responseData, error, errorMsg, fetchData } = useApi({
+    service: apiParams.service,
+    method: apiParams.method,
+    dataToSend: apiParams.dataToSend,
+  });
+
+  useEffect(() => {
+    showLoadingMessage(message, loading);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
+
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      const data = transformToBasicRateData(responseData.data[0]);
+      setDataModal({
+        type: ModalTypes.RATE_USER,
+        data: {
+          basicRateData: data,
+          type: requirement.type,
+          isOffer: true,
+          requirementOrOfferId: requirement.key,
+        },
+      });
+    } else if (error) {
+      showNotification(notification, "error", errorMsg);
+    }
+  }, [responseData, error]);
+
+  function getBasicRateData(
+    id: string,
+    offerService: boolean,
+    isOffer: boolean,
+    action: Action,
+    type: RequirementType
+  ) {
+    setDataModal({
+      type: ModalTypes.NONE,
+      data: {},
+    });
+    setCulminateData({
+      type,
+      isOffer,
+      requirementOrOfferId: id,
+      action,
+    });
+    setApiParams({
+      service: offerService
+        ? getBasicRateDataOfferService(id)
+        : getBasicRateDataReqService(id),
+      method: "get",
+    });
   }
 }
