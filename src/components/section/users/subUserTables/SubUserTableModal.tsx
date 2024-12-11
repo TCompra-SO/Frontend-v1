@@ -55,7 +55,7 @@ interface SubUserTableModalProps {
         tableContent: PurchaseOrderItemSubUser[];
       };
   onTabChange: (tabId: RequirementType | PurchaseOrderTableTypes) => void;
-  loading: boolean;
+  loading: boolean | undefined;
   tableType: TableTypes;
 }
 

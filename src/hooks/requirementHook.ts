@@ -21,7 +21,7 @@ import {
   getOffersByRequirementIdService,
 } from "../services/requests/offerService";
 import { Action, ModalTypes, RequirementType } from "../utilities/types";
-import { Offer, Requirement } from "../models/MainInterfaces";
+import { BaseUser, Offer, Requirement } from "../models/MainInterfaces";
 import { getRequirementById } from "../services/complete/general";
 import makeRequest from "../utilities/globalFunctions";
 import {
@@ -150,6 +150,7 @@ export function useCancelOffer() {
 }
 
 export function useGetOffersByRequirementId() {
+  const { t } = useTranslation();
   const { notification, message } = App.useApp();
   const [requirementData, setRequirementData] = useState<{
     requirement: Requirement | null | undefined;
@@ -204,24 +205,45 @@ export function useGetOffersByRequirementId() {
             fetchedRequirement = iniFetchedRequirement;
           } else {
             if (requirementData.requirement || fetchedRequirement) {
+              const users: {
+                [key: string]: {
+                  user: BaseUser;
+                  mainUser: BaseUser | undefined;
+                };
+              } = {};
+              const pendingRequests: { [key: string]: Promise<any> } = {};
+
               const offerArray: Offer[] = await Promise.all(
                 responseData.data.map(async (item: any) => {
-                  const { responseData: responseDataU }: any =
-                    await makeRequest({
-                      service: getBaseDataUserService(item.userID),
-                      method: "get",
-                    });
-                  const { user, subUser } = transformToBaseUser(
-                    responseDataU.data[0]
+                  if (
+                    item.userID &&
+                    !Object.prototype.hasOwnProperty.call(users, item.userID)
+                  ) {
+                    if (!pendingRequests[item.userID]) {
+                      pendingRequests[item.userID] = makeRequest({
+                        service: getBaseDataUserService(item.userID),
+                        method: "get",
+                      }).then(({ responseData: responseDataU }: any) => {
+                        const { user, subUser } = transformToBaseUser(
+                          responseDataU.data[0]
+                        );
+
+                        users[item.userID] = {
+                          user: subUser ?? user,
+                          mainUser: subUser ? user : undefined,
+                        };
+                        delete pendingRequests[item.userID];
+                      });
+                    }
+                    await pendingRequests[item.userID];
+                  }
+
+                  return transformToOffer(
+                    item,
+                    requirementData.type,
+                    users[item.userID].user,
+                    users[item.userID].mainUser
                   );
-                  return subUser
-                    ? transformToOffer(
-                        item,
-                        requirementData.type,
-                        subUser,
-                        user
-                      )
-                    : transformToOffer(item, requirementData.type, user);
                 })
               );
               setDataModal({
@@ -234,13 +256,13 @@ export function useGetOffersByRequirementId() {
                   filters: requirementData.filters,
                 },
               });
-            } else showNotification(notification, "error", errorMsg);
+            } else showNotification(notification, "error", t("errorOccurred"));
           }
         } else if (error) {
           showNotification(notification, "error", errorMsg);
         }
       } catch (error) {
-        showNotification(notification, "error", errorMsg);
+        showNotification(notification, "error", t("errorOccurred"));
       } finally {
         showLoadingMessage(message, false);
       }
