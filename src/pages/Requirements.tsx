@@ -74,15 +74,17 @@ export default function Requirements() {
   });
 
   /** Verificar si hay una solicitud pendiente */
+
   useEffect(() => {
-    if (detailedRequirementModalData.requirement) {
+    if (detailedRequirementModalData.requirementId) {
       getOffersByRequirementId(
-        detailedRequirementModalData.requirement.key,
+        detailedRequirementModalData.requirementId,
         detailedRequirementModalData.requirementType,
         false,
         detailedRequirementModalData.requirement
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

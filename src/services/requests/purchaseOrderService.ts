@@ -22,6 +22,15 @@ export function getPurchaseOrderPDFService(id: string): HttpService {
   };
 }
 
+export function getPurchaseOrderByIdService(id: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.purchaseOrder
+    }${ApiRoutes.purchaseOrder.getPurchaseOrderById}${id}`,
+    type: "PO-ID",
+  };
+}
+
 // Para cuentas principales (empresa y persona). Incluye órdenes de subusuarios
 export function getPurchaseOrdersByClientEntityService(
   id: string,

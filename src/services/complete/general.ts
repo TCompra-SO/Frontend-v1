@@ -5,6 +5,7 @@ import {
   transformToBaseUser,
   transformToFullUser,
   transformToOffer,
+  transformToPurchaseOrder,
 } from "../../utilities/transform";
 import { RequirementType } from "../../utilities/types";
 import {
@@ -12,6 +13,7 @@ import {
   getUserService,
 } from "../requests/authService";
 import { getOfferByIdService } from "../requests/offerService";
+import { getPurchaseOrderByIdService } from "../requests/purchaseOrderService";
 import { getRequirementByIdService } from "../requests/requirementService";
 
 export async function getBaseUserForUserSubUser(
@@ -75,6 +77,21 @@ export async function getRequirementById(id: string, type: RequirementType) {
           responseData.data[0],
           type
         )
+      : null,
+    error,
+    errorMsg,
+  };
+}
+
+export async function getPurchaseOrderById(id: string) {
+  const { responseData, error, errorMsg } = await makeRequest({
+    service: getPurchaseOrderByIdService(id),
+    method: "get",
+  });
+
+  return {
+    purchaseOrder: responseData
+      ? transformToPurchaseOrder(responseData.data)
       : null,
     error,
     errorMsg,

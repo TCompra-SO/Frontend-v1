@@ -22,7 +22,10 @@ import {
 } from "../services/requests/offerService";
 import { Action, ModalTypes, RequirementType } from "../utilities/types";
 import { BaseUser, Offer, Requirement } from "../models/MainInterfaces";
-import { getRequirementById } from "../services/complete/general";
+import {
+  getPurchaseOrderById,
+  getRequirementById,
+} from "../services/complete/general";
 import makeRequest from "../utilities/globalFunctions";
 import {
   transformToBaseUser,
@@ -153,22 +156,22 @@ export function useCancelOffer() {
 export function useGetOffersByRequirementId() {
   const { t } = useTranslation();
   const { notification, message } = App.useApp();
-  const {
-    updateMyRequirementsLoadingViewOffers,
-    myRequirementsLoadingViewOffers,
-  } = useContext(LoadingDataContext);
+  const { updateMyRequirementsLoadingViewOffers } =
+    useContext(LoadingDataContext);
   const [requirementData, setRequirementData] = useState<{
     requirement: Requirement | null | undefined;
     type: RequirementType;
     requirementId: string;
     filters: OfferFilters | undefined;
     forPurchaseOrder: boolean;
+    purchaseOrderId: string | undefined;
   }>({
     requirement: null,
     type: RequirementType.GOOD,
     requirementId: "",
     filters: undefined,
     forPurchaseOrder: false,
+    purchaseOrderId: undefined,
   });
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -193,7 +196,20 @@ export function useGetOffersByRequirementId() {
   useEffect(() => {
     async function process() {
       try {
+        // Obtener filtros para órdenes en caso de que no existan
+        let filters: OfferFilters | undefined = undefined;
         if (responseData && requirementData.requirementId) {
+          if (
+            requirementData.forPurchaseOrder &&
+            requirementData.purchaseOrderId &&
+            !requirementData.filters
+          ) {
+            const { purchaseOrder } = await getPurchaseOrderById(
+              requirementData.purchaseOrderId
+            );
+            if (purchaseOrder) filters = purchaseOrder.filters;
+          }
+          // Obtener requerimiento si no existe
           let fetchedRequirement: Requirement | null = null;
           if (!requirementData.requirement) {
             const { requirement: iniFetchedRequirement } =
@@ -202,60 +218,69 @@ export function useGetOffersByRequirementId() {
                 requirementData.type
               );
             fetchedRequirement = iniFetchedRequirement;
-          } else {
-            if (requirementData.requirement || fetchedRequirement) {
-              const users: {
-                [key: string]: {
-                  user: BaseUser;
-                  mainUser: BaseUser | undefined;
-                };
-              } = {};
-              const pendingRequests: { [key: string]: Promise<any> } = {};
-              const offerArray: Offer[] = await Promise.all(
-                responseData.data.map(async (item: any) => {
-                  if (
-                    item.userID &&
-                    !Object.prototype.hasOwnProperty.call(users, item.userID)
-                  ) {
-                    if (!pendingRequests[item.userID]) {
-                      pendingRequests[item.userID] = makeRequest({
-                        service: getBaseDataUserService(item.userID),
-                        method: "get",
-                      }).then(({ responseData: responseDataU }: any) => {
-                        const { user, subUser } = transformToBaseUser(
-                          responseDataU.data[0]
-                        );
+          }
+          if (requirementData.requirement || fetchedRequirement) {
+            const users: {
+              [key: string]: {
+                user: BaseUser;
+                mainUser: BaseUser | undefined;
+              };
+            } = {};
+            // Obtener lista de ofertas
+            const pendingRequests: { [key: string]: Promise<any> } = {};
+            const offerArray: Offer[] = await Promise.all(
+              responseData.data.map(async (item: any) => {
+                if (
+                  item.userID &&
+                  !Object.prototype.hasOwnProperty.call(users, item.userID)
+                ) {
+                  if (!pendingRequests[item.userID]) {
+                    pendingRequests[item.userID] = makeRequest({
+                      service: getBaseDataUserService(item.userID),
+                      method: "get",
+                    }).then(({ responseData: responseDataU }: any) => {
+                      const { user, subUser } = transformToBaseUser(
+                        responseDataU.data[0]
+                      );
 
-                        users[item.userID] = {
-                          user: subUser ?? user,
-                          mainUser: subUser ? user : undefined,
-                        };
-                        delete pendingRequests[item.userID];
-                      });
-                    }
-                    await pendingRequests[item.userID];
+                      users[item.userID] = {
+                        user: subUser ?? user,
+                        mainUser: subUser ? user : undefined,
+                      };
+                      delete pendingRequests[item.userID];
+                    });
                   }
-
-                  return transformToOffer(
-                    item,
-                    requirementData.type,
-                    users[item.userID].user,
-                    users[item.userID].mainUser
-                  );
-                })
-              );
+                  await pendingRequests[item.userID];
+                }
+                return transformToOffer(
+                  item,
+                  requirementData.type,
+                  users[item.userID].user,
+                  users[item.userID].mainUser
+                );
+              })
+            );
+            if (fetchedRequirement)
               setDataModal({
                 type: ModalTypes.DETAILED_REQUIREMENT,
                 data: {
                   offerList: offerArray,
-                  requirement:
-                    requirementData.requirement ?? fetchedRequirement,
+                  requirement: fetchedRequirement,
                   forPurchaseOrder: requirementData.forPurchaseOrder,
-                  filters: requirementData.filters,
+                  filters: requirementData.filters ?? filters,
                 },
               });
-            } else showNotification(notification, "error", t("errorOccurred"));
-          }
+            else if (requirementData.requirement)
+              setDataModal({
+                type: ModalTypes.DETAILED_REQUIREMENT,
+                data: {
+                  offerList: offerArray,
+                  requirement: requirementData.requirement,
+                  forPurchaseOrder: requirementData.forPurchaseOrder,
+                  filters: requirementData.filters ?? filters,
+                },
+              });
+          } else showNotification(notification, "error", t("errorOccurred"));
         } else if (error) {
           showNotification(notification, "error", errorMsg);
         }
@@ -278,7 +303,8 @@ export function useGetOffersByRequirementId() {
     typeReq: RequirementType,
     forPurchaseOrder: boolean,
     req?: Requirement,
-    filters?: OfferFilters
+    filters?: OfferFilters,
+    purchaseOrderId?: string
   ) {
     if (!requirementData.forPurchaseOrder)
       updateMyRequirementsLoadingViewOffers(true);
@@ -293,6 +319,7 @@ export function useGetOffersByRequirementId() {
       requirement: req,
       filters,
       forPurchaseOrder,
+      purchaseOrderId,
     });
     setApiParams({
       service: getOffersByRequirementIdService(reqId),

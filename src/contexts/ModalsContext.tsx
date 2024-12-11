@@ -1,20 +1,22 @@
 import { createContext, ReactNode, useState } from "react";
 import { Offer, Requirement } from "../models/MainInterfaces";
 import { RequirementType } from "../utilities/types";
+import { OfferFilters } from "../models/Interfaces";
 
 interface DetailedRequirementModalDataType {
-  requirement: Requirement | null;
+  requirement: Requirement | undefined;
   requirementId: string;
   requirementType: RequirementType;
 }
 
 interface DetailedOfferModalDataType {
   offerId: string;
-  offer: Offer | null;
+  offer: Offer | undefined;
 }
 
-interface ViewHistoryModalDataType {
-  requirementId: string;
+interface ViewHistoryModalDataType extends DetailedRequirementModalDataType {
+  filters?: OfferFilters;
+  purchaseOrderId: string;
 }
 
 interface ModalsContextType {
@@ -30,12 +32,17 @@ interface ModalsContextType {
 
 export const ModalsContext = createContext<ModalsContextType>({
   detailedRequirementModalData: {
-    requirement: null,
+    requirement: undefined,
     requirementId: "",
     requirementType: RequirementType.GOOD,
   },
-  detailedOfferModalData: { offerId: "", offer: null },
-  viewHistoryModalData: { requirementId: "" },
+  detailedOfferModalData: { offerId: "", offer: undefined },
+  viewHistoryModalData: {
+    requirement: undefined,
+    requirementId: "",
+    requirementType: RequirementType.GOOD,
+    purchaseOrderId: "",
+  },
   updateDetailedRequirementModalData: () => {},
   updateDetailedOfferModalData: () => {},
   updateViewHistoryModalData: () => {},
@@ -44,14 +51,19 @@ export const ModalsContext = createContext<ModalsContextType>({
 export function ModalsProvider({ children }: { children: ReactNode }) {
   const [detailedRequirementModalData, setDetailedRequirementModalData] =
     useState<DetailedRequirementModalDataType>({
-      requirement: null,
+      requirement: undefined,
       requirementId: "",
       requirementType: RequirementType.GOOD,
     });
   const [detailedOfferModalData, setDetailedOfferModalData] =
-    useState<DetailedOfferModalDataType>({ offerId: "", offer: null });
+    useState<DetailedOfferModalDataType>({ offerId: "", offer: undefined });
   const [viewHistoryModalData, setViewHistoryModalData] =
-    useState<ViewHistoryModalDataType>({ requirementId: "" });
+    useState<ViewHistoryModalDataType>({
+      requirement: undefined,
+      requirementId: "",
+      requirementType: RequirementType.GOOD,
+      purchaseOrderId: "",
+    });
 
   function updateDetailedRequirementModalData(
     val: DetailedRequirementModalDataType
