@@ -13,6 +13,7 @@ import { cancelRequirementService } from "../services/requests/requirementServic
 import { useTranslation } from "react-i18next";
 import {
   cancelOfferService,
+  getOfferByIdService,
   getOffersByRequirementIdService,
 } from "../services/requests/offerService";
 import { ModalTypes, RequirementType } from "../utilities/types";
@@ -270,4 +271,27 @@ export function useGetOffersByRequirementId() {
     responseDataGetOffersByRequirementId: responseData,
     modalDataOffersByRequirementId: dataModal,
   };
+}
+
+export function useShowDetailOffer() {
+  const [dataModal, setDataModal] = useState<ModalContent>({
+    type: ModalTypes.NONE,
+    data: {},
+  });
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  function getOfferDetail(offerId: string, offerData?: Offer) {
+    setDataModal({
+      type: ModalTypes.NONE,
+      data: {},
+    });
+    if (!offerData)
+      setApiParams({
+        service: getOfferByIdService(offerId),
+        method: "get",
+      });
+  }
 }

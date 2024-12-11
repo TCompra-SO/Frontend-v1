@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Offer } from "../models/MainInterfaces";
 import { Action, ModalTypes, TableTypes } from "../utilities/types";
 import ModalContainer from "../components/containers/ModalContainer";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import {
   ModalContent,
   TableTypeOffer,
@@ -32,11 +32,13 @@ import showNotification, {
 } from "../utilities/notification/showNotification";
 import { App } from "antd";
 import { getBasicRateDataReqService } from "../services/requests/requirementService";
+import { ModalsContext } from "../contexts/ModalsContext";
 
 export default function Offers() {
   const { t } = useTranslation();
   const location = useLocation();
   const { notification, message } = App.useApp();
+  const { detailedOfferModalData } = useContext(ModalsContext);
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const [type, setType] = useState(getRouteType(location.pathname));
@@ -56,6 +58,19 @@ export default function Offers() {
     nameColumnHeader: t("offers"),
     onButtonClick: handleOnButtonClick,
   });
+
+  /** Verificar si hay una solicitud pendiente */
+
+  useEffect(() => {
+    if (detailedOfferModalData.offerId) {
+      getOffersByRequirementId(
+        detailedRequirementModalData.requirement.key,
+        detailedRequirementModalData.requirementType,
+        false,
+        detailedRequirementModalData.requirement
+      );
+    }
+  }, []);
 
   /** Cargar datos iniciales */
 

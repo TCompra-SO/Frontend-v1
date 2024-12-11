@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useState } from "react";
-import { Requirement } from "../models/MainInterfaces";
+import { Offer, Requirement } from "../models/MainInterfaces";
 import { RequirementType } from "../utilities/types";
 
 interface DetailedRequirementModalDataType {
@@ -10,6 +10,7 @@ interface DetailedRequirementModalDataType {
 
 interface DetailedOfferModalDataType {
   offerId: string;
+  offer: Offer | null;
 }
 
 interface ViewHistoryModalDataType {
@@ -33,7 +34,7 @@ export const ModalsContext = createContext<ModalsContextType>({
     requirementId: "",
     requirementType: RequirementType.GOOD,
   },
-  detailedOfferModalData: { offerId: "" },
+  detailedOfferModalData: { offerId: "", offer: null },
   viewHistoryModalData: { requirementId: "" },
   updateDetailedRequirementModalData: () => {},
   updateDetailedOfferModalData: () => {},
@@ -48,7 +49,7 @@ export function ModalsProvider({ children }: { children: ReactNode }) {
       requirementType: RequirementType.GOOD,
     });
   const [detailedOfferModalData, setDetailedOfferModalData] =
-    useState<DetailedOfferModalDataType>({ offerId: "" });
+    useState<DetailedOfferModalDataType>({ offerId: "", offer: null });
   const [viewHistoryModalData, setViewHistoryModalData] =
     useState<ViewHistoryModalDataType>({ requirementId: "" });
 
