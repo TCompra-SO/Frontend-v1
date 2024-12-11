@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ModalContent, OfferFilters, useApiParams } from "../models/Interfaces";
 import useApi from "./useApi";
 import showNotification, {
@@ -30,6 +30,7 @@ import {
   transformToOffer,
 } from "../utilities/transform";
 import { getBaseDataUserService } from "../services/requests/authService";
+import { LoadingDataContext } from "../contexts/LoadingDataContext";
 
 export function useCancelRequirement() {
   const { t } = useTranslation();
@@ -152,6 +153,10 @@ export function useCancelOffer() {
 export function useGetOffersByRequirementId() {
   const { t } = useTranslation();
   const { notification, message } = App.useApp();
+  const {
+    updateMyRequirementsLoadingViewOffers,
+    myRequirementsLoadingViewOffers,
+  } = useContext(LoadingDataContext);
   const [requirementData, setRequirementData] = useState<{
     requirement: Requirement | null | undefined;
     type: RequirementType;
@@ -181,11 +186,6 @@ export function useGetOffersByRequirementId() {
   });
 
   useEffect(() => {
-    showLoadingMessage(message, loading);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
-
-  useEffect(() => {
     if (apiParams.service) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
@@ -194,7 +194,6 @@ export function useGetOffersByRequirementId() {
     async function process() {
       try {
         if (responseData && requirementData.requirementId) {
-          showLoadingMessage(message, true);
           let fetchedRequirement: Requirement | null = null;
           if (!requirementData.requirement) {
             const { requirement: iniFetchedRequirement } =
@@ -212,7 +211,6 @@ export function useGetOffersByRequirementId() {
                 };
               } = {};
               const pendingRequests: { [key: string]: Promise<any> } = {};
-
               const offerArray: Offer[] = await Promise.all(
                 responseData.data.map(async (item: any) => {
                   if (
@@ -264,12 +262,16 @@ export function useGetOffersByRequirementId() {
       } catch (error) {
         showNotification(notification, "error", t("errorOccurred"));
       } finally {
-        showLoadingMessage(message, false);
+        if (requirementData.requirementId && (error || responseData)) {
+          showLoadingMessage(message, false);
+          if (!requirementData.forPurchaseOrder)
+            updateMyRequirementsLoadingViewOffers(false);
+        }
       }
     }
     process();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [error, responseData, requirementData]);
+  }, [error, responseData]);
 
   function getOffersByRequirementId(
     reqId: string,
@@ -278,6 +280,9 @@ export function useGetOffersByRequirementId() {
     req?: Requirement,
     filters?: OfferFilters
   ) {
+    if (!requirementData.forPurchaseOrder)
+      updateMyRequirementsLoadingViewOffers(true);
+    showLoadingMessage(message, true);
     setDataModal({
       type: ModalTypes.NONE,
       data: {},

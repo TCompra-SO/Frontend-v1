@@ -39,11 +39,7 @@ import showNotification, {
   showLoadingMessage,
 } from "../utilities/notification/showNotification";
 import { App } from "antd";
-import {
-  getBasicRateDataOfferService,
-  getOffersByRequirementIdService,
-} from "../services/requests/offerService";
-import { LoadingDataContext } from "../contexts/LoadingDataContext";
+import { getBasicRateDataOfferService } from "../services/requests/offerService";
 import {
   useCancelRequirement,
   useGetOffersByRequirementId,
@@ -63,8 +59,6 @@ export default function Requirements() {
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
   const { cancelRequirement } = useCancelRequirement();
-  const { updateMyRequirementsLoadingViewOffers } =
-    useContext(LoadingDataContext);
 
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -100,7 +94,7 @@ export default function Requirements() {
 
   /* Obtener lista inicialmente */
 
-  const [apiParams, setApiParams] = useState<useApiParams>({
+  const [apiParams] = useState<useApiParams>({
     service: getRequirementsBySubUserService(dataUser.uid),
     method: "get",
   });
@@ -135,34 +129,12 @@ export default function Requirements() {
     if (responseData) {
       if (equalServices(apiParams.service, getRequirementsBySubUserService("")))
         setTableData();
-      else if (
-        equalServices(apiParams.service, getOffersByRequirementIdService(""))
-      )
-        if (requirement)
-          // openDetailedRequirement(responseData, requirement);
-          getOffersByRequirementId(
-            requirement.key,
-            requirement.type,
-            false,
-            requirement
-          );
     } else if (error) {
-      if (
-        equalServices(apiParams.service, getRequirementsBySubUserService("")) ||
-        equalServices(apiParams.service, getOffersByRequirementIdService(""))
-      )
+      if (equalServices(apiParams.service, getRequirementsBySubUserService("")))
         showNotification(notification, "error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
-
-  useEffect(() => {
-    if (equalServices(apiParams.service, getOffersByRequirementIdService(""))) {
-      updateMyRequirementsLoadingViewOffers(loading);
-      showLoadingMessage(message, loading);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
 
   /* Obtener datos para culminar */
 
@@ -296,10 +268,12 @@ export default function Requirements() {
 
     switch (action) {
       case Action.SHOW_OFFERS: {
-        setApiParams({
-          service: getOffersByRequirementIdService(requirement.key),
-          method: "get",
-        });
+        getOffersByRequirementId(
+          requirement.key,
+          requirement.type,
+          false,
+          requirement
+        );
         break;
       }
       case Action.SHOW_SUMMARY: {
