@@ -83,6 +83,7 @@ export default function Requirements() {
   useEffect(() => {
     if (detailedRequirementModalData.requirementId) {
       getOffersByRequirementId(
+        TableTypes.REQUIREMENT,
         detailedRequirementModalData.requirementId,
         detailedRequirementModalData.requirementType,
         false,
@@ -231,6 +232,7 @@ export default function Requirements() {
     switch (action) {
       case Action.SHOW_OFFERS: {
         getOffersByRequirementId(
+          TableTypes.REQUIREMENT,
           requirement.key,
           requirement.type,
           false,

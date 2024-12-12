@@ -25,6 +25,7 @@ import {
   EntityType,
   ModalTypes,
   RequirementType,
+  TableTypes,
 } from "../utilities/types";
 import { BaseUser, Offer, Requirement } from "../models/MainInterfaces";
 import {
@@ -171,8 +172,10 @@ export function useCancelOffer() {
 export function useGetOffersByRequirementId() {
   const { t } = useTranslation();
   const { notification, message } = App.useApp();
-  const { updateMyRequirementsLoadingViewOffers } =
-    useContext(LoadingDataContext);
+  const {
+    updateMyRequirementsLoadingViewOffers,
+    updateSubUserRequirementsViewOffers,
+  } = useContext(LoadingDataContext);
   const [requirementData, setRequirementData] = useState<{
     requirement: Requirement | null | undefined;
     type: RequirementType;
@@ -180,6 +183,7 @@ export function useGetOffersByRequirementId() {
     filters: OfferFilters | undefined;
     forPurchaseOrder: boolean;
     purchaseOrderId: string | undefined;
+    tableType: TableTypes;
   }>({
     requirement: null,
     type: RequirementType.GOOD,
@@ -187,6 +191,7 @@ export function useGetOffersByRequirementId() {
     filters: undefined,
     forPurchaseOrder: false,
     purchaseOrderId: undefined,
+    tableType: TableTypes.REQUIREMENT,
   });
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -303,8 +308,12 @@ export function useGetOffersByRequirementId() {
       } finally {
         if (requirementData.requirementId && (error || responseData)) {
           showLoadingMessage(message, false);
-          if (!requirementData.forPurchaseOrder)
+          if (requirementData.tableType == TableTypes.REQUIREMENT)
             updateMyRequirementsLoadingViewOffers(false);
+          else if (
+            requirementData.tableType == TableTypes.PURCHASE_ORDER_SUBUSER
+          )
+            updateSubUserRequirementsViewOffers(false);
         }
       }
     }
@@ -313,6 +322,7 @@ export function useGetOffersByRequirementId() {
   }, [error, responseData]);
 
   function getOffersByRequirementId(
+    tableType: TableTypes,
     reqId: string,
     typeReq: RequirementType,
     forPurchaseOrder: boolean,
@@ -320,8 +330,10 @@ export function useGetOffersByRequirementId() {
     filters?: OfferFilters,
     purchaseOrderId?: string
   ) {
-    if (!requirementData.forPurchaseOrder)
+    if (requirementData.tableType == TableTypes.REQUIREMENT)
       updateMyRequirementsLoadingViewOffers(true);
+    else if (requirementData.tableType == TableTypes.PURCHASE_ORDER_SUBUSER)
+      updateSubUserRequirementsViewOffers(true);
     showLoadingMessage(message, true);
     setDataModal({
       type: ModalTypes.NONE,
@@ -334,6 +346,7 @@ export function useGetOffersByRequirementId() {
       filters,
       forPurchaseOrder,
       purchaseOrderId,
+      tableType,
     });
     setApiParams({
       service: getOffersByRequirementIdService(reqId),

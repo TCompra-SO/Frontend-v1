@@ -86,6 +86,7 @@ export default function PurchaseOrders() {
   useEffect(() => {
     if (viewHistoryModalData.requirementId) {
       getOffersByRequirementId(
+        TableTypes.PURCHASE_ORDER,
         viewHistoryModalData.requirementId,
         viewHistoryModalData.requirementType,
         true,
@@ -325,6 +326,7 @@ export default function PurchaseOrders() {
         break;
       case Action.VIEW_HISTORY:
         getOffersByRequirementId(
+          TableTypes.PURCHASE_ORDER,
           purchaseOrder.requirementId,
           purchaseOrder.type,
           true,
