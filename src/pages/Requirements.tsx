@@ -43,9 +43,9 @@ import showNotification, {
   showLoadingMessage,
 } from "../utilities/notification/showNotification";
 import { App } from "antd";
-import { getBasicRateDataOfferService } from "../services/requests/offerService";
 import {
   useCancelRequirement,
+  useCulminate,
   useGetOffersByRequirementId,
 } from "../hooks/requirementHook";
 import { ModalsContext } from "../contexts/ModalsContext";
@@ -63,6 +63,7 @@ export default function Requirements() {
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
   const { cancelRequirement } = useCancelRequirement();
+  const { getBasicRateData, modalDataRate } = useCulminate();
 
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -91,12 +92,21 @@ export default function Requirements() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /** Para mostrar modales */
+
   useEffect(() => {
     if (modalDataOffersByRequirementId.type !== ModalTypes.NONE) {
       setDataModal(modalDataOffersByRequirementId);
       setIsOpenModal(true);
     }
   }, [modalDataOffersByRequirementId]);
+
+  useEffect(() => {
+    if (modalDataRate.type !== ModalTypes.NONE) {
+      setDataModal(modalDataRate);
+      setIsOpenModal(true);
+    }
+  }, [modalDataRate]);
 
   /* Obtener lista inicialmente */
 
@@ -141,44 +151,6 @@ export default function Requirements() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
-
-  /* Obtener datos para culminar */
-
-  const [apiParamsRate, setApiParamsRate] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingRate,
-    responseData: responseDataRate,
-    error: errorRate,
-    errorMsg: errorMsgRate,
-    fetchData: fetchDataRate,
-  } = useApi({
-    service: apiParamsRate.service,
-    method: apiParamsRate.method,
-    dataToSend: apiParamsRate.dataToSend,
-  });
-
-  useEffect(() => {
-    showLoadingMessage(message, loadingRate);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingRate]);
-
-  useEffect(() => {
-    if (apiParamsRate.service) fetchDataRate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsRate]);
-
-  useEffect(() => {
-    if (responseDataRate) {
-      openRateModal(responseDataRate);
-    } else if (errorRate) {
-      showNotification(notification, "error", errorMsgRate);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataRate, errorRate]);
 
   /* Para eliminar */
 
@@ -252,22 +224,6 @@ export default function Requirements() {
     }
   }
 
-  function openRateModal(responseData: any) {
-    const data = transformToBasicRateData(responseData.data[0]);
-    if (requirement) {
-      setDataModal({
-        type: ModalTypes.RATE_USER,
-        data: {
-          basicRateData: data,
-          type: requirement.type,
-          isOffer: true,
-          requirementOrOfferId: requirement.key,
-        },
-      });
-      setIsOpenModal(true);
-    }
-  }
-
   async function handleOnButtonClick(action: Action, requirement: Requirement) {
     console.log(requirement);
     setRequirement(requirement);
@@ -322,10 +278,14 @@ export default function Requirements() {
       }
       case Action.FINISH: {
         if (requirement.offerId)
-          setApiParamsRate({
-            service: getBasicRateDataOfferService(requirement.offerId),
-            method: "get",
-          });
+          getBasicRateData(
+            requirement.key,
+            requirement.offerId,
+            true,
+            true,
+            action,
+            requirement.type
+          );
         break;
       }
       case Action.DELETE: {

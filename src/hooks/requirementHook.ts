@@ -44,6 +44,8 @@ import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 
+/** useCancelRequirement */
+
 export function useCancelRequirement() {
   const { t } = useTranslation();
   const { notification, message } = App.useApp();
@@ -103,6 +105,8 @@ export function useCancelRequirement() {
   return { cancelRequirement, loadingCancelRequirement: loadingCancel };
 }
 
+/** useCancelOffer */
+
 export function useCancelOffer() {
   const { t } = useTranslation();
   const { notification, message } = App.useApp();
@@ -161,6 +165,8 @@ export function useCancelOffer() {
     responseDataCancelOffer: responseData,
   };
 }
+
+/** useGetOffersByRequirementId */
 
 export function useGetOffersByRequirementId() {
   const { t } = useTranslation();
@@ -343,6 +349,8 @@ export function useGetOffersByRequirementId() {
   };
 }
 
+/** useShowDetailOffer */
+
 export function useShowDetailOffer() {
   const { notification, message } = App.useApp();
   const { t } = useTranslation();
@@ -352,45 +360,6 @@ export function useShowDetailOffer() {
     type: ModalTypes.NONE,
     data: {},
   });
-  const [apiParams, setApiParams] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-  const { loading, responseData, error, errorMsg, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
-
-  useEffect(() => {
-    if (apiParams.service) fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParams]);
-
-  // useEffect(() => {
-  //   async function process() {
-  //     try {
-  //       if (responseData) {
-  //         const { purchaseOrder } = await getOfferById();
-  //         setDataModal({
-  //           type: ModalTypes.OFFER_DETAIL,
-  //           data: {
-  //             offer,
-  //           },
-  //         });
-  //       } else if (error) {
-  //         showNotification(notification, "error", errorMsg);
-  //       }
-  //     } catch (error) {
-  //       showNotification(notification, "error", t("errorOccurred"));
-  //     } finally {
-  //       showLoadingMessage(message, false);
-  //     }
-  //   }
-
-  //   process();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [error, responseData]);
 
   async function getOfferDetail(
     offerId: string,
@@ -405,10 +374,6 @@ export function useShowDetailOffer() {
         data: {},
       });
       if (!offerData) {
-        // setApiParams({
-        //   service: getOfferByIdService(offerId),
-        //   method: "get",
-        // });
         const { offer } = await getOfferById(
           offerId,
           type,
@@ -447,18 +412,23 @@ export function useShowDetailOffer() {
   };
 }
 
+/** useCulminate */
+
 export function useCulminate() {
+  const { t } = useTranslation();
   const { notification, message } = App.useApp();
   const [culminateData, setCulminateData] = useState<{
     type: RequirementType;
     isOffer: boolean;
-    requirementOrOfferId: string;
+    idToFinish: string;
+    idToGetData: string;
     action: Action;
   }>({
     type: RequirementType.GOOD,
     isOffer: false,
-    requirementOrOfferId: "",
     action: Action.FINISH,
+    idToFinish: "",
+    idToGetData: "",
   });
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -468,16 +438,11 @@ export function useCulminate() {
     service: null,
     method: "get",
   });
-  const { loading, responseData, error, errorMsg, fetchData } = useApi({
+  const { responseData, error, errorMsg, fetchData } = useApi({
     service: apiParams.service,
     method: apiParams.method,
     dataToSend: apiParams.dataToSend,
   });
-
-  useEffect(() => {
-    showLoadingMessage(message, loading);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
@@ -485,29 +450,37 @@ export function useCulminate() {
   }, [apiParams]);
 
   useEffect(() => {
-    if (responseData) {
-      const data = transformToBasicRateData(responseData.data[0]);
-      setDataModal({
-        type: ModalTypes.RATE_USER,
-        data: {
-          basicRateData: data,
-          type: culminateData.type,
-          isOffer: culminateData.isOffer,
-          requirementOrOfferId: culminateData.requirementOrOfferId,
-        },
-      });
-    } else if (error) {
-      showNotification(notification, "error", errorMsg);
+    try {
+      if (responseData) {
+        const data = transformToBasicRateData(responseData.data[0]);
+        setDataModal({
+          type: ModalTypes.RATE_USER,
+          data: {
+            basicRateData: data,
+            type: culminateData.type,
+            isOffer: culminateData.isOffer,
+            requirementOrOfferId: culminateData.idToFinish,
+          },
+        });
+      } else if (error) {
+        showNotification(notification, "error", errorMsg);
+      }
+    } catch (error) {
+      showNotification(notification, "error", t("errorOccurred"));
+    } finally {
+      showLoadingMessage(message, false);
     }
   }, [responseData, error]);
 
   function getBasicRateData(
-    id: string,
-    offerService: boolean,
+    idToFinish: string,
+    idToGetData: string,
+    useOfferService: boolean,
     isOffer: boolean,
     action: Action,
     type: RequirementType
   ) {
+    showLoadingMessage(message, true);
     setDataModal({
       type: ModalTypes.NONE,
       data: {},
@@ -515,14 +488,19 @@ export function useCulminate() {
     setCulminateData({
       type,
       isOffer,
-      requirementOrOfferId: id,
+      idToFinish,
+      idToGetData,
       action,
     });
     setApiParams({
-      service: offerService
-        ? getBasicRateDataOfferService(id)
-        : getBasicRateDataReqService(id),
+      service: useOfferService
+        ? getBasicRateDataOfferService(idToGetData)
+        : getBasicRateDataReqService(idToGetData),
       method: "get",
     });
   }
+  return {
+    getBasicRateData,
+    modalDataRate: dataModal,
+  };
 }
