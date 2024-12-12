@@ -435,3 +435,9 @@ export enum RateStartCountType {
   OFFER_LIST = 1,
   COMPANY_DATA_HOME = 2,
 }
+
+export enum OrderConfirmation {
+  NONE = 0,
+  YES = 1,
+  NO = 3,
+}

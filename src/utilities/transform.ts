@@ -16,6 +16,7 @@ import { getBaseDataUserService } from "../services/requests/authService";
 import makeRequest from "./globalFunctions";
 import {
   EntityType,
+  OrderConfirmation,
   PurchaseOrderTableTypes,
   RequirementType,
   Usage,
@@ -269,6 +270,16 @@ export function transformToPurchaseOrder(data: any) {
     subUserNameClient: data.nameSubUserClient,
     userNameProvider: data.nameUserProvider,
     subUserNameProvider: data.nameSubUserProvider,
+    clientConfirmation: data.scoreState.scoreClient
+      ? data.scoreState.deliveredClient
+        ? OrderConfirmation.YES
+        : OrderConfirmation.NO
+      : OrderConfirmation.NONE,
+    providerConfirmation: data.scoreState.scoreProvider
+      ? data.scoreState.deliveredProvider
+        ? OrderConfirmation.YES
+        : OrderConfirmation.NO
+      : OrderConfirmation.NONE,
   };
   return purcOrder;
 }

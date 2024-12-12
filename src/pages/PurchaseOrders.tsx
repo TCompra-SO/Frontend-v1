@@ -28,7 +28,6 @@ import {
   openPurchaseOrderPdf,
 } from "../utilities/globalFunctions";
 import {
-  transformToBasicRateData,
   transformToFullUser,
   transformToPurchaseOrder,
 } from "../utilities/transform";
@@ -41,11 +40,12 @@ import {
 } from "../services/requests/purchaseOrderService";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
-import { getBasicRateDataOfferService } from "../services/requests/offerService";
-import { getBasicRateDataReqService } from "../services/requests/requirementService";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import { ModalsContext } from "../contexts/ModalsContext";
-import { useGetOffersByRequirementId } from "../hooks/requirementHook";
+import {
+  useCulminate,
+  useGetOffersByRequirementId,
+} from "../hooks/requirementHook";
 
 export default function PurchaseOrders() {
   const { notification, message } = App.useApp();
@@ -60,6 +60,7 @@ export default function PurchaseOrders() {
     useGetOffersByRequirementId();
   const [currentPurchaseOrder, setCurrentPurchaseOrder] =
     useState<PurchaseOrder | null>(null);
+  const { getBasicRateData, modalDataRate } = useCulminate();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -94,6 +95,15 @@ export default function PurchaseOrders() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  /** Para mostrar modales */
+
+  useEffect(() => {
+    if (modalDataRate.type !== ModalTypes.NONE) {
+      setDataModal(modalDataRate);
+      setIsOpenModal(true);
+    }
+  }, [modalDataRate]);
 
   useEffect(() => {
     if (modalDataOffersByRequirementId.type !== ModalTypes.NONE) {
@@ -190,44 +200,6 @@ export default function PurchaseOrders() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataUser, errorUser]);
 
-  /* Obtener datos para culminar */
-
-  const [apiParamsRate, setApiParamsRate] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingRate,
-    responseData: responseDataRate,
-    error: errorRate,
-    errorMsg: errorMsgRate,
-    fetchData: fetchDataRate,
-  } = useApi({
-    service: apiParamsRate.service,
-    method: apiParamsRate.method,
-    dataToSend: apiParamsRate.dataToSend,
-  });
-
-  useEffect(() => {
-    showLoadingMessage(message, loadingRate);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingRate]);
-
-  useEffect(() => {
-    if (apiParamsRate.service) fetchDataRate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsRate]);
-
-  useEffect(() => {
-    if (responseDataRate) {
-      openRateModal();
-    } else if (errorRate) {
-      showNotification(notification, "error", errorMsgRate);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataRate, errorRate]);
-
   /* Para descargar pdf de orden de compra */
 
   const [apiParamsPdf, setApiParamsPdf] = useState<useApiParams>({
@@ -292,25 +264,6 @@ export default function PurchaseOrders() {
     setIsOpenModal(false);
   }
 
-  function openRateModal() {
-    const data = transformToBasicRateData(responseDataRate.data[0]);
-    if (currentPurchaseOrder) {
-      setDataModal({
-        type: ModalTypes.RATE_USER,
-        data: {
-          basicRateData: data,
-          type: currentPurchaseOrder.type,
-          isOffer: type == PurchaseOrderTableTypes.ISSUED,
-          requirementOrOfferId:
-            type == PurchaseOrderTableTypes.ISSUED
-              ? currentPurchaseOrder.requirementId
-              : currentPurchaseOrder.offerId,
-        },
-      });
-      setIsOpenModal(true);
-    }
-  }
-
   function showUserInfo() {
     const user = transformToFullUser(responseDataUser.data);
     setDataModal({
@@ -348,18 +301,27 @@ export default function PurchaseOrders() {
         if (type == PurchaseOrderTableTypes.ISSUED) {
           // Buscar en oferta de requerimiento
           if (purchaseOrder.type == RequirementType.GOOD)
-            setApiParamsRate({
-              service: getBasicRateDataOfferService(purchaseOrder.offerId),
-              method: "get",
-            });
+            // r3v falta servicios
+            getBasicRateData(
+              purchaseOrder.requirementId,
+              purchaseOrder.offerId,
+              true,
+              true,
+              action,
+              purchaseOrder.type
+            );
           break;
         } else if (type == PurchaseOrderTableTypes.RECEIVED)
           if (purchaseOrder.type == RequirementType.GOOD)
             // Buscar en requerimiento
-            setApiParamsRate({
-              service: getBasicRateDataReqService(purchaseOrder.requirementId),
-              method: "get",
-            });
+            getBasicRateData(
+              purchaseOrder.offerId,
+              purchaseOrder.requirementId,
+              false,
+              false,
+              action,
+              purchaseOrder.type
+            );
         break;
       case Action.VIEW_HISTORY:
         getOffersByRequirementId(

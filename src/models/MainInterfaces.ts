@@ -9,6 +9,7 @@ import {
   EntityType,
   PurchaseOrderTableTypes,
   CertificationState,
+  OrderConfirmation,
 } from "../utilities/types";
 import { OfferFilters } from "./Interfaces";
 
@@ -112,6 +113,9 @@ export interface BasicPurchaseOrder extends BasicPurchaseOrderItemSubUser {
   subTotal: number;
   igv: number;
   total: number;
+
+  clientConfirmation: OrderConfirmation;
+  providerConfirmation: OrderConfirmation;
 }
 
 export interface PurchaseOrder extends BasicPurchaseOrder {

@@ -53,6 +53,7 @@ interface SubUserTableModalProps {
     | {
         tableType: TableTypes.PURCHASE_ORDER_SUBUSER;
         tableContent: PurchaseOrderItemSubUser[];
+        subType: PurchaseOrderTableTypes;
       };
   onTabChange: (tabId: RequirementType | PurchaseOrderTableTypes) => void;
   loading: boolean | undefined;
@@ -427,6 +428,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
                     hiddenColumns: [],
                     nameColumnHeader: t("purchaseOrders"),
                     onButtonClick: handleOnButtonClick,
+                    subType: props.content.subType,
                   }}
                   loading={props.loading}
                 />

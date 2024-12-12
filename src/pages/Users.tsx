@@ -53,6 +53,9 @@ export default function Users() {
   const uid = useSelector((state: MainState) => state.user.uid);
   const [action, setAction] = useState<Action>(Action.ADD_USER);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [subTypeOrder, setSubTypeOrder] = useState<PurchaseOrderTableTypes>(
+    PurchaseOrderTableTypes.ISSUED
+  );
   const [userData, setUserData] = useState<SubUserBase | null>(null);
   const [userDataEdit, setUserDataEdit] = useState<SubUserProfile | null>(null);
   const [reqList, setReqList] = useState<RequirementItemSubUser[]>([]);
@@ -353,6 +356,7 @@ export default function Users() {
 
   function handleCloseModal() {
     setIsOpenModal(false);
+    setSubTypeOrder(PurchaseOrderTableTypes.ISSUED);
   }
 
   function handleOpenModal() {
@@ -452,6 +456,7 @@ export default function Users() {
             content={{
               tableType: TableTypes.PURCHASE_ORDER_SUBUSER,
               tableContent: orderList,
+              subType: subTypeOrder,
             }}
             user={userData}
             onTabChange={handleTabChange}
@@ -465,6 +470,7 @@ export default function Users() {
             content={{
               tableType: TableTypes.PURCHASE_ORDER_SUBUSER,
               tableContent: orderList,
+              subType: subTypeOrder,
             }}
             user={userData}
             onTabChange={handleTabChange}
@@ -524,6 +530,7 @@ export default function Users() {
       } else if (action == Action.VIEW_PURCHASE_ORDERS) {
         switch (tabId) {
           case PurchaseOrderTableTypes.ISSUED:
+            setSubTypeOrder(tabId);
             setApiParamsOrder({
               service: getPurchaseOrdersByClientEntityService(
                 userData.uid,
@@ -533,6 +540,7 @@ export default function Users() {
             });
             break;
           case PurchaseOrderTableTypes.RECEIVED:
+            setSubTypeOrder(tabId);
             setApiParamsOrder({
               service: getPurchaseOrdersByProviderEntityService(
                 userData.uid,

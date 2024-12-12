@@ -250,11 +250,13 @@ export interface TableTypeOfferSubUser extends TableHiddenColumns {
 
 export interface TableTypePurchaseOrderSubUser extends TableHiddenColumns {
   type: TableTypes.PURCHASE_ORDER_SUBUSER;
+  subType: PurchaseOrderTableTypes;
   data: PurchaseOrderItemSubUser[];
 }
 
 export interface TableTypeSalesOrderSubUser extends TableHiddenColumns {
   type: TableTypes.SALES_ORDER_SUBUSER;
+  subType: PurchaseOrderTableTypes;
   data: PurchaseOrderItemSubUser[];
 }
 

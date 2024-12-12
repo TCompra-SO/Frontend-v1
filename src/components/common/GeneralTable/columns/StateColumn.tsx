@@ -18,9 +18,19 @@ import {
   RequirementStateMeta,
 } from "../../../../utilities/colors";
 import { useTranslation } from "react-i18next";
-import { CertificationState, TableTypes } from "../../../../utilities/types";
+import {
+  CertificationState,
+  OrderConfirmation,
+  PurchaseOrderState,
+  PurchaseOrderTableTypes,
+  TableTypes,
+} from "../../../../utilities/types";
 
-export default function StateColumn(type: TableTypes, hidden: boolean = false) {
+export default function StateColumn(
+  type: TableTypes,
+  hidden: boolean = false,
+  extraParam?: any
+) {
   const { t } = useTranslation();
 
   const col: ColumnType<
@@ -95,7 +105,17 @@ export default function StateColumn(type: TableTypes, hidden: boolean = false) {
           type == TableTypes.SALES_ORDER ||
           type == TableTypes.ALL_SALES_ORDERS
         ) {
-          const state = (record as BasicPurchaseOrder).state;
+          const bpo = record as BasicPurchaseOrder;
+          let state = bpo.state;
+          if (
+            (extraParam == PurchaseOrderTableTypes.ISSUED &&
+              state == PurchaseOrderState.PENDING &&
+              bpo.clientConfirmation != OrderConfirmation.NONE) ||
+            (extraParam == PurchaseOrderTableTypes.RECEIVED &&
+              state == PurchaseOrderState.PENDING &&
+              bpo.providerConfirmation != OrderConfirmation.NONE)
+          )
+            state = PurchaseOrderState.FINISHED;
           label = t(PurchaseOrderStateMeta[state]?.label);
           className = `cont-estado ${PurchaseOrderStateMeta[state]?.class}`;
         } else if (
