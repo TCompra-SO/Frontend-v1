@@ -336,7 +336,7 @@ export function useGetOffersByRequirementId() {
 
 export function useShowDetailOffer() {
   const { notification, message } = App.useApp();
-  const{t}=useTranslation()
+  const { t } = useTranslation();
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
@@ -359,26 +359,26 @@ export function useShowDetailOffer() {
   useEffect(() => {
     async function process() {
       try {
-        if (responseData ) {
-              setDataModal({
-                type: ModalTypes.DETAILED_REQUIREMENT,
-                data: {
-                  offerList: offerArray,
-                  requirement: requirementData.requirement,
-                  forPurchaseOrder: requirementData.forPurchaseOrder,
-                  filters: requirementData.filters ?? filters,
-                },
-              });
+        if (responseData) {
+          // const { purchaseOrder } = await getPurchaseOrderById(
+          //   requirementData.purchaseOrderId
+          // );
+          setDataModal({
+            type: ModalTypes.OFFER_DETAIL,
+            data: {
+              offer,
+            },
+          });
         } else if (error) {
           showNotification(notification, "error", errorMsg);
         }
       } catch (error) {
         showNotification(notification, "error", t("errorOccurred"));
       } finally {
-          showLoadingMessage(message, false);
-        }
+        showLoadingMessage(message, false);
       }
     }
+
     process();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error, responseData]);
@@ -388,12 +388,13 @@ export function useShowDetailOffer() {
       type: ModalTypes.NONE,
       data: {},
     });
-    if (!offerData)
+    if (!offerData) {
+      showLoadingMessage(message, true);
       setApiParams({
         service: getOfferByIdService(offerId),
         method: "get",
       });
-    else
+    } else
       setDataModal({
         type: ModalTypes.OFFER_DETAIL,
         data: {

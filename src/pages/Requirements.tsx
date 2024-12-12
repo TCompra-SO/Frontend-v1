@@ -34,7 +34,11 @@ import {
 } from "../utilities/globalFunctions";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
-import { getFullUser, getOfferById } from "../services/complete/general";
+import {
+  getBaseUserForUserSubUser,
+  getFullUser,
+  getOfferById,
+} from "../services/complete/general";
 import showNotification, {
   showLoadingMessage,
 } from "../utilities/notification/showNotification";
@@ -281,17 +285,21 @@ export default function Requirements() {
       case Action.SHOW_SUMMARY: {
         if (requirement.offerUserId && requirement.offerId) {
           showLoadingMessage(message, true);
-          const { user } = await getFullUser(requirement.offerUserId);
-          if (user) {
+          const { user: fullUser } = await getFullUser(requirement.offerUserId);
+          const { user, subUser } = await getBaseUserForUserSubUser(
+            requirement.offerSubUserId ?? requirement.offerUserId
+          );
+          if (user && fullUser) {
             const { offer } = await getOfferById(
               requirement.offerId,
               type,
-              user
+              subUser ?? user,
+              subUser ? user : undefined
             );
             if (offer) {
               setDataModal({
                 type: ModalTypes.OFFER_SUMMARY,
-                data: { offer, requirement: requirement, user },
+                data: { offer, requirement: requirement, user: fullUser },
               });
               setIsOpenModal(true);
             } else {

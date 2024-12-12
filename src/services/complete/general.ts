@@ -1,4 +1,5 @@
-import { User } from "../../models/MainInterfaces";
+import { BaseUser, User } from "../../models/MainInterfaces";
+import { UserState } from "../../models/Redux";
 import makeRequest from "../../utilities/globalFunctions";
 import {
   transformFromGetRequirementByIdToRequirement,
@@ -49,7 +50,8 @@ export async function getFullUser(uid: string) {
 export async function getOfferById(
   id: string,
   type: RequirementType,
-  user: User
+  user: BaseUser | UserState,
+  mainUser?: BaseUser | UserState
 ) {
   const { responseData, error, errorMsg } = await makeRequest({
     service: getOfferByIdService(id),
@@ -58,7 +60,7 @@ export async function getOfferById(
 
   return {
     offer: responseData
-      ? transformToOffer(responseData.data[0], type, user)
+      ? transformToOffer(responseData.data[0], type, user, mainUser)
       : null,
     error,
     errorMsg,
