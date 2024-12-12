@@ -34,7 +34,6 @@ export default function RatingModal(props: RatingModalProps) {
   const [answer, setAnswer] = useState<YesNo | null>(null);
   const [scores, setScores] = useState([0, 0, 0]);
   const { notification } = App.useApp();
-  const uid = useSelector((state: MainState) => state.mainUser.uid);
   const userClass: UserClass = getUserClass(props.isOffer, props.type);
 
   const questions = {
