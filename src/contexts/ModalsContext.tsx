@@ -11,6 +11,7 @@ interface DetailedRequirementModalDataType {
 
 interface DetailedOfferModalDataType {
   offerId: string;
+  offerType: RequirementType;
   offer: Offer | undefined;
 }
 
@@ -36,7 +37,11 @@ export const ModalsContext = createContext<ModalsContextType>({
     requirementId: "",
     requirementType: RequirementType.GOOD,
   },
-  detailedOfferModalData: { offerId: "", offer: undefined },
+  detailedOfferModalData: {
+    offerId: "",
+    offerType: RequirementType.GOOD,
+    offer: undefined,
+  },
   viewHistoryModalData: {
     requirement: undefined,
     requirementId: "",
@@ -56,7 +61,11 @@ export function ModalsProvider({ children }: { children: ReactNode }) {
       requirementType: RequirementType.GOOD,
     });
   const [detailedOfferModalData, setDetailedOfferModalData] =
-    useState<DetailedOfferModalDataType>({ offerId: "", offer: undefined });
+    useState<DetailedOfferModalDataType>({
+      offerId: "",
+      offerType: RequirementType.GOOD,
+      offer: undefined,
+    });
   const [viewHistoryModalData, setViewHistoryModalData] =
     useState<ViewHistoryModalDataType>({
       requirement: undefined,

@@ -33,12 +33,14 @@ import showNotification, {
 import { App } from "antd";
 import { getBasicRateDataReqService } from "../services/requests/requirementService";
 import { ModalsContext } from "../contexts/ModalsContext";
+import { useShowDetailOffer } from "../hooks/requirementHook";
 
 export default function Offers() {
   const { t } = useTranslation();
   const location = useLocation();
   const { notification, message } = App.useApp();
   const { detailedOfferModalData } = useContext(ModalsContext);
+  const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const [type, setType] = useState(getRouteType(location.pathname));
@@ -63,14 +65,21 @@ export default function Offers() {
 
   useEffect(() => {
     if (detailedOfferModalData.offerId) {
-      getOffersByRequirementId(
-        detailedRequirementModalData.requirement.key,
-        detailedRequirementModalData.requirementType,
-        false,
-        detailedRequirementModalData.requirement
+      getOfferDetail(
+        detailedOfferModalData.offerId,
+        detailedOfferModalData.offerType,
+        true,
+        detailedOfferModalData.offer
       );
     }
   }, []);
+
+  useEffect(() => {
+    if (modalDataOfferDetail.type !== ModalTypes.NONE) {
+      setDataModal(modalDataOfferDetail);
+      setIsOpenModal(true);
+    }
+  }, [modalDataOfferDetail]);
 
   /** Cargar datos iniciales */
 
@@ -257,13 +266,7 @@ export default function Offers() {
 
     switch (action) {
       case Action.OFFER_DETAIL:
-        setDataModal({
-          type: ModalTypes.OFFER_DETAIL,
-          data: {
-            offer,
-          },
-        });
-        setIsOpenModal(true);
+        getOfferDetail(offer.key, offer.type, true, offer);
         break;
 
       case Action.DELETE: {

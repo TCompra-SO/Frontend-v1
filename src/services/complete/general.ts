@@ -50,7 +50,7 @@ export async function getFullUser(uid: string) {
 export async function getOfferById(
   id: string,
   type: RequirementType,
-  user: BaseUser | UserState,
+  user?: BaseUser | UserState,
   mainUser?: BaseUser | UserState
 ) {
   const { responseData, error, errorMsg } = await makeRequest({
@@ -58,13 +58,40 @@ export async function getOfferById(
     method: "get",
   });
 
-  return {
-    offer: responseData
-      ? transformToOffer(responseData.data[0], type, user, mainUser)
-      : null,
-    error,
-    errorMsg,
-  };
+  if (!user) {
+    const {
+      user: userN,
+      subUser: subUserN,
+      error: errorN,
+      errorMsg: errorMsgN,
+    } = await getBaseUserForUserSubUser(responseData.data[0].subUser);
+    if (userN)
+      return {
+        offer: responseData
+          ? transformToOffer(
+              responseData.data[0],
+              type,
+              subUserN ?? userN,
+              subUserN ? userN : undefined
+            )
+          : null,
+        errorN,
+        errorMsgN,
+      };
+    else
+      return {
+        offer: null,
+        error,
+        errorMsg,
+      };
+  } else
+    return {
+      offer: responseData
+        ? transformToOffer(responseData.data[0], type, user, mainUser)
+        : null,
+      error,
+      errorMsg,
+    };
 }
 
 export async function getRequirementById(id: string, type: RequirementType) {

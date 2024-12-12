@@ -20,9 +20,16 @@ import {
   getOfferByIdService,
   getOffersByRequirementIdService,
 } from "../services/requests/offerService";
-import { Action, ModalTypes, RequirementType } from "../utilities/types";
+import {
+  Action,
+  EntityType,
+  ModalTypes,
+  RequirementType,
+} from "../utilities/types";
 import { BaseUser, Offer, Requirement } from "../models/MainInterfaces";
 import {
+  getBaseUserForUserSubUser,
+  getOfferById,
   getPurchaseOrderById,
   getRequirementById,
 } from "../services/complete/general";
@@ -34,6 +41,8 @@ import {
 } from "../utilities/transform";
 import { getBaseDataUserService } from "../services/requests/authService";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
+import { useSelector } from "react-redux";
+import { MainState } from "../models/Redux";
 
 export function useCancelRequirement() {
   const { t } = useTranslation();
@@ -337,6 +346,8 @@ export function useGetOffersByRequirementId() {
 export function useShowDetailOffer() {
   const { notification, message } = App.useApp();
   const { t } = useTranslation();
+  const dataUser = useSelector((state: MainState) => state.user);
+  const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
@@ -356,51 +367,78 @@ export function useShowDetailOffer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
 
-  useEffect(() => {
-    async function process() {
-      try {
-        if (responseData) {
-          // const { purchaseOrder } = await getPurchaseOrderById(
-          //   requirementData.purchaseOrderId
-          // );
+  // useEffect(() => {
+  //   async function process() {
+  //     try {
+  //       if (responseData) {
+  //         const { purchaseOrder } = await getOfferById();
+  //         setDataModal({
+  //           type: ModalTypes.OFFER_DETAIL,
+  //           data: {
+  //             offer,
+  //           },
+  //         });
+  //       } else if (error) {
+  //         showNotification(notification, "error", errorMsg);
+  //       }
+  //     } catch (error) {
+  //       showNotification(notification, "error", t("errorOccurred"));
+  //     } finally {
+  //       showLoadingMessage(message, false);
+  //     }
+  //   }
+
+  //   process();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [error, responseData]);
+
+  async function getOfferDetail(
+    offerId: string,
+    type: RequirementType,
+    useUserData: boolean,
+    offerData?: Offer
+  ) {
+    try {
+      showLoadingMessage(message, true);
+      setDataModal({
+        type: ModalTypes.NONE,
+        data: {},
+      });
+      if (!offerData) {
+        // setApiParams({
+        //   service: getOfferByIdService(offerId),
+        //   method: "get",
+        // });
+        const { offer } = await getOfferById(
+          offerId,
+          type,
+          useUserData ? dataUser : undefined,
+          useUserData
+            ? dataUser.typeEntity == EntityType.SUBUSER
+              ? mainDataUser
+              : undefined
+            : undefined
+        );
+        if (offer)
           setDataModal({
             type: ModalTypes.OFFER_DETAIL,
             data: {
               offer,
             },
           });
-        } else if (error) {
-          showNotification(notification, "error", errorMsg);
-        }
-      } catch (error) {
-        showNotification(notification, "error", t("errorOccurred"));
-      } finally {
-        showLoadingMessage(message, false);
-      }
+        else showNotification(notification, "error", t("errorOccurred"));
+      } else
+        setDataModal({
+          type: ModalTypes.OFFER_DETAIL,
+          data: {
+            offer: offerData,
+          },
+        });
+    } catch (error) {
+      showNotification(notification, "error", t("errorOccurred"));
+    } finally {
+      showLoadingMessage(message, false);
     }
-
-    process();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [error, responseData]);
-
-  function getOfferDetail(offerId: string, offerData?: Offer) {
-    setDataModal({
-      type: ModalTypes.NONE,
-      data: {},
-    });
-    if (!offerData) {
-      showLoadingMessage(message, true);
-      setApiParams({
-        service: getOfferByIdService(offerId),
-        method: "get",
-      });
-    } else
-      setDataModal({
-        type: ModalTypes.OFFER_DETAIL,
-        data: {
-          offer: offerData,
-        },
-      });
   }
 
   return {
