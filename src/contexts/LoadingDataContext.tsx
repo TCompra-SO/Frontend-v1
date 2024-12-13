@@ -67,6 +67,7 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
   }
 
   function updateAllRequirementsViewOffers(val: boolean | undefined) {
+    console.log(val);
     setAllRequirementsViewOffers(val ? true : false);
   }
 

@@ -104,9 +104,9 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
   if (offersCopy.length > 0)
     return (
       <div className="t-flex gap-15" style={{ flexDirection: "column" }}>
-        {offersCopy.map((offer: Offer) => {
+        {offersCopy.map((offer: Offer, index: number) => {
           return (
-            <div key={offer.key} className="card-ofertas">
+            <div key={`${offer.key}${index}`} className="card-ofertas">
               <RequirementOfferListItemHeader
                 offer={offer}
                 showStateAndActions={{

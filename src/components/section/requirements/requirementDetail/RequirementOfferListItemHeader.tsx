@@ -51,7 +51,6 @@ export default function RequirementOfferListItemHeader({
       },
     },
   ];
-  console.log(props.offer);
   if (props.showStateAndActions.show) {
     if (props.offer.state == OfferState.WINNER)
       items.push({

@@ -12,8 +12,8 @@ import {
   PurchaseOrderTableTypes,
   TableTypes,
 } from "../utilities/types";
-import { PurchaseOrder, Offer } from "../models/MainInterfaces";
-import makeRequest, {
+import { PurchaseOrder } from "../models/MainInterfaces";
+import {
   getLabelFromPurchaseOrderType,
   getPurchaseOrderType,
   openPurchaseOrderPdf,
@@ -31,29 +31,21 @@ import {
 import showNotification, {
   showLoadingMessage,
 } from "../utilities/notification/showNotification";
-import {
-  transformToBaseUser,
-  transformToOffer,
-  transformToPurchaseOrder,
-} from "../utilities/transform";
-import { getOffersByRequirementIdService } from "../services/requests/offerService";
-import { getRequirementById } from "../services/complete/general";
-import { getBaseDataUserService } from "../services/requests/authService";
+import { transformToPurchaseOrder } from "../utilities/transform";
 import ModalContainer from "../components/containers/ModalContainer";
 import { mainModalScrollStyle } from "../utilities/globals";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
+import { useGetOffersByRequirementId } from "../hooks/requirementHook";
 
 export default function AllPurchaseOrders() {
   const { t } = useTranslation();
   const location = useLocation();
   const uid = useSelector((state: MainState) => state.user.uid);
   const role = useSelector((state: MainState) => state.user.typeID);
-  const { updateAllPurchaseOrdersLoadingPdf, updateAllRequirementsViewOffers } =
-    useContext(LoadingDataContext);
-
+  const { updateAllPurchaseOrdersLoadingPdf } = useContext(LoadingDataContext);
+  const { getOffersByRequirementId, modalDataOffersByRequirementId } =
+    useGetOffersByRequirementId();
   const { notification, message } = App.useApp();
-  const [currentPurchaseOrder, setCurrentPurchaseOrder] =
-    useState<PurchaseOrder | null>(null);
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
@@ -69,9 +61,20 @@ export default function AllPurchaseOrders() {
     onButtonClick: handleOnButtonClick,
   });
 
+  /** Obtener tipo */
+
   useEffect(() => {
     setType(getPurchaseOrderType(location.pathname));
   }, [location]);
+
+  /** Para mostrar modales */
+
+  useEffect(() => {
+    if (modalDataOffersByRequirementId.type !== ModalTypes.NONE) {
+      setDataModal(modalDataOffersByRequirementId);
+      setIsOpenModal(true);
+    }
+  }, [modalDataOffersByRequirementId]);
 
   /** Obtener datos de tabla */
 
@@ -117,45 +120,6 @@ export default function AllPurchaseOrders() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
-
-  /* Para ver historial */
-
-  const [apiParamsHist, setApiParamsHist] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingHist,
-    responseData: responseDataHist,
-    error: errorHist,
-    errorMsg: errorMsgHist,
-    fetchData: fetchDataHist,
-  } = useApi({
-    service: apiParamsHist.service,
-    method: apiParamsHist.method,
-    dataToSend: apiParamsHist.dataToSend,
-  });
-
-  useEffect(() => {
-    updateAllRequirementsViewOffers(loadingHist);
-    showLoadingMessage(message, loadingHist);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingHist]);
-
-  useEffect(() => {
-    if (apiParamsHist.service) fetchDataHist();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsHist]);
-
-  useEffect(() => {
-    if (responseDataHist) {
-      openDetailedRequirement(responseDataHist);
-    } else if (errorHist) {
-      showNotification(notification, "error", errorMsgHist);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataHist, errorHist]);
 
   /* Para descargar pdf de orden de compra */
 
@@ -221,63 +185,7 @@ export default function AllPurchaseOrders() {
     console.log(e.target.value);
   }
 
-  async function openDetailedRequirement(responseData: any) {
-    updateAllRequirementsViewOffers(true);
-    showLoadingMessage(message, true);
-    try {
-      if (
-        currentPurchaseOrder &&
-        responseData.data &&
-        Array.isArray(responseData.data)
-      ) {
-        const { requirement } = await getRequirementById(
-          currentPurchaseOrder.requirementId,
-          currentPurchaseOrder.type
-        );
-        if (requirement) {
-          const offerArray: Offer[] = await Promise.all(
-            responseData.data.map(async (item: any) => {
-              const { responseData }: any = await makeRequest({
-                service: getBaseDataUserService(item.userID),
-                method: "get",
-              });
-              const { user, subUser } = transformToBaseUser(
-                responseData.data[0]
-              );
-              return subUser
-                ? transformToOffer(
-                    item,
-                    currentPurchaseOrder.type,
-                    subUser,
-                    user
-                  )
-                : transformToOffer(item, currentPurchaseOrder.type, user);
-            })
-          );
-          setDataModal({
-            type: ModalTypes.DETAILED_REQUIREMENT,
-            data: {
-              offerList: offerArray,
-              requirement: requirement,
-              forPurchaseOrder: true,
-              filters: currentPurchaseOrder.filters,
-            },
-          });
-          setIsOpenModal(true);
-        } else showNotification(notification, "error", t("errorOccurred"));
-      } else showNotification(notification, "error", t("errorOccurred"));
-    } catch (error) {
-      console.log(error);
-      showNotification(notification, "error", t("errorOccurred"));
-    } finally {
-      showLoadingMessage(message, false);
-      updateAllRequirementsViewOffers(false);
-    }
-  }
-
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
-    setCurrentPurchaseOrder(purchaseOrder);
-
     switch (action) {
       case Action.DOWNLOAD_PURCHASE_ORDER:
         if (!loadingPdf)
@@ -287,10 +195,14 @@ export default function AllPurchaseOrders() {
           });
         break;
       case Action.VIEW_PURCHASE_ORDER:
-        setApiParamsHist({
-          service: getOffersByRequirementIdService(purchaseOrder.requirementId),
-          method: "get",
-        });
+        getOffersByRequirementId(
+          TableTypes.ALL_PURCHASE_ORDERS,
+          purchaseOrder.requirementId,
+          purchaseOrder.type,
+          true,
+          undefined,
+          purchaseOrder.filters
+        );
         break;
     }
   }
