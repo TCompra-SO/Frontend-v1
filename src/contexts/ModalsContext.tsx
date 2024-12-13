@@ -24,11 +24,13 @@ interface ModalsContextType {
   detailedRequirementModalData: DetailedRequirementModalDataType;
   detailedOfferModalData: DetailedOfferModalDataType;
   viewHistoryModalData: ViewHistoryModalDataType;
+  viewHistorySalesModalData: ViewHistoryModalDataType;
   updateDetailedRequirementModalData: (
     val: DetailedRequirementModalDataType
   ) => void;
   updateDetailedOfferModalData: (val: DetailedOfferModalDataType) => void;
   updateViewHistoryModalData: (val: ViewHistoryModalDataType) => void;
+  updateViewHistorySalesModalData: (val: ViewHistoryModalDataType) => void;
 }
 
 export const ModalsContext = createContext<ModalsContextType>({
@@ -48,9 +50,16 @@ export const ModalsContext = createContext<ModalsContextType>({
     requirementType: RequirementType.GOOD,
     purchaseOrderId: "",
   },
+  viewHistorySalesModalData: {
+    requirement: undefined,
+    requirementId: "",
+    requirementType: RequirementType.GOOD,
+    purchaseOrderId: "",
+  },
   updateDetailedRequirementModalData: () => {},
   updateDetailedOfferModalData: () => {},
   updateViewHistoryModalData: () => {},
+  updateViewHistorySalesModalData: () => {},
 });
 
 export function ModalsProvider({ children }: { children: ReactNode }) {
@@ -73,6 +82,13 @@ export function ModalsProvider({ children }: { children: ReactNode }) {
       requirementType: RequirementType.GOOD,
       purchaseOrderId: "",
     });
+  const [viewHistorySalesModalData, setViewHistorySalesModalData] =
+    useState<ViewHistoryModalDataType>({
+      requirement: undefined,
+      requirementId: "",
+      requirementType: RequirementType.GOOD,
+      purchaseOrderId: "",
+    });
 
   function updateDetailedRequirementModalData(
     val: DetailedRequirementModalDataType
@@ -88,15 +104,21 @@ export function ModalsProvider({ children }: { children: ReactNode }) {
     setViewHistoryModalData(val);
   }
 
+  function updateViewHistorySalesModalData(val: ViewHistoryModalDataType) {
+    setViewHistorySalesModalData(val);
+  }
+
   return (
     <ModalsContext.Provider
       value={{
         detailedRequirementModalData,
         detailedOfferModalData,
         viewHistoryModalData,
+        viewHistorySalesModalData,
         updateDetailedRequirementModalData,
         updateDetailedOfferModalData,
         updateViewHistoryModalData,
+        updateViewHistorySalesModalData,
       }}
     >
       {children}

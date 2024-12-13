@@ -155,6 +155,7 @@ export function transformToOffer(
   mainUser?: UserState | BaseUser
 ) {
   const offer: Offer = data;
+  offer.title = data.name;
   offer.subUser = undefined;
   offer.type = type;
   if (mainUser) {
@@ -195,6 +196,7 @@ export function transformToOfferFromGetOffersByEntityOrSubUser(
   includeAlwaysSubUser?: boolean
 ) {
   const offer: Offer = data;
+  offer.title = data.name;
   offer.subUser = undefined;
   offer.type = type;
 
@@ -270,13 +272,13 @@ export function transformToPurchaseOrder(data: any) {
     subUserNameClient: data.nameSubUserClient,
     userNameProvider: data.nameUserProvider,
     subUserNameProvider: data.nameSubUserProvider,
-    clientConfirmation: data.scoreState.scoreClient
-      ? data.scoreState.deliveredClient
+    clientConfirmation: data.scoreState?.scoreClient
+      ? data.scoreState?.deliveredClient
         ? OrderConfirmation.YES
         : OrderConfirmation.NO
       : OrderConfirmation.NONE,
-    providerConfirmation: data.scoreState.scoreProvider
-      ? data.scoreState.deliveredProvider
+    providerConfirmation: data.scoreState?.scoreProvider
+      ? data.scoreState?.deliveredProvider
         ? OrderConfirmation.YES
         : OrderConfirmation.NO
       : OrderConfirmation.NONE,

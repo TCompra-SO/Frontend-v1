@@ -22,10 +22,7 @@ import {
   deleteRequirementService,
   getRequirementsBySubUserService,
 } from "../services/requests/requirementService";
-import {
-  transformDataToRequirement,
-  transformToBasicRateData,
-} from "../utilities/transform";
+import { transformDataToRequirement } from "../utilities/transform";
 import { useLocation } from "react-router-dom";
 import {
   equalServices,
@@ -221,6 +218,7 @@ export default function Requirements() {
         onButtonClick: handleOnButtonClick,
       });
     } catch (error) {
+      console.log(error);
       showNotification(notification, "error", t("errorOccurred"));
     }
   }

@@ -320,6 +320,7 @@ export default function Users() {
       setReqList(data);
       handleOpenModal();
     } catch (error) {
+      console.log(error);
       showNotification(notification, "error", t("errorOccurred"));
     }
   }
@@ -332,6 +333,7 @@ export default function Users() {
       setOfferList(data);
       handleOpenModal();
     } catch (error) {
+      console.log(error);
       showNotification(notification, "error", t("errorOccurred"));
     }
   }
@@ -345,6 +347,7 @@ export default function Users() {
       setOrderList(data);
       handleOpenModal();
     } catch (error) {
+      console.log(error);
       showNotification(notification, "error", t("errorOccurred"));
     }
   }

@@ -221,6 +221,7 @@ export default function Offers() {
         onButtonClick: handleOnButtonClick,
       });
     } catch (error) {
+      console.log(error);
       showNotification(notification, "error", t("errorOccurred"));
     }
   }

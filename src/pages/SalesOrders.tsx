@@ -1,4 +1,4 @@
-import { Offer, PurchaseOrder } from "../models/MainInterfaces";
+import { PurchaseOrder } from "../models/MainInterfaces";
 import {
   Action,
   ModalTypes,
@@ -17,25 +17,20 @@ import { ChangeEvent, useContext, useEffect, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import useApi from "../hooks/useApi";
-import {
-  getBaseDataUserService,
-  getUserService,
-} from "../services/requests/authService";
+import { getUserService } from "../services/requests/authService";
 import { App } from "antd";
 import showNotification, {
   showLoadingMessage,
 } from "../utilities/notification/showNotification";
-import makeRequest, {
+import {
   getLabelFromPurchaseOrderType,
   getLabelFromRequirementType,
   getPurchaseOrderType,
   openPurchaseOrderPdf,
 } from "../utilities/globalFunctions";
 import {
-  transformToBaseUser,
   transformToBasicRateData,
   transformToFullUser,
-  transformToOffer,
   transformToPurchaseOrder,
 } from "../utilities/transform";
 import { mainModalScrollStyle } from "../utilities/globals";
@@ -47,13 +42,11 @@ import {
 } from "../services/requests/purchaseOrderService";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
-import {
-  getBasicRateDataOfferService,
-  getOffersByRequirementIdService,
-} from "../services/requests/offerService";
+import { getBasicRateDataOfferService } from "../services/requests/offerService";
 import { getBasicRateDataReqService } from "../services/requests/requirementService";
-import { getRequirementById } from "../services/complete/general";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
+import { useGetOffersByRequirementId } from "../hooks/requirementHook";
+import { ModalsContext } from "../contexts/ModalsContext";
 
 export default function SalesOrders() {
   const { t } = useTranslation();
@@ -63,6 +56,9 @@ export default function SalesOrders() {
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
   const { updateMyPurchaseOrdersLoadingPdf } = useContext(LoadingDataContext);
   const { notification, message } = App.useApp();
+  const { viewHistorySalesModalData } = useContext(ModalsContext);
+  const { getOffersByRequirementId, modalDataOffersByRequirementId } =
+    useGetOffersByRequirementId();
   const [currentPurchaseOrder, setCurrentPurchaseOrder] =
     useState<PurchaseOrder | null>(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -79,9 +75,43 @@ export default function SalesOrders() {
     onButtonClick: handleOnButtonClick,
   });
 
+  /** Obtener subsección */
+
   useEffect(() => {
     setType(getPurchaseOrderType(location.pathname));
   }, [location]);
+
+  /** Verificar si hay una solicitud pendiente */
+
+  useEffect(() => {
+    if (viewHistorySalesModalData.requirementId) {
+      getOffersByRequirementId(
+        TableTypes.PURCHASE_ORDER,
+        viewHistorySalesModalData.requirementId,
+        viewHistorySalesModalData.requirementType,
+        true,
+        viewHistorySalesModalData.requirement,
+        viewHistorySalesModalData.filters
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /** Para mostrar modales */
+
+  // useEffect(() => {
+  //   if (modalDataRate.type !== ModalTypes.NONE) {
+  //     setDataModal(modalDataRate);
+  //     setIsOpenModal(true);
+  //   }
+  // }, [modalDataRate]);
+
+  useEffect(() => {
+    if (modalDataOffersByRequirementId.type !== ModalTypes.NONE) {
+      setDataModal(modalDataOffersByRequirementId);
+      setIsOpenModal(true);
+    }
+  }, [modalDataOffersByRequirementId]);
 
   /** Para obtener datos iniciales y datos de proveedor/cliente */
 
@@ -209,44 +239,6 @@ export default function SalesOrders() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataRate, errorRate]);
 
-  /* Para ver historial */
-
-  const [apiParamsHist, setApiParamsHist] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingHist,
-    responseData: responseDataHist,
-    error: errorHist,
-    errorMsg: errorMsgHist,
-    fetchData: fetchDataHist,
-  } = useApi({
-    service: apiParamsHist.service,
-    method: apiParamsHist.method,
-    dataToSend: apiParamsHist.dataToSend,
-  });
-
-  useEffect(() => {
-    showLoadingMessage(message, loadingHist);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingHist]);
-
-  useEffect(() => {
-    if (apiParamsHist.service) fetchDataHist();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsHist]);
-
-  useEffect(() => {
-    if (responseDataHist) {
-      openDetailedRequirement();
-    } else if (errorHist) {
-      showNotification(notification, "error", errorMsgHist);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataHist, errorHist]);
-
   /* Para descargar pdf de orden de compra */
 
   const [apiParamsPdf, setApiParamsPdf] = useState<useApiParams>({
@@ -302,6 +294,7 @@ export default function SalesOrders() {
         };
       });
     } catch (error) {
+      console.log(error);
       showNotification(notification, "error", t("errorOccurred"));
     }
   }
@@ -338,58 +331,6 @@ export default function SalesOrders() {
       },
     });
     setIsOpenModal(true);
-  }
-
-  async function openDetailedRequirement() {
-    showLoadingMessage(message, true);
-    try {
-      if (
-        currentPurchaseOrder &&
-        responseDataHist.data &&
-        Array.isArray(responseDataHist.data)
-      ) {
-        const { requirement } = await getRequirementById(
-          currentPurchaseOrder.requirementId,
-          currentPurchaseOrder.type
-        );
-        if (requirement) {
-          const offerArray: Offer[] = await Promise.all(
-            responseDataHist.data.map(async (item: any) => {
-              const { responseData }: any = await makeRequest({
-                service: getBaseDataUserService(item.userID),
-                method: "get",
-              });
-              const { user, subUser } = transformToBaseUser(
-                responseData.data[0]
-              );
-              return subUser
-                ? transformToOffer(
-                    item,
-                    currentPurchaseOrder.type,
-                    subUser,
-                    user
-                  )
-                : transformToOffer(item, currentPurchaseOrder.type, user);
-            })
-          );
-          setDataModal({
-            type: ModalTypes.DETAILED_REQUIREMENT,
-            data: {
-              offerList: offerArray,
-              requirement: requirement,
-              forPurchaseOrder: true,
-              filters: currentPurchaseOrder.filters,
-            },
-          });
-          setIsOpenModal(true);
-        } else showNotification(notification, "error", t("errorOccurred"));
-      } else showNotification(notification, "error", t("errorOccurred"));
-    } catch (e) {
-      showNotification(notification, "error", t("errorOccurred"));
-      console.log(e);
-    } finally {
-      showLoadingMessage(message, false);
-    }
   }
 
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
@@ -432,10 +373,14 @@ export default function SalesOrders() {
             });
         break;
       case Action.VIEW_HISTORY:
-        setApiParamsHist({
-          service: getOffersByRequirementIdService(purchaseOrder.requirementId),
-          method: "get",
-        });
+        getOffersByRequirementId(
+          TableTypes.PURCHASE_ORDER,
+          purchaseOrder.requirementId,
+          purchaseOrder.type,
+          true,
+          undefined,
+          purchaseOrder.filters
+        );
         break;
       case Action.CANCEL: //r3v
         setDataModal({

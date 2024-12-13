@@ -17,7 +17,6 @@ import { useTranslation } from "react-i18next";
 import {
   cancelOfferService,
   getBasicRateDataOfferService,
-  getOfferByIdService,
   getOffersByRequirementIdService,
 } from "../services/requests/offerService";
 import {
@@ -29,7 +28,6 @@ import {
 } from "../utilities/types";
 import { BaseUser, Offer, Requirement } from "../models/MainInterfaces";
 import {
-  getBaseUserForUserSubUser,
   getOfferById,
   getPurchaseOrderById,
   getRequirementById,
@@ -304,6 +302,7 @@ export function useGetOffersByRequirementId() {
           showNotification(notification, "error", errorMsg);
         }
       } catch (error) {
+        console.log(error);
         showNotification(notification, "error", t("errorOccurred"));
       } finally {
         if (requirementData.requirementId && (error || responseData)) {
@@ -413,6 +412,7 @@ export function useShowDetailOffer() {
           },
         });
     } catch (error) {
+      console.log(error);
       showNotification(notification, "error", t("errorOccurred"));
     } finally {
       showLoadingMessage(message, false);
@@ -479,6 +479,7 @@ export function useCulminate() {
         showNotification(notification, "error", errorMsg);
       }
     } catch (error) {
+      console.log(error);
       showNotification(notification, "error", t("errorOccurred"));
     } finally {
       showLoadingMessage(message, false);
