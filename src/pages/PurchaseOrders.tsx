@@ -58,8 +58,6 @@ export default function PurchaseOrders() {
   const { viewHistoryModalData } = useContext(ModalsContext);
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
-  const [currentPurchaseOrder, setCurrentPurchaseOrder] =
-    useState<PurchaseOrder | null>(null);
   const { getBasicRateData, modalDataRate } = useCulminate();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
@@ -278,8 +276,6 @@ export default function PurchaseOrders() {
   }
 
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
-    setCurrentPurchaseOrder(purchaseOrder);
-
     switch (action) {
       case Action.VIEW_CUSTOMER:
         setApiParamsUser({
