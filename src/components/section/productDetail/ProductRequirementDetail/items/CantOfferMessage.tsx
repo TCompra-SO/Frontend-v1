@@ -257,6 +257,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
               : pageSubRoutes.sales)
         );
       } else if (props.motive == CantOfferMotives.SUBUSER_IS_CREATOR) {
+        navigate(pageRoutes.users);
       }
     }
   }
@@ -311,6 +312,16 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
                 className="btn btn-default btn-sm"
                 icon={<i className="fa-regular fa-columns"></i>}
                 onClick={() => seeRequirementDetails()}
+              >
+                {t("goTo") + t("controlPanel")}
+              </ButtonContainer>
+            )}
+            {props.motive == CantOfferMotives.SUBUSER_MADE_OFFER && (
+              <ButtonContainer
+                style={{ height: "auto" }}
+                className="btn btn-default btn-sm"
+                icon={<i className="fa-regular fa-columns"></i>}
+                onClick={() => navigate(pageRoutes.users)}
               >
                 {t("goTo") + t("controlPanel")}
               </ButtonContainer>

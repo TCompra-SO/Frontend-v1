@@ -54,7 +54,6 @@ export default function Requirements() {
   const { detailedRequirementModalData } = useContext(ModalsContext);
   const [type, setType] = useState(getRouteType(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [requirement, setRequirement] = useState<Requirement | null>(null);
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
@@ -225,8 +224,6 @@ export default function Requirements() {
 
   async function handleOnButtonClick(action: Action, requirement: Requirement) {
     console.log(requirement);
-    setRequirement(requirement);
-
     switch (action) {
       case Action.SHOW_OFFERS: {
         getOffersByRequirementId(
