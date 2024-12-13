@@ -477,7 +477,10 @@ export function useCulminate() {
       if (responseData) {
         const data = transformToBasicRateData(responseData.data[0]);
         setDataModal({
-          type: ModalTypes.RATE_USER,
+          type:
+            culminateData.action == Action.FINISH
+              ? ModalTypes.RATE_USER
+              : ModalTypes.RATE_CANCELED,
           data: {
             basicRateData: data,
             type: culminateData.type,

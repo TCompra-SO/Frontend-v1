@@ -11,8 +11,6 @@ import ButtonContainer from "../../containers/ButtonContainer";
 import { useEffect, useState } from "react";
 import showNotification from "../../../utilities/notification/showNotification";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
-import { MainState } from "../../../models/Redux";
 import FrontImage from "../FrontImage";
 import SubUserName from "../SubUserName";
 import { useApiParams } from "../../../models/Interfaces";
@@ -132,14 +130,6 @@ export default function RatingModal(props: RatingModalProps) {
       showNotification(notification, "info", t("mustAnswerAllQuestions"));
       return;
     }
-
-    // const data: RegisterScoreRequest = {
-    //   typeScore: userClass == UserClass.CUSTOMER ? "Client" : "Provider",
-    //   uidEntity: props.basicRateData.userId,
-    //   uidUser: uid,
-    //   score: calculateFinalScore(scores),
-    //   comments: "",
-    // };
 
     const data: CulminateRequest = {
       delivered: answer == YesNo.YES,

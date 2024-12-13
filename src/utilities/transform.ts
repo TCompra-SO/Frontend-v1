@@ -196,7 +196,6 @@ export function transformToOfferFromGetOffersByEntityOrSubUser(
   includeAlwaysSubUser?: boolean
 ) {
   const offer: Offer = data;
-  offer.title = data.name;
   offer.subUser = undefined;
   offer.type = type;
 
