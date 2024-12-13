@@ -173,7 +173,8 @@ export function useGetOffersByRequirementId() {
   const {
     updateMyRequirementsLoadingViewOffers,
     updateSubUserRequirementsViewOffers,
-    updateAllRequirementsViewOffers,
+    updateAllPurchaseOrdersViewOffers,
+    updateAllSalesOrdersViewOffers,
   } = useContext(LoadingDataContext);
   const [requirementData, setRequirementData] = useState<{
     requirement: Requirement | null | undefined;
@@ -315,7 +316,9 @@ export function useGetOffersByRequirementId() {
           )
             updateSubUserRequirementsViewOffers(false);
           else if (requirementData.tableType == TableTypes.ALL_PURCHASE_ORDERS)
-            updateAllRequirementsViewOffers(false);
+            updateAllPurchaseOrdersViewOffers(false);
+          else if (requirementData.tableType == TableTypes.ALL_SALES_ORDERS)
+            updateAllSalesOrdersViewOffers(false);
         }
       }
     }
@@ -337,7 +340,9 @@ export function useGetOffersByRequirementId() {
     else if (tableType == TableTypes.PURCHASE_ORDER_SUBUSER)
       updateSubUserRequirementsViewOffers(true);
     else if (tableType == TableTypes.ALL_PURCHASE_ORDERS)
-      updateAllRequirementsViewOffers(true);
+      updateAllPurchaseOrdersViewOffers(true);
+    else if (tableType == TableTypes.ALL_SALES_ORDERS)
+      updateAllSalesOrdersViewOffers(true);
     showLoadingMessage(message, true);
     setDataModal({
       type: ModalTypes.NONE,

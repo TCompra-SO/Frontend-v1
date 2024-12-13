@@ -4,32 +4,39 @@ interface LoadingDataContextType {
   myPurchaseOrdersLoadingPdf: boolean;
   subUserPurchaseOrdersLoadingPdf: boolean;
   allPurchaseOrdersLoadingPdf: boolean;
+  allSalesOrdersLoadingPdf: boolean;
   updateMyPurchaseOrdersLoadingPdf: (val: boolean | undefined) => void;
   updateSubUserPurchaseOrdersLoadingPdf: (val: boolean | undefined) => void;
   updateAllPurchaseOrdersLoadingPdf: (val: boolean | undefined) => void;
+  updateAllSalesOrdersLoadingPdf: (val: boolean | undefined) => void;
 
   myRequirementsLoadingViewOffers: boolean;
   subUserRequirementsViewOffers: boolean;
-  allRequirementsViewOffers: boolean;
+  allPurchaseOrdersViewOffers: boolean;
+  allSalesOrdersViewOffers: boolean;
   updateMyRequirementsLoadingViewOffers: (val: boolean | undefined) => void;
   updateSubUserRequirementsViewOffers: (val: boolean | undefined) => void;
-  updateAllRequirementsViewOffers: (val: boolean | undefined) => void;
+  updateAllPurchaseOrdersViewOffers: (val: boolean | undefined) => void;
+  updateAllSalesOrdersViewOffers: (val: boolean | undefined) => void;
 }
 
 export const LoadingDataContext = createContext<LoadingDataContextType>({
   myPurchaseOrdersLoadingPdf: false,
   subUserPurchaseOrdersLoadingPdf: false,
   allPurchaseOrdersLoadingPdf: false,
+  allSalesOrdersLoadingPdf: false,
   updateMyPurchaseOrdersLoadingPdf: () => {},
   updateSubUserPurchaseOrdersLoadingPdf: () => {},
   updateAllPurchaseOrdersLoadingPdf: () => {},
-
+  updateAllSalesOrdersLoadingPdf: () => {},
   myRequirementsLoadingViewOffers: false,
   subUserRequirementsViewOffers: false,
-  allRequirementsViewOffers: false,
+  allPurchaseOrdersViewOffers: false,
+  allSalesOrdersViewOffers: false,
   updateMyRequirementsLoadingViewOffers: () => {},
   updateSubUserRequirementsViewOffers: () => {},
-  updateAllRequirementsViewOffers: () => {},
+  updateAllPurchaseOrdersViewOffers: () => {},
+  updateAllSalesOrdersViewOffers: () => {},
 });
 
 export function LoadingDataProvider({ children }: { children: ReactNode }) {
@@ -39,11 +46,15 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
     useState(false);
   const [allPurchaseOrdersLoadingPdf, setAllPurchaseOrdersLoadingPdf] =
     useState(false);
+  const [allSalesOrdersLoadingPdf, setAllSalesOrdersLoadingPdf] =
+    useState(false);
   const [myRequirementsLoadingViewOffers, setMyRequirementsLoadingViewOffers] =
     useState(false);
   const [subUserRequirementsViewOffers, setSubUserRequirementsViewOffers] =
     useState(false);
-  const [allRequirementsViewOffers, setAllRequirementsViewOffers] =
+  const [allPurchaseOrdersViewOffers, setAllPurchaseOrdersViewOffers] =
+    useState(false);
+  const [allSalesOrdersViewOffers, setAllSalesOrdersViewOffers] =
     useState(false);
 
   function updateMyPurchaseOrdersLoadingPdf(val: boolean | undefined) {
@@ -58,6 +69,10 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
     setAllPurchaseOrdersLoadingPdf(val ? true : false);
   }
 
+  function updateAllSalesOrdersLoadingPdf(val: boolean | undefined) {
+    setAllSalesOrdersLoadingPdf(val ? true : false);
+  }
+
   function updateMyRequirementsLoadingViewOffers(val: boolean | undefined) {
     setMyRequirementsLoadingViewOffers(val ? true : false);
   }
@@ -66,9 +81,12 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
     setSubUserRequirementsViewOffers(val ? true : false);
   }
 
-  function updateAllRequirementsViewOffers(val: boolean | undefined) {
-    console.log(val);
-    setAllRequirementsViewOffers(val ? true : false);
+  function updateAllPurchaseOrdersViewOffers(val: boolean | undefined) {
+    setAllPurchaseOrdersViewOffers(val ? true : false);
+  }
+
+  function updateAllSalesOrdersViewOffers(val: boolean | undefined) {
+    setAllSalesOrdersViewOffers(val ? true : false);
   }
 
   return (
@@ -77,15 +95,19 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
         myPurchaseOrdersLoadingPdf,
         subUserPurchaseOrdersLoadingPdf,
         allPurchaseOrdersLoadingPdf,
+        allSalesOrdersLoadingPdf,
         myRequirementsLoadingViewOffers,
         subUserRequirementsViewOffers,
-        allRequirementsViewOffers,
+        allPurchaseOrdersViewOffers,
+        allSalesOrdersViewOffers,
         updateMyPurchaseOrdersLoadingPdf,
         updateSubUserPurchaseOrdersLoadingPdf,
         updateAllPurchaseOrdersLoadingPdf,
+        updateAllSalesOrdersLoadingPdf,
         updateMyRequirementsLoadingViewOffers,
         updateSubUserRequirementsViewOffers,
-        updateAllRequirementsViewOffers,
+        updateAllPurchaseOrdersViewOffers,
+        updateAllSalesOrdersViewOffers,
       }}
     >
       {children}

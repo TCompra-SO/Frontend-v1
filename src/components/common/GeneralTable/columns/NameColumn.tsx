@@ -161,7 +161,7 @@ export default function NameColumn(
                 (extraParam == PurchaseOrderTableTypes.ISSUED
                   ? (record as BasicPurchaseOrder).userNameClient
                   : (record as BasicPurchaseOrder).userNameProvider)}
-              {type === TableTypes.ALL_PURCHASE_ORDERS &&
+              {type === TableTypes.ALL_SALES_ORDERS &&
                 (extraParam == PurchaseOrderTableTypes.ISSUED
                   ? (record as BasicPurchaseOrder).subUserNameClient
                   : (record as BasicPurchaseOrder).subUserNameProvider)}

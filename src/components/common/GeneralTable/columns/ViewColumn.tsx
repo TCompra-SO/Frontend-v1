@@ -11,8 +11,11 @@ export default function ViewColumn(
   hidden: boolean = false
 ) {
   const { t } = useTranslation();
-  const { subUserRequirementsViewOffers, allRequirementsViewOffers } =
-    useContext(LoadingDataContext);
+  const {
+    subUserRequirementsViewOffers,
+    allPurchaseOrdersViewOffers,
+    allSalesOrdersViewOffers,
+  } = useContext(LoadingDataContext);
 
   const col: ColumnType<any> = {
     title: t("actionColumn"),
@@ -57,9 +60,10 @@ export default function ViewColumn(
             disabled={
               type == TableTypes.PURCHASE_ORDER_SUBUSER
                 ? subUserRequirementsViewOffers
-                : type == TableTypes.ALL_PURCHASE_ORDERS ||
-                  TableTypes.ALL_SALES_ORDERS
-                ? allRequirementsViewOffers
+                : type == TableTypes.ALL_PURCHASE_ORDERS
+                ? allPurchaseOrdersViewOffers
+                : type == TableTypes.ALL_SALES_ORDERS
+                ? allSalesOrdersViewOffers
                 : undefined
             }
           />
