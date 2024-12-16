@@ -14,7 +14,8 @@ export default function ChatListItem(props: ChatListItemProps) {
   const { t } = useTranslation();
   const dropdownItems: ItemType[] = [{ key: "ARC", label: t("archive") }];
 
-  const onClick: MenuProps["onClick"] = ({ key }) => {
+  const onClick: MenuProps["onClick"] = ({ key, domEvent }) => {
+    domEvent.stopPropagation();
     if (key == "ARC") console.log("archivar");
   };
 
@@ -44,7 +45,7 @@ export default function ChatListItem(props: ChatListItemProps) {
           trigger={["click"]}
           placement="bottomRight"
         >
-          <div className="chat-fecha">
+          <div className="chat-fecha" onClick={(e) => e.stopPropagation()}>
             <i className="fa-solid fa-ellipsis chat-opciones"></i>
           </div>
         </Dropdown>

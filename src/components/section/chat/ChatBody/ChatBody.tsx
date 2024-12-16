@@ -2,9 +2,10 @@ import { useTranslation } from "react-i18next";
 import { ChatListData, ChatMessage } from "../../../../models/MainInterfaces";
 import InputContainer from "../../../containers/InputContainer";
 import dayjs from "dayjs";
-import { dateFormatChatBody } from "../../../../utilities/globals";
+import { dateFormatChatBody, windowSize } from "../../../../utilities/globals";
 import ChatBodyMessage from "./ChatBodyMessage";
 import { useEffect, useRef } from "react";
+import useWindowSize from "../../../../hooks/useWindowSize";
 
 interface ChatBodyProps {
   chatData: ChatListData;
@@ -14,6 +15,7 @@ interface ChatBodyProps {
 
 export default function ChatBody(props: ChatBodyProps) {
   const { t } = useTranslation();
+  const { width } = useWindowSize();
   const divRef = useRef<HTMLDivElement>(null);
 
   function scrollToBottom() {
@@ -27,7 +29,10 @@ export default function ChatBody(props: ChatBodyProps) {
   }, [props.chatData]);
 
   return (
-    <div className="card-white mch-2 t-flex f-column gap-5">
+    <div
+      className="card-white mch-2 t-flex f-column gap-5"
+      style={width <= windowSize.sm ? { display: "flex" } : {}}
+    >
       <div className="chat-info t-flex gap-10 j-items">
         {props.chatData.userImage ? (
           <img src={props.chatData.userImage} className="img-chat-2" />

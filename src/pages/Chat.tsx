@@ -3,7 +3,9 @@ import ContentHeader from "../components/common/ContentHeader";
 import ChatList from "../components/section/chat/ChatList/ChatList";
 import ChatBody from "../components/section/chat/ChatBody/ChatBody";
 import { ChatListData, ChatMessage } from "../models/MainInterfaces";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useWindowSize from "../hooks/useWindowSize";
+import { windowSize } from "../utilities/globals";
 
 const chatElements: ChatListData[] = [
   {
@@ -209,9 +211,10 @@ const chatMessages: ChatMessage[] = [
 
 export default function Chat() {
   const { t } = useTranslation();
+  const { width } = useWindowSize();
   const [chatList, setChatList] = useState(chatElements);
   const [chatMsgs, setChatMsgs] = useState(chatMessages);
-  const [isChatOpened, setIsChatOpened] = useState(true);
+  const [isChatOpened, setIsChatOpened] = useState(false);
   const [currentChat, setCurrentChat] = useState<ChatListData | null>(null);
 
   function handleCloseChat() {
@@ -231,7 +234,10 @@ export default function Chat() {
         icon={<i className="fa-regular fa-comment c-default"></i>}
       />
       <div className="gap-20 modulo-chat">
-        <ChatList chatList={chatList} onClickOnItem={handleClickOnChatItem} />
+        {((width <= windowSize.sm && !isChatOpened) ||
+          width > windowSize.sm) && (
+          <ChatList chatList={chatList} onClickOnItem={handleClickOnChatItem} />
+        )}
         {isChatOpened && currentChat ? (
           <ChatBody
             chatData={currentChat}

@@ -174,6 +174,12 @@ export function isHome(pathname: string) {
   return lastSegment === home;
 }
 
+export function isChat(pathname: string) {
+  const lastSegment = getLastSegmentFromRoute(pathname);
+  const chat = getLastSegmentFromRoute(pageRoutes.chat);
+  return lastSegment === chat;
+}
+
 export function getLastSegmentFromRoute(pathname: string) {
   const pathSegments = pathname.split("/");
   return pathSegments[pathSegments.length - 1];
