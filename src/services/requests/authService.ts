@@ -28,6 +28,24 @@ export function profileUserService(): HttpService {
   };
 }
 
+export function updateProfileCompanyService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+      ApiRoutes.auth.updateCompany
+    }`,
+    type: "AU-UP-PR-CO",
+  };
+}
+
+export function updateProfileUserService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+      ApiRoutes.auth.updateUser
+    }`,
+    type: "AU-UP-PR-US",
+  };
+}
+
 export function registerService(): HttpService {
   return {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${

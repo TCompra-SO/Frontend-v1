@@ -18,13 +18,19 @@ import { defaultUserImage } from "../utilities/globals";
 import { useHandleChangeImage } from "../hooks/useHandleChangeImage";
 import PasswordField from "../components/common/formFields/PasswordField";
 import { useApiParams } from "../models/Interfaces";
-import { NewPasswordRequest, UploadAvatarRequest } from "../models/Requests";
+import {
+  NewPasswordRequest,
+  UpdateProfileRequest,
+  UploadAvatarRequest,
+} from "../models/Requests";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import useApi from "../hooks/useApi";
 import {
   getUserService,
   newPasswordService,
+  updateProfileCompanyService,
+  updateProfileUserService,
 } from "../services/requests/authService";
 import showNotification from "../utilities/notification/showNotification";
 import { equalServices } from "../utilities/globalFunctions";
@@ -152,23 +158,42 @@ export default function MyProfile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataMainUser]);
 
-  // const [apiParamsForm, setApiParamsForm] = useState<useApiParams<any>>({ /* r3v */
-  //   service: null,
-  //   method: "get",
-  //   token,
-  // });
-  // const {
-  //   loading: loadingForm,
-  //   responseData: responseDataForm,
-  //   error: errorForm,
-  //   errorMsg: errorMsgForm,
-  //   fetchData: fetchDataForm,
-  // } = useApi<NewPasswordRequest | FormData>({
-  //   service: apiParamsForm.service,
-  //   method: apiParamsForm.method,
-  //   dataToSend: apiParamsForm.dataToSend,
-  //   token: apiParamsForm.token,
-  // });
+  /** Actualizar perfil */
+
+  const [apiParamsForm, setApiParamsForm] = useState<
+    useApiParams<UpdateProfileRequest>
+  >({
+    service: null,
+    method: "get",
+    token,
+  });
+
+  const {
+    loading: loadingForm,
+    responseData: responseDataForm,
+    error: errorForm,
+    errorMsg: errorMsgForm,
+    fetchData: fetchDataForm,
+  } = useApi<UpdateProfileRequest>({
+    service: apiParamsForm.service,
+    method: apiParamsForm.method,
+    dataToSend: apiParamsForm.dataToSend,
+    token: apiParamsForm.token,
+  });
+
+  useEffect(() => {
+    if (apiParamsForm.service) fetchDataForm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsForm]);
+
+  useEffect(() => {
+    if (responseDataForm) {
+      showNotification(notification, "success", t("updateProfileSuccess"));
+    } else if (errorForm) {
+      showNotification(notification, "error", errorMsgForm);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataForm, errorForm]);
 
   /** Acciones iniciales */
 
@@ -255,11 +280,27 @@ export default function MyProfile() {
   }
 
   function saveMyProfile(values: any) {
-    console.log(user?.uid, values);
-    values.address.trim();
-    values.phone.trim();
-    values.specialty.trim();
-    values.aboutMe.trim();
+    const data: UpdateProfileRequest = {
+      uid,
+      phone: values.phone.trim(),
+      address: values.address.trim(),
+      cityID: values.location,
+    };
+    if (entityType == EntityType.COMPANY) {
+      data.age = values.tenure;
+      data.specialtyID = values.specialty.trim();
+      data.about_me = values.aboutMe.trim();
+    }
+    console.log(user?.uid, values, data);
+    // return;
+    setApiParamsForm({
+      service:
+        entityType == EntityType.COMPANY
+          ? updateProfileCompanyService()
+          : updateProfileUserService(),
+      method: "post",
+      dataToSend: data,
+    });
   }
 
   function saveMyPassword(values: any) {
@@ -504,11 +545,7 @@ export default function MyProfile() {
                   <ButtonContainer
                     className="btn btn-default"
                     htmlType="submit"
-                    // loading={
-                    //   equalServices(apiParams.service, newPasswordService())
-                    //     ? loading
-                    //     : undefined
-                    // }
+                    loading={loadingForm}
                   >
                     {t("saveButton")}
                   </ButtonContainer>

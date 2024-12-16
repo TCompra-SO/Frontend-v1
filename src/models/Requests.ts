@@ -13,18 +13,22 @@ export interface RegisterRequest {
   ruc?: string;
 }
 
-export interface ProfileRequest {
+export interface UpdateProfileRequest {
   uid: string;
   phone: string;
   address: string;
-  countryID: string;
+  categories?: number[];
   cityID: string;
-  categories: number[];
-  avatar?: string;
-  planID: number;
+  about_me?: string;
   age?: number;
   specialtyID?: string;
-  aboutMe?: string;
+}
+
+export interface ProfileRequest extends UpdateProfileRequest {
+  categories: number[];
+  countryID: string;
+  avatar?: string;
+  planID: number;
 }
 
 export interface ValidateCodeRequest {

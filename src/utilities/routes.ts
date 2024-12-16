@@ -20,6 +20,8 @@ export const ApiRoutes = {
     login: "login/",
     profileCompany: "profileCompany/",
     profileUser: "profileUser/",
+    updateCompany: "updateCompany/",
+    updateUser: "updateUser/",
     register: "register/",
     sendCode: "sendCode/",
     validateCode: "validate-code/",

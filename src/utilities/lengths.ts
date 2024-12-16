@@ -24,7 +24,7 @@ export const Lengths = {
     max: 20,
   },
   phone: {
-    min: 4,
+    min: 6,
     max: 13,
   },
   country: {
@@ -44,7 +44,7 @@ export const Lengths = {
     max: 255,
   },
   aboutMe: {
-    min: 1,
+    min: 3,
     max: 255,
   },
   title: {
