@@ -38,7 +38,12 @@ export default function CreateRequirementFloatButton() {
           <FloatButton.Group shape="circle" style={{ insetInlineEnd: 24 }}>
             {!isHomePage && (
               <FloatButton
-                icon={<i className="fa-regular fa-house"></i>}
+                icon={
+                  <i
+                    className="fa-regular fa-house"
+                    style={{ marginLeft: "-1px" }}
+                  ></i>
+                }
                 tooltip={t("home")}
                 type="primary"
                 onClick={() => navigate(pageRoutes.home)}
