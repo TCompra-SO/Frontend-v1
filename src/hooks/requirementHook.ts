@@ -28,6 +28,7 @@ import {
 } from "../utilities/types";
 import { BaseUser, Offer, Requirement } from "../models/MainInterfaces";
 import {
+  getBasicRateData,
   getOfferById,
   getPurchaseOrderById,
   getRequirementById,
@@ -406,21 +407,38 @@ export function useShowDetailOffer() {
               : undefined
             : undefined
         );
-        if (offer)
+        if (offer) {
+          const { basicRateData } = await getBasicRateData(
+            offer.requirementId,
+            false,
+            RequirementType.GOOD //r3v
+          );
+          if (basicRateData)
+            setDataModal({
+              type: ModalTypes.OFFER_DETAIL,
+              data: {
+                offer,
+                basicRateData,
+              },
+            });
+          else showNotification(notification, "error", t("errorOccurred"));
+        } else showNotification(notification, "error", t("errorOccurred"));
+      } else {
+        const { basicRateData } = await getBasicRateData(
+          offerData.requirementId,
+          false,
+          RequirementType.GOOD
+        ); // r3v
+        if (basicRateData)
           setDataModal({
             type: ModalTypes.OFFER_DETAIL,
             data: {
-              offer,
+              offer: offerData,
+              basicRateData,
             },
           });
         else showNotification(notification, "error", t("errorOccurred"));
-      } else
-        setDataModal({
-          type: ModalTypes.OFFER_DETAIL,
-          data: {
-            offer: offerData,
-          },
-        });
+      }
     } catch (error) {
       console.log(error);
       showNotification(notification, "error", t("errorOccurred"));

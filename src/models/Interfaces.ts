@@ -122,6 +122,7 @@ export interface ModalOfferDetail extends CommonModalType {
   type: ModalTypes.OFFER_DETAIL;
   data: {
     offer: Offer;
+    basicRateData: BasicRateData;
   };
 }
 

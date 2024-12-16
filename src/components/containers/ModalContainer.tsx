@@ -122,7 +122,12 @@ export default function ModalContainer(props: ModalContainerProps) {
         );
       }
       case ModalTypes.OFFER_DETAIL: {
-        return <OfferDetailModal offer={props.content.data.offer} />;
+        return (
+          <OfferDetailModal
+            offer={props.content.data.offer}
+            basicRateData={props.content.data.basicRateData}
+          />
+        );
       }
       case ModalTypes.USER_INFO: {
         return <UserInfoModal user={props.content.data.user} />;
