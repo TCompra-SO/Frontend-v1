@@ -331,7 +331,7 @@ export default function PurchaseOrders() {
           purchaseOrder.filters
         );
         break;
-      case Action.CANCEL: //r3v
+      case Action.CANCEL:
         setDataModal({
           type: ModalTypes.CANCEL_PURCHASE_ORDER,
           data: {

@@ -95,6 +95,7 @@ const chatMessages: ChatMessage[] = [
       "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
     time: "2024-11-20T15:24:00.000Z",
     read: true,
+    uid: "1",
   },
   {
     isInputMsg: true,
@@ -102,12 +103,14 @@ const chatMessages: ChatMessage[] = [
       "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
     time: "2024-11-20T15:25:00.000Z",
     read: true,
+    uid: "2",
   },
   {
     isInputMsg: true,
     message: "El costo es de $500 mensuales",
     read: true,
     time: "2024-11-20T15:26:00.000Z",
+    uid: "3",
   },
   {
     isInputMsg: false,
@@ -120,18 +123,21 @@ const chatMessages: ChatMessage[] = [
       // "https://dummyimage.com/250/ff3f21/000000",
       // "https://dummyimage.com/250/aa3ff1/000000",
     ],
+    uid: "4",
   },
   {
     isInputMsg: true,
     time: "2024-11-20T15:28:00.000Z",
     read: true,
     images: ["https://dummyimage.com/250/ff3fff/000000"],
+    uid: "5",
   },
   {
     isInputMsg: true,
     time: "2024-11-20T15:28:00.000Z",
     read: true,
     images: ["https://dummyimage.com/250/ff3fff/000000"],
+    uid: "6",
   },
   {
     isInputMsg: false,
@@ -140,6 +146,7 @@ const chatMessages: ChatMessage[] = [
     documents: [
       "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
     ],
+    uid: "7",
   },
   {
     isInputMsg: true,
@@ -148,6 +155,55 @@ const chatMessages: ChatMessage[] = [
     documents: [
       "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
     ],
+    uid: "8",
+  },
+  {
+    isInputMsg: false,
+    message:
+      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
+    time: "2024-11-20T15:24:00.000Z",
+    read: true,
+    uid: "9",
+  },
+  {
+    isInputMsg: true,
+    message:
+      "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
+    time: "2024-11-20T15:25:00.000Z",
+    read: true,
+    uid: "10",
+  },
+  {
+    isInputMsg: false,
+    message:
+      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
+    time: "2024-11-20T15:24:00.000Z",
+    read: true,
+    uid: "11",
+  },
+  {
+    isInputMsg: true,
+    message:
+      "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
+    time: "2024-11-20T15:25:00.000Z",
+    read: true,
+    uid: "12",
+  },
+  {
+    isInputMsg: false,
+    message:
+      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
+    time: "2024-11-20T15:24:00.000Z",
+    read: true,
+    uid: "13",
+  },
+  {
+    isInputMsg: true,
+    message:
+      "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
+    time: "2024-11-20T15:25:00.000Z",
+    read: true,
+    uid: "14",
   },
 ];
 
@@ -166,7 +222,6 @@ export default function Chat() {
   function handleClickOnChatItem(item: ChatListData) {
     setCurrentChat(item);
     setIsChatOpened(true);
-    console.log(item);
   }
 
   return (

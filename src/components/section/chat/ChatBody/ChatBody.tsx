@@ -4,6 +4,7 @@ import InputContainer from "../../../containers/InputContainer";
 import dayjs from "dayjs";
 import { dateFormatChatBody } from "../../../../utilities/globals";
 import ChatBodyMessage from "./ChatBodyMessage";
+import { useEffect, useRef } from "react";
 
 interface ChatBodyProps {
   chatData: ChatListData;
@@ -13,6 +14,17 @@ interface ChatBodyProps {
 
 export default function ChatBody(props: ChatBodyProps) {
   const { t } = useTranslation();
+  const divRef = useRef<HTMLDivElement>(null);
+
+  function scrollToBottom() {
+    if (divRef.current) {
+      divRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [props.chatData]);
 
   return (
     <div className="card-white mch-2 t-flex f-column gap-5">
@@ -45,11 +57,13 @@ export default function ChatBody(props: ChatBodyProps) {
         <div className="t-flex f-column gap-5 mensajes-contenedor">
           {props.messages.map((msg) => (
             <ChatBodyMessage
+              key={msg.uid}
               message={msg}
               userImage={props.chatData.userImage}
               userName={props.chatData.userName}
             />
           ))}
+          <div ref={divRef} />
         </div>
       </div>
       <div className="t-flex gap-10 j-items chat-buscar">

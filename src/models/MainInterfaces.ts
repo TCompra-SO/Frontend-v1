@@ -258,6 +258,7 @@ export interface ChatListData {
 }
 
 export interface ChatMessage {
+  uid: string;
   isInputMsg: boolean;
   message?: string;
   time: string;

@@ -200,7 +200,7 @@ export const ActionByStateRequirement: {
   [RequirementState.CANCELED]: [Action.REPUBLISH], // Action.DELETE
   [RequirementState.DISPUTE]: [Action.SHOW_SUMMARY],
   [RequirementState.EXPIRED]: [Action.DELETE, Action.REPUBLISH],
-  [RequirementState.FINISHED]: [Action.SHOW_SUMMARY], //, Action.FINISH],
+  [RequirementState.FINISHED]: [Action.SHOW_SUMMARY],
   [RequirementState.PUBLISHED]: [Action.DELETE, Action.CANCEL_REQUIREMENT],
   [RequirementState.SELECTED]: [Action.CANCEL_REQUIREMENT, Action.FINISH],
   [RequirementState.ELIMINATED]: [],
