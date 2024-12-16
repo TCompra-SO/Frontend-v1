@@ -1,4 +1,4 @@
-import { Flex, Tooltip } from "antd";
+import { Tooltip } from "antd";
 import SubUserName from "../../../common/SubUserName";
 import { getLabelFromRequirementType } from "../../../../utilities/globalFunctions";
 import { useTranslation } from "react-i18next";
@@ -23,36 +23,44 @@ export default function RequirementInfoNoTags(
 
   return (
     <>
-      <h2 className={props.forHome ? "titulo-req-2" : "titulo-req"}>
-        <Tooltip title={props.forHome ? props.user.name : props.title}>
-          {props.forHome ? props.user.name : props.title}{" "}
-        </Tooltip>
-        {props.forHome && <SubUserName subUserName={props.subUser?.name} />}
-      </h2>
-
       {!props.forHome && (
-        <div className="t-flex tags-req">
-          <Tooltip title={props.user.name}>
-            <div className="badge-default text-truncate">{props.user.name}</div>
-          </Tooltip>
-          <SubUserName subUserName={props.subUser?.name} />
-          <div className="badge-second">
-            {t(getLabelFromRequirementType(props.type))}
-          </div>
-          <RateStarCount
-            score={
-              props.type == RequirementType.SALE
-                ? props.user.sellerScore
-                : props.user.customerScore
-            }
-            count={
-              props.type == RequirementType.SALE
-                ? props.user.sellerCount
-                : props.user.customerCount
-            }
-          />
-        </div>
+        <h2 className={"titulo-req"}>
+          <Tooltip title={props.title}>{props.title}</Tooltip>
+        </h2>
       )}
+
+      <div className="t-flex tags-req">
+        <Tooltip title={props.user.name}>
+          <div
+            className={`${props.forHome ? "" : "badge-default "}text-truncate`}
+            style={
+              props.forHome ? { fontSize: "25px", fontWeight: "bold" } : {}
+            }
+          >
+            {props.user.name}
+          </div>
+        </Tooltip>
+        <SubUserName subUserName={props.subUser?.name} />
+        {!props.forHome && (
+          <>
+            <div className="badge-second">
+              {t(getLabelFromRequirementType(props.type))}
+            </div>
+            <RateStarCount
+              score={
+                props.type == RequirementType.SALE
+                  ? props.user.sellerScore
+                  : props.user.customerScore
+              }
+              count={
+                props.type == RequirementType.SALE
+                  ? props.user.sellerCount
+                  : props.user.customerCount
+              }
+            />
+          </>
+        )}
+      </div>
 
       <DescriptionParagraph
         text={props.description}
