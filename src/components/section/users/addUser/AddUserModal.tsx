@@ -303,8 +303,8 @@ export default function AddUserModal(props: AddUserModalProps) {
     if (props.userData && props.edit) {
       const profile: UpdateProfileSubUserRequest = {
         uid: props.userData.uid,
-        phone: values.phone,
-        address: values.address,
+        phone: values.phone.trim(),
+        address: values.address.trim(),
         cityID: values.location,
       };
       setApiParams({

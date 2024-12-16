@@ -21,6 +21,7 @@ import { useApiParams } from "../models/Interfaces";
 import {
   NewPasswordRequest,
   UpdateProfileRequest,
+  UpdateProfileSubUserRequest,
   UploadAvatarRequest,
 } from "../models/Requests";
 import { useSelector } from "react-redux";
@@ -39,7 +40,10 @@ import {
   transformToSubUserProfile,
 } from "../utilities/transform";
 import { uploadAvatarService } from "../services/requests/imageService";
-import { getSubUserService } from "../services/requests/subUserService";
+import {
+  getSubUserService,
+  updateProfileSubUserService,
+} from "../services/requests/subUserService";
 
 export default function MyProfile() {
   const { t } = useTranslation();
@@ -161,7 +165,7 @@ export default function MyProfile() {
   /** Actualizar perfil */
 
   const [apiParamsForm, setApiParamsForm] = useState<
-    useApiParams<UpdateProfileRequest>
+    useApiParams<UpdateProfileRequest | UpdateProfileSubUserRequest>
   >({
     service: null,
     method: "get",
@@ -174,7 +178,7 @@ export default function MyProfile() {
     error: errorForm,
     errorMsg: errorMsgForm,
     fetchData: fetchDataForm,
-  } = useApi<UpdateProfileRequest>({
+  } = useApi<UpdateProfileRequest | UpdateProfileSubUserRequest>({
     service: apiParamsForm.service,
     method: apiParamsForm.method,
     dataToSend: apiParamsForm.dataToSend,
@@ -280,27 +284,39 @@ export default function MyProfile() {
   }
 
   function saveMyProfile(values: any) {
-    const data: UpdateProfileRequest = {
-      uid,
-      phone: values.phone.trim(),
-      address: values.address.trim(),
-      cityID: values.location,
-    };
-    if (entityType == EntityType.COMPANY) {
-      data.age = values.tenure;
-      data.specialtyID = values.specialty.trim();
-      data.about_me = values.aboutMe.trim();
+    if (entityType == EntityType.SUBUSER) {
+      const profile: UpdateProfileSubUserRequest = {
+        uid,
+        phone: values.phone.trim(),
+        address: values.address.trim(),
+        cityID: values.location,
+      };
+      setApiParamsForm({
+        service: updateProfileSubUserService(),
+        method: "post",
+        dataToSend: profile,
+      });
+    } else {
+      const data: UpdateProfileRequest = {
+        uid,
+        phone: values.phone.trim(),
+        address: values.address.trim(),
+        cityID: values.location,
+      };
+      if (entityType == EntityType.COMPANY) {
+        data.age = values.tenure;
+        data.specialtyID = values.specialty.trim();
+        data.about_me = values.aboutMe.trim();
+      }
+      setApiParamsForm({
+        service:
+          entityType == EntityType.COMPANY
+            ? updateProfileCompanyService()
+            : updateProfileUserService(),
+        method: "post",
+        dataToSend: data,
+      });
     }
-    console.log(user?.uid, values, data);
-    // return;
-    setApiParamsForm({
-      service:
-        entityType == EntityType.COMPANY
-          ? updateProfileCompanyService()
-          : updateProfileUserService(),
-      method: "post",
-      dataToSend: data,
-    });
   }
 
   function saveMyPassword(values: any) {
