@@ -206,6 +206,7 @@ export interface CertificateFile {
 }
 
 export interface CertificationItem {
+  uid: string;
   companyId: string;
   companyName: string;
   companyDocument: string;

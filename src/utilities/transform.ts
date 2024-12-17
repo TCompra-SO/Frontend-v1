@@ -2,6 +2,7 @@ import {
   BaseUser,
   BasicRateData,
   CertificateFile,
+  CertificationItem,
   FullUser,
   Offer,
   OfferItemSubUser,
@@ -349,4 +350,16 @@ export function transformToCertificateFile(data: any) {
     url: data.url,
   };
   return doc;
+}
+
+export function transformToCertificationItem(data: any) {
+  const cert: CertificationItem = {
+    uid: data.uid,
+    companyId: data.companyId,
+    companyName: data.companyName,
+    companyDocument: data.companyDocument,
+    creationDate: data.creationDate,
+    state: data.state,
+  };
+  return cert;
 }
