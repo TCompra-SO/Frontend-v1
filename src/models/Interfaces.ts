@@ -27,6 +27,7 @@ import {
   BasicRateData,
   SubUserBase,
 } from "./MainInterfaces";
+import { extend } from "dayjs";
 
 /******** Modals *******/
 
@@ -174,6 +175,14 @@ export interface ModalNone extends CommonModalType {
   data: Record<string, never>;
 }
 
+export interface ModalSendMessage extends CommonModalType {
+  type: ModalTypes.SEND_MESSAGE;
+  data: {
+    requirementId: string;
+    userId: string;
+  };
+}
+
 export type ModalContent =
   | ModalValidateCode
   | ModalSelectOffer
@@ -192,6 +201,7 @@ export type ModalContent =
   | ModalViewDocsReceivedCert
   | ModalViewDocsSentCert
   | ModalSelectDocsCert
+  | ModalSendMessage
   | ModalNone;
 
 export interface SelectDocsModalData {

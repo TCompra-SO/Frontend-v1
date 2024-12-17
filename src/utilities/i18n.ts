@@ -495,7 +495,8 @@ const resources = {
       archive: "Archive",
       appName: "TCompra",
       message: "Message",
-      resend: "Resent"
+      resend: "Resent",
+      sendMessage: "Sed message"
     },
   },
   es: {
@@ -1003,7 +1004,8 @@ const resources = {
       archive: "Archivar",
       appName: "TCompra",
       message: "Mensaje",
-      resend: "Reenviar"
+      resend: "Reenviar",
+      sendMessage: "Enviar mensaje"
     },
   },
 };

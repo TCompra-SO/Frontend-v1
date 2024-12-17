@@ -97,6 +97,7 @@ export enum ModalTypes {
   VIEW_DOCS_RECEIVED_CERT = 15,
   VIEW_DOCS_SENT_CERT = 16,
   SELECT_DOCS_CERT = 17,
+  SEND_MESSAGE = 18,
 }
 
 export const ModalWidth: {
@@ -120,6 +121,7 @@ export const ModalWidth: {
   [ModalTypes.VIEW_DOCS_RECEIVED_CERT]: 800,
   [ModalTypes.VIEW_DOCS_SENT_CERT]: 800,
   [ModalTypes.SELECT_DOCS_CERT]: 800,
+  [ModalTypes.SEND_MESSAGE]: 600,
 };
 
 /***** Acciones *****/

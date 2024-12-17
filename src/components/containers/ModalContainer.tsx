@@ -17,6 +17,7 @@ import AddCertificatesModal from "../common/modals/AddCertificatesModal";
 import EditDocumentListToRequestModal from "../common/modals/EditDocumentListToRequestModal";
 import ViewDocsReceivedCertificate from "../common/modals/ViewDocsReceivedCertificate";
 import SelectDocumentsToSendCertificateModal from "../common/modals/SelectDocumentsToSendCertificateModal";
+import SendMessageModal from "../common/modals/SendMessageModal";
 
 interface ModalContainerProps extends ModalProps {
   content: ModalContent;
@@ -158,6 +159,15 @@ export default function ModalContainer(props: ModalContainerProps) {
         return (
           <SelectDocumentsToSendCertificateModal
             data={props.content.data.data}
+          />
+        );
+      }
+      case ModalTypes.SEND_MESSAGE: {
+        return (
+          <SendMessageModal
+            onClose={props.onClose}
+            requirementId={props.content.data.requirementId}
+            userId={props.content.data.userId}
           />
         );
       }
