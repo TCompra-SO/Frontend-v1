@@ -443,3 +443,9 @@ export enum OrderConfirmation {
   YES = 1,
   NO = 3,
 }
+
+export enum UploadCertificateLabels {
+  companyId = "companyID",
+  documenst = "documents",
+  name = "name",
+}

@@ -41,10 +41,11 @@ export default function useApi<T = any>({
         setResponseData(result.data);
       } catch (err) {
         console.log("HTTP error:", err);
-        setError(err as AxiosError);
         const errorMsg_ = t(httpErrorInterceptor(err, service.type));
         setErrorMsg(errorMsg_);
+        setError(err as AxiosError);
       } finally {
+        console.log(1111);
         setLoading(false);
       }
     }

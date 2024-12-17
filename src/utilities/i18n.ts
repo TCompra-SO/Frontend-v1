@@ -318,6 +318,7 @@ const resources = {
       cantCancelOfferClientFinished: "Offer cannot be canceled because the client has already completed their part of the process",
       cantCancelOfferSupplierFinished: "Offer cannot be canceled because the supplier has already completed their part of the process",
       offerCanceledSuccessfully: "Offer canceled successfully",
+      documentsUploadedSuccessfully: "Documents uploaded successfully",
       // Other
       yes: "Yes",
       no: "No",
@@ -823,6 +824,7 @@ const resources = {
       cantCancelOfferClientFinished: "No se puede cancelar la oferta porque el cliente ya ha completado su parte del proceso",
       cantCancelOfferSupplierFinished: "No se puede cancelar la oferta porque el proveedor ya ha completado su parte del proceso",
       offerCanceledSuccessfully: "Oferta cancelada exitosamente",
+      documentsUploadedSuccessfully: "Documentos subidos exitosamente",
       // Other
       yes: "Sí",
       no: "No",
