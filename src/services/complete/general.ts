@@ -1,5 +1,6 @@
 import { BaseUser } from "../../models/MainInterfaces";
 import { UserState } from "../../models/Redux";
+import store from "../../redux/store";
 import makeRequest from "../../utilities/globalFunctions";
 import {
   transformFromGetRequirementByIdToRequirement,
@@ -14,6 +15,7 @@ import {
   getBaseDataUserService,
   getUserService,
 } from "../requests/authService";
+import { getCertificatesService } from "../requests/certificateService";
 import {
   getBasicRateDataOfferService,
   getOfferByIdService,

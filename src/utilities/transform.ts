@@ -1,6 +1,7 @@
 import {
   BaseUser,
   BasicRateData,
+  CertificateFile,
   FullUser,
   Offer,
   OfferItemSubUser,
@@ -339,4 +340,13 @@ export function transformToSubUserProfile(data: any) {
     phone: data.phone,
   };
   return subUser;
+}
+
+export function transformToCertificateFile(data: any) {
+  const doc: CertificateFile = {
+    name: data.name,
+    documentName: data.documentName,
+    url: data.url,
+  };
+  return doc;
 }

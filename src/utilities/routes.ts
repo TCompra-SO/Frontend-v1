@@ -10,6 +10,7 @@ export const ApiMainRoutes = {
   offers: "offers/",
   score: "score/",
   purchaseOrder: "purchaseOrder/",
+  certificate: "certificate/",
 };
 
 export const ApiRoutes = {
@@ -107,6 +108,12 @@ export const ApiRoutes = {
     getPurchaseOrderPDF: "getpurchaseOrderPDF/",
     getPurchaseOrdersByProvider: "getPurchaseOrdersByProvider/",
     getPurchaseOrdersByClient: "getPurchaseOrdersByClient/",
+  },
+  certificate: {
+    uploadCertificate: "uploadCertificate",
+    getCertificates: "getCertificates/",
+    updateCertificationState: "updateCertifyState",
+    sendCertificationRequest: "sendCertification",
   },
 };
 
