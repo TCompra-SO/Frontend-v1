@@ -29,6 +29,7 @@ interface RequirementOfferListItemProps {
         show: true;
         requirement: Requirement;
         onSuccessfulSelection: (offerId: string) => void;
+        onCancelSuccess?: (offerId: string) => void;
       }
     | { show: false };
 }
@@ -51,6 +52,7 @@ export default function RequirementOfferListItemHeader({
       },
     },
   ];
+
   if (props.showStateAndActions.show) {
     if (props.offer.state == OfferState.WINNER)
       items.push({
@@ -61,12 +63,13 @@ export default function RequirementOfferListItemHeader({
     if (
       props.offer.state == OfferState.ACTIVE &&
       props.showStateAndActions.requirement.state == RequirementState.PUBLISHED
-    )
+    ) {
       items.push({
         label: t(ActionLabel[Action.SELECT_OFFER]),
         key: Action.SELECT_OFFER,
         onClick: () => onOpenModal(Action.SELECT_OFFER),
       });
+    }
     if (
       props.offer.state == OfferState.CANCELED &&
       props.offer.canceledByCreator // r3v
@@ -93,6 +96,7 @@ export default function RequirementOfferListItemHeader({
               requirementId: props.showStateAndActions.requirement.key,
               fromRequirementTable: false,
               canceledByCreator: false,
+              onCancelSuccess: props.showStateAndActions.onCancelSuccess,
             },
           });
           setIsOpenModal(true);

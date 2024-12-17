@@ -102,7 +102,12 @@ export function useCancelRequirement() {
     });
   }
 
-  return { cancelRequirement, loadingCancelRequirement: loadingCancel };
+  return {
+    cancelRequirement,
+    loadingCancelRequirement: loadingCancel,
+    responseDataCancelReq: responseDataCancel,
+    errorCancelReq: errorCancel,
+  };
 }
 
 /** useCancelOffer */
@@ -163,6 +168,7 @@ export function useCancelOffer() {
     cancelOffer,
     loadingCancelOffer: loading,
     responseDataCancelOffer: responseData,
+    errorCancelOffer: error,
   };
 }
 

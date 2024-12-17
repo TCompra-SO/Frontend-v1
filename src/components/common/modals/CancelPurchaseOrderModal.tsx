@@ -17,6 +17,7 @@ interface CancelPurchaseOrderModalProps {
   requirementId: string;
   fromRequirementTable: boolean;
   canceledByCreator: boolean;
+  onCancelSuccess?: (offerId: string) => void;
 }
 
 export default function CancelPurchaseOrderModal(
@@ -25,9 +26,12 @@ export default function CancelPurchaseOrderModal(
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const [text, setText] = useState<string>("");
-  const { cancelRequirement, loadingCancelRequirement } =
+  const { cancelRequirement, loadingCancelRequirement, responseDataCancelReq } =
     useCancelRequirement();
-  const { cancelOffer, loadingCancelOffer } = useCancelOffer();
+  const { cancelOffer, loadingCancelOffer, responseDataCancelOffer } =
+    useCancelOffer();
+
+  /** Cerrar modal */
 
   useEffect(() => {
     if (loadingCancelOffer === false) props.onClose();
@@ -39,9 +43,23 @@ export default function CancelPurchaseOrderModal(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingCancelRequirement]);
 
-  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  /** Realizar acción al cancelar exitosamente */
+
+  useEffect(() => {
+    if (responseDataCancelOffer && props.onCancelSuccess)
+      props.onCancelSuccess(props.offerId);
+  }, [responseDataCancelOffer]);
+
+  useEffect(() => {
+    if (responseDataCancelReq && props.onCancelSuccess)
+      props.onCancelSuccess(props.offerId);
+  }, [responseDataCancelReq]);
+
+  /** Funciones */
+
+  function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setText(e.target.value);
-  };
+  }
 
   function cancelPurchaseOrder() {
     if (!text) {

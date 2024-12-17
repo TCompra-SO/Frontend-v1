@@ -43,6 +43,7 @@ export interface ModalCancelPurchaseOrder extends CommonModalType {
     requirementId: string;
     fromRequirementTable: boolean;
     canceledByCreator: boolean;
+    onCancelSuccess?: (offerId: string) => void;
   };
 }
 
