@@ -159,7 +159,7 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
 
   function sendDocuments() {
     for (let i = 0; i < docList.length; i++) {
-      if (!docList[i] || !nameList[i]) {
+      if (!docList[i] || !nameList[i].trim()) {
         showNotification(
           notification,
           "error",
@@ -173,7 +173,7 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
     docList.forEach((file: File | null, i) => {
       if (file) {
         formData.append(UploadCertificateLabels.documenst, file);
-        formData.append(UploadCertificateLabels.name, nameList[i]);
+        formData.append(UploadCertificateLabels.name, nameList[i].trim());
       }
     });
     setApiParamsUpload({
