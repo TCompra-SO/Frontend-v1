@@ -36,3 +36,32 @@ export function updateCertificationStateService(): HttpService {
     type: "CE-UPD",
   };
 }
+
+export function getSentRequestsByEntityService(userId: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
+      ApiRoutes.certificate.getSentRequestsByEntity
+    }${userId}`,
+    type: "CE-GE-SE",
+  };
+}
+
+export function getReceivedRequestsByEntityService(
+  userId: string
+): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
+      ApiRoutes.certificate.getReceivedRequestsByEntity
+    }${userId}`,
+    type: "CE-GE-RE",
+  };
+}
+
+export function deleteCertificateService(certId: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
+      ApiRoutes.certificate.deleteCertificate
+    }${certId}`,
+    type: "CE-DEL",
+  };
+}

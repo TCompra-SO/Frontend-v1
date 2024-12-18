@@ -45,7 +45,6 @@ export default function useApi<T = any>({
         setErrorMsg(errorMsg_);
         setError(err as AxiosError);
       } finally {
-        console.log(1111);
         setLoading(false);
       }
     }

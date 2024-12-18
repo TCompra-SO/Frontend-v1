@@ -200,7 +200,7 @@ export default function Requirements() {
 
   async function setTableData() {
     try {
-      const data = responseData.data.map((e: any) =>
+      const data: Requirement[] = responseData.data.map((e: any) =>
         transformDataToRequirement(
           e,
           RequirementType.GOOD,

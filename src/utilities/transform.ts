@@ -345,6 +345,7 @@ export function transformToSubUserProfile(data: any) {
 
 export function transformToCertificateFile(data: any) {
   const doc: CertificateFile = {
+    uid: data.uid,
     name: data.name,
     documentName: data.documentName,
     url: data.url,
@@ -360,6 +361,11 @@ export function transformToCertificationItem(data: any) {
     companyDocument: data.companyDocument,
     creationDate: data.creationDate,
     state: data.state,
+    certificates: [],
   };
+  if (data.certificates)
+    cert.certificates = data.certificates.map((it: any) =>
+      transformToCertificateFile(it)
+    );
   return cert;
 }

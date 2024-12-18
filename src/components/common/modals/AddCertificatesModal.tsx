@@ -56,6 +56,7 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
     return () => {
       showLoadingMessage(message, false);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -64,7 +65,7 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
   }, [loadingUpload]);
 
   useEffect(() => {
-    if (apiParamsUpload.service) fetchDataUpload();
+    if (apiParamsUpload.service) fetchDataUpload(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParamsUpload]);
 

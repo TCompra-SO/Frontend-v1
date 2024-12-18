@@ -6,74 +6,30 @@ import {
   ModalContent,
   TableTypeCertificatesReceived,
   TableTypeCertificatesSent,
+  useApiParams,
 } from "../models/Interfaces";
-import {
-  Action,
-  CertificationState,
-  ModalTypes,
-  TableTypes,
-} from "../utilities/types";
+import { Action, ModalTypes, TableTypes } from "../utilities/types";
 import { useTranslation } from "react-i18next";
-import { CertificateFile, CertificationItem } from "../models/MainInterfaces";
+import { CertificationItem } from "../models/MainInterfaces";
 import { getLastSegmentFromRoute } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
 import { pageSubRoutes } from "../utilities/routes";
 import { App } from "antd";
-
-const cert: CertificateFile[] = [
-  {
-    name: "sadasd dhjahdjh sjh djhasjkdhka dhjahdjh sjh djhasjkdhka dhjahdjh sjh djhasjkdhka dhjahdjh sjh djhasjkdhka dhjahdjh sjh djhasjkdhka ",
-    documentName:
-      "ffdfds-ffdfds-ffdfds-ffdfds-ffdfds-ffdfds-ffdfds-ffdfds.jpeg",
-    url: "https://imgv3.fotor.com/images/cover-photo-image/AI-illustration-of-a-dragon-by-Fotor-AI-text-to-image-generator.jpg",
-    state: CertificationState.CERTIFIED,
-  },
-  {
-    name: "ddddddddd ssssssssssssss sss ssssssssss",
-    documentName: "dummy.pdf",
-    url: "https://www.rd.usda.gov/sites/default/files/pdf-sample_0.pdf",
-    state: CertificationState.REJECTED,
-  },
-  {
-    name: "ddddddddd ssssssssssssss sss ssssssssss",
-    documentName: "dummy.pdf",
-    url: "https://www.rd.usda.gov/sites/default/files/pdf-sample_0.pdf",
-    state: CertificationState.PENDING,
-  },
-];
-
-const cert2: CertificationItem[] = [
-  {
-    uid: "1",
-    companyId: "1111111",
-    companyName: "Empresa name sac hfdskhfjshf kjhsfjkshkfs",
-    companyDocument: "11111111-1",
-    creationDate: "2024-09-12T20:36:45.673Z",
-    state: CertificationState.CERTIFIED,
-    note: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
-  },
-  {
-    uid: "2",
-    companyId: "2222222",
-    companyName: "Empresa name sac hfdskhfjshf kjhsfjkshkfs",
-    companyDocument: "11111111-2",
-    creationDate: "2024-09-12T20:36:45.673Z",
-    state: CertificationState.PENDING,
-  },
-  {
-    uid: "3",
-    companyId: "33333333",
-    companyName: "Empresa name sac hfdskhfjshf kjhsfjkshkfs",
-    companyDocument: "11111111-3",
-    creationDate: "2024-09-12T20:36:45.673Z",
-    state: CertificationState.REJECTED,
-  },
-];
+import useApi from "../hooks/useApi";
+import showNotification from "../utilities/notification/showNotification";
+import {
+  getReceivedRequestsByEntityService,
+  getSentRequestsByEntityService,
+} from "../services/requests/certificateService";
+import { MainState } from "../models/Redux";
+import { useSelector } from "react-redux";
+import { transformToCertificationItem } from "../utilities/transform";
 
 export default function Certificates() {
   const location = useLocation();
-  // const { notification, message } = App.useApp();
+  const { notification } = App.useApp();
   const { t } = useTranslation();
+  const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
   const [type, setType] = useState(getLastSegmentFromRoute(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
@@ -90,31 +46,47 @@ export default function Certificates() {
     onButtonClick: handleOnButtonClick,
   });
 
-  // const [apiParams, setApiParams] = useState<useApiParams>({
-  //   service: getOffersService(),
-  //   method: "get",
-  // });
+  /** Obtener lista de solicitudes de certificación */
 
-  // const { loading, responseData, error, errorMsg, fetchData } = useApi({
-  //   service: apiParams.service,
-  //   method: apiParams.method,
-  //   dataToSend: apiParams.dataToSend,
-  // });
+  const [apiParamsCertif, setApiParamsCertif] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
 
-  // useEffect(() => {
-  //   if (apiParams.service) fetchData();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [apiParams]);
+  const {
+    loading: loadingCertif,
+    responseData: responseDataCertif,
+    error: errorCertif,
+    errorMsg: errorMsgCertif,
+    fetchData: fetchDataCertif,
+  } = useApi({
+    service: apiParamsCertif.service,
+    method: apiParamsCertif.method,
+    dataToSend: apiParamsCertif.dataToSend,
+  });
 
-  // useEffect(() => {
-  //   if (responseData) {
-  //     if (equalServices(apiParams.service, getOffersService())) setData();
-  //   } else if (error) {
-  //     if (equalServices(apiParams.service, getOffersService()))
-  //       showNotification(notification, "error", errorMsg);
-  //   }
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [responseData, error]);
+  useEffect(() => {
+    if (apiParamsCertif.service) fetchDataCertif();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsCertif]);
+
+  useEffect(() => {
+    if (responseDataCertif) {
+      setTableData();
+    } else if (errorCertif) {
+      setTableContent({
+        type: TableTypes.SENT_CERT | TableTypes.RECEIVED_CERT,
+        data: [],
+        hiddenColumns: [],
+        nameColumnHeader: t("name"),
+        onButtonClick: handleOnButtonClick,
+      });
+      showNotification(notification, "error", errorMsgCertif);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataCertif, errorCertif]);
+
+  /** Obtener tipo de tabla */
 
   useEffect(() => {
     setType(getLastSegmentFromRoute(location.pathname));
@@ -123,50 +95,56 @@ export default function Certificates() {
   useEffect(() => {
     switch (type) {
       case pageSubRoutes.sent:
-        setTableContent({
-          type: TableTypes.SENT_CERT,
-          data: cert2,
-          hiddenColumns: [],
-          nameColumnHeader: t("name"),
-          onButtonClick: handleOnButtonClick,
+        setApiParamsCertif({
+          service: getSentRequestsByEntityService(mainUserUid),
+          method: "get",
         });
         break;
       case pageSubRoutes.received:
-        setTableContent({
-          type: TableTypes.RECEIVED_CERT,
-          data: cert2,
-          hiddenColumns: [],
-          nameColumnHeader: t("name"),
-          onButtonClick: handleOnButtonClick,
+        setApiParamsCertif({
+          service: getReceivedRequestsByEntityService(mainUserUid),
+          method: "get",
         });
         break;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
-  // useEffect(() => {
-  //   if (equalServices(apiParams.service, getUserService("")))
-  //     if (loading) showLoadingMessage(message);
-  //     else destroyMessage(message);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [loading]);
+  /** Funciones */
+
+  function setTableData() {
+    try {
+      const data: CertificationItem[] = responseDataCertif.map((e: any) =>
+        transformToCertificationItem(e)
+      );
+      setTableContent({
+        type:
+          type == pageSubRoutes.received
+            ? TableTypes.RECEIVED_CERT
+            : TableTypes.SENT_CERT,
+        data,
+        hiddenColumns: [],
+        nameColumnHeader: t("name"),
+        onButtonClick: handleOnButtonClick,
+      });
+    } catch (error) {
+      console.log(error);
+      showNotification(notification, "error", t("errorOccurred"));
+    }
+  }
 
   function handleCloseModal() {
     setIsOpenModal(false);
   }
 
-  function handleOnButtonClick(
-    action: Action,
-    obj: CertificateFile | CertificationItem
-  ) {
+  function handleOnButtonClick(action: Action, certificate: CertificationItem) {
     if (type == pageSubRoutes.sent) {
-      const certificate = obj as CertificationItem;
       switch (action) {
         case Action.VIEW:
           setDataModal({
             type: ModalTypes.VIEW_DOCS_SENT_CERT,
             data: {
-              docs: cert,
+              docs: certificate.certificates,
               data: certificate,
               readonly: true,
             },
@@ -175,13 +153,12 @@ export default function Certificates() {
           break;
       }
     } else if (type == pageSubRoutes.received) {
-      const certificate = obj as CertificationItem;
       switch (action) {
         case Action.VIEW:
           setDataModal({
             type: ModalTypes.VIEW_DOCS_RECEIVED_CERT,
             data: {
-              docs: cert,
+              docs: certificate.certificates,
               data: certificate,
             },
           });
@@ -211,11 +188,7 @@ export default function Certificates() {
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
         hideSearch={true}
-        // loading={
-        //   equalServices(apiParams.service, getRequirementsService())
-        //     ? loading
-        //     : undefined
-        // }
+        loading={loadingCertif}
       />
     </>
   );

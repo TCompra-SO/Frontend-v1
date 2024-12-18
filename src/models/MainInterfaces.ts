@@ -199,6 +199,7 @@ export interface OfferItemSubUser extends BaseRequirementOffer {
 }
 
 export interface CertificateFile {
+  uid: string;
   name: string;
   documentName: string;
   url: string;
@@ -213,6 +214,7 @@ export interface CertificationItem {
   creationDate: string;
   state: CertificationState;
   note?: string;
+  certificates: CertificateFile[];
 }
 
 export interface StatisticsData {
