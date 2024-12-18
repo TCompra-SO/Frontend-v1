@@ -33,6 +33,7 @@ interface CantOfferMessageProps {
   isCertified?: CertificationState;
   loading?: boolean;
   onDeleteSuccess: () => void;
+  onSentDocsToGetCertifiedSuccess: () => void;
 }
 
 export default function CantOfferMessage(props: CantOfferMessageProps) {

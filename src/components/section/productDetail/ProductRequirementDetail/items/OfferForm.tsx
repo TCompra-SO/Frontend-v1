@@ -423,7 +423,7 @@ export default function OfferForm(props: OfferFormProps) {
     }
   }
 
-  function handleDeleteSuccess() {
+  function recheck() {
     setFormDataImg(null);
     setFormDataDoc(null);
     setReqSuccess(ProcessFlag.NOT_INI);
@@ -472,7 +472,8 @@ export default function OfferForm(props: OfferFormProps) {
               offerId={offerId}
               motive={CantOfferMotives.ALREADY_MADE_OFFER}
               requirement={props.requirement}
-              onDeleteSuccess={handleDeleteSuccess}
+              onDeleteSuccess={recheck}
+              onSentDocsToGetCertifiedSuccess={recheck}
             />
           ) : (
             <Form
@@ -544,7 +545,8 @@ export default function OfferForm(props: OfferFormProps) {
             requirement={props.requirement}
             isPremium={isPremium}
             isCertified={CertificationState.NONE} //r3v
-            onDeleteSuccess={handleDeleteSuccess}
+            onDeleteSuccess={recheck}
+            onSentDocsToGetCertifiedSuccess={recheck}
           />
         )}
       </div>
