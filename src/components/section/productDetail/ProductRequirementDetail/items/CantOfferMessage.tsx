@@ -207,7 +207,6 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
   }
 
   function deleteOffer() {
-    console.log("deleting", props.offerId);
     setDataModal({
       type: ModalTypes.CONFIRM,
       data: {

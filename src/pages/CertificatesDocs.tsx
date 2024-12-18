@@ -9,12 +9,16 @@ import { CertificateFile } from "../models/MainInterfaces";
 import { openDocument } from "../utilities/globalFunctions";
 import ButtonContainer from "../components/containers/ButtonContainer";
 import { Row } from "antd";
-import { useGetCertificatesList } from "../hooks/certificateHook";
+import {
+  useDeleteCertificate,
+  useGetCertificatesList,
+} from "../hooks/certificateHook";
 
 export default function CertificatesDocs() {
   const { t } = useTranslation();
   const { certificateList, getCertificatesList, loadingCertList } =
     useGetCertificatesList();
+  const { deleteCertificate, loadingDeleteCert } = useDeleteCertificate();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -75,8 +79,25 @@ export default function CertificatesDocs() {
         openDocument(certificate.url);
         break;
       case Action.DELETE:
-        console.log(certificate); //r3v
+        deleteDoc(certificate.uid);
+        break;
     }
+  }
+
+  function deleteDoc(uid: string) {
+    setDataModal({
+      type: ModalTypes.CONFIRM,
+      data: {
+        loading: loadingDeleteCert,
+        onAnswer: async (ok: boolean) => {
+          if (!ok) return;
+          await deleteCertificate(uid);
+          setIsOpenModal(false);
+        },
+        text: t("deleteDocumentConfirmation"),
+      },
+    });
+    setIsOpenModal(true);
   }
 
   return (

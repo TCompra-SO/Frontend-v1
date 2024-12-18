@@ -319,6 +319,8 @@ const resources = {
       cantCancelOfferSupplierFinished: "Offer cannot be canceled because the supplier has already completed their part of the process",
       offerCanceledSuccessfully: "Offer canceled successfully",
       documentsUploadedSuccessfully: "Documents uploaded successfully",
+      documentDeletedSuccessfully: "Document deleted successfully",
+      deleteDocumentConfirmation: "Are sure about deleting this document?",
       // Other
       yes: "Yes",
       no: "No",
@@ -825,6 +827,8 @@ const resources = {
       cantCancelOfferSupplierFinished: "No se puede cancelar la oferta porque el proveedor ya ha completado su parte del proceso",
       offerCanceledSuccessfully: "Oferta cancelada exitosamente",
       documentsUploadedSuccessfully: "Documentos subidos exitosamente",
+      documentDeletedSuccessfully: "Documento eliminado exitosamente",
+      deleteDocumentConfirmation: "¿Está seguro de eliminar el documento?",
       // Other
       yes: "Sí",
       no: "No",

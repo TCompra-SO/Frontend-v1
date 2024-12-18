@@ -3,18 +3,17 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useApiParams } from "../models/Interfaces";
 import useApi from "./useApi";
-import showNotification, {
-  showLoadingMessage,
-} from "../utilities/notification/showNotification";
+import showNotification from "../utilities/notification/showNotification";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { getCertificatesService } from "../services/requests/certificateService";
 import { CertificateFile } from "../models/MainInterfaces";
 import { transformToCertificateFile } from "../utilities/transform";
+import { deleteCertificateById } from "../services/complete/general";
 
 export function useGetCertificatesList() {
   const { t } = useTranslation();
-  const { notification, message } = App.useApp();
+  const { notification } = App.useApp();
   const [docList, setDocList] = useState<CertificateFile[] | null>(null);
   const mainUserId = useSelector((state: MainState) => state.mainUser.uid);
   const [apiParams, setApiParams] = useState<useApiParams>({
@@ -65,5 +64,33 @@ export function useGetCertificatesList() {
     responseDataCertList: responseData,
     errorCertList: error,
     certificateList: docList,
+  };
+}
+
+export function useDeleteCertificate() {
+  const { t } = useTranslation();
+  const { notification } = App.useApp();
+  const [loading, setLoading] = useState<boolean | undefined>(undefined);
+
+  async function deleteCertificate(certId: string) {
+    // showLoadingMessage(message, true);
+    setLoading(true);
+    const { responseData, error, errorMsg } = await deleteCertificateById(
+      certId
+    );
+    if (responseData)
+      showNotification(
+        notification,
+        "success",
+        t("documentDeletedSuccessfully")
+      );
+    else if (error) showNotification(notification, "error", errorMsg);
+    // showLoadingMessage(message, false);
+    setLoading(false);
+  }
+
+  return {
+    deleteCertificate,
+    loadingDeleteCert: loading,
   };
 }

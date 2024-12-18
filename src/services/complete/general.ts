@@ -15,7 +15,10 @@ import {
   getBaseDataUserService,
   getUserService,
 } from "../requests/authService";
-import { getCertificatesService } from "../requests/certificateService";
+import {
+  deleteCertificateService,
+  getCertificatesService,
+} from "../requests/certificateService";
 import {
   getBasicRateDataOfferService,
   getOfferByIdService,
@@ -157,6 +160,19 @@ export async function getBasicRateData(
     basicRateData: responseData
       ? transformToBasicRateData(responseData.data[0])
       : null,
+    error,
+    errorMsg,
+  };
+}
+
+export async function deleteCertificateById(id: string) {
+  const { responseData, error, errorMsg } = await makeRequest({
+    service: deleteCertificateService(id),
+    method: "get",
+  });
+
+  return {
+    responseData,
     error,
     errorMsg,
   };
