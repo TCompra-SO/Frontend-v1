@@ -5,11 +5,11 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
 import { App, Input, InputRef } from "antd";
-import { checkDoc, checkImage } from "../../../utilities/globalFunctions";
+import { checkDoc } from "../../../utilities/globalFunctions";
 import showNotification, {
   showLoadingMessage,
 } from "../../../utilities/notification/showNotification";
-import { maxDocSizeMb, maxImageSizeMb } from "../../../utilities/globals";
+import { maxDocSizeMb } from "../../../utilities/globals";
 import { useApiParams } from "../../../models/Interfaces";
 import useApi from "../../../hooks/useApi";
 import { UploadCertificateLabels } from "../../../utilities/types";
@@ -76,6 +76,7 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
         "success",
         t("documentsUploadedSuccessfully")
       );
+      if (props.onDocumentAdded) props.onDocumentAdded();
       props.onClose();
     } else if (errorUpload) {
       console.log(errorMsgUpload);
@@ -116,21 +117,23 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
   ) {
     const file = e.target.files?.[0];
     if (file) {
-      const { validImage, validSize } = checkImage(file);
+      // const { validImage, validSize } = checkImage(file);
       const { validSize: validSizeDoc, validFile } = checkDoc(file);
 
-      if (validImage) {
-        if (!validSize) {
-          showNotification(
-            notification,
-            "error",
-            t("invalidImageSize") + maxImageSizeMb + " mb"
-          );
-          return;
-        }
-      } else if (!validFile)
+      // if (validImage) {
+      //   if (!validSize) {
+      //     showNotification(
+      //       notification,
+      //       "error",
+      //       t("invalidImageSize") + maxImageSizeMb + " mb"
+      //     );
+      //     return;
+      //   }
+      // } else
+      if (!validFile) {
         showNotification(notification, "error", `${t("onlyPdfs")}`);
-      else if (!validSizeDoc) {
+        return;
+      } else if (!validSizeDoc) {
         showNotification(
           notification,
           "error",
@@ -143,11 +146,6 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
         newArray[index] = file;
         return newArray;
       });
-      // setNameList((prev) => {
-      //   const newArray = [...prev];
-      //   newArray[index] = file.name;
-      //   return newArray;
-      // });
     }
   }
 
@@ -181,7 +179,6 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
       method: "post",
       dataToSend: formData,
     });
-    if (props.onDocumentAdded) props.onDocumentAdded();
   }
 
   return (

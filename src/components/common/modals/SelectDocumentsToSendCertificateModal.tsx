@@ -16,9 +16,14 @@ import showNotification from "../../../utilities/notification/showNotification";
 import SimpleLoading from "../../../pages/utils/SimpleLoading";
 import useApi from "../../../hooks/useApi";
 import { useGetCertificatesList } from "../../../hooks/certificateHook";
+import { sendCertificationRequestService } from "../../../services/requests/certificateService";
+import { SendCertificationRequest } from "../../../models/Requests";
+import { MainState } from "../../../models/Redux";
+import { useSelector } from "react-redux";
 
 interface SelectDocumentsToSendCertificateModalProps {
   data: SelectDocsModalData;
+  onClose: () => any;
 }
 
 export default function SelectDocumentsToSendCertificateModal(
@@ -26,6 +31,7 @@ export default function SelectDocumentsToSendCertificateModal(
 ) {
   const { t } = useTranslation();
   const { notification } = App.useApp();
+  const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
   const { certificateList, getCertificatesList, loadingCertList } =
     useGetCertificatesList();
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -59,11 +65,27 @@ export default function SelectDocumentsToSendCertificateModal(
     service: null,
     method: "get",
   });
+
   const { loading, responseData, error, errorMsg, fetchData } = useApi({
     service: apiParams.service,
     method: apiParams.method,
     dataToSend: apiParams.dataToSend,
   });
+
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      showNotification(notification, "success", t("documentsSentSuccessfully"));
+      props.onClose();
+    } else if (error) {
+      showNotification(notification, "error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
 
   /* Funciones */
 
@@ -72,7 +94,7 @@ export default function SelectDocumentsToSendCertificateModal(
   }
 
   function handleOnDocumentAdded() {
-    console.log("dddddd"); // r3v
+    getCertificatesList();
   }
 
   function setCheckedDoc(value: boolean, index: number) {
@@ -84,7 +106,6 @@ export default function SelectDocumentsToSendCertificateModal(
   }
 
   function submit() {
-    console.log(checked);
     if (checked.every((element) => element === false)) {
       showNotification(
         notification,
@@ -93,6 +114,21 @@ export default function SelectDocumentsToSendCertificateModal(
       );
       return;
     }
+    const certList: string[] = docs
+      .map((obj, index) => (checked[index] ? obj.uid : null))
+      .filter((xx) => xx !== null) as string[];
+    // console.log(checked, mainUserUid, props.data.userId, result);
+
+    const data: SendCertificationRequest = {
+      userID: mainUserUid,
+      companyID: props.data.userId,
+      certificateIDs: certList,
+    };
+    setApiParams({
+      service: sendCertificationRequestService(),
+      method: "post",
+      dataToSend: data,
+    });
   }
 
   return (

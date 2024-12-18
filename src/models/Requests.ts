@@ -164,3 +164,9 @@ export interface CancelOfferRequest {
   reason?: string;
   canceledByCreator: boolean;
 }
+
+export interface SendCertificationRequest {
+  userID: string;
+  companyID: string;
+  certificateIDs: string[];
+}
