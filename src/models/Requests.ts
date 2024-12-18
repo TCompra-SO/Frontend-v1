@@ -1,4 +1,9 @@
-import { CommonFilter, RegisterTypeId, UserRoles } from "../utilities/types";
+import {
+  CertificationState,
+  CommonFilter,
+  RegisterTypeId,
+  UserRoles,
+} from "../utilities/types";
 
 export interface LoginRequest {
   email: string;
@@ -169,4 +174,10 @@ export interface SendCertificationRequest {
   userID: string;
   companyID: string;
   certificateIDs: string[];
+}
+
+export interface UpdateCertificationStateRequest {
+  certificateID: string;
+  state: CertificationState;
+  note?: string;
 }

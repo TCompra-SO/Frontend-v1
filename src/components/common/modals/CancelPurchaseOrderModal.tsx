@@ -48,17 +48,19 @@ export default function CancelPurchaseOrderModal(
   useEffect(() => {
     if (responseDataCancelOffer && props.onCancelSuccess)
       props.onCancelSuccess(props.offerId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataCancelOffer]);
 
   useEffect(() => {
     if (responseDataCancelReq && props.onCancelSuccess)
       props.onCancelSuccess(props.offerId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataCancelReq]);
 
   /** Funciones */
 
   function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    setText(e.target.value);
+    setText(e.target.value.trim());
   }
 
   function cancelPurchaseOrder() {

@@ -7,10 +7,15 @@ import {
 import TextAreaContainer from "../../containers/TextAreaContainer";
 import { Lengths } from "../../../utilities/lengths";
 import { CertificationState, ModalTypes } from "../../../utilities/types";
-import { useState } from "react";
-import { ModalContent } from "../../../models/Interfaces";
+import { useEffect, useState } from "react";
+import { ModalContent, useApiParams } from "../../../models/Interfaces";
 import ModalContainer from "../../containers/ModalContainer";
 import { mainModalScrollStyle } from "../../../utilities/globals";
+import useApi from "../../../hooks/useApi";
+import { App } from "antd";
+import showNotification from "../../../utilities/notification/showNotification";
+import { updateCertificationStateService } from "../../../services/requests/certificateService";
+import { UpdateCertificationStateRequest } from "../../../models/Requests";
 
 interface ViewDocsReceivedCertificateProps {
   data: CertificationItem;
@@ -23,14 +28,57 @@ export default function ViewDocsReceivedCertificate(
   props: ViewDocsReceivedCertificateProps
 ) {
   const { t } = useTranslation();
+  const { notification } = App.useApp();
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [certApproved, setCertApproved] = useState(false);
+  const [note, setNote] = useState("");
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
   });
 
-  function submit(approve: boolean) {
-    console.log(approve);
+  /** Para certificar o rechazar */
+
+  const [apiParamsCertif, setApiParamsCertif] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingCertif,
+    responseData: responseDataCertif,
+    error: errorCertif,
+    errorMsg: errorMsgCertif,
+    fetchData: fetchDataCertif,
+  } = useApi({
+    service: apiParamsCertif.service,
+    method: apiParamsCertif.method,
+    dataToSend: apiParamsCertif.dataToSend,
+  });
+
+  useEffect(() => {
+    if (apiParamsCertif.service) fetchDataCertif();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsCertif]);
+
+  useEffect(() => {
+    if (responseDataCertif) {
+      showNotification(
+        notification,
+        "success",
+        t(certApproved ? "certificationApproved" : "certificationRejected")
+      );
+      props.onClose();
+    } else if (errorCertif) {
+      showNotification(notification, "error", errorMsgCertif);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataCertif, errorCertif]);
+
+  /** Funciones */
+
+  function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    setNote(e.target.value.trim());
   }
 
   function resend() {
@@ -45,6 +93,30 @@ export default function ViewDocsReceivedCertificate(
       },
     });
     setIsOpenModal(true);
+  }
+
+  function submit(approve: boolean) {
+    if (!approve && !note) {
+      showNotification(
+        notification,
+        "error",
+        t("mustProvideReasonCertification")
+      );
+      return;
+    }
+    setCertApproved(approve);
+    const data: UpdateCertificationStateRequest = {
+      certificateID: props.data.uid,
+      state: approve
+        ? CertificationState.CERTIFIED
+        : CertificationState.REJECTED,
+    };
+    if (note) data.note = note;
+    setApiParamsCertif({
+      service: updateCertificationStateService(),
+      method: "post",
+      dataToSend: data,
+    });
   }
 
   return (
@@ -78,6 +150,7 @@ export default function ViewDocsReceivedCertificate(
                       autoSize
                       placeholder={`${t("notes")}...`}
                       maxLength={Lengths.certificationNotes.max}
+                      onChange={handleTextChange}
                     />
                   )}
                   {props.readOnly && <>{props.data.note}</>}
@@ -110,6 +183,7 @@ export default function ViewDocsReceivedCertificate(
             <ButtonContainer
               className="btn alert-boton btn-green"
               onClick={() => (props.readOnly ? props.onClose() : submit(true))}
+              loading={loadingCertif}
             >
               {t(props.readOnly ? "acceptButton" : "certify")}
             </ButtonContainer>
@@ -119,6 +193,7 @@ export default function ViewDocsReceivedCertificate(
               <ButtonContainer
                 className="btn alert-boton btn-green-o"
                 onClick={props.readOnly ? () => resend() : () => submit(false)}
+                loading={loadingCertif}
               >
                 {t(props.readOnly ? "resend" : "reject")}
               </ButtonContainer>

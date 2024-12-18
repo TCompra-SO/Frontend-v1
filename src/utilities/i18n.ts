@@ -322,6 +322,9 @@ const resources = {
       documentsSentSuccessfully: "Documents sent successfully",
       documentDeletedSuccessfully: "Document deleted successfully",
       deleteDocumentConfirmation: "Are sure about deleting this document?",
+      certificationApproved: "Company certified successfully",
+      certificationRejected: "Company rejected successfully",
+      mustProvideReasonCertification: "A reason is required to reject this request",
       // Other
       yes: "Yes",
       no: "No",
@@ -831,6 +834,9 @@ const resources = {
       documentsSentSuccessfully: "Documentos enviados exitosamente",
       documentDeletedSuccessfully: "Documento eliminado exitosamente",
       deleteDocumentConfirmation: "¿Está seguro de eliminar el documento?",
+      certificationApproved: "Empresa certificada exitosamente",
+      certificationRejected: "Empresa rechazada exitosamente",
+      mustProvideReasonCertification: "Debe proporcionar una razón para rechazar esta solicitud",
       // Other
       yes: "Sí",
       no: "No",
