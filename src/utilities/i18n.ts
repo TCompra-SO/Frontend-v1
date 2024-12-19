@@ -325,6 +325,7 @@ const resources = {
       certificationApproved: "Company certified successfully",
       certificationRejected: "Company rejected successfully",
       mustProvideReasonCertification: "A reason is required to reject this request",
+      noSavedRequiredDocListCertification: "There is no saved list of required documents for certification. This list can be created in the Certificates section.",
       // Other
       yes: "Yes",
       no: "No",
@@ -837,6 +838,7 @@ const resources = {
       certificationApproved: "Empresa certificada exitosamente",
       certificationRejected: "Empresa rechazada exitosamente",
       mustProvideReasonCertification: "Debe proporcionar una razón para rechazar esta solicitud",
+      noSavedRequiredDocListCertification: "No hay una lista guardada de los documentos requeridos para la certificación. Esta lista puede ser creada en la sección de Certificados.",
       // Other
       yes: "Sí",
       no: "No",

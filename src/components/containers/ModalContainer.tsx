@@ -110,6 +110,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             onAnswer={props.content.data.onAnswer}
             loading={props.content.data.loading}
             icon={props.content.data.icon}
+            showOnlyAcceptButton={props.content.data.showOnlyAcceptButton}
           />
         );
       }

@@ -7,6 +7,7 @@ import AddDocumentField from "../../common/formFields/AddDocumentField";
 import ButtonContainer from "../../containers/ButtonContainer";
 import {
   ImageRequestLabels,
+  ModalTypes,
   ProcessFlag,
   RequirementType,
   Usage,
@@ -239,7 +240,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   function getDocListCertification(val: number[]) {
     const show: boolean = val.includes(certifiedCompaniesOpt);
     setShowDocListToCetificate(show);
-    // if (show)
+    if (show && !certificatesRequired) setIsOpenModal(true);
   }
 
   function createRequirement(values: any) {
@@ -341,7 +342,14 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     <>
       <ModalContainer
         destroyOnClose
-        content={dataModal}
+        content={{
+          type: ModalTypes.CONFIRM,
+          data: {
+            onAnswer: (_: boolean) => {},
+            text: t("noSavedRequiredDocListCertification"),
+            showOnlyAcceptButton: true,
+          },
+        }}
         isOpen={isOpenModal}
         onClose={() => setIsOpenModal(false)}
         style={mainModalScrollStyle}

@@ -107,6 +107,7 @@ export interface ModalConfirmation extends CommonModalType {
     icon?: ReactNode;
     onAnswer: (ok: boolean) => void;
     loading?: boolean;
+    showOnlyAcceptButton?: boolean;
   };
 }
 
