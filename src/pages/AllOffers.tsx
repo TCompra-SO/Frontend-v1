@@ -45,7 +45,7 @@ export default function AllOffers() {
     method: "get",
   });
 
-  const { loading, responseData, error, errorMsg, fetchData } = useApi({
+  const { responseData, error, errorMsg, fetchData } = useApi({
     service: apiParams.service,
     method: apiParams.method,
     dataToSend: apiParams.dataToSend,
@@ -58,13 +58,17 @@ export default function AllOffers() {
 
   useEffect(() => {
     if (responseData) {
-      if (equalServices(apiParams.service, getOffersByEntityService("")))
-        setData();
+      setData();
     } else if (error) {
-      if (equalServices(apiParams.service, getOffersByEntityService(""))) {
-        setLoadingTable(false);
-        showNotification(notification, "error", errorMsg);
-      }
+      ({
+        type: TableTypes.ALL_OFFERS,
+        data: [],
+        hiddenColumns: [],
+        nameColumnHeader: t("offers"),
+        onButtonClick: handleOnButtonClick,
+      });
+      setLoadingTable(false);
+      showNotification(notification, "error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);

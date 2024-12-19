@@ -47,6 +47,14 @@ export default function CertificatesDocs() {
           data: certificateList,
         };
       });
+    } else {
+      setTableContent({
+        type: TableTypes.MY_DOCUMENTS,
+        data: [],
+        hiddenColumns: [],
+        nameColumnHeader: t("name"),
+        onButtonClick: handleOnButtonClick,
+      });
     }
   }, [certificateList]);
 

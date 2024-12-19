@@ -62,15 +62,17 @@ export default function AllRequirements() {
 
   useEffect(() => {
     if (responseData) {
-      if (equalServices(apiParams.service, getRequirementsByEntityService("")))
-        setData();
+      setData();
     } else if (error) {
-      if (
-        equalServices(apiParams.service, getRequirementsByEntityService(""))
-      ) {
-        setLoadingTable(false);
-        showNotification(notification, "error", errorMsg);
-      }
+      setTableContent({
+        type: TableTypes.ALL_REQUIREMENTS,
+        data: [],
+        hiddenColumns: [],
+        nameColumnHeader: t(getLabelFromRequirementType(type)),
+        onButtonClick: handleOnButtonClick,
+      });
+      setLoadingTable(false);
+      showNotification(notification, "error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);

@@ -48,7 +48,7 @@ export default function Offers() {
   });
   const [tableContent, setTableContent] = useState<TableTypeOffer>({
     type: TableTypes.OFFER,
-    data: [], //offerList,
+    data: [],
     subType: type,
     hiddenColumns: [],
     nameColumnHeader: t("offers"),
@@ -105,11 +105,17 @@ export default function Offers() {
 
   useEffect(() => {
     if (responseData) {
-      if (equalServices(apiParams.service, getOffersBySubUserService("")))
-        setData();
+      setData();
     } else if (error) {
-      if (equalServices(apiParams.service, getOffersBySubUserService("")))
-        showNotification(notification, "error", errorMsg);
+      setTableContent({
+        type: TableTypes.OFFER,
+        data: [],
+        subType: type,
+        hiddenColumns: [],
+        nameColumnHeader: t("offers"),
+        onButtonClick: handleOnButtonClick,
+      });
+      showNotification(notification, "error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);

@@ -86,6 +86,13 @@ export default function Users() {
     if (responseData) {
       setTableData();
     } else if (error) {
+      setTableContent({
+        type: TableTypes.USERS,
+        data: [],
+        hiddenColumns: [],
+        nameColumnHeader: t("user"),
+        onButtonClick: handleOnActionClick,
+      });
       showNotification(notification, "error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -321,6 +328,7 @@ export default function Users() {
       handleOpenModal();
     } catch (error) {
       console.log(error);
+      setReqList([]);
       showNotification(notification, "error", t("errorOccurred"));
     }
   }
@@ -334,6 +342,7 @@ export default function Users() {
       handleOpenModal();
     } catch (error) {
       console.log(error);
+      setOfferList([]);
       showNotification(notification, "error", t("errorOccurred"));
     }
   }
@@ -348,6 +357,7 @@ export default function Users() {
       handleOpenModal();
     } catch (error) {
       console.log(error);
+      setOrderList([]);
       showNotification(notification, "error", t("errorOccurred"));
     }
   }

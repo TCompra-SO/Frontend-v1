@@ -116,6 +116,14 @@ export default function AllPurchaseOrders() {
     if (responseData) {
       setTableData();
     } else if (error) {
+      setTableContent({
+        type: TableTypes.ALL_PURCHASE_ORDERS,
+        data: [],
+        subType: type,
+        hiddenColumns: [],
+        nameColumnHeader: t("user"),
+        onButtonClick: handleOnButtonClick,
+      });
       showNotification(notification, "error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

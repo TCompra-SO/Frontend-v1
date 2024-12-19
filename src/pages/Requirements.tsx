@@ -140,11 +140,17 @@ export default function Requirements() {
 
   useEffect(() => {
     if (responseData) {
-      if (equalServices(apiParams.service, getRequirementsBySubUserService("")))
-        setTableData();
+      setTableData();
     } else if (error) {
-      if (equalServices(apiParams.service, getRequirementsBySubUserService("")))
-        showNotification(notification, "error", errorMsg);
+      setTableContent({
+        type: TableTypes.REQUIREMENT,
+        data: [],
+        subType: type,
+        hiddenColumns: [TableColumns.CATEGORY],
+        nameColumnHeader: t(getLabelFromRequirementType(type)),
+        onButtonClick: handleOnButtonClick,
+      });
+      showNotification(notification, "error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
