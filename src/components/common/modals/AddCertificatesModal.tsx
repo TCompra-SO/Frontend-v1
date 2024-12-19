@@ -5,9 +5,15 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
 import { App, Input, InputRef } from "antd";
-import { checkDoc, checkImage } from "../../../utilities/globalFunctions";
-import showNotification from "../../../utilities/notification/showNotification";
-import { maxDocSizeMb, maxImageSizeMb } from "../../../utilities/globals";
+import { checkDoc } from "../../../utilities/globalFunctions";
+import showNotification, {
+  showLoadingMessage,
+} from "../../../utilities/notification/showNotification";
+import { maxDocSizeMb } from "../../../utilities/globals";
+import { useApiParams } from "../../../models/Interfaces";
+import useApi from "../../../hooks/useApi";
+import { UploadCertificateLabels } from "../../../utilities/types";
+import { uploadCertificateService } from "../../../services/requests/certificateService";
 
 interface AddCertificatesModalProps {
   onDocumentAdded?: () => void;
@@ -15,7 +21,7 @@ interface AddCertificatesModalProps {
 }
 
 export default function AddCertificatesModal(props: AddCertificatesModalProps) {
-  const { notification } = App.useApp();
+  const { notification, message } = App.useApp();
   const [docList, setDocList] = useState<(File | null)[]>([null]);
   const [nameList, setNameList] = useState<string[]>([""]);
   const uid = useSelector((state: MainState) => state.mainUser.uid);
@@ -26,6 +32,60 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
   useEffect(() => {
     fileInputRefs.current = fileInputRefs.current.slice(0, docList.length);
   }, [docList.length]);
+
+  /** Subir archivos */
+
+  const [apiParamsUpload, setApiParamsUpload] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingUpload,
+    responseData: responseDataUpload,
+    error: errorUpload,
+    errorMsg: errorMsgUpload,
+    fetchData: fetchDataUpload,
+  } = useApi({
+    service: apiParamsUpload.service,
+    method: apiParamsUpload.method,
+    dataToSend: apiParamsUpload.dataToSend,
+  });
+
+  useEffect(() => {
+    return () => {
+      showLoadingMessage(message, false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    showLoadingMessage(message, loadingUpload);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingUpload]);
+
+  useEffect(() => {
+    if (apiParamsUpload.service) fetchDataUpload(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsUpload]);
+
+  useEffect(() => {
+    if (responseDataUpload) {
+      showNotification(
+        notification,
+        "success",
+        t("documentsUploadedSuccessfully")
+      );
+      if (props.onDocumentAdded) props.onDocumentAdded();
+      props.onClose();
+    } else if (errorUpload) {
+      console.log(errorMsgUpload);
+      showNotification(notification, "error", errorMsgUpload);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataUpload, errorUpload]);
+
+  /** Funciones */
 
   function deleteBlock(index: number) {
     setDocList((array) => {
@@ -45,7 +105,7 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
     setNameList((array) => [...array, ""]);
   }
 
-  function handleClick(e: React.MouseEvent<HTMLElement>, index: number) {
+  function handleClick(_: React.MouseEvent<HTMLElement>, index: number) {
     if (fileInputRefs.current[index]) {
       fileInputRefs.current[index]?.input!.click();
     }
@@ -57,21 +117,23 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
   ) {
     const file = e.target.files?.[0];
     if (file) {
-      const { validImage, validSize } = checkImage(file);
+      // const { validImage, validSize } = checkImage(file);
       const { validSize: validSizeDoc, validFile } = checkDoc(file);
 
-      if (validImage) {
-        if (!validSize) {
-          showNotification(
-            notification,
-            "error",
-            t("invalidImageSize") + maxImageSizeMb + " mb"
-          );
-          return;
-        }
-      } else if (!validFile)
+      // if (validImage) {
+      //   if (!validSize) {
+      //     showNotification(
+      //       notification,
+      //       "error",
+      //       t("invalidImageSize") + maxImageSizeMb + " mb"
+      //     );
+      //     return;
+      //   }
+      // } else
+      if (!validFile) {
         showNotification(notification, "error", `${t("onlyPdfs")}`);
-      else if (!validSizeDoc) {
+        return;
+      } else if (!validSizeDoc) {
         showNotification(
           notification,
           "error",
@@ -84,11 +146,6 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
         newArray[index] = file;
         return newArray;
       });
-      // setNameList((prev) => {
-      //   const newArray = [...prev];
-      //   newArray[index] = file.name;
-      //   return newArray;
-      // });
     }
   }
 
@@ -100,7 +157,7 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
 
   function sendDocuments() {
     for (let i = 0; i < docList.length; i++) {
-      if (!docList[i] || !nameList[i]) {
+      if (!docList[i] || !nameList[i].trim()) {
         showNotification(
           notification,
           "error",
@@ -109,9 +166,19 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
         return;
       }
     }
-    console.log(uid);
-    if (props.onDocumentAdded) props.onDocumentAdded();
-    props.onClose();
+    const formData: FormData = new FormData();
+    formData.append(UploadCertificateLabels.companyId, uid);
+    docList.forEach((file: File | null, i) => {
+      if (file) {
+        formData.append(UploadCertificateLabels.documenst, file);
+        formData.append(UploadCertificateLabels.name, nameList[i].trim());
+      }
+    });
+    setApiParamsUpload({
+      service: uploadCertificateService(),
+      method: "post",
+      dataToSend: formData,
+    });
   }
 
   return (
@@ -198,7 +265,11 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
         ))}
 
         <div className="text-right">
-          <ButtonContainer className="btn btn-green" onClick={sendDocuments}>
+          <ButtonContainer
+            className="btn btn-green"
+            onClick={sendDocuments}
+            loading={loadingUpload}
+          >
             {t("uploadDocuments")}
           </ButtonContainer>
         </div>

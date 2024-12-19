@@ -1,4 +1,4 @@
-import { Offer } from "../../../../models/MainInterfaces";
+import { BasicRateData, Offer } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
 import FrontImage from "../../../common/FrontImage";
 import RequirementInfoNoTags from "../../requirements/requirementDetail/RequirementInfoNoTags";
@@ -14,6 +14,7 @@ import { CardByStateOffer } from "../../../../utilities/colors";
 
 interface OfferDetailModalProps {
   offer: Offer;
+  basicRateData: BasicRateData;
 }
 
 export default function OfferDetailModal(props: OfferDetailModalProps) {
@@ -86,17 +87,16 @@ export default function OfferDetailModal(props: OfferDetailModalProps) {
             <div className="t-flex" style={{ alignItems: "center" }}>
               <OfferDetailRequirementData
                 requirementTitle={props.offer.requirementTitle}
-                user={props.offer.user}
-                subUser={props.offer.subUser}
                 type={props.offer.type}
                 isOffer={false}
+                basicRateData={props.basicRateData}
               />
               <div className="multimedia-oferta">
                 <ImagesAndDocs
                   image={props.offer.image}
                   document={props.offer.document}
                   showChat
-                  goToChat={() => console.log("go to chat")}
+                  goToChat={() => console.log("go to chat")} // r3v
                 />
               </div>
             </div>

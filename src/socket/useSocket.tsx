@@ -4,8 +4,8 @@ import {
   transformDataToRequirement,
   transformToBaseUser,
 } from "../utilities/transform";
-import { EntityType, RequirementType } from "../utilities/types";
-import { BaseUser, Requirement } from "../models/MainInterfaces";
+import { RequirementType } from "../utilities/types";
+import { Requirement } from "../models/MainInterfaces";
 import makeRequest from "../utilities/globalFunctions";
 import { getRequirementsService } from "../services/requests/requirementService";
 import { getBaseDataUserService } from "../services/requests/authService";
@@ -18,37 +18,12 @@ export default function useSocket() {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-      const { responseData }: any = await makeRequest({
-        service: getRequirementsService(),
-        method: "get",
-      });
-      // console.log(responseData);
-      if (responseData) {
-        const data = await Promise.all(
-          responseData.data.map(async (e: any) => {
-            const { responseData: respData }: any = await makeRequest({
-              service: getBaseDataUserService(e.subUser),
-              method: "get",
-            });
-            const { user, subUser } = transformToBaseUser(respData.data[0]);
-            return transformDataToRequirement(
-              e,
-              RequirementType.GOOD,
-              e.user == e.subUser ? user : subUser,
-              user
-            );
-          })
-        );
-        setRequirements(data);
-      }
-      setLoading(false);
-
-      socketAPI.on("getRequeriments", async () => {
-        setLoading(true);
+      try {
         const { responseData }: any = await makeRequest({
           service: getRequirementsService(),
           method: "get",
         });
+        // console.log(responseData);
         if (responseData) {
           const data = await Promise.all(
             responseData.data.map(async (e: any) => {
@@ -66,6 +41,40 @@ export default function useSocket() {
             })
           );
           setRequirements(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      setLoading(false);
+
+      socketAPI.on("getRequeriments", async () => {
+        setLoading(true);
+        try {
+          const { responseData }: any = await makeRequest({
+            service: getRequirementsService(),
+            method: "get",
+          });
+          if (responseData) {
+            const data = await Promise.all(
+              responseData.data.map(async (e: any) => {
+                const { responseData: respData }: any = await makeRequest({
+                  service: getBaseDataUserService(e.subUser),
+                  method: "get",
+                });
+                const { user, subUser } = transformToBaseUser(respData.data[0]);
+                return transformDataToRequirement(
+                  e,
+                  RequirementType.GOOD,
+                  e.user == e.subUser ? user : subUser,
+                  user
+                );
+              })
+            );
+            setRequirements(data);
+          }
+        } catch (error) {
+          console.log(error);
+          setRequirements([]);
         }
         setLoading(false);
       });

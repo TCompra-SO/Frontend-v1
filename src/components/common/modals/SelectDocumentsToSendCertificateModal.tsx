@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { ModalTypes } from "../../../utilities/types";
 import { CertificateFile } from "../../../models/MainInterfaces";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TextAreaContainer from "../../containers/TextAreaContainer";
 import {
   ModalContent,
@@ -15,28 +15,15 @@ import { mainModalScrollStyle } from "../../../utilities/globals";
 import showNotification from "../../../utilities/notification/showNotification";
 import SimpleLoading from "../../../pages/utils/SimpleLoading";
 import useApi from "../../../hooks/useApi";
-
-const cert: CertificateFile[] = [
-  {
-    name: "sadasd dhjahdjh sjh djhasjkdhka dhjahdjh sjh djhasjkdhka dhjahdjh sjh djhasjkdhka dhjahdjh sjh djhasjkdhka dhjahdjh sjh djhasjkdhka ",
-    documentName:
-      "ffdfds-ffdfds-ffdfds-ffdfds-ffdfds-ffdfds-ffdfds-ffdfds.jpeg",
-    url: "https://imgv3.fotor.com/images/cover-photo-image/AI-illustration-of-a-dragon-by-Fotor-AI-text-to-image-generator.jpg",
-  },
-  {
-    name: "ddddddddd ssssssssssssss sss ssssssssss",
-    documentName: "dummy.pdf",
-    url: "https://www.rd.usda.gov/sites/default/files/pdf-sample_0.pdf",
-  },
-  {
-    name: "ddddddddd ssssssssssssss sss ssssssssss",
-    documentName: "dummy.pdf",
-    url: "https://www.rd.usda.gov/sites/default/files/pdf-sample_0.pdf",
-  },
-];
+import { useGetCertificatesList } from "../../../hooks/certificateHook";
+import { sendCertificationRequestService } from "../../../services/requests/certificateService";
+import { SendCertificationRequest } from "../../../models/Requests";
+import { MainState } from "../../../models/Redux";
+import { useSelector } from "react-redux";
 
 interface SelectDocumentsToSendCertificateModalProps {
   data: SelectDocsModalData;
+  onClose: () => any;
 }
 
 export default function SelectDocumentsToSendCertificateModal(
@@ -44,8 +31,11 @@ export default function SelectDocumentsToSendCertificateModal(
 ) {
   const { t } = useTranslation();
   const { notification } = App.useApp();
+  const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
+  const { certificateList, getCertificatesList, loadingCertList } =
+    useGetCertificatesList();
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [docs, setDocs] = useState<CertificateFile[]>(cert);
+  const [docs, setDocs] = useState<CertificateFile[]>([]);
   const [dataModal] = useState<ModalContent>({
     type: ModalTypes.ADD_CERTIFICATES,
     data: {
@@ -56,35 +46,46 @@ export default function SelectDocumentsToSendCertificateModal(
     Array(docs.length).fill(false)
   );
 
+  /** Obtener lista de documentos */
+
+  useEffect(() => {
+    getCertificatesList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (certificateList) {
+      setDocs(certificateList);
+    }
+  }, [certificateList]);
+
   /** Para enviar documentos */
 
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: null,
     method: "get",
   });
+
   const { loading, responseData, error, errorMsg, fetchData } = useApi({
     service: apiParams.service,
     method: apiParams.method,
     dataToSend: apiParams.dataToSend,
   });
 
-  /** Para obtener lista de documentos */
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
 
-  const [apiParamsDocs, setApiParamsDocs] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-  const {
-    loading: loadingDocs,
-    responseData: responseDataDocs,
-    error: errorDocs,
-    errorMsg: errorMsgDocs,
-    fetchData: fetchDataDocs,
-  } = useApi({
-    service: apiParamsDocs.service,
-    method: apiParamsDocs.method,
-    dataToSend: apiParamsDocs.dataToSend,
-  });
+  useEffect(() => {
+    if (responseData) {
+      showNotification(notification, "success", t("documentsSentSuccessfully"));
+      props.onClose();
+    } else if (error) {
+      showNotification(notification, "error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
 
   /* Funciones */
 
@@ -93,7 +94,7 @@ export default function SelectDocumentsToSendCertificateModal(
   }
 
   function handleOnDocumentAdded() {
-    console.log("dddddd");
+    getCertificatesList();
   }
 
   function setCheckedDoc(value: boolean, index: number) {
@@ -105,7 +106,6 @@ export default function SelectDocumentsToSendCertificateModal(
   }
 
   function submit() {
-    console.log(checked);
     if (checked.every((element) => element === false)) {
       showNotification(
         notification,
@@ -114,6 +114,21 @@ export default function SelectDocumentsToSendCertificateModal(
       );
       return;
     }
+    const certList: string[] = docs
+      .map((obj, index) => (checked[index] ? obj.uid : null))
+      .filter((xx) => xx !== null) as string[];
+    // console.log(checked, mainUserUid, props.data.userId, result);
+
+    const data: SendCertificationRequest = {
+      userID: mainUserUid,
+      companyID: props.data.userId,
+      certificateIDs: certList,
+    };
+    setApiParams({
+      service: sendCertificationRequestService(),
+      method: "post",
+      dataToSend: data,
+    });
   }
 
   return (
@@ -151,8 +166,8 @@ export default function SelectDocumentsToSendCertificateModal(
             </div>
           </div>
 
-          {loadingDocs && <SimpleLoading />}
-          {!loadingDocs &&
+          {loadingCertList && <SimpleLoading style={{ width: "15vw" }} />}
+          {!loadingCertList &&
             docs.map((obj, index) => (
               <div key={index} className="card-ofertas certificado-bloque">
                 <div className="t-flex oferta-titulo gap-10">

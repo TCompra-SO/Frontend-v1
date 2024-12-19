@@ -18,9 +18,19 @@ import {
   RequirementStateMeta,
 } from "../../../../utilities/colors";
 import { useTranslation } from "react-i18next";
-import { TableTypes } from "../../../../utilities/types";
+import {
+  CertificationState,
+  OrderConfirmation,
+  PurchaseOrderState,
+  PurchaseOrderTableTypes,
+  TableTypes,
+} from "../../../../utilities/types";
 
-export default function StateColumn(type: TableTypes, hidden: boolean = false) {
+export default function StateColumn(
+  type: TableTypes,
+  hidden: boolean = false,
+  extraParam?: any
+) {
   const { t } = useTranslation();
 
   const col: ColumnType<
@@ -42,6 +52,31 @@ export default function StateColumn(type: TableTypes, hidden: boolean = false) {
     showSorterTooltip: false,
     width: "113px",
     hidden,
+    filters:
+      type == TableTypes.SENT_CERT || type == TableTypes.RECEIVED_CERT
+        ? [
+            {
+              text: t(
+                CertificationStateMeta[CertificationState.CERTIFIED].label
+              ),
+              value: CertificationState.CERTIFIED,
+            },
+            {
+              text: t(CertificationStateMeta[CertificationState.PENDING].label),
+              value: CertificationState.PENDING,
+            },
+            {
+              text: t(
+                CertificationStateMeta[CertificationState.REJECTED].label
+              ),
+              value: CertificationState.REJECTED,
+            },
+          ]
+        : undefined,
+    onFilter:
+      type == TableTypes.SENT_CERT || type == TableTypes.RECEIVED_CERT
+        ? (value, record) => record.state == value
+        : undefined,
     render: (_, record) => {
       let label: string = "";
       let className: string = "";
@@ -70,7 +105,17 @@ export default function StateColumn(type: TableTypes, hidden: boolean = false) {
           type == TableTypes.SALES_ORDER ||
           type == TableTypes.ALL_SALES_ORDERS
         ) {
-          const state = (record as BasicPurchaseOrder).state;
+          const bpo = record as BasicPurchaseOrder;
+          let state = bpo.state;
+          if (
+            (extraParam == PurchaseOrderTableTypes.ISSUED &&
+              state == PurchaseOrderState.PENDING &&
+              bpo.clientConfirmation != OrderConfirmation.NONE) ||
+            (extraParam == PurchaseOrderTableTypes.RECEIVED &&
+              state == PurchaseOrderState.PENDING &&
+              bpo.providerConfirmation != OrderConfirmation.NONE)
+          )
+            state = PurchaseOrderState.FINISHED;
           label = t(PurchaseOrderStateMeta[state]?.label);
           className = `cont-estado ${PurchaseOrderStateMeta[state]?.class}`;
         } else if (

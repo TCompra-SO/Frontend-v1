@@ -18,7 +18,10 @@ import AddDocumentField from "../../../../common/formFields/AddDocumentField";
 import { CreateOfferRequest } from "../../../../../models/Requests";
 import { ReactNode, useEffect, useState } from "react";
 import showNotification from "../../../../../utilities/notification/showNotification";
-import { useApiParams } from "../../../../../models/Interfaces";
+import {
+  CanOfferResponse,
+  useApiParams,
+} from "../../../../../models/Interfaces";
 import useApi from "../../../../../hooks/useApi";
 import {
   createOfferService,
@@ -31,6 +34,7 @@ import {
   CodeResponseCanOffer,
   EntityType,
   ImageRequestLabels,
+  ModalTypes,
   ProcessFlag,
   RequirementState,
   RequirementType,
@@ -42,7 +46,8 @@ import React from "react";
 import CantOfferMessage from "./CantOfferMessage";
 import { Requirement } from "../../../../../models/MainInterfaces";
 import makeRequest from "../../../../../utilities/globalFunctions";
-import { CanOfferResponse } from "../../../../../models/Responses";
+import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
+import ModalContainer from "../../../../containers/ModalContainer";
 
 function RowContainer({ children }: { children: ReactNode }) {
   return (
@@ -63,13 +68,13 @@ export default function OfferForm(props: OfferFormProps) {
   const [form] = Form.useForm();
   const email = useSelector((state: MainState) => state.user.email);
   const uid = useSelector((state: MainState) => state.user.uid);
-  const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
   const entityType = useSelector((state: MainState) => state.user.typeEntity);
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const role = useSelector((state: MainState) => state.user.typeID);
   const { notification } = App.useApp();
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const [cantOfferMotive, setCantOfferMotive] = useState<CantOfferMotives>(
-    CantOfferMotives.NONE
+    CantOfferMotives.INI
   );
   const [checkedIGV, setCheckedIGV] = useState(false);
   const [checkedDelivery, setCheckedDelivery] = useState(false);
@@ -83,6 +88,10 @@ export default function OfferForm(props: OfferFormProps) {
   const [isPremium] = useState(true); // r3v
 
   useEffect(() => {
+    if (cantOfferMotive != CantOfferMotives.INI) setLoadingForm(false);
+  }, [cantOfferMotive]);
+
+  useEffect(() => {
     form.setFieldValue("currency", props.requirement?.coin);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.requirement]);
@@ -90,8 +99,7 @@ export default function OfferForm(props: OfferFormProps) {
   /** Verificar si el usuario puede ofertar */
 
   useEffect(() => {
-    checkIfUserCanOffer();
-
+    if (props.requirement) checkIfUserCanOffer();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, props.requirement]);
 
@@ -145,7 +153,23 @@ export default function OfferForm(props: OfferFormProps) {
     token: apiParamsImg.token,
   });
 
+  useEffect(() => {
+    if (apiParamsImg.service) fetchDataImg(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsImg]);
+
+  useEffect(() => {
+    if (responseDataImg) {
+      setImgSuccess(ProcessFlag.FIN_SUCCESS);
+    } else if (errorImg) {
+      setImgSuccess(ProcessFlag.FIN_UNSUCCESS);
+      showNotification(notification, "error", errorMsgImg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataImg, errorImg]);
+
   /* Para documentos */
+
   const [apiParamsDoc, setApiParamsDoc] = useState<useApiParams<FormData>>({
     service: null,
     method: "get",
@@ -164,14 +188,9 @@ export default function OfferForm(props: OfferFormProps) {
   });
 
   useEffect(() => {
-    if (responseDataImg) {
-      setImgSuccess(ProcessFlag.FIN_SUCCESS);
-    } else if (errorImg) {
-      setImgSuccess(ProcessFlag.FIN_UNSUCCESS);
-      showNotification(notification, "error", errorMsgImg);
-    }
+    if (apiParamsDoc.service) fetchDataDoc(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataImg, errorImg]);
+  }, [apiParamsDoc]);
 
   useEffect(() => {
     if (responseDataDoc) {
@@ -206,6 +225,8 @@ export default function OfferForm(props: OfferFormProps) {
           t("offerCreatedSuccessfullyNoDocOrImages")
         );
       }
+      form.resetFields();
+      form.setFieldValue("currency", props.requirement?.coin);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reqSuccess, imgSuccess, docSuccess]);
@@ -213,29 +234,21 @@ export default function OfferForm(props: OfferFormProps) {
   /** Funciones */
 
   async function checkIfUserCanOffer() {
-    // setLoadingForm(true);
+    setCantOfferMotive(CantOfferMotives.INI);
+    setLoadingForm(true);
+
     if (!isLoggedIn) {
       setCantOfferMotive(CantOfferMotives.NOT_LOGGED_IN);
+
+      return;
     } else if (
       props.requirement &&
       ((!props.requirement.subUser && props.requirement.user.uid == uid) || // requerimiento no fue creado por subusuario
         (props.requirement.subUser && props.requirement.subUser.uid == uid)) // requerimiento fue creado por subusuario
     ) {
       setCantOfferMotive(CantOfferMotives.IS_CREATOR);
-      // } else if (
-      //   entityType == EntityType.SUBUSER &&
-      //   props.requirement &&
-      //   !props.requirement.subUser && // requerimiento no fue creado por subusuario
-      //   props.requirement.user.uid == mainUserUid
-      // ) {
-      //   setCantOfferMotive(CantOfferMotives.MAIN_ACCOUNT_IS_CREATOR);
-      // } else if (
-      //   entityType != EntityType.SUBUSER &&
-      //   props.requirement &&
-      //   props.requirement.subUser &&
-      //   props.requirement.user.uid == uid
-      // ) {
-      //   setCantOfferMotive(CantOfferMotives.SUBUSER_IS_CREATOR);
+
+      return;
     } else if (
       role == UserRoles.LEGAL ||
       role == UserRoles.NONE ||
@@ -245,64 +258,74 @@ export default function OfferForm(props: OfferFormProps) {
         props.requirement?.type == RequirementType.SALE) // r3v
     ) {
       setCantOfferMotive(CantOfferMotives.NO_ALLOWED_ROLE);
+
+      return;
     } else if (
       props.requirement &&
       props.requirement.state != RequirementState.PUBLISHED
     ) {
       setCantOfferMotive(CantOfferMotives.CHANGED_STATE);
+
+      return;
     } else if (
       props.requirement &&
       props.requirement.allowedBidder == CanOfferType.PREMIUM &&
       !isPremium
     ) {
       setCantOfferMotive(CantOfferMotives.ONLY_PREMIUM);
+
+      return;
     } else {
       if (props.requirement) {
         const { responseData }: any = await makeRequest({
           service: getValidationOfferService(uid, props.requirement.key),
           method: "get",
         });
+
         if (responseData) {
           const car: CanOfferResponse = responseData.data;
           setOfferId(car.offerID ?? "");
           switch (car.codeResponse) {
             case CodeResponseCanOffer.ALREADY_MADE_OFFER:
               setCantOfferMotive(CantOfferMotives.ALREADY_MADE_OFFER);
-              break;
+              return;
             case CodeResponseCanOffer.MAIN_ACCOUNT_MADE_OFFER:
               setCantOfferMotive(CantOfferMotives.MAIN_ACCOUNT_MADE_OFFER);
-              break;
+              return;
             case CodeResponseCanOffer.OTHER_USER_IN_COMPANY_MADE_OFFER:
               setCantOfferMotive(
                 entityType == EntityType.SUBUSER
                   ? CantOfferMotives.OTHER_USER_IN_COMPANY_MADE_OFFER
                   : CantOfferMotives.SUBUSER_MADE_OFFER
               );
-              break;
+              return;
             case CodeResponseCanOffer.OTHER_USER_IN_COMPANY_IS_CREATOR:
               setCantOfferMotive(
                 entityType == EntityType.SUBUSER
                   ? CantOfferMotives.OTHER_USER_IN_COMPANY_IS_CREATOR
                   : CantOfferMotives.SUBUSER_IS_CREATOR
               );
-              break;
+              return;
             case CodeResponseCanOffer.IS_CREATOR:
               setCantOfferMotive(CantOfferMotives.IS_CREATOR);
-              break;
+              return;
             case CodeResponseCanOffer.MAIN_ACCOUNT_IS_CREATOR:
               setCantOfferMotive(CantOfferMotives.MAIN_ACCOUNT_IS_CREATOR);
-              break;
-            case CodeResponseCanOffer.NONE:
+              return;
+            // case CodeResponseCanOffer.NONE:
             // setCantOfferMotive(CantOfferMotives.NONE);
+            // return;
           }
         }
 
-        if (props.requirement.allowedBidder == CanOfferType.CERTIFIED_COMPANY)
+        if (props.requirement.allowedBidder == CanOfferType.CERTIFIED_COMPANY) {
           setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED); //r3v verificar si el usuario está certificado con la empresa
+          return;
+        }
       }
     }
-    setCantOfferMotive(CantOfferMotives.NONE_FINISH);
-    setLoadingForm(false);
+    console.log("aaaaaaa");
+    setCantOfferMotive(CantOfferMotives.NONE);
   }
 
   function createOffer(values: any) {
@@ -341,8 +364,6 @@ export default function OfferForm(props: OfferFormProps) {
             formData.append(ImageRequestLabels.IMAGES, file.originFileObj);
           }
         });
-        formData.append(ImageRequestLabels.UID, uid);
-
         setFormDataImg(formData);
       }
 
@@ -356,7 +377,6 @@ export default function OfferForm(props: OfferFormProps) {
             );
           }
         });
-        formDataDoc.append(ImageRequestLabels.UID, uid);
         setFormDataDoc(formDataDoc);
       }
 
@@ -365,7 +385,6 @@ export default function OfferForm(props: OfferFormProps) {
   }
 
   function submit(data: CreateOfferRequest) {
-    console.log(data);
     setApiParams({
       service: createOfferService(),
       method: "post",
@@ -380,124 +399,157 @@ export default function OfferForm(props: OfferFormProps) {
       if (!formDataDoc && !formDataImg) {
         return;
       }
-      if (formDataDoc)
+      if (formDataDoc) {
+        const data: FormData = formDataDoc;
+        data.append(ImageRequestLabels.UID, offerIdResponse);
         setApiParamsDoc({
           service: uploadDocsOfferService(),
           method: "post",
-          dataToSend: formDataDoc,
+          dataToSend: data,
         });
-      if (formDataImg)
+      }
+      if (formDataImg) {
+        const data: FormData = formDataImg;
+        data.append(ImageRequestLabels.UID, offerIdResponse);
         setApiParamsImg({
           service: uploadImagesOfferService(),
           method: "post",
           dataToSend: formDataImg,
         });
+      }
     } else {
       setDocSuccess(ProcessFlag.FIN_UNSUCCESS);
       setImgSuccess(ProcessFlag.FIN_UNSUCCESS);
     }
   }
 
-  function goToChat() {
-    console.log("chat", props.requirement?.key);
-  }
-
-  function handleDeleteSuccess() {
+  function recheck() {
+    setFormDataImg(null);
+    setFormDataDoc(null);
+    setReqSuccess(ProcessFlag.NOT_INI);
+    setDocSuccess(ProcessFlag.NOT_INI);
+    setImgSuccess(ProcessFlag.NOT_INI);
+    setOfferId("");
+    setCheckedIGV(false);
+    setCheckedDelivery(false);
     checkIfUserCanOffer();
   }
 
   return (
-    <div className="card-white cbl-6">
-      <div className="t-flex mr-sub-2">
-        <i className="fa-regular fa-tags sub-icon m-0"></i>
-        <div className="sub-titulo sub-calificar">
-          <div>{t("offerFormTitle")}</div>
-        </div>
-      </div>
-      {cantOfferMotive == CantOfferMotives.NONE_FINISH ? (
-        reqSuccess != ProcessFlag.NOT_INI &&
-        docSuccess != ProcessFlag.NOT_INI &&
-        imgSuccess != ProcessFlag.NOT_INI ? (
-          <CantOfferMessage
-            offerId={offerId}
-            motive={CantOfferMotives.ALREADY_MADE_OFFER}
-            requirement={props.requirement}
-            onDeleteSuccess={handleDeleteSuccess}
-          />
-        ) : (
-          <Form
-            form={form}
-            colon={false}
-            requiredMark={false}
-            onFinish={createOffer}
-          >
-            <div className="t-flex gap-15 f-column form-oferta">
-              <RowContainer>
-                <TitleField />
-                <EmailField onlyItem edit value={email} />
-              </RowContainer>
-              <RowContainer>
-                <OfferDescriptionField />
-              </RowContainer>
-              <RowContainer>
-                <LocationField onlyItem />
-                <DeliveryTimeField onlyItem />
-                <CurrencyField onlyItem disabled />
-              </RowContainer>
-              <RowContainer>
-                <WarrantyField required={false} />
-                <DurationField required={false} name={"duration"} onlyItem />
-                <SupportField />
-                <BudgetField required greaterThanZero />
-              </RowContainer>
-              <div className="t-flex gap-15 archivos-up">
-                <AddImagesField forOffer />
-                <AddDocumentField forOffer />
-              </div>
-
-              <div className="t-flex t-wrap gap-15 up-footer">
-                <div className="t-flex gap-5 uf-1">
-                  <Checkbox onChange={(e) => setCheckedIGV(e.target.checked)}>
-                    <div className="footer-text">{t("priceIncludesIGV")}</div>
-                  </Checkbox>
-                  <Checkbox
-                    onChange={(e) => setCheckedDelivery(e.target.checked)}
-                  >
-                    <div className="footer-text">{t("includeDelivery")}</div>
-                  </Checkbox>
-                </div>
-                <div className="t-flex gap-10 uf-2">
-                  <ButtonContainer
-                    htmlType="submit"
-                    className="btn btn-default"
-                    icon={<i className="fa-regular fa-tag"></i>}
-                    loading={loading || loadingDoc || loadingImg}
-                  >
-                    {`${t("offerButton")}`}
-                  </ButtonContainer>
-                  <ButtonContainer
-                    className="btn btn-green"
-                    icon={<i className="fa-regular fa-comment"></i>}
-                    onClick={goToChat}
-                  >
-                    {`${t("sendMessage")}`}
-                  </ButtonContainer>
-                </div>
-              </div>
-            </div>
-          </Form>
-        )
-      ) : (
-        <CantOfferMessage
-          offerId={offerId}
-          motive={cantOfferMotive}
-          requirement={props.requirement}
-          isPremium={isPremium}
-          isCertified={CertificationState.NONE} //r3v
-          loading={loadingForm}
-          onDeleteSuccess={handleDeleteSuccess}
+    <>
+      {props.requirement && (
+        <ModalContainer
+          className=""
+          content={{
+            type: ModalTypes.SEND_MESSAGE,
+            data: {
+              requirementId: props.requirement.key,
+              userId:
+                props.requirement.subUser?.uid ?? props.requirement?.user.uid,
+            },
+          }}
+          isOpen={isOpenModal}
+          onClose={() => setIsOpenModal(false)}
         />
       )}
-    </div>
+
+      <div className="card-white cbl-6">
+        <div className="t-flex mr-sub-2">
+          <i className="fa-regular fa-tags sub-icon m-0"></i>
+          <div className="sub-titulo sub-calificar">
+            <div>{t("offerFormTitle")}</div>
+          </div>
+        </div>
+        {loadingForm || !props.requirement ? (
+          <div className="t-flex f-column j-conten j-items oferta-check gap-10">
+            <SimpleLoading style={{ width: "15vw" }} />
+          </div>
+        ) : cantOfferMotive == CantOfferMotives.NONE ? (
+          reqSuccess != ProcessFlag.NOT_INI &&
+          docSuccess != ProcessFlag.NOT_INI &&
+          imgSuccess != ProcessFlag.NOT_INI ? (
+            <CantOfferMessage
+              offerId={offerId}
+              motive={CantOfferMotives.ALREADY_MADE_OFFER}
+              requirement={props.requirement}
+              onDeleteSuccess={recheck}
+              onSentDocsToGetCertifiedSuccess={recheck}
+            />
+          ) : (
+            <Form
+              form={form}
+              colon={false}
+              requiredMark={false}
+              onFinish={createOffer}
+            >
+              <div className="t-flex gap-15 f-column form-oferta">
+                <RowContainer>
+                  <TitleField />
+                  <EmailField onlyItem edit value={email} />
+                </RowContainer>
+                <RowContainer>
+                  <OfferDescriptionField />
+                </RowContainer>
+                <RowContainer>
+                  <LocationField onlyItem />
+                  <DeliveryTimeField onlyItem />
+                  <CurrencyField onlyItem disabled />
+                </RowContainer>
+                <RowContainer>
+                  <WarrantyField required={false} />
+                  <DurationField required={false} name={"duration"} onlyItem />
+                  <SupportField />
+                  <BudgetField required greaterThanZero />
+                </RowContainer>
+                <div className="t-flex gap-15 archivos-up">
+                  <AddImagesField forOffer />
+                  <AddDocumentField forOffer />
+                </div>
+
+                <div className="t-flex t-wrap gap-15 up-footer">
+                  <div className="t-flex gap-5 uf-1">
+                    <Checkbox onChange={(e) => setCheckedIGV(e.target.checked)}>
+                      <div className="footer-text">{t("priceIncludesIGV")}</div>
+                    </Checkbox>
+                    <Checkbox
+                      onChange={(e) => setCheckedDelivery(e.target.checked)}
+                    >
+                      <div className="footer-text">{t("includeDelivery")}</div>
+                    </Checkbox>
+                  </div>
+                  <div className="t-flex gap-10 uf-2">
+                    <ButtonContainer
+                      htmlType="submit"
+                      className="btn btn-default"
+                      icon={<i className="fa-regular fa-tag"></i>}
+                      loading={loading || loadingDoc || loadingImg}
+                    >
+                      {`${t("offerButton")}`}
+                    </ButtonContainer>
+                    <ButtonContainer
+                      className="btn btn-green"
+                      icon={<i className="fa-regular fa-comment"></i>}
+                      onClick={() => setIsOpenModal(true)}
+                    >
+                      {`${t("sendMessage")}`}
+                    </ButtonContainer>
+                  </div>
+                </div>
+              </div>
+            </Form>
+          )
+        ) : (
+          <CantOfferMessage
+            offerId={offerId}
+            motive={cantOfferMotive}
+            requirement={props.requirement}
+            isPremium={isPremium}
+            isCertified={CertificationState.NONE} //r3v
+            onDeleteSuccess={recheck}
+            onSentDocsToGetCertifiedSuccess={recheck}
+          />
+        )}
+      </div>
+    </>
   );
 }

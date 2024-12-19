@@ -1,6 +1,8 @@
 import {
   BaseUser,
   BasicRateData,
+  CertificateFile,
+  CertificationItem,
   FullUser,
   Offer,
   OfferItemSubUser,
@@ -8,13 +10,15 @@ import {
   PurchaseOrderItemSubUser,
   Requirement,
   RequirementItemSubUser,
+  SubUserBase,
+  SubUserProfile,
 } from "../models/MainInterfaces";
 import { UserState } from "../models/Redux";
-import { SubUserBase } from "../models/Responses";
 import { getBaseDataUserService } from "../services/requests/authService";
 import makeRequest from "./globalFunctions";
 import {
   EntityType,
+  OrderConfirmation,
   PurchaseOrderTableTypes,
   RequirementType,
   Usage,
@@ -82,6 +86,7 @@ export function transformToFullUser(response: any) {
   user.tenure = response.age;
   user.numGoods = response.numProducts;
   user.numSales = response.numLiquidations;
+  user.image = response.avatar;
   return user;
 }
 
@@ -152,28 +157,37 @@ export function transformToOffer(
   mainUser?: UserState | BaseUser
 ) {
   const offer: Offer = data;
-  offer.key = data.uid;
   offer.title = data.name;
-  offer.location = data.cityID;
-  offer.deliveryTime = data.deliveryTimeID;
-  offer.coin = data.currencyID;
-  offer.warrantyTime = data.timeMeasurementID;
-  offer.price = data.budget;
-  offer.igv = data.includesIGV;
-  offer.requirementId = data.requerimentID;
-  offer.state = data.stateID; //OfferState.CANCELED
-  offer.canceledByCreator = false;
+  offer.subUser = undefined;
   offer.type = type;
-  offer.requirementTitle = data.requerimentTitle;
   if (mainUser) {
     offer.user = mainUser;
     offer.subUser = user;
   } else offer.user = user;
-  // if (mainUser.uid != user.uid) {
+
+  return offer;
+  // const offer: Offer = data;
+  // offer.subUser = undefined;
+  // offer.key = data.uid;
+  // offer.title = data.name;
+  // offer.location = data.cityID;
+  // offer.deliveryTime = data.deliveryTimeID;
+  // offer.coin = data.currencyID;
+  // offer.warrantyTime = data.timeMeasurementID;
+  // offer.price = data.budget;
+  // offer.igv = data.includesIGV;
+  // offer.requirementId = data.requerimentID;
+  // offer.state = data.stateID; //OfferState.CANCELED
+  // offer.canceledByCreator = data.canceledByCreator;
+  // offer.type = type;
+  // offer.requirementTitle = data.requerimentTitle;
+  // offer.image = data.images;
+  // offer.document = data.files;
+  // if (mainUser) {
   //   offer.user = mainUser;
   //   offer.subUser = user;
   // } else offer.user = user;
-  return offer;
+  // return offer;
 }
 
 export function transformToOfferFromGetOffersByEntityOrSubUser(
@@ -185,7 +199,6 @@ export function transformToOfferFromGetOffersByEntityOrSubUser(
 ) {
   const offer: Offer = data;
   offer.subUser = undefined;
-  offer.canceledByCreator = false;
   offer.type = type;
 
   if (includeAlwaysSubUser) {
@@ -260,6 +273,16 @@ export function transformToPurchaseOrder(data: any) {
     subUserNameClient: data.nameSubUserClient,
     userNameProvider: data.nameUserProvider,
     subUserNameProvider: data.nameSubUserProvider,
+    clientConfirmation: data.scoreState?.scoreClient
+      ? data.scoreState?.deliveredClient
+        ? OrderConfirmation.YES
+        : OrderConfirmation.NO
+      : OrderConfirmation.NONE,
+    providerConfirmation: data.scoreState?.scoreProvider
+      ? data.scoreState?.deliveredProvider
+        ? OrderConfirmation.YES
+        : OrderConfirmation.NO
+      : OrderConfirmation.NONE,
   };
   return purcOrder;
 }
@@ -307,4 +330,42 @@ export function transformToSubUserBase(data: any) {
     numSellingOrdersClient: data.numSellingOrdersClient,
   };
   return subUser;
+}
+
+export function transformToSubUserProfile(data: any) {
+  const subUser: SubUserProfile = {
+    ...transformToSubUserBase(data),
+    address: data.address,
+    cityID: data.cityID,
+    companyID: data.companyID,
+    phone: data.phone,
+  };
+  return subUser;
+}
+
+export function transformToCertificateFile(data: any) {
+  const doc: CertificateFile = {
+    uid: data.uid,
+    name: data.name,
+    documentName: data.documentName,
+    url: data.url,
+  };
+  return doc;
+}
+
+export function transformToCertificationItem(data: any) {
+  const cert: CertificationItem = {
+    uid: data.uid,
+    companyId: data.companyId,
+    companyName: data.companyName,
+    companyDocument: data.companyDocument,
+    creationDate: data.creationDate,
+    state: data.state,
+    certificates: [],
+  };
+  if (data.certificates)
+    cert.certificates = data.certificates.map((it: any) =>
+      transformToCertificateFile(it)
+    );
+  return cert;
 }

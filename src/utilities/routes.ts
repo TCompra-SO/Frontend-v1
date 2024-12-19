@@ -10,6 +10,7 @@ export const ApiMainRoutes = {
   offers: "offers/",
   score: "score/",
   purchaseOrder: "purchaseOrder/",
+  certificate: "certificate/",
 };
 
 export const ApiRoutes = {
@@ -20,6 +21,8 @@ export const ApiRoutes = {
     login: "login/",
     profileCompany: "profileCompany/",
     profileUser: "profileUser/",
+    updateCompany: "updateCompany/",
+    updateUser: "updateUser/",
     register: "register/",
     sendCode: "sendCode/",
     validateCode: "validate-code/",
@@ -66,6 +69,7 @@ export const ApiRoutes = {
     getRequirementsBySubUser: "getRequerimentsBySubUser/",
     getRequirementsByEntity: "getRequerimentsByEntity/",
     culminate: "culminate/",
+    cancel: "canceled/",
   },
   requirement: {
     create: "create/",
@@ -92,6 +96,7 @@ export const ApiRoutes = {
     delete: "delete/",
     culminate: "culminate/",
     getValidation: "getValidation/",
+    cancel: "canceled/",
   },
   score: {
     registerScore: "registerScore/",
@@ -103,6 +108,15 @@ export const ApiRoutes = {
     getPurchaseOrderPDF: "getpurchaseOrderPDF/",
     getPurchaseOrdersByProvider: "getPurchaseOrdersByProvider/",
     getPurchaseOrdersByClient: "getPurchaseOrdersByClient/",
+  },
+  certificate: {
+    uploadCertificate: "uploadCertificate",
+    getCertificates: "getCertificates/",
+    updateCertificationState: "updateCertifyState",
+    sendCertificationRequest: "sendCertification",
+    getReceivedRequestsByEntity: "getReceivedRequestsByEntity/",
+    getSentRequestsByEntity: "getSentRequestsByEntity/",
+    deleteCertificate: "deleteCertificate/",
   },
 };
 
@@ -124,7 +138,7 @@ export const pageRoutes = {
   statistics: "/statistics",
 };
 
-export const pageSubRoutes: Record<string, string> = {
+export const pageSubRoutes = {
   goods: "bienes",
   services: "servicios",
   sales: "liquidaciones",

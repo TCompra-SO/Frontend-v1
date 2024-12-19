@@ -8,6 +8,7 @@ import {
   TableTypes,
   CommonFilter,
   PurchaseOrderTableTypes,
+  CodeResponseCanOffer,
 } from "../utilities/types";
 import {
   OfferItemSubUser,
@@ -24,8 +25,8 @@ import {
   CertificateFile,
   CertificationItem,
   BasicRateData,
+  SubUserBase,
 } from "./MainInterfaces";
-import { SubUserBase } from "./Responses";
 
 /******** Modals *******/
 
@@ -40,6 +41,8 @@ export interface ModalCancelPurchaseOrder extends CommonModalType {
     offerId: string;
     requirementId: string;
     fromRequirementTable: boolean;
+    canceledByCreator: boolean;
+    onCancelSuccess?: (offerId: string) => void;
   };
 }
 
@@ -104,6 +107,7 @@ export interface ModalConfirmation extends CommonModalType {
     icon?: ReactNode;
     onAnswer: (ok: boolean) => void;
     loading?: boolean;
+    showOnlyAcceptButton?: boolean;
   };
 }
 
@@ -120,6 +124,7 @@ export interface ModalOfferDetail extends CommonModalType {
   type: ModalTypes.OFFER_DETAIL;
   data: {
     offer: Offer;
+    basicRateData: BasicRateData;
   };
 }
 
@@ -171,6 +176,14 @@ export interface ModalNone extends CommonModalType {
   data: Record<string, never>;
 }
 
+export interface ModalSendMessage extends CommonModalType {
+  type: ModalTypes.SEND_MESSAGE;
+  data: {
+    requirementId: string;
+    userId: string;
+  };
+}
+
 export type ModalContent =
   | ModalValidateCode
   | ModalSelectOffer
@@ -189,6 +202,7 @@ export type ModalContent =
   | ModalViewDocsReceivedCert
   | ModalViewDocsSentCert
   | ModalSelectDocsCert
+  | ModalSendMessage
   | ModalNone;
 
 export interface SelectDocsModalData {
@@ -248,11 +262,13 @@ export interface TableTypeOfferSubUser extends TableHiddenColumns {
 
 export interface TableTypePurchaseOrderSubUser extends TableHiddenColumns {
   type: TableTypes.PURCHASE_ORDER_SUBUSER;
+  subType: PurchaseOrderTableTypes;
   data: PurchaseOrderItemSubUser[];
 }
 
 export interface TableTypeSalesOrderSubUser extends TableHiddenColumns {
   type: TableTypes.SALES_ORDER_SUBUSER;
+  subType: PurchaseOrderTableTypes;
   data: PurchaseOrderItemSubUser[];
 }
 
@@ -399,4 +415,9 @@ export interface OfferFilters {
 export interface ListItem {
   key: string;
   value: string;
+}
+
+export interface CanOfferResponse {
+  codeResponse: CodeResponseCanOffer;
+  offerID?: string;
 }

@@ -1,17 +1,23 @@
 import { App } from "antd";
 import TextAreaContainer from "../../containers/TextAreaContainer";
-import { SyntheticEvent, useState } from "react";
+import { useEffect, useState } from "react";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import { Lengths } from "../../../utilities/lengths";
 import showNotification from "../../../utilities/notification/showNotification";
 import { Action, ActionLabel } from "../../../utilities/types";
+import {
+  useCancelOffer,
+  useCancelRequirement,
+} from "../../../hooks/requirementHook";
 
 interface CancelPurchaseOrderModalProps {
-  onClose: (e: SyntheticEvent<Element, Event>) => any;
+  onClose: () => any;
   offerId: string;
   requirementId: string;
   fromRequirementTable: boolean;
+  canceledByCreator: boolean;
+  onCancelSuccess?: (offerId: string) => void;
 }
 
 export default function CancelPurchaseOrderModal(
@@ -20,13 +26,44 @@ export default function CancelPurchaseOrderModal(
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const [text, setText] = useState<string>("");
+  const { cancelRequirement, loadingCancelRequirement, responseDataCancelReq } =
+    useCancelRequirement();
+  const { cancelOffer, loadingCancelOffer, responseDataCancelOffer } =
+    useCancelOffer();
 
-  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setText(e.target.value);
-  };
+  /** Cerrar modal */
 
-  function cancelPurchaseOrder(e: SyntheticEvent<Element, Event>) {
-    console.log(props.offerId, props.requirementId, text.trim());
+  useEffect(() => {
+    if (loadingCancelOffer === false) props.onClose();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingCancelOffer]);
+
+  useEffect(() => {
+    if (loadingCancelRequirement === false) props.onClose();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingCancelRequirement]);
+
+  /** Realizar acción al cancelar exitosamente */
+
+  useEffect(() => {
+    if (responseDataCancelOffer && props.onCancelSuccess)
+      props.onCancelSuccess(props.offerId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataCancelOffer]);
+
+  useEffect(() => {
+    if (responseDataCancelReq && props.onCancelSuccess)
+      props.onCancelSuccess(props.offerId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataCancelReq]);
+
+  /** Funciones */
+
+  function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    setText(e.target.value.trim());
+  }
+
+  function cancelPurchaseOrder() {
     if (!text) {
       showNotification(
         notification,
@@ -35,7 +72,9 @@ export default function CancelPurchaseOrderModal(
       );
       return;
     }
-    props.onClose(e);
+    if (props.fromRequirementTable)
+      cancelRequirement(props.requirementId, text.trim());
+    else cancelOffer(props.offerId, props.canceledByCreator, text.trim());
   }
 
   return (
@@ -58,7 +97,6 @@ export default function CancelPurchaseOrderModal(
         <div className="t-flex wd-100">
           <TextAreaContainer
             // rows={4}
-
             placeholder={t("reason")}
             maxLength={Lengths.reasonCancellation.max}
             onChange={handleTextChange}
@@ -71,6 +109,7 @@ export default function CancelPurchaseOrderModal(
             children={t("acceptButton")}
             onClick={cancelPurchaseOrder}
             className="btn btn-default alert-boton"
+            loading={loadingCancelRequirement || loadingCancelOffer}
           />
           <ButtonContainer
             children={t("cancelButton")}

@@ -97,6 +97,7 @@ export enum ModalTypes {
   VIEW_DOCS_RECEIVED_CERT = 15,
   VIEW_DOCS_SENT_CERT = 16,
   SELECT_DOCS_CERT = 17,
+  SEND_MESSAGE = 18,
 }
 
 export const ModalWidth: {
@@ -120,6 +121,7 @@ export const ModalWidth: {
   [ModalTypes.VIEW_DOCS_RECEIVED_CERT]: 800,
   [ModalTypes.VIEW_DOCS_SENT_CERT]: 800,
   [ModalTypes.SELECT_DOCS_CERT]: 800,
+  [ModalTypes.SEND_MESSAGE]: 600,
 };
 
 /***** Acciones *****/
@@ -197,10 +199,10 @@ export const ActionLabel: {
 export const ActionByStateRequirement: {
   [key in RequirementState]: Array<Action>;
 } = {
-  [RequirementState.CANCELED]: [Action.DELETE, Action.REPUBLISH],
+  [RequirementState.CANCELED]: [Action.REPUBLISH], // Action.DELETE
   [RequirementState.DISPUTE]: [Action.SHOW_SUMMARY],
   [RequirementState.EXPIRED]: [Action.DELETE, Action.REPUBLISH],
-  [RequirementState.FINISHED]: [Action.SHOW_SUMMARY], //, Action.FINISH],
+  [RequirementState.FINISHED]: [Action.SHOW_SUMMARY],
   [RequirementState.PUBLISHED]: [Action.DELETE, Action.CANCEL_REQUIREMENT],
   [RequirementState.SELECTED]: [Action.CANCEL_REQUIREMENT, Action.FINISH],
   [RequirementState.ELIMINATED]: [],
@@ -384,6 +386,7 @@ export enum CertificationState {
   CERTIFIED = 1,
   REJECTED = 2,
   PENDING = 3,
+  RESENT = 4,
 }
 
 export enum ImageRequestLabels {
@@ -401,7 +404,7 @@ export enum ProcessFlag {
 
 export enum CantOfferMotives {
   NONE = 0,
-  NONE_FINISH = 14,
+  INI = 14,
 
   ALREADY_MADE_OFFER = 1, //
   MAIN_ACCOUNT_MADE_OFFER = 11, //
@@ -433,4 +436,16 @@ export enum CodeResponseCanOffer {
 export enum RateStartCountType {
   OFFER_LIST = 1,
   COMPANY_DATA_HOME = 2,
+}
+
+export enum OrderConfirmation {
+  NONE = 0,
+  YES = 1,
+  NO = 3,
+}
+
+export enum UploadCertificateLabels {
+  companyId = "companyID",
+  documenst = "documents",
+  name = "name",
 }

@@ -1,18 +1,29 @@
-import { User } from "../../models/MainInterfaces";
+import { BaseUser } from "../../models/MainInterfaces";
+import { UserState } from "../../models/Redux";
 import makeRequest from "../../utilities/globalFunctions";
 import {
   transformFromGetRequirementByIdToRequirement,
   transformToBaseUser,
+  transformToBasicRateData,
   transformToFullUser,
   transformToOffer,
+  transformToPurchaseOrder,
 } from "../../utilities/transform";
 import { RequirementType } from "../../utilities/types";
 import {
   getBaseDataUserService,
   getUserService,
 } from "../requests/authService";
-import { getOfferByIdService } from "../requests/offerService";
-import { getRequirementByIdService } from "../requests/requirementService";
+import { deleteCertificateService } from "../requests/certificateService";
+import {
+  getBasicRateDataOfferService,
+  getOfferByIdService,
+} from "../requests/offerService";
+import { getPurchaseOrderByIdService } from "../requests/purchaseOrderService";
+import {
+  getBasicRateDataReqService,
+  getRequirementByIdService,
+} from "../requests/requirementService";
 
 export async function getBaseUserForUserSubUser(
   uid: string,
@@ -47,20 +58,48 @@ export async function getFullUser(uid: string) {
 export async function getOfferById(
   id: string,
   type: RequirementType,
-  user: User
+  user?: BaseUser | UserState,
+  mainUser?: BaseUser | UserState
 ) {
   const { responseData, error, errorMsg } = await makeRequest({
     service: getOfferByIdService(id),
     method: "get",
   });
 
-  return {
-    offer: responseData
-      ? transformToOffer(responseData.data[0], type, user)
-      : null,
-    error,
-    errorMsg,
-  };
+  if (!user) {
+    const {
+      user: userN,
+      subUser: subUserN,
+      error: errorN,
+      errorMsg: errorMsgN,
+    } = await getBaseUserForUserSubUser(responseData.data[0].subUser);
+    if (userN)
+      return {
+        offer: responseData
+          ? transformToOffer(
+              responseData.data[0],
+              type,
+              subUserN ?? userN,
+              subUserN ? userN : undefined
+            )
+          : null,
+        errorN,
+        errorMsgN,
+      };
+    else
+      return {
+        offer: null,
+        error,
+        errorMsg,
+      };
+  } else
+    return {
+      offer: responseData
+        ? transformToOffer(responseData.data[0], type, user, mainUser)
+        : null,
+      error,
+      errorMsg,
+    };
 }
 
 export async function getRequirementById(id: string, type: RequirementType) {
@@ -76,6 +115,60 @@ export async function getRequirementById(id: string, type: RequirementType) {
           type
         )
       : null,
+    error,
+    errorMsg,
+  };
+}
+
+export async function getPurchaseOrderById(id: string) {
+  const { responseData, error, errorMsg } = await makeRequest({
+    service: getPurchaseOrderByIdService(id),
+    method: "get",
+  });
+
+  return {
+    purchaseOrder: responseData
+      ? transformToPurchaseOrder(responseData.data)
+      : null,
+    error,
+    errorMsg,
+  };
+}
+
+export async function getBasicRateData(
+  idToGetData: string,
+  useOfferService: boolean,
+  type: RequirementType
+) {
+  const { responseData, error, errorMsg } = await makeRequest({
+    service:
+      type == RequirementType.GOOD
+        ? useOfferService
+          ? getBasicRateDataOfferService(idToGetData)
+          : getBasicRateDataReqService(idToGetData)
+        : useOfferService
+        ? getBasicRateDataOfferService(idToGetData)
+        : getBasicRateDataReqService(idToGetData),
+    method: "get",
+  });
+
+  return {
+    basicRateData: responseData
+      ? transformToBasicRateData(responseData.data[0])
+      : null,
+    error,
+    errorMsg,
+  };
+}
+
+export async function deleteCertificateById(id: string) {
+  const { responseData, error, errorMsg } = await makeRequest({
+    service: deleteCertificateService(id),
+    method: "get",
+  });
+
+  return {
+    responseData,
     error,
     errorMsg,
   };

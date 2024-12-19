@@ -31,6 +31,7 @@ export default function AllRequirements() {
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const [type, setType] = useState(getRouteType(location.pathname));
+  const [loadingTable, setLoadingTable] = useState(true);
   const [tableContent, setTableContent] = useState<TableTypeAllRequirements>({
     type: TableTypes.ALL_REQUIREMENTS,
     data: [],
@@ -46,29 +47,37 @@ export default function AllRequirements() {
     method: "get",
   });
 
-  const { loading, responseData, error, errorMsg, fetchData } = useApi({
+  const { responseData, error, errorMsg, fetchData } = useApi({
     service: apiParams.service,
     method: apiParams.method,
     dataToSend: apiParams.dataToSend,
   });
 
   useEffect(() => {
-    if (apiParams.service) fetchData();
+    if (apiParams.service) {
+      fetchData();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
 
   useEffect(() => {
     if (responseData) {
-      if (equalServices(apiParams.service, getRequirementsByEntityService("")))
-        setData();
+      setData();
     } else if (error) {
-      if (equalServices(apiParams.service, getRequirementsByEntityService("")))
-        showNotification(notification, "error", errorMsg);
+      setTableContent({
+        type: TableTypes.ALL_REQUIREMENTS,
+        data: [],
+        hiddenColumns: [],
+        nameColumnHeader: t(getLabelFromRequirementType(type)),
+        onButtonClick: handleOnButtonClick,
+      });
+      setLoadingTable(false);
+      showNotification(notification, "error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
-  /******** */
+  /* Actualizar tabla */
 
   useEffect(() => {
     setType(getRouteType(location.pathname));
@@ -90,6 +99,8 @@ export default function AllRequirements() {
   async function setData() {
     try {
       const subUsers: { [key: string]: BaseUser } = {};
+      const pendingRequests: { [key: string]: Promise<any> } = {};
+
       const data = await Promise.all(
         responseData.data.map(async (e: any) => {
           if (e.subUser == dataUser.uid) {
@@ -101,13 +112,22 @@ export default function AllRequirements() {
               true
             );
           } else {
+            // If the subUser's data is not cached and there's no ongoing request for it
             if (!Object.prototype.hasOwnProperty.call(subUsers, e.subUser)) {
-              const { responseData }: any = await makeRequest({
-                service: getBaseDataUserService(e.subUser),
-                method: "get",
-              });
-              const { subUser } = transformToBaseUser(responseData.data[0]);
-              subUsers[e.subUser] = subUser;
+              // If there's no request in progress for this subUser, initiate one
+              if (!pendingRequests[e.subUser]) {
+                pendingRequests[e.subUser] = makeRequest({
+                  service: getBaseDataUserService(e.subUser),
+                  method: "get",
+                }).then(({ responseData }: any) => {
+                  const { subUser } = transformToBaseUser(responseData.data[0]);
+                  subUsers[e.subUser] = subUser;
+                  // Clean up the pending request after it resolves
+                  delete pendingRequests[e.subUser];
+                });
+              }
+              // Wait for the request to resolve if it's already in progress
+              await pendingRequests[e.subUser];
             }
             return transformDataToRequirement(
               e,
@@ -127,7 +147,10 @@ export default function AllRequirements() {
         onButtonClick: handleOnButtonClick,
       });
     } catch (error) {
+      console.log(error);
       showNotification(notification, "error", t("errorOccurred"));
+    } finally {
+      setLoadingTable(false);
     }
   }
 
@@ -148,11 +171,7 @@ export default function AllRequirements() {
       subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
       table={tableContent}
       onSearch={handleSearch}
-      loading={
-        equalServices(apiParams.service, getRequirementsByEntityService(""))
-          ? loading
-          : undefined
-      }
+      loading={loadingTable}
     />
   );
 }

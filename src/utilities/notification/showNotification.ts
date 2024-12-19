@@ -18,7 +18,7 @@ export default function showNotification(
 
 export function showLoadingMessage(
   message: MessageInstance,
-  show: boolean,
+  show: boolean | undefined,
   text: string = "Cargando..."
 ) {
   if (message && show)

@@ -4,6 +4,7 @@ import {
   BasicPurchaseOrder,
   CertificateFile,
   Requirement,
+  SubUserBase,
 } from "../../../../models/MainInterfaces";
 import {
   PurchaseOrderTableTypes,
@@ -11,7 +12,6 @@ import {
 } from "../../../../utilities/types";
 import { useContext } from "react";
 import { ListsContext } from "../../../../contexts/ListsContext";
-import { SubUserBase } from "../../../../models/Responses";
 import { getLabelFromRole } from "../../../../utilities/globalFunctions";
 import { useTranslation } from "react-i18next";
 
@@ -161,7 +161,7 @@ export default function NameColumn(
                 (extraParam == PurchaseOrderTableTypes.ISSUED
                   ? (record as BasicPurchaseOrder).userNameClient
                   : (record as BasicPurchaseOrder).userNameProvider)}
-              {type === TableTypes.ALL_PURCHASE_ORDERS &&
+              {type === TableTypes.ALL_SALES_ORDERS &&
                 (extraParam == PurchaseOrderTableTypes.ISSUED
                   ? (record as BasicPurchaseOrder).subUserNameClient
                   : (record as BasicPurchaseOrder).subUserNameProvider)}

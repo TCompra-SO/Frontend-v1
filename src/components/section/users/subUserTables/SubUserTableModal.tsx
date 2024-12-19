@@ -6,12 +6,11 @@ import {
   RequirementType,
   TableTypes,
 } from "../../../../utilities/types";
-import { SubUserBase } from "../../../../models/Responses";
 import {
-  Offer,
   OfferItemSubUser,
   PurchaseOrderItemSubUser,
   RequirementItemSubUser,
+  SubUserBase,
 } from "../../../../models/MainInterfaces";
 import GeneralTable from "../../../common/GeneralTable/GeneralTable";
 import { useContext, useEffect, useState } from "react";
@@ -22,22 +21,14 @@ import showNotification, {
   showLoadingMessage,
 } from "../../../../utilities/notification/showNotification";
 import { App } from "antd";
-import makeRequest, {
-  openPurchaseOrderPdf,
-} from "../../../../utilities/globalFunctions";
+import { openPurchaseOrderPdf } from "../../../../utilities/globalFunctions";
 import { getPurchaseOrderPDFService } from "../../../../services/requests/purchaseOrderService";
-import { getOffersByRequirementIdService } from "../../../../services/requests/offerService";
 import ModalContainer from "../../../containers/ModalContainer";
-import { getRequirementById } from "../../../../services/complete/general";
-import { getBaseDataUserService } from "../../../../services/requests/authService";
-import {
-  transformToBaseUser,
-  transformToOffer,
-} from "../../../../utilities/transform";
 import { mainModalScrollStyle } from "../../../../utilities/globals";
 import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../../../../utilities/routes";
 import ButtonContainer from "../../../containers/ButtonContainer";
+import { useGetOffersByRequirementId } from "../../../../hooks/requirementHook";
 
 interface SubUserTableModalProps {
   user: SubUserBase | null;
@@ -53,9 +44,10 @@ interface SubUserTableModalProps {
     | {
         tableType: TableTypes.PURCHASE_ORDER_SUBUSER;
         tableContent: PurchaseOrderItemSubUser[];
+        subType: PurchaseOrderTableTypes;
       };
   onTabChange: (tabId: RequirementType | PurchaseOrderTableTypes) => void;
-  loading: boolean;
+  loading: boolean | undefined;
   tableType: TableTypes;
 }
 
@@ -66,12 +58,12 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
   const [subType, setSubType] = useState<
     RequirementType | PurchaseOrderTableTypes
   >(RequirementType.GOOD);
+  const { getOffersByRequirementId, modalDataOffersByRequirementId } =
+    useGetOffersByRequirementId();
   const [currentPurchaseOrder, setCurrentPurchaseOrder] =
     useState<PurchaseOrderItemSubUser | null>(null);
-  const {
-    updateSubUserPurchaseOrdersLoadingPdf,
-    updateSubUserRequirementsViewOffers,
-  } = useContext(LoadingDataContext);
+  const { updateSubUserPurchaseOrdersLoadingPdf } =
+    useContext(LoadingDataContext);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -128,87 +120,16 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataPdf, errorPdf]);
 
-  /* Para ver historial */
-
-  const [apiParamsHist, setApiParamsHist] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingHist,
-    responseData: responseDataHist,
-    error: errorHist,
-    errorMsg: errorMsgHist,
-    fetchData: fetchDataHist,
-  } = useApi({
-    service: apiParamsHist.service,
-    method: apiParamsHist.method,
-    dataToSend: apiParamsHist.dataToSend,
-  });
+  /** Para mostrar modales */
 
   useEffect(() => {
-    updateSubUserRequirementsViewOffers(loadingHist);
-    showLoadingMessage(message, loadingHist);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingHist]);
-
-  useEffect(() => {
-    if (apiParamsHist.service) fetchDataHist();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsHist]);
-
-  useEffect(() => {
-    if (responseDataHist) {
-      openDetailedRequirement(responseDataHist);
-    } else if (errorHist) {
-      showNotification(notification, "error", errorMsgHist);
+    if (modalDataOffersByRequirementId.type !== ModalTypes.NONE) {
+      setDataModal(modalDataOffersByRequirementId);
+      setIsOpenModal(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataHist, errorHist]);
+  }, [modalDataOffersByRequirementId]);
 
   /** Funciones */
-
-  async function openDetailedRequirement(responseData: any) {
-    showLoadingMessage(message, true);
-    updateSubUserRequirementsViewOffers(true);
-    if (
-      currentPurchaseOrder &&
-      responseData.data &&
-      Array.isArray(responseData.data)
-    ) {
-      const { requirement } = await getRequirementById(
-        currentPurchaseOrder.requirementId,
-        currentPurchaseOrder.type
-      );
-      if (requirement) {
-        const offerArray: Offer[] = await Promise.all(
-          responseData.data.map(async (item: any) => {
-            const { responseData }: any = await makeRequest({
-              service: getBaseDataUserService(item.userID),
-              method: "get",
-            });
-            const { user, subUser } = transformToBaseUser(responseData.data[0]);
-            return subUser
-              ? transformToOffer(item, currentPurchaseOrder.type, subUser, user)
-              : transformToOffer(item, currentPurchaseOrder.type, user);
-          })
-        );
-        setDataModal({
-          type: ModalTypes.DETAILED_REQUIREMENT,
-          data: {
-            offerList: offerArray,
-            requirement: requirement,
-            forPurchaseOrder: true,
-            filters: currentPurchaseOrder.filters,
-          },
-        });
-        setIsOpenModal(true);
-      } else showNotification(notification, "error", t("errorOccurred"));
-    } else showNotification(notification, "error", t("errorOccurred"));
-    showLoadingMessage(message, false);
-    updateSubUserRequirementsViewOffers(false);
-  }
 
   function handleOnButtonClick(action: Action, data: any) {
     switch (action) {
@@ -224,10 +145,14 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
       case Action.VIEW_PURCHASE_ORDER: {
         const po = data as PurchaseOrderItemSubUser;
         setCurrentPurchaseOrder(po);
-        setApiParamsHist({
-          service: getOffersByRequirementIdService(po.requirementId),
-          method: "get",
-        });
+        getOffersByRequirementId(
+          TableTypes.PURCHASE_ORDER_SUBUSER,
+          po.requirementId,
+          po.type,
+          true,
+          undefined,
+          po.filters
+        );
         break;
       }
       case Action.VIEW_REQUIREMENT: {
@@ -241,8 +166,10 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
   function changeSubType(
     newSubType: RequirementType | PurchaseOrderTableTypes
   ) {
-    setSubType(newSubType);
-    props.onTabChange(newSubType);
+    if (subType != newSubType) {
+      setSubType(newSubType);
+      props.onTabChange(newSubType);
+    }
   }
 
   return (
@@ -389,6 +316,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
                     hiddenColumns: [],
                     nameColumnHeader: t("purchaseOrders"),
                     onButtonClick: handleOnButtonClick,
+                    subType: props.content.subType,
                   }}
                   loading={props.loading}
                 />

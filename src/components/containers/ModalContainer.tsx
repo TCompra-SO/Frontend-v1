@@ -17,6 +17,7 @@ import AddCertificatesModal from "../common/modals/AddCertificatesModal";
 import EditDocumentListToRequestModal from "../common/modals/EditDocumentListToRequestModal";
 import ViewDocsReceivedCertificate from "../common/modals/ViewDocsReceivedCertificate";
 import SelectDocumentsToSendCertificateModal from "../common/modals/SelectDocumentsToSendCertificateModal";
+import SendMessageModal from "../common/modals/SendMessageModal";
 
 interface ModalContainerProps extends ModalProps {
   content: ModalContent;
@@ -48,6 +49,8 @@ export default function ModalContainer(props: ModalContainerProps) {
             offerId={props.content.data.offerId}
             requirementId={props.content.data.requirementId}
             fromRequirementTable={props.content.data.fromRequirementTable}
+            canceledByCreator={props.content.data.canceledByCreator}
+            onCancelSuccess={props.content.data.onCancelSuccess}
           />
         );
       }
@@ -107,6 +110,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             onAnswer={props.content.data.onAnswer}
             loading={props.content.data.loading}
             icon={props.content.data.icon}
+            showOnlyAcceptButton={props.content.data.showOnlyAcceptButton}
           />
         );
       }
@@ -121,7 +125,12 @@ export default function ModalContainer(props: ModalContainerProps) {
         );
       }
       case ModalTypes.OFFER_DETAIL: {
-        return <OfferDetailModal offer={props.content.data.offer} />;
+        return (
+          <OfferDetailModal
+            offer={props.content.data.offer}
+            basicRateData={props.content.data.basicRateData}
+          />
+        );
       }
       case ModalTypes.USER_INFO: {
         return <UserInfoModal user={props.content.data.user} />;
@@ -144,6 +153,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             data={props.content.data.data}
             docs={props.content.data.docs}
             readOnly={props.content.data.readonly}
+            onClose={props.onClose}
           />
         );
       }
@@ -151,6 +161,16 @@ export default function ModalContainer(props: ModalContainerProps) {
         return (
           <SelectDocumentsToSendCertificateModal
             data={props.content.data.data}
+            onClose={props.onClose}
+          />
+        );
+      }
+      case ModalTypes.SEND_MESSAGE: {
+        return (
+          <SendMessageModal
+            onClose={props.onClose}
+            requirementId={props.content.data.requirementId}
+            userId={props.content.data.userId}
           />
         );
       }

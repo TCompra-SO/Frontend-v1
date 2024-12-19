@@ -10,7 +10,7 @@ interface InputEmailModalProps {
   text?: React.ReactNode;
   buttonText?: ReactNode;
   onAnswer: (email: string) => any;
-  onClose: (e: React.SyntheticEvent<Element, Event>) => any;
+  onClose: () => any;
 }
 
 export default function InputEmailModal(props: InputEmailModalProps) {

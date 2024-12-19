@@ -95,3 +95,12 @@ export function getValidationOfferService(
     type: "OF-VAL",
   };
 }
+
+export function cancelOfferService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+      ApiRoutes.offers.cancel
+    }`,
+    type: "OF-CAN",
+  };
+}

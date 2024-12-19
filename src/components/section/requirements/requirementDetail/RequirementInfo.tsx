@@ -35,6 +35,7 @@ export default function RequirementInfo(props: RequirementInfoProps) {
             ? "t-flex f-column gap-10 req-det"
             : `t-flex detalle-req`
         }
+        style={props.forHome ? { width: "calc(100% - 161px)" } : {}}
       >
         <RequirementInfoNoTags
           title={props.requirement.title}

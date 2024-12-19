@@ -101,18 +101,36 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
     });
   }
 
+  function handleCancelSuccess(offerId: string) {
+    setReqCopy((prevObject) => ({
+      ...prevObject,
+      state: RequirementState.PUBLISHED,
+    }));
+    setOffersCopy((prev) => {
+      const indexToUpdate = prev.findIndex((offer) => offer.key === offerId);
+      if (indexToUpdate !== -1) {
+        prev[indexToUpdate] = {
+          ...prev[indexToUpdate],
+          state: OfferState.CANCELED,
+        };
+      }
+      return prev;
+    });
+  }
+
   if (offersCopy.length > 0)
     return (
       <div className="t-flex gap-15" style={{ flexDirection: "column" }}>
-        {offersCopy.map((offer: Offer) => {
+        {offersCopy.map((offer: Offer, index: number) => {
           return (
-            <div key={offer.key} className="card-ofertas">
+            <div key={`${offer.key}${index}`} className="card-ofertas">
               <RequirementOfferListItemHeader
                 offer={offer}
                 showStateAndActions={{
                   show: !props.forPurchaseOrder,
                   requirement: reqCopy,
                   onSuccessfulSelection: handleSuccessfulSelection,
+                  onCancelSuccess: handleCancelSuccess,
                 }}
               />
               <RequirementOfferListItemBody offer={offer} showUserData={true} />

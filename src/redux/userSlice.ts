@@ -13,13 +13,7 @@ export const userInitialState: UserState = {
   typeID: UserRoles.NONE,
   planID: 0,
   typeEntity: EntityType.PERSON,
-  tenure: undefined,
-  customerScore: undefined,
-  sellerScore: undefined,
-  customerCount: undefined,
-  sellerCount: undefined,
   document: "",
-  isLoggedIn: undefined,
 };
 
 export const userSlice = createSlice({
@@ -51,6 +45,7 @@ export const userSlice = createSlice({
       state.sellerCount = action.payload.sellerCount;
       state.typeEntity = action.payload.typeEntity;
       state.document = action.payload.document;
+      state.image = action.payload.image;
     },
     setUid: (state, action) => {
       state.uid = action.payload;
@@ -58,7 +53,7 @@ export const userSlice = createSlice({
     setEmail: (state, action) => {
       state.email = action.payload;
     },
-    setFullUser: (state, action: { payload: UserState; type: string }) => {
+    setFullUser: (_, action: { payload: UserState; type: string }) => {
       return { ...action.payload };
     },
     setIsLoggedIn: (state, action) => {

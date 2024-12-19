@@ -9,6 +9,7 @@ import {
   EntityType,
   PurchaseOrderTableTypes,
   CertificationState,
+  OrderConfirmation,
 } from "../utilities/types";
 import { OfferFilters } from "./Interfaces";
 
@@ -112,16 +113,13 @@ export interface BasicPurchaseOrder extends BasicPurchaseOrderItemSubUser {
   subTotal: number;
   igv: number;
   total: number;
+
+  clientConfirmation: OrderConfirmation;
+  providerConfirmation: OrderConfirmation;
 }
 
 export interface PurchaseOrder extends BasicPurchaseOrder {
   filters?: OfferFilters;
-}
-
-export interface User extends BaseUser {
-  document: string;
-  address: string;
-  phone: string;
 }
 
 export interface BaseUser {
@@ -137,6 +135,11 @@ export interface BaseUser {
   customerCount?: number;
   sellerCount?: number;
   typeEntity: EntityType;
+}
+
+export interface User extends BaseUser {
+  address: string;
+  phone: string;
 }
 
 export interface FullUser extends User {
@@ -158,6 +161,26 @@ export interface FullUser extends User {
   numSellingOrdersClient: number;
 }
 
+export interface SubUserBase extends BaseUser {
+  typeID: UserRoles;
+  createdAt: string;
+  numGoods: number;
+  numServices: number;
+  numSales: number;
+  numOffers: number;
+  numPurchaseOrdersProvider: number;
+  numPurchaseOrdersClient: number;
+  numSellingOrdersProvider: number;
+  numSellingOrdersClient: number;
+}
+
+export interface SubUserProfile extends SubUserBase {
+  address: string;
+  cityID: number;
+  companyID: string;
+  phone: string;
+}
+
 export interface RequirementItemSubUser extends BaseRequirementOffer {
   price: number;
   publishDate: string;
@@ -176,6 +199,7 @@ export interface OfferItemSubUser extends BaseRequirementOffer {
 }
 
 export interface CertificateFile {
+  uid: string;
   name: string;
   documentName: string;
   url: string;
@@ -183,12 +207,14 @@ export interface CertificateFile {
 }
 
 export interface CertificationItem {
-  companyID: string;
+  uid: string;
+  companyId: string;
   companyName: string;
   companyDocument: string;
   creationDate: string;
   state: CertificationState;
   note?: string;
+  certificates: CertificateFile[];
 }
 
 export interface StatisticsData {
@@ -220,4 +246,26 @@ export interface BasicRateData {
   userImage?: string;
   subUserId?: string;
   subUserName?: string;
+}
+
+export interface ChatListData {
+  userImage?: string;
+  userName: string;
+  userOnline?: boolean;
+  userId: string;
+  title: string;
+  requirementId: string;
+  lastMessage: string;
+  lastDate: string;
+  numUnreadMessages?: number;
+}
+
+export interface ChatMessage {
+  uid: string;
+  isInputMsg: boolean;
+  message?: string;
+  time: string;
+  read: boolean;
+  images?: string[];
+  documents?: string[];
 }

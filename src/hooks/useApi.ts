@@ -11,7 +11,7 @@ export default function useApi<T = any>({
   token,
 }: useApiParams<T>) {
   const { t } = useTranslation();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean | undefined>(undefined);
   const [responseData, setResponseData] = useState<any | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [error, setError] = useState<AxiosError<any, any> | null>(null);
@@ -41,9 +41,9 @@ export default function useApi<T = any>({
         setResponseData(result.data);
       } catch (err) {
         console.log("HTTP error:", err);
-        setError(err as AxiosError);
         const errorMsg_ = t(httpErrorInterceptor(err, service.type));
         setErrorMsg(errorMsg_);
+        setError(err as AxiosError);
       } finally {
         setLoading(false);
       }

@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Offer } from "../models/MainInterfaces";
 import { Action, ModalTypes, TableTypes } from "../utilities/types";
 import ModalContainer from "../components/containers/ModalContainer";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import {
   ModalContent,
   TableTypeOffer,
@@ -23,39 +23,67 @@ import {
 import useApi from "../hooks/useApi";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
-import {
-  transformToBasicRateData,
-  transformToOfferFromGetOffersByEntityOrSubUser,
-} from "../utilities/transform";
+import { transformToOfferFromGetOffersByEntityOrSubUser } from "../utilities/transform";
 import showNotification, {
   showLoadingMessage,
 } from "../utilities/notification/showNotification";
 import { App } from "antd";
-import { getBasicRateDataReqService } from "../services/requests/requirementService";
+import { ModalsContext } from "../contexts/ModalsContext";
+import { useCulminate, useShowDetailOffer } from "../hooks/requirementHook";
 
 export default function Offers() {
   const { t } = useTranslation();
   const location = useLocation();
   const { notification, message } = App.useApp();
+  const { detailedOfferModalData } = useContext(ModalsContext);
+  const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const [type, setType] = useState(getRouteType(location.pathname));
-  const [currentAction, setCurrentAction] = useState<Action>(Action.CANCEL);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [offer, setOffer] = useState<Offer>();
-
+  const { getBasicRateData, modalDataRate } = useCulminate();
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
   });
   const [tableContent, setTableContent] = useState<TableTypeOffer>({
     type: TableTypes.OFFER,
-    data: [], //offerList,
+    data: [],
     subType: type,
     hiddenColumns: [],
     nameColumnHeader: t("offers"),
     onButtonClick: handleOnButtonClick,
   });
+
+  /** Verificar si hay una solicitud pendiente */
+
+  useEffect(() => {
+    if (detailedOfferModalData.offerId) {
+      getOfferDetail(
+        detailedOfferModalData.offerId,
+        detailedOfferModalData.offerType,
+        true,
+        detailedOfferModalData.offer
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (modalDataOfferDetail.type !== ModalTypes.NONE) {
+      setDataModal(modalDataOfferDetail);
+      setIsOpenModal(true);
+    }
+  }, [modalDataOfferDetail]);
+
+  /** Para mostrar modales */
+
+  useEffect(() => {
+    if (modalDataRate.type !== ModalTypes.NONE) {
+      setDataModal(modalDataRate);
+      setIsOpenModal(true);
+    }
+  }, [modalDataRate]);
 
   /** Cargar datos iniciales */
 
@@ -77,11 +105,17 @@ export default function Offers() {
 
   useEffect(() => {
     if (responseData) {
-      if (equalServices(apiParams.service, getOffersBySubUserService("")))
-        setData();
+      setData();
     } else if (error) {
-      if (equalServices(apiParams.service, getOffersBySubUserService("")))
-        showNotification(notification, "error", errorMsg);
+      setTableContent({
+        type: TableTypes.OFFER,
+        data: [],
+        subType: type,
+        hiddenColumns: [],
+        nameColumnHeader: t("offers"),
+        onButtonClick: handleOnButtonClick,
+      });
+      showNotification(notification, "error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -125,7 +159,7 @@ export default function Offers() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataDelete, errorDelete]);
 
-  /********** */
+  /* Obtener tipo y mostrar datos */
 
   useEffect(() => {
     setType(getRouteType(location.pathname));
@@ -140,42 +174,7 @@ export default function Offers() {
     });
   }, [type]);
 
-  /* Obtener datos para culminar */
-  const [apiParamsRate, setApiParamsRate] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingRate,
-    responseData: responseDataRate,
-    error: errorRate,
-    errorMsg: errorMsgRate,
-    fetchData: fetchDataRate,
-  } = useApi({
-    service: apiParamsRate.service,
-    method: apiParamsRate.method,
-    dataToSend: apiParamsRate.dataToSend,
-  });
-
-  useEffect(() => {
-    showLoadingMessage(message, loadingRate);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingRate]);
-
-  useEffect(() => {
-    if (apiParamsRate.service) fetchDataRate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsRate]);
-
-  useEffect(() => {
-    if (responseDataRate) {
-      openRateModal(responseDataRate);
-    } else if (errorRate) {
-      showNotification(notification, "error", errorMsgRate);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataRate, errorRate]);
+  /** Funciones */
 
   async function setData() {
     try {
@@ -197,6 +196,7 @@ export default function Offers() {
         onButtonClick: handleOnButtonClick,
       });
     } catch (error) {
+      console.log(error);
       showNotification(notification, "error", t("errorOccurred"));
     }
   }
@@ -216,39 +216,11 @@ export default function Offers() {
     console.log("goToChat", offer.key, offer.requirementId);
   }
 
-  function openRateModal(responseData: any) {
-    const data = transformToBasicRateData(responseData.data[0]);
-    if (offer) {
-      setDataModal({
-        type:
-          currentAction == Action.FINISH
-            ? ModalTypes.RATE_USER
-            : ModalTypes.RATE_CANCELED,
-        data: {
-          basicRateData: data,
-          type,
-          isOffer: false,
-          requirementOrOfferId: offer?.key,
-        },
-      });
-      setIsOpenModal(true);
-    }
-  }
-
   function handleOnButtonClick(action: Action, offer: Offer) {
     console.log(offer);
-    setCurrentAction(action);
-    setOffer(offer);
-
     switch (action) {
       case Action.OFFER_DETAIL:
-        setDataModal({
-          type: ModalTypes.OFFER_DETAIL,
-          data: {
-            offer,
-          },
-        });
-        setIsOpenModal(true);
+        getOfferDetail(offer.key, offer.type, true, offer);
         break;
 
       case Action.DELETE: {
@@ -268,26 +240,30 @@ export default function Offers() {
       }
 
       case Action.CHAT: {
-        goToChat(offer);
+        goToChat(offer); //r3v
         break;
       }
 
       case Action.RATE_CANCELED: {
-        setApiParamsRate({
-          service: getBasicRateDataReqService(offer.requirementId),
-          method: "get",
-        });
+        getBasicRateData(
+          offer.key,
+          offer.requirementId,
+          false,
+          false,
+          action,
+          offer.type
+        );
         break;
       }
 
       case Action.CANCEL_OFFER: {
-        // r3v
         setDataModal({
           type: ModalTypes.CANCEL_PURCHASE_ORDER,
           data: {
             offerId: offer.key,
             requirementId: offer.requirementId,
             fromRequirementTable: false,
+            canceledByCreator: true,
           },
         });
         setIsOpenModal(true);
@@ -295,10 +271,14 @@ export default function Offers() {
       }
 
       case Action.FINISH: {
-        setApiParamsRate({
-          service: getBasicRateDataReqService(offer.requirementId),
-          method: "get",
-        });
+        getBasicRateData(
+          offer.key,
+          offer.requirementId,
+          false,
+          false,
+          action,
+          offer.type
+        );
         break;
       }
     }

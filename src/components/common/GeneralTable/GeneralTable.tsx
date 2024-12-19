@@ -25,10 +25,10 @@ import {
   BaseRequirementOffer,
   CertificateFile,
   CertificationItem,
+  SubUserBase,
 } from "../../../models/MainInterfaces";
 import { ColumnType } from "antd/es/table";
 import { useTranslation } from "react-i18next";
-import { SubUserBase } from "../../../models/Responses";
 import GeneralColumnString from "./columns/GeneralColumnString";
 import GeneralColumnNumber from "./columns/GeneralColumnNumber";
 import TypeColumn from "./columns/TypeColumn";
@@ -399,7 +399,11 @@ export default function GeneralTable(props: GeneralTableProps) {
           visibility[TableColumns.SELECTION_DATE]
         ),
         TypeColumn(visibility[TableColumns.TYPE]),
-        StateColumn(props.content.type, visibility[TableColumns.STATE]),
+        StateColumn(
+          props.content.type,
+          visibility[TableColumns.STATE],
+          props.content.subType
+        ),
         ActionColumn(
           props.content.type,
           props.content.onButtonClick,
@@ -510,7 +514,11 @@ export default function GeneralTable(props: GeneralTableProps) {
           props.content.onButtonClick,
           visibility[TableColumns.DOCUMENT]
         ),
-        StateColumn(props.content.type, visibility[TableColumns.STATE]),
+        StateColumn(
+          props.content.type,
+          visibility[TableColumns.STATE],
+          props.content.subType
+        ),
         ViewColumn(
           props.content.type,
           props.content.onButtonClick,
@@ -643,52 +651,56 @@ export default function GeneralTable(props: GeneralTableProps) {
   }
 
   function getPurchaseOrderSubUserColumns() {
-    columns = [
-      GeneralColumnString(
-        t("requirement"),
-        "requirementTitle",
-        true,
-        130,
-        visibility[TableColumns.REQUIREMENT]
-      ),
-      GeneralColumnString(
-        t("offer"),
-        "offerTitle",
-        true,
-        130,
-        visibility[TableColumns.OFFER]
-      ),
-      GeneralDateColumn(
-        t("selectionDateAbbrev"),
-        "selectionDate",
-        visibility[TableColumns.SELECTION_DATE]
-      ),
-      GeneralColumnString(
-        t("class"),
-        "subType",
-        false,
-        90,
-        visibility[TableColumns.SUBTYPE],
-        false,
-        getLabelFromPurchaseOrderType
-      ),
-      TypeColumn(visibility[TableColumns.TYPE]),
-      DocumentColumn(
-        props.content.type,
-        props.content.onButtonClick,
-        visibility[TableColumns.DOCUMENT]
-      ),
-      StateColumn(
-        TableTypes.PURCHASE_ORDER_SUBUSER,
-        visibility[TableColumns.STATE]
-      ),
-      ViewColumn(
-        TableTypes.PURCHASE_ORDER_SUBUSER,
-        props.content.onButtonClick,
-        visibility[TableColumns.VIEW]
-      ),
-    ];
-    return columns;
+    if (props.content.type == TableTypes.PURCHASE_ORDER_SUBUSER) {
+      columns = [
+        GeneralColumnString(
+          t("requirement"),
+          "requirementTitle",
+          true,
+          130,
+          visibility[TableColumns.REQUIREMENT]
+        ),
+        GeneralColumnString(
+          t("offer"),
+          "offerTitle",
+          true,
+          130,
+          visibility[TableColumns.OFFER]
+        ),
+        GeneralDateColumn(
+          t("selectionDateAbbrev"),
+          "selectionDate",
+          visibility[TableColumns.SELECTION_DATE]
+        ),
+        GeneralColumnString(
+          t("class"),
+          "subType",
+          false,
+          90,
+          visibility[TableColumns.SUBTYPE],
+          false,
+          getLabelFromPurchaseOrderType
+        ),
+        TypeColumn(visibility[TableColumns.TYPE]),
+        DocumentColumn(
+          props.content.type,
+          props.content.onButtonClick,
+          visibility[TableColumns.DOCUMENT]
+        ),
+        StateColumn(
+          TableTypes.PURCHASE_ORDER_SUBUSER,
+          visibility[TableColumns.STATE],
+          props.content.subType
+        ),
+        ViewColumn(
+          TableTypes.PURCHASE_ORDER_SUBUSER,
+          props.content.onButtonClick,
+          visibility[TableColumns.VIEW]
+        ),
+      ];
+      return columns;
+    }
+    return [];
   }
 
   function getMyDocumentsCertificateColumns() {
@@ -734,7 +746,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         visibility[TableColumns.DOCUMENT]
       ),
       GeneralDateColumn(
-        t("date"),
+        t("dateColumn"),
         "creationDate",
         visibility[TableColumns.CREATION_DATE]
       ),
@@ -764,7 +776,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         visibility[TableColumns.DOCUMENT]
       ),
       GeneralDateColumn(
-        t("date"),
+        t("dateColumn"),
         "creationDate",
         visibility[TableColumns.CREATION_DATE]
       ),

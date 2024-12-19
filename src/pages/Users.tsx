@@ -24,22 +24,27 @@ import showNotification, {
   showLoadingMessage,
 } from "../utilities/notification/showNotification";
 import { App } from "antd";
-import { SubUserBase, SubUserProfile } from "../models/Responses";
 import SubUserTableModal from "../components/section/users/subUserTables/SubUserTableModal";
 import {
   OfferItemSubUser,
   PurchaseOrderItemSubUser,
   RequirementItemSubUser,
+  SubUserBase,
+  SubUserProfile,
 } from "../models/MainInterfaces";
 import {
   transformDataToOfferItemSubUser,
   transformDataToRequirementItemSubUser,
   transformToPurchaseOrderItemSubUser,
   transformToSubUserBase,
+  transformToSubUserProfile,
 } from "../utilities/transform";
 import { getRequirementsBySubUserService } from "../services/requests/requirementService";
 import { getOffersBySubUserService } from "../services/requests/offerService";
-import { getPurchaseOrdersByClientEntityService } from "../services/requests/purchaseOrderService";
+import {
+  getPurchaseOrdersByClientEntityService,
+  getPurchaseOrdersByProviderEntityService,
+} from "../services/requests/purchaseOrderService";
 
 export default function Users() {
   const { t } = useTranslation();
@@ -48,6 +53,9 @@ export default function Users() {
   const uid = useSelector((state: MainState) => state.user.uid);
   const [action, setAction] = useState<Action>(Action.ADD_USER);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [subTypeOrder, setSubTypeOrder] = useState<PurchaseOrderTableTypes>(
+    PurchaseOrderTableTypes.ISSUED
+  );
   const [userData, setUserData] = useState<SubUserBase | null>(null);
   const [userDataEdit, setUserDataEdit] = useState<SubUserProfile | null>(null);
   const [reqList, setReqList] = useState<RequirementItemSubUser[]>([]);
@@ -78,6 +86,13 @@ export default function Users() {
     if (responseData) {
       setTableData();
     } else if (error) {
+      setTableContent({
+        type: TableTypes.USERS,
+        data: [],
+        hiddenColumns: [],
+        nameColumnHeader: t("user"),
+        onButtonClick: handleOnActionClick,
+      });
       showNotification(notification, "error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -120,11 +135,7 @@ export default function Users() {
   useEffect(() => {
     if (responseDataUser) {
       if (equalServices(apiParamsUser.service, getSubUserService(""))) {
-        setUserDataEdit({
-          // email: userData?.email,
-          // typeID: userData?.typeID,
-          ...responseDataUser,
-        });
+        setUserDataEdit(transformToSubUserProfile(responseDataUser));
         handleOpenModal();
       }
     } else if (errorUser) {
@@ -316,6 +327,8 @@ export default function Users() {
       setReqList(data);
       handleOpenModal();
     } catch (error) {
+      console.log(error);
+      setReqList([]);
       showNotification(notification, "error", t("errorOccurred"));
     }
   }
@@ -328,6 +341,8 @@ export default function Users() {
       setOfferList(data);
       handleOpenModal();
     } catch (error) {
+      console.log(error);
+      setOfferList([]);
       showNotification(notification, "error", t("errorOccurred"));
     }
   }
@@ -341,6 +356,8 @@ export default function Users() {
       setOrderList(data);
       handleOpenModal();
     } catch (error) {
+      console.log(error);
+      setOrderList([]);
       showNotification(notification, "error", t("errorOccurred"));
     }
   }
@@ -352,6 +369,7 @@ export default function Users() {
 
   function handleCloseModal() {
     setIsOpenModal(false);
+    setSubTypeOrder(PurchaseOrderTableTypes.ISSUED);
   }
 
   function handleOpenModal() {
@@ -365,7 +383,6 @@ export default function Users() {
   function handleOnActionClick(action: Action, user: SubUserBase) {
     setAction(action);
     setUserData(user);
-    console.log(user);
     switch (action) {
       case Action.EDIT_USER:
         setApiParamsUser({
@@ -452,6 +469,7 @@ export default function Users() {
             content={{
               tableType: TableTypes.PURCHASE_ORDER_SUBUSER,
               tableContent: orderList,
+              subType: subTypeOrder,
             }}
             user={userData}
             onTabChange={handleTabChange}
@@ -465,6 +483,7 @@ export default function Users() {
             content={{
               tableType: TableTypes.PURCHASE_ORDER_SUBUSER,
               tableContent: orderList,
+              subType: subTypeOrder,
             }}
             user={userData}
             onTabChange={handleTabChange}
@@ -496,6 +515,72 @@ export default function Users() {
           case RequirementType.SALE:
             setApiParamsReq({
               service: getRequirementsBySubUserService(userData.uid),
+              method: "get",
+            });
+            break;
+        }
+      } else if (action == Action.VIEW_OFFERS) {
+        switch (tabId) {
+          case RequirementType.GOOD:
+            setApiParamsOffer({
+              service: getOffersBySubUserService(userData.uid), // r3v para servicios y liquidaciones
+              method: "get",
+            });
+            break;
+          case RequirementType.SERVICE:
+            setApiParamsOffer({
+              service: getOffersBySubUserService(userData.uid),
+              method: "get",
+            });
+            break;
+          case RequirementType.SALE:
+            setApiParamsOffer({
+              service: getOffersBySubUserService(userData.uid),
+              method: "get",
+            });
+            break;
+        }
+      } else if (action == Action.VIEW_PURCHASE_ORDERS) {
+        switch (tabId) {
+          case PurchaseOrderTableTypes.ISSUED:
+            setSubTypeOrder(tabId);
+            setApiParamsOrder({
+              service: getPurchaseOrdersByClientEntityService(
+                userData.uid,
+                userData.typeID
+              ),
+              method: "get",
+            });
+            break;
+          case PurchaseOrderTableTypes.RECEIVED:
+            setSubTypeOrder(tabId);
+            setApiParamsOrder({
+              service: getPurchaseOrdersByProviderEntityService(
+                userData.uid,
+                userData.typeID
+              ),
+              method: "get",
+            });
+            break;
+        }
+      } else if (action == Action.VIEw_SALES_ORDERS) {
+        // r3v cambiar a liq
+        switch (tabId) {
+          case PurchaseOrderTableTypes.ISSUED:
+            setApiParamsOrder({
+              service: getPurchaseOrdersByClientEntityService(
+                userData.uid,
+                userData.typeID
+              ),
+              method: "get",
+            });
+            break;
+          case PurchaseOrderTableTypes.RECEIVED:
+            setApiParamsOrder({
+              service: getPurchaseOrdersByProviderEntityService(
+                userData.uid,
+                userData.typeID
+              ),
               method: "get",
             });
             break;

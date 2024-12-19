@@ -4,32 +4,39 @@ interface LoadingDataContextType {
   myPurchaseOrdersLoadingPdf: boolean;
   subUserPurchaseOrdersLoadingPdf: boolean;
   allPurchaseOrdersLoadingPdf: boolean;
-  updateMyPurchaseOrdersLoadingPdf: (val: boolean) => void;
-  updateSubUserPurchaseOrdersLoadingPdf: (val: boolean) => void;
-  updateAllPurchaseOrdersLoadingPdf: (val: boolean) => void;
+  allSalesOrdersLoadingPdf: boolean;
+  updateMyPurchaseOrdersLoadingPdf: (val: boolean | undefined) => void;
+  updateSubUserPurchaseOrdersLoadingPdf: (val: boolean | undefined) => void;
+  updateAllPurchaseOrdersLoadingPdf: (val: boolean | undefined) => void;
+  updateAllSalesOrdersLoadingPdf: (val: boolean | undefined) => void;
 
   myRequirementsLoadingViewOffers: boolean;
   subUserRequirementsViewOffers: boolean;
-  allRequirementsViewOffers: boolean;
-  updateMyRequirementsLoadingViewOffers: (val: boolean) => void;
-  updateSubUserRequirementsViewOffers: (val: boolean) => void;
-  updateAllRequirementsViewOffers: (val: boolean) => void;
+  allPurchaseOrdersViewOffers: boolean;
+  allSalesOrdersViewOffers: boolean;
+  updateMyRequirementsLoadingViewOffers: (val: boolean | undefined) => void;
+  updateSubUserRequirementsViewOffers: (val: boolean | undefined) => void;
+  updateAllPurchaseOrdersViewOffers: (val: boolean | undefined) => void;
+  updateAllSalesOrdersViewOffers: (val: boolean | undefined) => void;
 }
 
 export const LoadingDataContext = createContext<LoadingDataContextType>({
   myPurchaseOrdersLoadingPdf: false,
   subUserPurchaseOrdersLoadingPdf: false,
   allPurchaseOrdersLoadingPdf: false,
+  allSalesOrdersLoadingPdf: false,
   updateMyPurchaseOrdersLoadingPdf: () => {},
   updateSubUserPurchaseOrdersLoadingPdf: () => {},
   updateAllPurchaseOrdersLoadingPdf: () => {},
-
+  updateAllSalesOrdersLoadingPdf: () => {},
   myRequirementsLoadingViewOffers: false,
   subUserRequirementsViewOffers: false,
-  allRequirementsViewOffers: false,
+  allPurchaseOrdersViewOffers: false,
+  allSalesOrdersViewOffers: false,
   updateMyRequirementsLoadingViewOffers: () => {},
   updateSubUserRequirementsViewOffers: () => {},
-  updateAllRequirementsViewOffers: () => {},
+  updateAllPurchaseOrdersViewOffers: () => {},
+  updateAllSalesOrdersViewOffers: () => {},
 });
 
 export function LoadingDataProvider({ children }: { children: ReactNode }) {
@@ -39,35 +46,47 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
     useState(false);
   const [allPurchaseOrdersLoadingPdf, setAllPurchaseOrdersLoadingPdf] =
     useState(false);
+  const [allSalesOrdersLoadingPdf, setAllSalesOrdersLoadingPdf] =
+    useState(false);
   const [myRequirementsLoadingViewOffers, setMyRequirementsLoadingViewOffers] =
     useState(false);
   const [subUserRequirementsViewOffers, setSubUserRequirementsViewOffers] =
     useState(false);
-  const [allRequirementsViewOffers, setAllRequirementsViewOffers] =
+  const [allPurchaseOrdersViewOffers, setAllPurchaseOrdersViewOffers] =
+    useState(false);
+  const [allSalesOrdersViewOffers, setAllSalesOrdersViewOffers] =
     useState(false);
 
-  function updateMyPurchaseOrdersLoadingPdf(val: boolean) {
-    setMyPurchaseOrdersLoadingPdf(val);
+  function updateMyPurchaseOrdersLoadingPdf(val: boolean | undefined) {
+    setMyPurchaseOrdersLoadingPdf(val ? true : false);
   }
 
-  function updateSubUserPurchaseOrdersLoadingPdf(val: boolean) {
-    setSubUserPurchaseOrdersLoadingPdf(val);
+  function updateSubUserPurchaseOrdersLoadingPdf(val: boolean | undefined) {
+    setSubUserPurchaseOrdersLoadingPdf(val ? true : false);
   }
 
-  function updateAllPurchaseOrdersLoadingPdf(val: boolean) {
-    setAllPurchaseOrdersLoadingPdf(val);
+  function updateAllPurchaseOrdersLoadingPdf(val: boolean | undefined) {
+    setAllPurchaseOrdersLoadingPdf(val ? true : false);
   }
 
-  function updateMyRequirementsLoadingViewOffers(val: boolean) {
-    setMyRequirementsLoadingViewOffers(val);
+  function updateAllSalesOrdersLoadingPdf(val: boolean | undefined) {
+    setAllSalesOrdersLoadingPdf(val ? true : false);
   }
 
-  function updateSubUserRequirementsViewOffers(val: boolean) {
-    setSubUserRequirementsViewOffers(val);
+  function updateMyRequirementsLoadingViewOffers(val: boolean | undefined) {
+    setMyRequirementsLoadingViewOffers(val ? true : false);
   }
 
-  function updateAllRequirementsViewOffers(val: boolean) {
-    setAllRequirementsViewOffers(val);
+  function updateSubUserRequirementsViewOffers(val: boolean | undefined) {
+    setSubUserRequirementsViewOffers(val ? true : false);
+  }
+
+  function updateAllPurchaseOrdersViewOffers(val: boolean | undefined) {
+    setAllPurchaseOrdersViewOffers(val ? true : false);
+  }
+
+  function updateAllSalesOrdersViewOffers(val: boolean | undefined) {
+    setAllSalesOrdersViewOffers(val ? true : false);
   }
 
   return (
@@ -76,15 +95,19 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
         myPurchaseOrdersLoadingPdf,
         subUserPurchaseOrdersLoadingPdf,
         allPurchaseOrdersLoadingPdf,
+        allSalesOrdersLoadingPdf,
         myRequirementsLoadingViewOffers,
         subUserRequirementsViewOffers,
-        allRequirementsViewOffers,
+        allPurchaseOrdersViewOffers,
+        allSalesOrdersViewOffers,
         updateMyPurchaseOrdersLoadingPdf,
         updateSubUserPurchaseOrdersLoadingPdf,
         updateAllPurchaseOrdersLoadingPdf,
+        updateAllSalesOrdersLoadingPdf,
         updateMyRequirementsLoadingViewOffers,
         updateSubUserRequirementsViewOffers,
-        updateAllRequirementsViewOffers,
+        updateAllPurchaseOrdersViewOffers,
+        updateAllSalesOrdersViewOffers,
       }}
     >
       {children}

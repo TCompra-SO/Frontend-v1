@@ -256,7 +256,7 @@ export function ListsProvider({ children }: ListsProviderProps) {
       setUserRolesData(
         userRolesResponseData
           .filter(({ id }: IdValueObj) => {
-            return id != UserRoles.ADMIN; // Descartar Admin,
+            return id != UserRoles.ADMIN && id != UserRoles.LEGAL; // Descartar Admin, legal
           })
           .reduce((acc: IdValueMap, { id, value }: IdValueObj) => {
             acc[id] = { value };

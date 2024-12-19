@@ -1,4 +1,4 @@
-import { Offer, PurchaseOrder } from "../models/MainInterfaces";
+import { PurchaseOrder } from "../models/MainInterfaces";
 import {
   Action,
   ModalTypes,
@@ -17,24 +17,18 @@ import { ChangeEvent, useContext, useEffect, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import useApi from "../hooks/useApi";
-import {
-  getBaseDataUserService,
-  getUserService,
-} from "../services/requests/authService";
+import { getUserService } from "../services/requests/authService";
 import { App } from "antd";
 import showNotification, {
   showLoadingMessage,
 } from "../utilities/notification/showNotification";
-import makeRequest, {
+import {
   getLabelFromPurchaseOrderType,
   getPurchaseOrderType,
   openPurchaseOrderPdf,
 } from "../utilities/globalFunctions";
 import {
-  transformToBaseUser,
-  transformToBasicRateData,
   transformToFullUser,
-  transformToOffer,
   transformToPurchaseOrder,
 } from "../utilities/transform";
 import { mainModalScrollStyle } from "../utilities/globals";
@@ -46,24 +40,25 @@ import {
 } from "../services/requests/purchaseOrderService";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
-import {
-  getBasicRateDataOfferService,
-  getOffersByRequirementIdService,
-} from "../services/requests/offerService";
-import { getBasicRateDataReqService } from "../services/requests/requirementService";
-import { getRequirementById } from "../services/complete/general";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
+import { ModalsContext } from "../contexts/ModalsContext";
+import {
+  useCulminate,
+  useGetOffersByRequirementId,
+} from "../hooks/requirementHook";
 
 export default function PurchaseOrders() {
+  const { notification, message } = App.useApp();
   const { t } = useTranslation();
   const location = useLocation();
   const uid = useSelector((state: MainState) => state.user.uid);
   const role = useSelector((state: MainState) => state.user.typeID);
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
   const { updateMyPurchaseOrdersLoadingPdf } = useContext(LoadingDataContext);
-  const { notification, message } = App.useApp();
-  const [currentPurchaseOrder, setCurrentPurchaseOrder] =
-    useState<PurchaseOrder | null>(null);
+  const { viewHistoryModalData } = useContext(ModalsContext);
+  const { getOffersByRequirementId, modalDataOffersByRequirementId } =
+    useGetOffersByRequirementId();
+  const { getBasicRateData, modalDataRate } = useCulminate();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -78,9 +73,43 @@ export default function PurchaseOrders() {
     onButtonClick: handleOnButtonClick,
   });
 
+  /** Obtener subsección */
+
   useEffect(() => {
     setType(getPurchaseOrderType(location.pathname));
   }, [location]);
+
+  /** Verificar si hay una solicitud pendiente */
+
+  useEffect(() => {
+    if (viewHistoryModalData.requirementId) {
+      getOffersByRequirementId(
+        TableTypes.PURCHASE_ORDER,
+        viewHistoryModalData.requirementId,
+        viewHistoryModalData.requirementType,
+        true,
+        viewHistoryModalData.requirement,
+        viewHistoryModalData.filters
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /** Para mostrar modales */
+
+  useEffect(() => {
+    if (modalDataRate.type !== ModalTypes.NONE) {
+      setDataModal(modalDataRate);
+      setIsOpenModal(true);
+    }
+  }, [modalDataRate]);
+
+  useEffect(() => {
+    if (modalDataOffersByRequirementId.type !== ModalTypes.NONE) {
+      setDataModal(modalDataOffersByRequirementId);
+      setIsOpenModal(true);
+    }
+  }, [modalDataOffersByRequirementId]);
 
   /** Para obtener datos iniciales y datos de proveedor/cliente */
 
@@ -127,6 +156,14 @@ export default function PurchaseOrders() {
     if (responseData) {
       setTableData();
     } else if (error) {
+      setTableContent({
+        type: TableTypes.PURCHASE_ORDER,
+        data: [],
+        subType: type,
+        hiddenColumns: [],
+        nameColumnHeader: t("user"),
+        onButtonClick: handleOnButtonClick,
+      });
       showNotification(notification, "error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -169,82 +206,6 @@ export default function PurchaseOrders() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataUser, errorUser]);
-
-  /* Obtener datos para culminar */
-
-  const [apiParamsRate, setApiParamsRate] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingRate,
-    responseData: responseDataRate,
-    error: errorRate,
-    errorMsg: errorMsgRate,
-    fetchData: fetchDataRate,
-  } = useApi({
-    service: apiParamsRate.service,
-    method: apiParamsRate.method,
-    dataToSend: apiParamsRate.dataToSend,
-  });
-
-  useEffect(() => {
-    showLoadingMessage(message, loadingRate);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingRate]);
-
-  useEffect(() => {
-    if (apiParamsRate.service) fetchDataRate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsRate]);
-
-  useEffect(() => {
-    if (responseDataRate) {
-      openRateModal();
-    } else if (errorRate) {
-      showNotification(notification, "error", errorMsgRate);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataRate, errorRate]);
-
-  /* Para ver historial */
-
-  const [apiParamsHist, setApiParamsHist] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingHist,
-    responseData: responseDataHist,
-    error: errorHist,
-    errorMsg: errorMsgHist,
-    fetchData: fetchDataHist,
-  } = useApi({
-    service: apiParamsHist.service,
-    method: apiParamsHist.method,
-    dataToSend: apiParamsHist.dataToSend,
-  });
-
-  useEffect(() => {
-    showLoadingMessage(message, loadingHist);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingHist]);
-
-  useEffect(() => {
-    if (apiParamsHist.service) fetchDataHist();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsHist]);
-
-  useEffect(() => {
-    if (responseDataHist) {
-      openDetailedRequirement();
-    } else if (errorHist) {
-      showNotification(notification, "error", errorMsgHist);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataHist, errorHist]);
 
   /* Para descargar pdf de orden de compra */
 
@@ -302,31 +263,13 @@ export default function PurchaseOrders() {
         onButtonClick: handleOnButtonClick,
       });
     } catch (error) {
+      console.log(error);
       showNotification(notification, "error", t("errorOccurred"));
     }
   }
 
   function handleCloseModal() {
     setIsOpenModal(false);
-  }
-
-  function openRateModal() {
-    const data = transformToBasicRateData(responseDataRate.data[0]);
-    if (currentPurchaseOrder) {
-      setDataModal({
-        type: ModalTypes.RATE_USER,
-        data: {
-          basicRateData: data,
-          type: currentPurchaseOrder.type,
-          isOffer: type == PurchaseOrderTableTypes.ISSUED,
-          requirementOrOfferId:
-            type == PurchaseOrderTableTypes.ISSUED
-              ? currentPurchaseOrder.requirementId
-              : currentPurchaseOrder.offerId,
-        },
-      });
-      setIsOpenModal(true);
-    }
   }
 
   function showUserInfo() {
@@ -340,61 +283,7 @@ export default function PurchaseOrders() {
     setIsOpenModal(true);
   }
 
-  async function openDetailedRequirement() {
-    showLoadingMessage(message, true);
-    try {
-      if (
-        currentPurchaseOrder &&
-        responseDataHist.data &&
-        Array.isArray(responseDataHist.data)
-      ) {
-        const { requirement } = await getRequirementById(
-          currentPurchaseOrder.requirementId,
-          currentPurchaseOrder.type
-        );
-        if (requirement) {
-          const offerArray: Offer[] = await Promise.all(
-            responseDataHist.data.map(async (item: any) => {
-              const { responseData }: any = await makeRequest({
-                service: getBaseDataUserService(item.userID),
-                method: "get",
-              });
-              const { user, subUser } = transformToBaseUser(
-                responseData.data[0]
-              );
-              return subUser
-                ? transformToOffer(
-                    item,
-                    currentPurchaseOrder.type,
-                    subUser,
-                    user
-                  )
-                : transformToOffer(item, currentPurchaseOrder.type, user);
-            })
-          );
-          setDataModal({
-            type: ModalTypes.DETAILED_REQUIREMENT,
-            data: {
-              offerList: offerArray,
-              requirement: requirement,
-              forPurchaseOrder: true,
-              filters: currentPurchaseOrder.filters,
-            },
-          });
-          setIsOpenModal(true);
-        } else showNotification(notification, "error", t("errorOccurred"));
-      } else showNotification(notification, "error", t("errorOccurred"));
-    } catch (e) {
-      showNotification(notification, "error", t("errorOccurred"));
-      console.log(e);
-    } finally {
-      showLoadingMessage(message, false);
-    }
-  }
-
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
-    setCurrentPurchaseOrder(purchaseOrder);
-
     switch (action) {
       case Action.VIEW_CUSTOMER:
         setApiParamsUser({
@@ -418,32 +307,46 @@ export default function PurchaseOrders() {
         if (type == PurchaseOrderTableTypes.ISSUED) {
           // Buscar en oferta de requerimiento
           if (purchaseOrder.type == RequirementType.GOOD)
-            setApiParamsRate({
-              service: getBasicRateDataOfferService(purchaseOrder.offerId),
-              method: "get",
-            });
+            // r3v falta servicios
+            getBasicRateData(
+              purchaseOrder.requirementId,
+              purchaseOrder.offerId,
+              true,
+              true,
+              action,
+              purchaseOrder.type
+            );
           break;
         } else if (type == PurchaseOrderTableTypes.RECEIVED)
           if (purchaseOrder.type == RequirementType.GOOD)
             // Buscar en requerimiento
-            setApiParamsRate({
-              service: getBasicRateDataReqService(purchaseOrder.requirementId),
-              method: "get",
-            });
+            getBasicRateData(
+              purchaseOrder.offerId,
+              purchaseOrder.requirementId,
+              false,
+              false,
+              action,
+              purchaseOrder.type
+            );
         break;
       case Action.VIEW_HISTORY:
-        setApiParamsHist({
-          service: getOffersByRequirementIdService(purchaseOrder.requirementId),
-          method: "get",
-        });
+        getOffersByRequirementId(
+          TableTypes.PURCHASE_ORDER,
+          purchaseOrder.requirementId,
+          purchaseOrder.type,
+          true,
+          undefined,
+          purchaseOrder.filters
+        );
         break;
-      case Action.CANCEL: //r3v
+      case Action.CANCEL:
         setDataModal({
           type: ModalTypes.CANCEL_PURCHASE_ORDER,
           data: {
             offerId: purchaseOrder.offerId,
             requirementId: purchaseOrder.requirementId,
             fromRequirementTable: false,
+            canceledByCreator: type == PurchaseOrderTableTypes.RECEIVED,
           },
         });
         setIsOpenModal(true);
@@ -468,7 +371,7 @@ export default function PurchaseOrders() {
         title={t("myPurchaseOrders")}
         titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
         subtitle={`${t("listOf")} ${t(
-          getLabelFromPurchaseOrderType(type, true, false)
+          getLabelFromPurchaseOrderType(type, true)
         )}`}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}

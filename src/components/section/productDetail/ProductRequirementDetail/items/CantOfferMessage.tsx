@@ -7,10 +7,10 @@ import {
   ModalTypes,
   RequirementType,
 } from "../../../../../utilities/types";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Requirement } from "../../../../../models/MainInterfaces";
 import { useNavigate } from "react-router-dom";
-import { pageRoutes } from "../../../../../utilities/routes";
+import { pageRoutes, pageSubRoutes } from "../../../../../utilities/routes";
 import ModalContainer from "../../../../containers/ModalContainer";
 import { ModalContent, useApiParams } from "../../../../../models/Interfaces";
 import { mainModalScrollStyle } from "../../../../../utilities/globals";
@@ -23,6 +23,7 @@ import showNotification, {
 } from "../../../../../utilities/notification/showNotification";
 import { App } from "antd";
 import useApi from "../../../../../hooks/useApi";
+import { ModalsContext } from "../../../../../contexts/ModalsContext";
 
 interface CantOfferMessageProps {
   offerId: string;
@@ -32,6 +33,7 @@ interface CantOfferMessageProps {
   isCertified?: CertificationState;
   loading?: boolean;
   onDeleteSuccess: () => void;
+  onSentDocsToGetCertifiedSuccess: () => void;
 }
 
 export default function CantOfferMessage(props: CantOfferMessageProps) {
@@ -39,6 +41,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
   const navigate = useNavigate();
   const { notification, message } = App.useApp();
   const entityType = useSelector((state: MainState) => state.user.typeEntity);
+  const { updateDetailedRequirementModalData } = useContext(ModalsContext);
   const [mainText, setMainText] = useState("");
   const [optionalText, setOptionalText] = useState("");
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -46,8 +49,6 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
     type: ModalTypes.NONE,
     data: {},
   });
-
-  console.log(props.motive);
 
   /* Para eliminar */
 
@@ -207,7 +208,6 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
   }
 
   function deleteOffer() {
-    console.log("deleting", props.offerId);
     setDataModal({
       type: ModalTypes.CONFIRM,
       data: {
@@ -226,17 +226,41 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
   }
 
   function openGetCertifiedModal() {
-    setDataModal({
-      type: ModalTypes.SELECT_DOCS_CERT,
-      data: {
+    if (props.requirement)
+      setDataModal({
+        type: ModalTypes.SELECT_DOCS_CERT,
         data: {
-          userId: "2222222",
-          userName: "Uiversidad nacional de san agustín",
-          text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
+          data: {
+            userId: props.requirement.user.uid,
+            userName: props.requirement.user.name,
+            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
+          }, // r3v
         },
-      },
-    });
+      });
     setIsOpenModal(true);
+  }
+
+  function seeRequirementDetails() {
+    if (props.requirement) {
+      if (props.motive == CantOfferMotives.IS_CREATOR) {
+        updateDetailedRequirementModalData({
+          requirement: props.requirement,
+          requirementId: props.requirement.key,
+          requirementType: props.requirement.type,
+        });
+        navigate(
+          pageRoutes.myRequirements +
+            "/" +
+            (props.requirement.type == RequirementType.GOOD
+              ? pageSubRoutes.goods
+              : props.requirement.type == RequirementType.SERVICE
+              ? pageSubRoutes.services
+              : pageSubRoutes.sales)
+        );
+      } else if (props.motive == CantOfferMotives.SUBUSER_IS_CREATOR) {
+        navigate(pageRoutes.users);
+      }
+    }
   }
 
   return (
@@ -288,7 +312,17 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
                 style={{ height: "auto" }}
                 className="btn btn-default btn-sm"
                 icon={<i className="fa-regular fa-columns"></i>}
-                onClick={() => navigate(pageRoutes.home)} // r3v
+                onClick={() => seeRequirementDetails()}
+              >
+                {t("goTo") + t("controlPanel")}
+              </ButtonContainer>
+            )}
+            {props.motive == CantOfferMotives.SUBUSER_MADE_OFFER && (
+              <ButtonContainer
+                style={{ height: "auto" }}
+                className="btn btn-default btn-sm"
+                icon={<i className="fa-regular fa-columns"></i>}
+                onClick={() => navigate(pageRoutes.users)}
               >
                 {t("goTo") + t("controlPanel")}
               </ButtonContainer>

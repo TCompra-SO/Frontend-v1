@@ -74,7 +74,7 @@ export default function CompanyData() {
             <>
               <BasicCompanyData user={user} />
               <DetailedCompanyData user={user} />
-              <CertificationData state={CertificationState.NONE} />
+              <CertificationData state={CertificationState.NONE} user={user} />
             </>
           ) : (
             <Flex justify="center" align="center">

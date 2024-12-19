@@ -20,14 +20,6 @@ export default function AuthRoleGuard({
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const typeId = useSelector((state: MainState) => state.user.typeID);
 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setIsWaiting(false);
-  //   }, 300); // espera para obtener datos del usuario
-
-  //   return () => clearTimeout(timer);
-  // }, []);
-
   useEffect(() => {
     if (isLoggedIn !== undefined) setIsWaiting(false);
   }, [isLoggedIn]);

@@ -31,7 +31,6 @@ export default function Home() {
     hiddenColumns: [TableColumns.CATEGORY],
     nameColumnHeader: t("goods"),
     onButtonClick: (action: Action, req: Requirement) => {
-      console.log("ssssss", action);
       if (action == Action.VIEW_REQUIREMENT)
         navigate(`${pageRoutes.productDetail}/${req.key}`);
     },

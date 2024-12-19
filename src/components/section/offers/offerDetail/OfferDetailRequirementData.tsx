@@ -1,17 +1,16 @@
 import { useTranslation } from "react-i18next";
 import FrontImage from "../../../common/FrontImage";
 import SubUserName from "../../../common/SubUserName";
-import { BaseUser } from "../../../../models/MainInterfaces";
+import { BasicRateData } from "../../../../models/MainInterfaces";
 import { Tooltip } from "antd";
 import { RequirementType, UserClass } from "../../../../utilities/types";
 import { getUserClass } from "../../../../utilities/globalFunctions";
 
 interface OfferDetailRequirementDataProps {
   requirementTitle: string;
-  user: BaseUser;
-  subUser: BaseUser | undefined;
   type: RequirementType;
   isOffer: boolean;
+  basicRateData: BasicRateData;
 }
 
 export default function OfferDetailRequirementData(
@@ -22,7 +21,7 @@ export default function OfferDetailRequirementData(
 
   return (
     <div className="t-flex oferta-titulo">
-      <FrontImage small image={props.user.image} isUser={true} />
+      <FrontImage small image={props.basicRateData.userImage} isUser={true} />
       <div className="oferta-usuario" style={{ marginRight: "5px" }}>
         <div className="oferta-datos t-wrap m-0">
           <div
@@ -44,11 +43,11 @@ export default function OfferDetailRequirementData(
         <div className="t-flex oferta-descripcion">
           <div className="text-truncate detalles-oferta">
             {userClass == UserClass.CUSTOMER ? t("customer") : t("seller")}:{" "}
-            <Tooltip title={props.user.name} placement="topLeft">
-              {props.user.name}{" "}
+            <Tooltip title={props.basicRateData.userName} placement="topLeft">
+              {props.basicRateData.userName}{" "}
             </Tooltip>
           </div>
-          <SubUserName subUserName={props.subUser?.name} small />
+          <SubUserName subUserName={props.basicRateData.subUserName} small />
         </div>
       </div>
     </div>

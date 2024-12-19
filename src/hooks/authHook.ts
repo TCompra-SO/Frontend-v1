@@ -20,7 +20,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { MainState } from "../models/Redux";
-import { setIsUserLoading } from "../redux/loadingUserSlice";
 import { decryptData } from "../utilities/crypto";
 import { getBaseUserForUserSubUser } from "../services/complete/general";
 
@@ -62,7 +61,6 @@ export function useLoadUserInfo() {
   const dispatch = useDispatch();
 
   async function loadUserInfo() {
-    dispatch(setIsUserLoading(true));
     const userData = localStorage.getItem(userDataKey);
     if (userData) {
       const userInfo = JSON.parse(decryptData(userData));
@@ -96,17 +94,14 @@ export function useLoadUserInfo() {
           dispatch(setBaseUser(subUser));
         }
 
-        dispatch(setIsUserLoading(false));
         dispatch(setIsLoggedIn(user && subUser ? true : false));
         return;
       }
 
-      dispatch(setIsUserLoading(false));
       dispatch(setIsLoggedIn(false));
       return;
     }
 
-    dispatch(setIsUserLoading(false));
     dispatch(setIsLoggedIn(false));
   }
 

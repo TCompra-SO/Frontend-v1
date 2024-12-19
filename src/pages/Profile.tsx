@@ -132,7 +132,7 @@ export default function Profile(props: ProfileProps) {
     if (props.docType == DocType.RUC) {
       data.specialtyID = values.specialty.trim();
       data.age = values.tenure;
-      if (values.aboutMe) data.aboutMe = values.aboutMe.trim();
+      if (values.aboutMe?.trim()) data.about_me = values.aboutMe.trim();
     }
     console.log(values, data);
     setApiParams({

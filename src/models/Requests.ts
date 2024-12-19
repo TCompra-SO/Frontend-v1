@@ -1,4 +1,9 @@
-import { CommonFilter, RegisterTypeId, UserRoles } from "../utilities/types";
+import {
+  CertificationState,
+  CommonFilter,
+  RegisterTypeId,
+  UserRoles,
+} from "../utilities/types";
 
 export interface LoginRequest {
   email: string;
@@ -13,18 +18,22 @@ export interface RegisterRequest {
   ruc?: string;
 }
 
-export interface ProfileRequest {
+export interface UpdateProfileRequest {
   uid: string;
   phone: string;
   address: string;
-  countryID: string;
+  categories?: number[];
   cityID: string;
-  categories: number[];
-  avatar?: string;
-  planID: number;
+  about_me?: string;
   age?: number;
   specialtyID?: string;
-  aboutMe?: string;
+}
+
+export interface ProfileRequest extends UpdateProfileRequest {
+  categories: number[];
+  countryID: string;
+  avatar?: string;
+  planID: number;
 }
 
 export interface ValidateCodeRequest {
@@ -148,4 +157,27 @@ export interface CulminateRequest {
   comments?: string;
   requerimentID?: string;
   offerID?: string;
+}
+
+export interface CancelRequirementRequest {
+  requerimentID: string;
+  reason?: string;
+}
+
+export interface CancelOfferRequest {
+  offerID: string;
+  reason?: string;
+  canceledByCreator: boolean;
+}
+
+export interface SendCertificationRequest {
+  userID: string;
+  companyID: string;
+  certificateIDs: string[];
+}
+
+export interface UpdateCertificationStateRequest {
+  certificateID: string;
+  state: CertificationState;
+  note?: string;
 }

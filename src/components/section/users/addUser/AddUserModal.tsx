@@ -29,8 +29,8 @@ import { useSelector } from "react-redux";
 import { MainState } from "../../../../models/Redux";
 import { equalServices } from "../../../../utilities/globalFunctions";
 import PasswordField from "../../../common/formFields/PasswordField";
-import { SubUserProfile } from "../../../../models/Responses";
 import { newPasswordService } from "../../../../services/requests/authService";
+import { SubUserProfile } from "../../../../models/MainInterfaces";
 
 interface AddUserModalProps {
   onClose: () => void;
@@ -50,7 +50,9 @@ export default function AddUserModal(props: AddUserModalProps) {
   const [validDoc, setValidDoc] = useState(false);
   const uid = useSelector((state: MainState) => state.user.uid);
 
-  const [loadingRegisterUser, setLoadingRegisterUser] = useState(false);
+  const [loadingRegisterUser, setLoadingRegisterUser] = useState<
+    boolean | undefined
+  >(false);
   const [apiParams, setApiParams] = useState<
     useApiParams<
       | GetNameReniecRequest
@@ -113,6 +115,7 @@ export default function AddUserModal(props: AddUserModalProps) {
     if (props.edit && props.userData?.document) {
       form.setFieldsValue({ document: props.userData?.document });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.userData?.document, form]);
 
   useEffect(() => {
@@ -303,8 +306,8 @@ export default function AddUserModal(props: AddUserModalProps) {
     if (props.userData && props.edit) {
       const profile: UpdateProfileSubUserRequest = {
         uid: props.userData.uid,
-        phone: values.phone,
-        address: values.address,
+        phone: values.phone.trim(),
+        address: values.address.trim(),
         cityID: values.location,
       };
       setApiParams({

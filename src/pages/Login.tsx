@@ -359,6 +359,7 @@ export default function Login(props: LoginProps) {
                     className="form-control"
                     placeholder="example@email.com"
                     style={{ flexGrow: 1 }}
+                    id="email-login"
                   />
                 </Form.Item>
               </div>

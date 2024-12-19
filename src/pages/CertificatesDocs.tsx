@@ -3,83 +3,62 @@ import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import { mainModalScrollStyle } from "../utilities/globals";
 import { ModalContent, TableTypeMyDocuments } from "../models/Interfaces";
-import {
-  Action,
-  CertificationState,
-  ModalTypes,
-  TableTypes,
-} from "../utilities/types";
+import { Action, ModalTypes, TableTypes } from "../utilities/types";
 import { useTranslation } from "react-i18next";
-import { CertificateFile, CertificationItem } from "../models/MainInterfaces";
-import { equalServices, openDocument } from "../utilities/globalFunctions";
+import { CertificateFile } from "../models/MainInterfaces";
+import { openDocument } from "../utilities/globalFunctions";
 import ButtonContainer from "../components/containers/ButtonContainer";
-import { App, Row } from "antd";
-import useApi from "../hooks/useApi";
-import showNotification from "../utilities/notification/showNotification";
-
-const cert: CertificateFile[] = [
-  {
-    name: "sadasd dhjahdjh sjh djhasjkdhka dhjahdjh sjh djhasjkdhka dhjahdjh sjh djhasjkdhka dhjahdjh sjh djhasjkdhka dhjahdjh sjh djhasjkdhka ",
-    documentName:
-      "ffdfds-ffdfds-ffdfds-ffdfds-ffdfds-ffdfds-ffdfds-ffdfds.jpeg",
-    url: "https://imgv3.fotor.com/images/cover-photo-image/AI-illustration-of-a-dragon-by-Fotor-AI-text-to-image-generator.jpg",
-    state: CertificationState.CERTIFIED,
-  },
-  {
-    name: "ddddddddd ssssssssssssss sss ssssssssss",
-    documentName: "dummy.pdf",
-    url: "https://www.rd.usda.gov/sites/default/files/pdf-sample_0.pdf",
-    state: CertificationState.REJECTED,
-  },
-  {
-    name: "ddddddddd ssssssssssssss sss ssssssssss",
-    documentName: "dummy.pdf",
-    url: "https://www.rd.usda.gov/sites/default/files/pdf-sample_0.pdf",
-    state: CertificationState.PENDING,
-  },
-];
+import { Row } from "antd";
+import {
+  useDeleteCertificate,
+  useGetCertificatesList,
+} from "../hooks/certificateHook";
 
 export default function CertificatesDocs() {
   const { t } = useTranslation();
-  const { notification, message } = App.useApp();
+  const { certificateList, getCertificatesList, loadingCertList } =
+    useGetCertificatesList();
+  const { deleteCertificate, loadingDeleteCert } = useDeleteCertificate();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
   });
-  const [tableContent] = useState<TableTypeMyDocuments>({
+  const [tableContent, setTableContent] = useState<TableTypeMyDocuments>({
     type: TableTypes.MY_DOCUMENTS,
-    data: cert,
+    data: [],
     hiddenColumns: [],
     nameColumnHeader: t("name"),
     onButtonClick: handleOnButtonClick,
   });
 
-  // const [apiParams, setApiParams] = useState<useApiParams>({
-  //   service: getOffersService(),
-  //   method: "get",
-  // });
+  /** Obtener lista de documentos */
 
-  // const { loading, responseData, error, errorMsg, fetchData } = useApi({
-  //   service: apiParams.service,
-  //   method: apiParams.method,
-  //   dataToSend: apiParams.dataToSend,
-  // });
+  useEffect(() => {
+    getCertificatesList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // useEffect(() => {
-  //   if (apiParams.service) fetchData();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [apiParams]);
+  useEffect(() => {
+    if (certificateList) {
+      setTableContent((prev) => {
+        return {
+          ...prev,
+          data: certificateList,
+        };
+      });
+    } else {
+      setTableContent({
+        type: TableTypes.MY_DOCUMENTS,
+        data: [],
+        hiddenColumns: [],
+        nameColumnHeader: t("name"),
+        onButtonClick: handleOnButtonClick,
+      });
+    }
+  }, [certificateList]);
 
-  // useEffect(() => {
-  //   if (responseData) {
-  //     if (equalServices(apiParams.service, getOffersService())) setData();
-  //   } else if (error) {
-  //     if (equalServices(apiParams.service, getOffersService()))
-  //       showNotification(notification, "error", errorMsg);
-  //   }
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [responseData, error]);
+  /** Funciones */
 
   function handleCloseModal() {
     setIsOpenModal(false);
@@ -103,14 +82,30 @@ export default function CertificatesDocs() {
   }
 
   function handleOnButtonClick(action: Action, certificate: CertificateFile) {
-    // const certificate = obj as CertificateFile;
     switch (action) {
       case Action.VIEW_DOCUMENT:
         openDocument(certificate.url);
         break;
       case Action.DELETE:
-        console.log(certificate); //r3v
+        deleteDoc(certificate.uid);
+        break;
     }
+  }
+
+  function deleteDoc(uid: string) {
+    setDataModal({
+      type: ModalTypes.CONFIRM,
+      data: {
+        loading: loadingDeleteCert,
+        onAnswer: async (ok: boolean) => {
+          if (!ok) return;
+          await deleteCertificate(uid);
+          setIsOpenModal(false);
+        },
+        text: t("deleteDocumentConfirmation"),
+      },
+    });
+    setIsOpenModal(true);
   }
 
   return (
@@ -150,11 +145,7 @@ export default function CertificatesDocs() {
             </ButtonContainer>
           </Row>
         }
-        // loading={
-        //   equalServices(apiParams.service, getRequirementsService())
-        //     ? loading
-        //     : undefined
-        // }
+        loading={loadingCertList}
       />
     </>
   );
