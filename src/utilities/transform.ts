@@ -157,7 +157,6 @@ export function transformToOffer(
   mainUser?: UserState | BaseUser
 ) {
   const offer: Offer = data;
-  offer.title = data.name;
   offer.subUser = undefined;
   offer.type = type;
   if (mainUser) {
@@ -166,28 +165,6 @@ export function transformToOffer(
   } else offer.user = user;
 
   return offer;
-  // const offer: Offer = data;
-  // offer.subUser = undefined;
-  // offer.key = data.uid;
-  // offer.title = data.name;
-  // offer.location = data.cityID;
-  // offer.deliveryTime = data.deliveryTimeID;
-  // offer.coin = data.currencyID;
-  // offer.warrantyTime = data.timeMeasurementID;
-  // offer.price = data.budget;
-  // offer.igv = data.includesIGV;
-  // offer.requirementId = data.requerimentID;
-  // offer.state = data.stateID; //OfferState.CANCELED
-  // offer.canceledByCreator = data.canceledByCreator;
-  // offer.type = type;
-  // offer.requirementTitle = data.requerimentTitle;
-  // offer.image = data.images;
-  // offer.document = data.files;
-  // if (mainUser) {
-  //   offer.user = mainUser;
-  //   offer.subUser = user;
-  // } else offer.user = user;
-  // return offer;
 }
 
 export function transformToOfferFromGetOffersByEntityOrSubUser(
