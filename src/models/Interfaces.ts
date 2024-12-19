@@ -168,6 +168,7 @@ export interface ModalSelectDocsCert extends CommonModalType {
   type: ModalTypes.SELECT_DOCS_CERT;
   data: {
     data: SelectDocsModalData;
+    certificationId?: string;
   };
 }
 

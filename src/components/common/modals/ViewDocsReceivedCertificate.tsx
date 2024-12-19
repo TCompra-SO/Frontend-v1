@@ -85,6 +85,7 @@ export default function ViewDocsReceivedCertificate(
     setDataModal({
       type: ModalTypes.SELECT_DOCS_CERT,
       data: {
+        certificationId: props.data.uid,
         data: {
           userId: props.data.companyId,
           userName: props.data.companyName,
@@ -93,6 +94,7 @@ export default function ViewDocsReceivedCertificate(
       },
     });
     setIsOpenModal(true);
+    props.onClose();
   }
 
   function submit(approve: boolean) {
@@ -143,7 +145,7 @@ export default function ViewDocsReceivedCertificate(
           {((props.readOnly && props.data.note) || !props.readOnly) && (
             <div className="t-flex gap-15">
               <div className="card-ofertas cert-datos">
-                <div className="dato-empresa">
+                <div className="dato-empresa text-left">
                   {!props.readOnly && (
                     <TextAreaContainer
                       className="form-control wd-100"

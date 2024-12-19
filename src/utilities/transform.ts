@@ -362,6 +362,7 @@ export function transformToCertificationItem(data: any) {
     creationDate: data.creationDate,
     state: data.state,
     certificates: [],
+    note: data.note,
   };
   if (data.certificates)
     cert.certificates = data.certificates.map((it: any) =>

@@ -65,3 +65,12 @@ export function deleteCertificateService(certId: string): HttpService {
     type: "CE-DEL",
   };
 }
+
+export function resendCertificatesService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
+      ApiRoutes.certificate.resendCertificates
+    }`,
+    type: "CE-RES",
+  };
+}

@@ -181,3 +181,8 @@ export interface UpdateCertificationStateRequest {
   state: CertificationState;
   note?: string;
 }
+
+export interface ResendCertificatesRequest {
+  certificateRequestID: string;
+  certificateIDs: string[];
+}

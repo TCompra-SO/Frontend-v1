@@ -16,14 +16,21 @@ import showNotification from "../../../utilities/notification/showNotification";
 import SimpleLoading from "../../../pages/utils/SimpleLoading";
 import useApi from "../../../hooks/useApi";
 import { useGetCertificatesList } from "../../../hooks/certificateHook";
-import { sendCertificationRequestService } from "../../../services/requests/certificateService";
-import { SendCertificationRequest } from "../../../models/Requests";
+import {
+  resendCertificatesService,
+  sendCertificationRequestService,
+} from "../../../services/requests/certificateService";
+import {
+  ResendCertificatesRequest,
+  SendCertificationRequest,
+} from "../../../models/Requests";
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
 
 interface SelectDocumentsToSendCertificateModalProps {
   data: SelectDocsModalData;
   onClose: () => any;
+  certificationId?: string;
 }
 
 export default function SelectDocumentsToSendCertificateModal(
@@ -119,13 +126,22 @@ export default function SelectDocumentsToSendCertificateModal(
       .filter((xx) => xx !== null) as string[];
     // console.log(checked, mainUserUid, props.data.userId, result);
 
-    const data: SendCertificationRequest = {
-      userID: mainUserUid,
-      companyID: props.data.userId,
-      certificateIDs: certList,
-    };
+    const data: SendCertificationRequest | ResendCertificatesRequest =
+      props.certificationId
+        ? {
+            certificateRequestID: props.certificationId,
+            certificateIDs: certList,
+          }
+        : {
+            userID: mainUserUid,
+            companyID: props.data.userId,
+            certificateIDs: certList,
+          };
+
     setApiParams({
-      service: sendCertificationRequestService(),
+      service: props.certificationId
+        ? resendCertificatesService()
+        : sendCertificationRequestService(),
       method: "post",
       dataToSend: data,
     });
