@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { HomeContext } from "../../../contexts/Homecontext";
 import SelectContainer from "../../containers/SelectContainer";
 import { DisplayUser } from "../../../models/MainInterfaces";
@@ -26,29 +26,24 @@ export default function CompanyFilter() {
   const { updateUserId } = useContext(HomeContext);
   const [value, setValue] = useState<string>();
   const [companyList, setCompanyList] = useState<DisplayUser[]>([]);
+  const [fetching, setFetching] = useState(false);
 
   function search(companyId: string) {
-    updateUserId(companyId); // r3v
+    updateUserId(companyId);
   }
 
   const handleSearch = debounce((newValue: string) => {
     if (newValue.trim().length >= 3) {
       setCompanyList(aaa); // r3v
-      console.log(newValue);
+    } else {
+      setCompanyList([]);
     }
-    // else {
-    //   setCompanyList([]);
-    // }
   }, 300);
 
   function handleChange(newValue: string) {
     setValue(newValue);
     search(newValue);
   }
-
-  useEffect(() => {
-    console.log(companyList);
-  }, [companyList]);
 
   return (
     <div className="card-white back-filter">
@@ -59,10 +54,10 @@ export default function CompanyFilter() {
         style={{ width: "100%" }}
         placeholder={t("companyName")}
         className="form-control form-filter"
-        // notFoundContent={fetching ? <Spin size="small" /> : null}
-        // notFoundContent={null}
+        notFoundContent={fetching ? <Spin size="small" /> : null}
         onChange={handleChange}
         onSearch={handleSearch}
+        filterOption={false}
         options={companyList.map((comp) => ({
           value: comp.uid,
           label: (
