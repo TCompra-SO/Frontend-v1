@@ -26,7 +26,7 @@ export default function CompanyFilter() {
   const { updateUserId } = useContext(HomeContext);
   const [value, setValue] = useState<string>();
   const [companyList, setCompanyList] = useState<DisplayUser[]>([]);
-  const [fetching, setFetching] = useState(false);
+  const [fetching] = useState(false);
 
   function search(companyId: string) {
     updateUserId(companyId);
