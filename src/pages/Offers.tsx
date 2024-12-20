@@ -9,9 +9,8 @@ import {
   useApiParams,
 } from "../models/Interfaces";
 import TablePageContent from "../components/section/table-page/TablePageContent";
-import { mainModalScrollStyle } from "../utilities/globals";
+import { mainModalScrollStyle, pageSizeOptionsSt } from "../utilities/globals";
 import {
-  equalServices,
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
@@ -53,6 +52,7 @@ export default function Offers() {
     hiddenColumns: [],
     nameColumnHeader: t("offers"),
     onButtonClick: handleOnButtonClick,
+    total: 0,
   });
 
   /** Verificar si hay una solicitud pendiente */
@@ -87,8 +87,8 @@ export default function Offers() {
 
   /** Cargar datos iniciales */
 
-  const [apiParams] = useState<useApiParams>({
-    service: getOffersBySubUserService(dataUser.uid),
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: getOffersBySubUserService(dataUser.uid, 1, pageSizeOptionsSt[0]),
     method: "get",
   });
 
@@ -114,6 +114,7 @@ export default function Offers() {
         hiddenColumns: [],
         nameColumnHeader: t("offers"),
         onButtonClick: handleOnButtonClick,
+        total: 0,
       });
       showNotification(notification, "error", errorMsg);
     }
@@ -169,6 +170,7 @@ export default function Offers() {
     setTableContent((prev) => {
       return {
         ...prev,
+        //total: 80, // r3v
         subType: type,
       };
     });
@@ -194,6 +196,7 @@ export default function Offers() {
         hiddenColumns: [],
         nameColumnHeader: t("offers"),
         onButtonClick: handleOnButtonClick,
+        total: responseData.res?.totalDocuments,
       });
     } catch (error) {
       console.log(error);
@@ -288,6 +291,14 @@ export default function Offers() {
     console.log(e.target.value);
   }
 
+  function handleChangePageAndPageSize(page: number, pageSize: number) {
+    // setLoadingTable(true);
+    setApiParams({
+      service: getOffersBySubUserService(dataUser.uid, page, pageSize),
+      method: "get",
+    });
+  }
+
   return (
     <>
       <ModalContainer
@@ -304,11 +315,8 @@ export default function Offers() {
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
         onSearch={handleSearch}
-        loading={
-          equalServices(apiParams.service, getOffersBySubUserService(""))
-            ? loading
-            : undefined
-        }
+        loading={loading}
+        onChangePageAndPageSize={handleChangePageAndPageSize}
       />
     </>
   );

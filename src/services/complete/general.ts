@@ -2,6 +2,7 @@ import { BaseUser } from "../../models/MainInterfaces";
 import { UserState } from "../../models/Redux";
 import makeRequest from "../../utilities/globalFunctions";
 import {
+  transformDataToRequirement,
   transformFromGetRequirementByIdToRequirement,
   transformToBaseUser,
   transformToBasicRateData,
@@ -172,4 +173,32 @@ export async function deleteCertificateById(id: string) {
     error,
     errorMsg,
   };
+}
+
+export async function getRequirementFromData(
+  data: any,
+  user?: BaseUser,
+  subUser?: BaseUser
+) {
+  if (user && subUser)
+    return transformDataToRequirement(
+      data,
+      RequirementType.GOOD,
+      data.user == data.subUser ? user : subUser,
+      user
+    );
+
+  const { responseData: respData }: any = await makeRequest({
+    service: getBaseDataUserService(data.subUser),
+    method: "get",
+  });
+  const { user: newUser, subUser: newSubUser } = transformToBaseUser(
+    respData.data[0]
+  );
+  return transformDataToRequirement(
+    data,
+    RequirementType.GOOD,
+    data.user == data.subUser ? newUser : newSubUser,
+    newUser
+  );
 }

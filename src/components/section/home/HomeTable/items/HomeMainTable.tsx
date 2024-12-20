@@ -4,6 +4,7 @@ import GeneralTable from "../../../../common/GeneralTable/GeneralTable";
 interface HomeMainTableProps {
   loadingTable?: boolean;
   content: TableType;
+  onChangePageAndPageSize?: (page: number, pageSize: number) => void;
 }
 
 export default function HomeMainTable(props: HomeMainTableProps) {
@@ -14,6 +15,7 @@ export default function HomeMainTable(props: HomeMainTableProps) {
           content={props.content}
           loading={props.loadingTable}
           // onRowAction
+          onChangePageAndPageSize={props.onChangePageAndPageSize}
         />
       </div>
     </div>

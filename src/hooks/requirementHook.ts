@@ -339,6 +339,8 @@ export function useGetOffersByRequirementId() {
     reqId: string,
     typeReq: RequirementType,
     forPurchaseOrder: boolean,
+    page: number,
+    pageSize: number,
     req?: Requirement,
     filters?: OfferFilters,
     purchaseOrderId?: string
@@ -366,7 +368,7 @@ export function useGetOffersByRequirementId() {
       tableType,
     });
     setApiParams({
-      service: getOffersByRequirementIdService(reqId),
+      service: getOffersByRequirementIdService(reqId, page, pageSize),
       method: "get",
     });
   }

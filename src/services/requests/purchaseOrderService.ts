@@ -34,12 +34,16 @@ export function getPurchaseOrderByIdService(id: string): HttpService {
 // Para cuentas principales (empresa y persona). Incluye órdenes de subusuarios
 export function getPurchaseOrdersByClientEntityService(
   id: string,
-  userRole: UserRoles
+  userRole: UserRoles,
+  page: number,
+  pageSize: number
 ): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.purchaseOrder
-    }${ApiRoutes.purchaseOrder.getPurchaseOrdersByClient}${id}/${userRole}`,
+    }${
+      ApiRoutes.purchaseOrder.getPurchaseOrdersByClient
+    }${id}/${userRole}/${page}/${pageSize}`,
     type: "PO-GET-ENT-C",
   };
 }
@@ -47,12 +51,16 @@ export function getPurchaseOrdersByClientEntityService(
 // Para cuentas principales (empresa y persona). Incluye órdenes de subusuarios
 export function getPurchaseOrdersByProviderEntityService(
   id: string,
-  userRole: UserRoles
+  userRole: UserRoles,
+  page: number,
+  pageSize: number
 ): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.purchaseOrder
-    }${ApiRoutes.purchaseOrder.getPurchaseOrdersByProvider}${id}/${userRole}`,
+    }${
+      ApiRoutes.purchaseOrder.getPurchaseOrdersByProvider
+    }${id}/${userRole}/${page}/${pageSize}`,
     type: "PO-GET-ENT-P",
   };
 }

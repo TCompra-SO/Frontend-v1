@@ -16,7 +16,11 @@ import {
 } from "../models/Interfaces";
 import { useTranslation } from "react-i18next";
 import TablePageContent from "../components/section/table-page/TablePageContent";
-import { mainModalScrollStyle } from "../utilities/globals";
+import {
+  mainModalScrollStyle,
+  noPaginationPageSize,
+  pageSizeOptionsSt,
+} from "../utilities/globals";
 import useApi from "../hooks/useApi";
 import {
   deleteRequirementService,
@@ -25,7 +29,6 @@ import {
 import { transformDataToRequirement } from "../utilities/transform";
 import { useLocation } from "react-router-dom";
 import {
-  equalServices,
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
@@ -51,6 +54,7 @@ export default function Requirements() {
   const { t } = useTranslation();
   const { notification, message } = App.useApp();
   const location = useLocation();
+  const [loadingTable, setLoadingTable] = useState(true);
   const { detailedRequirementModalData } = useContext(ModalsContext);
   const [type, setType] = useState(getRouteType(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -72,6 +76,7 @@ export default function Requirements() {
     hiddenColumns: [TableColumns.CATEGORY],
     nameColumnHeader: t(getLabelFromRequirementType(type)),
     onButtonClick: handleOnButtonClick,
+    total: 0,
   });
 
   /** Verificar si hay una solicitud pendiente */
@@ -83,6 +88,8 @@ export default function Requirements() {
         detailedRequirementModalData.requirementId,
         detailedRequirementModalData.requirementType,
         false,
+        1,
+        noPaginationPageSize,
         detailedRequirementModalData.requirement
       );
     }
@@ -107,12 +114,16 @@ export default function Requirements() {
 
   /* Obtener lista inicialmente */
 
-  const [apiParams] = useState<useApiParams>({
-    service: getRequirementsBySubUserService(dataUser.uid),
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: getRequirementsBySubUserService(
+      dataUser.uid,
+      1,
+      pageSizeOptionsSt[0]
+    ),
     method: "get",
   });
 
-  const { loading, responseData, error, errorMsg, fetchData } = useApi({
+  const { responseData, error, errorMsg, fetchData } = useApi({
     service: apiParams.service,
     method: apiParams.method,
     dataToSend: apiParams.dataToSend,
@@ -126,6 +137,7 @@ export default function Requirements() {
     setTableContent((prev) => {
       return {
         ...prev,
+        //total: 100, // r3v
         subType: type,
         nameColumnHeader: t(getLabelFromRequirementType(type)),
       };
@@ -149,7 +161,9 @@ export default function Requirements() {
         hiddenColumns: [TableColumns.CATEGORY],
         nameColumnHeader: t(getLabelFromRequirementType(type)),
         onButtonClick: handleOnButtonClick,
+        total: 0,
       });
+      setLoadingTable(false);
       showNotification(notification, "error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -221,10 +235,13 @@ export default function Requirements() {
         hiddenColumns: [TableColumns.CATEGORY],
         nameColumnHeader: t("goods"),
         onButtonClick: handleOnButtonClick,
+        total: responseData.res?.totalDocuments,
       });
     } catch (error) {
       console.log(error);
       showNotification(notification, "error", t("errorOccurred"));
+    } finally {
+      setLoadingTable(false);
     }
   }
 
@@ -237,6 +254,8 @@ export default function Requirements() {
           requirement.key,
           requirement.type,
           false,
+          1,
+          noPaginationPageSize,
           requirement
         );
         break;
@@ -343,6 +362,14 @@ export default function Requirements() {
     setIsOpenModal(false);
   }
 
+  function handleChangePageAndPageSize(page: number, pageSize: number) {
+    setLoadingTable(true);
+    setApiParams({
+      service: getRequirementsBySubUserService(dataUser.uid, page, pageSize),
+      method: "get",
+    });
+  }
+
   return (
     <>
       <ModalContainer
@@ -359,11 +386,8 @@ export default function Requirements() {
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
         onSearch={handleSearch}
-        loading={
-          equalServices(apiParams.service, getRequirementsBySubUserService(""))
-            ? loading
-            : undefined
-        }
+        loading={loadingTable}
+        onChangePageAndPageSize={handleChangePageAndPageSize}
       />
     </>
   );

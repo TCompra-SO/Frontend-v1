@@ -27,6 +27,7 @@ export default function Home() {
   const [tableContent, setTableContent] = useState<TableTypeHome>({
     type: TableTypes.HOME,
     data: tableData,
+    total: 50, // r3v
     subType: RequirementType.GOOD,
     hiddenColumns: [TableColumns.CATEGORY],
     nameColumnHeader: t("goods"),
@@ -36,12 +37,21 @@ export default function Home() {
     },
   });
 
+  /** Mostrar datos iniciales */
+
   useEffect(() => {
     setTableContent((prevContent) => ({
       ...prevContent,
+      total: 50, // r3v
       data: tableData,
     }));
   }, [tableData]);
+
+  /** Funciones */
+
+  function handleChangePageAndPageSize(page: number, pageSize: number) {
+    console.log(page, pageSize);
+  }
 
   return (
     <HomeProvider>
@@ -53,7 +63,11 @@ export default function Home() {
           <div className="titulo req-t">
             {t("homeTableFirstHalf")} <span>{t("homeTableSecondHalf")}</span>
           </div>
-          <HomeTable content={tableContent} loadingTable={loadingTable} />
+          <HomeTable
+            content={tableContent}
+            loadingTable={loadingTable}
+            onChangePageAndPageSize={handleChangePageAndPageSize}
+          />
         </div>
         <Ads />
       </div>

@@ -345,7 +345,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         content={{
           type: ModalTypes.CONFIRM,
           data: {
-            onAnswer: (_: boolean) => {},
+            onAnswer: () => {},
             text: t("noSavedRequiredDocListCertification"),
             showOnlyAcceptButton: true,
           },

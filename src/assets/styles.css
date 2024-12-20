@@ -459,8 +459,19 @@ body {
   background-position: center;
 }
 
+.image-box-registro {
+  width: 60%;
+  background-image: url(images/registro.jpg);
+  background-size: cover;
+  background-position: center;
+}
+
 @media (max-width: 768px) {
   .image-box {
+    display: none;
+  }
+
+  .image-box-registro {
     display: none;
   }
 

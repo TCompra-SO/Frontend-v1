@@ -383,7 +383,7 @@ export default function Profile(props: ProfileProps) {
           </Form>
         </div>
 
-        <div className="image-box wd-50"></div>
+        <div className="image-box-registro wd-50"></div>
       </div>
     </>
   );
