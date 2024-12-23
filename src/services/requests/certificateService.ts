@@ -80,3 +80,15 @@ export function resendCertificatesService(): HttpService {
     type: "CE-RES",
   };
 }
+
+export function verifyCertificationService(
+  userId: string,
+  companyIdToVerify: string
+): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
+      ApiRoutes.certificate.verifyCertification
+    }${userId}/${companyIdToVerify}`,
+    type: "CE-VER",
+  };
+}

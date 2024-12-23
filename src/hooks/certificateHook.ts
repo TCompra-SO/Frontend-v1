@@ -94,3 +94,5 @@ export function useDeleteCertificate() {
     loadingDeleteCert: loading,
   };
 }
+
+export function useVerifyCertification() {}
