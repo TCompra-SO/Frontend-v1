@@ -144,7 +144,9 @@ export default function ModalContainer(props: ModalContainerProps) {
         );
       }
       case ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST: {
-        return <EditDocumentListToRequestModal />;
+        return (
+          <EditDocumentListToRequestModal text={props.content.data.text} />
+        );
       }
       case ModalTypes.VIEW_DOCS_RECEIVED_CERT:
       case ModalTypes.VIEW_DOCS_SENT_CERT: {

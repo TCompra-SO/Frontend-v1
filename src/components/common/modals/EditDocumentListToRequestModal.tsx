@@ -6,7 +6,13 @@ import { Form } from "antd";
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
 
-export default function EditDocumentListToRequestModal() {
+interface EditDocumentListToRequestModalProps {
+  text: string;
+}
+
+export default function EditDocumentListToRequestModal(
+  props: EditDocumentListToRequestModalProps
+) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const uid = useSelector((state: MainState) => state.mainUser.uid);
@@ -38,6 +44,7 @@ export default function EditDocumentListToRequestModal() {
                 autoSize
                 placeholder={t("listOfDocumentsToRequest")}
                 maxLength={Lengths.docListToRequest.max}
+                value={props.text}
               />
             </Form.Item>
           </div>

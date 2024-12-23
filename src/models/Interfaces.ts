@@ -144,6 +144,9 @@ export interface ModalAddCertificates extends CommonModalType {
 
 export interface ModalEditDocumentListToRequest extends CommonModalType {
   type: ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST;
+  data: {
+    text: string;
+  };
 }
 
 export interface ModalViewDocsReceivedCert extends CommonModalType {
@@ -422,4 +425,10 @@ export interface ListItem {
 export interface CanOfferResponse {
   codeResponse: CodeResponseCanOffer;
   offerID?: string;
+}
+
+export interface RequiredDocsForCert {
+  name: string;
+  uid: string;
+  requiredDocuments: string;
 }

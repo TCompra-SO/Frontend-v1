@@ -1,3 +1,4 @@
+import { RequiredDocsForCert } from "../models/Interfaces";
 import {
   BaseUser,
   BasicRateData,
@@ -346,4 +347,9 @@ export function transformToCertificationItem(data: any) {
       transformToCertificateFile(it)
     );
   return cert;
+}
+
+export function transformToRequiredDocsCert(data: any) {
+  const obj: RequiredDocsForCert = data;
+  return obj;
 }

@@ -48,6 +48,7 @@ import { Requirement } from "../../../../../models/MainInterfaces";
 import makeRequest from "../../../../../utilities/globalFunctions";
 import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
 import ModalContainer from "../../../../containers/ModalContainer";
+import { verifyCertificationByUserIdAndCompanyId } from "../../../../../services/complete/general";
 
 function RowContainer({ children }: { children: ReactNode }) {
   return (
@@ -68,10 +69,14 @@ export default function OfferForm(props: OfferFormProps) {
   const [form] = Form.useForm();
   const email = useSelector((state: MainState) => state.user.email);
   const uid = useSelector((state: MainState) => state.user.uid);
+  const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const entityType = useSelector((state: MainState) => state.user.typeEntity);
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const role = useSelector((state: MainState) => state.user.typeID);
   const { notification } = App.useApp();
+  const [isCertified, setIsCertified] = useState<CertificationState>(
+    CertificationState.NONE
+  );
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [cantOfferMotive, setCantOfferMotive] = useState<CantOfferMotives>(
     CantOfferMotives.INI
@@ -255,7 +260,7 @@ export default function OfferForm(props: OfferFormProps) {
       (role == UserRoles.BUYER &&
         props.requirement?.type != RequirementType.SALE) ||
       (role == UserRoles.SELLER &&
-        props.requirement?.type == RequirementType.SALE) // r3v
+        props.requirement?.type == RequirementType.SALE)
     ) {
       setCantOfferMotive(CantOfferMotives.NO_ALLOWED_ROLE);
 
@@ -322,12 +327,21 @@ export default function OfferForm(props: OfferFormProps) {
             CanOfferType.CERTIFIED_COMPANY
           )
         ) {
-          setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED); //r3v verificar si el usuario está certificado con la empresa
-          return;
+          const { certState: certResult } =
+            await verifyCertificationByUserIdAndCompanyId(
+              mainUid,
+              props.requirement.user.uid
+            );
+          if (certResult) {
+            setIsCertified(certResult);
+            if (certResult != CertificationState.CERTIFIED) {
+              setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED);
+              return;
+            }
+          }
         }
       }
     }
-    console.log("aaaaaaa");
     setCantOfferMotive(CantOfferMotives.NONE);
   }
 
@@ -547,7 +561,7 @@ export default function OfferForm(props: OfferFormProps) {
             motive={cantOfferMotive}
             requirement={props.requirement}
             isPremium={isPremium}
-            isCertified={CertificationState.NONE} //r3v
+            isCertified={isCertified}
             onDeleteSuccess={recheck}
             onSentDocsToGetCertifiedSuccess={recheck}
           />

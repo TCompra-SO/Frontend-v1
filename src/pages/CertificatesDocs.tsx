@@ -12,13 +12,18 @@ import { Row } from "antd";
 import {
   useDeleteCertificate,
   useGetCertificatesList,
+  useGetRequiredDocsCert,
 } from "../hooks/certificateHook";
+import { MainState } from "../models/Redux";
+import { useSelector } from "react-redux";
 
 export default function CertificatesDocs() {
   const { t } = useTranslation();
+  const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
   const { certificateList, getCertificatesList, loadingCertList } =
     useGetCertificatesList();
   const { deleteCertificate, loadingDeleteCert } = useDeleteCertificate();
+  const { getRequiredDocsCert, requiredDocs } = useGetRequiredDocsCert();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -56,7 +61,22 @@ export default function CertificatesDocs() {
         onButtonClick: handleOnButtonClick,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [certificateList]);
+
+  /** Mostrar lista de documentos requeridos */
+
+  useEffect(() => {
+    if (requiredDocs !== null) {
+      setDataModal({
+        type: ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST,
+        data: {
+          text: requiredDocs,
+        },
+      });
+      setIsOpenModal(true);
+    }
+  }, [requiredDocs]);
 
   /** Funciones */
 
@@ -73,10 +93,7 @@ export default function CertificatesDocs() {
         setIsOpenModal(true);
         break;
       case Action.EDIT_DOCUMENT_LIST_TO_REQUEST:
-        setDataModal({
-          type: ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST,
-        });
-        setIsOpenModal(true);
+        getRequiredDocsCert(mainUserUid);
         break;
     }
   }

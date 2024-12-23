@@ -119,6 +119,8 @@ export const ApiRoutes = {
     deleteCertificate: "deleteCertificate/",
     resendCertificates: "resendCertify",
     verifyCertification: "verifyCertification/",
+    updateRequiredDocuments: "updateRequiredDocuments",
+    getRequiredDocuments: "getRequiredDocuments/",
   },
 };
 

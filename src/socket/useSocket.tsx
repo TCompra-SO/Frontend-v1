@@ -21,10 +21,10 @@ export default function useSocket() {
         });
         // console.log(responseData);
         if (responseData) {
-          const data = await Promise.all(
+          const data: (Requirement | null)[] = await Promise.all(
             responseData.data.map(async (e: any) => getRequirementFromData(e))
           );
-          setRequirements(data);
+          setRequirements(data.filter((req) => req !== null));
         }
       } catch (error) {
         console.log(error);
@@ -39,10 +39,10 @@ export default function useSocket() {
             method: "get",
           });
           if (responseData) {
-            const data = await Promise.all(
+            const data: (Requirement | null)[] = await Promise.all(
               responseData.data.map(async (e: any) => getRequirementFromData(e))
             );
-            setRequirements(data);
+            setRequirements(data.filter((req) => req !== null));
           }
         } catch (error) {
           console.log(error);

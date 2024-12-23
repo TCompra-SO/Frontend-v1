@@ -92,3 +92,21 @@ export function verifyCertificationService(
     type: "CE-VER",
   };
 }
+
+export function updateRequiredDocumentsService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
+      ApiRoutes.certificate.updateRequiredDocuments
+    }`,
+    type: "CE-UPD-DOC",
+  };
+}
+
+export function getRequiredDocumentsService(companyId: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
+      ApiRoutes.certificate.getRequiredDocuments
+    }${companyId}`,
+    type: "CE-GET-DOC",
+  };
+}

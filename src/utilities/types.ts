@@ -382,7 +382,7 @@ export enum PurchaseOrderTableTypes {
 }
 
 export enum CertificationState {
-  NONE = 0,
+  NONE = 5,
   CERTIFIED = 1,
   REJECTED = 2,
   PENDING = 3,
