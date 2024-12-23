@@ -47,7 +47,7 @@ export interface Requirement extends BasicRequirement {
   used?: Usage;
   deliveryTime: number;
   paymentMethod: number;
-  allowedBidder: number;
+  allowedBidder: number[];
 }
 
 export interface BasicOffer extends BaseRequirementOffer {
@@ -122,12 +122,14 @@ export interface PurchaseOrder extends BasicPurchaseOrder {
   filters?: OfferFilters;
 }
 
-export interface BaseUser {
+export interface DisplayUser {
   uid: string;
   name: string;
   document: string;
   image?: string;
-  avatar?: string;
+}
+
+export interface BaseUser extends DisplayUser {
   email: string;
   tenure?: number;
   customerScore?: number;

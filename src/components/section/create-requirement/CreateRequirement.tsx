@@ -262,7 +262,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       payment_methodID: values.paymentMethod,
       completion_date: dayjs(values.expirationDate).toISOString(),
       submission_dateID: values.deliveryTime,
-      allowed_bidersID: values.canOffer[0], // r3v
+      allowed_bidersID: values.canOffer,
       userID: uid,
     };
 
@@ -345,7 +345,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         content={{
           type: ModalTypes.CONFIRM,
           data: {
-            onAnswer: (_: boolean) => {},
+            onAnswer: () => {},
             text: t("noSavedRequiredDocListCertification"),
             showOnlyAcceptButton: true,
           },

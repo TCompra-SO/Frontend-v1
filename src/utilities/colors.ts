@@ -166,6 +166,10 @@ export const CertificationStateMeta: {
     class: "es-eliminado",
     label: "none",
   },
+  [CertificationState.RESENT]: {
+    class: "es-disputa",
+    label: "resent",
+  },
 };
 
 export const filterLabels: {

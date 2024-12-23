@@ -1,11 +1,14 @@
 import { HttpService } from "../../models/Interfaces";
 import { ApiMainRoutes, ApiRoutes } from "../../utilities/routes";
 
-export function getRequirementsService(): HttpService {
+export function getRequirementsService(
+  page: number,
+  pageSize: number
+): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.getRequirements}`,
+    }${ApiRoutes.requirements.getRequirements}${page}/${pageSize}`,
     type: "RE-GET-ALL",
   };
 }
@@ -68,21 +71,33 @@ export function republishRequirementService(): HttpService {
 }
 
 // Para cuentas principales (empresa y persona). Incluye requerimientos de subusuarios
-export function getRequirementsByEntityService(id: string): HttpService {
+export function getRequirementsByEntityService(
+  id: string,
+  page: number,
+  pageSize: number
+): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.getRequirementsByEntity}${id}`,
+    }${
+      ApiRoutes.requirements.getRequirementsByEntity
+    }${id}/${page}/${pageSize}`,
     type: "RE-GET-ENT",
   };
 }
 
 // Para subusuarios + cuentas principales. No incluye requerimientos de subusuarios
-export function getRequirementsBySubUserService(id: string): HttpService {
+export function getRequirementsBySubUserService(
+  id: string,
+  page: number,
+  pageSize: number
+): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.getRequirementsBySubUser}${id}`,
+    }${
+      ApiRoutes.requirements.getRequirementsBySubUser
+    }${id}/${page}/${pageSize}`,
     type: "RE-GET-SUB",
   };
 }

@@ -5,7 +5,6 @@ import { TableTypeAllOffers, useApiParams } from "../models/Interfaces";
 import { Action, TableTypes } from "../utilities/types";
 import { BaseUser, BasicOffer } from "../models/MainInterfaces";
 import makeRequest, {
-  equalServices,
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
@@ -21,6 +20,7 @@ import {
   transformToOfferFromGetOffersByEntityOrSubUser,
 } from "../utilities/transform";
 import { getBaseDataUserService } from "../services/requests/authService";
+import { pageSizeOptionsSt } from "../utilities/globals";
 
 export default function AllOffers() {
   const { t } = useTranslation();
@@ -36,12 +36,13 @@ export default function AllOffers() {
     hiddenColumns: [],
     nameColumnHeader: t("offers"),
     onButtonClick: handleOnButtonClick,
+    total: 0,
   });
 
   /** Obtener datos de tabla */
 
-  const [apiParams] = useState<useApiParams>({
-    service: getOffersByEntityService(dataUser.uid),
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: getOffersByEntityService(dataUser.uid, 1, pageSizeOptionsSt[0]),
     method: "get",
   });
 
@@ -83,6 +84,7 @@ export default function AllOffers() {
     setTableContent((prev) => {
       return {
         ...prev,
+        total: 100, // r3v
         subType: type,
       };
     });
@@ -139,6 +141,7 @@ export default function AllOffers() {
         hiddenColumns: [],
         nameColumnHeader: t("offers"),
         onButtonClick: handleOnButtonClick,
+        total: 100, // r3v
       });
     } catch (error) {
       console.log(error);
@@ -154,6 +157,14 @@ export default function AllOffers() {
 
   function handleOnButtonClick(action: Action, offer: BasicOffer) {}
 
+  function handleChangePageAndPageSize(page: number, pageSize: number) {
+    setLoadingTable(true);
+    setApiParams({
+      service: getOffersByEntityService(dataUser.uid, page, pageSize),
+      method: "get",
+    });
+  }
+
   return (
     <TablePageContent
       title={t("offers")}
@@ -163,6 +174,7 @@ export default function AllOffers() {
       table={tableContent}
       onSearch={handleSearch}
       loading={loadingTable}
+      onChangePageAndPageSize={handleChangePageAndPageSize}
     />
   );
 }

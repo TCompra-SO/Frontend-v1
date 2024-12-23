@@ -71,6 +71,10 @@ export default function StateColumn(
               ),
               value: CertificationState.REJECTED,
             },
+            {
+              text: t(CertificationStateMeta[CertificationState.RESENT].label),
+              value: CertificationState.RESENT,
+            },
           ]
         : undefined,
     onFilter:

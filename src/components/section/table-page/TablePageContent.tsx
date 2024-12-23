@@ -17,6 +17,7 @@ interface TablePageContentProps {
   additionalContentHeader?: ReactNode;
   hideSearch?: boolean;
   loading?: boolean;
+  onChangePageAndPageSize?: (page: number, pageSize: number) => void;
 }
 
 export default function TablePageContent(props: TablePageContentProps) {
@@ -62,7 +63,11 @@ export default function TablePageContent(props: TablePageContentProps) {
         </Row>
         {props.table && (
           <div className="table-responsive">
-            <GeneralTable content={props.table} loading={props.loading} />
+            <GeneralTable
+              content={props.table}
+              loading={props.loading}
+              onChangePageAndPageSize={props.onChangePageAndPageSize}
+            />
           </div>
         )}
       </div>

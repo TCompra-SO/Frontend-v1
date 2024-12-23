@@ -5,7 +5,6 @@ import { TableTypeAllRequirements, useApiParams } from "../models/Interfaces";
 import { Action, TableTypes } from "../utilities/types";
 import { BaseUser, BasicRequirement } from "../models/MainInterfaces";
 import makeRequest, {
-  equalServices,
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
@@ -22,6 +21,7 @@ import {
   transformToBaseUser,
 } from "../utilities/transform";
 import { pageRoutes } from "../utilities/routes";
+import { pageSizeOptionsSt } from "../utilities/globals";
 
 export default function AllRequirements() {
   const { t } = useTranslation();
@@ -38,12 +38,17 @@ export default function AllRequirements() {
     hiddenColumns: [],
     nameColumnHeader: t(getLabelFromRequirementType(type)),
     onButtonClick: handleOnButtonClick,
+    total: 0,
   });
 
   /** Obtener datos de tabla */
 
-  const [apiParams] = useState<useApiParams>({
-    service: getRequirementsByEntityService(dataUser.uid),
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: getRequirementsByEntityService(
+      dataUser.uid,
+      1,
+      pageSizeOptionsSt[0]
+    ),
     method: "get",
   });
 
@@ -70,6 +75,7 @@ export default function AllRequirements() {
         hiddenColumns: [],
         nameColumnHeader: t(getLabelFromRequirementType(type)),
         onButtonClick: handleOnButtonClick,
+        total: 0,
       });
       setLoadingTable(false);
       showNotification(notification, "error", errorMsg);
@@ -87,6 +93,7 @@ export default function AllRequirements() {
     setTableContent((prev) => {
       return {
         ...prev,
+        //total: 100, // r3v
         subType: type,
         nameColumnHeader: t(getLabelFromRequirementType(type)),
       };
@@ -145,6 +152,7 @@ export default function AllRequirements() {
         hiddenColumns: [],
         nameColumnHeader: t(getLabelFromRequirementType(type)),
         onButtonClick: handleOnButtonClick,
+        total: responseData.res?.totalDocuments,
       });
     } catch (error) {
       console.log(error);
@@ -163,6 +171,14 @@ export default function AllRequirements() {
       navigate(`${pageRoutes.productDetail}/${requirement.key}`);
   }
 
+  function handleChangePageAndPageSize(page: number, pageSize: number) {
+    setLoadingTable(true);
+    setApiParams({
+      service: getRequirementsByEntityService(dataUser.uid, page, pageSize),
+      method: "get",
+    });
+  }
+
   return (
     <TablePageContent
       title={t("requirements")}
@@ -172,6 +188,7 @@ export default function AllRequirements() {
       table={tableContent}
       onSearch={handleSearch}
       loading={loadingTable}
+      onChangePageAndPageSize={handleChangePageAndPageSize}
     />
   );
 }

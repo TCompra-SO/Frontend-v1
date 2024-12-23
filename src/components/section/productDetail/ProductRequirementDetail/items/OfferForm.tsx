@@ -265,11 +265,10 @@ export default function OfferForm(props: OfferFormProps) {
       props.requirement.state != RequirementState.PUBLISHED
     ) {
       setCantOfferMotive(CantOfferMotives.CHANGED_STATE);
-
       return;
     } else if (
       props.requirement &&
-      props.requirement.allowedBidder == CanOfferType.PREMIUM &&
+      props.requirement.allowedBidder.includes(CanOfferType.PREMIUM) &&
       !isPremium
     ) {
       setCantOfferMotive(CantOfferMotives.ONLY_PREMIUM);
@@ -318,7 +317,11 @@ export default function OfferForm(props: OfferFormProps) {
           }
         }
 
-        if (props.requirement.allowedBidder == CanOfferType.CERTIFIED_COMPANY) {
+        if (
+          props.requirement.allowedBidder.includes(
+            CanOfferType.CERTIFIED_COMPANY
+          )
+        ) {
           setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED); //r3v verificar si el usuario está certificado con la empresa
           return;
         }

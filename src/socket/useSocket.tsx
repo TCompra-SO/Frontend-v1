@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
-import {
-  transformDataToRequirement,
-  transformToBaseUser,
-} from "../utilities/transform";
-import { RequirementType } from "../utilities/types";
 import { Requirement } from "../models/MainInterfaces";
 import makeRequest from "../utilities/globalFunctions";
 import { getRequirementsService } from "../services/requests/requirementService";
-import { getBaseDataUserService } from "../services/requests/authService";
+import { getRequirementFromData } from "../services/complete/general";
+import { pageSizeOptionsSt } from "../utilities/globals";
 
 export default function useSocket() {
   const [requirements, setRequirements] = useState<Requirement[]>([]);
@@ -20,25 +16,13 @@ export default function useSocket() {
       setLoading(true);
       try {
         const { responseData }: any = await makeRequest({
-          service: getRequirementsService(),
+          service: getRequirementsService(1, 50),
           method: "get",
         });
         // console.log(responseData);
         if (responseData) {
           const data = await Promise.all(
-            responseData.data.map(async (e: any) => {
-              const { responseData: respData }: any = await makeRequest({
-                service: getBaseDataUserService(e.subUser),
-                method: "get",
-              });
-              const { user, subUser } = transformToBaseUser(respData.data[0]);
-              return transformDataToRequirement(
-                e,
-                RequirementType.GOOD,
-                e.user == e.subUser ? user : subUser,
-                user
-              );
-            })
+            responseData.data.map(async (e: any) => getRequirementFromData(e))
           );
           setRequirements(data);
         }
@@ -51,24 +35,12 @@ export default function useSocket() {
         setLoading(true);
         try {
           const { responseData }: any = await makeRequest({
-            service: getRequirementsService(),
+            service: getRequirementsService(1, pageSizeOptionsSt[0]),
             method: "get",
           });
           if (responseData) {
             const data = await Promise.all(
-              responseData.data.map(async (e: any) => {
-                const { responseData: respData }: any = await makeRequest({
-                  service: getBaseDataUserService(e.subUser),
-                  method: "get",
-                });
-                const { user, subUser } = transformToBaseUser(respData.data[0]);
-                return transformDataToRequirement(
-                  e,
-                  RequirementType.GOOD,
-                  e.user == e.subUser ? user : subUser,
-                  user
-                );
-              })
+              responseData.data.map(async (e: any) => getRequirementFromData(e))
             );
             setRequirements(data);
           }
@@ -86,6 +58,7 @@ export default function useSocket() {
     return () => {
       socketAPI.off("getRequeriments");
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return { requirements, loading };
 }

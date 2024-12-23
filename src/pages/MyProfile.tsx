@@ -236,7 +236,7 @@ export default function MyProfile() {
         });
       }
     }
-    if (user?.avatar) setImageSrc(user.avatar);
+    if (user?.image) setImageSrc(user.image);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
@@ -249,7 +249,6 @@ export default function MyProfile() {
       const user = transformToFullUser(responseData.data);
       setUser(user);
     }
-    if (user?.image) setImageSrc(user.image);
   }
 
   function handleClick() {

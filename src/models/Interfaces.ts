@@ -168,6 +168,7 @@ export interface ModalSelectDocsCert extends CommonModalType {
   type: ModalTypes.SELECT_DOCS_CERT;
   data: {
     data: SelectDocsModalData;
+    certificationId?: string;
   };
 }
 
@@ -214,6 +215,7 @@ export interface SelectDocsModalData {
 /********** Tables *************/
 
 export interface TableHiddenColumns {
+  total?: number;
   hiddenColumns: TableColumns[];
   nameColumnHeader: string;
   onButtonClick: (action: Action, data: any) => void;

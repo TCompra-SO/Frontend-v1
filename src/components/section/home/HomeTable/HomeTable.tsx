@@ -5,6 +5,7 @@ import HomeMainTable from "./items/HomeMainTable";
 interface HomeTableProps {
   loadingTable?: boolean;
   content: TableType;
+  onChangePageAndPageSize?: (page: number, pageSize: number) => void;
 }
 
 export default function HomeTable(props: HomeTableProps) {
@@ -14,6 +15,7 @@ export default function HomeTable(props: HomeTableProps) {
       <HomeMainTable
         content={props.content}
         loadingTable={props.loadingTable}
+        onChangePageAndPageSize={props.onChangePageAndPageSize}
       />
     </>
   );

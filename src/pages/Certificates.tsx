@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
-import { mainModalScrollStyle } from "../utilities/globals";
+import { mainModalScrollStyle, pageSizeOptionsSt } from "../utilities/globals";
 import {
   ModalContent,
   TableTypeCertificatesReceived,
@@ -44,6 +44,7 @@ export default function Certificates() {
     hiddenColumns: [],
     nameColumnHeader: t("name"),
     onButtonClick: handleOnButtonClick,
+    total: 0,
   });
 
   /** Obtener lista de solicitudes de certificación */
@@ -80,6 +81,7 @@ export default function Certificates() {
         hiddenColumns: [],
         nameColumnHeader: t("name"),
         onButtonClick: handleOnButtonClick,
+        total: 0,
       });
       showNotification(notification, "error", errorMsgCertif);
     }
@@ -96,13 +98,21 @@ export default function Certificates() {
     switch (type) {
       case pageSubRoutes.sent:
         setApiParamsCertif({
-          service: getSentRequestsByEntityService(mainUserUid),
+          service: getSentRequestsByEntityService(
+            mainUserUid,
+            1,
+            pageSizeOptionsSt[0]
+          ),
           method: "get",
         });
         break;
       case pageSubRoutes.received:
         setApiParamsCertif({
-          service: getReceivedRequestsByEntityService(mainUserUid),
+          service: getReceivedRequestsByEntityService(
+            mainUserUid,
+            1,
+            pageSizeOptionsSt[0]
+          ),
           method: "get",
         });
         break;
@@ -114,7 +124,7 @@ export default function Certificates() {
 
   function setTableData() {
     try {
-      const data: CertificationItem[] = responseDataCertif.map((e: any) =>
+      const data: CertificationItem[] = responseDataCertif.data.map((e: any) =>
         transformToCertificationItem(e)
       );
       setTableContent({
@@ -126,6 +136,7 @@ export default function Certificates() {
         hiddenColumns: [],
         nameColumnHeader: t("name"),
         onButtonClick: handleOnButtonClick,
+        total: responseDataCertif.res?.totalDocuments,
       });
     } catch (error) {
       console.log(error);
@@ -168,6 +179,27 @@ export default function Certificates() {
     }
   }
 
+  function handleChangePageAndPageSize(page: number, pageSize: number) {
+    switch (type) {
+      case pageSubRoutes.sent:
+        setApiParamsCertif({
+          service: getSentRequestsByEntityService(mainUserUid, page, pageSize),
+          method: "get",
+        });
+        break;
+      case pageSubRoutes.received:
+        setApiParamsCertif({
+          service: getReceivedRequestsByEntityService(
+            mainUserUid,
+            page,
+            pageSize
+          ),
+          method: "get",
+        });
+        break;
+    }
+  }
+
   return (
     <>
       <ModalContainer
@@ -189,6 +221,7 @@ export default function Certificates() {
         table={tableContent}
         hideSearch={true}
         loading={loadingCertif}
+        onChangePageAndPageSize={handleChangePageAndPageSize}
       />
     </>
   );

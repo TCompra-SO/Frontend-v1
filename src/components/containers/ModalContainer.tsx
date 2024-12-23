@@ -161,6 +161,7 @@ export default function ModalContainer(props: ModalContainerProps) {
         return (
           <SelectDocumentsToSendCertificateModal
             data={props.content.data.data}
+            certificationId={props.content.data.certificationId}
             onClose={props.onClose}
           />
         );

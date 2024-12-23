@@ -24,7 +24,10 @@ import { App } from "antd";
 import { openPurchaseOrderPdf } from "../../../../utilities/globalFunctions";
 import { getPurchaseOrderPDFService } from "../../../../services/requests/purchaseOrderService";
 import ModalContainer from "../../../containers/ModalContainer";
-import { mainModalScrollStyle } from "../../../../utilities/globals";
+import {
+  mainModalScrollStyle,
+  noPaginationPageSize,
+} from "../../../../utilities/globals";
 import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../../../../utilities/routes";
 import ButtonContainer from "../../../containers/ButtonContainer";
@@ -36,19 +39,27 @@ interface SubUserTableModalProps {
     | {
         tableType: TableTypes.REQUIREMENT_SUBUSER;
         tableContent: RequirementItemSubUser[];
+        total?: number;
       }
     | {
         tableType: TableTypes.OFFER_SUBUSER;
         tableContent: OfferItemSubUser[];
+        total?: number;
       }
     | {
         tableType: TableTypes.PURCHASE_ORDER_SUBUSER;
         tableContent: PurchaseOrderItemSubUser[];
         subType: PurchaseOrderTableTypes;
+        total?: number;
       };
   onTabChange: (tabId: RequirementType | PurchaseOrderTableTypes) => void;
   loading: boolean | undefined;
   tableType: TableTypes;
+  onChangePageAndPageSize?: (
+    page: number,
+    pageSize: number,
+    subType: RequirementType | PurchaseOrderTableTypes
+  ) => void;
 }
 
 export default function SubUserTableModal(props: SubUserTableModalProps) {
@@ -60,8 +71,6 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
   >(RequirementType.GOOD);
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
-  const [currentPurchaseOrder, setCurrentPurchaseOrder] =
-    useState<PurchaseOrderItemSubUser | null>(null);
   const { updateSubUserPurchaseOrdersLoadingPdf } =
     useContext(LoadingDataContext);
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -144,12 +153,13 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
       }
       case Action.VIEW_PURCHASE_ORDER: {
         const po = data as PurchaseOrderItemSubUser;
-        setCurrentPurchaseOrder(po);
         getOffersByRequirementId(
           TableTypes.PURCHASE_ORDER_SUBUSER,
           po.requirementId,
           po.type,
           true,
+          1,
+          noPaginationPageSize,
           undefined,
           po.filters
         );
@@ -286,7 +296,12 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
                     hiddenColumns: [],
                     nameColumnHeader: t("requirements"),
                     onButtonClick: handleOnButtonClick,
+                    total: props.content.total,
                   }}
+                  onChangePageAndPageSize={(page, pageSize) =>
+                    props.onChangePageAndPageSize?.(page, pageSize, subType)
+                  }
+                  loading={props.loading}
                 />
               </div>
             </div>
@@ -301,7 +316,12 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
                     hiddenColumns: [],
                     nameColumnHeader: t("offers"),
                     onButtonClick: handleOnButtonClick,
+                    total: props.content.total,
                   }}
+                  onChangePageAndPageSize={(page, pageSize) =>
+                    props.onChangePageAndPageSize?.(page, pageSize, subType)
+                  }
+                  loading={props.loading}
                 />
               </div>
             </div>
@@ -317,7 +337,11 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
                     nameColumnHeader: t("purchaseOrders"),
                     onButtonClick: handleOnButtonClick,
                     subType: props.content.subType,
+                    total: props.content.total,
                   }}
+                  onChangePageAndPageSize={(page, pageSize) =>
+                    props.onChangePageAndPageSize?.(page, pageSize, subType)
+                  }
                   loading={props.loading}
                 />
               </div>

@@ -10,7 +10,7 @@ import {
   TableTypes,
 } from "../utilities/types";
 import { TableTypeUsers, useApiParams } from "../models/Interfaces";
-import { mainModalScrollStyle } from "../utilities/globals";
+import { mainModalScrollStyle, pageSizeOptionsSt } from "../utilities/globals";
 import ButtonContainer from "../components/containers/ButtonContainer";
 import useApi from "../hooks/useApi";
 import {
@@ -58,6 +58,10 @@ export default function Users() {
   );
   const [userData, setUserData] = useState<SubUserBase | null>(null);
   const [userDataEdit, setUserDataEdit] = useState<SubUserProfile | null>(null);
+  const [totalReq, setTotalReq] = useState(0);
+  const [totalOffer, setTotalOffer] = useState(0);
+  const [totalPurc, setTotalPurc] = useState(0);
+  const [totalSales, setTotalSales] = useState(0);
   const [reqList, setReqList] = useState<RequirementItemSubUser[]>([]);
   const [offerList, setOfferList] = useState<OfferItemSubUser[]>([]);
   const [orderList, setOrderList] = useState<PurchaseOrderItemSubUser[]>([]);
@@ -165,7 +169,7 @@ export default function Users() {
   });
 
   useEffect(() => {
-    showLoadingMessage(message, loadingReq);
+    if (!isOpenModal) showLoadingMessage(message, loadingReq);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingReq]);
 
@@ -178,6 +182,8 @@ export default function Users() {
     if (responseDataReq) {
       setModalTableDataReq();
     } else if (errorReq) {
+      setReqList([]);
+      setTotalReq(0);
       showNotification(notification, "error", errorMsgReq);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -203,7 +209,7 @@ export default function Users() {
   });
 
   useEffect(() => {
-    showLoadingMessage(message, loadingOffer);
+    if (!isOpenModal) showLoadingMessage(message, loadingOffer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingOffer]);
 
@@ -216,6 +222,8 @@ export default function Users() {
     if (responseDataOffer) {
       setModalTableDataOffer();
     } else if (errorOffer) {
+      setOfferList([]);
+      setTotalOffer(0);
       showNotification(notification, "error", errorMsgOffer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -241,7 +249,7 @@ export default function Users() {
   });
 
   useEffect(() => {
-    showLoadingMessage(message, loadingOrder);
+    if (!isOpenModal) showLoadingMessage(message, loadingOrder);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingOrder]);
 
@@ -254,6 +262,8 @@ export default function Users() {
     if (responseDataOrder) {
       setModalTableDataOrder();
     } else if (errorOrder) {
+      setOrderList([]);
+      setTotalPurc(0);
       showNotification(notification, "error", errorMsgOrder);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -279,7 +289,7 @@ export default function Users() {
   });
 
   useEffect(() => {
-    showLoadingMessage(message, loadingSales);
+    if (!isOpenModal) showLoadingMessage(message, loadingSales);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingSales]);
 
@@ -290,8 +300,10 @@ export default function Users() {
 
   useEffect(() => {
     if (responseDataSales) {
-      setModalTableDataOrder();
+      setModalTableDataSalesOrder();
     } else if (errorSales) {
+      setOrderList([]);
+      setTotalSales(0);
       showNotification(notification, "error", errorMsgSales);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -324,11 +336,13 @@ export default function Users() {
         (e: any) =>
           transformDataToRequirementItemSubUser(e, RequirementType.GOOD) // r3v
       );
+      setTotalReq(responseDataReq.res?.totalDocuments);
       setReqList(data);
       handleOpenModal();
     } catch (error) {
       console.log(error);
       setReqList([]);
+      setTotalReq(0);
       showNotification(notification, "error", t("errorOccurred"));
     }
   }
@@ -338,11 +352,13 @@ export default function Users() {
       const data: OfferItemSubUser[] = responseDataOffer.data.map(
         (e: any) => transformDataToOfferItemSubUser(e, RequirementType.GOOD) // r3v
       );
+      setTotalOffer(responseDataOffer.res?.totalDocuments);
       setOfferList(data);
       handleOpenModal();
     } catch (error) {
       console.log(error);
       setOfferList([]);
+      setTotalOffer(0);
       showNotification(notification, "error", t("errorOccurred"));
     }
   }
@@ -353,11 +369,30 @@ export default function Users() {
         (e: any) =>
           transformToPurchaseOrderItemSubUser(e, PurchaseOrderTableTypes.ISSUED) // r3v
       );
+      setTotalPurc(responseDataOrder.res?.totalDocuments);
       setOrderList(data);
       handleOpenModal();
     } catch (error) {
       console.log(error);
       setOrderList([]);
+      setTotalPurc(0);
+      showNotification(notification, "error", t("errorOccurred"));
+    }
+  }
+
+  function setModalTableDataSalesOrder() {
+    try {
+      const data: PurchaseOrderItemSubUser[] = responseDataSales.data.map(
+        (e: any) =>
+          transformToPurchaseOrderItemSubUser(e, PurchaseOrderTableTypes.ISSUED) // r3v
+      );
+      setTotalSales(responseDataSales.res?.totalDocuments);
+      setOrderList(data);
+      handleOpenModal();
+    } catch (error) {
+      console.log(error);
+      setOrderList([]);
+      setTotalSales(0);
       showNotification(notification, "error", t("errorOccurred"));
     }
   }
@@ -393,13 +428,17 @@ export default function Users() {
         break;
       case Action.VIEW_REQUIREMENTS:
         setApiParamsReq({
-          service: getRequirementsBySubUserService(user.uid),
+          service: getRequirementsBySubUserService(
+            user.uid,
+            1,
+            pageSizeOptionsSt[0]
+          ),
           method: "get",
         });
         break;
       case Action.VIEW_OFFERS:
         setApiParamsOffer({
-          service: getOffersBySubUserService(user.uid),
+          service: getOffersBySubUserService(user.uid, 1, pageSizeOptionsSt[0]),
           method: "get",
         });
         break;
@@ -407,7 +446,9 @@ export default function Users() {
         setApiParamsOrder({
           service: getPurchaseOrdersByClientEntityService(
             user.uid,
-            user.typeID
+            user.typeID,
+            1,
+            pageSizeOptionsSt[0]
           ),
           method: "get",
         });
@@ -417,7 +458,9 @@ export default function Users() {
           service: getPurchaseOrdersByClientEntityService(
             // r3v
             user.uid,
-            user.typeID
+            user.typeID,
+            1,
+            pageSizeOptionsSt[0]
           ),
           method: "get",
         });
@@ -443,11 +486,13 @@ export default function Users() {
             content={{
               tableType: TableTypes.REQUIREMENT_SUBUSER,
               tableContent: reqList,
+              total: totalReq,
             }}
             user={userData}
             onTabChange={handleTabChange}
             loading={loadingReq}
             tableType={TableTypes.REQUIREMENT_SUBUSER}
+            onChangePageAndPageSize={handleChangePageAndPageSize}
           />
         );
       case Action.VIEW_OFFERS:
@@ -456,11 +501,13 @@ export default function Users() {
             content={{
               tableType: TableTypes.OFFER_SUBUSER,
               tableContent: offerList,
+              total: totalOffer,
             }}
             user={userData}
             onTabChange={handleTabChange}
             loading={loadingOffer}
             tableType={TableTypes.OFFER_SUBUSER}
+            onChangePageAndPageSize={handleChangePageAndPageSize}
           />
         );
       case Action.VIEW_PURCHASE_ORDERS:
@@ -470,11 +517,13 @@ export default function Users() {
               tableType: TableTypes.PURCHASE_ORDER_SUBUSER,
               tableContent: orderList,
               subType: subTypeOrder,
+              total: totalPurc,
             }}
             user={userData}
             onTabChange={handleTabChange}
             loading={loadingOrder}
             tableType={TableTypes.PURCHASE_ORDER_SUBUSER}
+            onChangePageAndPageSize={handleChangePageAndPageSize}
           />
         );
       case Action.VIEw_SALES_ORDERS:
@@ -484,11 +533,13 @@ export default function Users() {
               tableType: TableTypes.PURCHASE_ORDER_SUBUSER,
               tableContent: orderList,
               subType: subTypeOrder,
+              total: totalSales,
             }}
             user={userData}
             onTabChange={handleTabChange}
             loading={loadingOrder}
             tableType={TableTypes.SALES_ORDER_SUBUSER}
+            onChangePageAndPageSize={handleChangePageAndPageSize}
           />
         );
       default:
@@ -502,19 +553,31 @@ export default function Users() {
         switch (tabId) {
           case RequirementType.GOOD:
             setApiParamsReq({
-              service: getRequirementsBySubUserService(userData.uid), // r3v para servicios y liquidaciones
+              service: getRequirementsBySubUserService(
+                userData.uid,
+                1,
+                pageSizeOptionsSt[0]
+              ), // r3v para servicios y liquidaciones
               method: "get",
             });
             break;
           case RequirementType.SERVICE:
             setApiParamsReq({
-              service: getRequirementsBySubUserService(userData.uid),
+              service: getRequirementsBySubUserService(
+                userData.uid,
+                1,
+                pageSizeOptionsSt[0]
+              ),
               method: "get",
             });
             break;
           case RequirementType.SALE:
             setApiParamsReq({
-              service: getRequirementsBySubUserService(userData.uid),
+              service: getRequirementsBySubUserService(
+                userData.uid,
+                1,
+                pageSizeOptionsSt[0]
+              ),
               method: "get",
             });
             break;
@@ -523,19 +586,31 @@ export default function Users() {
         switch (tabId) {
           case RequirementType.GOOD:
             setApiParamsOffer({
-              service: getOffersBySubUserService(userData.uid), // r3v para servicios y liquidaciones
+              service: getOffersBySubUserService(
+                userData.uid,
+                1,
+                pageSizeOptionsSt[0]
+              ), // r3v para servicios y liquidaciones
               method: "get",
             });
             break;
           case RequirementType.SERVICE:
             setApiParamsOffer({
-              service: getOffersBySubUserService(userData.uid),
+              service: getOffersBySubUserService(
+                userData.uid,
+                1,
+                pageSizeOptionsSt[0]
+              ),
               method: "get",
             });
             break;
           case RequirementType.SALE:
             setApiParamsOffer({
-              service: getOffersBySubUserService(userData.uid),
+              service: getOffersBySubUserService(
+                userData.uid,
+                1,
+                pageSizeOptionsSt[0]
+              ),
               method: "get",
             });
             break;
@@ -547,7 +622,9 @@ export default function Users() {
             setApiParamsOrder({
               service: getPurchaseOrdersByClientEntityService(
                 userData.uid,
-                userData.typeID
+                userData.typeID,
+                1,
+                pageSizeOptionsSt[0]
               ),
               method: "get",
             });
@@ -557,7 +634,9 @@ export default function Users() {
             setApiParamsOrder({
               service: getPurchaseOrdersByProviderEntityService(
                 userData.uid,
-                userData.typeID
+                userData.typeID,
+                1,
+                pageSizeOptionsSt[0]
               ),
               method: "get",
             });
@@ -570,7 +649,9 @@ export default function Users() {
             setApiParamsOrder({
               service: getPurchaseOrdersByClientEntityService(
                 userData.uid,
-                userData.typeID
+                userData.typeID,
+                1,
+                pageSizeOptionsSt[0]
               ),
               method: "get",
             });
@@ -579,7 +660,127 @@ export default function Users() {
             setApiParamsOrder({
               service: getPurchaseOrdersByProviderEntityService(
                 userData.uid,
-                userData.typeID
+                userData.typeID,
+                1,
+                pageSizeOptionsSt[0]
+              ),
+              method: "get",
+            });
+            break;
+        }
+      }
+    }
+  }
+
+  function handleChangePageAndPageSize(
+    page: number,
+    pageSize: number,
+    tabId: RequirementType | PurchaseOrderTableTypes
+  ) {
+    // setLoadingTable(true);
+    if (userData) {
+      if (action == Action.VIEW_REQUIREMENTS) {
+        switch (tabId) {
+          case RequirementType.GOOD:
+            setApiParamsReq({
+              service: getRequirementsBySubUserService(
+                userData.uid,
+                page,
+                pageSize
+              ), // r3v para servicios y liquidaciones
+              method: "get",
+            });
+            break;
+          case RequirementType.SERVICE:
+            setApiParamsReq({
+              service: getRequirementsBySubUserService(
+                userData.uid,
+                page,
+                pageSize
+              ),
+              method: "get",
+            });
+            break;
+          case RequirementType.SALE:
+            setApiParamsReq({
+              service: getRequirementsBySubUserService(
+                userData.uid,
+                page,
+                pageSize
+              ),
+              method: "get",
+            });
+            break;
+        }
+      } else if (action == Action.VIEW_OFFERS) {
+        switch (tabId) {
+          case RequirementType.GOOD:
+            setApiParamsOffer({
+              service: getOffersBySubUserService(userData.uid, page, pageSize), // r3v para servicios y liquidaciones
+              method: "get",
+            });
+            break;
+          case RequirementType.SERVICE:
+            setApiParamsOffer({
+              service: getOffersBySubUserService(userData.uid, page, pageSize),
+              method: "get",
+            });
+            break;
+          case RequirementType.SALE:
+            setApiParamsOffer({
+              service: getOffersBySubUserService(userData.uid, page, pageSize),
+              method: "get",
+            });
+            break;
+        }
+      } else if (action == Action.VIEW_PURCHASE_ORDERS) {
+        switch (tabId) {
+          case PurchaseOrderTableTypes.ISSUED:
+            setSubTypeOrder(tabId);
+            setApiParamsOrder({
+              service: getPurchaseOrdersByClientEntityService(
+                userData.uid,
+                userData.typeID,
+                page,
+                pageSize
+              ),
+              method: "get",
+            });
+            break;
+          case PurchaseOrderTableTypes.RECEIVED:
+            setSubTypeOrder(tabId);
+            setApiParamsOrder({
+              service: getPurchaseOrdersByProviderEntityService(
+                userData.uid,
+                userData.typeID,
+                page,
+                pageSize
+              ),
+              method: "get",
+            });
+            break;
+        }
+      } else if (action == Action.VIEw_SALES_ORDERS) {
+        // r3v cambiar a liq
+        switch (tabId) {
+          case PurchaseOrderTableTypes.ISSUED:
+            setApiParamsOrder({
+              service: getPurchaseOrdersByClientEntityService(
+                userData.uid,
+                userData.typeID,
+                page,
+                pageSize
+              ),
+              method: "get",
+            });
+            break;
+          case PurchaseOrderTableTypes.RECEIVED:
+            setApiParamsOrder({
+              service: getPurchaseOrdersByProviderEntityService(
+                userData.uid,
+                userData.typeID,
+                page,
+                pageSize
               ),
               method: "get",
             });

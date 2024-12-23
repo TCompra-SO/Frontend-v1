@@ -31,7 +31,11 @@ import {
   transformToFullUser,
   transformToPurchaseOrder,
 } from "../utilities/transform";
-import { mainModalScrollStyle } from "../utilities/globals";
+import {
+  mainModalScrollStyle,
+  noPaginationPageSize,
+  pageSizeOptionsSt,
+} from "../utilities/globals";
 import { useLocation } from "react-router-dom";
 import {
   getPurchaseOrderPDFService,
@@ -71,6 +75,7 @@ export default function PurchaseOrders() {
     hiddenColumns: [],
     nameColumnHeader: t("user"),
     onButtonClick: handleOnButtonClick,
+    total: 0,
   });
 
   /** Obtener subsección */
@@ -88,6 +93,8 @@ export default function PurchaseOrders() {
         viewHistoryModalData.requirementId,
         viewHistoryModalData.requirementType,
         true,
+        1,
+        noPaginationPageSize,
         viewHistoryModalData.requirement,
         viewHistoryModalData.filters
       );
@@ -129,7 +136,9 @@ export default function PurchaseOrders() {
         setApiParams({
           service: getPurchaseOrdersByClientEntityService(
             uid,
-            role == UserRoles.ADMIN ? UserRoles.BUYER : role
+            role == UserRoles.ADMIN ? UserRoles.BUYER : role,
+            1,
+            pageSizeOptionsSt[0]
           ),
           method: "get",
         });
@@ -138,7 +147,9 @@ export default function PurchaseOrders() {
         setApiParams({
           service: getPurchaseOrdersByProviderEntityService(
             uid,
-            role == UserRoles.ADMIN ? UserRoles.BUYER : role
+            role == UserRoles.ADMIN ? UserRoles.BUYER : role,
+            1,
+            pageSizeOptionsSt[0]
           ),
           method: "get",
         });
@@ -163,6 +174,7 @@ export default function PurchaseOrders() {
         hiddenColumns: [],
         nameColumnHeader: t("user"),
         onButtonClick: handleOnButtonClick,
+        total: 0,
       });
       showNotification(notification, "error", errorMsg);
     }
@@ -261,6 +273,7 @@ export default function PurchaseOrders() {
         hiddenColumns: [],
         nameColumnHeader: t("user"),
         onButtonClick: handleOnButtonClick,
+        total: responseData.res?.totalDocuments,
       });
     } catch (error) {
       console.log(error);
@@ -335,6 +348,8 @@ export default function PurchaseOrders() {
           purchaseOrder.requirementId,
           purchaseOrder.type,
           true,
+          1,
+          noPaginationPageSize,
           undefined,
           purchaseOrder.filters
         );
@@ -358,6 +373,34 @@ export default function PurchaseOrders() {
     console.log(e.target.value);
   }
 
+  function handleChangePageAndPageSize(page: number, pageSize: number) {
+    // setLoadingTable(true);
+    switch (type) {
+      case PurchaseOrderTableTypes.ISSUED:
+        setApiParams({
+          service: getPurchaseOrdersByClientEntityService(
+            uid,
+            role == UserRoles.ADMIN ? UserRoles.BUYER : role,
+            page,
+            pageSize
+          ),
+          method: "get",
+        });
+        break;
+      case PurchaseOrderTableTypes.RECEIVED:
+        setApiParams({
+          service: getPurchaseOrdersByProviderEntityService(
+            uid,
+            role == UserRoles.ADMIN ? UserRoles.BUYER : role,
+            page,
+            pageSize
+          ),
+          method: "get",
+        });
+        break;
+    }
+  }
+
   return (
     <>
       <ModalContainer
@@ -377,6 +420,7 @@ export default function PurchaseOrders() {
         table={tableContent}
         onSearch={handleSearch}
         loading={loading}
+        onChangePageAndPageSize={handleChangePageAndPageSize}
       />
     </>
   );

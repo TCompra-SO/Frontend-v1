@@ -37,22 +37,28 @@ export function updateCertificationStateService(): HttpService {
   };
 }
 
-export function getSentRequestsByEntityService(userId: string): HttpService {
+export function getSentRequestsByEntityService(
+  userId: string,
+  page: number,
+  pageSize: number
+): HttpService {
   return {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
       ApiRoutes.certificate.getSentRequestsByEntity
-    }${userId}`,
+    }${userId}/${page}/${pageSize}`,
     type: "CE-GE-SE",
   };
 }
 
 export function getReceivedRequestsByEntityService(
-  userId: string
+  userId: string,
+  page: number,
+  pageSize: number
 ): HttpService {
   return {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
       ApiRoutes.certificate.getReceivedRequestsByEntity
-    }${userId}`,
+    }${userId}/${page}/${pageSize}`,
     type: "CE-GE-RE",
   };
 }
@@ -63,5 +69,26 @@ export function deleteCertificateService(certId: string): HttpService {
       ApiRoutes.certificate.deleteCertificate
     }${certId}`,
     type: "CE-DEL",
+  };
+}
+
+export function resendCertificatesService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
+      ApiRoutes.certificate.resendCertificates
+    }`,
+    type: "CE-RES",
+  };
+}
+
+export function verifyCertificationService(
+  userId: string,
+  companyIdToVerify: string
+): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
+      ApiRoutes.certificate.verifyCertification
+    }${userId}/${companyIdToVerify}`,
+    type: "CE-VER",
   };
 }

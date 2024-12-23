@@ -117,6 +117,8 @@ export const ApiRoutes = {
     getReceivedRequestsByEntity: "getReceivedRequestsByEntity/",
     getSentRequestsByEntity: "getSentRequestsByEntity/",
     deleteCertificate: "deleteCertificate/",
+    resendCertificates: "resendCertify",
+    verifyCertification: "verifyCertification/",
   },
 };
 

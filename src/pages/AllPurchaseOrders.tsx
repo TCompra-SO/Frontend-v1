@@ -33,7 +33,11 @@ import showNotification, {
 } from "../utilities/notification/showNotification";
 import { transformToPurchaseOrder } from "../utilities/transform";
 import ModalContainer from "../components/containers/ModalContainer";
-import { mainModalScrollStyle } from "../utilities/globals";
+import {
+  mainModalScrollStyle,
+  noPaginationPageSize,
+  pageSizeOptionsSt,
+} from "../utilities/globals";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import { useGetOffersByRequirementId } from "../hooks/requirementHook";
 
@@ -59,6 +63,7 @@ export default function AllPurchaseOrders() {
     hiddenColumns: [],
     nameColumnHeader: t("user"),
     onButtonClick: handleOnButtonClick,
+    total: 0,
   });
 
   /** Obtener tipo */
@@ -93,13 +98,23 @@ export default function AllPurchaseOrders() {
     switch (type) {
       case PurchaseOrderTableTypes.ISSUED:
         setApiParams({
-          service: getPurchaseOrdersByClientEntityService(uid, role),
+          service: getPurchaseOrdersByClientEntityService(
+            uid,
+            role,
+            1,
+            pageSizeOptionsSt[0]
+          ),
           method: "get",
         });
         break;
       case PurchaseOrderTableTypes.RECEIVED:
         setApiParams({
-          service: getPurchaseOrdersByProviderEntityService(uid, role),
+          service: getPurchaseOrdersByProviderEntityService(
+            uid,
+            role,
+            1,
+            pageSizeOptionsSt[0]
+          ),
           method: "get",
         });
         break;
@@ -123,6 +138,7 @@ export default function AllPurchaseOrders() {
         hiddenColumns: [],
         nameColumnHeader: t("user"),
         onButtonClick: handleOnButtonClick,
+        total: 0,
       });
       showNotification(notification, "error", errorMsg);
     }
@@ -182,6 +198,7 @@ export default function AllPurchaseOrders() {
         hiddenColumns: [],
         nameColumnHeader: t("user"),
         onButtonClick: handleOnButtonClick,
+        total: responseData.res?.totalDocuments,
       });
     } catch (error) {
       console.log(error);
@@ -208,6 +225,8 @@ export default function AllPurchaseOrders() {
           purchaseOrder.requirementId,
           purchaseOrder.type,
           true,
+          1,
+          noPaginationPageSize,
           undefined,
           purchaseOrder.filters
         );
@@ -217,6 +236,34 @@ export default function AllPurchaseOrders() {
 
   function handleCloseModal() {
     setIsOpenModal(false);
+  }
+
+  function handleChangePageAndPageSize(page: number, pageSize: number) {
+    // setLoadingTable(true);
+    switch (type) {
+      case PurchaseOrderTableTypes.ISSUED:
+        setApiParams({
+          service: getPurchaseOrdersByClientEntityService(
+            uid,
+            role,
+            page,
+            pageSize
+          ),
+          method: "get",
+        });
+        break;
+      case PurchaseOrderTableTypes.RECEIVED:
+        setApiParams({
+          service: getPurchaseOrdersByProviderEntityService(
+            uid,
+            role,
+            page,
+            pageSize
+          ),
+          method: "get",
+        });
+        break;
+    }
   }
 
   return (
@@ -238,6 +285,7 @@ export default function AllPurchaseOrders() {
         table={tableContent}
         onSearch={handleSearch}
         loading={loading}
+        onChangePageAndPageSize={handleChangePageAndPageSize}
       />
     </>
   );

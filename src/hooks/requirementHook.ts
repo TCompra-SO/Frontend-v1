@@ -223,6 +223,7 @@ export function useGetOffersByRequirementId() {
     async function process() {
       try {
         if (responseData && requirementData.requirementId) {
+          console.log(responseData);
           // Obtener filtros para órdenes en caso de que no existan
           let filters: OfferFilters | undefined = undefined;
           if (
@@ -257,32 +258,32 @@ export function useGetOffersByRequirementId() {
             const offerArray: Offer[] = await Promise.all(
               responseData.data.map(async (item: any) => {
                 if (
-                  item.userID &&
-                  !Object.prototype.hasOwnProperty.call(users, item.userID)
+                  item.user &&
+                  !Object.prototype.hasOwnProperty.call(users, item.user)
                 ) {
-                  if (!pendingRequests[item.userID]) {
-                    pendingRequests[item.userID] = makeRequest({
-                      service: getBaseDataUserService(item.userID),
+                  if (!pendingRequests[item.user]) {
+                    pendingRequests[item.user] = makeRequest({
+                      service: getBaseDataUserService(item.user),
                       method: "get",
                     }).then(({ responseData: responseDataU }: any) => {
                       const { user, subUser } = transformToBaseUser(
                         responseDataU.data[0]
                       );
 
-                      users[item.userID] = {
+                      users[item.user] = {
                         user: subUser ?? user,
                         mainUser: subUser ? user : undefined,
                       };
-                      delete pendingRequests[item.userID];
+                      delete pendingRequests[item.user];
                     });
                   }
-                  await pendingRequests[item.userID];
+                  await pendingRequests[item.user];
                 }
                 return transformToOffer(
                   item,
                   requirementData.type,
-                  users[item.userID].user,
-                  users[item.userID].mainUser
+                  users[item.user].user,
+                  users[item.user].mainUser
                 );
               })
             );
@@ -338,6 +339,8 @@ export function useGetOffersByRequirementId() {
     reqId: string,
     typeReq: RequirementType,
     forPurchaseOrder: boolean,
+    page: number,
+    pageSize: number,
     req?: Requirement,
     filters?: OfferFilters,
     purchaseOrderId?: string
@@ -365,7 +368,7 @@ export function useGetOffersByRequirementId() {
       tableType,
     });
     setApiParams({
-      service: getOffersByRequirementIdService(reqId),
+      service: getOffersByRequirementIdService(reqId, page, pageSize),
       method: "get",
     });
   }

@@ -55,6 +55,7 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
   useEffect(() => {
     return () => {
       showLoadingMessage(message, false);
+      console.log("closing");
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -77,6 +78,7 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
         t("documentsUploadedSuccessfully")
       );
       if (props.onDocumentAdded) props.onDocumentAdded();
+      console.log("already closed");
       props.onClose();
     } else if (errorUpload) {
       console.log(errorMsgUpload);
