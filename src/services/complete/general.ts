@@ -219,14 +219,13 @@ export async function verifyCertificationByUserIdAndCompanyId(
     service: verifyCertificationService(userId, companyIdToVerify),
     method: "get",
   });
-
   return {
     certState: error
-      ? error.code == "404"
+      ? error.status == 404
         ? CertificationState.NONE
         : null
       : (responseData.data[0].state as CertificationState),
-    error,
+    error: error && error.status != 404 ? error : null,
     errorMsg,
   };
 }

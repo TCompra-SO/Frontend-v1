@@ -10,6 +10,7 @@ import { certifiedCompaniesOpt } from "../../../utilities/globals";
 interface CanOfferFieldProps {
   type: RequirementType;
   handleOptionChange: (value: any) => void;
+  onBlur?: () => void;
 }
 
 export default function CanOfferField(props: CanOfferFieldProps) {
@@ -25,6 +26,7 @@ export default function CanOfferField(props: CanOfferFieldProps) {
       rules={[{ required: true }]}
     >
       <SelectContainer
+        onBlur={props.onBlur}
         mode="multiple"
         showSearch={false}
         placeholder={t("select")}

@@ -145,7 +145,10 @@ export default function ModalContainer(props: ModalContainerProps) {
       }
       case ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST: {
         return (
-          <EditDocumentListToRequestModal text={props.content.data.text} />
+          <EditDocumentListToRequestModal
+            text={props.content.data.text}
+            onClose={props.onClose}
+          />
         );
       }
       case ModalTypes.VIEW_DOCS_RECEIVED_CERT:

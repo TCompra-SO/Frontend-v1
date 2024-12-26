@@ -327,17 +327,21 @@ export default function OfferForm(props: OfferFormProps) {
             CanOfferType.CERTIFIED_COMPANY
           )
         ) {
-          const { certState: certResult } =
+          const { certState: certResult, error: errorCert } =
             await verifyCertificationByUserIdAndCompanyId(
               mainUid,
               props.requirement.user.uid
             );
-          if (certResult) {
-            setIsCertified(certResult);
-            if (certResult != CertificationState.CERTIFIED) {
-              setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED);
-              return;
-            }
+          if (errorCert)
+            showNotification(
+              notification,
+              "error",
+              t("certificationVerificationError")
+            );
+          setIsCertified(certResult ?? CertificationState.NONE);
+          if (certResult != CertificationState.CERTIFIED) {
+            setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED);
+            return;
           }
         }
       }

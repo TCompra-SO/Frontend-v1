@@ -5,20 +5,33 @@ import ButtonContainer from "../../containers/ButtonContainer";
 import { Form } from "antd";
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
+import { useUpdateRequiredDocsCert } from "../../../hooks/certificateHook";
+import { useEffect } from "react";
 
 interface EditDocumentListToRequestModalProps {
   text: string;
+  onClose: () => void;
 }
 
 export default function EditDocumentListToRequestModal(
   props: EditDocumentListToRequestModalProps
 ) {
   const { t } = useTranslation();
+  const { updateRequiredDocsCert, loadingUpdateRequiredDocs } =
+    useUpdateRequiredDocsCert();
   const [form] = Form.useForm();
-  const uid = useSelector((state: MainState) => state.mainUser.uid);
+  const mainUid = useSelector((state: MainState) => state.mainUser.uid);
 
-  function handleSubmit() {
-    console.log(uid);
+  useEffect(() => {
+    form.setFieldValue("list", props.text);
+  }, [props.text]);
+
+  useEffect(() => {
+    if (loadingUpdateRequiredDocs === false) props.onClose();
+  }, [loadingUpdateRequiredDocs]);
+
+  function handleSubmit(values: any) {
+    updateRequiredDocsCert(mainUid, values.list?.trim());
   }
 
   return (
@@ -44,7 +57,6 @@ export default function EditDocumentListToRequestModal(
                 autoSize
                 placeholder={t("listOfDocumentsToRequest")}
                 maxLength={Lengths.docListToRequest.max}
-                value={props.text}
               />
             </Form.Item>
           </div>

@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import {
   getCertificatesService,
   getRequiredDocumentsService,
+  updateRequiredDocumentsService,
 } from "../services/requests/certificateService";
 import { CertificateFile } from "../models/MainInterfaces";
 import {
@@ -21,6 +22,7 @@ import {
   deleteCertificateById,
   verifyCertificationByUserIdAndCompanyId,
 } from "../services/complete/general";
+import { UpdateRequiredDocsRequest } from "../models/Requests";
 
 export function useGetCertificatesList() {
   const { t } = useTranslation();
@@ -168,6 +170,7 @@ export function useGetRequiredDocsCert() {
   }, [responseData, error]);
 
   function getRequiredDocsCert(companyId: string) {
+    setRequiredDocs(null);
     setApiParams({
       service: getRequiredDocumentsService(companyId),
       method: "get",
@@ -178,5 +181,56 @@ export function useGetRequiredDocsCert() {
     getRequiredDocsCert,
     loadingRequiredDocs: loading,
     requiredDocs,
+    errorRequiredDocs: error,
+  };
+}
+
+export function useUpdateRequiredDocsCert() {
+  const { t } = useTranslation();
+  const { notification, message } = App.useApp();
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+  const { loading, responseData, error, errorMsg, fetchData } = useApi({
+    service: apiParams.service,
+    method: apiParams.method,
+    dataToSend: apiParams.dataToSend,
+  });
+
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    showLoadingMessage(message, loading);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
+
+  useEffect(() => {
+    if (responseData) {
+      showNotification(notification, "success", t("dataSavedSuccessfully"));
+    } else if (error) {
+      showNotification(notification, "error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
+
+  function updateRequiredDocsCert(companyId: string, newText: string) {
+    const data: UpdateRequiredDocsRequest = {
+      companyID: companyId,
+      requiredDocuments: newText,
+    };
+    setApiParams({
+      service: updateRequiredDocumentsService(),
+      method: "post",
+      dataToSend: data,
+    });
+  }
+
+  return {
+    updateRequiredDocsCert,
+    loadingUpdateRequiredDocs: loading,
   };
 }

@@ -46,6 +46,7 @@ import CanOfferField from "../../common/formFields/CanOfferField";
 import { uploadImagesRequirementService } from "../../../services/requests/imageService";
 import { uploadDocsRequirementService } from "../../../services/requests/documentService";
 import ModalContainer from "../../containers/ModalContainer";
+import { useGetRequiredDocsCert } from "../../../hooks/certificateHook";
 
 interface CreateRequirementProps {
   closeModal: () => void;
@@ -63,13 +64,16 @@ function LabelForCreateRequirement({ label }: LabelForCreateRequirementProps) {
 export default function CreateRequirement(props: CreateRequirementProps) {
   const { t } = useTranslation();
   const uid = useSelector((state: MainState) => state.user.uid);
+  const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const { notification } = App.useApp();
   const [form] = Form.useForm();
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [showDocListToCetificate, setShowDocListToCetificate] = useState(false);
   const [isPremium] = useState<boolean>(true); // r3v
-  const [certificatesRequired, setCertificatesRequired] = useState(""); // r3v
+  const [certificatesRequired, setCertificatesRequired] = useState("");
+  const { getRequiredDocsCert, requiredDocs, errorRequiredDocs } =
+    useGetRequiredDocsCert();
   const [formDataImg, setFormDataImg] = useState<FormData | null>(null);
   const [formDataDoc, setFormDataDoc] = useState<FormData | null>(null);
   const [reqSuccess, setReqSuccess] = useState(ProcessFlag.NOT_INI);
@@ -224,9 +228,26 @@ export default function CreateRequirement(props: CreateRequirementProps) {
 
   useEffect(() => {
     form.setFieldsValue({ budget: 0 });
-    form.setFieldsValue({ docList: certificatesRequired });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form]);
+
+  /** Mostrar lista de documentos requeridos */
+
+  useEffect(() => {
+    console.log(requiredDocs);
+    if (requiredDocs !== null) {
+      setCertificatesRequired(requiredDocs);
+      if (!requiredDocs && showDocListToCetificate) setIsOpenModal(true);
+    }
+  }, [requiredDocs]);
+
+  useEffect(() => {
+    form.setFieldsValue({ docList: certificatesRequired });
+  }, [certificatesRequired]);
+
+  useEffect(() => {
+    if (errorRequiredDocs) setCertificatesRequired("");
+  }, [errorRequiredDocs]);
 
   /** Funciones */
 
@@ -240,7 +261,10 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   function getDocListCertification(val: number[]) {
     const show: boolean = val.includes(certifiedCompaniesOpt);
     setShowDocListToCetificate(show);
-    if (show && !certificatesRequired) setIsOpenModal(true);
+  }
+
+  function checkWhoCanOffer() {
+    if (showDocListToCetificate) getRequiredDocsCert(mainUid);
   }
 
   function createRequirement(values: any) {
@@ -429,6 +453,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
                   <CanOfferField
                     type={type}
                     handleOptionChange={getDocListCertification}
+                    onBlur={checkWhoCanOffer}
                   />
                 </div>
                 {showDocListToCetificate && (

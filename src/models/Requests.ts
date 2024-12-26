@@ -186,3 +186,8 @@ export interface ResendCertificatesRequest {
   certificateRequestID: string;
   certificateIDs: string[];
 }
+
+export interface UpdateRequiredDocsRequest {
+  companyID: string;
+  requiredDocuments: string;
+}

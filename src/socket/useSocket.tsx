@@ -16,7 +16,7 @@ export default function useSocket() {
       setLoading(true);
       try {
         const { responseData }: any = await makeRequest({
-          service: getRequirementsService(1, 50),
+          service: getRequirementsService(1, 100),
           method: "get",
         });
         // console.log(responseData);
