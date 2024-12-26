@@ -9,7 +9,7 @@ import { certifiedCompaniesOpt } from "../../../utilities/globals";
 
 interface CanOfferFieldProps {
   type: RequirementType;
-  handleOptionChange: (value: any) => void;
+  handleOptionChange?: (value: any) => void;
   onBlur?: () => void;
 }
 

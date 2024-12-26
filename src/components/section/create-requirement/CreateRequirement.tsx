@@ -234,7 +234,6 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   /** Mostrar lista de documentos requeridos */
 
   useEffect(() => {
-    console.log(requiredDocs);
     if (requiredDocs !== null) {
       setCertificatesRequired(requiredDocs);
       if (!requiredDocs && showDocListToCetificate) setIsOpenModal(true);
@@ -258,13 +257,11 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     }
   }
 
-  function getDocListCertification(val: number[]) {
-    const show: boolean = val.includes(certifiedCompaniesOpt);
-    setShowDocListToCetificate(show);
-  }
-
   function checkWhoCanOffer() {
-    if (showDocListToCetificate) getRequiredDocsCert(mainUid);
+    const val: number[] = form.getFieldValue("canOffer");
+    const show: boolean = val.includes(certifiedCompaniesOpt);
+    if (!showDocListToCetificate && show) getRequiredDocsCert(mainUid);
+    setShowDocListToCetificate(show);
   }
 
   function createRequirement(values: any) {
@@ -450,11 +447,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
               <>
                 <div>
                   <LabelForCreateRequirement label={"whoCanMakeOffers"} />
-                  <CanOfferField
-                    type={type}
-                    handleOptionChange={getDocListCertification}
-                    onBlur={checkWhoCanOffer}
-                  />
+                  <CanOfferField type={type} onBlur={checkWhoCanOffer} />
                 </div>
                 {showDocListToCetificate && (
                   <div>
