@@ -12,7 +12,7 @@ import showNotification, {
 import { maxDocSizeMb } from "../../../utilities/globals";
 import { useApiParams } from "../../../models/Interfaces";
 import useApi from "../../../hooks/useApi";
-import { UploadCertificateLabels } from "../../../utilities/types";
+import { Action, UploadCertificateLabels } from "../../../utilities/types";
 import { uploadCertificateService } from "../../../services/requests/certificateService";
 
 interface AddCertificatesModalProps {
@@ -46,11 +46,14 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
     error: errorUpload,
     errorMsg: errorMsgUpload,
     fetchData: fetchDataUpload,
-  } = useApi({
-    service: apiParamsUpload.service,
-    method: apiParamsUpload.method,
-    dataToSend: apiParamsUpload.dataToSend,
-  });
+  } = useApi(
+    {
+      service: apiParamsUpload.service,
+      method: apiParamsUpload.method,
+      dataToSend: apiParamsUpload.dataToSend,
+    },
+    { saveInQueue: true, action: Action.NONE, functionToExecute: xx }
+  );
 
   useEffect(() => {
     return () => {
@@ -70,22 +73,33 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParamsUpload]);
 
-  useEffect(() => {
-    if (responseDataUpload) {
-      showNotification(
-        notification,
-        "success",
-        t("documentsUploadedSuccessfully")
-      );
-      if (props.onDocumentAdded) props.onDocumentAdded();
-      console.log("already closed");
-      props.onClose();
-    } else if (errorUpload) {
-      console.log(errorMsgUpload);
-      showNotification(notification, "error", errorMsgUpload);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataUpload, errorUpload]);
+  // useEffect(() => {
+  //   if (responseDataUpload) {
+  //     showNotification(
+  //       notification,
+  //       "success",
+  //       t("documentsUploadedSuccessfully")
+  //     );
+  //     if (props.onDocumentAdded) props.onDocumentAdded();
+  //     console.log("already closed");
+  //     props.onClose();
+  //   } else if (errorUpload) {
+  //     console.log(errorMsgUpload);
+  //     showNotification(notification, "error", errorMsgUpload);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [responseDataUpload, errorUpload]);
+
+  function xx() {
+    showNotification(
+      notification,
+      "success",
+      t("documentsUploadedSuccessfully")
+    );
+    if (props.onDocumentAdded) props.onDocumentAdded();
+    console.log("already closed");
+    props.onClose();
+  }
 
   /** Funciones */
 

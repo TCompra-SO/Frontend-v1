@@ -144,7 +144,7 @@ export default function GeneralTable(props: GeneralTableProps) {
     bordered: false,
     pagination: {
       pageSizeOptions,
-      showSizeChanger: true,
+      showSizeChanger: props.content.type != TableTypes.HOME,
       onChange: props.onChangePageAndPageSize,
       total: props.content.total,
       showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,

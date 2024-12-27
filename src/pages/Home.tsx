@@ -23,11 +23,16 @@ import { pageRoutes } from "../utilities/routes.ts";
 export default function Home() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { requirements: tableData, loading: loadingTable } = useSocket();
+  const [currentPage, setCurrentPage] = useState(1);
+  const {
+    requirements: tableData,
+    loading: loadingTable,
+    totalRequirements,
+  } = useSocket(currentPage);
   const [tableContent, setTableContent] = useState<TableTypeHome>({
     type: TableTypes.HOME,
     data: tableData,
-    total: 50, // r3v
+    total: totalRequirements,
     subType: RequirementType.GOOD,
     hiddenColumns: [TableColumns.CATEGORY],
     nameColumnHeader: t("goods"),
@@ -42,14 +47,16 @@ export default function Home() {
   useEffect(() => {
     setTableContent((prevContent) => ({
       ...prevContent,
-      total: 50, // r3v
       data: tableData,
+      total: totalRequirements,
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tableData]);
 
   /** Funciones */
 
   function handleChangePageAndPageSize(page: number, pageSize: number) {
+    setCurrentPage(page);
     console.log(page, pageSize);
   }
 

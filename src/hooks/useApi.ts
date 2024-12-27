@@ -1,25 +1,50 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import httpErrorInterceptor from "../interceptors/httpErrorInterceptor";
 import { useApiParams } from "../models/Interfaces";
 import { useTranslation } from "react-i18next";
+import { RequestContext } from "../contexts/RequestContext";
+import { generateShortId } from "../utilities/globalFunctions";
+import { Action } from "../utilities/types";
 
-export default function useApi<T = any>({
-  service,
-  method,
-  dataToSend,
-  token,
-}: useApiParams<T>) {
+export default function useApi<T = any>(
+  { service, method, dataToSend, token }: useApiParams<T>,
+  {
+    saveInQueue,
+    action,
+    functionToExecute,
+  }: { saveInQueue: boolean; action: Action; functionToExecute: () => void } = {
+    saveInQueue: false,
+    action: Action.NONE,
+    functionToExecute: () => {},
+  }
+) {
   const { t } = useTranslation();
   const [loading, setLoading] = useState<boolean | undefined>(undefined);
   const [responseData, setResponseData] = useState<any | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [error, setError] = useState<AxiosError<any, any> | null>(null);
+  const { pushToRequestQueue, executeAfterResponseOrError } =
+    useContext(RequestContext);
+  const [requestId, setRequestId] = useState("");
+
+  useEffect(() => {
+    if (saveInQueue) {
+      console.log("inuseapi");
+      executeAfterResponseOrError(requestId, {
+        response: responseData,
+        error,
+        errorMsg,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
 
   async function fetchData(includeHeader: boolean = true) {
     setResponseData(null);
     setErrorMsg(null);
     setError(null);
+
     if (service) {
       setLoading(true);
       try {
@@ -47,6 +72,12 @@ export default function useApi<T = any>({
       } finally {
         setLoading(false);
       }
+    }
+
+    if (saveInQueue) {
+      const id = generateShortId();
+      setRequestId(id);
+      pushToRequestQueue(id, action, functionToExecute);
     }
   }
 

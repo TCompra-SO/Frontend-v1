@@ -127,6 +127,7 @@ export const ModalWidth: {
 /***** Acciones *****/
 
 export enum Action {
+  NONE = 0,
   SHOW_OFFERS = 1,
   DELETE = 2,
   CANCEL_REQUIREMENT = 3,
@@ -194,6 +195,7 @@ export const ActionLabel: {
   [Action.EDIT_DOCUMENT_LIST_TO_REQUEST]: "listOfDocumentsToRequest",
   [Action.VIEW]: "view",
   [Action.VIEw_SALES_ORDERS]: "viewSalesOrders",
+  [Action.NONE]: "none",
 };
 
 export const ActionByStateRequirement: {
