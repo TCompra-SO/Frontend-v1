@@ -9,7 +9,7 @@ import {
   SelectDocsModalData,
   useApiParams,
 } from "../../../models/Interfaces";
-import { App, Checkbox } from "antd";
+import { App, Checkbox, Flex, Pagination } from "antd";
 import ModalContainer from "../../containers/ModalContainer";
 import {
   mainModalScrollStyle,
@@ -42,8 +42,12 @@ export default function SelectDocumentsToSendCertificateModal(
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
-  const { certificateList, getCertificatesList, loadingCertList } =
-    useGetCertificatesList();
+  const {
+    certificateList,
+    getCertificatesList,
+    loadingCertList,
+    totalCertList,
+  } = useGetCertificatesList();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [docs, setDocs] = useState<CertificateFile[]>([]);
   const [dataModal] = useState<ModalContent>({
@@ -55,6 +59,7 @@ export default function SelectDocumentsToSendCertificateModal(
   const [checked, setChecked] = useState<boolean[]>(
     Array(docs.length).fill(false)
   );
+  const [certificateIds, setCertificateIds] = useState<string[]>([]);
 
   /** Obtener lista de documentos */
 
@@ -64,9 +69,19 @@ export default function SelectDocumentsToSendCertificateModal(
   }, []);
 
   useEffect(() => {
+    console.log(certificateIds);
     if (certificateList) {
       setDocs(certificateList);
+      const indexes = certificateList.map((item) =>
+        certificateIds.findIndex((id) => id == item.uid)
+      );
+      const temp: boolean[] = Array(certificateList.length).fill(false);
+      indexes.forEach((ind) => {
+        if (ind != -1) temp[ind] = true;
+      });
+      setChecked(temp); // check incorrecto
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [certificateList]);
 
   /** Para enviar documentos */
@@ -107,16 +122,32 @@ export default function SelectDocumentsToSendCertificateModal(
     getCertificatesList(1, pageSizeOptionsSt[0]);
   }
 
+  function onChangePageAndPageSize(page: number, pageSize: number) {
+    getCertificatesList(page, pageSize);
+  }
+
   function setCheckedDoc(value: boolean, index: number) {
-    setChecked((prev) => {
-      const newArray = [...prev];
-      newArray[index] = value;
-      return newArray;
-    });
+    if (certificateList && certificateList[index]) {
+      if (value)
+        setCertificateIds((prev) => {
+          return [...prev, certificateList[index].uid];
+        });
+      else
+        setCertificateIds(
+          (prevList) =>
+            prevList.filter((item) => item != certificateList[index].uid) // check no elmina
+        );
+      setChecked((prev) => {
+        const newArray = [...prev];
+        newArray[index] = value;
+        return newArray;
+      });
+    }
   }
 
   function submit() {
-    if (checked.every((element) => element === false)) {
+    if (certificateIds.length == 0) {
+      //(checked.every((element) => element === false)) {
       showNotification(
         notification,
         "error",
@@ -124,21 +155,21 @@ export default function SelectDocumentsToSendCertificateModal(
       );
       return;
     }
-    const certList: string[] = docs
-      .map((obj, index) => (checked[index] ? obj.uid : null))
-      .filter((xx) => xx !== null) as string[];
+    // const certList: string[] = docs
+    //   .map((obj, index) => (checked[index] ? obj.uid : null))
+    //   .filter((xx) => xx !== null) as string[];
     // console.log(checked, mainUserUid, props.data.userId, result);
 
     const data: SendCertificationRequest | ResendCertificatesRequest =
       props.certificationId
         ? {
             certificateRequestID: props.certificationId,
-            certificateIDs: certList,
+            certificateIDs: certificateIds,
           }
         : {
             userID: mainUserUid,
             companyID: props.data.userId,
-            certificateIDs: certList,
+            certificateIDs: certificateIds,
           };
 
     setApiParams({
@@ -185,7 +216,11 @@ export default function SelectDocumentsToSendCertificateModal(
             </div>
           </div>
 
-          {loadingCertList && <SimpleLoading style={{ width: "15vw" }} />}
+          {loadingCertList && (
+            <Flex justify="center">
+              <SimpleLoading style={{ width: "15vw" }} />
+            </Flex>
+          )}
           {!loadingCertList &&
             docs.map((obj, index) => (
               <div key={index} className="card-ofertas certificado-bloque">
@@ -213,6 +248,14 @@ export default function SelectDocumentsToSendCertificateModal(
                 </div>
               </div>
             ))}
+          <Flex justify="center">
+            <Pagination
+              size="small"
+              total={totalCertList}
+              onChange={onChangePageAndPageSize}
+              // showTotal={(total) => `${total}`}
+            />
+          </Flex>
           <div className="t-flex gap-15 wd-100 alert-btn">
             <ButtonContainer
               className="btn alert-boton btn-green"
