@@ -186,6 +186,7 @@ export default function ModalContainer(props: ModalContainerProps) {
   return (
     <NoContentModalContainer
       {...props}
+      destroyOnClose={false}
       width={ModalWidth[props.content.type]}
       open={props.isOpen}
       showFooter={props.showFooter}

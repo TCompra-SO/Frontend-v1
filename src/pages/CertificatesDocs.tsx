@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
-import { mainModalScrollStyle } from "../utilities/globals";
+import { mainModalScrollStyle, pageSizeOptionsSt } from "../utilities/globals";
 import { ModalContent, TableTypeMyDocuments } from "../models/Interfaces";
 import { Action, ModalTypes, TableTypes } from "../utilities/types";
 import { useTranslation } from "react-i18next";
@@ -20,8 +20,12 @@ import { useSelector } from "react-redux";
 export default function CertificatesDocs() {
   const { t } = useTranslation();
   const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
-  const { certificateList, getCertificatesList, loadingCertList } =
-    useGetCertificatesList();
+  const {
+    certificateList,
+    getCertificatesList,
+    loadingCertList,
+    totalCertList,
+  } = useGetCertificatesList();
   const { deleteCertificate, loadingDeleteCert } = useDeleteCertificate();
   const { getRequiredDocsCert, requiredDocs } = useGetRequiredDocsCert();
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -35,12 +39,13 @@ export default function CertificatesDocs() {
     hiddenColumns: [],
     nameColumnHeader: t("name"),
     onButtonClick: handleOnButtonClick,
+    total: totalCertList,
   });
 
   /** Obtener lista de documentos */
 
   useEffect(() => {
-    getCertificatesList();
+    getCertificatesList(1, pageSizeOptionsSt[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -50,6 +55,7 @@ export default function CertificatesDocs() {
         return {
           ...prev,
           data: certificateList,
+          total: totalCertList,
         };
       });
     } else {
@@ -59,6 +65,7 @@ export default function CertificatesDocs() {
         hiddenColumns: [],
         nameColumnHeader: t("name"),
         onButtonClick: handleOnButtonClick,
+        total: totalCertList,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -125,6 +132,10 @@ export default function CertificatesDocs() {
     setIsOpenModal(true);
   }
 
+  function handleChangePageAndPageSize(page: number, pageSize: number) {
+    getCertificatesList(page, pageSize);
+  }
+
   return (
     <>
       <ModalContainer
@@ -163,6 +174,7 @@ export default function CertificatesDocs() {
           </Row>
         }
         loading={loadingCertList}
+        onChangePageAndPageSize={handleChangePageAndPageSize}
       />
     </>
   );

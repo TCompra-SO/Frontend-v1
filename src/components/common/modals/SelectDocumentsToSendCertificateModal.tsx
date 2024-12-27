@@ -11,7 +11,10 @@ import {
 } from "../../../models/Interfaces";
 import { App, Checkbox } from "antd";
 import ModalContainer from "../../containers/ModalContainer";
-import { mainModalScrollStyle } from "../../../utilities/globals";
+import {
+  mainModalScrollStyle,
+  pageSizeOptionsSt,
+} from "../../../utilities/globals";
 import showNotification from "../../../utilities/notification/showNotification";
 import SimpleLoading from "../../../pages/utils/SimpleLoading";
 import useApi from "../../../hooks/useApi";
@@ -56,7 +59,7 @@ export default function SelectDocumentsToSendCertificateModal(
   /** Obtener lista de documentos */
 
   useEffect(() => {
-    getCertificatesList();
+    getCertificatesList(1, pageSizeOptionsSt[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -101,7 +104,7 @@ export default function SelectDocumentsToSendCertificateModal(
   }
 
   function handleOnDocumentAdded() {
-    getCertificatesList();
+    getCertificatesList(1, pageSizeOptionsSt[0]);
   }
 
   function setCheckedDoc(value: boolean, index: number) {

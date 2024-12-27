@@ -10,11 +10,15 @@ export function uploadCertificateService(): HttpService {
   };
 }
 
-export function getCertificatesService(userId: string): HttpService {
+export function getCertificatesService(
+  userId: string,
+  page: number,
+  pageSize: number
+): HttpService {
   return {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
       ApiRoutes.certificate.getCertificates
-    }${userId}`,
+    }${userId}/${page}/${pageSize}`,
     type: "CE-GET",
   };
 }

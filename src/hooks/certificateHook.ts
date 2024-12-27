@@ -27,6 +27,7 @@ import { UpdateRequiredDocsRequest } from "../models/Requests";
 export function useGetCertificatesList() {
   const { t } = useTranslation();
   const { notification } = App.useApp();
+  const [total, setTotal] = useState(0);
   const [docList, setDocList] = useState<CertificateFile[] | null>(null);
   const mainUserId = useSelector((state: MainState) => state.mainUser.uid);
   const [apiParams, setApiParams] = useState<useApiParams>({
@@ -47,12 +48,14 @@ export function useGetCertificatesList() {
   useEffect(() => {
     if (responseData) {
       try {
+        setTotal(responseData.res?.totalDocuments);
         setDocList(
-          responseData.map((doc: any) => transformToCertificateFile(doc))
+          responseData.data.map((doc: any) => transformToCertificateFile(doc))
         );
       } catch (err) {
         console.log(err);
         showNotification(notification, "error", t("errorOccurred"));
+        setTotal(0);
       } finally {
         // showLoadingMessage(message, false);
       }
@@ -62,10 +65,10 @@ export function useGetCertificatesList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
-  function getCertificatesList() {
+  function getCertificatesList(page: number, pageSize: number) {
     // showLoadingMessage(message, true);
     setApiParams({
-      service: getCertificatesService(mainUserId),
+      service: getCertificatesService(mainUserId, page, pageSize),
       method: "get",
     });
   }
@@ -76,6 +79,7 @@ export function useGetCertificatesList() {
     responseDataCertList: responseData,
     errorCertList: error,
     certificateList: docList,
+    totalCertList: total,
   };
 }
 
