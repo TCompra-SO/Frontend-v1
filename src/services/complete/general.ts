@@ -224,7 +224,7 @@ export async function verifyCertificationByUserIdAndCompanyId(
       ? error.status == 404
         ? CertificationState.NONE
         : null
-      : (responseData.data[0].state as CertificationState),
+      : (responseData.state as CertificationState),
     error: error && error.status != 404 ? error : null,
     errorMsg,
   };
