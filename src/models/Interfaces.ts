@@ -432,3 +432,8 @@ export interface RequiredDocsForCert {
   uid: string;
   requiredDocuments: string;
 }
+
+export interface NotificationData {
+  type: "success" | "error" | "info" | "warning";
+  description: string | null;
+}

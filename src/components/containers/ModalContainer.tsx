@@ -1,10 +1,14 @@
-import { ModalTypes, ModalWidth } from "../../utilities/types";
+import { Action, ModalTypes, ModalWidth } from "../../utilities/types";
 import RequirementDetail from "../section/requirements/requirementDetail/RequirementDetail";
 import RequirementModalOfferSelected from "../section/requirements/RequirementModalOfferSelected";
 import { ModalProps } from "antd/lib";
 import RequirementOfferSummary from "../section/requirements/requirementOfferSummary/RequirementOfferSummary";
 import RequirementModalRepublish from "../section/requirements/RequirementModalRepublish";
-import { ModalContent } from "../../models/Interfaces";
+import {
+  ModalContent,
+  NotificationData,
+  useApiParams,
+} from "../../models/Interfaces";
 import RatingCanceledModal from "../common/modals/RatingCanceledModal";
 import CancelPurchaseOrderModal from "../common/modals/CancelPurchaseOrderModal";
 import RatingModal from "../common/modals/RatingModal";
@@ -18,6 +22,9 @@ import EditDocumentListToRequestModal from "../common/modals/EditDocumentListToR
 import ViewDocsReceivedCertificate from "../common/modals/ViewDocsReceivedCertificate";
 import SelectDocumentsToSendCertificateModal from "../common/modals/SelectDocumentsToSendCertificateModal";
 import SendMessageModal from "../common/modals/SendMessageModal";
+import { useEffect, useState } from "react";
+import useApi from "../../hooks/useApi";
+import { App } from "antd";
 
 interface ModalContainerProps extends ModalProps {
   content: ModalContent;
@@ -29,6 +36,41 @@ interface ModalContainerProps extends ModalProps {
 }
 
 export default function ModalContainer(props: ModalContainerProps) {
+  const { notification } = App.useApp();
+  const [callback, setCallback] = useState<() => void>(() => {});
+  const [notificationData, setNotificationData] = useState<NotificationData>({
+    type: "success",
+    description: null,
+  });
+
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const { loading, responseData, error, errorMsg, fetchData } = useApi(
+    {
+      service: apiParams.service,
+      method: apiParams.method,
+      dataToSend: apiParams.dataToSend,
+    },
+    { saveInQueue: true, action: Action.NONE, functionToExecute: callback }
+  );
+
+  // useEffect(() => {
+  //   showNotification(
+  //     notification,
+  //     notificationData.type,
+  //     notificationData.description
+  //   );
+  // }, [notificationData]);
+  useEffect(() => {
+    console.log("ModalParentContainer");
+    return () => {
+      console.log("ModalParentContainer exit");
+    };
+  }, []);
+
   function getContent() {
     switch (props.content.type) {
       case ModalTypes.DETAILED_REQUIREMENT: {
@@ -186,7 +228,7 @@ export default function ModalContainer(props: ModalContainerProps) {
   return (
     <NoContentModalContainer
       {...props}
-      destroyOnClose={false}
+      destroyOnClose={true}
       width={ModalWidth[props.content.type]}
       open={props.isOpen}
       showFooter={props.showFooter}

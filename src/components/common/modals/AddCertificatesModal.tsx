@@ -52,13 +52,20 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
       method: apiParamsUpload.method,
       dataToSend: apiParamsUpload.dataToSend,
     },
-    { saveInQueue: true, action: Action.NONE, functionToExecute: xx }
+    {
+      saveInQueue: true,
+      action: Action.NONE,
+      functionToExecute: xx,
+      notificationData: {
+        type: "success",
+        description: t("documentsUploadedSuccessfully"),
+      },
+    }
   );
 
   useEffect(() => {
     return () => {
       showLoadingMessage(message, false);
-      console.log("closing");
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -91,12 +98,12 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
   // }, [responseDataUpload, errorUpload]);
 
   function xx() {
-    showNotification(
-      notification,
-      "success",
-      t("documentsUploadedSuccessfully")
-    );
-    if (props.onDocumentAdded) props.onDocumentAdded();
+    // showNotification(
+    //   notification,
+    //   "success",
+    //   t("documentsUploadedSuccessfully")
+    // );
+    // if (props.onDocumentAdded) props.onDocumentAdded();
     console.log("already closed");
     props.onClose();
   }

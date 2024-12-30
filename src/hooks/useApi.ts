@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { useContext, useEffect, useState } from "react";
 import httpErrorInterceptor from "../interceptors/httpErrorInterceptor";
-import { useApiParams } from "../models/Interfaces";
+import { NotificationData, useApiParams } from "../models/Interfaces";
 import { useTranslation } from "react-i18next";
 import { RequestContext } from "../contexts/RequestContext";
 import { generateShortId } from "../utilities/globalFunctions";
@@ -13,10 +13,20 @@ export default function useApi<T = any>(
     saveInQueue,
     action,
     functionToExecute,
-  }: { saveInQueue: boolean; action: Action; functionToExecute: () => void } = {
+    notificationData,
+  }: {
+    saveInQueue: boolean;
+    action: Action;
+    functionToExecute: () => void;
+    notificationData?: NotificationData;
+  } = {
     saveInQueue: false,
     action: Action.NONE,
     functionToExecute: () => {},
+    notificationData: {
+      type: "error",
+      description: null,
+    },
   }
 ) {
   const { t } = useTranslation();
@@ -29,14 +39,19 @@ export default function useApi<T = any>(
   const [requestId, setRequestId] = useState("");
 
   useEffect(() => {
-    if (saveInQueue) {
-      console.log("inuseapi");
-      executeAfterResponseOrError(requestId, {
-        response: responseData,
-        error,
-        errorMsg,
-      });
-    }
+    if (responseData || error)
+      if (saveInQueue) {
+        console.log("inuseapi");
+        executeAfterResponseOrError(
+          requestId,
+          {
+            response: responseData,
+            error,
+            errorMsg,
+          },
+          notificationData
+        );
+      }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 

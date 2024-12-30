@@ -1,6 +1,10 @@
 import { AxiosError } from "axios";
 import { createContext, ReactNode, useState } from "react";
 import { Action } from "../utilities/types";
+import { NotificationData } from "../models/Interfaces";
+import { App } from "antd";
+import showNotification from "../utilities/notification/showNotification";
+import useShowNotification from "../hooks/utilHook";
 
 interface RequestQueueItem {
   response: any;
@@ -11,7 +15,8 @@ interface RequestQueueItem {
 interface RequestContextType {
   executeAfterResponseOrError: (
     requestId: string,
-    updates: Partial<RequestQueueItem>
+    updates: Partial<RequestQueueItem>,
+    notificationData?: NotificationData
   ) => void;
   pushToRequestQueue: (
     requestId: string,
@@ -26,6 +31,8 @@ export const RequestContext = createContext<RequestContextType>({
 });
 
 export function RequestProvider({ children }: { children: ReactNode }) {
+  const { notification } = App.useApp();
+  const { showNotificationHook } = useShowNotification();
   const [requestQueue, setRequestQueue] = useState<
     Record<string, { action: Action; functionToExecute: () => void }>
   >({});
@@ -43,8 +50,16 @@ export function RequestProvider({ children }: { children: ReactNode }) {
 
   function executeAfterResponseOrError(
     requestId: string,
-    updates: Partial<RequestQueueItem>
+    updates: Partial<RequestQueueItem>,
+    notificationData?: NotificationData
   ) {
+    // if (notificationData) {
+    //   showNotification(
+    //     notification,
+    //     notificationData.type,
+    //     notificationData.description
+    //   );
+    // }
     if (updates.response) {
       if (requestQueue[requestId]) {
         requestQueue[requestId].functionToExecute();

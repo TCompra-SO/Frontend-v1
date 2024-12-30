@@ -6,6 +6,7 @@ export default function showNotification(
   type: "success" | "error" | "info" | "warning",
   description: string | null
 ) {
+  console.log(api, type, description);
   if (api && description)
     api[type]({
       message: description,
