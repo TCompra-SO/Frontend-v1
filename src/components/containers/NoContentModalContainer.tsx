@@ -9,7 +9,7 @@ export default function NoContentModalContainer(
 ) {
   const modalProps: ModalProps = {
     ...props,
-    destroyOnClose: true,
+    destroyOnClose: props.destroyOnClose ?? true,
     closable: props.closable ?? true,
     centered: true,
     maskClosable: props.maskClosable ?? true,

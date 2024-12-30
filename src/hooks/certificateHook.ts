@@ -41,6 +41,12 @@ export function useGetCertificatesList() {
   });
 
   useEffect(() => {
+    return () => {
+      console.log("destroying modaldd");
+    };
+  }, []);
+
+  useEffect(() => {
     if (apiParams.service) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
