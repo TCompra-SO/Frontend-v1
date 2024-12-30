@@ -328,6 +328,7 @@ const resources = {
       noSavedRequiredDocListCertification: "There is no saved list of required documents for certification. This list can be created in the Certificates section.",
       dataSavedSuccessfully: "Data saved successfully",
       certificationVerificationError: "Certification status could not be verified",
+      alreadySentCertificationRequest: "A certification request was already sent to this company",
       // Other
       yes: "Yes",
       no: "No",
@@ -844,6 +845,7 @@ const resources = {
       noSavedRequiredDocListCertification: "No hay una lista guardada de los documentos requeridos para la certificación. Esta lista puede ser creada en la sección de Certificados.",
       dataSavedSuccessfully: "Datos guardados exitosamente",
       certificationVerificationError: "No se pudo verificar el estado de la certificación",
+      alreadySentCertificationRequest: "Ya fue enviada una solicitud de certificación a esta empresa",
       // Other
       yes: "Sí",
       no: "No",

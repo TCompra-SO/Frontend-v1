@@ -9,6 +9,7 @@ import {
   sendCodeService,
   validateCodeService,
 } from "../services/requests/authService";
+import { sendCertificationRequestService } from "../services/requests/certificateService";
 import { uploadDocsRequirementService } from "../services/requests/documentService";
 import { uploadImagesRequirementService } from "../services/requests/imageService";
 import { createOfferService } from "../services/requests/offerService";
@@ -221,6 +222,12 @@ export default function httpErrorInterceptor(error: any, type: string): string {
       switch (code) {
         case 400:
           erroMsg = "cantCancelRequirementSupplierFinished";
+      }
+      break;
+    case sendCertificationRequestService().type:
+      switch (code) {
+        case 401:
+          erroMsg = "alreadySentCertificationRequest";
       }
       break;
     case "": // No mostrar mensaje

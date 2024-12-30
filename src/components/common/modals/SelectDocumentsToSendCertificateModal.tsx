@@ -72,14 +72,15 @@ export default function SelectDocumentsToSendCertificateModal(
     console.log(certificateIds);
     if (certificateList) {
       setDocs(certificateList);
-      const indexes = certificateList.map((item) =>
-        certificateIds.findIndex((id) => id == item.uid)
-      );
+      const indexes = certificateList.map((item, i) => {
+        if (certificateIds.includes(item.uid)) return i;
+        return -1;
+      });
       const temp: boolean[] = Array(certificateList.length).fill(false);
       indexes.forEach((ind) => {
         if (ind != -1) temp[ind] = true;
       });
-      setChecked(temp); // check incorrecto
+      setChecked(temp);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [certificateList]);
@@ -133,9 +134,8 @@ export default function SelectDocumentsToSendCertificateModal(
           return [...prev, certificateList[index].uid];
         });
       else
-        setCertificateIds(
-          (prevList) =>
-            prevList.filter((item) => item != certificateList[index].uid) // check no elmina
+        setCertificateIds((prevList) =>
+          prevList.filter((item) => item != certificateList[index].uid)
         );
       setChecked((prev) => {
         const newArray = [...prev];
