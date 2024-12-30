@@ -31,6 +31,7 @@ export const ApiRoutes = {
     newPassword: "NewPassword/",
     getBaseDataUser: "getBaseDataUser/",
     getUser: "getUser/",
+    searchCompanyByName: "searchCompany/",
   },
   util: {
     countries: "countries/",

@@ -18,10 +18,15 @@ import {
 } from "../redux/userSlice";
 
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { MainState } from "../models/Redux";
 import { decryptData } from "../utilities/crypto";
 import { getBaseUserForUserSubUser } from "../services/complete/general";
+import { searchCompanyByNameService } from "../services/requests/authService";
+import useApi from "./useApi";
+import { useApiParams } from "../models/Interfaces";
+import { DisplayUser } from "../models/MainInterfaces";
+import { transformToDisplayUser } from "../utilities/transform";
 
 export function useLogout() {
   const navigate = useNavigate();
@@ -52,6 +57,7 @@ export function useLogout() {
     return () => {
       window.removeEventListener("storage", handleStorageChange);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return logout;
@@ -106,4 +112,56 @@ export function useLoadUserInfo() {
   }
 
   return loadUserInfo;
+}
+
+export function useSearchCompanyByName() {
+  const [companyList, setCompanyList] = useState<DisplayUser[]>([]);
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+  const { loading, responseData, fetchData } = useApi({
+    service: apiParams.service,
+    method: apiParams.method,
+    dataToSend: apiParams.dataToSend,
+  });
+
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      try {
+        setCompanyList(
+          responseData.data?.map((item: any) => transformToDisplayUser(item))
+        );
+      } catch (err) {
+        console.log(err);
+      } finally {
+        // showLoadingMessage(message, false);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData]);
+
+  function searchCompanyByName(query: string) {
+    setCompanyList([]);
+    setApiParams({
+      service: searchCompanyByNameService(query),
+      method: "get",
+    });
+  }
+
+  function clearList() {
+    setCompanyList([]);
+  }
+
+  return {
+    searchCompanyByName,
+    clearList,
+    loadingCompanyList: loading,
+    companyList,
+  };
 }

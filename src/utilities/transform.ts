@@ -4,6 +4,7 @@ import {
   BasicRateData,
   CertificateFile,
   CertificationItem,
+  DisplayUser,
   FullUser,
   Offer,
   OfferItemSubUser,
@@ -351,5 +352,10 @@ export function transformToCertificationItem(data: any) {
 
 export function transformToRequiredDocsCert(data: any) {
   const obj: RequiredDocsForCert = data;
+  return obj;
+}
+
+export function transformToDisplayUser(data: any) {
+  const obj: DisplayUser = data;
   return obj;
 }
