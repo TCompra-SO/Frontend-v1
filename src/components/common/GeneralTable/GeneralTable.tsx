@@ -475,7 +475,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       PriceColumn(visibility[TableColumns.PRICE]),
       StateColumn(props.content.type, visibility[TableColumns.STATE]),
       ViewColumn(
-        TableTypes.ALL_REQUIREMENTS,
+        props.content.type,
         props.content.onButtonClick,
         visibility[TableColumns.VIEW]
       ),

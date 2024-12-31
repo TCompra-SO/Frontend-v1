@@ -1,9 +1,13 @@
 import { useTranslation } from "react-i18next";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import { ChangeEvent, useEffect, useState } from "react";
-import { TableTypeAllOffers, useApiParams } from "../models/Interfaces";
-import { Action, TableTypes } from "../utilities/types";
-import { BaseUser, BasicOffer } from "../models/MainInterfaces";
+import {
+  ModalContent,
+  TableTypeAllOffers,
+  useApiParams,
+} from "../models/Interfaces";
+import { Action, ModalTypes, TableTypes } from "../utilities/types";
+import { BaseUser, Offer } from "../models/MainInterfaces";
 import makeRequest, {
   getLabelFromRequirementType,
   getRouteType,
@@ -20,7 +24,9 @@ import {
   transformToOfferFromGetOffersByEntityOrSubUser,
 } from "../utilities/transform";
 import { getBaseDataUserService } from "../services/requests/authService";
-import { pageSizeOptionsSt } from "../utilities/globals";
+import { mainModalScrollStyle, pageSizeOptionsSt } from "../utilities/globals";
+import { useShowDetailOffer } from "../hooks/requirementHook";
+import ModalContainer from "../components/containers/ModalContainer";
 
 export default function AllOffers() {
   const { t } = useTranslation();
@@ -28,8 +34,14 @@ export default function AllOffers() {
   const { notification } = App.useApp();
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const dataUser = useSelector((state: MainState) => state.user);
+  const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
   const [type, setType] = useState(getRouteType(location.pathname));
   const [loadingTable, setLoadingTable] = useState(true);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [dataModal, setDataModal] = useState<ModalContent>({
+    type: ModalTypes.NONE,
+    data: {},
+  });
   const [tableContent, setTableContent] = useState<TableTypeAllOffers>({
     type: TableTypes.ALL_OFFERS,
     data: [],
@@ -61,12 +73,13 @@ export default function AllOffers() {
     if (responseData) {
       setData();
     } else if (error) {
-      ({
+      setTableContent({
         type: TableTypes.ALL_OFFERS,
         data: [],
         hiddenColumns: [],
         nameColumnHeader: t("offers"),
         onButtonClick: handleOnButtonClick,
+        total: 0,
       });
       setLoadingTable(false);
       showNotification(notification, "error", errorMsg);
@@ -74,7 +87,7 @@ export default function AllOffers() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
-  /******** */
+  /** Cambio de tipo */
 
   useEffect(() => {
     setType(getRouteType(location.pathname));
@@ -84,11 +97,21 @@ export default function AllOffers() {
     setTableContent((prev) => {
       return {
         ...prev,
-        total: 100, // r3v
+        // total: 100, // r3v
         subType: type,
+        nameColumnHeader: t(getLabelFromRequirementType(type)),
       };
     });
   }, [type]);
+
+  /** Abrir detalle de oferta */
+
+  useEffect(() => {
+    if (modalDataOfferDetail.type !== ModalTypes.NONE) {
+      setDataModal(modalDataOfferDetail);
+      setIsOpenModal(true);
+    }
+  }, [modalDataOfferDetail]);
 
   /** Funciones */
 
@@ -97,7 +120,7 @@ export default function AllOffers() {
       const subUsers: { [key: string]: BaseUser } = {};
       const pendingRequests: { [key: string]: Promise<any> } = {};
 
-      const data = await Promise.all(
+      const data: Offer[] = await Promise.all(
         responseData.data.map(async (e: any) => {
           if (e.subUser == dataUser.uid) {
             return transformToOfferFromGetOffersByEntityOrSubUser(
@@ -141,7 +164,7 @@ export default function AllOffers() {
         hiddenColumns: [],
         nameColumnHeader: t("offers"),
         onButtonClick: handleOnButtonClick,
-        total: 100, // r3v
+        total: responseData.res?.totalDocuments,
       });
     } catch (error) {
       console.log(error);
@@ -155,7 +178,10 @@ export default function AllOffers() {
     console.log(e.target.value);
   }
 
-  function handleOnButtonClick(action: Action, offer: BasicOffer) {}
+  function handleOnButtonClick(action: Action, offer: Offer) {
+    if (action == Action.VIEW_OFFER)
+      getOfferDetail(offer.key, offer.type, true, offer);
+  }
 
   function handleChangePageAndPageSize(page: number, pageSize: number) {
     setLoadingTable(true);
@@ -166,15 +192,24 @@ export default function AllOffers() {
   }
 
   return (
-    <TablePageContent
-      title={t("offers")}
-      titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
-      subtitle={`${t("listOf")}  ${t(getLabelFromRequirementType(type))}`}
-      subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
-      table={tableContent}
-      onSearch={handleSearch}
-      loading={loadingTable}
-      onChangePageAndPageSize={handleChangePageAndPageSize}
-    />
+    <>
+      <ModalContainer
+        destroyOnClose
+        content={dataModal}
+        isOpen={isOpenModal}
+        onClose={() => setIsOpenModal(false)}
+        style={mainModalScrollStyle}
+      />
+      <TablePageContent
+        title={t("offers")}
+        titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
+        subtitle={`${t("listOf")}  ${t(getLabelFromRequirementType(type))}`}
+        subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
+        table={tableContent}
+        onSearch={handleSearch}
+        loading={loadingTable}
+        onChangePageAndPageSize={handleChangePageAndPageSize}
+      />
+    </>
   );
 }

@@ -284,7 +284,7 @@ export interface TableTypeAllRequirements extends TableHiddenColumns {
 
 export interface TableTypeAllOffers extends TableHiddenColumns {
   type: TableTypes.ALL_OFFERS;
-  data: BasicOffer[];
+  data: Offer[];
 }
 
 export interface TableTypeAllPurchaseOrders extends TableHiddenColumns {
