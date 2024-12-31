@@ -14,9 +14,6 @@ export default function CompanyFilter() {
   const { loadingCompanyList, searchCompanyByName, clearList, companyList } =
     useSearchCompanyByName();
   const [value, setValue] = useState<string>();
-  function search(companyId: string) {
-    updateUserId(companyId);
-  }
 
   const handleSearch = debounce((newValue: string) => {
     if (newValue.trim().length >= 3) {
@@ -25,6 +22,10 @@ export default function CompanyFilter() {
       clearList();
     }
   }, 400);
+
+  function search(companyId: string) {
+    updateUserId(companyId);
+  }
 
   function handleChange(newValue: string) {
     setValue(newValue);
