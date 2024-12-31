@@ -7,19 +7,16 @@ import { RequestContext } from "../contexts/RequestContext";
 import { generateShortId } from "../utilities/globalFunctions";
 import { Action } from "../utilities/types";
 
+export interface UseApiType {
+  saveInQueue: boolean;
+  action: Action;
+  functionToExecute: () => void;
+  notificationData?: NotificationData;
+}
+
 export default function useApi<T = any>(
   { service, method, dataToSend, token }: useApiParams<T>,
-  {
-    saveInQueue,
-    action,
-    functionToExecute,
-    notificationData,
-  }: {
-    saveInQueue: boolean;
-    action: Action;
-    functionToExecute: () => void;
-    notificationData?: NotificationData;
-  } = {
+  { saveInQueue, action, functionToExecute, notificationData }: UseApiType = {
     saveInQueue: false,
     action: Action.NONE,
     functionToExecute: () => {},

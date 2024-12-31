@@ -11,13 +11,17 @@ import showNotification, {
 } from "../../../utilities/notification/showNotification";
 import { maxDocSizeMb } from "../../../utilities/globals";
 import { useApiParams } from "../../../models/Interfaces";
-import useApi from "../../../hooks/useApi";
+import useApi, { UseApiType } from "../../../hooks/useApi";
 import { Action, UploadCertificateLabels } from "../../../utilities/types";
 import { uploadCertificateService } from "../../../services/requests/certificateService";
 
 interface AddCertificatesModalProps {
   onDocumentAdded?: () => void;
   onClose: () => any;
+  useApiHook: ReturnType<typeof useApi>;
+  setApiParams: (params: useApiParams) => void;
+  setCallback: (newFunc: () => {}) => void;
+  setAdditionalApiParams: (additionalParams: UseApiType) => void;
 }
 
 export default function AddCertificatesModal(props: AddCertificatesModalProps) {
@@ -28,6 +32,7 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
   const name = useSelector((state: MainState) => state.mainUser.name);
   const doc = useSelector((state: MainState) => state.mainUser.document);
   const fileInputRefs = useRef<(InputRef | null)[]>([]);
+  const { loading: loadingUpload } = props.useApiHook;
 
   useEffect(() => {
     fileInputRefs.current = fileInputRefs.current.slice(0, docList.length);
@@ -35,24 +40,8 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
 
   /** Subir archivos */
 
-  const [apiParamsUpload, setApiParamsUpload] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingUpload,
-    responseData: responseDataUpload,
-    error: errorUpload,
-    errorMsg: errorMsgUpload,
-    fetchData: fetchDataUpload,
-  } = useApi(
-    {
-      service: apiParamsUpload.service,
-      method: apiParamsUpload.method,
-      dataToSend: apiParamsUpload.dataToSend,
-    },
-    {
+  useEffect(() => {
+    props.setAdditionalApiParams({
       saveInQueue: true,
       action: Action.NONE,
       functionToExecute: xx,
@@ -60,8 +49,8 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
         type: "success",
         description: t("documentsUploadedSuccessfully"),
       },
-    }
-  );
+    });
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -69,16 +58,6 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    showLoadingMessage(message, loadingUpload);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingUpload]);
-
-  useEffect(() => {
-    if (apiParamsUpload.service) fetchDataUpload(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsUpload]);
 
   // useEffect(() => {
   //   if (responseDataUpload) {
@@ -103,7 +82,7 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
     //   "success",
     //   t("documentsUploadedSuccessfully")
     // );
-    // if (props.onDocumentAdded) props.onDocumentAdded();
+    if (props.onDocumentAdded) props.onDocumentAdded();
     console.log("already closed");
     props.onClose();
   }
@@ -197,7 +176,12 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
         formData.append(UploadCertificateLabels.name, nameList[i].trim());
       }
     });
-    setApiParamsUpload({
+    // setApiParamsUpload({
+    //   service: uploadCertificateService(),
+    //   method: "post",
+    //   dataToSend: formData,
+    // });
+    props.setApiParams({
       service: uploadCertificateService(),
       method: "post",
       dataToSend: formData,

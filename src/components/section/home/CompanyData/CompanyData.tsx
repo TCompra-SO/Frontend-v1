@@ -78,7 +78,10 @@ export default function CompanyData() {
                 <BasicCompanyData user={user} />
                 <DetailedCompanyData user={user} />
                 {userId != mainUid && certifState && (
-                  <CertificationData state={certifState} user={user} />
+                  <CertificationData
+                    state={CertificationState.NONE} // r3v
+                    user={user}
+                  />
                 )}
               </>
             )

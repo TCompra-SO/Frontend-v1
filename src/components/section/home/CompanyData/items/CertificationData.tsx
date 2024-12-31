@@ -20,8 +20,6 @@ export default function CertificationData(props: CertificationDataProps) {
     data: {},
   });
 
-  console.log(props.state);
-
   function openGetCertifiedModal() {
     //r3v
     setDataModal({

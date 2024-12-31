@@ -23,8 +23,9 @@ import ViewDocsReceivedCertificate from "../common/modals/ViewDocsReceivedCertif
 import SelectDocumentsToSendCertificateModal from "../common/modals/SelectDocumentsToSendCertificateModal";
 import SendMessageModal from "../common/modals/SendMessageModal";
 import { useEffect, useState } from "react";
-import useApi from "../../hooks/useApi";
+import useApi, { UseApiType } from "../../hooks/useApi";
 import { App } from "antd";
+import { showLoadingMessage } from "../../utilities/notification/showNotification";
 
 interface ModalContainerProps extends ModalProps {
   content: ModalContent;
@@ -36,8 +37,17 @@ interface ModalContainerProps extends ModalProps {
 }
 
 export default function ModalContainer(props: ModalContainerProps) {
-  const { notification } = App.useApp();
+  const { notification, message } = App.useApp();
   const [callback, setCallback] = useState<() => void>(() => {});
+  const [additionalApiParams, setAdditionalApiParams] = useState<UseApiType>({
+    saveInQueue: false,
+    action: Action.NONE,
+    functionToExecute: () => {},
+    notificationData: {
+      type: "error",
+      description: null,
+    },
+  });
   const [notificationData, setNotificationData] = useState<NotificationData>({
     type: "success",
     description: null,
@@ -48,14 +58,25 @@ export default function ModalContainer(props: ModalContainerProps) {
     method: "get",
   });
 
-  const { loading, responseData, error, errorMsg, fetchData } = useApi(
+  // const { loading, responseData, error, errorMsg, fetchData } = useApi(
+  const useApiHook = useApi(
     {
       service: apiParams.service,
       method: apiParams.method,
       dataToSend: apiParams.dataToSend,
     },
-    { saveInQueue: true, action: Action.NONE, functionToExecute: callback }
+    additionalApiParams
   );
+
+  useEffect(() => {
+    showLoadingMessage(message, useApiHook.loading);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useApiHook.loading]);
+
+  useEffect(() => {
+    if (apiParams.service) useApiHook.fetchData(false); // r3v no siempre es falso
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
 
   // useEffect(() => {
   //   showNotification(
@@ -182,6 +203,10 @@ export default function ModalContainer(props: ModalContainerProps) {
           <AddCertificatesModal
             onDocumentAdded={props.content.data?.onDocumentAdded}
             onClose={props.onClose}
+            useApiHook={useApiHook}
+            setApiParams={setApiParams}
+            setCallback={setCallback}
+            setAdditionalApiParams={setAdditionalApiParams}
           />
         );
       }
