@@ -173,6 +173,7 @@ export interface ModalSelectDocsCert extends CommonModalType {
   data: {
     data: SelectDocsModalData;
     certificationId?: string;
+    onRequestSent?: () => void;
   };
 }
 
@@ -440,9 +441,8 @@ export interface NotificationData {
   description: string | null;
 }
 
-export interface ModalCommonProps {
+export interface CommonModalProps {
   useApiHook: ReturnType<typeof useApi>;
   setApiParams: (params: useApiParams) => void;
   setAdditionalApiParams: (additionalParams: UseApiType) => void;
-  includeHeaderInRequest?: boolean;
 }

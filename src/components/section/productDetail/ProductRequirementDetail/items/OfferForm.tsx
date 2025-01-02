@@ -485,6 +485,7 @@ export default function OfferForm(props: OfferFormProps) {
               requirement={props.requirement}
               onDeleteSuccess={recheck}
               onSentDocsToGetCertifiedSuccess={recheck}
+              setIsCertified={setIsCertified}
             />
           ) : (
             <Form
@@ -558,6 +559,7 @@ export default function OfferForm(props: OfferFormProps) {
             isCertified={isCertified}
             onDeleteSuccess={recheck}
             onSentDocsToGetCertifiedSuccess={recheck}
+            setIsCertified={setIsCertified}
           />
         )}
       </div>

@@ -10,6 +10,7 @@ import { FullUser } from "../../../../../models/MainInterfaces";
 interface CertificationDataProps {
   state: CertificationState;
   user: FullUser;
+  onRequestSent: () => void;
 }
 
 export default function CertificationData(props: CertificationDataProps) {
@@ -25,6 +26,7 @@ export default function CertificationData(props: CertificationDataProps) {
     setDataModal({
       type: ModalTypes.SELECT_DOCS_CERT,
       data: {
+        onRequestSent: props.onRequestSent,
         data: {
           userId: props.user.uid,
           userName: props.user.name,

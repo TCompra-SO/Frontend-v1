@@ -8,7 +8,7 @@ import { App, Input, InputRef } from "antd";
 import { checkDoc } from "../../../utilities/globalFunctions";
 import { showLoadingMessage } from "../../../utilities/notification/showNotification";
 import { maxDocSizeMb } from "../../../utilities/globals";
-import { ModalCommonProps } from "../../../models/Interfaces";
+import { CommonModalProps } from "../../../models/Interfaces";
 import {
   ErrorMsgRequestType,
   ErrorRequestType,
@@ -18,7 +18,7 @@ import {
 import { uploadCertificateService } from "../../../services/requests/certificateService";
 import useShowNotification from "../../../hooks/utilHook";
 
-interface AddCertificatesModalProps extends ModalCommonProps {
+interface AddCertificatesModalProps extends CommonModalProps {
   onDocumentAdded?: () => void;
   onClose: () => any;
 }

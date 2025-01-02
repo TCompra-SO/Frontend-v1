@@ -4,7 +4,11 @@ import RequirementModalOfferSelected from "../section/requirements/RequirementMo
 import { ModalProps } from "antd/lib";
 import RequirementOfferSummary from "../section/requirements/requirementOfferSummary/RequirementOfferSummary";
 import RequirementModalRepublish from "../section/requirements/RequirementModalRepublish";
-import { ModalContent, useApiParams } from "../../models/Interfaces";
+import {
+  CommonModalProps,
+  ModalContent,
+  useApiParams,
+} from "../../models/Interfaces";
 import RatingCanceledModal from "../common/modals/RatingCanceledModal";
 import CancelPurchaseOrderModal from "../common/modals/CancelPurchaseOrderModal";
 import RatingModal from "../common/modals/RatingModal";
@@ -47,6 +51,12 @@ export default function ModalContainer(props: ModalContainerProps) {
   });
 
   const useApiHook = useApi(apiParams, additionalApiParams);
+
+  const [commonModalProps] = useState<CommonModalProps>({
+    useApiHook: useApiHook,
+    setApiParams: setApiParams,
+    setAdditionalApiParams: setAdditionalApiParams,
+  });
 
   /** Acciones para solicitud */
 
@@ -173,9 +183,7 @@ export default function ModalContainer(props: ModalContainerProps) {
           <AddCertificatesModal
             onDocumentAdded={props.content.data?.onDocumentAdded}
             onClose={props.onClose}
-            useApiHook={useApiHook}
-            setApiParams={setApiParams}
-            setAdditionalApiParams={setAdditionalApiParams}
+            {...commonModalProps}
           />
         );
       }
@@ -204,6 +212,8 @@ export default function ModalContainer(props: ModalContainerProps) {
             data={props.content.data.data}
             certificationId={props.content.data.certificationId}
             onClose={props.onClose}
+            onRequestSent={props.content.data.onRequestSent}
+            {...commonModalProps}
           />
         );
       }

@@ -79,8 +79,11 @@ export default function CompanyData() {
                 <DetailedCompanyData user={user} />
                 {userId != mainUid && certifState && (
                   <CertificationData
-                    state={CertificationState.NONE} // r3v
+                    state={certifState}
                     user={user}
+                    onRequestSent={() =>
+                      setCertifState(CertificationState.PENDING)
+                    }
                   />
                 )}
               </>

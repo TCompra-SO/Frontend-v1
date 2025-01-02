@@ -1,13 +1,18 @@
 import { useTranslation } from "react-i18next";
 import ButtonContainer from "../../containers/ButtonContainer";
-import { ModalTypes } from "../../../utilities/types";
+import {
+  ErrorMsgRequestType,
+  ErrorRequestType,
+  ModalTypes,
+  ResponseRequestType,
+} from "../../../utilities/types";
 import { CertificateFile } from "../../../models/MainInterfaces";
 import { useEffect, useState } from "react";
 import TextAreaContainer from "../../containers/TextAreaContainer";
 import {
+  CommonModalProps,
   ModalContent,
   SelectDocsModalData,
-  useApiParams,
 } from "../../../models/Interfaces";
 import { Checkbox, Flex, Pagination } from "antd";
 import ModalContainer from "../../containers/ModalContainer";
@@ -16,7 +21,6 @@ import {
   pageSizeOptionsSt,
 } from "../../../utilities/globals";
 import SimpleLoading from "../../../pages/utils/SimpleLoading";
-import useApi from "../../../hooks/useApi";
 import { useGetCertificatesList } from "../../../hooks/certificateHook";
 import {
   resendCertificatesService,
@@ -30,10 +34,11 @@ import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
 import useShowNotification from "../../../hooks/utilHook";
 
-interface SelectDocumentsToSendCertificateModalProps {
+interface SelectDocumentsToSendCertificateModalProps extends CommonModalProps {
   data: SelectDocsModalData;
   onClose: () => any;
   certificationId?: string;
+  onRequestSent?: () => void;
 }
 
 export default function SelectDocumentsToSendCertificateModal(
@@ -60,6 +65,7 @@ export default function SelectDocumentsToSendCertificateModal(
     Array(docs.length).fill(false)
   );
   const [certificateIds, setCertificateIds] = useState<string[]>([]);
+  const { loading } = props.useApiHook;
 
   /** Obtener lista de documentos */
 
@@ -87,31 +93,23 @@ export default function SelectDocumentsToSendCertificateModal(
 
   /** Para enviar documentos */
 
-  const [apiParams, setApiParams] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const { loading, responseData, error, errorMsg, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
-
   useEffect(() => {
-    if (apiParams.service) fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParams]);
-
-  useEffect(() => {
-    if (responseData) {
-      showNotification("success", t("documentsSentSuccessfully"));
-      props.onClose();
-    } else if (error) {
-      showNotification("error", errorMsg);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseData, error]);
+    props.setAdditionalApiParams({
+      functionToExecute: function (
+        responseData: ResponseRequestType,
+        error: ErrorRequestType,
+        errorMsg: ErrorMsgRequestType
+      ) {
+        if (responseData) {
+          showNotification("success", t("documentsSentSuccessfully"));
+          if (props.onRequestSent) props.onRequestSent();
+          props.onClose();
+        } else if (error) {
+          showNotification("error", errorMsg);
+        }
+      },
+    });
+  }, []);
 
   /* Funciones */
 
@@ -147,14 +145,9 @@ export default function SelectDocumentsToSendCertificateModal(
 
   function submit() {
     if (certificateIds.length == 0) {
-      //(checked.every((element) => element === false)) {
       showNotification("error", t("mustSelectAtLeastOneDocument"));
       return;
     }
-    // const certList: string[] = docs
-    //   .map((obj, index) => (checked[index] ? obj.uid : null))
-    //   .filter((xx) => xx !== null) as string[];
-    // console.log(checked, mainUserUid, props.data.userId, result);
 
     const data: SendCertificationRequest | ResendCertificatesRequest =
       props.certificationId
@@ -168,7 +161,7 @@ export default function SelectDocumentsToSendCertificateModal(
             certificateIDs: certificateIds,
           };
 
-    setApiParams({
+    props.setApiParams({
       service: props.certificationId
         ? resendCertificatesService()
         : sendCertificationRequestService(),

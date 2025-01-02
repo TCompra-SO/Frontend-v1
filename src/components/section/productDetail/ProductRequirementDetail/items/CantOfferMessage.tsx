@@ -33,6 +33,7 @@ interface CantOfferMessageProps {
   loading?: boolean;
   onDeleteSuccess: () => void;
   onSentDocsToGetCertifiedSuccess: () => void;
+  setIsCertified: (newMotive: CertificationState) => void;
 }
 
 export default function CantOfferMessage(props: CantOfferMessageProps) {
@@ -230,6 +231,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
       setDataModal({
         type: ModalTypes.SELECT_DOCS_CERT,
         data: {
+          onRequestSent: () => props.setIsCertified(CertificationState.PENDING),
           data: {
             userId: props.requirement.user.uid,
             userName: props.requirement.user.name,
