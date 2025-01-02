@@ -105,6 +105,7 @@ export default function MyProfile() {
     service: null,
     method: "get",
     token,
+    includeHeader: false,
   });
   const {
     loading: loadingImage,
@@ -121,7 +122,7 @@ export default function MyProfile() {
 
   useEffect(() => {
     if (apiParamsImage.service) {
-      fetchDataImage(false);
+      fetchDataImage();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParamsImage]);

@@ -7,8 +7,11 @@ import {
 } from "../models/Interfaces";
 import { defaultCountry, maxDocSizeMb, maxImageSizeMb } from "./globals";
 import {
+  ErrorMsgRequestType,
+  ErrorRequestType,
   PurchaseOrderTableTypes,
   RequirementType,
+  ResponseRequestType,
   TimeMeasurement,
   UserClass,
   UserRoles,
@@ -204,9 +207,9 @@ export default async function makeRequest<T = any>({
   dataToSend,
   token,
 }: useApiParams<T>) {
-  let responseData: any | null = null;
-  let errorMsg: string | null = null;
-  let error: AxiosError<any, any> | null = null;
+  let responseData: ResponseRequestType = null;
+  let errorMsg: ErrorMsgRequestType = null;
+  let error: ErrorRequestType = null;
 
   if (service) {
     try {

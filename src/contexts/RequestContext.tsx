@@ -1,6 +1,5 @@
 import { AxiosError } from "axios";
 import { createContext, ReactNode, useState } from "react";
-import { Action } from "../utilities/types";
 import { NotificationData } from "../models/Interfaces";
 import useShowNotification from "../hooks/utilHook";
 
@@ -18,7 +17,6 @@ interface RequestContextType {
   ) => void;
   pushToRequestQueue: (
     requestId: string,
-    action: Action,
     functionToExecute: () => void
   ) => void;
 }
@@ -31,17 +29,16 @@ export const RequestContext = createContext<RequestContextType>({
 export function RequestProvider({ children }: { children: ReactNode }) {
   const { showNotification } = useShowNotification();
   const [requestQueue, setRequestQueue] = useState<
-    Record<string, { action: Action; functionToExecute: () => void }>
+    Record<string, { functionToExecute: () => void }>
   >({});
 
   function pushToRequestQueue(
     requestId: string,
-    action: Action,
     functionToExecute: () => void
   ) {
     setRequestQueue((prevQueue) => ({
       ...prevQueue,
-      [requestId]: { action, functionToExecute },
+      [requestId]: { functionToExecute },
     }));
   }
 
@@ -53,9 +50,10 @@ export function RequestProvider({ children }: { children: ReactNode }) {
     if (notificationData) {
       showNotification(notificationData.type, notificationData.description);
     }
+    requestQueue[requestId].functionToExecute();
+
     if (updates.response) {
       if (requestQueue[requestId]) {
-        requestQueue[requestId].functionToExecute();
         console.log("444444");
       }
     } else if (updates.error) {

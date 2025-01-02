@@ -27,6 +27,7 @@ import {
   BasicRateData,
   SubUserBase,
 } from "./MainInterfaces";
+import useApi, { UseApiType } from "../hooks/useApi";
 
 /******** Modals *******/
 
@@ -351,6 +352,7 @@ export interface useApiParams<T = any> {
   method: "get" | "post" | "put" | "delete";
   dataToSend?: T;
   token?: string;
+  includeHeader?: boolean;
 }
 
 export interface CountryObj {
@@ -436,4 +438,11 @@ export interface RequiredDocsForCert {
 export interface NotificationData {
   type: "success" | "error" | "info" | "warning";
   description: string | null;
+}
+
+export interface ModalCommonProps {
+  useApiHook: ReturnType<typeof useApi>;
+  setApiParams: (params: useApiParams) => void;
+  setAdditionalApiParams: (additionalParams: UseApiType) => void;
+  includeHeaderInRequest?: boolean;
 }

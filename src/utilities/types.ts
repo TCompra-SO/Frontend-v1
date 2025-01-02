@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import {
   allSelect,
   commonModalWidth,
@@ -451,3 +452,8 @@ export enum UploadCertificateLabels {
   documenst = "documents",
   name = "name",
 }
+
+/** Request parameters type */
+export type ResponseRequestType = any | null;
+export type ErrorRequestType = AxiosError<any, any> | null;
+export type ErrorMsgRequestType = string | null;

@@ -100,6 +100,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   const [apiParamsImg, setApiParamsImg] = useState<useApiParams<FormData>>({
     service: null,
     method: "get",
+    includeHeader: false,
   });
   const {
     loading: loadingImg,
@@ -119,6 +120,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   const [apiParamsDoc, setApiParamsDoc] = useState<useApiParams<FormData>>({
     service: null,
     method: "get",
+    includeHeader: false,
   });
   const {
     loading: loadingDoc,
@@ -134,12 +136,12 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   });
 
   useEffect(() => {
-    if (apiParamsImg.service) fetchDataImg(false);
+    if (apiParamsImg.service) fetchDataImg();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParamsImg]);
 
   useEffect(() => {
-    if (apiParamsDoc.service) fetchDataDoc(false);
+    if (apiParamsDoc.service) fetchDataDoc();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParamsDoc]);
 

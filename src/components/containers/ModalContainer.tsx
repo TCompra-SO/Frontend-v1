@@ -1,14 +1,10 @@
-import { Action, ModalTypes, ModalWidth } from "../../utilities/types";
+import { ModalTypes, ModalWidth } from "../../utilities/types";
 import RequirementDetail from "../section/requirements/requirementDetail/RequirementDetail";
 import RequirementModalOfferSelected from "../section/requirements/RequirementModalOfferSelected";
 import { ModalProps } from "antd/lib";
 import RequirementOfferSummary from "../section/requirements/requirementOfferSummary/RequirementOfferSummary";
 import RequirementModalRepublish from "../section/requirements/RequirementModalRepublish";
-import {
-  ModalContent,
-  NotificationData,
-  useApiParams,
-} from "../../models/Interfaces";
+import { ModalContent, useApiParams } from "../../models/Interfaces";
 import RatingCanceledModal from "../common/modals/RatingCanceledModal";
 import CancelPurchaseOrderModal from "../common/modals/CancelPurchaseOrderModal";
 import RatingModal from "../common/modals/RatingModal";
@@ -38,19 +34,11 @@ interface ModalContainerProps extends ModalProps {
 
 export default function ModalContainer(props: ModalContainerProps) {
   const { message } = App.useApp();
-  const [callback, setCallback] = useState<() => void>(() => {});
+
+  /** Variables para solicitud */
+
   const [additionalApiParams, setAdditionalApiParams] = useState<UseApiType>({
-    saveInQueue: false,
-    action: Action.NONE,
     functionToExecute: () => {},
-    notificationData: {
-      type: "error",
-      description: null,
-    },
-  });
-  const [notificationData, setNotificationData] = useState<NotificationData>({
-    type: "success",
-    description: null,
   });
 
   const [apiParams, setApiParams] = useState<useApiParams>({
@@ -58,15 +46,9 @@ export default function ModalContainer(props: ModalContainerProps) {
     method: "get",
   });
 
-  // const { loading, responseData, error, errorMsg, fetchData } = useApi(
-  const useApiHook = useApi(
-    {
-      service: apiParams.service,
-      method: apiParams.method,
-      dataToSend: apiParams.dataToSend,
-    },
-    additionalApiParams
-  );
+  const useApiHook = useApi(apiParams, additionalApiParams);
+
+  /** Acciones para solicitud */
 
   useEffect(() => {
     showLoadingMessage(message, useApiHook.loading);
@@ -74,23 +56,11 @@ export default function ModalContainer(props: ModalContainerProps) {
   }, [useApiHook.loading]);
 
   useEffect(() => {
-    if (apiParams.service) useApiHook.fetchData(false); // r3v no siempre es falso
+    if (apiParams.service) useApiHook.fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
 
-  // useEffect(() => {
-  //   showNotification(
-  //     notification,
-  //     notificationData.type,
-  //     notificationData.description
-  //   );
-  // }, [notificationData]);
-  useEffect(() => {
-    console.log("ModalParentContainer");
-    return () => {
-      console.log("ModalParentContainer exit");
-    };
-  }, []);
+  /** Funciones */
 
   function getContent() {
     switch (props.content.type) {
@@ -205,7 +175,6 @@ export default function ModalContainer(props: ModalContainerProps) {
             onClose={props.onClose}
             useApiHook={useApiHook}
             setApiParams={setApiParams}
-            setCallback={setCallback}
             setAdditionalApiParams={setAdditionalApiParams}
           />
         );

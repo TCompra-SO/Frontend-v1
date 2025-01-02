@@ -8,19 +8,19 @@ import { App, Input, InputRef } from "antd";
 import { checkDoc } from "../../../utilities/globalFunctions";
 import { showLoadingMessage } from "../../../utilities/notification/showNotification";
 import { maxDocSizeMb } from "../../../utilities/globals";
-import { useApiParams } from "../../../models/Interfaces";
-import useApi, { UseApiType } from "../../../hooks/useApi";
-import { Action, UploadCertificateLabels } from "../../../utilities/types";
+import { ModalCommonProps } from "../../../models/Interfaces";
+import {
+  ErrorMsgRequestType,
+  ErrorRequestType,
+  ResponseRequestType,
+  UploadCertificateLabels,
+} from "../../../utilities/types";
 import { uploadCertificateService } from "../../../services/requests/certificateService";
 import useShowNotification from "../../../hooks/utilHook";
 
-interface AddCertificatesModalProps {
+interface AddCertificatesModalProps extends ModalCommonProps {
   onDocumentAdded?: () => void;
   onClose: () => any;
-  useApiHook: ReturnType<typeof useApi>;
-  setApiParams: (params: useApiParams) => void;
-  setCallback: (newFunc: () => {}) => void;
-  setAdditionalApiParams: (additionalParams: UseApiType) => void;
 }
 
 export default function AddCertificatesModal(props: AddCertificatesModalProps) {
@@ -42,13 +42,7 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
 
   useEffect(() => {
     props.setAdditionalApiParams({
-      saveInQueue: true,
-      action: Action.NONE,
-      functionToExecute: xx,
-      notificationData: {
-        type: "success",
-        description: t("documentsUploadedSuccessfully"),
-      },
+      functionToExecute: processRequestResult,
     });
   }, []);
 
@@ -59,35 +53,21 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // useEffect(() => {
-  //   if (responseDataUpload) {
-  //     showNotification(
-  //       notification,
-  //       "success",
-  //       t("documentsUploadedSuccessfully")
-  //     );
-  //     if (props.onDocumentAdded) props.onDocumentAdded();
-  //     console.log("already closed");
-  //     props.onClose();
-  //   } else if (errorUpload) {
-  //     console.log(errorMsgUpload);
-  //     showNotification(notification, "error", errorMsgUpload);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [responseDataUpload, errorUpload]);
-
-  function xx() {
-    // showNotification(
-    //   notification,
-    //   "success",
-    //   t("documentsUploadedSuccessfully")
-    // );
-    if (props.onDocumentAdded) props.onDocumentAdded();
-    console.log("already closed");
-    props.onClose();
-  }
-
   /** Funciones */
+
+  function processRequestResult(
+    responseDataUpload: ResponseRequestType,
+    errorUpload: ErrorRequestType,
+    errorMsgUpload: ErrorMsgRequestType
+  ) {
+    if (responseDataUpload) {
+      showNotification("success", t("documentsUploadedSuccessfully"));
+      if (props.onDocumentAdded) props.onDocumentAdded();
+      props.onClose();
+    } else if (errorUpload) {
+      showNotification("error", errorMsgUpload);
+    }
+  }
 
   function deleteBlock(index: number) {
     setDocList((array) => {
@@ -174,15 +154,11 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
         formData.append(UploadCertificateLabels.name, nameList[i].trim());
       }
     });
-    // setApiParamsUpload({
-    //   service: uploadCertificateService(),
-    //   method: "post",
-    //   dataToSend: formData,
-    // });
     props.setApiParams({
       service: uploadCertificateService(),
       method: "post",
       dataToSend: formData,
+      includeHeader: false,
     });
   }
 
