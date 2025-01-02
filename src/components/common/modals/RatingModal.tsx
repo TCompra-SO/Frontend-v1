@@ -1,4 +1,4 @@
-import { App, Tooltip } from "antd";
+import { Tooltip } from "antd";
 import { RequirementType, YesNo, UserClass } from "../../../utilities/types";
 import SelectContainer from "../../containers/SelectContainer";
 import RatingContainer from "../../containers/RatingContainer";
@@ -9,7 +9,6 @@ import {
 } from "../../../utilities/globalFunctions";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useEffect, useState } from "react";
-import showNotification from "../../../utilities/notification/showNotification";
 import { useTranslation } from "react-i18next";
 import FrontImage from "../FrontImage";
 import SubUserName from "../SubUserName";
@@ -18,6 +17,7 @@ import { CulminateRequest } from "../../../models/Requests";
 import useApi from "../../../hooks/useApi";
 import { culminateRequirementService } from "../../../services/requests/requirementService";
 import { culminateOfferService } from "../../../services/requests/offerService";
+import useShowNotification from "../../../hooks/utilHook";
 
 interface RatingModalProps {
   basicRateData: BasicRateData;
@@ -31,7 +31,7 @@ export default function RatingModal(props: RatingModalProps) {
   const { t } = useTranslation();
   const [answer, setAnswer] = useState<YesNo | null>(null);
   const [scores, setScores] = useState([0, 0, 0]);
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const userClass: UserClass = getUserClass(props.isOffer, props.type);
 
   const questions = {
@@ -107,10 +107,10 @@ export default function RatingModal(props: RatingModalProps) {
 
   useEffect(() => {
     if (responseData) {
-      showNotification(notification, "success", t("scoreSavedSuccessfully"));
+      showNotification("success", t("scoreSavedSuccessfully"));
       props.onClose();
     } else if (error) {
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -127,7 +127,7 @@ export default function RatingModal(props: RatingModalProps) {
 
   function rateUser() {
     if (answer === null || scores[0] == 0 || scores[1] == 0 || scores[2] == 0) {
-      showNotification(notification, "info", t("mustAnswerAllQuestions"));
+      showNotification("info", t("mustAnswerAllQuestions"));
       return;
     }
 

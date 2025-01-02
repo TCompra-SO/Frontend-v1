@@ -37,7 +37,7 @@ interface ModalContainerProps extends ModalProps {
 }
 
 export default function ModalContainer(props: ModalContainerProps) {
-  const { notification, message } = App.useApp();
+  const { message } = App.useApp();
   const [callback, setCallback] = useState<() => void>(() => {});
   const [additionalApiParams, setAdditionalApiParams] = useState<UseApiType>({
     saveInQueue: false,

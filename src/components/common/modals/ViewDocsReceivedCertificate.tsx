@@ -12,10 +12,9 @@ import { ModalContent, useApiParams } from "../../../models/Interfaces";
 import ModalContainer from "../../containers/ModalContainer";
 import { mainModalScrollStyle } from "../../../utilities/globals";
 import useApi from "../../../hooks/useApi";
-import { App } from "antd";
-import showNotification from "../../../utilities/notification/showNotification";
 import { updateCertificationStateService } from "../../../services/requests/certificateService";
 import { UpdateCertificationStateRequest } from "../../../models/Requests";
+import useShowNotification from "../../../hooks/utilHook";
 
 interface ViewDocsReceivedCertificateProps {
   data: CertificationItem;
@@ -28,7 +27,7 @@ export default function ViewDocsReceivedCertificate(
   props: ViewDocsReceivedCertificateProps
 ) {
   const { t } = useTranslation();
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [certApproved, setCertApproved] = useState(false);
   const [note, setNote] = useState("");
@@ -64,13 +63,12 @@ export default function ViewDocsReceivedCertificate(
   useEffect(() => {
     if (responseDataCertif) {
       showNotification(
-        notification,
         "success",
         t(certApproved ? "certificationApproved" : "certificationRejected")
       );
       props.onClose();
     } else if (errorCertif) {
-      showNotification(notification, "error", errorMsgCertif);
+      showNotification("error", errorMsgCertif);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataCertif, errorCertif]);
@@ -99,11 +97,7 @@ export default function ViewDocsReceivedCertificate(
 
   function submit(approve: boolean) {
     if (!approve && !note) {
-      showNotification(
-        notification,
-        "error",
-        t("mustProvideReasonCertification")
-      );
+      showNotification("error", t("mustProvideReasonCertification"));
       return;
     }
     setCertApproved(approve);

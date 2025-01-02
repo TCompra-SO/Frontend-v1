@@ -14,9 +14,7 @@ import { CertificationItem } from "../models/MainInterfaces";
 import { getLastSegmentFromRoute } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
 import { pageSubRoutes } from "../utilities/routes";
-import { App } from "antd";
 import useApi from "../hooks/useApi";
-import showNotification from "../utilities/notification/showNotification";
 import {
   getReceivedRequestsByEntityService,
   getSentRequestsByEntityService,
@@ -24,10 +22,11 @@ import {
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { transformToCertificationItem } from "../utilities/transform";
+import useShowNotification from "../hooks/utilHook";
 
 export default function Certificates() {
   const location = useLocation();
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const { t } = useTranslation();
   const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
   const [type, setType] = useState(getLastSegmentFromRoute(location.pathname));
@@ -83,7 +82,7 @@ export default function Certificates() {
         onButtonClick: handleOnButtonClick,
         total: 0,
       });
-      showNotification(notification, "error", errorMsgCertif);
+      showNotification("error", errorMsgCertif);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataCertif, errorCertif]);
@@ -140,7 +139,7 @@ export default function Certificates() {
       });
     } catch (error) {
       console.log(error);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     }
   }
 

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import ButtonContainer from "../../../../containers/ButtonContainer";
-import { App, Checkbox, Form, UploadFile } from "antd";
+import { Checkbox, Form, UploadFile } from "antd";
 import { MainState } from "../../../../../models/Redux";
 import { useSelector } from "react-redux";
 import TitleField from "../../../../common/formFields/TitleField";
@@ -17,7 +17,6 @@ import AddImagesField from "../../../../common/formFields/AddImagesField";
 import AddDocumentField from "../../../../common/formFields/AddDocumentField";
 import { CreateOfferRequest } from "../../../../../models/Requests";
 import { ReactNode, useEffect, useState } from "react";
-import showNotification from "../../../../../utilities/notification/showNotification";
 import {
   CanOfferResponse,
   useApiParams,
@@ -49,6 +48,7 @@ import makeRequest from "../../../../../utilities/globalFunctions";
 import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
 import ModalContainer from "../../../../containers/ModalContainer";
 import { verifyCertificationByUserIdAndCompanyId } from "../../../../../services/complete/general";
+import useShowNotification from "../../../../../hooks/utilHook";
 
 function RowContainer({ children }: { children: ReactNode }) {
   return (
@@ -74,7 +74,7 @@ export default function OfferForm(props: OfferFormProps) {
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const role = useSelector((state: MainState) => state.user.typeID);
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const [isCertified, setIsCertified] = useState<CertificationState>(
     CertificationState.NONE
   );
@@ -134,7 +134,7 @@ export default function OfferForm(props: OfferFormProps) {
       uploadImgsAndDocs(responseData.data?.uid);
     } else if (error) {
       setReqSuccess(ProcessFlag.FIN_UNSUCCESS);
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -168,7 +168,7 @@ export default function OfferForm(props: OfferFormProps) {
       setImgSuccess(ProcessFlag.FIN_SUCCESS);
     } else if (errorImg) {
       setImgSuccess(ProcessFlag.FIN_UNSUCCESS);
-      showNotification(notification, "error", errorMsgImg);
+      showNotification("error", errorMsgImg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataImg, errorImg]);
@@ -202,7 +202,7 @@ export default function OfferForm(props: OfferFormProps) {
       setDocSuccess(ProcessFlag.FIN_SUCCESS);
     } else if (errorDoc) {
       setDocSuccess(ProcessFlag.FIN_UNSUCCESS);
-      showNotification(notification, "error", errorMsgDoc);
+      showNotification("error", errorMsgDoc);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataDoc, errorDoc]);
@@ -218,17 +218,9 @@ export default function OfferForm(props: OfferFormProps) {
         docSuccess == ProcessFlag.FIN_SUCCESS &&
         imgSuccess == ProcessFlag.FIN_SUCCESS
       ) {
-        showNotification(
-          notification,
-          "success",
-          t("offerCreatedSuccessfully")
-        );
+        showNotification("success", t("offerCreatedSuccessfully"));
       } else {
-        showNotification(
-          notification,
-          "warning",
-          t("offerCreatedSuccessfullyNoDocOrImages")
-        );
+        showNotification("warning", t("offerCreatedSuccessfullyNoDocOrImages"));
       }
       form.resetFields();
       form.setFieldValue("currency", props.requirement?.coin);
@@ -333,11 +325,7 @@ export default function OfferForm(props: OfferFormProps) {
               props.requirement.user.uid
             );
           if (errorCert)
-            showNotification(
-              notification,
-              "error",
-              t("certificationVerificationError")
-            );
+            showNotification("error", t("certificationVerificationError"));
           setIsCertified(certResult ?? CertificationState.NONE);
           if (certResult != CertificationState.CERTIFIED) {
             setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED);
@@ -402,7 +390,7 @@ export default function OfferForm(props: OfferFormProps) {
       }
 
       submit(data);
-    } else showNotification(notification, "error", t("errorOccurred"));
+    } else showNotification("error", t("errorOccurred"));
   }
 
   function submit(data: CreateOfferRequest) {

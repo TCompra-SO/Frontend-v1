@@ -18,12 +18,11 @@ import { MainState } from "../../../../../models/Redux";
 import { useSelector } from "react-redux";
 import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
 import { deleteOfferService } from "../../../../../services/requests/offerService";
-import showNotification, {
-  showLoadingMessage,
-} from "../../../../../utilities/notification/showNotification";
+import { showLoadingMessage } from "../../../../../utilities/notification/showNotification";
 import { App } from "antd";
 import useApi from "../../../../../hooks/useApi";
 import { ModalsContext } from "../../../../../contexts/ModalsContext";
+import useShowNotification from "../../../../../hooks/utilHook";
 
 interface CantOfferMessageProps {
   offerId: string;
@@ -39,7 +38,8 @@ interface CantOfferMessageProps {
 export default function CantOfferMessage(props: CantOfferMessageProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { notification, message } = App.useApp();
+  const { message } = App.useApp();
+  const { showNotification } = useShowNotification();
   const entityType = useSelector((state: MainState) => state.user.typeEntity);
   const { updateDetailedRequirementModalData } = useContext(ModalsContext);
   const [mainText, setMainText] = useState("");
@@ -81,11 +81,11 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
 
   useEffect(() => {
     if (responseDataDelete) {
-      showNotification(notification, "success", t("offerDeletedSuccessfully"));
+      showNotification("success", t("offerDeletedSuccessfully"));
       handleCloseModal();
       props.onDeleteSuccess();
     } else if (errorDelete) {
-      showNotification(notification, "error", errorMsgDelete);
+      showNotification("error", errorMsgDelete);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataDelete, errorDelete]);

@@ -17,9 +17,7 @@ import { useContext, useEffect, useState } from "react";
 import { LoadingDataContext } from "../../../../contexts/LoadingDataContext";
 import { ModalContent, useApiParams } from "../../../../models/Interfaces";
 import useApi from "../../../../hooks/useApi";
-import showNotification, {
-  showLoadingMessage,
-} from "../../../../utilities/notification/showNotification";
+import { showLoadingMessage } from "../../../../utilities/notification/showNotification";
 import { App } from "antd";
 import { openPurchaseOrderPdf } from "../../../../utilities/globalFunctions";
 import { getPurchaseOrderPDFService } from "../../../../services/requests/purchaseOrderService";
@@ -32,6 +30,7 @@ import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../../../../utilities/routes";
 import ButtonContainer from "../../../containers/ButtonContainer";
 import { useGetOffersByRequirementId } from "../../../../hooks/requirementHook";
+import useShowNotification from "../../../../hooks/utilHook";
 
 interface SubUserTableModalProps {
   user: SubUserBase | null;
@@ -65,7 +64,8 @@ interface SubUserTableModalProps {
 export default function SubUserTableModal(props: SubUserTableModalProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { notification, message } = App.useApp();
+  const { message } = App.useApp();
+  const { showNotification } = useShowNotification();
   const [subType, setSubType] = useState<
     RequirementType | PurchaseOrderTableTypes
   >(RequirementType.GOOD);
@@ -124,7 +124,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
     if (responseDataPdf) {
       openPurchaseOrderPdf(responseDataPdf);
     } else if (errorPdf) {
-      showNotification(notification, "error", errorMsgPdf);
+      showNotification("error", errorMsgPdf);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataPdf, errorPdf]);

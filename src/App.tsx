@@ -127,10 +127,10 @@ function App() {
           },
         }}
       >
-        <ListsProvider>
-          <RequestProvider>
-            <ModalsProvider>
-              <AntdApp>
+        <AntdApp>
+          <ListsProvider>
+            <RequestProvider>
+              <ModalsProvider>
                 <CreateRequirementFloatButton />
                 <LoadingCond></LoadingCond>
                 <Routes>
@@ -588,10 +588,10 @@ function App() {
                     }
                   />
                 </Routes>
-              </AntdApp>
-            </ModalsProvider>
-          </RequestProvider>
-        </ListsProvider>
+              </ModalsProvider>
+            </RequestProvider>
+          </ListsProvider>
+        </AntdApp>
       </ConfigProvider>
     </>
   );

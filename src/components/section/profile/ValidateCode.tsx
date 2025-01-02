@@ -4,7 +4,7 @@ import {
   SendOutlined,
   SolutionOutlined,
 } from "@ant-design/icons";
-import { App, Divider, Flex, Form, Steps, StepsProps } from "antd";
+import { Divider, Flex, Form, Steps, StepsProps } from "antd";
 import { useEffect, useState } from "react";
 import {
   RecoverPasswordRequest,
@@ -12,7 +12,6 @@ import {
   SendCodeRequest,
   ValidateCodeRequest,
 } from "../../../models/Requests";
-import showNotification from "../../../utilities/notification/showNotification";
 import { StepsItemContent, useApiParams } from "../../../models/Interfaces";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
@@ -30,6 +29,7 @@ import InputContainer from "../../containers/InputContainer";
 import { usePasswordRules } from "../../../hooks/validators";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
+import useShowNotification from "../../../hooks/utilHook";
 
 const stepsIni: StepsItemContent[] = [
   {
@@ -95,7 +95,7 @@ export default function ValidateCode({
   isForgotPassword,
 }: ValidateCodeProps) {
   const { t } = useTranslation();
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const [form] = Form.useForm();
   const [current, setCurrent] = useState(0);
   const [waiting, setWaiting] = useState(false);
@@ -158,7 +158,7 @@ export default function ValidateCode({
         equalServices(apiParams.service, sendCodeRecoveryService())
       ) {
         beginTimer();
-        showNotification(notification, "success", t("sentValidationCode"));
+        showNotification("success", t("sentValidationCode"));
         if (current == 0) next();
       } else if (
         equalServices(apiParams.service, validateCodeService()) ||
@@ -169,7 +169,7 @@ export default function ValidateCode({
         form.resetFields();
       }
     } else if (error) {
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
       if (
         equalServices(apiParams.service, validateCodeService()) ||
         equalServices(apiParams.service, recoverPasswordService())
@@ -207,7 +207,7 @@ export default function ValidateCode({
       beginTimerToValidate();
       if (isForgotPassword) {
         if (values.password1 !== values.password2) {
-          showNotification(notification, "error", t("passwordsMusMatch"));
+          showNotification("error", t("passwordsMusMatch"));
           return;
         }
         const data: RecoverPasswordRequest = {

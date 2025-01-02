@@ -1,4 +1,4 @@
-import { App, Col, Form, Input, InputRef, Row } from "antd";
+import { Col, Form, Input, InputRef, Row } from "antd";
 import { ProfileRequest } from "../models/Requests";
 import {
   defaultCountry,
@@ -8,7 +8,6 @@ import {
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { useContext, useEffect, useState } from "react";
-import showNotification from "../utilities/notification/showNotification";
 import { IdValueObj, useApiParams } from "../models/Interfaces";
 import ButtonContainer from "../components/containers/ButtonContainer";
 import SelectContainer from "../components/containers/SelectContainer";
@@ -32,6 +31,7 @@ import TenureField from "../components/common/formFields/TenureField";
 import SpecialtyField from "../components/common/formFields/SpecialtyField";
 import AboutMeField from "../components/common/formFields/AboutMeField";
 import { useHandleChangeImage } from "../hooks/useHandleChangeImage";
+import useShowNotification from "../hooks/utilHook";
 // import LocationField from "../components/common/formFields/LocationField";
 
 interface ProfileProps {
@@ -44,14 +44,14 @@ export default function Profile(props: ProfileProps) {
   const context = useContext(ListsContext);
   const { countryList, countryData, categoryData } = context;
   const { t } = useTranslation();
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const [form] = Form.useForm();
   const fileInputRef = React.useRef<InputRef>(null);
   const uid = useSelector((state: MainState) => state.user.uid);
   const [imageSrc, setImageSrc] = useState(defaultUserImage);
   const [profileSuccess, setProfileSuccess] = useState(false);
   const [cities, setCities] = useState<IdValueObj[]>([]);
-  const handleChangeImage = useHandleChangeImage(notification);
+  const handleChangeImage = useHandleChangeImage();
   const [apiParams, setApiParams] = useState<useApiParams<ProfileRequest>>({
     service: null,
     method: "get",
@@ -80,7 +80,7 @@ export default function Profile(props: ProfileProps) {
         equalServices(apiParams.service, profileUserService()) ||
         equalServices(apiParams.service, profileCompanyService())
       ) {
-        showNotification(notification, "success", t("createProfileSuccess"));
+        showNotification("success", t("createProfileSuccess"));
         setProfileSuccess(true);
       }
     } else if (error) {
@@ -88,7 +88,7 @@ export default function Profile(props: ProfileProps) {
         equalServices(apiParams.service, profileUserService()) ||
         equalServices(apiParams.service, profileCompanyService())
       ) {
-        showNotification(notification, "error", errorMsg);
+        showNotification("error", errorMsg);
         if (
           equalServices(apiParams.service, profileUserService()) ||
           equalServices(apiParams.service, profileCompanyService())
@@ -116,7 +116,7 @@ export default function Profile(props: ProfileProps) {
 
   async function HandleSubmit(values: any) {
     if (!checkDifferentCategories(values)) {
-      showNotification(notification, "error", t("selectDifferentCategories"));
+      showNotification("error", t("selectDifferentCategories"));
       return;
     }
     const data: ProfileRequest = {

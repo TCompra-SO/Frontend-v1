@@ -39,9 +39,7 @@ import {
   getFullUser,
   getOfferById,
 } from "../services/complete/general";
-import showNotification, {
-  showLoadingMessage,
-} from "../utilities/notification/showNotification";
+import { showLoadingMessage } from "../utilities/notification/showNotification";
 import { App } from "antd";
 import {
   useCancelRequirement,
@@ -49,10 +47,12 @@ import {
   useGetOffersByRequirementId,
 } from "../hooks/requirementHook";
 import { ModalsContext } from "../contexts/ModalsContext";
+import useShowNotification from "../hooks/utilHook";
 
 export default function Requirements() {
   const { t } = useTranslation();
-  const { notification, message } = App.useApp();
+  const { message } = App.useApp();
+  const { showNotification } = useShowNotification();
   const location = useLocation();
   const [loadingTable, setLoadingTable] = useState(true);
   const { detailedRequirementModalData } = useContext(ModalsContext);
@@ -164,7 +164,7 @@ export default function Requirements() {
         total: 0,
       });
       setLoadingTable(false);
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -201,7 +201,6 @@ export default function Requirements() {
   useEffect(() => {
     if (responseDataDelete) {
       showNotification(
-        notification,
         "success",
         t(
           type == RequirementType.SALE
@@ -211,7 +210,7 @@ export default function Requirements() {
       );
       handleCloseModal();
     } else if (errorDelete) {
-      showNotification(notification, "error", errorMsgDelete);
+      showNotification("error", errorMsgDelete);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataDelete, errorDelete]);
@@ -239,7 +238,7 @@ export default function Requirements() {
       });
     } catch (error) {
       console.log(error);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     } finally {
       setLoadingTable(false);
     }
@@ -281,10 +280,10 @@ export default function Requirements() {
               });
               setIsOpenModal(true);
             } else {
-              showNotification(notification, "error", t("errorOccurred"));
+              showNotification("error", t("errorOccurred"));
             }
           } else {
-            showNotification(notification, "error", t("errorOccurred"));
+            showNotification("error", t("errorOccurred"));
           }
           showLoadingMessage(message, false);
         }

@@ -9,13 +9,12 @@ import {
   SelectDocsModalData,
   useApiParams,
 } from "../../../models/Interfaces";
-import { App, Checkbox, Flex, Pagination } from "antd";
+import { Checkbox, Flex, Pagination } from "antd";
 import ModalContainer from "../../containers/ModalContainer";
 import {
   mainModalScrollStyle,
   pageSizeOptionsSt,
 } from "../../../utilities/globals";
-import showNotification from "../../../utilities/notification/showNotification";
 import SimpleLoading from "../../../pages/utils/SimpleLoading";
 import useApi from "../../../hooks/useApi";
 import { useGetCertificatesList } from "../../../hooks/certificateHook";
@@ -29,6 +28,7 @@ import {
 } from "../../../models/Requests";
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
+import useShowNotification from "../../../hooks/utilHook";
 
 interface SelectDocumentsToSendCertificateModalProps {
   data: SelectDocsModalData;
@@ -40,7 +40,7 @@ export default function SelectDocumentsToSendCertificateModal(
   props: SelectDocumentsToSendCertificateModalProps
 ) {
   const { t } = useTranslation();
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
   const {
     certificateList,
@@ -105,10 +105,10 @@ export default function SelectDocumentsToSendCertificateModal(
 
   useEffect(() => {
     if (responseData) {
-      showNotification(notification, "success", t("documentsSentSuccessfully"));
+      showNotification("success", t("documentsSentSuccessfully"));
       props.onClose();
     } else if (error) {
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -148,11 +148,7 @@ export default function SelectDocumentsToSendCertificateModal(
   function submit() {
     if (certificateIds.length == 0) {
       //(checked.every((element) => element === false)) {
-      showNotification(
-        notification,
-        "error",
-        t("mustSelectAtLeastOneDocument")
-      );
+      showNotification("error", t("mustSelectAtLeastOneDocument"));
       return;
     }
     // const certList: string[] = docs

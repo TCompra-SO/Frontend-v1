@@ -7,7 +7,7 @@ import PhoneField from "../components/common/formFields/PhoneField";
 import LocationField from "../components/common/formFields/LocationField";
 import AddressField from "../components/common/formFields/AddressField";
 import EmailField from "../components/common/formFields/EmailField";
-import { App, Form, Input, InputRef } from "antd";
+import { Form, Input, InputRef } from "antd";
 import NameField from "../components/common/formFields/NameField";
 import DniField from "../components/common/formFields/DniField";
 import TenureField from "../components/common/formFields/TenureField";
@@ -33,7 +33,6 @@ import {
   updateProfileCompanyService,
   updateProfileUserService,
 } from "../services/requests/authService";
-import showNotification from "../utilities/notification/showNotification";
 import { equalServices } from "../utilities/globalFunctions";
 import {
   transformToFullUser,
@@ -44,9 +43,11 @@ import {
   getSubUserService,
   updateProfileSubUserService,
 } from "../services/requests/subUserService";
+import useShowNotification from "../hooks/utilHook";
 
 export default function MyProfile() {
   const { t } = useTranslation();
+  const { showNotification } = useShowNotification();
   const [user, setUser] = useState<FullUser | SubUserProfile>();
   const [mainUser, setMainUser] = useState<FullUser>();
   const context = useContext(ListsContext);
@@ -54,9 +55,8 @@ export default function MyProfile() {
   const fileInputRef = useRef<InputRef>(null);
   const [form] = Form.useForm();
   const [passwordForm] = Form.useForm();
-  const { notification } = App.useApp();
   const [imageSrc, setImageSrc] = useState(defaultUserImage);
-  const handleChangeImage = useHandleChangeImage(notification);
+  const handleChangeImage = useHandleChangeImage();
   const [token] = useState(useSelector((state: MainState) => state.user.token));
   const uid = useSelector((state: MainState) => state.user.uid);
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
@@ -94,7 +94,7 @@ export default function MyProfile() {
       )
         setFormData(responseData);
     } else if (error) {
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -128,10 +128,10 @@ export default function MyProfile() {
 
   useEffect(() => {
     if (responseDataImage) {
-      showNotification(notification, "success", t("imageUpdatedSuccessfully"));
+      showNotification("success", t("imageUpdatedSuccessfully"));
     } else if (errorImage) {
       setImageSrc(defaultUserImage);
-      showNotification(notification, "error", errorMsgImage);
+      showNotification("error", errorMsgImage);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataImage, errorImage]);
@@ -192,9 +192,9 @@ export default function MyProfile() {
 
   useEffect(() => {
     if (responseDataForm) {
-      showNotification(notification, "success", t("updateProfileSuccess"));
+      showNotification("success", t("updateProfileSuccess"));
     } else if (errorForm) {
-      showNotification(notification, "error", errorMsgForm);
+      showNotification("error", errorMsgForm);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataForm, errorForm]);
@@ -259,7 +259,7 @@ export default function MyProfile() {
   }
 
   function changePasswordSuccess() {
-    showNotification(notification, "success", t("passwordHasBeenUpdated"));
+    showNotification("success", t("passwordHasBeenUpdated"));
   }
 
   function changeImage(e: React.ChangeEvent<HTMLInputElement>) {
@@ -320,7 +320,7 @@ export default function MyProfile() {
 
   function saveMyPassword(values: any) {
     if (values.password1 !== values.password2) {
-      showNotification(notification, "error", t("passwordsMusMatch"));
+      showNotification("error", t("passwordsMusMatch"));
       passwordForm.resetFields();
       return;
     }

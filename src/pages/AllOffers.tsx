@@ -14,8 +14,6 @@ import makeRequest, {
 } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
 import useApi from "../hooks/useApi";
-import { App } from "antd";
-import showNotification from "../utilities/notification/showNotification";
 import { getOffersByEntityService } from "../services/requests/offerService";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
@@ -27,11 +25,12 @@ import { getBaseDataUserService } from "../services/requests/authService";
 import { mainModalScrollStyle, pageSizeOptionsSt } from "../utilities/globals";
 import { useShowDetailOffer } from "../hooks/requirementHook";
 import ModalContainer from "../components/containers/ModalContainer";
+import useShowNotification from "../hooks/utilHook";
 
 export default function AllOffers() {
   const { t } = useTranslation();
   const location = useLocation();
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const dataUser = useSelector((state: MainState) => state.user);
   const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
@@ -82,7 +81,7 @@ export default function AllOffers() {
         total: 0,
       });
       setLoadingTable(false);
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -168,7 +167,7 @@ export default function AllOffers() {
       });
     } catch (error) {
       console.log(error);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     } finally {
       setLoadingTable(false);
     }

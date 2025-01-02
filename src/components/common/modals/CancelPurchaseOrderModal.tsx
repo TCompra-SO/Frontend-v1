@@ -1,15 +1,14 @@
-import { App } from "antd";
 import TextAreaContainer from "../../containers/TextAreaContainer";
 import { useEffect, useState } from "react";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import { Lengths } from "../../../utilities/lengths";
-import showNotification from "../../../utilities/notification/showNotification";
 import { Action, ActionLabel } from "../../../utilities/types";
 import {
   useCancelOffer,
   useCancelRequirement,
 } from "../../../hooks/requirementHook";
+import useShowNotification from "../../../hooks/utilHook";
 
 interface CancelPurchaseOrderModalProps {
   onClose: () => any;
@@ -24,7 +23,7 @@ export default function CancelPurchaseOrderModal(
   props: CancelPurchaseOrderModalProps
 ) {
   const { t } = useTranslation();
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const [text, setText] = useState<string>("");
   const { cancelRequirement, loadingCancelRequirement, responseDataCancelReq } =
     useCancelRequirement();
@@ -65,11 +64,7 @@ export default function CancelPurchaseOrderModal(
 
   function cancelPurchaseOrder() {
     if (!text) {
-      showNotification(
-        notification,
-        "error",
-        t("mustIndicateReasonCancellation")
-      );
+      showNotification("error", t("mustIndicateReasonCancellation"));
       return;
     }
     if (props.fromRequirementTable)

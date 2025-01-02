@@ -1,4 +1,4 @@
-import { App, Checkbox, Form } from "antd";
+import { Checkbox, Form } from "antd";
 import { useEffect, useState } from "react";
 import {
   GetNameReniecRequest,
@@ -8,7 +8,6 @@ import {
 import { useDispatch } from "react-redux";
 import { setUid, setUser, setEmail } from "../redux/userSlice";
 import { DocType, ModalTypes, RegisterTypeId } from "../utilities/types";
-import showNotification from "../utilities/notification/showNotification";
 import useApi from "../hooks/useApi";
 import {
   loginService,
@@ -32,6 +31,7 @@ import ModalContainer from "../components/containers/ModalContainer";
 import { AxiosError } from "axios";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { useLoadUserInfo } from "../hooks/authHook";
+import useShowNotification from "../hooks/utilHook";
 
 const LoginType = {
   LOGIN: "login",
@@ -48,7 +48,7 @@ interface LoginProps {
 export default function Login(props: LoginProps) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const { emailRules } = useEmailRules(true);
   const { passwordRules } = usePasswordRules(true);
   const { dniRules } = useDniRules(true);
@@ -86,7 +86,7 @@ export default function Login(props: LoginProps) {
         setValidDoc(true);
       }
     } else if (error) {
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
 
       if (equalServices(apiParams.service, getNameReniecService(""))) {
         setValidDoc(false);
@@ -159,16 +159,12 @@ export default function Login(props: LoginProps) {
       });
     } else {
       if (!validDoc) {
-        showNotification(notification, "error", t("mustProvideValidDoc"));
+        showNotification("error", t("mustProvideValidDoc"));
         return;
       }
 
       if (!checkedTermsConditions) {
-        showNotification(
-          notification,
-          "error",
-          t("mustAgreeToTermsAndConditions")
-        );
+        showNotification("error", t("mustAgreeToTermsAndConditions"));
         return;
       }
 
@@ -191,13 +187,13 @@ export default function Login(props: LoginProps) {
   async function afterSubmit() {
     if (loginType == LoginType.REGISTER) {
       dispatch(setUid(responseData.res.uid));
-      showNotification(notification, "success", t("registerUserSuccess"));
+      showNotification("success", t("registerUserSuccess"));
       dispatch(setEmail(form.getFieldValue("email")));
       props.onRegisterSuccess(docType);
     } else {
       dispatch(setUser(responseData));
       await loadUserInfo();
-      showNotification(notification, "success", t("welcome"));
+      showNotification("success", t("welcome"));
       props.closeLoginModal();
     }
   }

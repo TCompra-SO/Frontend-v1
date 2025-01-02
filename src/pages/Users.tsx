@@ -20,9 +20,7 @@ import {
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { equalServices } from "../utilities/globalFunctions";
-import showNotification, {
-  showLoadingMessage,
-} from "../utilities/notification/showNotification";
+import { showLoadingMessage } from "../utilities/notification/showNotification";
 import { App } from "antd";
 import SubUserTableModal from "../components/section/users/subUserTables/SubUserTableModal";
 import {
@@ -45,10 +43,12 @@ import {
   getPurchaseOrdersByClientEntityService,
   getPurchaseOrdersByProviderEntityService,
 } from "../services/requests/purchaseOrderService";
+import useShowNotification from "../hooks/utilHook";
 
 export default function Users() {
   const { t } = useTranslation();
-  const { notification, message } = App.useApp();
+  const { message } = App.useApp();
+  const { showNotification } = useShowNotification();
   const token = useSelector((state: MainState) => state.user.token);
   const uid = useSelector((state: MainState) => state.user.uid);
   const [action, setAction] = useState<Action>(Action.ADD_USER);
@@ -97,7 +97,7 @@ export default function Users() {
         nameColumnHeader: t("user"),
         onButtonClick: handleOnActionClick,
       });
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -143,7 +143,7 @@ export default function Users() {
         handleOpenModal();
       }
     } else if (errorUser) {
-      showNotification(notification, "error", errorMsgUser);
+      showNotification("error", errorMsgUser);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -184,7 +184,7 @@ export default function Users() {
     } else if (errorReq) {
       setReqList([]);
       setTotalReq(0);
-      showNotification(notification, "error", errorMsgReq);
+      showNotification("error", errorMsgReq);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataReq, errorReq]);
@@ -224,7 +224,7 @@ export default function Users() {
     } else if (errorOffer) {
       setOfferList([]);
       setTotalOffer(0);
-      showNotification(notification, "error", errorMsgOffer);
+      showNotification("error", errorMsgOffer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataOffer, errorOffer]);
@@ -264,7 +264,7 @@ export default function Users() {
     } else if (errorOrder) {
       setOrderList([]);
       setTotalPurc(0);
-      showNotification(notification, "error", errorMsgOrder);
+      showNotification("error", errorMsgOrder);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataOrder, errorOrder]);
@@ -304,7 +304,7 @@ export default function Users() {
     } else if (errorSales) {
       setOrderList([]);
       setTotalSales(0);
-      showNotification(notification, "error", errorMsgSales);
+      showNotification("error", errorMsgSales);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataSales, errorSales]);
@@ -325,7 +325,7 @@ export default function Users() {
         onButtonClick: handleOnActionClick,
       });
     } catch (error) {
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
       console.log(error);
     }
   }
@@ -343,7 +343,7 @@ export default function Users() {
       console.log(error);
       setReqList([]);
       setTotalReq(0);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     }
   }
 
@@ -359,7 +359,7 @@ export default function Users() {
       console.log(error);
       setOfferList([]);
       setTotalOffer(0);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     }
   }
 
@@ -376,7 +376,7 @@ export default function Users() {
       console.log(error);
       setOrderList([]);
       setTotalPurc(0);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     }
   }
 
@@ -393,7 +393,7 @@ export default function Users() {
       console.log(error);
       setOrderList([]);
       setTotalSales(0);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     }
   }
 

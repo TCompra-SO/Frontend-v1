@@ -1,9 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { ModalContent, OfferFilters, useApiParams } from "../models/Interfaces";
 import useApi from "./useApi";
-import showNotification, {
-  showLoadingMessage,
-} from "../utilities/notification/showNotification";
+import { showLoadingMessage } from "../utilities/notification/showNotification";
 import { App } from "antd";
 import {
   CancelOfferRequest,
@@ -43,12 +41,14 @@ import { getBaseDataUserService } from "../services/requests/authService";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
+import useShowNotification from "./utilHook";
 
 /** useCancelRequirement */
 
 export function useCancelRequirement() {
   const { t } = useTranslation();
-  const { notification, message } = App.useApp();
+  const { message } = App.useApp();
+  const { showNotification } = useShowNotification();
 
   const [apiParamsCancel, setApiParamsCancel] = useState<useApiParams>({
     service: null,
@@ -79,13 +79,9 @@ export function useCancelRequirement() {
 
   useEffect(() => {
     if (responseDataCancel) {
-      showNotification(
-        notification,
-        "success",
-        t("requirementCanceledSuccessfully")
-      );
+      showNotification("success", t("requirementCanceledSuccessfully"));
     } else if (errorCancel) {
-      showNotification(notification, "error", errorMsgCancel);
+      showNotification("error", errorMsgCancel);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataCancel, errorCancel]);
@@ -114,7 +110,8 @@ export function useCancelRequirement() {
 
 export function useCancelOffer() {
   const { t } = useTranslation();
-  const { notification, message } = App.useApp();
+  const { message } = App.useApp();
+  const { showNotification } = useShowNotification();
 
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: null,
@@ -140,9 +137,9 @@ export function useCancelOffer() {
 
   useEffect(() => {
     if (responseData) {
-      showNotification(notification, "success", t("offerCanceledSuccessfully"));
+      showNotification("success", t("offerCanceledSuccessfully"));
     } else if (error) {
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -176,7 +173,8 @@ export function useCancelOffer() {
 
 export function useGetOffersByRequirementId() {
   const { t } = useTranslation();
-  const { notification, message } = App.useApp();
+  const { showNotification } = useShowNotification();
+  const { message } = App.useApp();
   const {
     updateMyRequirementsLoadingViewOffers,
     updateSubUserRequirementsViewOffers,
@@ -307,13 +305,13 @@ export function useGetOffersByRequirementId() {
                   filters: requirementData.filters ?? filters,
                 },
               });
-          } else showNotification(notification, "error", t("errorOccurred"));
+          } else showNotification("error", t("errorOccurred"));
         } else if (error) {
-          showNotification(notification, "error", errorMsg);
+          showNotification("error", errorMsg);
         }
       } catch (error) {
         console.log(error);
-        showNotification(notification, "error", t("errorOccurred"));
+        showNotification("error", t("errorOccurred"));
       } finally {
         if (requirementData.requirementId && (error || responseData)) {
           showLoadingMessage(message, false);
@@ -384,7 +382,8 @@ export function useGetOffersByRequirementId() {
 /** useShowDetailOffer */
 
 export function useShowDetailOffer() {
-  const { notification, message } = App.useApp();
+  const { message } = App.useApp();
+  const { showNotification } = useShowNotification();
   const { t } = useTranslation();
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
@@ -430,8 +429,8 @@ export function useShowDetailOffer() {
                 basicRateData,
               },
             });
-          else showNotification(notification, "error", t("errorOccurred"));
-        } else showNotification(notification, "error", t("errorOccurred"));
+          else showNotification("error", t("errorOccurred"));
+        } else showNotification("error", t("errorOccurred"));
       } else {
         const { basicRateData } = await getBasicRateData(
           offerData.requirementId,
@@ -446,11 +445,11 @@ export function useShowDetailOffer() {
               basicRateData,
             },
           });
-        else showNotification(notification, "error", t("errorOccurred"));
+        else showNotification("error", t("errorOccurred"));
       }
     } catch (error) {
       console.log(error);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     } finally {
       showLoadingMessage(message, false);
     }
@@ -466,7 +465,8 @@ export function useShowDetailOffer() {
 
 export function useCulminate() {
   const { t } = useTranslation();
-  const { notification, message } = App.useApp();
+  const { showNotification } = useShowNotification();
+  const { message } = App.useApp();
   const [culminateData, setCulminateData] = useState<{
     type: RequirementType;
     isOffer: boolean;
@@ -516,11 +516,11 @@ export function useCulminate() {
           },
         });
       } else if (error) {
-        showNotification(notification, "error", errorMsg);
+        showNotification("error", errorMsg);
       }
     } catch (error) {
       console.log(error);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     } finally {
       showLoadingMessage(message, false);
     }

@@ -2,13 +2,11 @@ import { App } from "antd";
 
 export default function useShowNotification() {
   const { notification: api } = App.useApp();
-  console.log(api);
 
-  function showNotificationHook(
+  function showNotification(
     type: "success" | "error" | "info" | "warning",
     description: string | null
   ) {
-    console.log(api);
     if (api && description)
       api[type]({
         message: description,
@@ -19,5 +17,5 @@ export default function useShowNotification() {
       });
   }
 
-  return { showNotificationHook };
+  return { showNotification };
 }

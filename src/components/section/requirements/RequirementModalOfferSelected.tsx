@@ -12,8 +12,7 @@ import { SelectOfferRequest } from "../../../models/Requests";
 import useApi from "../../../hooks/useApi";
 import { useApiParams } from "../../../models/Interfaces";
 import { selectOfferService } from "../../../services/requests/requirementService";
-import showNotification from "../../../utilities/notification/showNotification";
-import { App } from "antd";
+import useShowNotification from "../../../hooks/utilHook";
 
 interface RequirementModalOfferSelectedProps {
   offer: Offer;
@@ -26,7 +25,7 @@ export default function RequirementModalOfferSelected(
   props: RequirementModalOfferSelectedProps
 ) {
   const { t } = useTranslation();
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const { filters, filterNames } = useContext(requirementDetailContext);
   const [text, setText] = useState<string>("");
   const [apiParams, setApiParams] = useState<useApiParams<SelectOfferRequest>>({
@@ -47,12 +46,12 @@ export default function RequirementModalOfferSelected(
 
   useEffect(() => {
     if (responseData) {
-      showNotification(notification, "success", t("offerSelectedSuccessfully"));
+      showNotification("success", t("offerSelectedSuccessfully"));
       props.onClose();
       if (apiParams.dataToSend?.offerID)
         props.onSucces(apiParams.dataToSend.offerID);
     } else if (error) {
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);

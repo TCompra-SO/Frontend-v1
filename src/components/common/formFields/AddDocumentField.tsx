@@ -1,10 +1,10 @@
-import { App, Form, Upload, UploadFile } from "antd";
+import { Form, Upload, UploadFile } from "antd";
 import { RcFile, UploadChangeParam } from "antd/lib/upload";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { maxDocSizeMb, maxDocsQuantity } from "../../../utilities/globals";
 import { checkDoc } from "../../../utilities/globalFunctions";
-import showNotification from "../../../utilities/notification/showNotification";
+import useShowNotification from "../../../hooks/utilHook";
 
 export default function AddDocumentField({
   forOffer = false,
@@ -12,7 +12,7 @@ export default function AddDocumentField({
   forOffer?: boolean;
 }) {
   const { t } = useTranslation();
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const fileInputRefDoc = useRef<HTMLDivElement>(null);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
@@ -34,18 +34,13 @@ export default function AddDocumentField({
 
   function checkDocBeforeUpload(file: RcFile) {
     if (fileList.length == maxDocsQuantity && maxDocsQuantity > 1) {
-      showNotification(
-        notification,
-        "error",
-        `${file.name}${t("maxNumberDocsReached")}`
-      );
+      showNotification("error", `${file.name}${t("maxNumberDocsReached")}`);
       return Upload.LIST_IGNORE;
     }
     const { validSize, validFile } = checkDoc(file);
-    if (!validFile) showNotification(notification, "error", `${t("onlyPdfs")}`);
+    if (!validFile) showNotification("error", `${t("onlyPdfs")}`);
     else if (!validSize)
       showNotification(
-        notification,
         "error",
         `${file.name} ${t("nameInvalidImageSize")}${maxDocSizeMb} mb`
       );

@@ -1,11 +1,8 @@
-import { App } from "antd";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useApiParams } from "../models/Interfaces";
 import useApi from "./useApi";
-import showNotification, {
-  showLoadingMessage,
-} from "../utilities/notification/showNotification";
+import { showLoadingMessage } from "../utilities/notification/showNotification";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import {
@@ -23,10 +20,12 @@ import {
   verifyCertificationByUserIdAndCompanyId,
 } from "../services/complete/general";
 import { UpdateRequiredDocsRequest } from "../models/Requests";
+import useShowNotification from "./utilHook";
+import { App } from "antd";
 
 export function useGetCertificatesList() {
   const { t } = useTranslation();
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const [total, setTotal] = useState(0);
   const [docList, setDocList] = useState<CertificateFile[] | null>(null);
   const mainUserId = useSelector((state: MainState) => state.mainUser.uid);
@@ -60,13 +59,13 @@ export function useGetCertificatesList() {
         );
       } catch (err) {
         console.log(err);
-        showNotification(notification, "error", t("errorOccurred"));
+        showNotification("error", t("errorOccurred"));
         setTotal(0);
       } finally {
         // showLoadingMessage(message, false);
       }
     } else if (error) {
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -91,7 +90,7 @@ export function useGetCertificatesList() {
 
 export function useDeleteCertificate() {
   const { t } = useTranslation();
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const [loading, setLoading] = useState<boolean | undefined>(undefined);
 
   async function deleteCertificate(certId: string) {
@@ -101,12 +100,8 @@ export function useDeleteCertificate() {
       certId
     );
     if (responseData)
-      showNotification(
-        notification,
-        "success",
-        t("documentDeletedSuccessfully")
-      );
-    else if (error) showNotification(notification, "error", errorMsg);
+      showNotification("success", t("documentDeletedSuccessfully"));
+    else if (error) showNotification("error", errorMsg);
     // showLoadingMessage(message, false);
     setLoading(false);
   }
@@ -141,7 +136,8 @@ export function useVerifyCertification() {
 
 export function useGetRequiredDocsCert() {
   const { t } = useTranslation();
-  const { notification, message } = App.useApp();
+  const { message } = App.useApp();
+  const { showNotification } = useShowNotification();
   const [requiredDocs, setRequiredDocs] = useState<string | null>(null);
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: null,
@@ -171,10 +167,10 @@ export function useGetRequiredDocsCert() {
         );
       } catch (err) {
         console.log(err);
-        showNotification(notification, "error", t("errorOccurred"));
+        showNotification("error", t("errorOccurred"));
       }
     } else if (error) {
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -197,7 +193,8 @@ export function useGetRequiredDocsCert() {
 
 export function useUpdateRequiredDocsCert() {
   const { t } = useTranslation();
-  const { notification, message } = App.useApp();
+  const { message } = App.useApp();
+  const { showNotification } = useShowNotification();
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: null,
     method: "get",
@@ -220,9 +217,9 @@ export function useUpdateRequiredDocsCert() {
 
   useEffect(() => {
     if (responseData) {
-      showNotification(notification, "success", t("dataSavedSuccessfully"));
+      showNotification("success", t("dataSavedSuccessfully"));
     } else if (error) {
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);

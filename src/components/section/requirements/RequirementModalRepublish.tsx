@@ -4,13 +4,12 @@ import dayjs from "dayjs";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import { isDateEarlierThanTomorrow } from "../../../utilities/globalFunctions";
-import { App } from "antd";
-import showNotification from "../../../utilities/notification/showNotification";
 import { useApiParams } from "../../../models/Interfaces";
 import { RepublishRequest } from "../../../models/Requests";
 import useApi from "../../../hooks/useApi";
 import { republishRequirementService } from "../../../services/requests/requirementService";
 import { RequirementType } from "../../../utilities/types";
+import useShowNotification from "../../../hooks/utilHook";
 
 interface RequirementModalRepublishProps {
   requirementId: string;
@@ -23,7 +22,7 @@ export default function RequirementModalRepublish(
 ) {
   const { t } = useTranslation();
   const [newDate, setNewDate] = useState(dayjs().add(1, "day"));
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const [apiParamsRep, setApiParamsRep] = useState<
     useApiParams<RepublishRequest>
   >({
@@ -51,7 +50,6 @@ export default function RequirementModalRepublish(
   useEffect(() => {
     if (responseDataRep) {
       showNotification(
-        notification,
         "success",
         t(
           props.type == RequirementType.SALE
@@ -61,7 +59,7 @@ export default function RequirementModalRepublish(
       );
       props.onClose();
     } else if (errorRep) {
-      showNotification(notification, "error", errorMsgRep);
+      showNotification("error", errorMsgRep);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataRep, errorRep]);
@@ -72,7 +70,7 @@ export default function RequirementModalRepublish(
 
   function republishRequirement() {
     if (!newDate) {
-      showNotification(notification, "error", t("enterAValidDate"));
+      showNotification("error", t("enterAValidDate"));
       return;
     }
     setApiParamsRep({

@@ -23,17 +23,17 @@ import useApi from "../hooks/useApi";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { transformToOfferFromGetOffersByEntityOrSubUser } from "../utilities/transform";
-import showNotification, {
-  showLoadingMessage,
-} from "../utilities/notification/showNotification";
+import { showLoadingMessage } from "../utilities/notification/showNotification";
 import { App } from "antd";
 import { ModalsContext } from "../contexts/ModalsContext";
 import { useCulminate, useShowDetailOffer } from "../hooks/requirementHook";
+import useShowNotification from "../hooks/utilHook";
 
 export default function Offers() {
   const { t } = useTranslation();
   const location = useLocation();
-  const { notification, message } = App.useApp();
+  const { showNotification } = useShowNotification();
+  const { message } = App.useApp();
   const { detailedOfferModalData } = useContext(ModalsContext);
   const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
   const dataUser = useSelector((state: MainState) => state.user);
@@ -116,7 +116,7 @@ export default function Offers() {
         onButtonClick: handleOnButtonClick,
         total: 0,
       });
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -152,10 +152,10 @@ export default function Offers() {
 
   useEffect(() => {
     if (responseDataDelete) {
-      showNotification(notification, "success", t("offerDeletedSuccessfully"));
+      showNotification("success", t("offerDeletedSuccessfully"));
       handleCloseModal();
     } else if (errorDelete) {
-      showNotification(notification, "error", errorMsgDelete);
+      showNotification("error", errorMsgDelete);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataDelete, errorDelete]);
@@ -200,7 +200,7 @@ export default function Offers() {
       });
     } catch (error) {
       console.log(error);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     }
   }
 

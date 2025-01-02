@@ -1,4 +1,4 @@
-import { App, Col, Form, Row, UploadFile } from "antd";
+import { Col, Form, Row, UploadFile } from "antd";
 import { useTranslation } from "react-i18next";
 import EmailCR from "./create-requirement-items/EmailCR";
 import DocumentsCertifCR from "./create-requirement-items/DocumentsCertifCR";
@@ -25,7 +25,6 @@ import {
   isDateEarlierThanTomorrow,
 } from "../../../utilities/globalFunctions";
 import { createRequirementService } from "../../../services/requests/requirementService";
-import showNotification from "../../../utilities/notification/showNotification";
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
@@ -47,6 +46,7 @@ import { uploadImagesRequirementService } from "../../../services/requests/image
 import { uploadDocsRequirementService } from "../../../services/requests/documentService";
 import ModalContainer from "../../containers/ModalContainer";
 import { useGetRequiredDocsCert } from "../../../hooks/certificateHook";
+import useShowNotification from "../../../hooks/utilHook";
 
 interface CreateRequirementProps {
   closeModal: () => void;
@@ -66,7 +66,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   const uid = useSelector((state: MainState) => state.user.uid);
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const [form] = Form.useForm();
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -159,7 +159,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       }
     } else if (error) {
       setReqSuccess(ProcessFlag.FIN_UNSUCCESS);
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -169,7 +169,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       setImgSuccess(ProcessFlag.FIN_SUCCESS);
     } else if (errorImg) {
       setImgSuccess(ProcessFlag.FIN_UNSUCCESS);
-      showNotification(notification, "error", errorMsgImg);
+      showNotification("error", errorMsgImg);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -180,7 +180,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       setDocSuccess(ProcessFlag.FIN_SUCCESS);
     } else if (errorDoc) {
       setDocSuccess(ProcessFlag.FIN_UNSUCCESS);
-      showNotification(notification, "error", errorMsgDoc);
+      showNotification("error", errorMsgDoc);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataDoc, errorDoc]);
@@ -199,7 +199,6 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         imgSuccess == ProcessFlag.FIN_SUCCESS
       ) {
         showNotification(
-          notification,
           "success",
           t(
             type == RequirementType.GOOD || type == RequirementType.SERVICE
@@ -210,7 +209,6 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         props.closeModal();
       } else {
         showNotification(
-          notification,
           "warning",
           t(
             type == RequirementType.GOOD || type == RequirementType.SERVICE

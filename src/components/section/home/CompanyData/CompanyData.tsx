@@ -5,8 +5,7 @@ import DetailedCompanyData from "./items/DetailedCompanyData";
 import { HomeContext } from "../../../../contexts/Homecontext";
 import { FullUser } from "../../../../models/MainInterfaces";
 import SimpleLoading from "../../../../pages/utils/SimpleLoading";
-import { App, Flex } from "antd/lib";
-import showNotification from "../../../../utilities/notification/showNotification";
+import { Flex } from "antd/lib";
 import { CertificationState } from "../../../../utilities/types";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../../models/Redux";
@@ -15,10 +14,11 @@ import {
   verifyCertificationByUserIdAndCompanyId,
 } from "../../../../services/complete/general";
 import { useTranslation } from "react-i18next";
+import useShowNotification from "../../../../hooks/utilHook";
 
 export default function CompanyData() {
   const { t } = useTranslation();
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const { userId } = useContext(HomeContext);
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const [loadingUser, setLoadingUser] = useState<boolean | undefined>(
@@ -48,10 +48,10 @@ export default function CompanyData() {
       setUser(null);
       const { user, error, errorMsg } = await getFullUser(userId);
       if (user) setUser(user);
-      else if (error) showNotification(notification, "error", errorMsg);
+      else if (error) showNotification("error", errorMsg);
     } catch (err) {
       console.log(err);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     } finally {
       setLoadingUser(false);
     }
@@ -65,7 +65,7 @@ export default function CompanyData() {
       errorMsg: errorMsgCert,
     } = await verifyCertificationByUserIdAndCompanyId(mainUid, userId);
     if (certResult) setCertifState(certResult);
-    else if (errorCert) showNotification(notification, "error", errorMsgCert);
+    else if (errorCert) showNotification("error", errorMsgCert);
   }
 
   return (

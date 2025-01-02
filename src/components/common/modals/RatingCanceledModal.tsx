@@ -1,4 +1,4 @@
-import { App, Tooltip } from "antd";
+import { Tooltip } from "antd";
 import { BasicRateData } from "../../../models/MainInterfaces";
 import {
   Action,
@@ -16,13 +16,13 @@ import {
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
-import showNotification from "../../../utilities/notification/showNotification";
 import FrontImage from "../FrontImage";
 import SubUserName from "../SubUserName";
 import { useApiParams } from "../../../models/Interfaces";
 import { RegisterScoreRequest } from "../../../models/Requests";
 import useApi from "../../../hooks/useApi";
 import { registerScoreService } from "../../../services/requests/scoreService";
+import useShowNotification from "../../../hooks/utilHook";
 
 interface RatingCanceledModalProps {
   basicRateData: BasicRateData;
@@ -33,8 +33,8 @@ interface RatingCanceledModalProps {
 
 export default function RatingCanceledModal(props: RatingCanceledModalProps) {
   const { t } = useTranslation();
+  const { showNotification } = useShowNotification();
   const [score, setScore] = useState(0);
-  const { notification } = App.useApp();
   const uid = useSelector((state: MainState) => state.user.uid);
   const userClass: UserClass = getUserClass(props.isOffer, props.type);
 
@@ -58,10 +58,10 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
 
   useEffect(() => {
     if (responseData) {
-      showNotification(notification, "success", t("scoreSavedSuccessfully"));
+      showNotification("success", t("scoreSavedSuccessfully"));
       props.onClose();
     } else if (error) {
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -72,7 +72,7 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
 
   function saveScore() {
     if (score == 0) {
-      showNotification(notification, "info", t("mustAnswerQuestion"));
+      showNotification("info", t("mustAnswerQuestion"));
       return;
     }
 

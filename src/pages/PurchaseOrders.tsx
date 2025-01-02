@@ -19,9 +19,7 @@ import TablePageContent from "../components/section/table-page/TablePageContent"
 import useApi from "../hooks/useApi";
 import { getUserService } from "../services/requests/authService";
 import { App } from "antd";
-import showNotification, {
-  showLoadingMessage,
-} from "../utilities/notification/showNotification";
+import { showLoadingMessage } from "../utilities/notification/showNotification";
 import {
   getLabelFromPurchaseOrderType,
   getPurchaseOrderType,
@@ -50,11 +48,13 @@ import {
   useCulminate,
   useGetOffersByRequirementId,
 } from "../hooks/requirementHook";
+import useShowNotification from "../hooks/utilHook";
 
 export default function PurchaseOrders() {
-  const { notification, message } = App.useApp();
+  const { message } = App.useApp();
   const { t } = useTranslation();
   const location = useLocation();
+  const { showNotification } = useShowNotification();
   const uid = useSelector((state: MainState) => state.user.uid);
   const role = useSelector((state: MainState) => state.user.typeID);
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
@@ -176,7 +176,7 @@ export default function PurchaseOrders() {
         onButtonClick: handleOnButtonClick,
         total: 0,
       });
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -214,7 +214,7 @@ export default function PurchaseOrders() {
     if (responseDataUser) {
       showUserInfo();
     } else if (errorUser) {
-      showNotification(notification, "error", errorMsgUser);
+      showNotification("error", errorMsgUser);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataUser, errorUser]);
@@ -253,7 +253,7 @@ export default function PurchaseOrders() {
     if (responseDataPdf) {
       openPurchaseOrderPdf(responseDataPdf);
     } else if (errorPdf) {
-      showNotification(notification, "error", errorMsgPdf);
+      showNotification("error", errorMsgPdf);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataPdf, errorPdf]);
@@ -277,7 +277,7 @@ export default function PurchaseOrders() {
       });
     } catch (error) {
       console.log(error);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     }
   }
 

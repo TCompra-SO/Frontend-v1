@@ -6,14 +6,13 @@ import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
 import { App, Input, InputRef } from "antd";
 import { checkDoc } from "../../../utilities/globalFunctions";
-import showNotification, {
-  showLoadingMessage,
-} from "../../../utilities/notification/showNotification";
+import { showLoadingMessage } from "../../../utilities/notification/showNotification";
 import { maxDocSizeMb } from "../../../utilities/globals";
 import { useApiParams } from "../../../models/Interfaces";
 import useApi, { UseApiType } from "../../../hooks/useApi";
 import { Action, UploadCertificateLabels } from "../../../utilities/types";
 import { uploadCertificateService } from "../../../services/requests/certificateService";
+import useShowNotification from "../../../hooks/utilHook";
 
 interface AddCertificatesModalProps {
   onDocumentAdded?: () => void;
@@ -25,7 +24,8 @@ interface AddCertificatesModalProps {
 }
 
 export default function AddCertificatesModal(props: AddCertificatesModalProps) {
-  const { notification, message } = App.useApp();
+  const { message } = App.useApp();
+  const { showNotification } = useShowNotification();
   const [docList, setDocList] = useState<(File | null)[]>([null]);
   const [nameList, setNameList] = useState<string[]>([""]);
   const uid = useSelector((state: MainState) => state.mainUser.uid);
@@ -133,11 +133,10 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
       //   }
       // } else
       if (!validFile) {
-        showNotification(notification, "error", `${t("onlyPdfs")}`);
+        showNotification("error", `${t("onlyPdfs")}`);
         return;
       } else if (!validSizeDoc) {
         showNotification(
-          notification,
           "error",
           file.name + t("nameInvalidImageSize") + maxDocSizeMb + " mb"
         );
@@ -161,7 +160,6 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
     for (let i = 0; i < docList.length; i++) {
       if (!docList[i] || !nameList[i].trim()) {
         showNotification(
-          notification,
           "error",
           t("mustUploadAFileAndProvideNameForEachItem")
         );
