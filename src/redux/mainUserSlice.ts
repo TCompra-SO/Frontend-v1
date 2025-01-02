@@ -12,6 +12,7 @@ export const mainUserInitialState: UserState = {
   planID: 0,
   typeEntity: EntityType.COMPANY,
   document: "",
+  isPremium: true,
 };
 
 export const mainUserSlice = createSlice({

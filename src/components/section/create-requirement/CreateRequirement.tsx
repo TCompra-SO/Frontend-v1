@@ -65,12 +65,12 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   const { t } = useTranslation();
   const uid = useSelector((state: MainState) => state.user.uid);
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
+  const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
   const { notification } = App.useApp();
   const [form] = Form.useForm();
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [showDocListToCetificate, setShowDocListToCetificate] = useState(false);
-  const [isPremium] = useState<boolean>(true); // r3v
   const [certificatesRequired, setCertificatesRequired] = useState("");
   const { getRequiredDocsCert, requiredDocs, errorRequiredDocs } =
     useGetRequiredDocsCert();

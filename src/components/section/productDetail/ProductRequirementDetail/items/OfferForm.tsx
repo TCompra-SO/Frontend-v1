@@ -73,6 +73,7 @@ export default function OfferForm(props: OfferFormProps) {
   const entityType = useSelector((state: MainState) => state.user.typeEntity);
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const role = useSelector((state: MainState) => state.user.typeID);
+  const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
   const { notification } = App.useApp();
   const [isCertified, setIsCertified] = useState<CertificationState>(
     CertificationState.NONE
@@ -90,7 +91,6 @@ export default function OfferForm(props: OfferFormProps) {
   const [imgSuccess, setImgSuccess] = useState(ProcessFlag.NOT_INI);
   const [offerId, setOfferId] = useState<string>("");
   const [loadingForm, setLoadingForm] = useState(true);
-  const [isPremium] = useState(true); // r3v
 
   useEffect(() => {
     if (cantOfferMotive != CantOfferMotives.INI) setLoadingForm(false);

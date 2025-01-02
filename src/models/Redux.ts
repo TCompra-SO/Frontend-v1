@@ -17,6 +17,7 @@ export interface UserState {
   document: string;
   isLoggedIn?: boolean;
   image?: string;
+  isPremium: boolean;
 }
 
 export interface LoadingState {
