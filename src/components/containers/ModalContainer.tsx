@@ -56,6 +56,7 @@ export default function ModalContainer(props: ModalContainerProps) {
     useApiHook: useApiHook,
     setApiParams: setApiParams,
     setAdditionalApiParams: setAdditionalApiParams,
+    apiParams,
   });
 
   /** Acciones para solicitud */
@@ -104,6 +105,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             requirement={props.content.data.requirement}
             onSucces={props.content.data.onSuccess}
             onClose={props.onClose}
+            {...commonModalProps}
           />
         );
       }

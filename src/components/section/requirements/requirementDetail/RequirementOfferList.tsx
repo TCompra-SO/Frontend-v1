@@ -89,6 +89,7 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
       ...prevObject,
       state: RequirementState.SELECTED,
     }));
+
     setOffersCopy((prev) => {
       const indexToUpdate = prev.findIndex((offer) => offer.key === offerId);
       if (indexToUpdate !== -1) {

@@ -20,7 +20,6 @@ import {
   User,
   FullUser,
   BasicRequirement,
-  BasicOffer,
   BasicPurchaseOrder,
   CertificateFile,
   CertificationItem,
@@ -445,4 +444,5 @@ export interface CommonModalProps {
   useApiHook: ReturnType<typeof useApi>;
   setApiParams: (params: useApiParams) => void;
   setAdditionalApiParams: (additionalParams: UseApiType) => void;
+  apiParams: useApiParams;
 }
