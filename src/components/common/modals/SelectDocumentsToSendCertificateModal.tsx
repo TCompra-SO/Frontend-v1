@@ -21,7 +21,10 @@ import {
   pageSizeOptionsSt,
 } from "../../../utilities/globals";
 import SimpleLoading from "../../../pages/utils/SimpleLoading";
-import { useGetCertificatesList } from "../../../hooks/certificateHook";
+import {
+  useGetCertificatesList,
+  useGetRequiredDocsCert,
+} from "../../../hooks/certificateHook";
 import {
   resendCertificatesService,
   sendCertificationRequestService,
@@ -46,6 +49,8 @@ export default function SelectDocumentsToSendCertificateModal(
 ) {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
+  const { getRequiredDocsCert, requiredDocs, loadingRequiredDocs } =
+    useGetRequiredDocsCert();
   const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
   const {
     certificateList,
@@ -75,7 +80,6 @@ export default function SelectDocumentsToSendCertificateModal(
   }, []);
 
   useEffect(() => {
-    console.log(certificateIds);
     if (certificateList) {
       setDocs(certificateList);
       const indexes = certificateList.map((item, i) => {
@@ -90,6 +94,13 @@ export default function SelectDocumentsToSendCertificateModal(
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [certificateList]);
+
+  /** Obtener texto de documentos requeridos */
+
+  useEffect(() => {
+    getRequiredDocsCert(props.data.userId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.data]);
 
   /** Para enviar documentos */
 
@@ -109,6 +120,7 @@ export default function SelectDocumentsToSendCertificateModal(
         }
       },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* Funciones */
@@ -191,19 +203,25 @@ export default function SelectDocumentsToSendCertificateModal(
           </div>
         </div>
         <div className="t-flex gap-15 preguntas">
-          <div className="t-flex gap-15">
-            <div className="card-ofertas cert-datos">
-              <div className="dato-empresa">
-                <TextAreaContainer
-                  className="form-control wd-100"
-                  autoSize
-                  readOnly
-                  placeholder={`${t("notes")}...`}
-                  value={props.data.text}
-                />
+          {loadingRequiredDocs ? (
+            <Flex justify="center">
+              <SimpleLoading style={{ width: "15vw" }} />
+            </Flex>
+          ) : (
+            <div className="t-flex gap-15">
+              <div className="card-ofertas cert-datos">
+                <div className="dato-empresa">
+                  <TextAreaContainer
+                    className="form-control wd-100"
+                    autoSize
+                    readOnly
+                    placeholder={`${t("notes")}...`}
+                    value={requiredDocs ?? ""}
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {loadingCertList && (
             <Flex justify="center">

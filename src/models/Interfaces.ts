@@ -213,7 +213,6 @@ export type ModalContent =
 export interface SelectDocsModalData {
   userId: string;
   userName: string;
-  text: string;
 }
 
 /********** Tables *************/
