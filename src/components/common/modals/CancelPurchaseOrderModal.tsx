@@ -17,6 +17,8 @@ interface CancelPurchaseOrderModalProps {
   fromRequirementTable: boolean;
   canceledByCreator: boolean;
   onCancelSuccess?: (offerId: string) => void;
+  useCancelRequirementHook: ReturnType<typeof useCancelRequirement>;
+  useCancelOfferHook: ReturnType<typeof useCancelOffer>;
 }
 
 export default function CancelPurchaseOrderModal(
@@ -26,9 +28,9 @@ export default function CancelPurchaseOrderModal(
   const { showNotification } = useShowNotification();
   const [text, setText] = useState<string>("");
   const { cancelRequirement, loadingCancelRequirement, responseDataCancelReq } =
-    useCancelRequirement();
+    props.useCancelRequirementHook;
   const { cancelOffer, loadingCancelOffer, responseDataCancelOffer } =
-    useCancelOffer();
+    props.useCancelOfferHook;
 
   /** Cerrar modal */
 

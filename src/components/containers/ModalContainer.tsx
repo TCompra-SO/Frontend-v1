@@ -26,6 +26,10 @@ import { useEffect, useState } from "react";
 import useApi, { UseApiType } from "../../hooks/useApi";
 import { App } from "antd";
 import { showLoadingMessage } from "../../utilities/notification/showNotification";
+import {
+  useCancelOffer,
+  useCancelRequirement,
+} from "../../hooks/requirementHook";
 
 interface ModalContainerProps extends ModalProps {
   content: ModalContent;
@@ -59,6 +63,11 @@ export default function ModalContainer(props: ModalContainerProps) {
     apiParams,
   });
 
+  /** Para CancelPurchaseOrderModal */
+
+  const useCancelRequirementHook = useCancelRequirement();
+  const useCancelOfferHook = useCancelOffer();
+
   /** Acciones para solicitud */
 
   useEffect(() => {
@@ -70,6 +79,26 @@ export default function ModalContainer(props: ModalContainerProps) {
     if (apiParams.service) useApiHook.fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
+
+  /** Reset */
+
+  useEffect(() => {
+    if (!props.isOpen) {
+      if (props.content.type == ModalTypes.CANCEL_PURCHASE_ORDER) {
+        useCancelOfferHook.resetCancelOffer();
+        useCancelRequirementHook.resetCancelRequirement();
+      } else {
+        setAdditionalApiParams({
+          functionToExecute: () => {},
+        });
+        setApiParams({
+          service: null,
+          method: "get",
+        });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.isOpen]);
 
   /** Funciones */
 
@@ -95,6 +124,8 @@ export default function ModalContainer(props: ModalContainerProps) {
             fromRequirementTable={props.content.data.fromRequirementTable}
             canceledByCreator={props.content.data.canceledByCreator}
             onCancelSuccess={props.content.data.onCancelSuccess}
+            useCancelRequirementHook={useCancelRequirementHook}
+            useCancelOfferHook={useCancelOfferHook}
           />
         );
       }

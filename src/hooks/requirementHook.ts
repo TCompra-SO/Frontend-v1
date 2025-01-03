@@ -61,6 +61,7 @@ export function useCancelRequirement() {
     error: errorCancel,
     errorMsg: errorMsgCancel,
     fetchData: fetchDataCancel,
+    reset: resetUseApi,
   } = useApi<CancelRequirementRequest>({
     service: apiParamsCancel.service,
     method: apiParamsCancel.method,
@@ -98,8 +99,17 @@ export function useCancelRequirement() {
     });
   }
 
+  function reset() {
+    setApiParamsCancel({
+      service: null,
+      method: "get",
+    });
+    resetUseApi();
+  }
+
   return {
     cancelRequirement,
+    resetCancelRequirement: reset,
     loadingCancelRequirement: loadingCancel,
     responseDataCancelReq: responseDataCancel,
     errorCancelReq: errorCancel,
@@ -118,12 +128,18 @@ export function useCancelOffer() {
     method: "get",
   });
 
-  const { loading, responseData, error, errorMsg, fetchData } =
-    useApi<CancelOfferRequest>({
-      service: apiParams.service,
-      method: apiParams.method,
-      dataToSend: apiParams.dataToSend,
-    });
+  const {
+    loading,
+    responseData,
+    error,
+    errorMsg,
+    fetchData,
+    reset: resetUseApi,
+  } = useApi<CancelOfferRequest>({
+    service: apiParams.service,
+    method: apiParams.method,
+    dataToSend: apiParams.dataToSend,
+  });
 
   useEffect(() => {
     showLoadingMessage(message, loading);
@@ -161,8 +177,17 @@ export function useCancelOffer() {
     });
   }
 
+  function reset() {
+    setApiParams({
+      service: null,
+      method: "get",
+    });
+    resetUseApi();
+  }
+
   return {
     cancelOffer,
+    resetCancelOffer: reset,
     loadingCancelOffer: loading,
     responseDataCancelOffer: responseData,
     errorCancelOffer: error,

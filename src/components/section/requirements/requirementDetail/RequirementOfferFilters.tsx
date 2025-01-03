@@ -28,6 +28,9 @@ export default function RequirementOfferFilters(
   const [form] = Form.useForm<OfferFilters>();
   const context = useContext(ListsContext);
   const { countryData, deliveryTimeData } = context;
+  const showCountry = countryData[defaultCountry]
+    ? defaultCountry
+    : Object.keys(countryData)[0];
   const [commonList] = useState(
     Object.keys(CommonFilter)
       .filter((key) => isNaN(Number(key)))
@@ -55,10 +58,6 @@ export default function RequirementOfferFilters(
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialValues]);
-
-  const showCountry = countryData[defaultCountry]
-    ? defaultCountry
-    : Object.keys(countryData)[0];
 
   function onChangeFilters(changedValues: any, allValues: OfferFilters) {
     let location: string = filterNames.location;

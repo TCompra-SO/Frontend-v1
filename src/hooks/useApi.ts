@@ -42,9 +42,7 @@ export default function useApi<T = any>(
   }, [responseData, error]);
 
   async function fetchData() {
-    setResponseData(null);
-    setErrorMsg(null);
-    setError(null);
+    reset();
 
     if (service) {
       setLoading(true);
@@ -76,5 +74,12 @@ export default function useApi<T = any>(
     }
   }
 
-  return { loading, responseData, error, errorMsg, fetchData };
+  function reset() {
+    setResponseData(null);
+    setErrorMsg(null);
+    setError(null);
+    setLoading(undefined);
+  }
+
+  return { loading, responseData, error, errorMsg, fetchData, reset };
 }

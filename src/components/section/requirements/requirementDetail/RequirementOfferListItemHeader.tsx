@@ -135,6 +135,7 @@ export default function RequirementOfferListItemHeader({
   }
 
   function handleSuccessfulSelection(offerId: string) {
+    console.log("ssssssssss");
     if (props.showStateAndActions.show)
       props.showStateAndActions.onSuccessfulSelection(offerId);
   }

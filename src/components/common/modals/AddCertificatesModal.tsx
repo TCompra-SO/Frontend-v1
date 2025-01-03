@@ -44,6 +44,7 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
     props.setAdditionalApiParams({
       functionToExecute: processRequestResult,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
