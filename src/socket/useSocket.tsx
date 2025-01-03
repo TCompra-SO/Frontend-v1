@@ -40,8 +40,6 @@ export default function useSocket(page: number) {
 
   useEffect(() => {
     async function fetchData() {
-      getData();
-
       socketAPI.on("getRequeriments", async () => {
         if (page == 1) {
           getData();
