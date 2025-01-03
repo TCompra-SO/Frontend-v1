@@ -24,6 +24,7 @@ import RateStarCount from "../../../common/RateStarCount";
 interface RequirementOfferListItemProps {
   offer: Offer;
   style?: React.CSSProperties;
+  onClose: () => any;
   showStateAndActions:
     | {
         show: true;
@@ -135,9 +136,10 @@ export default function RequirementOfferListItemHeader({
   }
 
   function handleSuccessfulSelection(offerId: string) {
-    console.log("ssssssssss");
-    if (props.showStateAndActions.show)
+    if (props.showStateAndActions.show) {
       props.showStateAndActions.onSuccessfulSelection(offerId);
+      props.onClose();
+    }
   }
 
   return (

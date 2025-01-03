@@ -3,7 +3,6 @@ import RequirementOfferFilters from "./RequirementOfferFilters";
 import RequirementOfferList from "./RequirementOfferList";
 
 import { Offer, Requirement } from "../../../../models/MainInterfaces";
-import { SyntheticEvent } from "react";
 import { OfferFilters } from "../../../../models/Interfaces";
 import { RequirementDetailProvider } from "../../../../contexts/RequirementDetailProvider";
 
@@ -12,7 +11,7 @@ interface RequirementDetailProps {
   requirement: Requirement;
   forPurchaseOrder: boolean;
   filters?: OfferFilters;
-  onClose: (e: SyntheticEvent<Element, Event>) => any;
+  onClose: () => any;
 }
 
 export default function RequirementDetail(props: RequirementDetailProps) {
@@ -33,6 +32,7 @@ export default function RequirementDetail(props: RequirementDetailProps) {
             offers={props.offerList}
             requirement={props.requirement}
             forPurchaseOrder={props.forPurchaseOrder}
+            onClose={props.onClose}
           />
         </div>
       </div>

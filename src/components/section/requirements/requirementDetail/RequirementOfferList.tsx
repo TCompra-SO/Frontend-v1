@@ -16,6 +16,7 @@ interface RequirementOfferListProps {
   offers: Offer[];
   requirement: Requirement;
   forPurchaseOrder: boolean;
+  onClose: () => any;
 }
 
 export default function RequirementOfferList(props: RequirementOfferListProps) {
@@ -133,6 +134,7 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
                   onSuccessfulSelection: handleSuccessfulSelection,
                   onCancelSuccess: handleCancelSuccess,
                 }}
+                onClose={props.onClose}
               />
               <RequirementOfferListItemBody offer={offer} showUserData={true} />
             </div>
