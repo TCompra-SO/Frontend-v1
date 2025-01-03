@@ -238,10 +238,12 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       setCertificatesRequired(requiredDocs);
       if (!requiredDocs && showDocListToCetificate) setIsOpenModal(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requiredDocs]);
 
   useEffect(() => {
     form.setFieldsValue({ docList: certificatesRequired });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [certificatesRequired]);
 
   useEffect(() => {

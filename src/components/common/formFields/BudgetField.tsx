@@ -26,6 +26,7 @@ export default function BudgetField(props: BudgetFieldProps) {
         precision={1}
         className="form-control"
         placeholder="0"
+        onFocus={(event) => event.target.select()}
       />
     </Form.Item>
   );
