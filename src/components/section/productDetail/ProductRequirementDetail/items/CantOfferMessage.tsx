@@ -18,11 +18,11 @@ import { MainState } from "../../../../../models/Redux";
 import { useSelector } from "react-redux";
 import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
 import { deleteOfferService } from "../../../../../services/requests/offerService";
-import { showLoadingMessage } from "../../../../../utilities/notification/showNotification";
-import { App } from "antd";
 import useApi from "../../../../../hooks/useApi";
 import { ModalsContext } from "../../../../../contexts/ModalsContext";
-import useShowNotification from "../../../../../hooks/utilHook";
+import useShowNotification, {
+  useShowLoadingMessage,
+} from "../../../../../hooks/utilHook";
 
 interface CantOfferMessageProps {
   offerId: string;
@@ -39,7 +39,7 @@ interface CantOfferMessageProps {
 export default function CantOfferMessage(props: CantOfferMessageProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { message } = App.useApp();
+  const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
   const entityType = useSelector((state: MainState) => state.user.typeEntity);
   const { updateDetailedRequirementModalData } = useContext(ModalsContext);
@@ -71,7 +71,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
   });
 
   useEffect(() => {
-    showLoadingMessage(message, loadingDelete);
+    showLoadingMessage(loadingDelete);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingDelete]);
 

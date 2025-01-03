@@ -20,8 +20,6 @@ import {
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { equalServices } from "../utilities/globalFunctions";
-import { showLoadingMessage } from "../utilities/notification/showNotification";
-import { App } from "antd";
 import SubUserTableModal from "../components/section/users/subUserTables/SubUserTableModal";
 import {
   OfferItemSubUser,
@@ -43,11 +41,11 @@ import {
   getPurchaseOrdersByClientEntityService,
   getPurchaseOrdersByProviderEntityService,
 } from "../services/requests/purchaseOrderService";
-import useShowNotification from "../hooks/utilHook";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
 
 export default function Users() {
   const { t } = useTranslation();
-  const { message } = App.useApp();
+  const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
   const token = useSelector((state: MainState) => state.user.token);
   const uid = useSelector((state: MainState) => state.user.uid);
@@ -127,7 +125,7 @@ export default function Users() {
   });
 
   useEffect(() => {
-    showLoadingMessage(message, loadingUser);
+    showLoadingMessage(loadingUser);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingUser]);
 
@@ -169,7 +167,7 @@ export default function Users() {
   });
 
   useEffect(() => {
-    if (!isOpenModal) showLoadingMessage(message, loadingReq);
+    if (!isOpenModal) showLoadingMessage(loadingReq);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingReq]);
 
@@ -209,7 +207,7 @@ export default function Users() {
   });
 
   useEffect(() => {
-    if (!isOpenModal) showLoadingMessage(message, loadingOffer);
+    if (!isOpenModal) showLoadingMessage(loadingOffer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingOffer]);
 
@@ -249,7 +247,7 @@ export default function Users() {
   });
 
   useEffect(() => {
-    if (!isOpenModal) showLoadingMessage(message, loadingOrder);
+    if (!isOpenModal) showLoadingMessage(loadingOrder);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingOrder]);
 
@@ -289,7 +287,7 @@ export default function Users() {
   });
 
   useEffect(() => {
-    if (!isOpenModal) showLoadingMessage(message, loadingSales);
+    if (!isOpenModal) showLoadingMessage(loadingSales);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingSales]);
 

@@ -21,7 +21,6 @@ import {
   openPurchaseOrderPdf,
 } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
-import { App } from "antd";
 import useApi from "../hooks/useApi";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
@@ -30,7 +29,6 @@ import {
   getPurchaseOrdersByClientEntityService,
   getPurchaseOrdersByProviderEntityService,
 } from "../services/requests/purchaseOrderService";
-import { showLoadingMessage } from "../utilities/notification/showNotification";
 import { transformToPurchaseOrder } from "../utilities/transform";
 import ModalContainer from "../components/containers/ModalContainer";
 import {
@@ -40,17 +38,17 @@ import {
 } from "../utilities/globals";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import { useGetOffersByRequirementId } from "../hooks/requirementHook";
-import useShowNotification from "../hooks/utilHook";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
 
 export default function AllSalesOrders() {
   const { t } = useTranslation();
   const location = useLocation();
   const uid = useSelector((state: MainState) => state.user.uid);
   const role = useSelector((state: MainState) => state.user.typeID);
+  const { showLoadingMessage } = useShowLoadingMessage();
   const { updateAllSalesOrdersLoadingPdf } = useContext(LoadingDataContext);
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
-  const { message } = App.useApp();
   const { showNotification } = useShowNotification();
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -168,7 +166,7 @@ export default function AllSalesOrders() {
 
   useEffect(() => {
     updateAllSalesOrdersLoadingPdf(loadingPdf);
-    showLoadingMessage(message, loadingPdf);
+    showLoadingMessage(loadingPdf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingPdf]);
 

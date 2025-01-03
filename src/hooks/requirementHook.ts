@@ -1,8 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { ModalContent, OfferFilters, useApiParams } from "../models/Interfaces";
 import useApi from "./useApi";
-import { showLoadingMessage } from "../utilities/notification/showNotification";
-import { App } from "antd";
 import {
   CancelOfferRequest,
   CancelRequirementRequest,
@@ -41,13 +39,13 @@ import { getBaseDataUserService } from "../services/requests/authService";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
-import useShowNotification from "./utilHook";
+import useShowNotification, { useShowLoadingMessage } from "./utilHook";
 
 /** useCancelRequirement */
 
 export function useCancelRequirement() {
   const { t } = useTranslation();
-  const { message } = App.useApp();
+  const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
 
   const [apiParamsCancel, setApiParamsCancel] = useState<useApiParams>({
@@ -69,7 +67,7 @@ export function useCancelRequirement() {
   });
 
   useEffect(() => {
-    showLoadingMessage(message, loadingCancel);
+    showLoadingMessage(loadingCancel);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingCancel]);
 
@@ -120,7 +118,7 @@ export function useCancelRequirement() {
 
 export function useCancelOffer() {
   const { t } = useTranslation();
-  const { message } = App.useApp();
+  const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
 
   const [apiParams, setApiParams] = useState<useApiParams>({
@@ -142,7 +140,7 @@ export function useCancelOffer() {
   });
 
   useEffect(() => {
-    showLoadingMessage(message, loading);
+    showLoadingMessage(loading);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
@@ -199,7 +197,7 @@ export function useCancelOffer() {
 export function useGetOffersByRequirementId() {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
-  const { message } = App.useApp();
+  const { showLoadingMessage } = useShowLoadingMessage();
   const {
     updateMyRequirementsLoadingViewOffers,
     updateSubUserRequirementsViewOffers,
@@ -339,7 +337,7 @@ export function useGetOffersByRequirementId() {
         showNotification("error", t("errorOccurred"));
       } finally {
         if (requirementData.requirementId && (error || responseData)) {
-          showLoadingMessage(message, false);
+          showLoadingMessage(false);
           if (requirementData.tableType == TableTypes.REQUIREMENT)
             updateMyRequirementsLoadingViewOffers(false);
           else if (
@@ -376,7 +374,7 @@ export function useGetOffersByRequirementId() {
       updateAllPurchaseOrdersViewOffers(true);
     else if (tableType == TableTypes.ALL_SALES_ORDERS)
       updateAllSalesOrdersViewOffers(true);
-    showLoadingMessage(message, true);
+    showLoadingMessage(true);
     setDataModal({
       type: ModalTypes.NONE,
       data: {},
@@ -407,7 +405,7 @@ export function useGetOffersByRequirementId() {
 /** useShowDetailOffer */
 
 export function useShowDetailOffer() {
-  const { message } = App.useApp();
+  const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
   const { t } = useTranslation();
   const dataUser = useSelector((state: MainState) => state.user);
@@ -424,7 +422,7 @@ export function useShowDetailOffer() {
     offerData?: Offer
   ) {
     try {
-      showLoadingMessage(message, true);
+      showLoadingMessage(true);
       setDataModal({
         type: ModalTypes.NONE,
         data: {},
@@ -476,7 +474,7 @@ export function useShowDetailOffer() {
       console.log(error);
       showNotification("error", t("errorOccurred"));
     } finally {
-      showLoadingMessage(message, false);
+      showLoadingMessage(false);
     }
   }
 
@@ -491,7 +489,7 @@ export function useShowDetailOffer() {
 export function useCulminate() {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
-  const { message } = App.useApp();
+  const { showLoadingMessage } = useShowLoadingMessage();
   const [culminateData, setCulminateData] = useState<{
     type: RequirementType;
     isOffer: boolean;
@@ -547,7 +545,7 @@ export function useCulminate() {
       console.log(error);
       showNotification("error", t("errorOccurred"));
     } finally {
-      showLoadingMessage(message, false);
+      showLoadingMessage(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -560,7 +558,7 @@ export function useCulminate() {
     action: Action,
     type: RequirementType
   ) {
-    showLoadingMessage(message, true);
+    showLoadingMessage(true);
     setDataModal({
       type: ModalTypes.NONE,
       data: {},

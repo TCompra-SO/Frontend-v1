@@ -38,6 +38,7 @@ export default function useApi<T = any>(
 
   useEffect(() => {
     if (responseData || error) functionToExecute(responseData, error, errorMsg);
+    reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 

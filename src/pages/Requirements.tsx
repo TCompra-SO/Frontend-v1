@@ -39,19 +39,17 @@ import {
   getFullUser,
   getOfferById,
 } from "../services/complete/general";
-import { showLoadingMessage } from "../utilities/notification/showNotification";
-import { App } from "antd";
 import {
   useCancelRequirement,
   useCulminate,
   useGetOffersByRequirementId,
 } from "../hooks/requirementHook";
 import { ModalsContext } from "../contexts/ModalsContext";
-import useShowNotification from "../hooks/utilHook";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
 
 export default function Requirements() {
   const { t } = useTranslation();
-  const { message } = App.useApp();
+  const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
   const location = useLocation();
   const [loadingTable, setLoadingTable] = useState(true);
@@ -189,7 +187,7 @@ export default function Requirements() {
   });
 
   useEffect(() => {
-    showLoadingMessage(message, loadingDelete);
+    showLoadingMessage(loadingDelete);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingDelete]);
 
@@ -261,7 +259,7 @@ export default function Requirements() {
       }
       case Action.SHOW_SUMMARY: {
         if (requirement.offerUserId && requirement.offerId) {
-          showLoadingMessage(message, true);
+          showLoadingMessage(true);
           const { user: fullUser } = await getFullUser(requirement.offerUserId);
           const { user, subUser } = await getBaseUserForUserSubUser(
             requirement.offerSubUserId ?? requirement.offerUserId
@@ -285,7 +283,7 @@ export default function Requirements() {
           } else {
             showNotification("error", t("errorOccurred"));
           }
-          showLoadingMessage(message, false);
+          showLoadingMessage(false);
         }
         break;
       }

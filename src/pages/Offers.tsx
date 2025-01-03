@@ -23,17 +23,15 @@ import useApi from "../hooks/useApi";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { transformToOfferFromGetOffersByEntityOrSubUser } from "../utilities/transform";
-import { showLoadingMessage } from "../utilities/notification/showNotification";
-import { App } from "antd";
 import { ModalsContext } from "../contexts/ModalsContext";
 import { useCulminate, useShowDetailOffer } from "../hooks/requirementHook";
-import useShowNotification from "../hooks/utilHook";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
 
 export default function Offers() {
   const { t } = useTranslation();
   const location = useLocation();
   const { showNotification } = useShowNotification();
-  const { message } = App.useApp();
+  const { showLoadingMessage } = useShowLoadingMessage();
   const { detailedOfferModalData } = useContext(ModalsContext);
   const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
   const dataUser = useSelector((state: MainState) => state.user);
@@ -141,7 +139,7 @@ export default function Offers() {
   });
 
   useEffect(() => {
-    showLoadingMessage(message, loadingDelete);
+    showLoadingMessage(loadingDelete);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingDelete]);
 

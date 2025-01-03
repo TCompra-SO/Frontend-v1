@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useApiParams } from "../models/Interfaces";
 import useApi from "./useApi";
-import { showLoadingMessage } from "../utilities/notification/showNotification";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import {
@@ -20,8 +19,7 @@ import {
   verifyCertificationByUserIdAndCompanyId,
 } from "../services/complete/general";
 import { UpdateRequiredDocsRequest } from "../models/Requests";
-import useShowNotification from "./utilHook";
-import { App } from "antd";
+import useShowNotification, { useShowLoadingMessage } from "./utilHook";
 
 export function useGetCertificatesList() {
   const { t } = useTranslation();
@@ -62,7 +60,7 @@ export function useGetCertificatesList() {
         showNotification("error", t("errorOccurred"));
         setTotal(0);
       } finally {
-        // showLoadingMessage(message, false);
+        // showLoadingMessage( false);
       }
     } else if (error) {
       showNotification("error", errorMsg);
@@ -71,7 +69,7 @@ export function useGetCertificatesList() {
   }, [responseData, error]);
 
   function getCertificatesList(page: number, pageSize: number) {
-    // showLoadingMessage(message, true);
+    // showLoadingMessage( true);
     setApiParams({
       service: getCertificatesService(mainUserId, page, pageSize),
       method: "get",
@@ -94,7 +92,7 @@ export function useDeleteCertificate() {
   const [loading, setLoading] = useState<boolean | undefined>(undefined);
 
   async function deleteCertificate(certId: string) {
-    // showLoadingMessage(message, true);
+    // showLoadingMessage( true);
     setLoading(true);
     const { responseData, error, errorMsg } = await deleteCertificateById(
       certId
@@ -102,7 +100,7 @@ export function useDeleteCertificate() {
     if (responseData)
       showNotification("success", t("documentDeletedSuccessfully"));
     else if (error) showNotification("error", errorMsg);
-    // showLoadingMessage(message, false);
+    // showLoadingMessage( false);
     setLoading(false);
   }
 
@@ -136,7 +134,7 @@ export function useVerifyCertification() {
 
 export function useGetRequiredDocsCert() {
   const { t } = useTranslation();
-  const { message } = App.useApp();
+  const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
   const [requiredDocs, setRequiredDocs] = useState<string | null>(null);
   const [apiParams, setApiParams] = useState<useApiParams>({
@@ -155,7 +153,7 @@ export function useGetRequiredDocsCert() {
   }, [apiParams]);
 
   useEffect(() => {
-    showLoadingMessage(message, loading);
+    showLoadingMessage(loading);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
@@ -193,7 +191,7 @@ export function useGetRequiredDocsCert() {
 
 export function useUpdateRequiredDocsCert() {
   const { t } = useTranslation();
-  const { message } = App.useApp();
+  const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: null,
@@ -211,7 +209,7 @@ export function useUpdateRequiredDocsCert() {
   }, [apiParams]);
 
   useEffect(() => {
-    showLoadingMessage(message, loading);
+    showLoadingMessage(loading);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 

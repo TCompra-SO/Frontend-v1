@@ -18,8 +18,6 @@ import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import useApi from "../hooks/useApi";
 import { getUserService } from "../services/requests/authService";
-import { App } from "antd";
-import { showLoadingMessage } from "../utilities/notification/showNotification";
 import {
   getLabelFromPurchaseOrderType,
   getLabelFromRequirementType,
@@ -49,7 +47,7 @@ import {
   useGetOffersByRequirementId,
 } from "../hooks/requirementHook";
 import { ModalsContext } from "../contexts/ModalsContext";
-import useShowNotification from "../hooks/utilHook";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
 
 export default function SalesOrders() {
   const { t } = useTranslation();
@@ -60,7 +58,7 @@ export default function SalesOrders() {
   const { getBasicRateData, modalDataRate } = useCulminate();
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
   const { updateMyPurchaseOrdersLoadingPdf } = useContext(LoadingDataContext);
-  const { message } = App.useApp();
+  const { showLoadingMessage } = useShowLoadingMessage();
   const { viewHistorySalesModalData } = useContext(ModalsContext);
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
@@ -202,7 +200,7 @@ export default function SalesOrders() {
   });
 
   useEffect(() => {
-    showLoadingMessage(message, loadingUser);
+    showLoadingMessage(loadingUser);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingUser]);
 
@@ -241,7 +239,7 @@ export default function SalesOrders() {
 
   useEffect(() => {
     updateMyPurchaseOrdersLoadingPdf(loadingPdf);
-    showLoadingMessage(message, loadingPdf);
+    showLoadingMessage(loadingPdf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingPdf]);
 

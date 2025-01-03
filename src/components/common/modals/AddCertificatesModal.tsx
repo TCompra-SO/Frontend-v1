@@ -1,12 +1,10 @@
-import { t } from "i18next";
 import ButtonContainer from "../../containers/ButtonContainer";
 import InputContainer from "../../containers/InputContainer";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
-import { App, Input, InputRef } from "antd";
+import { Input, InputRef } from "antd";
 import { checkDoc } from "../../../utilities/globalFunctions";
-import { showLoadingMessage } from "../../../utilities/notification/showNotification";
 import { maxDocSizeMb } from "../../../utilities/globals";
 import { CommonModalProps } from "../../../models/Interfaces";
 import {
@@ -17,6 +15,7 @@ import {
 } from "../../../utilities/types";
 import { uploadCertificateService } from "../../../services/requests/certificateService";
 import useShowNotification from "../../../hooks/utilHook";
+import { useTranslation } from "react-i18next";
 
 interface AddCertificatesModalProps extends CommonModalProps {
   onDocumentAdded?: () => void;
@@ -24,7 +23,7 @@ interface AddCertificatesModalProps extends CommonModalProps {
 }
 
 export default function AddCertificatesModal(props: AddCertificatesModalProps) {
-  const { message } = App.useApp();
+  const { t } = useTranslation();
   const { showNotification } = useShowNotification();
   const [docList, setDocList] = useState<(File | null)[]>([null]);
   const [nameList, setNameList] = useState<string[]>([""]);
@@ -44,13 +43,6 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
     props.setAdditionalApiParams({
       functionToExecute: processRequestResult,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      showLoadingMessage(message, false);
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

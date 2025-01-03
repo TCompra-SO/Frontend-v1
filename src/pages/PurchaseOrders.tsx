@@ -18,8 +18,6 @@ import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import useApi from "../hooks/useApi";
 import { getUserService } from "../services/requests/authService";
-import { App } from "antd";
-import { showLoadingMessage } from "../utilities/notification/showNotification";
 import {
   getLabelFromPurchaseOrderType,
   getPurchaseOrderType,
@@ -48,10 +46,10 @@ import {
   useCulminate,
   useGetOffersByRequirementId,
 } from "../hooks/requirementHook";
-import useShowNotification from "../hooks/utilHook";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
 
 export default function PurchaseOrders() {
-  const { message } = App.useApp();
+  const { showLoadingMessage } = useShowLoadingMessage();
   const { t } = useTranslation();
   const location = useLocation();
   const { showNotification } = useShowNotification();
@@ -201,7 +199,7 @@ export default function PurchaseOrders() {
   });
 
   useEffect(() => {
-    showLoadingMessage(message, loadingUser);
+    showLoadingMessage(loadingUser);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingUser]);
 
@@ -240,7 +238,7 @@ export default function PurchaseOrders() {
 
   useEffect(() => {
     updateMyPurchaseOrdersLoadingPdf(loadingPdf);
-    showLoadingMessage(message, loadingPdf);
+    showLoadingMessage(loadingPdf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingPdf]);
 

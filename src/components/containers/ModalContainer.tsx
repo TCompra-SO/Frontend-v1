@@ -24,12 +24,11 @@ import SelectDocumentsToSendCertificateModal from "../common/modals/SelectDocume
 import SendMessageModal from "../common/modals/SendMessageModal";
 import { useEffect, useState } from "react";
 import useApi, { UseApiType } from "../../hooks/useApi";
-import { App } from "antd";
-import { showLoadingMessage } from "../../utilities/notification/showNotification";
 import {
   useCancelOffer,
   useCancelRequirement,
 } from "../../hooks/requirementHook";
+import { useShowLoadingMessage } from "../../hooks/utilHook";
 
 interface ModalContainerProps extends ModalProps {
   content: ModalContent;
@@ -41,7 +40,7 @@ interface ModalContainerProps extends ModalProps {
 }
 
 export default function ModalContainer(props: ModalContainerProps) {
-  const { message } = App.useApp();
+  const { showLoadingMessage } = useShowLoadingMessage();
 
   /** Variables para solicitud */
 
@@ -71,7 +70,7 @@ export default function ModalContainer(props: ModalContainerProps) {
   /** Acciones para solicitud */
 
   useEffect(() => {
-    showLoadingMessage(message, useApiHook.loading);
+    showLoadingMessage(useApiHook.loading);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [useApiHook.loading]);
 
@@ -82,23 +81,23 @@ export default function ModalContainer(props: ModalContainerProps) {
 
   /** Reset */
 
-  useEffect(() => {
-    if (!props.isOpen) {
-      if (props.content.type == ModalTypes.CANCEL_PURCHASE_ORDER) {
-        useCancelOfferHook.resetCancelOffer();
-        useCancelRequirementHook.resetCancelRequirement();
-      } else {
-        setAdditionalApiParams({
-          functionToExecute: () => {},
-        });
-        setApiParams({
-          service: null,
-          method: "get",
-        });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.isOpen]);
+  // useEffect(() => {
+  //   if (!props.isOpen) {
+  //     if (props.content.type == ModalTypes.CANCEL_PURCHASE_ORDER) {
+  //       useCancelOfferHook.resetCancelOffer();
+  //       useCancelRequirementHook.resetCancelRequirement();
+  //     } else {
+  //       setAdditionalApiParams({
+  //         functionToExecute: () => {},
+  //       });
+  //       setApiParams({
+  //         service: null,
+  //         method: "get",
+  //       });
+  //     }
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [props.isOpen]);
 
   /** Funciones */
 
