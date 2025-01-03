@@ -3,8 +3,9 @@ import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import TextAreaContainer from "../../containers/TextAreaContainer";
 import { useState } from "react";
+import { CommonModalProps } from "../../../models/Interfaces";
 
-interface SendMessageModalProps {
+interface SendMessageModalProps extends CommonModalProps {
   onClose: () => any;
   requirementId: string;
   userId: string;

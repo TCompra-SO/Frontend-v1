@@ -1,5 +1,12 @@
 import { Tooltip } from "antd";
-import { RequirementType, YesNo, UserClass } from "../../../utilities/types";
+import {
+  RequirementType,
+  YesNo,
+  UserClass,
+  ResponseRequestType,
+  ErrorRequestType,
+  ErrorMsgRequestType,
+} from "../../../utilities/types";
 import SelectContainer from "../../containers/SelectContainer";
 import RatingContainer from "../../containers/RatingContainer";
 import { BasicRateData } from "../../../models/MainInterfaces";
@@ -12,14 +19,13 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import FrontImage from "../FrontImage";
 import SubUserName from "../SubUserName";
-import { useApiParams } from "../../../models/Interfaces";
+import { CommonModalProps } from "../../../models/Interfaces";
 import { CulminateRequest } from "../../../models/Requests";
-import useApi from "../../../hooks/useApi";
 import { culminateRequirementService } from "../../../services/requests/requirementService";
 import { culminateOfferService } from "../../../services/requests/offerService";
 import useShowNotification from "../../../hooks/utilHook";
 
-interface RatingModalProps {
+interface RatingModalProps extends CommonModalProps {
   basicRateData: BasicRateData;
   type: RequirementType;
   isOffer: boolean; // indica si a quien se califica es creador de una oferta o no
@@ -33,6 +39,7 @@ export default function RatingModal(props: RatingModalProps) {
   const [scores, setScores] = useState([0, 0, 0]);
   const { showNotification } = useShowNotification();
   const userClass: UserClass = getUserClass(props.isOffer, props.type);
+  const { loading } = props.useApiHook;
 
   const questions = {
     [UserClass.SELLER]: [
@@ -89,31 +96,23 @@ export default function RatingModal(props: RatingModalProps) {
     ],
   };
 
-  const [apiParams, setApiParams] = useState<useApiParams<CulminateRequest>>({
-    service: null,
-    method: "get",
-  });
-  const { loading, responseData, error, errorMsg, fetchData } =
-    useApi<CulminateRequest>({
-      service: apiParams.service,
-      method: apiParams.method,
-      dataToSend: apiParams.dataToSend,
+  useEffect(() => {
+    props.setAdditionalApiParams({
+      functionToExecute: function (
+        responseData: ResponseRequestType,
+        error: ErrorRequestType,
+        errorMsg: ErrorMsgRequestType
+      ) {
+        if (responseData) {
+          showNotification("success", t("scoreSavedSuccessfully"));
+          props.onClose();
+        } else if (error) {
+          showNotification("error", errorMsg);
+        }
+      },
     });
-
-  useEffect(() => {
-    if (apiParams.service) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParams]);
-
-  useEffect(() => {
-    if (responseData) {
-      showNotification("success", t("scoreSavedSuccessfully"));
-      props.onClose();
-    } else if (error) {
-      showNotification("error", errorMsg);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseData, error]);
+  }, []);
 
   function onScoreChange(position: number, score: number) {
     const copy = scores;
@@ -130,17 +129,13 @@ export default function RatingModal(props: RatingModalProps) {
       showNotification("info", t("mustAnswerAllQuestions"));
       return;
     }
-
     const data: CulminateRequest = {
       delivered: answer == YesNo.YES,
       score: calculateFinalScore(scores),
     };
-
     if (props.isOffer) data.requerimentID = props.requirementOrOfferId;
     else data.offerID = props.requirementOrOfferId;
-
-    console.log(data);
-    setApiParams({
+    props.setApiParams({
       service: props.isOffer
         ? culminateRequirementService()
         : culminateOfferService(),

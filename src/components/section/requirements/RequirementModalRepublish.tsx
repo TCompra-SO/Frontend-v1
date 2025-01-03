@@ -4,14 +4,17 @@ import dayjs from "dayjs";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import { isDateEarlierThanTomorrow } from "../../../utilities/globalFunctions";
-import { useApiParams } from "../../../models/Interfaces";
-import { RepublishRequest } from "../../../models/Requests";
-import useApi from "../../../hooks/useApi";
+import { CommonModalProps } from "../../../models/Interfaces";
 import { republishRequirementService } from "../../../services/requests/requirementService";
-import { RequirementType } from "../../../utilities/types";
+import {
+  ErrorMsgRequestType,
+  ErrorRequestType,
+  RequirementType,
+  ResponseRequestType,
+} from "../../../utilities/types";
 import useShowNotification from "../../../hooks/utilHook";
 
-interface RequirementModalRepublishProps {
+interface RequirementModalRepublishProps extends CommonModalProps {
   requirementId: string;
   onClose: () => any;
   type: RequirementType;
@@ -23,46 +26,32 @@ export default function RequirementModalRepublish(
   const { t } = useTranslation();
   const [newDate, setNewDate] = useState(dayjs().add(1, "day"));
   const { showNotification } = useShowNotification();
-  const [apiParamsRep, setApiParamsRep] = useState<
-    useApiParams<RepublishRequest>
-  >({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingRep,
-    responseData: responseDataRep,
-    error: errorRep,
-    errorMsg: errorMsgRep,
-    fetchData: fetchDataRep,
-  } = useApi({
-    service: apiParamsRep.service,
-    method: apiParamsRep.method,
-    dataToSend: apiParamsRep.dataToSend,
-  });
+  const { loading } = props.useApiHook;
 
   useEffect(() => {
-    if (apiParamsRep.service) fetchDataRep();
+    props.setAdditionalApiParams({
+      functionToExecute: function (
+        responseData: ResponseRequestType,
+        error: ErrorRequestType,
+        errorMsg: ErrorMsgRequestType
+      ) {
+        if (responseData) {
+          showNotification(
+            "success",
+            t(
+              props.type == RequirementType.SALE
+                ? "saleRepublishedSuccessfully"
+                : "requirementRepublishedSuccessfully"
+            )
+          );
+          props.onClose();
+        } else if (error) {
+          showNotification("error", errorMsg);
+        }
+      },
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsRep]);
-
-  useEffect(() => {
-    if (responseDataRep) {
-      showNotification(
-        "success",
-        t(
-          props.type == RequirementType.SALE
-            ? "saleRepublishedSuccessfully"
-            : "requirementRepublishedSuccessfully"
-        )
-      );
-      props.onClose();
-    } else if (errorRep) {
-      showNotification("error", errorMsgRep);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataRep, errorRep]);
+  }, []);
 
   function handleDateChange(date: dayjs.Dayjs) {
     setNewDate(date);
@@ -73,7 +62,7 @@ export default function RequirementModalRepublish(
       showNotification("error", t("enterAValidDate"));
       return;
     }
-    setApiParamsRep({
+    props.setApiParams({
       service: republishRequirementService(),
       method: "post",
       dataToSend: {
@@ -106,7 +95,7 @@ export default function RequirementModalRepublish(
           </div>
           <ButtonContainer
             children={t("saveButton")}
-            loading={loadingRep}
+            loading={loading}
             onClick={republishRequirement}
             className="btn btn-default wd-100"
           />

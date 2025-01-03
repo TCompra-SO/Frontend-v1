@@ -6,17 +6,22 @@ import {
 } from "../../../models/MainInterfaces";
 import TextAreaContainer from "../../containers/TextAreaContainer";
 import { Lengths } from "../../../utilities/lengths";
-import { CertificationState, ModalTypes } from "../../../utilities/types";
+import {
+  CertificationState,
+  ErrorMsgRequestType,
+  ErrorRequestType,
+  ModalTypes,
+  ResponseRequestType,
+} from "../../../utilities/types";
 import { useEffect, useState } from "react";
-import { ModalContent, useApiParams } from "../../../models/Interfaces";
+import { CommonModalProps, ModalContent } from "../../../models/Interfaces";
 import ModalContainer from "../../containers/ModalContainer";
 import { mainModalScrollStyle } from "../../../utilities/globals";
-import useApi from "../../../hooks/useApi";
 import { updateCertificationStateService } from "../../../services/requests/certificateService";
 import { UpdateCertificationStateRequest } from "../../../models/Requests";
 import useShowNotification from "../../../hooks/utilHook";
 
-interface ViewDocsReceivedCertificateProps {
+interface ViewDocsReceivedCertificateProps extends CommonModalProps {
   data: CertificationItem;
   docs: CertificateFile[];
   readOnly?: boolean;
@@ -31,6 +36,7 @@ export default function ViewDocsReceivedCertificate(
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [certApproved, setCertApproved] = useState(false);
   const [note, setNote] = useState("");
+  const { loading } = props.useApiHook;
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
@@ -38,40 +44,26 @@ export default function ViewDocsReceivedCertificate(
 
   /** Para certificar o rechazar */
 
-  const [apiParamsCertif, setApiParamsCertif] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingCertif,
-    responseData: responseDataCertif,
-    error: errorCertif,
-    errorMsg: errorMsgCertif,
-    fetchData: fetchDataCertif,
-  } = useApi({
-    service: apiParamsCertif.service,
-    method: apiParamsCertif.method,
-    dataToSend: apiParamsCertif.dataToSend,
-  });
-
   useEffect(() => {
-    if (apiParamsCertif.service) fetchDataCertif();
+    props.setAdditionalApiParams({
+      functionToExecute: function (
+        responseData: ResponseRequestType,
+        error: ErrorRequestType,
+        errorMsg: ErrorMsgRequestType
+      ) {
+        if (responseData) {
+          showNotification(
+            "success",
+            t(certApproved ? "certificationApproved" : "certificationRejected")
+          );
+          props.onClose();
+        } else if (error) {
+          showNotification("error", errorMsg);
+        }
+      },
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsCertif]);
-
-  useEffect(() => {
-    if (responseDataCertif) {
-      showNotification(
-        "success",
-        t(certApproved ? "certificationApproved" : "certificationRejected")
-      );
-      props.onClose();
-    } else if (errorCertif) {
-      showNotification("error", errorMsgCertif);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataCertif, errorCertif]);
+  }, []);
 
   /** Funciones */
 
@@ -108,7 +100,7 @@ export default function ViewDocsReceivedCertificate(
         : CertificationState.REJECTED,
     };
     if (note) data.note = note;
-    setApiParamsCertif({
+    props.setApiParams({
       service: updateCertificationStateService(),
       method: "post",
       dataToSend: data,
@@ -179,7 +171,7 @@ export default function ViewDocsReceivedCertificate(
             <ButtonContainer
               className="btn alert-boton btn-green"
               onClick={() => (props.readOnly ? props.onClose() : submit(true))}
-              loading={loadingCertif}
+              loading={loading}
             >
               {t(props.readOnly ? "acceptButton" : "certify")}
             </ButtonContainer>
@@ -189,7 +181,7 @@ export default function ViewDocsReceivedCertificate(
               <ButtonContainer
                 className="btn alert-boton btn-green-o"
                 onClick={props.readOnly ? () => resend() : () => submit(false)}
-                loading={loadingCertif}
+                loading={loading}
               >
                 {t(props.readOnly ? "resend" : "reject")}
               </ButtonContainer>

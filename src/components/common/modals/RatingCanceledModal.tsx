@@ -3,7 +3,10 @@ import { BasicRateData } from "../../../models/MainInterfaces";
 import {
   Action,
   ActionLabel,
+  ErrorMsgRequestType,
+  ErrorRequestType,
   RequirementType,
+  ResponseRequestType,
   UserClass,
 } from "../../../utilities/types";
 import RatingContainer from "../../containers/RatingContainer";
@@ -18,13 +21,12 @@ import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
 import FrontImage from "../FrontImage";
 import SubUserName from "../SubUserName";
-import { useApiParams } from "../../../models/Interfaces";
+import { CommonModalProps } from "../../../models/Interfaces";
 import { RegisterScoreRequest } from "../../../models/Requests";
-import useApi from "../../../hooks/useApi";
 import { registerScoreService } from "../../../services/requests/scoreService";
 import useShowNotification from "../../../hooks/utilHook";
 
-interface RatingCanceledModalProps {
+interface RatingCanceledModalProps extends CommonModalProps {
   basicRateData: BasicRateData;
   type: RequirementType;
   isOffer: boolean;
@@ -37,34 +39,25 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
   const [score, setScore] = useState(0);
   const uid = useSelector((state: MainState) => state.user.uid);
   const userClass: UserClass = getUserClass(props.isOffer, props.type);
+  const { loading } = props.useApiHook;
 
-  const [apiParams, setApiParams] = useState<
-    useApiParams<RegisterScoreRequest>
-  >({
-    service: null,
-    method: "get",
-  });
-  const { loading, responseData, error, errorMsg, fetchData } =
-    useApi<RegisterScoreRequest>({
-      service: apiParams.service,
-      method: apiParams.method,
-      dataToSend: apiParams.dataToSend,
+  useEffect(() => {
+    props.setAdditionalApiParams({
+      functionToExecute: function (
+        responseData: ResponseRequestType,
+        error: ErrorRequestType,
+        errorMsg: ErrorMsgRequestType
+      ) {
+        if (responseData) {
+          showNotification("success", t("scoreSavedSuccessfully"));
+          props.onClose();
+        } else if (error) {
+          showNotification("error", errorMsg);
+        }
+      },
     });
-
-  useEffect(() => {
-    if (apiParams.service) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParams]);
-
-  useEffect(() => {
-    if (responseData) {
-      showNotification("success", t("scoreSavedSuccessfully"));
-      props.onClose();
-    } else if (error) {
-      showNotification("error", errorMsg);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseData, error]);
+  }, []);
 
   function onScoreChange(score: number) {
     setScore(score);
@@ -75,15 +68,13 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
       showNotification("info", t("mustAnswerQuestion"));
       return;
     }
-
     const data: RegisterScoreRequest = {
       typeScore: userClass == UserClass.CUSTOMER ? "Client" : "Provider",
       uidEntity: props.basicRateData.userId,
       uidUser: uid,
       score: calculateFinalScore([score]),
     };
-
-    setApiParams({
+    props.setApiParams({
       service: registerScoreService(),
       method: "post",
       dataToSend: data,

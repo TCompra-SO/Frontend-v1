@@ -123,6 +123,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             requirementId={props.content.data.requirementId}
             onClose={props.onClose}
             type={props.content.data.type}
+            {...commonModalProps}
           />
         );
       }
@@ -133,6 +134,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             type={props.content.data.type}
             isOffer={props.content.data.isOffer}
             onClose={props.onClose}
+            {...commonModalProps}
           />
         );
       }
@@ -144,6 +146,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             type={props.content.data.type}
             isOffer={props.content.data.isOffer}
             requirementOrOfferId={props.content.data.requirementOrOfferId}
+            {...commonModalProps}
           />
         );
       }
@@ -205,6 +208,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             docs={props.content.data.docs}
             readOnly={props.content.data.readonly}
             onClose={props.onClose}
+            {...commonModalProps}
           />
         );
       }
@@ -225,6 +229,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             onClose={props.onClose}
             requirementId={props.content.data.requirementId}
             userId={props.content.data.userId}
+            {...commonModalProps}
           />
         );
       }

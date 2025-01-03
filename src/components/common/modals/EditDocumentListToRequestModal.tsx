@@ -24,10 +24,12 @@ export default function EditDocumentListToRequestModal(
 
   useEffect(() => {
     form.setFieldValue("list", props.text);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.text]);
 
   useEffect(() => {
     if (loadingUpdateRequiredDocs === false) props.onClose();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingUpdateRequiredDocs]);
 
   function handleSubmit(values: any) {

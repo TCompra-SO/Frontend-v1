@@ -50,6 +50,7 @@ export default function RequirementModalOfferSelected(
         }
       },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
