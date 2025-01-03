@@ -37,6 +37,7 @@ export default function CompanyFilter() {
       <div className="t-filtro">{t("companyFilter")}</div>
       <SelectContainer
         showSearch
+        allowClear
         value={value}
         style={{ width: "100%" }}
         placeholder={t("companyName")}
@@ -44,6 +45,7 @@ export default function CompanyFilter() {
         notFoundContent={loadingCompanyList ? <Spin size="small" /> : null}
         onChange={handleChange}
         onSearch={handleSearch}
+        onClear={() => clearList()}
         filterOption={false}
         options={companyList.map((comp) => ({
           value: comp.uid,

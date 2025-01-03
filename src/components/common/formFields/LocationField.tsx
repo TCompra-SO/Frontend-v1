@@ -25,6 +25,8 @@ export default function LocationField(props: LocationFieldProps) {
       initialValue={props.value}
     >
       <SelectContainer
+        showSearch
+        optionFilterProp="label"
         placeholder={t(props.onlyItem ? "city" : "select")}
         options={getCityListForSelect(countryData)}
         className="form-control"
