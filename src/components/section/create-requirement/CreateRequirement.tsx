@@ -61,9 +61,11 @@ interface CreateRequirementProps extends CommonModalProps {
   setAdditionalApiParamsDoc: (additionalParams: UseApiType) => void;
   apiParamsDoc: useApiParams;
 
-  // setReqSuccess: (val: ProcessFlag) => void;
-  // setDocSuccess: (val: ProcessFlag) => void;
-  // setImgSuccess: (val: ProcessFlag) => void;
+  setReqSuccess: (val: ProcessFlag) => void;
+  setDocSuccess: (val: ProcessFlag) => void;
+  setImgSuccess: (val: ProcessFlag) => void;
+
+  setType: (val: RequirementType) => void;
 }
 
 interface LabelForCreateRequirementProps {
@@ -90,9 +92,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     useGetRequiredDocsCert();
   const [formDataImg, setFormDataImg] = useState<FormData | null>(null);
   const [formDataDoc, setFormDataDoc] = useState<FormData | null>(null);
-  const [reqSuccess, setReqSuccess] = useState(ProcessFlag.NOT_INI);
-  const [docSuccess, setDocSuccess] = useState(ProcessFlag.NOT_INI);
-  const [imgSuccess, setImgSuccess] = useState(ProcessFlag.NOT_INI);
+
   const formDataImgRef = useRef(formDataImg);
   const formDataDocRef = useRef(formDataDoc);
 
@@ -124,14 +124,14 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         errorMsg: ErrorMsgRequestType
       ) {
         if (responseData) {
-          setReqSuccess(ProcessFlag.FIN_SUCCESS);
+          props.setReqSuccess(ProcessFlag.FIN_SUCCESS);
           uploadImgsAndDocs(
             responseData.data?.uid,
             formDataImgRef.current,
             formDataDocRef.current
           );
         } else if (error) {
-          setReqSuccess(ProcessFlag.FIN_UNSUCCESS);
+          props.setReqSuccess(ProcessFlag.FIN_UNSUCCESS);
           showNotification("error", errorMsg);
         }
       },
@@ -144,9 +144,9 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         errorMsgImg: ErrorMsgRequestType
       ) {
         if (responseDataImg) {
-          setImgSuccess(ProcessFlag.FIN_SUCCESS);
+          props.setImgSuccess(ProcessFlag.FIN_SUCCESS);
         } else if (errorImg) {
-          setImgSuccess(ProcessFlag.FIN_UNSUCCESS);
+          props.setImgSuccess(ProcessFlag.FIN_UNSUCCESS);
           showNotification("error", errorMsgImg);
         }
       },
@@ -159,9 +159,9 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         errorMsgDoc: ErrorMsgRequestType
       ) {
         if (responseDataDoc) {
-          setDocSuccess(ProcessFlag.FIN_SUCCESS);
+          props.setDocSuccess(ProcessFlag.FIN_SUCCESS);
         } else if (errorDoc) {
-          setDocSuccess(ProcessFlag.FIN_UNSUCCESS);
+          props.setDocSuccess(ProcessFlag.FIN_UNSUCCESS);
           showNotification("error", errorMsgDoc);
         }
       },
@@ -173,43 +173,6 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     // };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  /** Crear requerimiento */
-
-  useEffect(() => {
-    if (
-      reqSuccess != ProcessFlag.NOT_INI &&
-      docSuccess != ProcessFlag.NOT_INI &&
-      imgSuccess != ProcessFlag.NOT_INI
-    ) {
-      if (
-        reqSuccess == ProcessFlag.FIN_SUCCESS &&
-        docSuccess == ProcessFlag.FIN_SUCCESS &&
-        imgSuccess == ProcessFlag.FIN_SUCCESS
-      ) {
-        showNotification(
-          "success",
-          t(
-            type == RequirementType.GOOD || type == RequirementType.SERVICE
-              ? "createRequirementSuccess"
-              : "createSaleSuccess"
-          )
-        );
-        props.closeModal();
-      } else {
-        showNotification(
-          "warning",
-          t(
-            type == RequirementType.GOOD || type == RequirementType.SERVICE
-              ? "createRequirementSuccessNoDocOrImages"
-              : "createSaleSuccessNoDocOrImages"
-          )
-        );
-        props.closeModal();
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reqSuccess, imgSuccess, docSuccess]);
 
   /** Establecer valores iniciales */
 
@@ -242,6 +205,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   function changeTab(newtype: RequirementType) {
     if (newtype != type) {
       setType(newtype);
+      props.setType(newtype);
       form.resetFields();
     }
   }
@@ -256,11 +220,11 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   function createRequirement(values: any) {
     form.setFieldsValue({ budget: 0 });
 
-    setReqSuccess(ProcessFlag.NOT_INI);
+    props.setReqSuccess(ProcessFlag.NOT_INI);
     setFormDataDoc(null);
     setFormDataImg(null);
-    setDocSuccess(ProcessFlag.NOT_INI);
-    setImgSuccess(ProcessFlag.NOT_INI);
+    props.setDocSuccess(ProcessFlag.NOT_INI);
+    props.setImgSuccess(ProcessFlag.NOT_INI);
 
     const data: CreateRequirementRequest = {
       name: values.title.trim(),
@@ -323,8 +287,8 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     formDataDoc: FormData | null
   ) {
     if (reqId) {
-      if (!formDataDoc) setDocSuccess(ProcessFlag.FIN_SUCCESS);
-      if (!formDataImg) setImgSuccess(ProcessFlag.FIN_SUCCESS);
+      if (!formDataDoc) props.setDocSuccess(ProcessFlag.FIN_SUCCESS);
+      if (!formDataImg) props.setImgSuccess(ProcessFlag.FIN_SUCCESS);
       if (!formDataDoc && !formDataImg) {
         return;
       }
@@ -349,8 +313,8 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         });
       }
     } else {
-      setDocSuccess(ProcessFlag.FIN_UNSUCCESS);
-      setImgSuccess(ProcessFlag.FIN_UNSUCCESS);
+      props.setDocSuccess(ProcessFlag.FIN_UNSUCCESS);
+      props.setImgSuccess(ProcessFlag.FIN_UNSUCCESS);
     }
   }
 

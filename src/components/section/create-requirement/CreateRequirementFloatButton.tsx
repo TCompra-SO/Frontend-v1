@@ -12,7 +12,10 @@ import { windowSize } from "../../../utilities/globals";
 import { CommonModalProps, useApiParams } from "../../../models/Interfaces";
 import useApi, { UseApiType } from "../../../hooks/useApi";
 import { CreateRequirementRequest } from "../../../models/Requests";
-import { useShowLoadingMessage } from "../../../hooks/utilHook";
+import useShowNotification, {
+  useShowLoadingMessage,
+} from "../../../hooks/utilHook";
+import { ProcessFlag, RequirementType } from "../../../utilities/types";
 
 const CreateRequirement = lazy(
   () => import("../create-requirement/CreateRequirement")
@@ -24,11 +27,16 @@ export default function CreateRequirementFloatButton() {
   const navigate = useNavigate();
   const { width } = useWindowSize();
   const { showLoadingMessage } = useShowLoadingMessage();
+  const { showNotification } = useShowNotification();
   const isLoading = useSelector((state: MainState) => state.loading.isLoading);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isHomePage, setIsHomePage] = useState(true);
   const [isChatPage, setIsChatPage] = useState(false);
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
+  const [reqSuccess, setReqSuccess] = useState(ProcessFlag.NOT_INI);
+  const [docSuccess, setDocSuccess] = useState(ProcessFlag.NOT_INI);
+  const [imgSuccess, setImgSuccess] = useState(ProcessFlag.NOT_INI);
+  const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
 
   useEffect(() => {
     setIsHomePage(isHome(location.pathname));
@@ -120,6 +128,42 @@ export default function CreateRequirementFloatButton() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParamsDoc]);
 
+  /** Notificaciones */
+  useEffect(() => {
+    if (
+      reqSuccess != ProcessFlag.NOT_INI &&
+      docSuccess != ProcessFlag.NOT_INI &&
+      imgSuccess != ProcessFlag.NOT_INI
+    ) {
+      if (
+        reqSuccess == ProcessFlag.FIN_SUCCESS &&
+        docSuccess == ProcessFlag.FIN_SUCCESS &&
+        imgSuccess == ProcessFlag.FIN_SUCCESS
+      ) {
+        showNotification(
+          "success",
+          t(
+            // type == RequirementType.GOOD || type == RequirementType.SERVICE
+            //   ? "createRequirementSuccess"
+            "createSaleSuccess"
+          )
+        );
+        // props.closeModal();
+      } else {
+        showNotification(
+          "warning",
+          t(
+            // type == RequirementType.GOOD || type == RequirementType.SERVICE
+            // ? "createRequirementSuccessNoDocOrImages"
+            "createSaleSuccessNoDocOrImages"
+          )
+        );
+        // props.closeModal();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reqSuccess, imgSuccess, docSuccess]);
+
   return (
     <>
       {!isLoading &&
@@ -167,6 +211,10 @@ export default function CreateRequirementFloatButton() {
                 setApiParamsDoc={setApiParamsDoc}
                 setAdditionalApiParamsDoc={setAdditionalApiParamsDoc}
                 apiParamsDoc={apiParamsDoc}
+                setReqSuccess={setReqSuccess}
+                setDocSuccess={setDocSuccess}
+                setImgSuccess={setImgSuccess}
+                setType={setType}
                 {...commonModalProps}
               />
             </NoContentModalContainer>
