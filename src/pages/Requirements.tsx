@@ -81,6 +81,7 @@ export default function Requirements() {
 
   useEffect(() => {
     if (detailedRequirementModalData.requirementId) {
+      console.log(detailedRequirementModalData.requirementId);
       getOffersByRequirementId(
         TableTypes.REQUIREMENT,
         detailedRequirementModalData.requirementId,

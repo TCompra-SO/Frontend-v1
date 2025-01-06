@@ -55,6 +55,7 @@ export default function CreateRequirementFloatButton() {
     if (createRequirementLoading && !isOpenModal) {
       setAvoidClosingModal(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpenModal]);
 
   /** Variables para crear requerimiento */

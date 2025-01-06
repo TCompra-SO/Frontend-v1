@@ -27,7 +27,7 @@ import { useLoadUserInfo } from "./hooks/authHook.ts";
 import MainHeader from "./components/section/header/MainHeader.tsx";
 import { LoadingDataProvider } from "./contexts/LoadingDataContext.tsx";
 import { getSectionFromRoute } from "./utilities/globalFunctions.ts";
-import { RequestProvider } from "./contexts/RequestContext.tsx";
+import { ModalsProvider } from "./contexts/ModalsContext.tsx";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
@@ -128,7 +128,7 @@ function App() {
       >
         <AntdApp>
           <ListsProvider>
-            <RequestProvider>
+            <ModalsProvider>
               <LoadingDataProvider>
                 <CreateRequirementFloatButton />
                 <LoadingCond></LoadingCond>
@@ -580,7 +580,7 @@ function App() {
                   />
                 </Routes>
               </LoadingDataProvider>
-            </RequestProvider>
+            </ModalsProvider>
           </ListsProvider>
         </AntdApp>
       </ConfigProvider>
