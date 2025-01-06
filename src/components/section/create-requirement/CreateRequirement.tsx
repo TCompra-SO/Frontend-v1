@@ -6,24 +6,24 @@ import AddImagesField from "../../common/formFields/AddImagesField";
 import AddDocumentField from "../../common/formFields/AddDocumentField";
 import ButtonContainer from "../../containers/ButtonContainer";
 import {
+  ErrorMsgRequestType,
+  ErrorRequestType,
   ImageRequestLabels,
   ModalTypes,
   ProcessFlag,
   RequirementType,
+  ResponseRequestType,
   Usage,
 } from "../../../utilities/types";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   certifiedCompaniesOpt,
   mainModalScrollStyle,
 } from "../../../utilities/globals";
 import { CreateRequirementRequest } from "../../../models/Requests";
-import { useApiParams } from "../../../models/Interfaces";
-import useApi from "../../../hooks/useApi";
-import {
-  equalServices,
-  isDateEarlierThanTomorrow,
-} from "../../../utilities/globalFunctions";
+import { CommonModalProps, useApiParams } from "../../../models/Interfaces";
+import useApi, { UseApiType } from "../../../hooks/useApi";
+import { isDateEarlierThanTomorrow } from "../../../utilities/globalFunctions";
 import { createRequirementService } from "../../../services/requests/requirementService";
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
@@ -48,8 +48,22 @@ import ModalContainer from "../../containers/ModalContainer";
 import { useGetRequiredDocsCert } from "../../../hooks/certificateHook";
 import useShowNotification from "../../../hooks/utilHook";
 
-interface CreateRequirementProps {
+interface CreateRequirementProps extends CommonModalProps {
   closeModal: () => void;
+
+  useApiHookImg: ReturnType<typeof useApi>;
+  setApiParamsImg: (params: useApiParams) => void;
+  setAdditionalApiParamsImg: (additionalParams: UseApiType) => void;
+  apiParamsImg: useApiParams;
+
+  useApiHookDoc: ReturnType<typeof useApi>;
+  setApiParamsDoc: (params: useApiParams) => void;
+  setAdditionalApiParamsDoc: (additionalParams: UseApiType) => void;
+  apiParamsDoc: useApiParams;
+
+  // setReqSuccess: (val: ProcessFlag) => void;
+  // setDocSuccess: (val: ProcessFlag) => void;
+  // setImgSuccess: (val: ProcessFlag) => void;
 }
 
 interface LabelForCreateRequirementProps {
@@ -79,103 +93,86 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   const [reqSuccess, setReqSuccess] = useState(ProcessFlag.NOT_INI);
   const [docSuccess, setDocSuccess] = useState(ProcessFlag.NOT_INI);
   const [imgSuccess, setImgSuccess] = useState(ProcessFlag.NOT_INI);
+  const formDataImgRef = useRef(formDataImg);
+  const formDataDocRef = useRef(formDataDoc);
+
+  useEffect(() => {
+    formDataDocRef.current = formDataDoc;
+  }, [formDataDoc]);
+
+  useEffect(() => {
+    formDataImgRef.current = formDataImg;
+  }, [formDataImg]);
 
   /** Para crear requerimiento */
 
-  const [apiParams, setApiParams] = useState<
-    useApiParams<CreateRequirementRequest>
-  >({
-    service: null,
-    method: "get",
-  });
-  const { loading, responseData, error, errorMsg, fetchData } =
-    useApi<CreateRequirementRequest>({
-      service: apiParams.service,
-      method: apiParams.method,
-      dataToSend: apiParams.dataToSend,
-    });
+  const { loading } = props.useApiHook;
 
   /** Para imagenes */
 
-  const [apiParamsImg, setApiParamsImg] = useState<useApiParams<FormData>>({
-    service: null,
-    method: "get",
-    includeHeader: false,
-  });
-  const {
-    loading: loadingImg,
-    responseData: responseDataImg,
-    error: errorImg,
-    errorMsg: errorMsgImg,
-    fetchData: fetchDataImg,
-  } = useApi<FormData>(apiParamsImg);
+  const { loading: loadingImg } = props.useApiHookImg;
 
   /** Para documentos */
 
-  const [apiParamsDoc, setApiParamsDoc] = useState<useApiParams<FormData>>({
-    service: null,
-    method: "get",
-    includeHeader: false,
-  });
-  const {
-    loading: loadingDoc,
-    responseData: responseDataDoc,
-    error: errorDoc,
-    errorMsg: errorMsgDoc,
-    fetchData: fetchDataDoc,
-  } = useApi<FormData>(apiParamsDoc);
+  const { loading: loadingDoc } = props.useApiHookDoc;
 
   useEffect(() => {
-    if (apiParamsImg.service) fetchDataImg();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsImg]);
-
-  useEffect(() => {
-    if (apiParamsDoc.service) fetchDataDoc();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsDoc]);
-
-  useEffect(() => {
-    if (apiParams.service) fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParams]);
-
-  useEffect(() => {
-    if (responseData) {
-      if (
-        equalServices(apiParams.service, createRequirementService()) ||
-        equalServices(apiParams.service, createSaleService())
+    props.setAdditionalApiParams({
+      functionToExecute: function (
+        responseData: ResponseRequestType,
+        error: ErrorRequestType,
+        errorMsg: ErrorMsgRequestType
       ) {
-        setReqSuccess(ProcessFlag.FIN_SUCCESS);
-        uploadImgsAndDocs(responseData.data?.uid);
-      }
-    } else if (error) {
-      setReqSuccess(ProcessFlag.FIN_UNSUCCESS);
-      showNotification("error", errorMsg);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseData, error]);
+        if (responseData) {
+          setReqSuccess(ProcessFlag.FIN_SUCCESS);
+          uploadImgsAndDocs(
+            responseData.data?.uid,
+            formDataImgRef.current,
+            formDataDocRef.current
+          );
+        } else if (error) {
+          setReqSuccess(ProcessFlag.FIN_UNSUCCESS);
+          showNotification("error", errorMsg);
+        }
+      },
+    });
 
-  useEffect(() => {
-    if (responseDataImg) {
-      setImgSuccess(ProcessFlag.FIN_SUCCESS);
-    } else if (errorImg) {
-      setImgSuccess(ProcessFlag.FIN_UNSUCCESS);
-      showNotification("error", errorMsgImg);
-    }
+    props.setAdditionalApiParamsImg({
+      functionToExecute: function (
+        responseDataImg: ResponseRequestType,
+        errorImg: ErrorRequestType,
+        errorMsgImg: ErrorMsgRequestType
+      ) {
+        if (responseDataImg) {
+          setImgSuccess(ProcessFlag.FIN_SUCCESS);
+        } else if (errorImg) {
+          setImgSuccess(ProcessFlag.FIN_UNSUCCESS);
+          showNotification("error", errorMsgImg);
+        }
+      },
+    });
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataImg, errorImg]);
+    props.setAdditionalApiParamsDoc({
+      functionToExecute: function (
+        responseDataDoc: ResponseRequestType,
+        errorDoc: ErrorRequestType,
+        errorMsgDoc: ErrorMsgRequestType
+      ) {
+        if (responseDataDoc) {
+          setDocSuccess(ProcessFlag.FIN_SUCCESS);
+        } else if (errorDoc) {
+          setDocSuccess(ProcessFlag.FIN_UNSUCCESS);
+          showNotification("error", errorMsgDoc);
+        }
+      },
+    });
 
-  useEffect(() => {
-    if (responseDataDoc) {
-      setDocSuccess(ProcessFlag.FIN_SUCCESS);
-    } else if (errorDoc) {
-      setDocSuccess(ProcessFlag.FIN_UNSUCCESS);
-      showNotification("error", errorMsgDoc);
-    }
+    // return () => {
+    //   formDataImgRef.current = null;
+    //   formDataDocRef.current = null;
+    // };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataDoc, errorDoc]);
+  }, []);
 
   /** Crear requerimiento */
 
@@ -290,7 +287,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       data.used = values.itemCondition == Usage.USED;
 
     console.log(values, data);
-    setApiParams({
+    props.setApiParams({
       service:
         type == RequirementType.SALE
           ? createSaleService()
@@ -320,7 +317,11 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     }
   }
 
-  function uploadImgsAndDocs(reqId: string | undefined) {
+  function uploadImgsAndDocs(
+    reqId: string | undefined,
+    formDataImg: FormData | null,
+    formDataDoc: FormData | null
+  ) {
     if (reqId) {
       if (!formDataDoc) setDocSuccess(ProcessFlag.FIN_SUCCESS);
       if (!formDataImg) setImgSuccess(ProcessFlag.FIN_SUCCESS);
@@ -330,7 +331,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       if (formDataDoc) {
         const data: FormData = formDataDoc;
         data.append(ImageRequestLabels.UID, reqId);
-        setApiParamsDoc({
+        props.setApiParamsDoc({
           service: uploadDocsRequirementService(),
           method: "post",
           dataToSend: data,
@@ -340,7 +341,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       if (formDataImg) {
         const data: FormData = formDataImg;
         data.append(ImageRequestLabels.UID, reqId);
-        setApiParamsImg({
+        props.setApiParamsImg({
           service: uploadImagesRequirementService(),
           method: "post",
           dataToSend: data,

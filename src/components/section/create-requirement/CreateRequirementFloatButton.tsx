@@ -9,6 +9,10 @@ import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
 import useWindowSize from "../../../hooks/useWindowSize";
 import { windowSize } from "../../../utilities/globals";
+import { CommonModalProps, useApiParams } from "../../../models/Interfaces";
+import useApi, { UseApiType } from "../../../hooks/useApi";
+import { CreateRequirementRequest } from "../../../models/Requests";
+import { useShowLoadingMessage } from "../../../hooks/utilHook";
 
 const CreateRequirement = lazy(
   () => import("../create-requirement/CreateRequirement")
@@ -19,6 +23,7 @@ export default function CreateRequirementFloatButton() {
   const location = useLocation();
   const navigate = useNavigate();
   const { width } = useWindowSize();
+  const { showLoadingMessage } = useShowLoadingMessage();
   const isLoading = useSelector((state: MainState) => state.loading.isLoading);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isHomePage, setIsHomePage] = useState(true);
@@ -29,6 +34,91 @@ export default function CreateRequirementFloatButton() {
     setIsHomePage(isHome(location.pathname));
     setIsChatPage(isChat(location.pathname));
   }, [location]);
+
+  /** Variables para crear requerimiento */
+
+  const [additionalApiParams, setAdditionalApiParams] = useState<UseApiType>({
+    functionToExecute: () => {},
+  });
+
+  const [apiParams, setApiParams] = useState<
+    useApiParams<CreateRequirementRequest>
+  >({
+    service: null,
+    method: "get",
+  });
+
+  const useApiHook = useApi<CreateRequirementRequest>(
+    apiParams,
+    additionalApiParams
+  );
+
+  const [commonModalProps] = useState<CommonModalProps>({
+    useApiHook: useApiHook,
+    setApiParams: setApiParams,
+    setAdditionalApiParams: setAdditionalApiParams,
+    apiParams,
+  });
+
+  /** Variables para subir imágenes */
+
+  const [additionalApiParamsImg, setAdditionalApiParamsImg] =
+    useState<UseApiType>({
+      functionToExecute: () => {},
+    });
+
+  const [apiParamsImg, setApiParamsImg] = useState<useApiParams<FormData>>({
+    service: null,
+    method: "get",
+  });
+
+  const useApiHookImg = useApi<FormData>(apiParamsImg, additionalApiParamsImg);
+
+  /** Variables para subir documentos */
+
+  const [additionalApiParamsDoc, setAdditionalApiParamsDoc] =
+    useState<UseApiType>({
+      functionToExecute: () => {},
+    });
+
+  const [apiParamsDoc, setApiParamsDoc] = useState<useApiParams<FormData>>({
+    service: null,
+    method: "get",
+  });
+
+  const useApiHookDoc = useApi<FormData>(apiParamsDoc, additionalApiParamsDoc);
+
+  /** Acciones para solicitud */
+
+  useEffect(() => {
+    showLoadingMessage(useApiHook.loading);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useApiHook.loading]);
+
+  useEffect(() => {
+    showLoadingMessage(useApiHookImg.loading);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useApiHookImg.loading]);
+
+  useEffect(() => {
+    showLoadingMessage(useApiHookDoc.loading);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useApiHookDoc.loading]);
+
+  useEffect(() => {
+    if (apiParams.service) useApiHook.fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (apiParamsImg.service) useApiHookImg.fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsImg]);
+
+  useEffect(() => {
+    if (apiParamsDoc.service) useApiHookDoc.fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsDoc]);
 
   return (
     <>
@@ -67,7 +157,18 @@ export default function CreateRequirementFloatButton() {
               closable={true}
               maskClosable={false}
             >
-              <CreateRequirement closeModal={() => setIsOpenModal(false)} />
+              <CreateRequirement
+                closeModal={() => setIsOpenModal(false)}
+                useApiHookImg={useApiHookImg}
+                setApiParamsImg={setApiParamsImg}
+                setAdditionalApiParamsImg={setAdditionalApiParamsImg}
+                apiParamsImg={apiParamsImg}
+                useApiHookDoc={useApiHookDoc}
+                setApiParamsDoc={setApiParamsDoc}
+                setAdditionalApiParamsDoc={setAdditionalApiParamsDoc}
+                apiParamsDoc={apiParamsDoc}
+                {...commonModalProps}
+              />
             </NoContentModalContainer>
           )}
         </>

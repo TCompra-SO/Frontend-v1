@@ -57,7 +57,6 @@ export default function Home() {
 
   function handleChangePageAndPageSize(page: number, pageSize: number) {
     setCurrentPage(page);
-    console.log(page, pageSize);
   }
 
   return (
