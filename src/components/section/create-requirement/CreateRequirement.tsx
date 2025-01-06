@@ -108,12 +108,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     error: errorImg,
     errorMsg: errorMsgImg,
     fetchData: fetchDataImg,
-  } = useApi<FormData>({
-    service: apiParamsImg.service,
-    method: apiParamsImg.method,
-    dataToSend: apiParamsImg.dataToSend,
-    token: apiParamsImg.token,
-  });
+  } = useApi<FormData>(apiParamsImg);
 
   /** Para documentos */
 
@@ -128,12 +123,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     error: errorDoc,
     errorMsg: errorMsgDoc,
     fetchData: fetchDataDoc,
-  } = useApi<FormData>({
-    service: apiParamsDoc.service,
-    method: apiParamsDoc.method,
-    dataToSend: apiParamsDoc.dataToSend,
-    token: apiParamsDoc.token,
-  });
+  } = useApi<FormData>(apiParamsDoc);
 
   useEffect(() => {
     if (apiParamsImg.service) fetchDataImg();
@@ -344,6 +334,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
           service: uploadDocsRequirementService(),
           method: "post",
           dataToSend: data,
+          includeHeader: false,
         });
       }
       if (formDataImg) {
@@ -353,6 +344,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
           service: uploadImagesRequirementService(),
           method: "post",
           dataToSend: data,
+          includeHeader: false,
         });
       }
     } else {
