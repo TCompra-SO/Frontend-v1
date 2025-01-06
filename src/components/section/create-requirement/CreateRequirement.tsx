@@ -1,4 +1,4 @@
-import { Col, Form, Row, UploadFile } from "antd";
+import { Col, Flex, Form, Row, UploadFile } from "antd";
 import { useTranslation } from "react-i18next";
 import EmailCR from "./create-requirement-items/EmailCR";
 import DocumentsCertifCR from "./create-requirement-items/DocumentsCertifCR";
@@ -15,7 +15,7 @@ import {
   ResponseRequestType,
   Usage,
 } from "../../../utilities/types";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   certifiedCompaniesOpt,
   mainModalScrollStyle,
@@ -47,6 +47,8 @@ import { uploadDocsRequirementService } from "../../../services/requests/documen
 import ModalContainer from "../../containers/ModalContainer";
 import { useGetRequiredDocsCert } from "../../../hooks/certificateHook";
 import useShowNotification from "../../../hooks/utilHook";
+import { LoadingDataContext } from "../../../contexts/LoadingDataContext";
+import SimpleLoading from "../../../pages/utils/SimpleLoading";
 
 interface CreateRequirementProps extends CommonModalProps {
   closeModal: () => void;
@@ -79,6 +81,8 @@ function LabelForCreateRequirement({ label }: LabelForCreateRequirementProps) {
 
 export default function CreateRequirement(props: CreateRequirementProps) {
   const { t } = useTranslation();
+  const { createRequirementLoading, updateCreateRequirementLoading } =
+    useContext(LoadingDataContext);
   const uid = useSelector((state: MainState) => state.user.uid);
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
@@ -218,6 +222,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   }
 
   function createRequirement(values: any) {
+    updateCreateRequirementLoading(true);
     form.setFieldsValue({ budget: 0 });
 
     props.setReqSuccess(ProcessFlag.NOT_INI);
@@ -348,157 +353,166 @@ export default function CreateRequirement(props: CreateRequirementProps) {
             {t("newRequirement")}
           </div>
         </div>
-        <div className="t-flex mr-sub">
-          <ButtonContainer
-            common
-            className={`btn btn-grey wd-33 ${
-              type == RequirementType.GOOD ? "active" : ""
-            }`}
-            onClick={() => {
-              changeTab(RequirementType.GOOD);
-            }}
-          >
-            <i className="fa-regular fa-dolly"></i>{" "}
-            <span className="req-btn-info">{t("goods")}</span>
-          </ButtonContainer>
-          <ButtonContainer
-            common
-            className={`btn btn-grey wd-33 ${
-              type == RequirementType.SERVICE ? "active" : ""
-            }`}
-            onClick={() => {
-              changeTab(RequirementType.SERVICE);
-            }}
-          >
-            <i className="fa-regular fa-hand-holding-magic"></i>{" "}
-            <span className="req-btn-info">{t("services")}</span>
-          </ButtonContainer>
-          <ButtonContainer
-            common
-            className={`btn btn-grey wd-33 ${
-              type == RequirementType.SALE ? "active" : ""
-            }`}
-            onClick={() => {
-              changeTab(RequirementType.SALE);
-            }}
-          >
-            <i className="fa-regular fa-basket-shopping"></i>{" "}
-            <span className="req-btn-info">{t("sales")}</span>
-          </ButtonContainer>
-        </div>
 
-        <Form
-          form={form}
-          colon={false}
-          requiredMark={false}
-          onFinish={createRequirement}
-        >
-          <div className="t-flex form-tc">
-            <div>
-              <LabelForCreateRequirement label={"title"} />
-              <TitleField></TitleField>
+        {createRequirementLoading ? (
+          <Flex justify="center">
+            <SimpleLoading style={{ width: "15vw" }} />
+          </Flex>
+        ) : (
+          <>
+            <div className="t-flex mr-sub">
+              <ButtonContainer
+                common
+                className={`btn btn-grey wd-33 ${
+                  type == RequirementType.GOOD ? "active" : ""
+                }`}
+                onClick={() => {
+                  changeTab(RequirementType.GOOD);
+                }}
+              >
+                <i className="fa-regular fa-dolly"></i>{" "}
+                <span className="req-btn-info">{t("goods")}</span>
+              </ButtonContainer>
+              <ButtonContainer
+                common
+                className={`btn btn-grey wd-33 ${
+                  type == RequirementType.SERVICE ? "active" : ""
+                }`}
+                onClick={() => {
+                  changeTab(RequirementType.SERVICE);
+                }}
+              >
+                <i className="fa-regular fa-hand-holding-magic"></i>{" "}
+                <span className="req-btn-info">{t("services")}</span>
+              </ButtonContainer>
+              <ButtonContainer
+                common
+                className={`btn btn-grey wd-33 ${
+                  type == RequirementType.SALE ? "active" : ""
+                }`}
+                onClick={() => {
+                  changeTab(RequirementType.SALE);
+                }}
+              >
+                <i className="fa-regular fa-basket-shopping"></i>{" "}
+                <span className="req-btn-info">{t("sales")}</span>
+              </ButtonContainer>
             </div>
-            <div>
-              <LabelForCreateRequirement label={"description"} />
-              <DescriptionCRField></DescriptionCRField>
-            </div>
-            {isPremium && (
-              <>
+
+            <Form
+              form={form}
+              colon={false}
+              requiredMark={false}
+              onFinish={createRequirement}
+            >
+              <div className="t-flex form-tc">
                 <div>
-                  <LabelForCreateRequirement label={"whoCanMakeOffers"} />
-                  <CanOfferField type={type} onBlur={checkWhoCanOffer} />
+                  <LabelForCreateRequirement label={"title"} />
+                  <TitleField></TitleField>
                 </div>
-                {showDocListToCetificate && (
-                  <div>
-                    <DocumentsCertifCR />
-                  </div>
+                <div>
+                  <LabelForCreateRequirement label={"description"} />
+                  <DescriptionCRField></DescriptionCRField>
+                </div>
+                {isPremium && (
+                  <>
+                    <div>
+                      <LabelForCreateRequirement label={"whoCanMakeOffers"} />
+                      <CanOfferField type={type} onBlur={checkWhoCanOffer} />
+                    </div>
+                    {showDocListToCetificate && (
+                      <div>
+                        <DocumentsCertifCR />
+                      </div>
+                    )}
+                  </>
                 )}
-              </>
-            )}
-            <Row gutter={[15, 15]}>
-              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <LabelForCreateRequirement label={"category"} />
-                <CategoryField />
-              </Col>
-              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <EmailCR />
-              </Col>
-            </Row>
+                <Row gutter={[15, 15]}>
+                  <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                    <LabelForCreateRequirement label={"category"} />
+                    <CategoryField />
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                    <EmailCR />
+                  </Col>
+                </Row>
 
-            <Row gutter={[15, 15]}>
-              <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-                <LabelForCreateRequirement label={"location"} />
-                <LocationField onlyItem />
-              </Col>
-              <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-                <LabelForCreateRequirement label={"budget"} />
-                <BudgetField required={false} />
-              </Col>
-              <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-                <LabelForCreateRequirement label={"currency"} />
-                <CurrencyField />
-              </Col>
-              <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-                <LabelForCreateRequirement label={"paymentMethod"} />
-                <PaymentMethodField />
-              </Col>
-            </Row>
-
-            <Row gutter={[15, 15]}>
-              <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-                <LabelForCreateRequirement label={"expirationDate"} />
-                <DateField
-                  name={"expirationDate"}
-                  disabledDate={isDateEarlierThanTomorrow}
-                />
-              </Col>
-              <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-                <LabelForCreateRequirement label={"deliveryTime"} />
-                <DeliveryTimeField />
-              </Col>
-              {(type == RequirementType.GOOD ||
-                type == RequirementType.SERVICE) && (
-                <>
+                <Row gutter={[15, 15]}>
                   <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-                    <LabelForCreateRequirement label={"warranty"} />
-                    <WarrantyField required={false} />
+                    <LabelForCreateRequirement label={"location"} />
+                    <LocationField onlyItem />
                   </Col>
                   <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-                    <LabelForCreateRequirement label={"duration"} />
-                    <DurationField required={false} name="duration" />
+                    <LabelForCreateRequirement label={"budget"} />
+                    <BudgetField required={false} />
                   </Col>
-                </>
-              )}
-              {type == RequirementType.SALE && (
-                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                  <LabelForCreateRequirement label={"itemCondition"} />
-                  <ItemConditionField />
-                </Col>
-              )}
-            </Row>
+                  <Col xs={24} sm={24} md={6} lg={6} xl={6}>
+                    <LabelForCreateRequirement label={"currency"} />
+                    <CurrencyField />
+                  </Col>
+                  <Col xs={24} sm={24} md={6} lg={6} xl={6}>
+                    <LabelForCreateRequirement label={"paymentMethod"} />
+                    <PaymentMethodField />
+                  </Col>
+                </Row>
 
-            <Row gutter={[15, 15]}>
-              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <AddImagesField />
-              </Col>
-              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <AddDocumentField />
-              </Col>
-            </Row>
-            <div className="t-flex t-wrap up-footer">
-              <div className="footer-text">{t("allDataIsImportant")}</div>
-              <div className="wd-25">
-                <ButtonContainer
-                  loading={loading || loadingDoc || loadingImg}
-                  htmlType="submit"
-                  className="btn btn-default wd-100"
-                >
-                  {t("saveButton")}
-                </ButtonContainer>
+                <Row gutter={[15, 15]}>
+                  <Col xs={24} sm={24} md={6} lg={6} xl={6}>
+                    <LabelForCreateRequirement label={"expirationDate"} />
+                    <DateField
+                      name={"expirationDate"}
+                      disabledDate={isDateEarlierThanTomorrow}
+                    />
+                  </Col>
+                  <Col xs={24} sm={24} md={6} lg={6} xl={6}>
+                    <LabelForCreateRequirement label={"deliveryTime"} />
+                    <DeliveryTimeField />
+                  </Col>
+                  {(type == RequirementType.GOOD ||
+                    type == RequirementType.SERVICE) && (
+                    <>
+                      <Col xs={24} sm={24} md={6} lg={6} xl={6}>
+                        <LabelForCreateRequirement label={"warranty"} />
+                        <WarrantyField required={false} />
+                      </Col>
+                      <Col xs={24} sm={24} md={6} lg={6} xl={6}>
+                        <LabelForCreateRequirement label={"duration"} />
+                        <DurationField required={false} name="duration" />
+                      </Col>
+                    </>
+                  )}
+                  {type == RequirementType.SALE && (
+                    <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                      <LabelForCreateRequirement label={"itemCondition"} />
+                      <ItemConditionField />
+                    </Col>
+                  )}
+                </Row>
+
+                <Row gutter={[15, 15]}>
+                  <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                    <AddImagesField />
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                    <AddDocumentField />
+                  </Col>
+                </Row>
+                <div className="t-flex t-wrap up-footer">
+                  <div className="footer-text">{t("allDataIsImportant")}</div>
+                  <div className="wd-25">
+                    <ButtonContainer
+                      loading={loading || loadingDoc || loadingImg}
+                      htmlType="submit"
+                      className="btn btn-default wd-100"
+                    >
+                      {t("saveButton")}
+                    </ButtonContainer>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </Form>
+            </Form>
+          </>
+        )}
       </div>
     </>
   );

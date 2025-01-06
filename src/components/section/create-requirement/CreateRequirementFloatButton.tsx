@@ -1,7 +1,7 @@
 import { FloatButton } from "antd";
 import { useTranslation } from "react-i18next";
 import NoContentModalContainer from "../../containers/NoContentModalContainer";
-import { lazy, useEffect, useState } from "react";
+import { lazy, useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { isChat, isHome } from "../../../utilities/globalFunctions";
 import { pageRoutes } from "../../../utilities/routes";
@@ -16,6 +16,7 @@ import useShowNotification, {
   useShowLoadingMessage,
 } from "../../../hooks/utilHook";
 import { ProcessFlag, RequirementType } from "../../../utilities/types";
+import { LoadingDataContext } from "../../../contexts/LoadingDataContext";
 
 const CreateRequirement = lazy(
   () => import("../create-requirement/CreateRequirement")
@@ -23,6 +24,8 @@ const CreateRequirement = lazy(
 
 export default function CreateRequirementFloatButton() {
   const { t } = useTranslation();
+  const { updateCreateRequirementLoading, createRequirementLoading } =
+    useContext(LoadingDataContext);
   const location = useLocation();
   const navigate = useNavigate();
   const { width } = useWindowSize();
@@ -33,15 +36,26 @@ export default function CreateRequirementFloatButton() {
   const [isHomePage, setIsHomePage] = useState(true);
   const [isChatPage, setIsChatPage] = useState(false);
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
+
   const [reqSuccess, setReqSuccess] = useState(ProcessFlag.NOT_INI);
   const [docSuccess, setDocSuccess] = useState(ProcessFlag.NOT_INI);
   const [imgSuccess, setImgSuccess] = useState(ProcessFlag.NOT_INI);
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
 
+  const [avoidClosingModal, setAvoidClosingModal] = useState(false);
+
   useEffect(() => {
     setIsHomePage(isHome(location.pathname));
     setIsChatPage(isChat(location.pathname));
   }, [location]);
+
+  /** Determinar si se debe cerrar el modal o no*/
+
+  useEffect(() => {
+    if (createRequirementLoading && !isOpenModal) {
+      setAvoidClosingModal(true);
+    }
+  }, [isOpenModal]);
 
   /** Variables para crear requerimiento */
 
@@ -143,26 +157,47 @@ export default function CreateRequirementFloatButton() {
         showNotification(
           "success",
           t(
-            // type == RequirementType.GOOD || type == RequirementType.SERVICE
-            //   ? "createRequirementSuccess"
-            "createSaleSuccess"
+            type == RequirementType.GOOD || type == RequirementType.SERVICE
+              ? "createRequirementSuccess"
+              : "createSaleSuccess"
           )
         );
-        // props.closeModal();
       } else {
         showNotification(
           "warning",
           t(
-            // type == RequirementType.GOOD || type == RequirementType.SERVICE
-            // ? "createRequirementSuccessNoDocOrImages"
-            "createSaleSuccessNoDocOrImages"
+            type == RequirementType.GOOD || type == RequirementType.SERVICE
+              ? "createRequirementSuccessNoDocOrImages"
+              : "createSaleSuccessNoDocOrImages"
           )
         );
-        // props.closeModal();
       }
+      if (!avoidClosingModal) setIsOpenModal(false);
+      updateCreateRequirementLoading(false);
+      reset();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reqSuccess, imgSuccess, docSuccess]);
+
+  function reset() {
+    setApiParams({
+      service: null,
+      method: "get",
+    });
+    setApiParamsDoc({
+      service: null,
+      method: "get",
+    });
+    setApiParamsImg({
+      service: null,
+      method: "get",
+    });
+    setReqSuccess(ProcessFlag.NOT_INI);
+    setDocSuccess(ProcessFlag.NOT_INI);
+    setImgSuccess(ProcessFlag.NOT_INI);
+    setType(RequirementType.GOOD);
+    setAvoidClosingModal(false);
+  }
 
   return (
     <>
@@ -196,10 +231,10 @@ export default function CreateRequirementFloatButton() {
           {isLoggedIn && (
             <NoContentModalContainer
               open={isOpenModal}
-              onClose={() => setIsOpenModal(false)}
               width={850}
               closable={true}
               maskClosable={false}
+              onClose={() => setIsOpenModal(false)}
             >
               <CreateRequirement
                 closeModal={() => setIsOpenModal(false)}
