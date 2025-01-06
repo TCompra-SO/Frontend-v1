@@ -55,7 +55,7 @@ export default function Home() {
 
   /** Funciones */
 
-  function handleChangePageAndPageSize(page: number, pageSize: number) {
+  function handleChangePageAndPageSize(page: number) {
     setCurrentPage(page);
   }
 

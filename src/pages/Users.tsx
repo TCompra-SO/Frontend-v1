@@ -69,12 +69,13 @@ export default function Users() {
     hiddenColumns: [],
     nameColumnHeader: t("user"),
     onButtonClick: handleOnActionClick,
+    total: 0,
   });
 
   /** Obtener lista de subusuarios */
 
-  const [apiParams] = useState<useApiParams>({
-    service: getSubUsersByEntityService(uid),
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: getSubUsersByEntityService(uid, 1, pageSizeOptionsSt[0]),
     method: "get",
   });
 
@@ -94,6 +95,7 @@ export default function Users() {
         hiddenColumns: [],
         nameColumnHeader: t("user"),
         onButtonClick: handleOnActionClick,
+        total: 0,
       });
       showNotification("error", errorMsg);
     }
@@ -321,6 +323,7 @@ export default function Users() {
         hiddenColumns: [],
         nameColumnHeader: t("user"),
         onButtonClick: handleOnActionClick,
+        total: responseData.res?.totalDocuments,
       });
     } catch (error) {
       showNotification("error", t("errorOccurred"));
@@ -788,6 +791,16 @@ export default function Users() {
     }
   }
 
+  function handleChangePageAndPageSizeMainTable(
+    page: number,
+    pageSize: number
+  ) {
+    setApiParams({
+      service: getSubUsersByEntityService(uid, page, pageSize),
+      method: "get",
+    });
+  }
+
   return (
     <>
       <NoContentModalContainer
@@ -819,6 +832,7 @@ export default function Users() {
           </div>
         }
         loading={loading}
+        onChangePageAndPageSize={handleChangePageAndPageSizeMainTable}
       />
     </>
   );
