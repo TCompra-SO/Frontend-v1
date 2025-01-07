@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { TableTypeHome } from "../models/Interfaces.ts";
 import {
   Action,
+  OnChangePageAndPageSizeTypeParams,
   RequirementType,
   TableColumns,
   TableTypes,
@@ -55,7 +56,9 @@ export default function Home() {
 
   /** Funciones */
 
-  function handleChangePageAndPageSize(page: number) {
+  function handleChangePageAndPageSize({
+    page,
+  }: OnChangePageAndPageSizeTypeParams) {
     setCurrentPage(page);
   }
 

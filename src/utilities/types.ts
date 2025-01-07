@@ -7,6 +7,11 @@ import {
   smallModalWidth,
   allItems,
 } from "./globals";
+import {
+  FilterValue,
+  SorterResult,
+  TableCurrentDataSource,
+} from "antd/lib/table/interface";
 
 /**** Estados ***/
 
@@ -457,3 +462,15 @@ export enum UploadCertificateLabels {
 export type ResponseRequestType = any | null;
 export type ErrorRequestType = AxiosError<any, any> | null;
 export type ErrorMsgRequestType = string | null;
+
+/** Tipos para paginación */
+export type OnChangePageAndPageSizeTypeParams = {
+  page: number;
+  pageSize: number;
+  filters?: Record<string, FilterValue | null>;
+  sorter?: SorterResult<any> | SorterResult<any>[];
+  extra?: TableCurrentDataSource<any>;
+};
+export type OnChangePageAndPageSizeType = (
+  params: OnChangePageAndPageSizeTypeParams
+) => void;

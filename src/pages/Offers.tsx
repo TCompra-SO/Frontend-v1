@@ -1,6 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { Offer } from "../models/MainInterfaces";
-import { Action, ModalTypes, TableTypes } from "../utilities/types";
+import {
+  Action,
+  ModalTypes,
+  OnChangePageAndPageSizeTypeParams,
+  TableTypes,
+} from "../utilities/types";
 import ModalContainer from "../components/containers/ModalContainer";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import {
@@ -289,7 +294,10 @@ export default function Offers() {
     console.log(e.target.value);
   }
 
-  function handleChangePageAndPageSize(page: number, pageSize: number) {
+  function handleChangePageAndPageSize({
+    page,
+    pageSize,
+  }: OnChangePageAndPageSizeTypeParams) {
     // setLoadingTable(true);
     setApiParams({
       service: getOffersBySubUserService(dataUser.uid, page, pageSize),

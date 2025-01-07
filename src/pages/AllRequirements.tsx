@@ -2,7 +2,11 @@ import { useTranslation } from "react-i18next";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import { ChangeEvent, useEffect, useState } from "react";
 import { TableTypeAllRequirements, useApiParams } from "../models/Interfaces";
-import { Action, TableTypes } from "../utilities/types";
+import {
+  Action,
+  OnChangePageAndPageSizeTypeParams,
+  TableTypes,
+} from "../utilities/types";
 import { BaseUser, BasicRequirement } from "../models/MainInterfaces";
 import makeRequest, {
   getLabelFromRequirementType,
@@ -170,7 +174,10 @@ export default function AllRequirements() {
       navigate(`${pageRoutes.productDetail}/${requirement.key}`);
   }
 
-  function handleChangePageAndPageSize(page: number, pageSize: number) {
+  function handleChangePageAndPageSize({
+    page,
+    pageSize,
+  }: OnChangePageAndPageSizeTypeParams) {
     setLoadingTable(true);
     setApiParams({
       service: getRequirementsByEntityService(dataUser.uid, page, pageSize),

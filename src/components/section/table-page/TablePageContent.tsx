@@ -6,6 +6,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { TableType } from "../../../models/Interfaces";
 import GeneralTable from "../../common/GeneralTable/GeneralTable";
+import { OnChangePageAndPageSizeType } from "../../../utilities/types";
 
 interface TablePageContentProps {
   title: string;
@@ -17,7 +18,7 @@ interface TablePageContentProps {
   additionalContentHeader?: ReactNode;
   hideSearch?: boolean;
   loading?: boolean;
-  onChangePageAndPageSize?: (page: number, pageSize: number) => void;
+  onChangePageAndPageSize?: OnChangePageAndPageSizeType;
 }
 
 export default function TablePageContent(props: TablePageContentProps) {

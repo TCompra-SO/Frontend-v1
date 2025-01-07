@@ -6,6 +6,7 @@ import {
   TableColumns,
   RequirementType,
   TableTypes,
+  OnChangePageAndPageSizeTypeParams,
 } from "../utilities/types";
 import { Requirement } from "../models/MainInterfaces";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
@@ -46,6 +47,11 @@ import {
 } from "../hooks/requirementHook";
 import { ModalsContext } from "../contexts/ModalsContext";
 import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
+import {
+  FilterValue,
+  SorterResult,
+  TableCurrentDataSource,
+} from "antd/lib/table/interface";
 
 export default function Requirements() {
   const { t } = useTranslation();
@@ -360,12 +366,20 @@ export default function Requirements() {
     setIsOpenModal(false);
   }
 
-  function handleChangePageAndPageSize(page: number, pageSize: number) {
-    setLoadingTable(true);
-    setApiParams({
-      service: getRequirementsBySubUserService(dataUser.uid, page, pageSize),
-      method: "get",
-    });
+  function handleChangePageAndPageSize({
+    page,
+    pageSize,
+    filters,
+    extra,
+  }: OnChangePageAndPageSizeTypeParams) {
+    console.log(extra);
+    if (!filters || (filters && filters.state === null)) {
+      setLoadingTable(true);
+      setApiParams({
+        service: getRequirementsBySubUserService(dataUser.uid, page, pageSize),
+        method: "get",
+      });
+    }
   }
 
   return (

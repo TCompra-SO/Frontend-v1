@@ -5,6 +5,7 @@ import AddUserModal from "../components/section/users/addUser/AddUserModal";
 import { useTranslation } from "react-i18next";
 import {
   Action,
+  OnChangePageAndPageSizeTypeParams,
   PurchaseOrderTableTypes,
   RequirementType,
   TableTypes,
@@ -791,10 +792,10 @@ export default function Users() {
     }
   }
 
-  function handleChangePageAndPageSizeMainTable(
-    page: number,
-    pageSize: number
-  ) {
+  function handleChangePageAndPageSizeMainTable({
+    page,
+    pageSize,
+  }: OnChangePageAndPageSizeTypeParams) {
     setApiParams({
       service: getSubUsersByEntityService(uid, page, pageSize),
       method: "get",

@@ -3,7 +3,12 @@ import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import { mainModalScrollStyle, pageSizeOptionsSt } from "../utilities/globals";
 import { ModalContent, TableTypeMyDocuments } from "../models/Interfaces";
-import { Action, ModalTypes, TableTypes } from "../utilities/types";
+import {
+  Action,
+  ModalTypes,
+  OnChangePageAndPageSizeTypeParams,
+  TableTypes,
+} from "../utilities/types";
 import { useTranslation } from "react-i18next";
 import { CertificateFile } from "../models/MainInterfaces";
 import { openDocument } from "../utilities/globalFunctions";
@@ -132,7 +137,10 @@ export default function CertificatesDocs() {
     setIsOpenModal(true);
   }
 
-  function handleChangePageAndPageSize(page: number, pageSize: number) {
+  function handleChangePageAndPageSize({
+    page,
+    pageSize,
+  }: OnChangePageAndPageSizeTypeParams) {
     getCertificatesList(page, pageSize);
   }
 

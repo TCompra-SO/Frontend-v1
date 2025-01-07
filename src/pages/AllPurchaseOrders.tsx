@@ -9,6 +9,7 @@ import {
 import {
   Action,
   ModalTypes,
+  OnChangePageAndPageSizeTypeParams,
   PurchaseOrderTableTypes,
   TableTypes,
 } from "../utilities/types";
@@ -236,7 +237,10 @@ export default function AllPurchaseOrders() {
     setIsOpenModal(false);
   }
 
-  function handleChangePageAndPageSize(page: number, pageSize: number) {
+  function handleChangePageAndPageSize({
+    page,
+    pageSize,
+  }: OnChangePageAndPageSizeTypeParams) {
     // setLoadingTable(true);
     switch (type) {
       case PurchaseOrderTableTypes.ISSUED:

@@ -298,7 +298,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
                     onButtonClick: handleOnButtonClick,
                     total: props.content.total,
                   }}
-                  onChangePageAndPageSize={(page, pageSize) =>
+                  onChangePageAndPageSize={({ page, pageSize }) =>
                     props.onChangePageAndPageSize?.(page, pageSize, subType)
                   }
                   loading={props.loading}
@@ -318,7 +318,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
                     onButtonClick: handleOnButtonClick,
                     total: props.content.total,
                   }}
-                  onChangePageAndPageSize={(page, pageSize) =>
+                  onChangePageAndPageSize={({ page, pageSize }) =>
                     props.onChangePageAndPageSize?.(page, pageSize, subType)
                   }
                   loading={props.loading}
@@ -339,7 +339,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
                     subType: props.content.subType,
                     total: props.content.total,
                   }}
-                  onChangePageAndPageSize={(page, pageSize) =>
+                  onChangePageAndPageSize={({ page, pageSize }) =>
                     props.onChangePageAndPageSize?.(page, pageSize, subType)
                   }
                   loading={props.loading}

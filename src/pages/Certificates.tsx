@@ -8,7 +8,12 @@ import {
   TableTypeCertificatesSent,
   useApiParams,
 } from "../models/Interfaces";
-import { Action, ModalTypes, TableTypes } from "../utilities/types";
+import {
+  Action,
+  ModalTypes,
+  OnChangePageAndPageSizeTypeParams,
+  TableTypes,
+} from "../utilities/types";
 import { useTranslation } from "react-i18next";
 import { CertificationItem } from "../models/MainInterfaces";
 import { getLastSegmentFromRoute } from "../utilities/globalFunctions";
@@ -178,7 +183,10 @@ export default function Certificates() {
     }
   }
 
-  function handleChangePageAndPageSize(page: number, pageSize: number) {
+  function handleChangePageAndPageSize({
+    page,
+    pageSize,
+  }: OnChangePageAndPageSizeTypeParams) {
     switch (type) {
       case pageSubRoutes.sent:
         setApiParamsCertif({

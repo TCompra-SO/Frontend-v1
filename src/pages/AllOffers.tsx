@@ -6,7 +6,12 @@ import {
   TableTypeAllOffers,
   useApiParams,
 } from "../models/Interfaces";
-import { Action, ModalTypes, TableTypes } from "../utilities/types";
+import {
+  Action,
+  ModalTypes,
+  OnChangePageAndPageSizeTypeParams,
+  TableTypes,
+} from "../utilities/types";
 import { BaseUser, Offer } from "../models/MainInterfaces";
 import makeRequest, {
   getLabelFromRequirementType,
@@ -182,7 +187,10 @@ export default function AllOffers() {
       getOfferDetail(offer.key, offer.type, true, offer);
   }
 
-  function handleChangePageAndPageSize(page: number, pageSize: number) {
+  function handleChangePageAndPageSize({
+    page,
+    pageSize,
+  }: OnChangePageAndPageSizeTypeParams) {
     setLoadingTable(true);
     setApiParams({
       service: getOffersByEntityService(dataUser.uid, page, pageSize),
