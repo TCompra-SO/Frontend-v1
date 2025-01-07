@@ -12,6 +12,7 @@ import {
   PurchaseOrderItemSubUser,
   Requirement,
   RequirementItemSubUser,
+  StatisticsData,
   SubUserBase,
   SubUserProfile,
 } from "../models/MainInterfaces";
@@ -357,5 +358,10 @@ export function transformToRequiredDocsCert(data: any) {
 
 export function transformToDisplayUser(data: any) {
   const obj: DisplayUser = data;
+  return obj;
+}
+
+export function transformToStatistics(data: any) {
+  const obj: StatisticsData = data;
   return obj;
 }

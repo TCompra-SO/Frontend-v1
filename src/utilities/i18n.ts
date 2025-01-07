@@ -430,6 +430,9 @@ const resources = {
       received: "Received",
       issuedPl: "Issued",
       receivedPl: "Received",
+      sentPlFem: "Sent",
+      issuedPlSales: "Issued - Sales",
+      receivedPlSales: "Received - Sales",
       receivedPlMasc: "Received",
       myDocuments: "My documents",
       sent: "Sent",
@@ -508,7 +511,9 @@ const resources = {
       message: "Message",
       resend: "Resend",
       sendMessage: "Sed message",
-      resent: "Resent"
+      resent: "Resent",
+      approvedCertifications: "Approved certifications",
+      total: "Total"
     },
   },
   es: {
@@ -949,6 +954,7 @@ const resources = {
       received: "Recibida",
       issuedPl: "Emitidas",
       receivedPl: "Recibidas",
+      sentPlFem: "Enviadas",
       issuedPlSales: "Emitidas - Liquidaciones",
       receivedPlSales: "Recibidas - Liquidaciones",
       receivedPlMasc: "Recibidos",
@@ -1029,7 +1035,9 @@ const resources = {
       message: "Mensaje",
       resend: "Reenviar",
       sendMessage: "Enviar mensaje",
-      resent: "Reenviado"
+      resent: "Reenviado",
+      approvedCertifications: "Certificaciones aprobadas",
+      total: "Total"
     },
   },
 };

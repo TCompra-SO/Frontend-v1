@@ -445,3 +445,12 @@ export interface CommonModalProps {
   setAdditionalApiParams: (additionalParams: UseApiType) => void;
   apiParams: useApiParams;
 }
+
+export interface MainFilters {
+  keywords: string;
+  location: number;
+  category: number;
+  startDate: string;
+  endDate: string;
+  companyId: string;
+}

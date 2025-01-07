@@ -11,6 +11,7 @@ export const ApiMainRoutes = {
   score: "score/",
   purchaseOrder: "purchaseOrder/",
   certificate: "certificate/",
+  reports: "reports/",
 };
 
 export const ApiRoutes = {
@@ -122,6 +123,9 @@ export const ApiRoutes = {
     verifyCertification: "verifyCertification/",
     updateRequiredDocuments: "updateRequiredDocuments",
     getRequiredDocuments: "getRequiredDocuments/",
+  },
+  reports: {
+    statistics: "getCountsByEntity/",
   },
 };
 
