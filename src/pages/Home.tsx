@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import Search from "../components/section/home/Search.tsx";
 import Footer from "../components/section/footer/Footer.tsx";
 import Ads from "../components/section/home/Ads.tsx";
-import CompanyFilter from "../components/section/home/CompanyFilter.tsx";
+import CompanyFilter from "../components/section/home/CompanyFilter/CompanyFilter.tsx";
 import CompanyData from "../components/section/home/CompanyData/CompanyData.tsx";
 import { HomeProvider } from "../contexts/Homecontext.tsx";
 import HomeTable from "../components/section/home/HomeTable/HomeTable.tsx";

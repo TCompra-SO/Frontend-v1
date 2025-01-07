@@ -5,9 +5,14 @@ import { useState } from "react";
 import { RequirementType } from "../../../../../utilities/types";
 import { getLabelFromRequirementType } from "../../../../../utilities/globalFunctions";
 import RangeDatePickerContainer from "../../../../containers/RangeDatePicker";
+import LocationField from "../../../../common/formFields/LocationField";
+import CategoryField from "../../../../common/formFields/CategoryField";
+import { Form } from "antd";
+import KeywordsField from "../../../../common/formFields/KeywordsField";
 
 export default function HomeFilters() {
   const { t } = useTranslation();
+  const [form] = Form.useForm();
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [hideFilters, setHideFilters] = useState(true);
 
@@ -58,47 +63,42 @@ export default function HomeFilters() {
             <i className="fa-regular fa-filter"></i>
           </div>
         </div>
-        <div
-          className="card-gray back-white t-flex f-column gap-10"
-          style={hideFilters ? { display: "none" } : {}}
+        <Form
+          form={form}
+          colon={false}
+          requiredMark={false}
+          // onFinish={createRequirement}
         >
-          <div className="filter-in">
-            <InputContainer
-              type="text"
-              className="form-control"
-              placeholder={t("keywords")}
-            />
-            <InputContainer
-              type="text"
-              className="form-control"
-              placeholder={t("location")}
-            />
-            <InputContainer
-              type="text"
-              className="form-control"
-              placeholder={t("category")}
-            />
-            <RangeDatePickerContainer
-              className="form-control"
-              placeholder={[t("rangeStart"), t("rangeEnd")]}
-            />
+          <div
+            className="card-gray back-white t-flex f-column gap-10"
+            style={hideFilters ? { display: "none" } : {}}
+          >
+            <div className="filter-in">
+              <KeywordsField />
+              <LocationField onlyItem />
+              <CategoryField showLabelPlaceholder />
+              <RangeDatePickerContainer
+                className="form-control"
+                placeholder={[t("rangeStart"), t("rangeEnd")]}
+              />
+            </div>
+            <div className="filter-in">
+              <InputContainer
+                type="text"
+                className="form-control f-empresa"
+                placeholder={t("companyName")}
+              />
+              <ButtonContainer
+                className="btn btn-second alert-boton"
+                icon={
+                  <i className="fa-solid fa-magnifying-glass-arrows-rotate"></i>
+                }
+              >
+                {t("resetFilters")}{" "}
+              </ButtonContainer>
+            </div>
           </div>
-          <div className="filter-in">
-            <InputContainer
-              type="text"
-              className="form-control f-empresa"
-              placeholder={t("companyName")}
-            />
-            <ButtonContainer
-              className="btn btn-second alert-boton"
-              icon={
-                <i className="fa-solid fa-magnifying-glass-arrows-rotate"></i>
-              }
-            >
-              {t("resetFilters")}{" "}
-            </ButtonContainer>
-          </div>
-        </div>
+        </Form>
       </div>
     </>
   );

@@ -6,7 +6,11 @@ import { ListsContext } from "../../../contexts/ListsContext";
 import SelectContainer from "../../containers/SelectContainer";
 import { getListForSelectIdValueMap } from "../../../utilities/globalFunctions";
 
-export default function CategoryField() {
+interface CategoryFieldProps {
+  showLabelPlaceholder?: boolean;
+}
+
+export default function CategoryField(props: CategoryFieldProps) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { categoryData } = context;
@@ -21,7 +25,7 @@ export default function CategoryField() {
       <SelectContainer
         showSearch
         optionFilterProp="label"
-        placeholder={t("select")}
+        placeholder={t(props.showLabelPlaceholder ? "category" : "select")}
         className="form-control"
         options={getListForSelectIdValueMap(categoryData)}
       />
