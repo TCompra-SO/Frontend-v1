@@ -36,6 +36,7 @@ export default function Certificates() {
   const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
   const [type, setType] = useState(getLastSegmentFromRoute(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [total, setTotal] = useState(0);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
@@ -48,7 +49,7 @@ export default function Certificates() {
     hiddenColumns: [],
     nameColumnHeader: t("name"),
     onButtonClick: handleOnButtonClick,
-    total: 0,
+    total,
   });
 
   /** Obtener lista de solicitudes de certificación */
@@ -79,13 +80,14 @@ export default function Certificates() {
     if (responseDataCertif) {
       setTableData();
     } else if (errorCertif) {
+      setTotal(0);
       setTableContent({
         type: TableTypes.SENT_CERT | TableTypes.RECEIVED_CERT,
         data: [],
         hiddenColumns: [],
         nameColumnHeader: t("name"),
         onButtonClick: handleOnButtonClick,
-        total: 0,
+        total,
       });
       showNotification("error", errorMsgCertif);
     }
@@ -131,6 +133,7 @@ export default function Certificates() {
       const data: CertificationItem[] = responseDataCertif.data.map((e: any) =>
         transformToCertificationItem(e)
       );
+      setTotal(responseDataCertif.res?.totalDocuments);
       setTableContent({
         type:
           type == pageSubRoutes.received
@@ -140,7 +143,7 @@ export default function Certificates() {
         hiddenColumns: [],
         nameColumnHeader: t("name"),
         onButtonClick: handleOnButtonClick,
-        total: responseDataCertif.res?.totalDocuments,
+        total,
       });
     } catch (error) {
       console.log(error);
@@ -186,23 +189,37 @@ export default function Certificates() {
   function handleChangePageAndPageSize({
     page,
     pageSize,
+    filters,
+    extra,
   }: OnChangePageAndPageSizeTypeParams) {
     switch (type) {
       case pageSubRoutes.sent:
-        setApiParamsCertif({
-          service: getSentRequestsByEntityService(mainUserUid, page, pageSize),
-          method: "get",
-        });
+        if (!filters || (filters && filters.state === null)) {
+          setApiParamsCertif({
+            service: getSentRequestsByEntityService(
+              mainUserUid,
+              page,
+              pageSize
+            ),
+            method: "get",
+          });
+        } else if (filters && filters.state) {
+          setTotal(extra?.currentDataSource.length ?? 0);
+        }
         break;
       case pageSubRoutes.received:
-        setApiParamsCertif({
-          service: getReceivedRequestsByEntityService(
-            mainUserUid,
-            page,
-            pageSize
-          ),
-          method: "get",
-        });
+        if (!filters || (filters && filters.state === null)) {
+          setApiParamsCertif({
+            service: getReceivedRequestsByEntityService(
+              mainUserUid,
+              page,
+              pageSize
+            ),
+            method: "get",
+          });
+        } else if (filters && filters.state) {
+          setTotal(extra?.currentDataSource.length ?? 0);
+        }
         break;
     }
   }
@@ -229,6 +246,7 @@ export default function Certificates() {
         hideSearch={true}
         loading={loadingCertif}
         onChangePageAndPageSize={handleChangePageAndPageSize}
+        total={total}
       />
     </>
   );

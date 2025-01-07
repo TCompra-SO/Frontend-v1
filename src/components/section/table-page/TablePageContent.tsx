@@ -19,6 +19,7 @@ interface TablePageContentProps {
   hideSearch?: boolean;
   loading?: boolean;
   onChangePageAndPageSize?: OnChangePageAndPageSizeType;
+  total?: number;
 }
 
 export default function TablePageContent(props: TablePageContentProps) {
@@ -68,6 +69,7 @@ export default function TablePageContent(props: TablePageContentProps) {
               content={props.table}
               loading={props.loading}
               onChangePageAndPageSize={props.onChangePageAndPageSize}
+              total={props.total}
             />
           </div>
         )}

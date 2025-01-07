@@ -513,7 +513,9 @@ const resources = {
       sendMessage: "Sed message",
       resent: "Resent",
       approvedCertifications: "Approved certifications",
-      total: "Total"
+      total: "Total",
+      items: "items",
+      of: 'of'
     },
   },
   es: {
@@ -1037,7 +1039,9 @@ const resources = {
       sendMessage: "Enviar mensaje",
       resent: "Reenviado",
       approvedCertifications: "Certificaciones aprobadas",
-      total: "Total"
+      total: "Total",
+      items: "items",
+      of: 'de'
     },
   },
 };

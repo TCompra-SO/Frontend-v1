@@ -47,11 +47,6 @@ import {
 } from "../hooks/requirementHook";
 import { ModalsContext } from "../contexts/ModalsContext";
 import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
-import {
-  FilterValue,
-  SorterResult,
-  TableCurrentDataSource,
-} from "antd/lib/table/interface";
 
 export default function Requirements() {
   const { t } = useTranslation();
@@ -68,6 +63,7 @@ export default function Requirements() {
     useGetOffersByRequirementId();
   const { cancelRequirement } = useCancelRequirement();
   const { getBasicRateData, modalDataRate } = useCulminate();
+  const [total, setTotal] = useState(0);
 
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -80,7 +76,7 @@ export default function Requirements() {
     hiddenColumns: [TableColumns.CATEGORY],
     nameColumnHeader: t(getLabelFromRequirementType(type)),
     onButtonClick: handleOnButtonClick,
-    total: 0,
+    total,
   });
 
   /** Verificar si hay una solicitud pendiente */
@@ -159,6 +155,7 @@ export default function Requirements() {
     if (responseData) {
       setTableData();
     } else if (error) {
+      setTotal(0);
       setTableContent({
         type: TableTypes.REQUIREMENT,
         data: [],
@@ -166,7 +163,7 @@ export default function Requirements() {
         hiddenColumns: [TableColumns.CATEGORY],
         nameColumnHeader: t(getLabelFromRequirementType(type)),
         onButtonClick: handleOnButtonClick,
-        total: 0,
+        total,
       });
       setLoadingTable(false);
       showNotification("error", errorMsg);
@@ -232,6 +229,7 @@ export default function Requirements() {
           mainDataUser
         )
       );
+      setTotal(responseData.res?.totalDocuments);
       setTableContent({
         type: TableTypes.REQUIREMENT,
         data,
@@ -239,7 +237,7 @@ export default function Requirements() {
         hiddenColumns: [TableColumns.CATEGORY],
         nameColumnHeader: t("goods"),
         onButtonClick: handleOnButtonClick,
-        total: responseData.res?.totalDocuments,
+        total,
       });
     } catch (error) {
       console.log(error);
@@ -379,6 +377,8 @@ export default function Requirements() {
         service: getRequirementsBySubUserService(dataUser.uid, page, pageSize),
         method: "get",
       });
+    } else if (filters && filters.state) {
+      setTotal(extra?.currentDataSource.length ?? 0);
     }
   }
 
@@ -400,6 +400,7 @@ export default function Requirements() {
         onSearch={handleSearch}
         loading={loadingTable}
         onChangePageAndPageSize={handleChangePageAndPageSize}
+        total={total}
       />
     </>
   );

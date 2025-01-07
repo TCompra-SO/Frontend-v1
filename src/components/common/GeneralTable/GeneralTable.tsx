@@ -49,6 +49,7 @@ interface GeneralTableProps {
   loading?: boolean;
   onRowAction?: boolean;
   onChangePageAndPageSize?: OnChangePageAndPageSizeType;
+  total?: number;
 }
 
 export default function GeneralTable(props: GeneralTableProps) {
@@ -164,9 +165,9 @@ export default function GeneralTable(props: GeneralTableProps) {
       pageSizeOptions,
       showSizeChanger: props.content.type != TableTypes.HOME,
       // onChange: props.onChangePageAndPageSize,
-      total: props.content.total,
-      showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
-      // current: 2,
+      total: props.total ?? props.content.total,
+      showTotal: (total, range) =>
+        `${range[0]}-${range[1]} ${t("of")} ${total} ${t("items")}`,
     },
   };
 
