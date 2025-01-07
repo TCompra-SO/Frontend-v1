@@ -528,8 +528,8 @@ export default function GeneralTable(props: GeneralTableProps) {
           visibility[TableColumns.OFFER]
         ),
         GeneralDateColumn(
-          t("publishDateAbbrev"),
-          "publishDate",
+          t("creationDateAbbrev"),
+          "selectionDate",
           visibility[TableColumns.PUBLISH_DATE]
         ),
         TypeColumn(visibility[TableColumns.TYPE]),
