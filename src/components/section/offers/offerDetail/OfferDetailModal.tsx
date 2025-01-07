@@ -11,6 +11,8 @@ import PriceInHeader from "../../../common/PriceInHeader";
 import OfferDetailRequirementData from "./OfferDetailRequirementData";
 import ImagesAndDocs from "../../../common/ImagesAndDocs";
 import { CardByStateOffer } from "../../../../utilities/colors";
+import { MainState } from "../../../../models/Redux";
+import { useSelector } from "react-redux";
 
 interface OfferDetailModalProps {
   offer: Offer;
@@ -22,6 +24,7 @@ export default function OfferDetailModal(props: OfferDetailModalProps) {
   const context = useContext(ListsContext);
   const { countryData, deliveryTimeData } = context;
   const [cities, setCities] = useState<IdValueMap>({});
+  const uid = useSelector((state: MainState) => state.user.uid);
 
   useEffect(() => {
     if (countryData && countryData[defaultCountry]) {
@@ -35,6 +38,16 @@ export default function OfferDetailModal(props: OfferDetailModalProps) {
       setCities(loadedCities);
     }
   }, [countryData]);
+
+  function goToChat() {
+    console.log(
+      "go to chat",
+      props.offer.subUser && uid == props.offer.subUser.uid,
+      props.offer.user.uid == uid,
+      (props.offer.subUser && uid == props.offer.subUser.uid) ||
+        props.offer.user.uid == uid
+    );
+  }
 
   return (
     <div className="modal-card">
@@ -96,7 +109,15 @@ export default function OfferDetailModal(props: OfferDetailModalProps) {
                   image={props.offer.image}
                   document={props.offer.document}
                   showChat
-                  goToChat={() => console.log("go to chat")} // r3v
+                  goToChat={
+                    props.offer.subUser
+                      ? uid == props.offer.subUser.uid
+                        ? goToChat
+                        : undefined
+                      : props.offer.user.uid == uid
+                      ? goToChat
+                      : undefined
+                  } // r3v
                 />
               </div>
             </div>

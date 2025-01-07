@@ -6,6 +6,7 @@ import {
   TableColumns,
   RequirementType,
   TableTypes,
+  OnChangePageAndPageSizeTypeParams,
 } from "../utilities/types";
 import { Requirement } from "../models/MainInterfaces";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
@@ -39,20 +40,23 @@ import {
   getFullUser,
   getOfferById,
 } from "../services/complete/general";
-import showNotification, {
-  showLoadingMessage,
-} from "../utilities/notification/showNotification";
-import { App } from "antd";
 import {
   useCancelRequirement,
   useCulminate,
   useGetOffersByRequirementId,
 } from "../hooks/requirementHook";
 import { ModalsContext } from "../contexts/ModalsContext";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
+import {
+  FilterValue,
+  SorterResult,
+  TableCurrentDataSource,
+} from "antd/lib/table/interface";
 
 export default function Requirements() {
   const { t } = useTranslation();
-  const { notification, message } = App.useApp();
+  const { showLoadingMessage } = useShowLoadingMessage();
+  const { showNotification } = useShowNotification();
   const location = useLocation();
   const [loadingTable, setLoadingTable] = useState(true);
   const { detailedRequirementModalData } = useContext(ModalsContext);
@@ -83,6 +87,7 @@ export default function Requirements() {
 
   useEffect(() => {
     if (detailedRequirementModalData.requirementId) {
+      console.log(detailedRequirementModalData.requirementId);
       getOffersByRequirementId(
         TableTypes.REQUIREMENT,
         detailedRequirementModalData.requirementId,
@@ -164,7 +169,7 @@ export default function Requirements() {
         total: 0,
       });
       setLoadingTable(false);
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -189,7 +194,7 @@ export default function Requirements() {
   });
 
   useEffect(() => {
-    showLoadingMessage(message, loadingDelete);
+    showLoadingMessage(loadingDelete);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingDelete]);
 
@@ -201,7 +206,6 @@ export default function Requirements() {
   useEffect(() => {
     if (responseDataDelete) {
       showNotification(
-        notification,
         "success",
         t(
           type == RequirementType.SALE
@@ -211,7 +215,7 @@ export default function Requirements() {
       );
       handleCloseModal();
     } else if (errorDelete) {
-      showNotification(notification, "error", errorMsgDelete);
+      showNotification("error", errorMsgDelete);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataDelete, errorDelete]);
@@ -239,7 +243,7 @@ export default function Requirements() {
       });
     } catch (error) {
       console.log(error);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     } finally {
       setLoadingTable(false);
     }
@@ -262,7 +266,7 @@ export default function Requirements() {
       }
       case Action.SHOW_SUMMARY: {
         if (requirement.offerUserId && requirement.offerId) {
-          showLoadingMessage(message, true);
+          showLoadingMessage(true);
           const { user: fullUser } = await getFullUser(requirement.offerUserId);
           const { user, subUser } = await getBaseUserForUserSubUser(
             requirement.offerSubUserId ?? requirement.offerUserId
@@ -281,12 +285,12 @@ export default function Requirements() {
               });
               setIsOpenModal(true);
             } else {
-              showNotification(notification, "error", t("errorOccurred"));
+              showNotification("error", t("errorOccurred"));
             }
           } else {
-            showNotification(notification, "error", t("errorOccurred"));
+            showNotification("error", t("errorOccurred"));
           }
-          showLoadingMessage(message, false);
+          showLoadingMessage(false);
         }
         break;
       }
@@ -362,12 +366,20 @@ export default function Requirements() {
     setIsOpenModal(false);
   }
 
-  function handleChangePageAndPageSize(page: number, pageSize: number) {
-    setLoadingTable(true);
-    setApiParams({
-      service: getRequirementsBySubUserService(dataUser.uid, page, pageSize),
-      method: "get",
-    });
+  function handleChangePageAndPageSize({
+    page,
+    pageSize,
+    filters,
+    extra,
+  }: OnChangePageAndPageSizeTypeParams) {
+    console.log(extra);
+    if (!filters || (filters && filters.state === null)) {
+      setLoadingTable(true);
+      setApiParams({
+        service: getRequirementsBySubUserService(dataUser.uid, page, pageSize),
+        method: "get",
+      });
+    }
   }
 
   return (

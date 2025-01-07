@@ -5,6 +5,7 @@ import AddUserModal from "../components/section/users/addUser/AddUserModal";
 import { useTranslation } from "react-i18next";
 import {
   Action,
+  OnChangePageAndPageSizeTypeParams,
   PurchaseOrderTableTypes,
   RequirementType,
   TableTypes,
@@ -20,10 +21,6 @@ import {
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { equalServices } from "../utilities/globalFunctions";
-import showNotification, {
-  showLoadingMessage,
-} from "../utilities/notification/showNotification";
-import { App } from "antd";
 import SubUserTableModal from "../components/section/users/subUserTables/SubUserTableModal";
 import {
   OfferItemSubUser,
@@ -45,10 +42,12 @@ import {
   getPurchaseOrdersByClientEntityService,
   getPurchaseOrdersByProviderEntityService,
 } from "../services/requests/purchaseOrderService";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
 
 export default function Users() {
   const { t } = useTranslation();
-  const { notification, message } = App.useApp();
+  const { showLoadingMessage } = useShowLoadingMessage();
+  const { showNotification } = useShowNotification();
   const token = useSelector((state: MainState) => state.user.token);
   const uid = useSelector((state: MainState) => state.user.uid);
   const [action, setAction] = useState<Action>(Action.ADD_USER);
@@ -71,12 +70,13 @@ export default function Users() {
     hiddenColumns: [],
     nameColumnHeader: t("user"),
     onButtonClick: handleOnActionClick,
+    total: 0,
   });
 
   /** Obtener lista de subusuarios */
 
-  const [apiParams] = useState<useApiParams>({
-    service: getSubUsersByEntityService(uid),
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: getSubUsersByEntityService(uid, 1, pageSizeOptionsSt[0]),
     method: "get",
   });
 
@@ -96,8 +96,9 @@ export default function Users() {
         hiddenColumns: [],
         nameColumnHeader: t("user"),
         onButtonClick: handleOnActionClick,
+        total: 0,
       });
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -127,7 +128,7 @@ export default function Users() {
   });
 
   useEffect(() => {
-    showLoadingMessage(message, loadingUser);
+    showLoadingMessage(loadingUser);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingUser]);
 
@@ -143,7 +144,7 @@ export default function Users() {
         handleOpenModal();
       }
     } else if (errorUser) {
-      showNotification(notification, "error", errorMsgUser);
+      showNotification("error", errorMsgUser);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -169,7 +170,7 @@ export default function Users() {
   });
 
   useEffect(() => {
-    if (!isOpenModal) showLoadingMessage(message, loadingReq);
+    if (!isOpenModal) showLoadingMessage(loadingReq);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingReq]);
 
@@ -184,7 +185,7 @@ export default function Users() {
     } else if (errorReq) {
       setReqList([]);
       setTotalReq(0);
-      showNotification(notification, "error", errorMsgReq);
+      showNotification("error", errorMsgReq);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataReq, errorReq]);
@@ -209,7 +210,7 @@ export default function Users() {
   });
 
   useEffect(() => {
-    if (!isOpenModal) showLoadingMessage(message, loadingOffer);
+    if (!isOpenModal) showLoadingMessage(loadingOffer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingOffer]);
 
@@ -224,7 +225,7 @@ export default function Users() {
     } else if (errorOffer) {
       setOfferList([]);
       setTotalOffer(0);
-      showNotification(notification, "error", errorMsgOffer);
+      showNotification("error", errorMsgOffer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataOffer, errorOffer]);
@@ -249,7 +250,7 @@ export default function Users() {
   });
 
   useEffect(() => {
-    if (!isOpenModal) showLoadingMessage(message, loadingOrder);
+    if (!isOpenModal) showLoadingMessage(loadingOrder);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingOrder]);
 
@@ -264,7 +265,7 @@ export default function Users() {
     } else if (errorOrder) {
       setOrderList([]);
       setTotalPurc(0);
-      showNotification(notification, "error", errorMsgOrder);
+      showNotification("error", errorMsgOrder);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataOrder, errorOrder]);
@@ -289,7 +290,7 @@ export default function Users() {
   });
 
   useEffect(() => {
-    if (!isOpenModal) showLoadingMessage(message, loadingSales);
+    if (!isOpenModal) showLoadingMessage(loadingSales);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingSales]);
 
@@ -304,7 +305,7 @@ export default function Users() {
     } else if (errorSales) {
       setOrderList([]);
       setTotalSales(0);
-      showNotification(notification, "error", errorMsgSales);
+      showNotification("error", errorMsgSales);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataSales, errorSales]);
@@ -323,9 +324,10 @@ export default function Users() {
         hiddenColumns: [],
         nameColumnHeader: t("user"),
         onButtonClick: handleOnActionClick,
+        total: responseData.res?.totalDocuments,
       });
     } catch (error) {
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
       console.log(error);
     }
   }
@@ -343,7 +345,7 @@ export default function Users() {
       console.log(error);
       setReqList([]);
       setTotalReq(0);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     }
   }
 
@@ -359,7 +361,7 @@ export default function Users() {
       console.log(error);
       setOfferList([]);
       setTotalOffer(0);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     }
   }
 
@@ -376,7 +378,7 @@ export default function Users() {
       console.log(error);
       setOrderList([]);
       setTotalPurc(0);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     }
   }
 
@@ -393,7 +395,7 @@ export default function Users() {
       console.log(error);
       setOrderList([]);
       setTotalSales(0);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     }
   }
 
@@ -790,6 +792,16 @@ export default function Users() {
     }
   }
 
+  function handleChangePageAndPageSizeMainTable({
+    page,
+    pageSize,
+  }: OnChangePageAndPageSizeTypeParams) {
+    setApiParams({
+      service: getSubUsersByEntityService(uid, page, pageSize),
+      method: "get",
+    });
+  }
+
   return (
     <>
       <NoContentModalContainer
@@ -821,6 +833,7 @@ export default function Users() {
           </div>
         }
         loading={loading}
+        onChangePageAndPageSize={handleChangePageAndPageSizeMainTable}
       />
     </>
   );

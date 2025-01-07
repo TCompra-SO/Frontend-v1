@@ -9,6 +9,7 @@ import {
 import {
   Action,
   ModalTypes,
+  OnChangePageAndPageSizeTypeParams,
   PurchaseOrderTableTypes,
   RequirementType,
   TableTypes,
@@ -21,7 +22,6 @@ import {
   openPurchaseOrderPdf,
 } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
-import { App } from "antd";
 import useApi from "../hooks/useApi";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
@@ -30,9 +30,6 @@ import {
   getPurchaseOrdersByClientEntityService,
   getPurchaseOrdersByProviderEntityService,
 } from "../services/requests/purchaseOrderService";
-import showNotification, {
-  showLoadingMessage,
-} from "../utilities/notification/showNotification";
 import { transformToPurchaseOrder } from "../utilities/transform";
 import ModalContainer from "../components/containers/ModalContainer";
 import {
@@ -42,16 +39,18 @@ import {
 } from "../utilities/globals";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import { useGetOffersByRequirementId } from "../hooks/requirementHook";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
 
 export default function AllSalesOrders() {
   const { t } = useTranslation();
   const location = useLocation();
   const uid = useSelector((state: MainState) => state.user.uid);
   const role = useSelector((state: MainState) => state.user.typeID);
+  const { showLoadingMessage } = useShowLoadingMessage();
   const { updateAllSalesOrdersLoadingPdf } = useContext(LoadingDataContext);
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
-  const { notification, message } = App.useApp();
+  const { showNotification } = useShowNotification();
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
@@ -142,7 +141,7 @@ export default function AllSalesOrders() {
         onButtonClick: handleOnButtonClick,
         total: 0,
       });
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -168,7 +167,7 @@ export default function AllSalesOrders() {
 
   useEffect(() => {
     updateAllSalesOrdersLoadingPdf(loadingPdf);
-    showLoadingMessage(message, loadingPdf);
+    showLoadingMessage(loadingPdf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingPdf]);
 
@@ -181,7 +180,7 @@ export default function AllSalesOrders() {
     if (responseDataPdf) {
       openPurchaseOrderPdf(responseDataPdf);
     } else if (errorPdf) {
-      showNotification(notification, "error", errorMsgPdf);
+      showNotification("error", errorMsgPdf);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataPdf, errorPdf]);
@@ -204,7 +203,7 @@ export default function AllSalesOrders() {
       });
     } catch (error) {
       console.log(error);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     }
   }
 
@@ -240,7 +239,10 @@ export default function AllSalesOrders() {
     setIsOpenModal(false);
   }
 
-  function handleChangePageAndPageSize(page: number, pageSize: number) {
+  function handleChangePageAndPageSize({
+    page,
+    pageSize,
+  }: OnChangePageAndPageSizeTypeParams) {
     // setLoadingTable(true);
     switch (type) {
       case PurchaseOrderTableTypes.ISSUED:

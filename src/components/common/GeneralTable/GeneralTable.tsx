@@ -1,5 +1,9 @@
 import { Table, TableProps } from "antd";
-import { TableColumns, TableTypes } from "../../../utilities/types";
+import {
+  OnChangePageAndPageSizeType,
+  TableColumns,
+  TableTypes,
+} from "../../../utilities/types";
 import { pageSizeOptionsSt } from "../../../utilities/globals";
 import ImageColumn from "./columns/ImageColumn";
 import NameColumn from "./columns/NameColumn";
@@ -44,7 +48,7 @@ interface GeneralTableProps {
   content: TableType;
   loading?: boolean;
   onRowAction?: boolean;
-  onChangePageAndPageSize?: (page: number, pageSize: number) => void;
+  onChangePageAndPageSize?: OnChangePageAndPageSizeType;
 }
 
 export default function GeneralTable(props: GeneralTableProps) {
@@ -142,10 +146,24 @@ export default function GeneralTable(props: GeneralTableProps) {
     },
     style: { width: "100%" },
     bordered: false,
+    onChange: (pagination, filters, sorter, extra) => {
+      if (
+        props.onChangePageAndPageSize &&
+        pagination.current &&
+        pagination.pageSize
+      )
+        props.onChangePageAndPageSize({
+          page: pagination.current,
+          pageSize: pagination.pageSize,
+          filters,
+          sorter,
+          extra,
+        });
+    },
     pagination: {
       pageSizeOptions,
-      showSizeChanger: true,
-      onChange: props.onChangePageAndPageSize,
+      showSizeChanger: props.content.type != TableTypes.HOME,
+      // onChange: props.onChangePageAndPageSize,
       total: props.content.total,
       showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
       // current: 2,
@@ -475,7 +493,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       PriceColumn(visibility[TableColumns.PRICE]),
       StateColumn(props.content.type, visibility[TableColumns.STATE]),
       ViewColumn(
-        TableTypes.ALL_REQUIREMENTS,
+        props.content.type,
         props.content.onButtonClick,
         visibility[TableColumns.VIEW]
       ),

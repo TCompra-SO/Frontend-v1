@@ -126,38 +126,38 @@ function App() {
           },
         }}
       >
-        <ListsProvider>
-          <ModalsProvider>
-            <AntdApp>
-              <CreateRequirementFloatButton />
-              <LoadingCond></LoadingCond>
-              <Routes>
-                <Route
-                  path={`${pageRoutes.home}`}
-                  element={
-                    <Suspense fallback={<LoadingPage />}>
-                      <MainHeader />
-                      <Home></Home>
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path={`${pageRoutes.productDetail}/:requirementId`}
-                  element={
-                    <Suspense fallback={<LoadingPage />}>
-                      <AuthRoleGuard
-                        allowedRoles={RolesForSection.productDetail}
-                      >
+        <AntdApp>
+          <ListsProvider>
+            <ModalsProvider>
+              <LoadingDataProvider>
+                <CreateRequirementFloatButton />
+                <LoadingCond></LoadingCond>
+                <Routes>
+                  <Route
+                    path={`${pageRoutes.home}`}
+                    element={
+                      <Suspense fallback={<LoadingPage />}>
                         <MainHeader />
-                        <ProductDetail />
-                      </AuthRoleGuard>
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="*"
-                  element={
-                    <LoadingDataProvider>
+                        <Home></Home>
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path={`${pageRoutes.productDetail}/:requirementId`}
+                    element={
+                      <Suspense fallback={<LoadingPage />}>
+                        <AuthRoleGuard
+                          allowedRoles={RolesForSection.productDetail}
+                        >
+                          <MainHeader />
+                          <ProductDetail />
+                        </AuthRoleGuard>
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="*"
+                    element={
                       <MainLayout>
                         <Suspense fallback={<LoadingPage />}>
                           <Routes>
@@ -576,13 +576,13 @@ function App() {
                           </Routes>
                         </Suspense>
                       </MainLayout>
-                    </LoadingDataProvider>
-                  }
-                />
-              </Routes>
-            </AntdApp>
-          </ModalsProvider>
-        </ListsProvider>
+                    }
+                  />
+                </Routes>
+              </LoadingDataProvider>
+            </ModalsProvider>
+          </ListsProvider>
+        </AntdApp>
       </ConfigProvider>
     </>
   );

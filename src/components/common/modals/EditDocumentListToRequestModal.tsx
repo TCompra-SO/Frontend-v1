@@ -5,14 +5,35 @@ import ButtonContainer from "../../containers/ButtonContainer";
 import { Form } from "antd";
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
+import { useUpdateRequiredDocsCert } from "../../../hooks/certificateHook";
+import { useEffect } from "react";
 
-export default function EditDocumentListToRequestModal() {
+interface EditDocumentListToRequestModalProps {
+  text: string;
+  onClose: () => void;
+}
+
+export default function EditDocumentListToRequestModal(
+  props: EditDocumentListToRequestModalProps
+) {
   const { t } = useTranslation();
+  const { updateRequiredDocsCert, loadingUpdateRequiredDocs } =
+    useUpdateRequiredDocsCert();
   const [form] = Form.useForm();
-  const uid = useSelector((state: MainState) => state.mainUser.uid);
+  const mainUid = useSelector((state: MainState) => state.mainUser.uid);
 
-  function handleSubmit() {
-    console.log(uid);
+  useEffect(() => {
+    form.setFieldValue("list", props.text);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.text]);
+
+  useEffect(() => {
+    if (loadingUpdateRequiredDocs === false) props.onClose();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingUpdateRequiredDocs]);
+
+  function handleSubmit(values: any) {
+    updateRequiredDocsCert(mainUid, values.list?.trim());
   }
 
   return (

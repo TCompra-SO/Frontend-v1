@@ -1,25 +1,50 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import httpErrorInterceptor from "../interceptors/httpErrorInterceptor";
-import { useApiParams } from "../models/Interfaces";
+import { NotificationData, useApiParams } from "../models/Interfaces";
 import { useTranslation } from "react-i18next";
+import {
+  ErrorMsgRequestType,
+  ErrorRequestType,
+  ResponseRequestType,
+} from "../utilities/types";
 
-export default function useApi<T = any>({
-  service,
-  method,
-  dataToSend,
-  token,
-}: useApiParams<T>) {
+export interface UseApiType {
+  saveInQueue?: boolean;
+  functionToExecute: (
+    response: ResponseRequestType,
+    error: ErrorRequestType,
+    errorMsg: ErrorMsgRequestType
+  ) => void;
+  notificationData?: NotificationData;
+}
+
+export default function useApi<T = any>(
+  { service, method, dataToSend, token, includeHeader = true }: useApiParams<T>,
+  { functionToExecute }: UseApiType = {
+    saveInQueue: false,
+    functionToExecute: () => {},
+    notificationData: {
+      type: "error",
+      description: null,
+    },
+  }
+) {
   const { t } = useTranslation();
   const [loading, setLoading] = useState<boolean | undefined>(undefined);
-  const [responseData, setResponseData] = useState<any | null>(null);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [error, setError] = useState<AxiosError<any, any> | null>(null);
+  const [responseData, setResponseData] = useState<ResponseRequestType>(null);
+  const [errorMsg, setErrorMsg] = useState<ErrorMsgRequestType>(null);
+  const [error, setError] = useState<ErrorRequestType>(null);
 
-  async function fetchData(includeHeader: boolean = true) {
-    setResponseData(null);
-    setErrorMsg(null);
-    setError(null);
+  useEffect(() => {
+    if (responseData || error) functionToExecute(responseData, error, errorMsg);
+    reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
+
+  async function fetchData() {
+    reset();
+
     if (service) {
       setLoading(true);
       try {
@@ -50,5 +75,12 @@ export default function useApi<T = any>({
     }
   }
 
-  return { loading, responseData, error, errorMsg, fetchData };
+  function reset() {
+    setResponseData(null);
+    setErrorMsg(null);
+    setError(null);
+    setLoading(undefined);
+  }
+
+  return { loading, responseData, error, errorMsg, fetchData, reset };
 }

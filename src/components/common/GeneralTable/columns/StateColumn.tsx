@@ -23,6 +23,7 @@ import {
   OrderConfirmation,
   PurchaseOrderState,
   PurchaseOrderTableTypes,
+  RequirementState,
   TableTypes,
 } from "../../../../utilities/types";
 
@@ -76,11 +77,26 @@ export default function StateColumn(
               value: CertificationState.RESENT,
             },
           ]
+        : type == TableTypes.REQUIREMENT
+        ? Object.values(RequirementState)
+            .filter(
+              (state) => RequirementStateMeta[Number(state) as RequirementState]
+            )
+            .map((state) => {
+              return {
+                text: RequirementStateMeta[Number(state) as RequirementState]
+                  ?.label,
+                value: Number(state) as RequirementState,
+              };
+            })
         : undefined,
     onFilter:
       type == TableTypes.SENT_CERT || type == TableTypes.RECEIVED_CERT
         ? (value, record) => record.state == value
+        : type == TableTypes.REQUIREMENT
+        ? (value, record) => record.state == value
         : undefined,
+
     render: (_, record) => {
       let label: string = "";
       let className: string = "";

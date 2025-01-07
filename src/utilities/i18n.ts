@@ -326,6 +326,9 @@ const resources = {
       certificationRejected: "Company rejected successfully",
       mustProvideReasonCertification: "A reason is required to reject this request",
       noSavedRequiredDocListCertification: "There is no saved list of required documents for certification. This list can be created in the Certificates section.",
+      dataSavedSuccessfully: "Data saved successfully",
+      certificationVerificationError: "Certification status could not be verified",
+      alreadySentCertificationRequest: "A certification request was already sent to this company",
       // Other
       yes: "Yes",
       no: "No",
@@ -427,6 +430,9 @@ const resources = {
       received: "Received",
       issuedPl: "Issued",
       receivedPl: "Received",
+      sentPlFem: "Sent",
+      issuedPlSales: "Issued - Sales",
+      receivedPlSales: "Received - Sales",
       receivedPlMasc: "Received",
       myDocuments: "My documents",
       sent: "Sent",
@@ -505,7 +511,9 @@ const resources = {
       message: "Message",
       resend: "Resend",
       sendMessage: "Sed message",
-      resent: "Resent"
+      resent: "Resent",
+      approvedCertifications: "Approved certifications",
+      total: "Total"
     },
   },
   es: {
@@ -840,6 +848,9 @@ const resources = {
       certificationRejected: "Empresa rechazada exitosamente",
       mustProvideReasonCertification: "Debe proporcionar una razón para rechazar esta solicitud",
       noSavedRequiredDocListCertification: "No hay una lista guardada de los documentos requeridos para la certificación. Esta lista puede ser creada en la sección de Certificados.",
+      dataSavedSuccessfully: "Datos guardados exitosamente",
+      certificationVerificationError: "No se pudo verificar el estado de la certificación",
+      alreadySentCertificationRequest: "Ya fue enviada una solicitud de certificación a esta empresa",
       // Other
       yes: "Sí",
       no: "No",
@@ -943,6 +954,7 @@ const resources = {
       received: "Recibida",
       issuedPl: "Emitidas",
       receivedPl: "Recibidas",
+      sentPlFem: "Enviadas",
       issuedPlSales: "Emitidas - Liquidaciones",
       receivedPlSales: "Recibidas - Liquidaciones",
       receivedPlMasc: "Recibidos",
@@ -1023,7 +1035,9 @@ const resources = {
       message: "Mensaje",
       resend: "Reenviar",
       sendMessage: "Enviar mensaje",
-      resent: "Reenviado"
+      resent: "Reenviado",
+      approvedCertifications: "Certificaciones aprobadas",
+      total: "Total"
     },
   },
 };

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import ButtonContainer from "../../../containers/ButtonContainer";
-import { App, Col, Form, Row } from "antd";
+import { Col, Form, Row } from "antd";
 import DniField from "../../../common/formFields/DniField";
 import LocationField from "../../../common/formFields/LocationField";
 import AddressField from "../../../common/formFields/AddressField";
@@ -19,7 +19,6 @@ import {
 } from "../../../../models/Requests";
 import { useApiParams } from "../../../../models/Interfaces";
 import useApi from "../../../../hooks/useApi";
-import showNotification from "../../../../utilities/notification/showNotification";
 import {
   changeRoleSubUserService,
   registerSubUserService,
@@ -31,6 +30,7 @@ import { equalServices } from "../../../../utilities/globalFunctions";
 import PasswordField from "../../../common/formFields/PasswordField";
 import { newPasswordService } from "../../../../services/requests/authService";
 import { SubUserProfile } from "../../../../models/MainInterfaces";
+import useShowNotification from "../../../../hooks/utilHook";
 
 interface AddUserModalProps {
   onClose: () => void;
@@ -40,7 +40,7 @@ interface AddUserModalProps {
 
 export default function AddUserModal(props: AddUserModalProps) {
   const { t } = useTranslation();
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const [form] = Form.useForm();
   const [passSuccess, setPassSuccess] = useState(false);
   const [roleSuccess, setRoleSuccess] = useState(false);
@@ -165,7 +165,7 @@ export default function AddUserModal(props: AddUserModalProps) {
         updateSubUserSuccess(1);
       }
     } else if (error) {
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
       if (equalServices(apiParams.service, getNameReniecService("")))
         setValidDoc(false);
     }
@@ -176,7 +176,7 @@ export default function AddUserModal(props: AddUserModalProps) {
     if (responseDataNewPass) {
       updateSubUserSuccess(3);
     } else if (errorNewPass) {
-      showNotification(notification, "error", errorMsgNewPass);
+      showNotification("error", errorMsgNewPass);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataNewPass, errorNewPass]);
@@ -185,7 +185,7 @@ export default function AddUserModal(props: AddUserModalProps) {
     if (responseDataChangeRole) {
       updateSubUserSuccess(2);
     } else if (errorChangeRole) {
-      showNotification(notification, "error", errorMsgChangeRole);
+      showNotification("error", errorMsgChangeRole);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataChangeRole, errorChangeRole]);
@@ -204,7 +204,6 @@ export default function AddUserModal(props: AddUserModalProps) {
 
   function registerSubUserSuccess() {
     showNotification(
-      notification,
       "success",
       `${t("registerUserSuccess")}. ${t("subUserPasswordIsDocument")}`
     );
@@ -223,11 +222,7 @@ export default function AddUserModal(props: AddUserModalProps) {
       roleSuccess &&
       profileSuccess
     ) {
-      showNotification(
-        notification,
-        "success",
-        `${t("userUpdatedSuccessfully")}`
-      );
+      showNotification("success", `${t("userUpdatedSuccessfully")}`);
       props.onClose();
     }
   }
@@ -256,7 +251,7 @@ export default function AddUserModal(props: AddUserModalProps) {
 
   function createUser(values: any) {
     if (!validDoc) {
-      showNotification(notification, "error", t("mustProvideValidDoc"));
+      showNotification("error", t("mustProvideValidDoc"));
       return;
     }
 
@@ -279,7 +274,7 @@ export default function AddUserModal(props: AddUserModalProps) {
 
   function editUser(values: any) {
     if (values.password1 !== values.password2) {
-      showNotification(notification, "error", t("passwordsMusMatch"));
+      showNotification("error", t("passwordsMusMatch"));
       return;
     }
 

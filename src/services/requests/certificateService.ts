@@ -10,11 +10,15 @@ export function uploadCertificateService(): HttpService {
   };
 }
 
-export function getCertificatesService(userId: string): HttpService {
+export function getCertificatesService(
+  userId: string,
+  page: number,
+  pageSize: number
+): HttpService {
   return {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
       ApiRoutes.certificate.getCertificates
-    }${userId}`,
+    }${userId}/${page}/${pageSize}`,
     type: "CE-GET",
   };
 }
@@ -90,5 +94,23 @@ export function verifyCertificationService(
       ApiRoutes.certificate.verifyCertification
     }${userId}/${companyIdToVerify}`,
     type: "CE-VER",
+  };
+}
+
+export function updateRequiredDocumentsService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
+      ApiRoutes.certificate.updateRequiredDocuments
+    }`,
+    type: "CE-UPD-DOC",
+  };
+}
+
+export function getRequiredDocumentsService(companyId: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
+      ApiRoutes.certificate.getRequiredDocuments
+    }${companyId}`,
+    type: "CE-GET-DOC",
   };
 }

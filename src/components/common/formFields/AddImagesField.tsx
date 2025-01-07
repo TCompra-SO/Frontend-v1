@@ -1,18 +1,10 @@
-import {
-  App,
-  Form,
-  GetProp,
-  Image,
-  Upload,
-  UploadFile,
-  UploadProps,
-} from "antd";
+import { Form, GetProp, Image, Upload, UploadFile, UploadProps } from "antd";
 import { RcFile, UploadChangeParam } from "antd/lib/upload";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { maxImageSizeMb, maxImagesQuantity } from "../../../utilities/globals";
 import { checkImage } from "../../../utilities/globalFunctions";
-import showNotification from "../../../utilities/notification/showNotification";
+import useShowNotification from "../../../hooks/utilHook";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
@@ -22,7 +14,7 @@ export default function AddImagesField({
   forOffer?: boolean;
 }) {
   const { t } = useTranslation();
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const fileInputRef = useRef<HTMLDivElement>(null);
@@ -63,19 +55,14 @@ export default function AddImagesField({
 
   function checkImageBeforeUpload(file: RcFile) {
     if (fileList.length == maxImagesQuantity) {
-      showNotification(notification, "error", `${t("maxNumberImagesReached")}`);
+      showNotification("error", `${t("maxNumberImagesReached")}`);
       return Upload.LIST_IGNORE;
     }
     const { validImage, validSize } = checkImage(file);
     if (!validImage)
-      showNotification(
-        notification,
-        "error",
-        `${file.name}${t("nameInvalidImage")}`
-      );
+      showNotification("error", `${file.name}${t("nameInvalidImage")}`);
     else if (!validSize)
       showNotification(
-        notification,
         "error",
         `${file.name}${t("nameInvalidImageSize")}${maxImageSizeMb} mb`
       );

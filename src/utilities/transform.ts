@@ -1,8 +1,10 @@
+import { RequiredDocsForCert } from "../models/Interfaces";
 import {
   BaseUser,
   BasicRateData,
   CertificateFile,
   CertificationItem,
+  DisplayUser,
   FullUser,
   Offer,
   OfferItemSubUser,
@@ -10,6 +12,7 @@ import {
   PurchaseOrderItemSubUser,
   Requirement,
   RequirementItemSubUser,
+  StatisticsData,
   SubUserBase,
   SubUserProfile,
 } from "../models/MainInterfaces";
@@ -346,4 +349,19 @@ export function transformToCertificationItem(data: any) {
       transformToCertificateFile(it)
     );
   return cert;
+}
+
+export function transformToRequiredDocsCert(data: any) {
+  const obj: RequiredDocsForCert = data;
+  return obj;
+}
+
+export function transformToDisplayUser(data: any) {
+  const obj: DisplayUser = data;
+  return obj;
+}
+
+export function transformToStatistics(data: any) {
+  const obj: StatisticsData = data;
+  return obj;
 }

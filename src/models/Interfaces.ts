@@ -20,13 +20,13 @@ import {
   User,
   FullUser,
   BasicRequirement,
-  BasicOffer,
   BasicPurchaseOrder,
   CertificateFile,
   CertificationItem,
   BasicRateData,
   SubUserBase,
 } from "./MainInterfaces";
+import useApi, { UseApiType } from "../hooks/useApi";
 
 /******** Modals *******/
 
@@ -144,6 +144,9 @@ export interface ModalAddCertificates extends CommonModalType {
 
 export interface ModalEditDocumentListToRequest extends CommonModalType {
   type: ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST;
+  data: {
+    text: string;
+  };
 }
 
 export interface ModalViewDocsReceivedCert extends CommonModalType {
@@ -169,6 +172,7 @@ export interface ModalSelectDocsCert extends CommonModalType {
   data: {
     data: SelectDocsModalData;
     certificationId?: string;
+    onRequestSent?: () => void;
   };
 }
 
@@ -209,7 +213,6 @@ export type ModalContent =
 export interface SelectDocsModalData {
   userId: string;
   userName: string;
-  text: string;
 }
 
 /********** Tables *************/
@@ -281,7 +284,7 @@ export interface TableTypeAllRequirements extends TableHiddenColumns {
 
 export interface TableTypeAllOffers extends TableHiddenColumns {
   type: TableTypes.ALL_OFFERS;
-  data: BasicOffer[];
+  data: Offer[];
 }
 
 export interface TableTypeAllPurchaseOrders extends TableHiddenColumns {
@@ -348,6 +351,7 @@ export interface useApiParams<T = any> {
   method: "get" | "post" | "put" | "delete";
   dataToSend?: T;
   token?: string;
+  includeHeader?: boolean;
 }
 
 export interface CountryObj {
@@ -422,4 +426,31 @@ export interface ListItem {
 export interface CanOfferResponse {
   codeResponse: CodeResponseCanOffer;
   offerID?: string;
+}
+
+export interface RequiredDocsForCert {
+  name: string;
+  uid: string;
+  requiredDocuments: string;
+}
+
+export interface NotificationData {
+  type: "success" | "error" | "info" | "warning";
+  description: string | null;
+}
+
+export interface CommonModalProps {
+  useApiHook: ReturnType<typeof useApi>;
+  setApiParams: (params: useApiParams) => void;
+  setAdditionalApiParams: (additionalParams: UseApiType) => void;
+  apiParams: useApiParams;
+}
+
+export interface MainFilters {
+  keywords: string;
+  location: number;
+  category: number;
+  startDate: string;
+  endDate: string;
+  companyId: string;
 }

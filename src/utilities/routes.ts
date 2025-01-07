@@ -11,6 +11,7 @@ export const ApiMainRoutes = {
   score: "score/",
   purchaseOrder: "purchaseOrder/",
   certificate: "certificate/",
+  reports: "reports/",
 };
 
 export const ApiRoutes = {
@@ -31,6 +32,7 @@ export const ApiRoutes = {
     newPassword: "NewPassword/",
     getBaseDataUser: "getBaseDataUser/",
     getUser: "getUser/",
+    searchCompanyByName: "searchCompany/",
   },
   util: {
     countries: "countries/",
@@ -119,6 +121,11 @@ export const ApiRoutes = {
     deleteCertificate: "deleteCertificate/",
     resendCertificates: "resendCertify",
     verifyCertification: "verifyCertification/",
+    updateRequiredDocuments: "updateRequiredDocuments",
+    getRequiredDocuments: "getRequiredDocuments/",
+  },
+  reports: {
+    statistics: "getCountsByEntity/",
   },
 };
 

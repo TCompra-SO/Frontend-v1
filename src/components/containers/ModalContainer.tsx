@@ -4,7 +4,11 @@ import RequirementModalOfferSelected from "../section/requirements/RequirementMo
 import { ModalProps } from "antd/lib";
 import RequirementOfferSummary from "../section/requirements/requirementOfferSummary/RequirementOfferSummary";
 import RequirementModalRepublish from "../section/requirements/RequirementModalRepublish";
-import { ModalContent } from "../../models/Interfaces";
+import {
+  CommonModalProps,
+  ModalContent,
+  useApiParams,
+} from "../../models/Interfaces";
 import RatingCanceledModal from "../common/modals/RatingCanceledModal";
 import CancelPurchaseOrderModal from "../common/modals/CancelPurchaseOrderModal";
 import RatingModal from "../common/modals/RatingModal";
@@ -18,6 +22,13 @@ import EditDocumentListToRequestModal from "../common/modals/EditDocumentListToR
 import ViewDocsReceivedCertificate from "../common/modals/ViewDocsReceivedCertificate";
 import SelectDocumentsToSendCertificateModal from "../common/modals/SelectDocumentsToSendCertificateModal";
 import SendMessageModal from "../common/modals/SendMessageModal";
+import { useEffect, useState } from "react";
+import useApi, { UseApiType } from "../../hooks/useApi";
+import {
+  useCancelOffer,
+  useCancelRequirement,
+} from "../../hooks/requirementHook";
+import { useShowLoadingMessage } from "../../hooks/utilHook";
 
 interface ModalContainerProps extends ModalProps {
   content: ModalContent;
@@ -29,6 +40,67 @@ interface ModalContainerProps extends ModalProps {
 }
 
 export default function ModalContainer(props: ModalContainerProps) {
+  const { showLoadingMessage } = useShowLoadingMessage();
+
+  /** Variables para solicitud */
+
+  const [additionalApiParams, setAdditionalApiParams] = useState<UseApiType>({
+    functionToExecute: () => {},
+  });
+
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const useApiHook = useApi(apiParams, additionalApiParams);
+
+  const [commonModalProps] = useState<CommonModalProps>({
+    useApiHook: useApiHook,
+    setApiParams: setApiParams,
+    setAdditionalApiParams: setAdditionalApiParams,
+    apiParams,
+  });
+
+  /** Para CancelPurchaseOrderModal */
+
+  const useCancelRequirementHook = useCancelRequirement();
+  const useCancelOfferHook = useCancelOffer();
+
+  /** Acciones para solicitud */
+
+  useEffect(() => {
+    showLoadingMessage(useApiHook.loading);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useApiHook.loading]);
+
+  useEffect(() => {
+    if (apiParams.service) useApiHook.fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  /** Reset */
+
+  // useEffect(() => {
+  //   if (!props.isOpen) {
+  //     if (props.content.type == ModalTypes.CANCEL_PURCHASE_ORDER) {
+  //       useCancelOfferHook.resetCancelOffer();
+  //       useCancelRequirementHook.resetCancelRequirement();
+  //     } else {
+  //       setAdditionalApiParams({
+  //         functionToExecute: () => {},
+  //       });
+  //       setApiParams({
+  //         service: null,
+  //         method: "get",
+  //       });
+  //     }
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [props.isOpen]);
+
+  /** Funciones */
+
   function getContent() {
     switch (props.content.type) {
       case ModalTypes.DETAILED_REQUIREMENT: {
@@ -51,6 +123,8 @@ export default function ModalContainer(props: ModalContainerProps) {
             fromRequirementTable={props.content.data.fromRequirementTable}
             canceledByCreator={props.content.data.canceledByCreator}
             onCancelSuccess={props.content.data.onCancelSuccess}
+            useCancelRequirementHook={useCancelRequirementHook}
+            useCancelOfferHook={useCancelOfferHook}
           />
         );
       }
@@ -61,6 +135,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             requirement={props.content.data.requirement}
             onSucces={props.content.data.onSuccess}
             onClose={props.onClose}
+            {...commonModalProps}
           />
         );
       }
@@ -78,6 +153,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             requirementId={props.content.data.requirementId}
             onClose={props.onClose}
             type={props.content.data.type}
+            {...commonModalProps}
           />
         );
       }
@@ -88,6 +164,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             type={props.content.data.type}
             isOffer={props.content.data.isOffer}
             onClose={props.onClose}
+            {...commonModalProps}
           />
         );
       }
@@ -99,6 +176,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             type={props.content.data.type}
             isOffer={props.content.data.isOffer}
             requirementOrOfferId={props.content.data.requirementOrOfferId}
+            {...commonModalProps}
           />
         );
       }
@@ -140,11 +218,17 @@ export default function ModalContainer(props: ModalContainerProps) {
           <AddCertificatesModal
             onDocumentAdded={props.content.data?.onDocumentAdded}
             onClose={props.onClose}
+            {...commonModalProps}
           />
         );
       }
       case ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST: {
-        return <EditDocumentListToRequestModal />;
+        return (
+          <EditDocumentListToRequestModal
+            text={props.content.data.text}
+            onClose={props.onClose}
+          />
+        );
       }
       case ModalTypes.VIEW_DOCS_RECEIVED_CERT:
       case ModalTypes.VIEW_DOCS_SENT_CERT: {
@@ -154,6 +238,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             docs={props.content.data.docs}
             readOnly={props.content.data.readonly}
             onClose={props.onClose}
+            {...commonModalProps}
           />
         );
       }
@@ -163,6 +248,8 @@ export default function ModalContainer(props: ModalContainerProps) {
             data={props.content.data.data}
             certificationId={props.content.data.certificationId}
             onClose={props.onClose}
+            onRequestSent={props.content.data.onRequestSent}
+            {...commonModalProps}
           />
         );
       }
@@ -172,6 +259,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             onClose={props.onClose}
             requirementId={props.content.data.requirementId}
             userId={props.content.data.userId}
+            {...commonModalProps}
           />
         );
       }
@@ -181,6 +269,7 @@ export default function ModalContainer(props: ModalContainerProps) {
   return (
     <NoContentModalContainer
       {...props}
+      destroyOnClose={true}
       width={ModalWidth[props.content.type]}
       open={props.isOpen}
       showFooter={props.showFooter}

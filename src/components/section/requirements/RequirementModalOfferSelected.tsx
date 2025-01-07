@@ -9,13 +9,16 @@ import { Lengths } from "../../../utilities/lengths";
 import SelectContainer from "../../containers/SelectContainer";
 import { filterLabels } from "../../../utilities/colors";
 import { SelectOfferRequest } from "../../../models/Requests";
-import useApi from "../../../hooks/useApi";
-import { useApiParams } from "../../../models/Interfaces";
+import { CommonModalProps } from "../../../models/Interfaces";
 import { selectOfferService } from "../../../services/requests/requirementService";
-import showNotification from "../../../utilities/notification/showNotification";
-import { App } from "antd";
+import useShowNotification from "../../../hooks/utilHook";
+import {
+  ErrorMsgRequestType,
+  ErrorRequestType,
+  ResponseRequestType,
+} from "../../../utilities/types";
 
-interface RequirementModalOfferSelectedProps {
+interface RequirementModalOfferSelectedProps extends CommonModalProps {
   offer: Offer;
   requirement: Requirement;
   onClose: () => any;
@@ -26,36 +29,29 @@ export default function RequirementModalOfferSelected(
   props: RequirementModalOfferSelectedProps
 ) {
   const { t } = useTranslation();
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const { filters, filterNames } = useContext(requirementDetailContext);
   const [text, setText] = useState<string>("");
-  const [apiParams, setApiParams] = useState<useApiParams<SelectOfferRequest>>({
-    service: null,
-    method: "get",
-  });
-  const { loading, responseData, error, errorMsg, fetchData } =
-    useApi<SelectOfferRequest>({
-      service: apiParams.service,
-      method: apiParams.method,
-      dataToSend: apiParams.dataToSend,
+  const { loading } = props.useApiHook;
+
+  useEffect(() => {
+    props.setAdditionalApiParams({
+      functionToExecute: function (
+        responseData: ResponseRequestType,
+        error: ErrorRequestType,
+        errorMsg: ErrorMsgRequestType
+      ) {
+        if (responseData) {
+          showNotification("success", t("offerSelectedSuccessfully"));
+          props.onSucces(props.offer.key);
+          props.onClose();
+        } else if (error) {
+          showNotification("error", errorMsg);
+        }
+      },
     });
-
-  useEffect(() => {
-    if (apiParams.service) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParams]);
-
-  useEffect(() => {
-    if (responseData) {
-      showNotification(notification, "success", t("offerSelectedSuccessfully"));
-      props.onClose();
-      if (apiParams.dataToSend?.offerID)
-        props.onSucces(apiParams.dataToSend.offerID);
-    } else if (error) {
-      showNotification(notification, "error", errorMsg);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseData, error]);
+  }, []);
 
   function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setText(e.target.value);
@@ -73,7 +69,7 @@ export default function RequirementModalOfferSelected(
     };
     if (notes) data.observation = notes;
     console.log(data);
-    setApiParams({
+    props.setApiParams({
       service: selectOfferService(),
       method: "post",
       dataToSend: data,

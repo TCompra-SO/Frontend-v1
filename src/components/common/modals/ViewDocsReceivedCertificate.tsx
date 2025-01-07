@@ -6,18 +6,22 @@ import {
 } from "../../../models/MainInterfaces";
 import TextAreaContainer from "../../containers/TextAreaContainer";
 import { Lengths } from "../../../utilities/lengths";
-import { CertificationState, ModalTypes } from "../../../utilities/types";
+import {
+  CertificationState,
+  ErrorMsgRequestType,
+  ErrorRequestType,
+  ModalTypes,
+  ResponseRequestType,
+} from "../../../utilities/types";
 import { useEffect, useState } from "react";
-import { ModalContent, useApiParams } from "../../../models/Interfaces";
+import { CommonModalProps, ModalContent } from "../../../models/Interfaces";
 import ModalContainer from "../../containers/ModalContainer";
 import { mainModalScrollStyle } from "../../../utilities/globals";
-import useApi from "../../../hooks/useApi";
-import { App } from "antd";
-import showNotification from "../../../utilities/notification/showNotification";
 import { updateCertificationStateService } from "../../../services/requests/certificateService";
 import { UpdateCertificationStateRequest } from "../../../models/Requests";
+import useShowNotification from "../../../hooks/utilHook";
 
-interface ViewDocsReceivedCertificateProps {
+interface ViewDocsReceivedCertificateProps extends CommonModalProps {
   data: CertificationItem;
   docs: CertificateFile[];
   readOnly?: boolean;
@@ -28,10 +32,11 @@ export default function ViewDocsReceivedCertificate(
   props: ViewDocsReceivedCertificateProps
 ) {
   const { t } = useTranslation();
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [certApproved, setCertApproved] = useState(false);
   const [note, setNote] = useState("");
+  const { loading } = props.useApiHook;
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
@@ -39,41 +44,26 @@ export default function ViewDocsReceivedCertificate(
 
   /** Para certificar o rechazar */
 
-  const [apiParamsCertif, setApiParamsCertif] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingCertif,
-    responseData: responseDataCertif,
-    error: errorCertif,
-    errorMsg: errorMsgCertif,
-    fetchData: fetchDataCertif,
-  } = useApi({
-    service: apiParamsCertif.service,
-    method: apiParamsCertif.method,
-    dataToSend: apiParamsCertif.dataToSend,
-  });
-
   useEffect(() => {
-    if (apiParamsCertif.service) fetchDataCertif();
+    props.setAdditionalApiParams({
+      functionToExecute: function (
+        responseData: ResponseRequestType,
+        error: ErrorRequestType,
+        errorMsg: ErrorMsgRequestType
+      ) {
+        if (responseData) {
+          showNotification(
+            "success",
+            t(certApproved ? "certificationApproved" : "certificationRejected")
+          );
+          props.onClose();
+        } else if (error) {
+          showNotification("error", errorMsg);
+        }
+      },
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsCertif]);
-
-  useEffect(() => {
-    if (responseDataCertif) {
-      showNotification(
-        notification,
-        "success",
-        t(certApproved ? "certificationApproved" : "certificationRejected")
-      );
-      props.onClose();
-    } else if (errorCertif) {
-      showNotification(notification, "error", errorMsgCertif);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataCertif, errorCertif]);
+  }, []);
 
   /** Funciones */
 
@@ -89,8 +79,7 @@ export default function ViewDocsReceivedCertificate(
         data: {
           userId: props.data.companyId,
           userName: props.data.companyName,
-          text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
-        }, // r3v
+        },
       },
     });
     setIsOpenModal(true);
@@ -99,11 +88,7 @@ export default function ViewDocsReceivedCertificate(
 
   function submit(approve: boolean) {
     if (!approve && !note) {
-      showNotification(
-        notification,
-        "error",
-        t("mustProvideReasonCertification")
-      );
+      showNotification("error", t("mustProvideReasonCertification"));
       return;
     }
     setCertApproved(approve);
@@ -114,7 +99,7 @@ export default function ViewDocsReceivedCertificate(
         : CertificationState.REJECTED,
     };
     if (note) data.note = note;
-    setApiParamsCertif({
+    props.setApiParams({
       service: updateCertificationStateService(),
       method: "post",
       dataToSend: data,
@@ -185,7 +170,7 @@ export default function ViewDocsReceivedCertificate(
             <ButtonContainer
               className="btn alert-boton btn-green"
               onClick={() => (props.readOnly ? props.onClose() : submit(true))}
-              loading={loadingCertif}
+              loading={loading}
             >
               {t(props.readOnly ? "acceptButton" : "certify")}
             </ButtonContainer>
@@ -195,7 +180,7 @@ export default function ViewDocsReceivedCertificate(
               <ButtonContainer
                 className="btn alert-boton btn-green-o"
                 onClick={props.readOnly ? () => resend() : () => submit(false)}
-                loading={loadingCertif}
+                loading={loading}
               >
                 {t(props.readOnly ? "resend" : "reject")}
               </ButtonContainer>

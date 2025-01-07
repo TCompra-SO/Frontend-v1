@@ -220,17 +220,19 @@ export interface CertificationItem {
 }
 
 export interface StatisticsData {
-  customers: number;
-  requirements: number;
-  certifications: number;
-  goods: number;
-  services: number;
-  sales: number;
-  // rrhh: number;
-  offers: number;
-  issuedPurchaseOrders: number;
-  receivedPurchaseOrders: number;
-  employees: number;
+  numProducts: number;
+  numServices: number;
+  numLiquidations: number;
+  numOffersProducts: number;
+  numOffersServices: number;
+  numOffersLiquidations: number;
+  numPurchaseOrdersClient: number;
+  numPurchaseOrdersProvider: number;
+  numSellingOrdersProvider: number;
+  numSellingOrdersClient: number;
+  numSentApprovedCertifications: number;
+  numReceivedApprovedCertifications: number;
+  numSubUsers: number;
 }
 
 export interface PlanData {

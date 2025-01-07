@@ -2,6 +2,7 @@ import { PurchaseOrder } from "../models/MainInterfaces";
 import {
   Action,
   ModalTypes,
+  OnChangePageAndPageSizeTypeParams,
   PurchaseOrderTableTypes,
   RequirementType,
   TableTypes,
@@ -18,10 +19,6 @@ import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import useApi from "../hooks/useApi";
 import { getUserService } from "../services/requests/authService";
-import { App } from "antd";
-import showNotification, {
-  showLoadingMessage,
-} from "../utilities/notification/showNotification";
 import {
   getLabelFromPurchaseOrderType,
   getLabelFromRequirementType,
@@ -51,16 +48,18 @@ import {
   useGetOffersByRequirementId,
 } from "../hooks/requirementHook";
 import { ModalsContext } from "../contexts/ModalsContext";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
 
 export default function SalesOrders() {
   const { t } = useTranslation();
   const location = useLocation();
+  const { showNotification } = useShowNotification();
   const uid = useSelector((state: MainState) => state.user.uid);
   const role = useSelector((state: MainState) => state.user.typeID);
   const { getBasicRateData, modalDataRate } = useCulminate();
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
   const { updateMyPurchaseOrdersLoadingPdf } = useContext(LoadingDataContext);
-  const { notification, message } = App.useApp();
+  const { showLoadingMessage } = useShowLoadingMessage();
   const { viewHistorySalesModalData } = useContext(ModalsContext);
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
@@ -177,7 +176,7 @@ export default function SalesOrders() {
         onButtonClick: handleOnButtonClick,
         total: 0,
       });
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -202,7 +201,7 @@ export default function SalesOrders() {
   });
 
   useEffect(() => {
-    showLoadingMessage(message, loadingUser);
+    showLoadingMessage(loadingUser);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingUser]);
 
@@ -215,7 +214,7 @@ export default function SalesOrders() {
     if (responseDataUser) {
       showUserInfo();
     } else if (errorUser) {
-      showNotification(notification, "error", errorMsgUser);
+      showNotification("error", errorMsgUser);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataUser, errorUser]);
@@ -241,7 +240,7 @@ export default function SalesOrders() {
 
   useEffect(() => {
     updateMyPurchaseOrdersLoadingPdf(loadingPdf);
-    showLoadingMessage(message, loadingPdf);
+    showLoadingMessage(loadingPdf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingPdf]);
 
@@ -254,7 +253,7 @@ export default function SalesOrders() {
     if (responseDataPdf) {
       openPurchaseOrderPdf(responseDataPdf);
     } else if (errorPdf) {
-      showNotification(notification, "error", errorMsgPdf);
+      showNotification("error", errorMsgPdf);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataPdf, errorPdf]);
@@ -277,7 +276,7 @@ export default function SalesOrders() {
       });
     } catch (error) {
       console.log(error);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     }
   }
 
@@ -371,7 +370,10 @@ export default function SalesOrders() {
     console.log(e.target.value);
   }
 
-  function handleChangePageAndPageSize(page: number, pageSize: number) {
+  function handleChangePageAndPageSize({
+    page,
+    pageSize,
+  }: OnChangePageAndPageSizeTypeParams) {
     // setLoadingTable(true);
     switch (type) {
       case PurchaseOrderTableTypes.ISSUED:

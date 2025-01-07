@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import ButtonContainer from "../../../../containers/ButtonContainer";
-import { App, Checkbox, Form, UploadFile } from "antd";
+import { Checkbox, Form, UploadFile } from "antd";
 import { MainState } from "../../../../../models/Redux";
 import { useSelector } from "react-redux";
 import TitleField from "../../../../common/formFields/TitleField";
@@ -17,7 +17,6 @@ import AddImagesField from "../../../../common/formFields/AddImagesField";
 import AddDocumentField from "../../../../common/formFields/AddDocumentField";
 import { CreateOfferRequest } from "../../../../../models/Requests";
 import { ReactNode, useEffect, useState } from "react";
-import showNotification from "../../../../../utilities/notification/showNotification";
 import {
   CanOfferResponse,
   useApiParams,
@@ -48,6 +47,8 @@ import { Requirement } from "../../../../../models/MainInterfaces";
 import makeRequest from "../../../../../utilities/globalFunctions";
 import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
 import ModalContainer from "../../../../containers/ModalContainer";
+import { verifyCertificationByUserIdAndCompanyId } from "../../../../../services/complete/general";
+import useShowNotification from "../../../../../hooks/utilHook";
 
 function RowContainer({ children }: { children: ReactNode }) {
   return (
@@ -68,10 +69,15 @@ export default function OfferForm(props: OfferFormProps) {
   const [form] = Form.useForm();
   const email = useSelector((state: MainState) => state.user.email);
   const uid = useSelector((state: MainState) => state.user.uid);
+  const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const entityType = useSelector((state: MainState) => state.user.typeEntity);
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const role = useSelector((state: MainState) => state.user.typeID);
-  const { notification } = App.useApp();
+  const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
+  const { showNotification } = useShowNotification();
+  const [isCertified, setIsCertified] = useState<CertificationState>(
+    CertificationState.NONE
+  );
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [cantOfferMotive, setCantOfferMotive] = useState<CantOfferMotives>(
     CantOfferMotives.INI
@@ -85,7 +91,6 @@ export default function OfferForm(props: OfferFormProps) {
   const [imgSuccess, setImgSuccess] = useState(ProcessFlag.NOT_INI);
   const [offerId, setOfferId] = useState<string>("");
   const [loadingForm, setLoadingForm] = useState(true);
-  const [isPremium] = useState(true); // r3v
 
   useEffect(() => {
     if (cantOfferMotive != CantOfferMotives.INI) setLoadingForm(false);
@@ -129,7 +134,7 @@ export default function OfferForm(props: OfferFormProps) {
       uploadImgsAndDocs(responseData.data?.uid);
     } else if (error) {
       setReqSuccess(ProcessFlag.FIN_UNSUCCESS);
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -139,6 +144,7 @@ export default function OfferForm(props: OfferFormProps) {
   const [apiParamsImg, setApiParamsImg] = useState<useApiParams<FormData>>({
     service: null,
     method: "get",
+    includeHeader: false,
   });
   const {
     loading: loadingImg,
@@ -154,7 +160,7 @@ export default function OfferForm(props: OfferFormProps) {
   });
 
   useEffect(() => {
-    if (apiParamsImg.service) fetchDataImg(false);
+    if (apiParamsImg.service) fetchDataImg();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParamsImg]);
 
@@ -163,7 +169,7 @@ export default function OfferForm(props: OfferFormProps) {
       setImgSuccess(ProcessFlag.FIN_SUCCESS);
     } else if (errorImg) {
       setImgSuccess(ProcessFlag.FIN_UNSUCCESS);
-      showNotification(notification, "error", errorMsgImg);
+      showNotification("error", errorMsgImg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataImg, errorImg]);
@@ -173,6 +179,7 @@ export default function OfferForm(props: OfferFormProps) {
   const [apiParamsDoc, setApiParamsDoc] = useState<useApiParams<FormData>>({
     service: null,
     method: "get",
+    includeHeader: false,
   });
   const {
     loading: loadingDoc,
@@ -188,7 +195,7 @@ export default function OfferForm(props: OfferFormProps) {
   });
 
   useEffect(() => {
-    if (apiParamsDoc.service) fetchDataDoc(false);
+    if (apiParamsDoc.service) fetchDataDoc();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParamsDoc]);
 
@@ -197,7 +204,7 @@ export default function OfferForm(props: OfferFormProps) {
       setDocSuccess(ProcessFlag.FIN_SUCCESS);
     } else if (errorDoc) {
       setDocSuccess(ProcessFlag.FIN_UNSUCCESS);
-      showNotification(notification, "error", errorMsgDoc);
+      showNotification("error", errorMsgDoc);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataDoc, errorDoc]);
@@ -213,17 +220,9 @@ export default function OfferForm(props: OfferFormProps) {
         docSuccess == ProcessFlag.FIN_SUCCESS &&
         imgSuccess == ProcessFlag.FIN_SUCCESS
       ) {
-        showNotification(
-          notification,
-          "success",
-          t("offerCreatedSuccessfully")
-        );
+        showNotification("success", t("offerCreatedSuccessfully"));
       } else {
-        showNotification(
-          notification,
-          "warning",
-          t("offerCreatedSuccessfullyNoDocOrImages")
-        );
+        showNotification("warning", t("offerCreatedSuccessfullyNoDocOrImages"));
       }
       form.resetFields();
       form.setFieldValue("currency", props.requirement?.coin);
@@ -255,7 +254,7 @@ export default function OfferForm(props: OfferFormProps) {
       (role == UserRoles.BUYER &&
         props.requirement?.type != RequirementType.SALE) ||
       (role == UserRoles.SELLER &&
-        props.requirement?.type == RequirementType.SALE) // r3v
+        props.requirement?.type == RequirementType.SALE)
     ) {
       setCantOfferMotive(CantOfferMotives.NO_ALLOWED_ROLE);
 
@@ -322,12 +321,21 @@ export default function OfferForm(props: OfferFormProps) {
             CanOfferType.CERTIFIED_COMPANY
           )
         ) {
-          setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED); //r3v verificar si el usuario está certificado con la empresa
-          return;
+          const { certState: certResult, error: errorCert } =
+            await verifyCertificationByUserIdAndCompanyId(
+              mainUid,
+              props.requirement.user.uid
+            );
+          if (errorCert)
+            showNotification("error", t("certificationVerificationError"));
+          setIsCertified(certResult ?? CertificationState.NONE);
+          if (certResult != CertificationState.CERTIFIED) {
+            setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED);
+            return;
+          }
         }
       }
     }
-    console.log("aaaaaaa");
     setCantOfferMotive(CantOfferMotives.NONE);
   }
 
@@ -384,7 +392,7 @@ export default function OfferForm(props: OfferFormProps) {
       }
 
       submit(data);
-    } else showNotification(notification, "error", t("errorOccurred"));
+    } else showNotification("error", t("errorOccurred"));
   }
 
   function submit(data: CreateOfferRequest) {
@@ -477,6 +485,7 @@ export default function OfferForm(props: OfferFormProps) {
               requirement={props.requirement}
               onDeleteSuccess={recheck}
               onSentDocsToGetCertifiedSuccess={recheck}
+              setIsCertified={setIsCertified}
             />
           ) : (
             <Form
@@ -547,9 +556,10 @@ export default function OfferForm(props: OfferFormProps) {
             motive={cantOfferMotive}
             requirement={props.requirement}
             isPremium={isPremium}
-            isCertified={CertificationState.NONE} //r3v
+            isCertified={isCertified}
             onDeleteSuccess={recheck}
             onSentDocsToGetCertifiedSuccess={recheck}
+            setIsCertified={setIsCertified}
           />
         )}
       </div>

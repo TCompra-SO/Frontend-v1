@@ -117,3 +117,12 @@ export function getUserService(uid: string): HttpService {
     type: "AU-GE-US",
   };
 }
+
+export function searchCompanyByNameService(name: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+      ApiRoutes.auth.searchCompanyByName
+    }${name}`,
+    type: "AU-SE-CO-NA",
+  };
+}

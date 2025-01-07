@@ -37,11 +37,15 @@ export function updateProfileSubUserService(): HttpService {
   };
 }
 
-export function getSubUsersByEntityService(id: string): HttpService {
+export function getSubUsersByEntityService(
+  id: string,
+  page: number,
+  pageSize: number
+): HttpService {
   return {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.subUser}${
       ApiRoutes.subUser.getSubUsersByEntity
-    }${id}`,
+    }${id}/${page}/${pageSize}`,
     type: "SU-GET-ENT",
   };
 }

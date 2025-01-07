@@ -7,8 +7,11 @@ import {
 } from "../models/Interfaces";
 import { defaultCountry, maxDocSizeMb, maxImageSizeMb } from "./globals";
 import {
+  ErrorMsgRequestType,
+  ErrorRequestType,
   PurchaseOrderTableTypes,
   RequirementType,
+  ResponseRequestType,
   TimeMeasurement,
   UserClass,
   UserRoles,
@@ -204,9 +207,9 @@ export default async function makeRequest<T = any>({
   dataToSend,
   token,
 }: useApiParams<T>) {
-  let responseData: any | null = null;
-  let errorMsg: string | null = null;
-  let error: AxiosError<any, any> | null = null;
+  let responseData: ResponseRequestType = null;
+  let errorMsg: ErrorMsgRequestType = null;
+  let error: ErrorRequestType = null;
 
   if (service) {
     try {
@@ -285,4 +288,11 @@ export function openPurchaseOrderPdf(responseData: any) {
       "width=800,height=1000,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes"
     );
   }
+}
+
+// Genera un identificador unico
+export function generateShortId(): string {
+  const timestamp = Date.now().toString(36).slice(-4);
+  const random = Math.random().toString(36).substring(2, 6);
+  return `${timestamp}${random}`;
 }

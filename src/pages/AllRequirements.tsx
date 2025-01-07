@@ -2,7 +2,11 @@ import { useTranslation } from "react-i18next";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import { ChangeEvent, useEffect, useState } from "react";
 import { TableTypeAllRequirements, useApiParams } from "../models/Interfaces";
-import { Action, TableTypes } from "../utilities/types";
+import {
+  Action,
+  OnChangePageAndPageSizeTypeParams,
+  TableTypes,
+} from "../utilities/types";
 import { BaseUser, BasicRequirement } from "../models/MainInterfaces";
 import makeRequest, {
   getLabelFromRequirementType,
@@ -10,8 +14,6 @@ import makeRequest, {
 } from "../utilities/globalFunctions";
 import { useLocation, useNavigate } from "react-router-dom";
 import useApi from "../hooks/useApi";
-import showNotification from "../utilities/notification/showNotification";
-import { App } from "antd";
 import { getRequirementsByEntityService } from "../services/requests/requirementService";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
@@ -22,12 +24,13 @@ import {
 } from "../utilities/transform";
 import { pageRoutes } from "../utilities/routes";
 import { pageSizeOptionsSt } from "../utilities/globals";
+import useShowNotification from "../hooks/utilHook";
 
 export default function AllRequirements() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const { notification } = App.useApp();
+  const { showNotification } = useShowNotification();
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const [type, setType] = useState(getRouteType(location.pathname));
@@ -78,7 +81,7 @@ export default function AllRequirements() {
         total: 0,
       });
       setLoadingTable(false);
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -156,7 +159,7 @@ export default function AllRequirements() {
       });
     } catch (error) {
       console.log(error);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     } finally {
       setLoadingTable(false);
     }
@@ -171,7 +174,10 @@ export default function AllRequirements() {
       navigate(`${pageRoutes.productDetail}/${requirement.key}`);
   }
 
-  function handleChangePageAndPageSize(page: number, pageSize: number) {
+  function handleChangePageAndPageSize({
+    page,
+    pageSize,
+  }: OnChangePageAndPageSizeTypeParams) {
     setLoadingTable(true);
     setApiParams({
       service: getRequirementsByEntityService(dataUser.uid, page, pageSize),

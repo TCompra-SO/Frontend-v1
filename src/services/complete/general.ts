@@ -9,13 +9,18 @@ import {
   transformToFullUser,
   transformToOffer,
   transformToPurchaseOrder,
+  transformToRequiredDocsCert,
 } from "../../utilities/transform";
-import { RequirementType } from "../../utilities/types";
+import { CertificationState, RequirementType } from "../../utilities/types";
 import {
   getBaseDataUserService,
   getUserService,
 } from "../requests/authService";
-import { deleteCertificateService } from "../requests/certificateService";
+import {
+  deleteCertificateService,
+  getRequiredDocumentsService,
+  verifyCertificationService,
+} from "../requests/certificateService";
 import {
   getBasicRateDataOfferService,
   getOfferByIdService,
@@ -192,13 +197,48 @@ export async function getRequirementFromData(
     service: getBaseDataUserService(data.subUser),
     method: "get",
   });
-  const { user: newUser, subUser: newSubUser } = transformToBaseUser(
-    respData.data[0]
-  );
-  return transformDataToRequirement(
-    data,
-    RequirementType.GOOD,
-    data.user == data.subUser ? newUser : newSubUser,
-    newUser
-  );
+  if (respData) {
+    const { user: newUser, subUser: newSubUser } = transformToBaseUser(
+      respData.data[0]
+    );
+    return transformDataToRequirement(
+      data,
+      RequirementType.GOOD,
+      data.user == data.subUser ? newUser : newSubUser,
+      newUser
+    );
+  }
+  return null;
+}
+
+export async function verifyCertificationByUserIdAndCompanyId(
+  userId: string,
+  companyIdToVerify: string
+) {
+  const { responseData, error, errorMsg } = await makeRequest({
+    service: verifyCertificationService(userId, companyIdToVerify),
+    method: "get",
+  });
+  return {
+    certState: error
+      ? error.status == 404
+        ? CertificationState.NONE
+        : null
+      : (responseData.state as CertificationState),
+    error: error && error.status != 404 ? error : null,
+    errorMsg,
+  };
+}
+
+export async function getRequiredDocumentsForCertification(companyId: string) {
+  const { responseData, error, errorMsg } = await makeRequest({
+    service: getRequiredDocumentsService(companyId),
+    method: "get",
+  });
+
+  return {
+    certState: responseData ? transformToRequiredDocsCert(responseData) : null,
+    error,
+    errorMsg,
+  };
 }

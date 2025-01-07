@@ -19,6 +19,8 @@ export default function CategoryField() {
       rules={[{ required: true }]}
     >
       <SelectContainer
+        showSearch
+        optionFilterProp="label"
         placeholder={t("select")}
         className="form-control"
         options={getListForSelectIdValueMap(categoryData)}

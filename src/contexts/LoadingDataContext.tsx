@@ -18,6 +18,9 @@ interface LoadingDataContextType {
   updateSubUserRequirementsViewOffers: (val: boolean | undefined) => void;
   updateAllPurchaseOrdersViewOffers: (val: boolean | undefined) => void;
   updateAllSalesOrdersViewOffers: (val: boolean | undefined) => void;
+
+  createRequirementLoading: boolean;
+  updateCreateRequirementLoading: (val: boolean | undefined) => void;
 }
 
 export const LoadingDataContext = createContext<LoadingDataContextType>({
@@ -37,6 +40,8 @@ export const LoadingDataContext = createContext<LoadingDataContextType>({
   updateSubUserRequirementsViewOffers: () => {},
   updateAllPurchaseOrdersViewOffers: () => {},
   updateAllSalesOrdersViewOffers: () => {},
+  createRequirementLoading: false,
+  updateCreateRequirementLoading: () => {},
 });
 
 export function LoadingDataProvider({ children }: { children: ReactNode }) {
@@ -55,6 +60,8 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
   const [allPurchaseOrdersViewOffers, setAllPurchaseOrdersViewOffers] =
     useState(false);
   const [allSalesOrdersViewOffers, setAllSalesOrdersViewOffers] =
+    useState(false);
+  const [createRequirementLoading, setCreateRequirementLoading] =
     useState(false);
 
   function updateMyPurchaseOrdersLoadingPdf(val: boolean | undefined) {
@@ -89,6 +96,11 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
     setAllSalesOrdersViewOffers(val ? true : false);
   }
 
+  function updateCreateRequirementLoading(val: boolean | undefined) {
+    console.log(val);
+    setCreateRequirementLoading(val ? true : false);
+  }
+
   return (
     <LoadingDataContext.Provider
       value={{
@@ -100,6 +112,7 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
         subUserRequirementsViewOffers,
         allPurchaseOrdersViewOffers,
         allSalesOrdersViewOffers,
+        createRequirementLoading,
         updateMyPurchaseOrdersLoadingPdf,
         updateSubUserPurchaseOrdersLoadingPdf,
         updateAllPurchaseOrdersLoadingPdf,
@@ -108,6 +121,7 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
         updateSubUserRequirementsViewOffers,
         updateAllPurchaseOrdersViewOffers,
         updateAllSalesOrdersViewOffers,
+        updateCreateRequirementLoading,
       }}
     >
       {children}

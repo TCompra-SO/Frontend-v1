@@ -14,7 +14,7 @@ export default function RequirementOfferSummary(
   props: RequirementOfferSummaryProps
 ) {
   const { t } = useTranslation();
-  console.log(props.offer);
+
   return (
     <div className="modal-card">
       <div className="detalle-oferta">

@@ -18,12 +18,11 @@ import { MainState } from "../../../../../models/Redux";
 import { useSelector } from "react-redux";
 import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
 import { deleteOfferService } from "../../../../../services/requests/offerService";
-import showNotification, {
-  showLoadingMessage,
-} from "../../../../../utilities/notification/showNotification";
-import { App } from "antd";
 import useApi from "../../../../../hooks/useApi";
 import { ModalsContext } from "../../../../../contexts/ModalsContext";
+import useShowNotification, {
+  useShowLoadingMessage,
+} from "../../../../../hooks/utilHook";
 
 interface CantOfferMessageProps {
   offerId: string;
@@ -34,12 +33,14 @@ interface CantOfferMessageProps {
   loading?: boolean;
   onDeleteSuccess: () => void;
   onSentDocsToGetCertifiedSuccess: () => void;
+  setIsCertified: (newMotive: CertificationState) => void;
 }
 
 export default function CantOfferMessage(props: CantOfferMessageProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { notification, message } = App.useApp();
+  const { showLoadingMessage } = useShowLoadingMessage();
+  const { showNotification } = useShowNotification();
   const entityType = useSelector((state: MainState) => state.user.typeEntity);
   const { updateDetailedRequirementModalData } = useContext(ModalsContext);
   const [mainText, setMainText] = useState("");
@@ -70,7 +71,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
   });
 
   useEffect(() => {
-    showLoadingMessage(message, loadingDelete);
+    showLoadingMessage(loadingDelete);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingDelete]);
 
@@ -81,11 +82,11 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
 
   useEffect(() => {
     if (responseDataDelete) {
-      showNotification(notification, "success", t("offerDeletedSuccessfully"));
+      showNotification("success", t("offerDeletedSuccessfully"));
       handleCloseModal();
       props.onDeleteSuccess();
     } else if (errorDelete) {
-      showNotification(notification, "error", errorMsgDelete);
+      showNotification("error", errorMsgDelete);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataDelete, errorDelete]);
@@ -230,11 +231,11 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
       setDataModal({
         type: ModalTypes.SELECT_DOCS_CERT,
         data: {
+          onRequestSent: () => props.setIsCertified(CertificationState.PENDING),
           data: {
             userId: props.requirement.user.uid,
             userName: props.requirement.user.name,
-            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
-          }, // r3v
+          },
         },
       });
     setIsOpenModal(true);

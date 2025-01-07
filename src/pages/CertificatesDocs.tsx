@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
-import { mainModalScrollStyle } from "../utilities/globals";
+import { mainModalScrollStyle, pageSizeOptionsSt } from "../utilities/globals";
 import { ModalContent, TableTypeMyDocuments } from "../models/Interfaces";
-import { Action, ModalTypes, TableTypes } from "../utilities/types";
+import {
+  Action,
+  ModalTypes,
+  OnChangePageAndPageSizeTypeParams,
+  TableTypes,
+} from "../utilities/types";
 import { useTranslation } from "react-i18next";
 import { CertificateFile } from "../models/MainInterfaces";
 import { openDocument } from "../utilities/globalFunctions";
@@ -12,13 +17,22 @@ import { Row } from "antd";
 import {
   useDeleteCertificate,
   useGetCertificatesList,
+  useGetRequiredDocsCert,
 } from "../hooks/certificateHook";
+import { MainState } from "../models/Redux";
+import { useSelector } from "react-redux";
 
 export default function CertificatesDocs() {
   const { t } = useTranslation();
-  const { certificateList, getCertificatesList, loadingCertList } =
-    useGetCertificatesList();
+  const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
+  const {
+    certificateList,
+    getCertificatesList,
+    loadingCertList,
+    totalCertList,
+  } = useGetCertificatesList();
   const { deleteCertificate, loadingDeleteCert } = useDeleteCertificate();
+  const { getRequiredDocsCert, requiredDocs } = useGetRequiredDocsCert();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -30,12 +44,13 @@ export default function CertificatesDocs() {
     hiddenColumns: [],
     nameColumnHeader: t("name"),
     onButtonClick: handleOnButtonClick,
+    total: totalCertList,
   });
 
   /** Obtener lista de documentos */
 
   useEffect(() => {
-    getCertificatesList();
+    getCertificatesList(1, pageSizeOptionsSt[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -45,6 +60,7 @@ export default function CertificatesDocs() {
         return {
           ...prev,
           data: certificateList,
+          total: totalCertList,
         };
       });
     } else {
@@ -54,9 +70,25 @@ export default function CertificatesDocs() {
         hiddenColumns: [],
         nameColumnHeader: t("name"),
         onButtonClick: handleOnButtonClick,
+        total: totalCertList,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [certificateList]);
+
+  /** Mostrar lista de documentos requeridos */
+
+  useEffect(() => {
+    if (requiredDocs !== null) {
+      setDataModal({
+        type: ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST,
+        data: {
+          text: requiredDocs,
+        },
+      });
+      setIsOpenModal(true);
+    }
+  }, [requiredDocs]);
 
   /** Funciones */
 
@@ -73,10 +105,7 @@ export default function CertificatesDocs() {
         setIsOpenModal(true);
         break;
       case Action.EDIT_DOCUMENT_LIST_TO_REQUEST:
-        setDataModal({
-          type: ModalTypes.EDIT_DOCUMENT_LIST_TO_REQUEST,
-        });
-        setIsOpenModal(true);
+        getRequiredDocsCert(mainUserUid);
         break;
     }
   }
@@ -106,6 +135,13 @@ export default function CertificatesDocs() {
       },
     });
     setIsOpenModal(true);
+  }
+
+  function handleChangePageAndPageSize({
+    page,
+    pageSize,
+  }: OnChangePageAndPageSizeTypeParams) {
+    getCertificatesList(page, pageSize);
   }
 
   return (
@@ -146,6 +182,7 @@ export default function CertificatesDocs() {
           </Row>
         }
         loading={loadingCertList}
+        onChangePageAndPageSize={handleChangePageAndPageSize}
       />
     </>
   );

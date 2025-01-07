@@ -1,10 +1,11 @@
 import { TableType } from "../../../../../models/Interfaces";
+import { OnChangePageAndPageSizeType } from "../../../../../utilities/types";
 import GeneralTable from "../../../../common/GeneralTable/GeneralTable";
 
 interface HomeMainTableProps {
   loadingTable?: boolean;
   content: TableType;
-  onChangePageAndPageSize?: (page: number, pageSize: number) => void;
+  onChangePageAndPageSize?: OnChangePageAndPageSizeType;
 }
 
 export default function HomeMainTable(props: HomeMainTableProps) {

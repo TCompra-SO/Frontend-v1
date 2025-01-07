@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import {
   allSelect,
   commonModalWidth,
@@ -6,6 +7,11 @@ import {
   smallModalWidth,
   allItems,
 } from "./globals";
+import {
+  FilterValue,
+  SorterResult,
+  TableCurrentDataSource,
+} from "antd/lib/table/interface";
 
 /**** Estados ***/
 
@@ -127,6 +133,7 @@ export const ModalWidth: {
 /***** Acciones *****/
 
 export enum Action {
+  NONE = 0,
   SHOW_OFFERS = 1,
   DELETE = 2,
   CANCEL_REQUIREMENT = 3,
@@ -194,6 +201,7 @@ export const ActionLabel: {
   [Action.EDIT_DOCUMENT_LIST_TO_REQUEST]: "listOfDocumentsToRequest",
   [Action.VIEW]: "view",
   [Action.VIEw_SALES_ORDERS]: "viewSalesOrders",
+  [Action.NONE]: "none",
 };
 
 export const ActionByStateRequirement: {
@@ -382,7 +390,7 @@ export enum PurchaseOrderTableTypes {
 }
 
 export enum CertificationState {
-  NONE = 0,
+  NONE = 5,
   CERTIFIED = 1,
   REJECTED = 2,
   PENDING = 3,
@@ -406,10 +414,10 @@ export enum CantOfferMotives {
   NONE = 0,
   INI = 14,
 
-  ALREADY_MADE_OFFER = 1, //
-  MAIN_ACCOUNT_MADE_OFFER = 11, //
-  OTHER_USER_IN_COMPANY_MADE_OFFER = 3, // a corregir
-  SUBUSER_MADE_OFFER = 12, //
+  ALREADY_MADE_OFFER = 1,
+  MAIN_ACCOUNT_MADE_OFFER = 11,
+  OTHER_USER_IN_COMPANY_MADE_OFFER = 3,
+  SUBUSER_MADE_OFFER = 12,
 
   NOT_LOGGED_IN = 2,
   CHANGED_STATE = 6,
@@ -417,10 +425,10 @@ export enum CantOfferMotives {
   ONLY_CERTIFIED = 8,
   NO_ALLOWED_ROLE = 9,
 
-  IS_CREATOR = 4, //
-  MAIN_ACCOUNT_IS_CREATOR = 5, // corregir
-  OTHER_USER_IN_COMPANY_IS_CREATOR = 10, //
-  SUBUSER_IS_CREATOR = 13, //
+  IS_CREATOR = 4,
+  MAIN_ACCOUNT_IS_CREATOR = 5,
+  OTHER_USER_IN_COMPANY_IS_CREATOR = 10,
+  SUBUSER_IS_CREATOR = 13,
 }
 
 export enum CodeResponseCanOffer {
@@ -449,3 +457,20 @@ export enum UploadCertificateLabels {
   documenst = "documents",
   name = "name",
 }
+
+/** Request parameters type */
+export type ResponseRequestType = any | null;
+export type ErrorRequestType = AxiosError<any, any> | null;
+export type ErrorMsgRequestType = string | null;
+
+/** Tipos para paginación */
+export type OnChangePageAndPageSizeTypeParams = {
+  page: number;
+  pageSize: number;
+  filters?: Record<string, FilterValue | null>;
+  sorter?: SorterResult<any> | SorterResult<any>[];
+  extra?: TableCurrentDataSource<any>;
+};
+export type OnChangePageAndPageSizeType = (
+  params: OnChangePageAndPageSizeTypeParams
+) => void;

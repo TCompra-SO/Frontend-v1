@@ -1,33 +1,37 @@
-import { t } from "i18next";
 import ButtonContainer from "../../containers/ButtonContainer";
 import InputContainer from "../../containers/InputContainer";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
-import { App, Input, InputRef } from "antd";
+import { Input, InputRef } from "antd";
 import { checkDoc } from "../../../utilities/globalFunctions";
-import showNotification, {
-  showLoadingMessage,
-} from "../../../utilities/notification/showNotification";
 import { maxDocSizeMb } from "../../../utilities/globals";
-import { useApiParams } from "../../../models/Interfaces";
-import useApi from "../../../hooks/useApi";
-import { UploadCertificateLabels } from "../../../utilities/types";
+import { CommonModalProps } from "../../../models/Interfaces";
+import {
+  ErrorMsgRequestType,
+  ErrorRequestType,
+  ResponseRequestType,
+  UploadCertificateLabels,
+} from "../../../utilities/types";
 import { uploadCertificateService } from "../../../services/requests/certificateService";
+import useShowNotification from "../../../hooks/utilHook";
+import { useTranslation } from "react-i18next";
 
-interface AddCertificatesModalProps {
+interface AddCertificatesModalProps extends CommonModalProps {
   onDocumentAdded?: () => void;
   onClose: () => any;
 }
 
 export default function AddCertificatesModal(props: AddCertificatesModalProps) {
-  const { notification, message } = App.useApp();
+  const { t } = useTranslation();
+  const { showNotification } = useShowNotification();
   const [docList, setDocList] = useState<(File | null)[]>([null]);
   const [nameList, setNameList] = useState<string[]>([""]);
   const uid = useSelector((state: MainState) => state.mainUser.uid);
   const name = useSelector((state: MainState) => state.mainUser.name);
   const doc = useSelector((state: MainState) => state.mainUser.document);
   const fileInputRefs = useRef<(InputRef | null)[]>([]);
+  const { loading: loadingUpload } = props.useApiHook;
 
   useEffect(() => {
     fileInputRefs.current = fileInputRefs.current.slice(0, docList.length);
@@ -35,59 +39,28 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
 
   /** Subir archivos */
 
-  const [apiParamsUpload, setApiParamsUpload] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingUpload,
-    responseData: responseDataUpload,
-    error: errorUpload,
-    errorMsg: errorMsgUpload,
-    fetchData: fetchDataUpload,
-  } = useApi({
-    service: apiParamsUpload.service,
-    method: apiParamsUpload.method,
-    dataToSend: apiParamsUpload.dataToSend,
-  });
-
   useEffect(() => {
-    return () => {
-      showLoadingMessage(message, false);
-      console.log("closing");
-    };
+    props.setAdditionalApiParams({
+      functionToExecute: processRequestResult,
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    showLoadingMessage(message, loadingUpload);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingUpload]);
+  /** Funciones */
 
-  useEffect(() => {
-    if (apiParamsUpload.service) fetchDataUpload(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsUpload]);
-
-  useEffect(() => {
+  function processRequestResult(
+    responseDataUpload: ResponseRequestType,
+    errorUpload: ErrorRequestType,
+    errorMsgUpload: ErrorMsgRequestType
+  ) {
     if (responseDataUpload) {
-      showNotification(
-        notification,
-        "success",
-        t("documentsUploadedSuccessfully")
-      );
+      showNotification("success", t("documentsUploadedSuccessfully"));
       if (props.onDocumentAdded) props.onDocumentAdded();
-      console.log("already closed");
       props.onClose();
     } else if (errorUpload) {
-      console.log(errorMsgUpload);
-      showNotification(notification, "error", errorMsgUpload);
+      showNotification("error", errorMsgUpload);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataUpload, errorUpload]);
-
-  /** Funciones */
+  }
 
   function deleteBlock(index: number) {
     setDocList((array) => {
@@ -133,11 +106,10 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
       //   }
       // } else
       if (!validFile) {
-        showNotification(notification, "error", `${t("onlyPdfs")}`);
+        showNotification("error", `${t("onlyPdfs")}`);
         return;
       } else if (!validSizeDoc) {
         showNotification(
-          notification,
           "error",
           file.name + t("nameInvalidImageSize") + maxDocSizeMb + " mb"
         );
@@ -161,7 +133,6 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
     for (let i = 0; i < docList.length; i++) {
       if (!docList[i] || !nameList[i].trim()) {
         showNotification(
-          notification,
           "error",
           t("mustUploadAFileAndProvideNameForEachItem")
         );
@@ -176,10 +147,11 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
         formData.append(UploadCertificateLabels.name, nameList[i].trim());
       }
     });
-    setApiParamsUpload({
+    props.setApiParams({
       service: uploadCertificateService(),
       method: "post",
       dataToSend: formData,
+      includeHeader: false,
     });
   }
 

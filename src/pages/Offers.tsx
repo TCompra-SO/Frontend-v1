@@ -1,6 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { Offer } from "../models/MainInterfaces";
-import { Action, ModalTypes, TableTypes } from "../utilities/types";
+import {
+  Action,
+  ModalTypes,
+  OnChangePageAndPageSizeTypeParams,
+  TableTypes,
+} from "../utilities/types";
 import ModalContainer from "../components/containers/ModalContainer";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import {
@@ -23,17 +28,15 @@ import useApi from "../hooks/useApi";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { transformToOfferFromGetOffersByEntityOrSubUser } from "../utilities/transform";
-import showNotification, {
-  showLoadingMessage,
-} from "../utilities/notification/showNotification";
-import { App } from "antd";
 import { ModalsContext } from "../contexts/ModalsContext";
 import { useCulminate, useShowDetailOffer } from "../hooks/requirementHook";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
 
 export default function Offers() {
   const { t } = useTranslation();
   const location = useLocation();
-  const { notification, message } = App.useApp();
+  const { showNotification } = useShowNotification();
+  const { showLoadingMessage } = useShowLoadingMessage();
   const { detailedOfferModalData } = useContext(ModalsContext);
   const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
   const dataUser = useSelector((state: MainState) => state.user);
@@ -116,7 +119,7 @@ export default function Offers() {
         onButtonClick: handleOnButtonClick,
         total: 0,
       });
-      showNotification(notification, "error", errorMsg);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -141,7 +144,7 @@ export default function Offers() {
   });
 
   useEffect(() => {
-    showLoadingMessage(message, loadingDelete);
+    showLoadingMessage(loadingDelete);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingDelete]);
 
@@ -152,10 +155,10 @@ export default function Offers() {
 
   useEffect(() => {
     if (responseDataDelete) {
-      showNotification(notification, "success", t("offerDeletedSuccessfully"));
+      showNotification("success", t("offerDeletedSuccessfully"));
       handleCloseModal();
     } else if (errorDelete) {
-      showNotification(notification, "error", errorMsgDelete);
+      showNotification("error", errorMsgDelete);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataDelete, errorDelete]);
@@ -200,7 +203,7 @@ export default function Offers() {
       });
     } catch (error) {
       console.log(error);
-      showNotification(notification, "error", t("errorOccurred"));
+      showNotification("error", t("errorOccurred"));
     }
   }
 
@@ -291,7 +294,10 @@ export default function Offers() {
     console.log(e.target.value);
   }
 
-  function handleChangePageAndPageSize(page: number, pageSize: number) {
+  function handleChangePageAndPageSize({
+    page,
+    pageSize,
+  }: OnChangePageAndPageSizeTypeParams) {
     // setLoadingTable(true);
     setApiParams({
       service: getOffersBySubUserService(dataUser.uid, page, pageSize),
