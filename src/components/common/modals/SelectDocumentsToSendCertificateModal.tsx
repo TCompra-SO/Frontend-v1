@@ -52,6 +52,7 @@ export default function SelectDocumentsToSendCertificateModal(
   const { getRequiredDocsCert, requiredDocs, loadingRequiredDocs } =
     useGetRequiredDocsCert();
   const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
+  const [currentPage, setCurrentPage] = useState(1);
   const {
     certificateList,
     getCertificatesList,
@@ -75,7 +76,7 @@ export default function SelectDocumentsToSendCertificateModal(
   /** Obtener lista de documentos */
 
   useEffect(() => {
-    getCertificatesList(1, pageSizeOptionsSt[0]);
+    getCertificatesList(currentPage, pageSizeOptionsSt[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -130,10 +131,12 @@ export default function SelectDocumentsToSendCertificateModal(
   }
 
   function handleOnDocumentAdded() {
+    setCurrentPage(1);
     getCertificatesList(1, pageSizeOptionsSt[0]);
   }
 
   function onChangePageAndPageSize(page: number, pageSize: number) {
+    setCurrentPage(page);
     getCertificatesList(page, pageSize);
   }
 
@@ -261,6 +264,7 @@ export default function SelectDocumentsToSendCertificateModal(
               total={totalCertList}
               onChange={onChangePageAndPageSize}
               // showTotal={(total) => `${total}`}
+              current={currentPage}
             />
           </Flex>
           <div className="t-flex gap-15 wd-100 alert-btn">
