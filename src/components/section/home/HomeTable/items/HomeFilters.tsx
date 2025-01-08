@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import ButtonContainer from "../../../../containers/ButtonContainer";
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { RequirementType } from "../../../../../utilities/types";
 import { getLabelFromRequirementType } from "../../../../../utilities/globalFunctions";
 import LocationField from "../../../../common/formFields/LocationField";
@@ -11,50 +11,21 @@ import { MainState } from "../../../../../models/Redux";
 import { useSelector } from "react-redux";
 import SelectCompanyField from "../../CompanyFilter/SelectCompanyField";
 import RangeDateField from "../../../../common/formFields/RangeDateField";
-import { useApiParams } from "../../../../../models/Interfaces";
-import { HomeFilterRequest } from "../../../../../models/Requests";
-import useApi from "../../../../../hooks/useApi";
-import useShowNotification from "../../../../../hooks/utilHook";
-import { homeFilterService } from "../../../../../services/requests/requirementService";
 import {
   dateFormatHomeSearch,
   pageSizeOptionsSt,
 } from "../../../../../utilities/globals";
 import dayjs from "dayjs";
+import { HomeContext } from "../../../../../contexts/Homecontext";
 
 export default function HomeFilters() {
   const { t } = useTranslation();
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
-  const { showNotification } = useShowNotification();
   const [form] = Form.useForm();
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [hideFilters, setHideFilters] = useState(true);
-
-  /** Obtener datos de tabla */
-
-  const [apiParams, setApiParams] = useState<useApiParams<HomeFilterRequest>>({
-    service: null,
-    method: "get",
-  });
-
-  const { responseData, error, errorMsg, fetchData, loading } =
-    useApi<HomeFilterRequest>(apiParams);
-
-  useEffect(() => {
-    if (apiParams.service) {
-      fetchData();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParams]);
-
-  useEffect(() => {
-    if (responseData) {
-      console.log(responseData);
-    } else if (error) {
-      showNotification("error", errorMsg);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseData, error]);
+  const { updateUseFilter, retrieveRequirements, loadingRequirementList } =
+    useContext(HomeContext);
 
   /**
    * Funciones
@@ -66,25 +37,21 @@ export default function HomeFilters() {
       else return val;
     });
     if (list.some((value) => value !== undefined)) {
-      setApiParams({
-        service: homeFilterService(),
-        method: "post",
-        dataToSend: {
-          keyWords: values.keywords?.trim(),
-          location: values.location,
-          category: values.category,
-          startDate:
-            values.rangeDate && values.rangeDate[0]
-              ? dayjs(values.rangeDate[0]).format(dateFormatHomeSearch)
-              : undefined,
-          endDate:
-            values.rangeDate && values.rangeDate[1]
-              ? dayjs(values.rangeDate[1]).format(dateFormatHomeSearch)
-              : undefined,
-          companyId: values.companyId,
-          page: 1,
-          pageSize: pageSizeOptionsSt[0],
-        },
+      retrieveRequirements(1, pageSizeOptionsSt[0], {
+        keyWords: values.keywords?.trim(),
+        location: values.location,
+        category: values.category,
+        startDate:
+          values.rangeDate && values.rangeDate[0]
+            ? dayjs(values.rangeDate[0]).format(dateFormatHomeSearch)
+            : undefined,
+        endDate:
+          values.rangeDate && values.rangeDate[1]
+            ? dayjs(values.rangeDate[1]).format(dateFormatHomeSearch)
+            : undefined,
+        companyId: values.companyId,
+        page: 1,
+        pageSize: pageSizeOptionsSt[0],
       });
     }
   }
@@ -168,7 +135,7 @@ export default function HomeFilters() {
                 className="btn btn-green-o alert-boton"
                 icon={<i className="fa-solid fa-search"></i>}
                 htmlType="submit"
-                loading={loading}
+                loading={loadingRequirementList}
               >
                 {t("search")}
               </ButtonContainer>

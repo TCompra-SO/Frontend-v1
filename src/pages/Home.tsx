@@ -15,7 +15,7 @@ import Footer from "../components/section/footer/Footer.tsx";
 import Ads from "../components/section/home/Ads.tsx";
 import CompanyFilter from "../components/section/home/CompanyFilter/CompanyFilter.tsx";
 import CompanyData from "../components/section/home/CompanyData/CompanyData.tsx";
-import { HomeContext, HomeProvider } from "../contexts/Homecontext.tsx";
+import { HomeContext } from "../contexts/Homecontext.tsx";
 import HomeTable from "../components/section/home/HomeTable/HomeTable.tsx";
 import { Requirement } from "../models/MainInterfaces.ts";
 import { useNavigate } from "react-router-dom";
@@ -27,17 +27,18 @@ export default function Home() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
-  const { useFilter } = useContext(HomeContext);
-  const [currentPage, setCurrentPage] = useState(1);
   const {
-    requirements: tableData,
-    loading: loadingTable,
-    totalRequirements,
-  } = useSocket(currentPage);
+    useFilter,
+    requirementList,
+    loadingRequirementList,
+    totalRequirementList,
+  } = useContext(HomeContext);
+  const [currentPage, setCurrentPage] = useState(1);
+  const {} = useSocket(currentPage);
   const [tableContent, setTableContent] = useState<TableTypeHome>({
     type: TableTypes.HOME,
-    data: tableData,
-    total: totalRequirements,
+    data: requirementList,
+    total: totalRequirementList,
     subType: RequirementType.GOOD,
     hiddenColumns: [TableColumns.CATEGORY],
     nameColumnHeader: t("goods"),
@@ -52,11 +53,11 @@ export default function Home() {
   useEffect(() => {
     setTableContent((prevContent) => ({
       ...prevContent,
-      data: tableData,
-      total: totalRequirements,
+      data: requirementList,
+      total: totalRequirementList,
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tableData]);
+  }, [requirementList]);
 
   /** Funciones */
 
@@ -67,7 +68,7 @@ export default function Home() {
   }
 
   return (
-    <HomeProvider>
+    <>
       <Search />
       <div className="t-flex f-column gap-20 section-detalles home-det">
         <div className="t-flex f-column gap-20 home-1">
@@ -83,13 +84,13 @@ export default function Home() {
           )}
           <HomeTable
             content={tableContent}
-            loadingTable={loadingTable}
+            loadingTable={loadingRequirementList}
             onChangePageAndPageSize={handleChangePageAndPageSize}
           />
         </div>
         <Ads />
       </div>
       <Footer />
-    </HomeProvider>
+    </>
   );
 }

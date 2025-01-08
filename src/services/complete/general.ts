@@ -185,6 +185,7 @@ export async function getRequirementFromData(
   user?: BaseUser,
   subUser?: BaseUser
 ) {
+  console.log(data);
   if (user && subUser)
     return transformDataToRequirement(
       data,
@@ -192,11 +193,12 @@ export async function getRequirementFromData(
       data.user == data.subUser ? user : subUser,
       user
     );
-
+  console.log(data.subUser);
   const { responseData: respData }: any = await makeRequest({
     service: getBaseDataUserService(data.subUser),
     method: "get",
   });
+
   if (respData) {
     const { user: newUser, subUser: newSubUser } = transformToBaseUser(
       respData.data[0]
