@@ -75,9 +75,16 @@ export const Lengths = {
     min: 0,
     max: 255,
   },
-
   tenure: {
     min: 1,
     max: 3,
+  },
+  keywords: {
+    min: 3,
+    max: 50,
+  },
+  companyNameSearch: {
+    min: 0,
+    max: 25,
   },
 };

@@ -191,3 +191,14 @@ export interface UpdateRequiredDocsRequest {
   companyID: string;
   requiredDocuments: string;
 }
+
+export interface HomeFilterRequest {
+  keyWords?: string;
+  location?: number;
+  category?: number;
+  startDate?: string;
+  endDate?: string;
+  companyId?: number;
+  page: number;
+  pageSize: number;
+}

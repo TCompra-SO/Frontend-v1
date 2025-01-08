@@ -4,10 +4,13 @@ import useApi from "./useApi";
 import {
   CancelOfferRequest,
   CancelRequirementRequest,
+  HomeFilterRequest,
 } from "../models/Requests";
 import {
   cancelRequirementService,
   getBasicRateDataReqService,
+  getRequirementsService,
+  homeFilterService,
 } from "../services/requests/requirementService";
 import { useTranslation } from "react-i18next";
 import {
@@ -28,6 +31,7 @@ import {
   getOfferById,
   getPurchaseOrderById,
   getRequirementById,
+  getRequirementFromData,
 } from "../services/complete/general";
 import makeRequest from "../utilities/globalFunctions";
 import {
@@ -40,6 +44,7 @@ import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import useShowNotification, { useShowLoadingMessage } from "./utilHook";
+import { pageSizeOptionsSt } from "../utilities/globals";
 
 /** useCancelRequirement */
 
@@ -580,5 +585,47 @@ export function useCulminate() {
   return {
     getBasicRateData,
     modalDataRate: dataModal,
+  };
+}
+
+export function useGetRequirementList() {
+  const [requirements, setRequirements] = useState<Requirement[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  async function getRequirementList(
+    page: number,
+    pageSize?: number,
+    params?: HomeFilterRequest
+  ) {
+    try {
+      setLoading(true);
+      const { responseData }: any = await makeRequest({
+        service: params
+          ? homeFilterService()
+          : getRequirementsService(page, pageSize ?? pageSizeOptionsSt[0]),
+        method: params ? "post" : "get",
+        dataToSend: params ?? undefined,
+      });
+      if (responseData) {
+        const data: (Requirement | null)[] = await Promise.all(
+          responseData.data.map(async (e: any) => getRequirementFromData(e))
+        );
+        setRequirements(data.filter((req) => req !== null));
+        setTotal(responseData.res?.totalDocuments);
+      }
+    } catch (error) {
+      console.log(error);
+      setRequirements([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return {
+    getRequirementList,
+    requirements,
+    total,
+    loading,
   };
 }

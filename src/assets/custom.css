@@ -170,6 +170,10 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
   height: 40.33px !important;
 }
 
+.ant-select-single {
+  height: 40.33px !important;
+}
+
 .form-control > .ant-select-selector {
   text-align: left;
 }

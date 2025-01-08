@@ -72,6 +72,7 @@ export const ApiRoutes = {
     getRequirementsByEntity: "getRequerimentsByEntity/",
     culminate: "culminate/",
     cancel: "canceled/",
+    searchMainFilters: "searchMainFilters",
   },
   requirement: {
     create: "create/",

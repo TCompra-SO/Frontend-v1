@@ -10,6 +10,7 @@ interface LocationFieldProps {
   edit?: boolean;
   fromMyPerfil?: boolean;
   onlyItem?: boolean;
+  required?: boolean;
 }
 
 export default function LocationField(props: LocationFieldProps) {
@@ -21,11 +22,12 @@ export default function LocationField(props: LocationFieldProps) {
       label={t("location")}
       name="location"
       labelCol={{ span: 0 }}
-      rules={[{ required: true }]}
+      rules={[{ required: props.required ?? true }]}
       initialValue={props.value}
     >
       <SelectContainer
         showSearch
+        allowClear
         optionFilterProp="label"
         placeholder={t(props.onlyItem ? "city" : "select")}
         options={getCityListForSelect(countryData)}

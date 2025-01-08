@@ -8,6 +8,7 @@ import { getListForSelectIdValueMap } from "../../../utilities/globalFunctions";
 
 interface CategoryFieldProps {
   showLabelPlaceholder?: boolean;
+  required?: boolean;
 }
 
 export default function CategoryField(props: CategoryFieldProps) {
@@ -20,10 +21,11 @@ export default function CategoryField(props: CategoryFieldProps) {
       label={t("category")}
       name="category"
       labelCol={{ span: 0 }}
-      rules={[{ required: true }]}
+      rules={[{ required: props.required ?? true }]}
     >
       <SelectContainer
         showSearch
+        allowClear
         optionFilterProp="label"
         placeholder={t(props.showLabelPlaceholder ? "category" : "select")}
         className="form-control"

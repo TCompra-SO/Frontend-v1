@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { Requirement } from "../models/MainInterfaces";
 import makeRequest from "../utilities/globalFunctions";
 import { getRequirementsService } from "../services/requests/requirementService";
 import { getRequirementFromData } from "../services/complete/general";
 import { pageSizeOptionsSt } from "../utilities/globals";
+import { HomeContext } from "../contexts/Homecontext";
 
 export default function useSocket(page: number) {
   const [requirements, setRequirements] = useState<Requirement[]>([]);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
+  const { useFilter } = useContext(HomeContext);
   const socketAPI = io(import.meta.env.VITE_SOCKET_URL);
 
   useEffect(() => {
@@ -41,9 +43,10 @@ export default function useSocket(page: number) {
   useEffect(() => {
     async function fetchData() {
       socketAPI.on("getRequeriments", async () => {
-        if (page == 1) {
-          getData();
-        }
+        if (!useFilter)
+          if (page == 1) {
+            getData();
+          }
       });
     }
 

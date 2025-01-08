@@ -2,6 +2,7 @@ import React from "react";
 import { pageRoutes } from "./routes";
 
 export const dateFormat: string = "DD-MM-YYYY";
+export const dateFormatHomeSearch: string = "YYYY-MM-DD";
 export const dateFormatChatList: string = "DD/MM/YY";
 export const dateFormatChatBody: string = "DD/MM/YYYY";
 export const hourFormatChatBody: string = "h:mm a";
@@ -22,6 +23,8 @@ export const mediumModalWidth: number = 450;
 export const smallModalWidth: number = 350;
 export const columnWidth: number = 100;
 
+export const searchSinceLength: number = 3;
+
 export const certifiedCompaniesOpt: number = 3;
 export const phoneCode: string = "+51";
 
@@ -32,6 +35,8 @@ export const navigateToAfterLoggingOut = pageRoutes.home;
 export const defaultUserImage: string = "/src/assets/images/user-default.svg";
 export const defaultRequirementImage: string =
   "/src/assets/images/img-prod.svg";
+
+export const onlyLettersAndNumbers: RegExp = /[^a-zA-Z0-9áéíóúÁÉÍÓÚ]/g;
 
 // local storage keys
 export const userDataKey: string = "udata";

@@ -38,6 +38,7 @@ export default function CompanyData() {
         verifyCertificationState(userId);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   /** Funciones */

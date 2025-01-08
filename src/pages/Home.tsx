@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { TableTypeHome } from "../models/Interfaces.ts";
 import {
@@ -15,15 +15,19 @@ import Footer from "../components/section/footer/Footer.tsx";
 import Ads from "../components/section/home/Ads.tsx";
 import CompanyFilter from "../components/section/home/CompanyFilter/CompanyFilter.tsx";
 import CompanyData from "../components/section/home/CompanyData/CompanyData.tsx";
-import { HomeProvider } from "../contexts/Homecontext.tsx";
+import { HomeContext, HomeProvider } from "../contexts/Homecontext.tsx";
 import HomeTable from "../components/section/home/HomeTable/HomeTable.tsx";
 import { Requirement } from "../models/MainInterfaces.ts";
 import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../utilities/routes.ts";
+import { MainState } from "../models/Redux.ts";
+import { useSelector } from "react-redux";
 
 export default function Home() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
+  const { useFilter } = useContext(HomeContext);
   const [currentPage, setCurrentPage] = useState(1);
   const {
     requirements: tableData,
@@ -67,11 +71,16 @@ export default function Home() {
       <Search />
       <div className="t-flex f-column gap-20 section-detalles home-det">
         <div className="t-flex f-column gap-20 home-1">
-          <CompanyFilter />
-          <CompanyData />
-          <div className="titulo req-t">
-            {t("homeTableFirstHalf")} <span>{t("homeTableSecondHalf")}</span>
-          </div>
+          {isPremium && (
+            <>
+              <CompanyFilter />
+              <CompanyData />
+              <div className="titulo req-t">
+                {t("homeTableFirstHalf")}{" "}
+                <span>{t("homeTableSecondHalf")}</span>
+              </div>
+            </>
+          )}
           <HomeTable
             content={tableContent}
             loadingTable={loadingTable}

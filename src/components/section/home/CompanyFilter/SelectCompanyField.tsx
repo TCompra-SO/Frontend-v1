@@ -3,11 +3,17 @@ import { useState } from "react";
 import SelectContainer from "../../../containers/SelectContainer";
 import { DocType } from "../../../../utilities/types";
 import { Avatar, Spin } from "antd";
-import { defaultUserImage } from "../../../../utilities/globals";
+import {
+  defaultUserImage,
+  onlyLettersAndNumbers,
+  searchSinceLength,
+} from "../../../../utilities/globals";
 import { debounce } from "lodash";
 import { useSearchCompanyByName } from "../../../../hooks/authHook";
+import { Lengths } from "../../../../utilities/lengths";
 
 interface SelectCompanyFieldProps {
+  forHomeFilter?: boolean;
   onCompanySelected: (companyId: string) => void;
 }
 
@@ -17,13 +23,17 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
     useSearchCompanyByName();
   const [value, setValue] = useState<string>();
 
-  const handleSearch = debounce((newValue: string) => {
-    if (newValue.trim().length >= 3) {
-      searchCompanyByName(newValue);
+  const searchCompany = debounce((newValue: string) => {
+    const temp = newValue.trim().replace(onlyLettersAndNumbers, "");
+    if (
+      temp.length >= searchSinceLength &&
+      temp.length <= Lengths.companyNameSearch.max
+    ) {
+      searchCompanyByName(temp);
     } else {
       clearList();
     }
-  }, 400);
+  }, 500);
 
   function onCompanySelected(companyId: string) {
     props.onCompanySelected(companyId);
@@ -41,10 +51,12 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
       value={value}
       style={{ width: "100%" }}
       placeholder={t("companyName")}
-      className="form-control form-filter"
+      className={`form-control ${
+        props.forHomeFilter ? "f-empresa" : "form-filter"
+      }`}
       notFoundContent={loadingCompanyList ? <Spin size="small" /> : null}
       onChange={handleChange}
-      onSearch={handleSearch}
+      onSearch={searchCompany}
       onClear={() => clearList()}
       filterOption={false}
       options={companyList.map((comp) => ({
@@ -56,6 +68,8 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
           </>
         ),
       }))}
+      // searchValue={selectValue}
+      // onInputKeyDown={onInputKeyDown}
     />
   );
 }
