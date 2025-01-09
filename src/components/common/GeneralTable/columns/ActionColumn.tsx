@@ -27,7 +27,8 @@ export default function ActionColumn(
   extraParam?: any
 ) {
   const { t } = useTranslation();
-  const { myPurchaseOrdersLoadingPdf } = useContext(LoadingDataContext);
+  const { myPurchaseOrdersLoadingPdf, idAndActionQueue } =
+    useContext(LoadingDataContext);
 
   const col: ColumnType<any> = {
     title: t("actionsColumn"),
@@ -91,10 +92,12 @@ export default function ActionColumn(
                       []
                     )
                   : ActionByState[key].map((action: Action) => {
+                      // default
                       return {
                         key: action,
                         label: t(ActionLabel[action]),
                         onClick: () => onButtonClick(action, record),
+                        disabled: idAndActionQueue[record?.key] ? true : false,
                       };
                     })
                 : type == TableTypes.PURCHASE_ORDER

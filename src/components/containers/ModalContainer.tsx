@@ -1,4 +1,4 @@
-import { ModalTypes, ModalWidth } from "../../utilities/types";
+import { Action, ModalTypes, ModalWidth } from "../../utilities/types";
 import RequirementDetail from "../section/requirements/requirementDetail/RequirementDetail";
 import RequirementModalOfferSelected from "../section/requirements/RequirementModalOfferSelected";
 import { ModalProps } from "antd/lib";
@@ -22,13 +22,14 @@ import EditDocumentListToRequestModal from "../common/modals/EditDocumentListToR
 import ViewDocsReceivedCertificate from "../common/modals/ViewDocsReceivedCertificate";
 import SelectDocumentsToSendCertificateModal from "../common/modals/SelectDocumentsToSendCertificateModal";
 import SendMessageModal from "../common/modals/SendMessageModal";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import useApi, { UseApiType } from "../../hooks/useApi";
 import {
   useCancelOffer,
   useCancelRequirement,
 } from "../../hooks/requirementHook";
 import { useShowLoadingMessage } from "../../hooks/utilHook";
+import { LoadingDataContext } from "../../contexts/LoadingDataContext";
 
 interface ModalContainerProps extends ModalProps {
   content: ModalContent;
@@ -41,6 +42,8 @@ interface ModalContainerProps extends ModalProps {
 
 export default function ModalContainer(props: ModalContainerProps) {
   const { showLoadingMessage } = useShowLoadingMessage();
+  const { updateIdAndActionQueue, deleteFromIdAndActionQueue } =
+    useContext(LoadingDataContext);
 
   /** Variables para solicitud */
 
@@ -71,6 +74,21 @@ export default function ModalContainer(props: ModalContainerProps) {
 
   useEffect(() => {
     showLoadingMessage(useApiHook.loading);
+    if (useApiHook.loading) {
+      switch (props.content.type) {
+        case ModalTypes.REPUBLISH_REQUIREMENT:
+          updateIdAndActionQueue(
+            props.content.data.requirementId,
+            Action.REPUBLISH
+          );
+          break;
+      }
+    } else
+      switch (props.content.type) {
+        case ModalTypes.REPUBLISH_REQUIREMENT:
+          deleteFromIdAndActionQueue(props.content.data.requirementId);
+          break;
+      }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [useApiHook.loading]);
 
