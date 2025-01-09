@@ -31,6 +31,7 @@ export default function HomeFilters() {
     loadingRequirementList,
     useFilter,
     updatePage,
+    page,
   } = useContext(HomeContext);
   const [homeFilter, setHomeFilter] = useState<HomeFilterRequest>({
     page: 1,
@@ -43,9 +44,9 @@ export default function HomeFilters() {
 
   useEffect(() => {
     if (useFilter) {
-      retrieveRequirements(currentPage, pageSizeOptionsSt[0], homeFilter);
+      retrieveRequirements(page, pageSizeOptionsSt[0], homeFilter);
     }
-  }, [currentPage]);
+  }, [homeFilter, page]);
 
   /**
    * Funciones
@@ -58,6 +59,7 @@ export default function HomeFilters() {
       else return val;
     });
     const temp = list.some((value) => value !== undefined);
+
     if (temp) {
       setValidSearch(temp);
       const filter: HomeFilterRequest = {
@@ -76,9 +78,9 @@ export default function HomeFilters() {
         page: 1,
         pageSize: pageSizeOptionsSt[0],
       };
-      setHomeFilter(filter);
       setCurrentPage(1);
       updatePage(1);
+      setHomeFilter(filter);
     }
   }
 

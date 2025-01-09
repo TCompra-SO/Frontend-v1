@@ -617,8 +617,11 @@ export function useGetRequirementList() {
         dataToSend: params ?? undefined,
       });
       if (responseData) {
+        const cache = new Map<string, any>(); // Scoped cache for this batch
         const data: (Requirement | null)[] = await Promise.all(
-          responseData.data.map(async (e: any) => getRequirementFromData(e))
+          responseData.data.map(async (e: any) =>
+            getRequirementFromData(e, undefined, undefined, cache)
+          )
         );
         setRequirements(data.filter((req) => req !== null));
         setTotal(responseData.res?.totalDocuments);

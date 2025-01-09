@@ -44,6 +44,10 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
+    console.log(page);
+  }, [page]);
+
+  useEffect(() => {
     if (useFilter === false) setPage(1);
   }, [useFilter]);
 

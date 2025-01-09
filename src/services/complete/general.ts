@@ -183,21 +183,52 @@ export async function deleteCertificateById(id: string) {
 export async function getRequirementFromData(
   data: any,
   user?: BaseUser,
-  subUser?: BaseUser
+  subUser?: BaseUser,
+  cache?: Map<string, Promise<any>> // Cache now stores Promises
 ) {
-  if (user && subUser)
+  if (user && subUser) {
     return transformDataToRequirement(
       data,
       RequirementType.GOOD,
       data.user == data.subUser ? user : subUser,
       user
     );
-  const { responseData: respData }: any = await makeRequest({
-    service: getBaseDataUserService(data.subUser),
-    method: "get",
-  });
+  }
 
-  if (respData) {
+  // Generate a consistent cache key
+  const cacheKey = data.subUser;
+  console.log(cacheKey);
+
+  if (cache && cache.has(cacheKey)) {
+    console.log("Cache hit for key:", cacheKey); // Debugging
+    // await cache.get(cacheKey); // Return the cached Promise
+  }
+
+  console.log("Cache miss for key:", cacheKey); // Debugging
+
+  // Create a new Promise for the cache to lock other requests
+  const requestPromise =
+    cache && cache.has(cacheKey)
+      ? cache.get(cacheKey)
+      : (async () => {
+          const { responseData: respData }: any = await makeRequest({
+            service: getBaseDataUserService(data.subUser),
+            method: "get",
+          });
+
+          if (respData) {
+            console.log("Storing result in cache:", cacheKey, respData); // Debugging
+            return respData;
+          }
+          throw new Error("Failed to fetch data");
+        })();
+
+  // Store the Promise in the cache
+  if (cache && !cache.has(cacheKey) && requestPromise)
+    cache.set(cacheKey, requestPromise);
+
+  try {
+    const respData = await requestPromise;
     const { user: newUser, subUser: newSubUser } = transformToBaseUser(
       respData.data[0]
     );
@@ -207,8 +238,11 @@ export async function getRequirementFromData(
       data.user == data.subUser ? newUser : newSubUser,
       newUser
     );
+  } catch (err) {
+    // Remove failed request from the cache to allow retrying
+    cache?.delete(cacheKey);
+    throw err;
   }
-  return null;
 }
 
 export async function verifyCertificationByUserIdAndCompanyId(
