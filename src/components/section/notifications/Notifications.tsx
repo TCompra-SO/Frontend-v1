@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Popover, List, Avatar, Typography } from "antd";
+import { Popover, List, Avatar, Typography, Space } from "antd";
 import { useTranslation } from "react-i18next";
 import ParagraphContainer from "../../containers/ParagraphContainer";
 
@@ -59,6 +59,7 @@ const notifications = [
 
 interface NotificationsProps {
   forDropdown?: boolean;
+  includeText?: boolean;
 }
 
 export default function Notifications(props: NotificationsProps) {
@@ -115,16 +116,30 @@ export default function Notifications(props: NotificationsProps) {
       trigger="click"
       open={visible}
       onOpenChange={setVisible}
-      className="notif-popover"
+      arrow={false}
     >
-      <div>
-        <i
-          className={`fa-regular fa-bell  ${
-            props.forDropdown ? "i-main " : "i-opt"
-          }`}
-        ></i>
-        {!props.forDropdown && <b className="i-notf"></b>}
-      </div>
+      {props.includeText ? (
+        <Space style={{ margin: "-10px 0" }}>
+          <div>
+            <i
+              className={`fa-regular fa-bell  ${
+                props.forDropdown ? "i-main " : "i-opt"
+              }`}
+            ></i>
+            {!props.forDropdown && <b className="i-notf"></b>}
+          </div>
+          {t("notifications")}
+        </Space>
+      ) : (
+        <div>
+          <i
+            className={`fa-regular fa-bell  ${
+              props.forDropdown ? "i-main " : "i-opt"
+            }`}
+          ></i>
+          {!props.forDropdown && <b className="i-notf"></b>}
+        </div>
+      )}
       {/* <Badge count={notifications.length} offset={[-5, 5]}> */}
       {/* <Avatar shape="circle" icon="bell" style={{ cursor: "pointer" }} /> */}
       {/* </Badge> */}

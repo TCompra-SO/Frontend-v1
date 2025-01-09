@@ -56,10 +56,11 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
     </Space>
   );
   const notifItem: ReactNode = (
-    <Space style={{ margin: "-10px 0" }}>
-      <Notifications forDropdown />
-      {t("notifications")}
-    </Space>
+    // <Space style={{ margin: "-10px 0" }}>
+    //   <Notifications forDropdown />
+    //   {t("notifications")}
+    // </Space>
+    <Notifications forDropdown includeText />
   );
   const chatItem: ReactNode = (
     <Space style={{ margin: "-10px 0" }}>
@@ -108,10 +109,10 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
     } else {
       setShowMenuButtonStyle({});
       setDropdownItems([
-        // {
-        //   key: "notification",
-        //   label: notifItem,
-        // },
+        {
+          key: "notification",
+          label: notifItem,
+        },
         {
           key: "chat",
           label: chatItem,
@@ -205,10 +206,9 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
             {width > windowSize.md && (
               <>
                 <Chat />
-                {/* <Notifications /> */}
+                <Notifications />
               </>
             )}
-            <Notifications />
             <UserName />
             <Dropdown
               menu={{ items: dropdownItems, onClick: onClick }}
