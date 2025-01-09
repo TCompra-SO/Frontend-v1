@@ -3,12 +3,12 @@ import { io } from "socket.io-client";
 import { pageSizeOptionsSt } from "../utilities/globals";
 import { HomeContext } from "../contexts/Homecontext";
 
-export default function useSocket(page: number) {
-  const { useFilter, retrieveRequirements } = useContext(HomeContext);
+export default function useSocket() {
+  const { useFilter, retrieveRequirements, page } = useContext(HomeContext);
   const socketAPI = io(import.meta.env.VITE_SOCKET_URL);
 
   useEffect(() => {
-    getData();
+    if (!useFilter) getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 

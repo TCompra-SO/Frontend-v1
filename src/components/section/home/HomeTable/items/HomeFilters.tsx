@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import ButtonContainer from "../../../../containers/ButtonContainer";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { RequirementType } from "../../../../../utilities/types";
 import { getLabelFromRequirementType } from "../../../../../utilities/globalFunctions";
 import LocationField from "../../../../common/formFields/LocationField";
@@ -17,6 +17,7 @@ import {
 } from "../../../../../utilities/globals";
 import dayjs from "dayjs";
 import { HomeContext } from "../../../../../contexts/Homecontext";
+import { HomeFilterRequest } from "../../../../../models/Requests";
 
 export default function HomeFilters() {
   const { t } = useTranslation();
@@ -24,20 +25,42 @@ export default function HomeFilters() {
   const [form] = Form.useForm();
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [hideFilters, setHideFilters] = useState(true);
-  const { updateUseFilter, retrieveRequirements, loadingRequirementList } =
-    useContext(HomeContext);
+  const {
+    updateUseFilter,
+    retrieveRequirements,
+    loadingRequirementList,
+    useFilter,
+    updatePage,
+  } = useContext(HomeContext);
+  const [homeFilter, setHomeFilter] = useState<HomeFilterRequest>({
+    page: 1,
+    pageSize: pageSizeOptionsSt[0],
+  });
+  const [validSearch, setValidSearch] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  /** Paginación */
+
+  useEffect(() => {
+    if (useFilter) {
+      retrieveRequirements(currentPage, pageSizeOptionsSt[0], homeFilter);
+    }
+  }, [currentPage]);
 
   /**
    * Funciones
    */
 
   function search(values: any) {
+    updateUseFilter(true);
     const list = Object.values(values).map((val) => {
       if (typeof val === "string" && val.trim() === "") return undefined;
       else return val;
     });
-    if (list.some((value) => value !== undefined)) {
-      retrieveRequirements(1, pageSizeOptionsSt[0], {
+    const temp = list.some((value) => value !== undefined);
+    if (temp) {
+      setValidSearch(temp);
+      const filter: HomeFilterRequest = {
         keyWords: values.keywords?.trim(),
         location: values.location,
         category: values.category,
@@ -52,12 +75,16 @@ export default function HomeFilters() {
         companyId: values.companyId,
         page: 1,
         pageSize: pageSizeOptionsSt[0],
-      });
+      };
+      setHomeFilter(filter);
+      setCurrentPage(1);
+      updatePage(1);
     }
   }
 
   function resetFilters() {
     form.resetFields();
+    updateUseFilter(false);
   }
 
   return (

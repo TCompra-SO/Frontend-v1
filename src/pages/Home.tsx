@@ -28,13 +28,12 @@ export default function Home() {
   const navigate = useNavigate();
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
   const {
-    useFilter,
+    updatePage,
     requirementList,
     loadingRequirementList,
     totalRequirementList,
   } = useContext(HomeContext);
-  const [currentPage, setCurrentPage] = useState(1);
-  const {} = useSocket(currentPage);
+  const {} = useSocket();
   const [tableContent, setTableContent] = useState<TableTypeHome>({
     type: TableTypes.HOME,
     data: requirementList,
@@ -64,7 +63,7 @@ export default function Home() {
   function handleChangePageAndPageSize({
     page,
   }: OnChangePageAndPageSizeTypeParams) {
-    setCurrentPage(page);
+    updatePage(page);
   }
 
   return (

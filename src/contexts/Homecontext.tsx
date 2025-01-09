@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import { Requirement } from "../models/MainInterfaces";
 import { useGetRequirementList } from "../hooks/requirementHook";
 import { HomeFilterRequest } from "../models/Requests";
@@ -6,7 +6,7 @@ import { HomeFilterRequest } from "../models/Requests";
 interface HomeContextType {
   userId: string;
   updateUserId: (id: string) => void;
-  useFilter: boolean;
+  useFilter: boolean | null;
   updateUseFilter: (val: boolean) => void;
   requirementList: Requirement[];
   totalRequirementList: number;
@@ -23,7 +23,7 @@ interface HomeContextType {
 export const HomeContext = createContext<HomeContextType>({
   userId: "",
   updateUserId: () => {},
-  useFilter: false,
+  useFilter: null,
   updateUseFilter: () => {},
   requirementList: [],
   totalRequirementList: 0,
@@ -34,7 +34,7 @@ export const HomeContext = createContext<HomeContextType>({
 
 export function HomeProvider({ children }: { children: ReactNode }) {
   const [userId, setUserId] = useState("");
-  const [useFilter, setUseFilter] = useState(false);
+  const [useFilter, setUseFilter] = useState<null | boolean>(null);
   const {
     getRequirementList,
     requirements: requirementList,
@@ -42,6 +42,10 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     loading: loadingRequirementList,
   } = useGetRequirementList();
   const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    if (useFilter === false) setPage(1);
+  }, [useFilter]);
 
   function retrieveRequirements(
     page: number,
@@ -64,7 +68,9 @@ export function HomeProvider({ children }: { children: ReactNode }) {
         useFilter,
         updateUseFilter: (val: boolean) => setUseFilter(val),
         page,
-        updatePage: (val: number) => setPage(val),
+        updatePage: (val: number) => {
+          setPage(val);
+        },
         retrieveRequirements,
         requirementList,
         totalRequirementList,
