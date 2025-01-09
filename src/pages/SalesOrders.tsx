@@ -78,6 +78,12 @@ export default function SalesOrders() {
     total: 0,
   });
 
+  useEffect(() => {
+    return () => {
+      updateMyPurchaseOrdersLoadingPdf(false);
+    };
+  }, []);
+
   /** Obtener subsección */
 
   useEffect(() => {

@@ -77,6 +77,12 @@ export default function PurchaseOrders() {
     total: 0,
   });
 
+  useEffect(() => {
+    return () => {
+      updateMyPurchaseOrdersLoadingPdf(false);
+    };
+  }, []);
+
   /** Obtener subsección */
 
   useEffect(() => {

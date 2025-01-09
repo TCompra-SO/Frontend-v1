@@ -79,6 +79,12 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
     data: {},
   });
 
+  useEffect(() => {
+    return () => {
+      updateSubUserPurchaseOrdersLoadingPdf(false);
+    };
+  }, []);
+
   /** Determinar subType */
 
   useEffect(() => {

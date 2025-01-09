@@ -21,6 +21,9 @@ interface LoadingDataContextType {
 
   createRequirementLoading: boolean;
   updateCreateRequirementLoading: (val: boolean | undefined) => void;
+
+  /** Requerimientos */
+  // actionLoading;
 }
 
 export const LoadingDataContext = createContext<LoadingDataContextType>({

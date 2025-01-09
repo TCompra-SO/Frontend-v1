@@ -45,6 +45,12 @@ export default function CreateRequirementFloatButton() {
   const [avoidClosingModal, setAvoidClosingModal] = useState(false);
 
   useEffect(() => {
+    return () => {
+      updateCreateRequirementLoading(false);
+    };
+  }, []);
+
+  useEffect(() => {
     setIsHomePage(isHome(location.pathname));
     setIsChatPage(isChat(location.pathname));
   }, [location]);

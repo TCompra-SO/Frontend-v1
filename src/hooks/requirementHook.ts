@@ -241,6 +241,15 @@ export function useGetOffersByRequirementId() {
   });
 
   useEffect(() => {
+    return () => {
+      updateMyRequirementsLoadingViewOffers(false);
+      updateSubUserRequirementsViewOffers(false);
+      updateAllPurchaseOrdersViewOffers(false);
+      updateAllSalesOrdersViewOffers(false);
+    };
+  }, []);
+
+  useEffect(() => {
     if (apiParams.service) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);

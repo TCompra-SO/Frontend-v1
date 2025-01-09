@@ -65,6 +65,12 @@ export default function AllPurchaseOrders() {
     total: 0,
   });
 
+  useEffect(() => {
+    return () => {
+      updateAllPurchaseOrdersLoadingPdf(false);
+    };
+  }, []);
+
   /** Obtener tipo */
 
   useEffect(() => {
