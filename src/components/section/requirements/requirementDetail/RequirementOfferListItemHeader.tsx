@@ -18,8 +18,8 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { ModalContent } from "../../../../models/Interfaces";
 import ModalContainer from "../../../containers/ModalContainer";
-import FrontImage from "../../../common/FrontImage";
-import RateStarCount from "../../../common/RateStarCount";
+import FrontImage from "../../../common/utils/FrontImage";
+import RateStarCount from "../../../common/utils/RateStarCount";
 
 interface RequirementOfferListItemProps {
   offer: Offer;

@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import DescriptionParagraph from "../../../../common/DescriptionParagraph";
+import DescriptionParagraph from "../../../../common/utils/DescriptionParagraph";
 import React from "react";
 
 interface RequirementDescriptionProps {

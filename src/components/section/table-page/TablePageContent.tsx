@@ -1,5 +1,5 @@
 import { ChangeEvent, ReactNode } from "react";
-import ContentHeader from "../../common/ContentHeader";
+import ContentHeader from "../../common/utils/ContentHeader";
 import { Col, Row } from "antd";
 import InputContainer from "../../containers/InputContainer";
 import { SearchOutlined } from "@ant-design/icons";

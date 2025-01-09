@@ -17,8 +17,8 @@ import {
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import FrontImage from "../FrontImage";
-import SubUserName from "../SubUserName";
+import FrontImage from "../utils/FrontImage";
+import SubUserName from "../utils/SubUserName";
 import { CommonModalProps } from "../../../models/Interfaces";
 import { CulminateRequest } from "../../../models/Requests";
 import { culminateRequirementService } from "../../../services/requests/requirementService";

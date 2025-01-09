@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import ParagraphContainer from "../containers/ParagraphContainer";
+import ParagraphContainer from "../../containers/ParagraphContainer";
 
 interface DescriptionParagraphProps {
   text: string | undefined;

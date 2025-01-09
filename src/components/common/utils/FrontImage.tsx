@@ -2,11 +2,11 @@ import { useRef, useState, useEffect } from "react";
 import {
   defaultRequirementImage,
   defaultUserImage,
-} from "../../utilities/globals";
+} from "../../../utilities/globals";
 import {
   ImagePreviewGroupContainer,
   ImagePreviewGroupContainerRef,
-} from "../containers/ImagePreviewGroupContainer";
+} from "../../containers/ImagePreviewGroupContainer";
 
 interface FrontImageProps {
   image: string | string[] | undefined;

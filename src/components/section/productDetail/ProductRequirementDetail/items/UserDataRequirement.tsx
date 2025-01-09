@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { BaseUser, Requirement } from "../../../../../models/MainInterfaces";
-import RateStarCount from "../../../../common/RateStarCount";
+import RateStarCount from "../../../../common/utils/RateStarCount";
 import { EntityType, RequirementType } from "../../../../../utilities/types";
 import { useContext } from "react";
 import dayjs from "dayjs";

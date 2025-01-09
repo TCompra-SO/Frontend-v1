@@ -1,17 +1,17 @@
-import { BasicRateData, Offer } from "../../../../models/MainInterfaces";
+import { BasicRateData, Offer } from "../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
-import FrontImage from "../../../common/FrontImage";
-import RequirementInfoNoTags from "../../requirements/requirementDetail/RequirementInfoNoTags";
+import FrontImage from "../../common/utils/FrontImage";
+import RequirementInfoNoTags from "../requirements/requirementDetail/RequirementInfoNoTags";
 import { useContext, useEffect, useState } from "react";
-import { IdValueMap, IdValueObj } from "../../../../models/Interfaces";
-import { ListsContext } from "../../../../contexts/ListsContext";
-import { dateFormat, defaultCountry } from "../../../../utilities/globals";
+import { IdValueMap, IdValueObj } from "../../../models/Interfaces";
+import { ListsContext } from "../../../contexts/ListsContext";
+import { dateFormat, defaultCountry } from "../../../utilities/globals";
 import dayjs from "dayjs";
-import PriceInHeader from "../../../common/PriceInHeader";
+import PriceInHeader from "../../common/utils/PriceInHeader";
 import OfferDetailRequirementData from "./OfferDetailRequirementData";
-import ImagesAndDocs from "../../../common/ImagesAndDocs";
-import { CardByStateOffer } from "../../../../utilities/colors";
-import { MainState } from "../../../../models/Redux";
+import ImagesAndDocs from "../../common/utils/ImagesAndDocs";
+import { CardByStateOffer } from "../../../utilities/colors";
+import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
 
 interface OfferDetailModalProps {

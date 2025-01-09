@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import ContentHeader from "../components/common/ContentHeader";
+import ContentHeader from "../components/common/utils/ContentHeader";
 import { StatisticsData } from "../models/MainInterfaces";
 import { useEffect, useState } from "react";
 import { useApiParams } from "../models/Interfaces";

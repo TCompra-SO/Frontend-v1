@@ -15,7 +15,7 @@ import RatingModal from "../common/modals/RatingModal";
 import ConfirmationModal from "../common/modals/ConfirmationModal";
 import InputEmailModal from "../common/modals/InputEmailModal";
 import NoContentModalContainer from "./NoContentModalContainer";
-import OfferDetailModal from "../section/offers/offerDetail/OfferDetailModal";
+import OfferDetailModal from "../section/offers/OfferDetailModal";
 import UserInfoModal from "../common/modals/UserInfoModal";
 import AddCertificatesModal from "../common/modals/AddCertificatesModal";
 import EditDocumentListToRequestModal from "../common/modals/EditDocumentListToRequestModal";

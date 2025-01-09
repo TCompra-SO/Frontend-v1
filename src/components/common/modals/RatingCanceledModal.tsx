@@ -19,8 +19,8 @@ import {
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
-import FrontImage from "../FrontImage";
-import SubUserName from "../SubUserName";
+import FrontImage from "../utils/FrontImage";
+import SubUserName from "../utils/SubUserName";
 import { CommonModalProps } from "../../../models/Interfaces";
 import { RegisterScoreRequest } from "../../../models/Requests";
 import { registerScoreService } from "../../../services/requests/scoreService";

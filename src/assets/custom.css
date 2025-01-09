@@ -195,3 +195,8 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
 .ant-table-wrapper .ant-table-expanded-row-fixed {
   padding: 11px 0px;
 }
+
+/* Ancho de bandeja de notificaciones */
+.notif-popover .ant-popover {
+  width: 300px;
+}

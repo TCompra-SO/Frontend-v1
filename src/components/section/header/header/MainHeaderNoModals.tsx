@@ -1,6 +1,5 @@
 import { Dropdown, MenuProps, Space } from "antd";
 import Premium from "../items/Premium";
-import Notification from "../items/Notification";
 import Chat from "../items/Chat";
 import UserName from "../items/UserName";
 import Logout from "../items/Logout";
@@ -18,6 +17,7 @@ import ButtonContainer from "../../../containers/ButtonContainer";
 import { useNavigate } from "react-router-dom";
 import { UserRoles } from "../../../../utilities/types";
 import ControlPanel from "../items/ControlPanel";
+import Notifications from "../../notifications/Notifications";
 
 interface MainHeaderNoModalsProps {
   onShowMenu?: (show: boolean) => void;
@@ -57,7 +57,7 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
   );
   const notifItem: ReactNode = (
     <Space style={{ margin: "-10px 0" }}>
-      <Notification forDropdown />
+      <Notifications forDropdown />
       {t("notifications")}
     </Space>
   );
@@ -108,10 +108,10 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
     } else {
       setShowMenuButtonStyle({});
       setDropdownItems([
-        {
-          key: "notification",
-          label: notifItem,
-        },
+        // {
+        //   key: "notification",
+        //   label: notifItem,
+        // },
         {
           key: "chat",
           label: chatItem,
@@ -205,9 +205,10 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
             {width > windowSize.md && (
               <>
                 <Chat />
-                <Notification />
+                {/* <Notifications /> */}
               </>
             )}
+            <Notifications />
             <UserName />
             <Dropdown
               menu={{ items: dropdownItems, onClick: onClick }}
