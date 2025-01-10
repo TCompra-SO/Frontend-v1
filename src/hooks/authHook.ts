@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { MainState } from "../models/Redux";
 import { decryptData } from "../utilities/crypto";
-import { getBaseUserForUserSubUser } from "../services/complete/general";
+import { getBaseUserForUserSubUser } from "../services/complete/generalServices";
 import { searchCompanyByNameService } from "../services/requests/authService";
 import useApi from "./useApi";
 import { useApiParams } from "../models/Interfaces";

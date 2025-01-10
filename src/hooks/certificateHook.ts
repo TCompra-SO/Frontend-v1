@@ -17,7 +17,7 @@ import {
 import {
   deleteCertificateById,
   verifyCertificationByUserIdAndCompanyId,
-} from "../services/complete/general";
+} from "../services/complete/generalServices";
 import { UpdateRequiredDocsRequest } from "../models/Requests";
 import useShowNotification, { useShowLoadingMessage } from "./utilHook";
 

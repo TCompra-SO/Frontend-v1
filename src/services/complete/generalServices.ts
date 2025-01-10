@@ -197,14 +197,6 @@ export async function getRequirementFromData(
 
   // Generate a consistent cache key
   const cacheKey = data.subUser;
-  console.log(cacheKey);
-
-  if (cache && cache.has(cacheKey)) {
-    console.log("Cache hit for key:", cacheKey); // Debugging
-    // await cache.get(cacheKey); // Return the cached Promise
-  }
-
-  console.log("Cache miss for key:", cacheKey); // Debugging
 
   // Create a new Promise for the cache to lock other requests
   const requestPromise =
@@ -217,7 +209,6 @@ export async function getRequirementFromData(
           });
 
           if (respData) {
-            console.log("Storing result in cache:", cacheKey, respData); // Debugging
             return respData;
           }
           throw new Error("Failed to fetch data");

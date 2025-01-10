@@ -148,6 +148,7 @@ export default function GeneralTable(props: GeneralTableProps) {
     style: { width: "100%" },
     bordered: false,
     onChange: (pagination, filters, sorter, extra) => {
+      console.log(pagination);
       if (
         props.onChangePageAndPageSize &&
         pagination.current &&
@@ -168,6 +169,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       total: props.total ?? props.content.total,
       showTotal: (total, range) =>
         `${range[0]}-${range[1]} ${t("of")} ${total} ${t("items")}`,
+      current: props.content.page,
     },
   };
 

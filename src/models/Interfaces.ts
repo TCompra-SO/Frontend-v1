@@ -219,6 +219,7 @@ export interface SelectDocsModalData {
 
 export interface TableHiddenColumns {
   total?: number;
+  page?: number;
   hiddenColumns: TableColumns[];
   nameColumnHeader: string;
   onButtonClick: (action: Action, data: any) => void;

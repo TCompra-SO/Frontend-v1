@@ -39,7 +39,7 @@ import {
   getBaseUserForUserSubUser,
   getFullUser,
   getOfferById,
-} from "../services/complete/general";
+} from "../services/complete/generalServices";
 import {
   useCancelRequirement,
   useCulminate,

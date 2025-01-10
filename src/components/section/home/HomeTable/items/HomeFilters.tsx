@@ -37,15 +37,16 @@ export default function HomeFilters() {
     page: 1,
     pageSize: pageSizeOptionsSt[0],
   });
-  const [validSearch, setValidSearch] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0);
 
   /** Paginación */
 
   useEffect(() => {
     if (useFilter) {
-      retrieveRequirements(page, pageSizeOptionsSt[0], homeFilter);
+      const newPageFilter = homeFilter;
+      newPageFilter.page = page;
+      retrieveRequirements(page, pageSizeOptionsSt[0], newPageFilter);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [homeFilter, page]);
 
   /**
@@ -61,7 +62,6 @@ export default function HomeFilters() {
     const temp = list.some((value) => value !== undefined);
 
     if (temp) {
-      setValidSearch(temp);
       const filter: HomeFilterRequest = {
         keyWords: values.keywords?.trim(),
         location: values.location,
@@ -78,7 +78,6 @@ export default function HomeFilters() {
         page: 1,
         pageSize: pageSizeOptionsSt[0],
       };
-      setCurrentPage(1);
       updatePage(1);
       setHomeFilter(filter);
     }

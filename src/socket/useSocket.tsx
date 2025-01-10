@@ -10,7 +10,7 @@ export default function useSocket() {
   useEffect(() => {
     if (!useFilter) getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  }, [page, useFilter]);
 
   async function getData() {
     retrieveRequirements(page, pageSizeOptionsSt[0]);

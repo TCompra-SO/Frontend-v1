@@ -28,16 +28,18 @@ export default function Home() {
   const navigate = useNavigate();
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
   const {
+    page,
     updatePage,
     requirementList,
     loadingRequirementList,
     totalRequirementList,
   } = useContext(HomeContext);
-  const {} = useSocket();
+  useSocket();
   const [tableContent, setTableContent] = useState<TableTypeHome>({
     type: TableTypes.HOME,
     data: requirementList,
     total: totalRequirementList,
+    page: page,
     subType: RequirementType.GOOD,
     hiddenColumns: [TableColumns.CATEGORY],
     nameColumnHeader: t("goods"),
@@ -52,6 +54,7 @@ export default function Home() {
   useEffect(() => {
     setTableContent((prevContent) => ({
       ...prevContent,
+      page,
       data: requirementList,
       total: totalRequirementList,
     }));
