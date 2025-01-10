@@ -63,9 +63,11 @@ export default function PurchaseOrders() {
     useGetOffersByRequirementId();
   const { getBasicRateData, modalDataRate } = useCulminate();
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [action, setAction] = useState<Action>(Action.NONE);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
   const [tableContent, setTableContent] = useState<TableTypePurchaseOrder>({
     type: TableTypes.PURCHASE_ORDER,
@@ -81,6 +83,7 @@ export default function PurchaseOrders() {
     return () => {
       updateMyPurchaseOrdersLoadingPdf(false);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /** Obtener subsección */
@@ -100,6 +103,7 @@ export default function PurchaseOrders() {
         true,
         1,
         noPaginationPageSize,
+        Action.VIEW_HISTORY,
         viewHistoryModalData.requirement,
         viewHistoryModalData.filters
       );
@@ -297,11 +301,13 @@ export default function PurchaseOrders() {
       data: {
         user,
       },
+      action: action,
     });
     setIsOpenModal(true);
   }
 
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
+    setAction(action);
     switch (action) {
       case Action.VIEW_CUSTOMER:
         setApiParamsUser({
@@ -355,6 +361,7 @@ export default function PurchaseOrders() {
           true,
           1,
           noPaginationPageSize,
+          action,
           undefined,
           purchaseOrder.filters
         );
@@ -368,6 +375,7 @@ export default function PurchaseOrders() {
             fromRequirementTable: false,
             canceledByCreator: type == PurchaseOrderTableTypes.RECEIVED,
           },
+          action,
         });
         setIsOpenModal(true);
         break;

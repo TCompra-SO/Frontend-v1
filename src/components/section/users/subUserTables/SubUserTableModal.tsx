@@ -77,6 +77,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
 
   useEffect(() => {
@@ -166,6 +167,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
           true,
           1,
           noPaginationPageSize,
+          action,
           undefined,
           po.filters
         );

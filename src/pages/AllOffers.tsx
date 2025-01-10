@@ -45,6 +45,7 @@ export default function AllOffers() {
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
   const [tableContent, setTableContent] = useState<TableTypeAllOffers>({
     type: TableTypes.ALL_OFFERS,
@@ -184,7 +185,7 @@ export default function AllOffers() {
 
   function handleOnButtonClick(action: Action, offer: Offer) {
     if (action == Action.VIEW_OFFER)
-      getOfferDetail(offer.key, offer.type, true, offer);
+      getOfferDetail(offer.key, offer.type, true, action, offer);
   }
 
   function handleChangePageAndPageSize({

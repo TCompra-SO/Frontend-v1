@@ -40,6 +40,7 @@ export default function Certificates() {
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
   const [tableContent, setTableContent] = useState<
     TableTypeCertificatesReceived | TableTypeCertificatesSent
@@ -166,6 +167,7 @@ export default function Certificates() {
               data: certificate,
               readonly: true,
             },
+            action,
           });
           setIsOpenModal(true);
           break;
@@ -179,6 +181,7 @@ export default function Certificates() {
               docs: certificate.certificates,
               data: certificate,
             },
+            action,
           });
           setIsOpenModal(true);
           break;

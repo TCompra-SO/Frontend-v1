@@ -37,6 +37,7 @@ export default function CertificatesDocs() {
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
   const [tableContent, setTableContent] = useState<TableTypeMyDocuments>({
     type: TableTypes.MY_DOCUMENTS,
@@ -85,6 +86,7 @@ export default function CertificatesDocs() {
         data: {
           text: requiredDocs,
         },
+        action: Action.EDIT_DOCUMENT_LIST_TO_REQUEST,
       });
       setIsOpenModal(true);
     }
@@ -101,6 +103,7 @@ export default function CertificatesDocs() {
       case Action.ADD_CERTIFICATES:
         setDataModal({
           type: ModalTypes.ADD_CERTIFICATES,
+          action,
         });
         setIsOpenModal(true);
         break;
@@ -132,7 +135,9 @@ export default function CertificatesDocs() {
           setIsOpenModal(false);
         },
         text: t("deleteDocumentConfirmation"),
+        id: uid,
       },
+      action: Action.DELETE,
     });
     setIsOpenModal(true);
   }

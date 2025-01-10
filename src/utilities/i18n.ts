@@ -329,6 +329,8 @@ const resources = {
       dataSavedSuccessfully: "Data saved successfully",
       certificationVerificationError: "Certification status could not be verified",
       alreadySentCertificationRequest: "A certification request was already sent to this company",
+      selectDocsToSend: "Select",
+      showUserInfo: "Show user data",
       // Other
       yes: "Yes",
       no: "No",
@@ -854,6 +856,8 @@ const resources = {
       dataSavedSuccessfully: "Datos guardados exitosamente",
       certificationVerificationError: "No se pudo verificar el estado de la certificación",
       alreadySentCertificationRequest: "Ya fue enviada una solicitud de certificación a esta empresa",
+      selectDocsToSend: "Seleccionar",
+      showUserInfo: "Mostrar datos de usuario",
       // Other
       yes: "Sí",
       no: "No",

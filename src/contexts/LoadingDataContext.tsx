@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { createContext, ReactNode, useState } from "react";
 import { Action } from "../utilities/types";
 
 interface LoadingDataContextType {
@@ -125,6 +125,7 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
 
   function deleteFromIdAndActionQueue(id: string) {
     setIdAndActionQueue((prev) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { [id]: _, ...rest } = prev;
       return rest;
     });

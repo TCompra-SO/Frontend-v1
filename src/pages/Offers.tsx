@@ -47,6 +47,7 @@ export default function Offers() {
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
   const [tableContent, setTableContent] = useState<TableTypeOffer>({
     type: TableTypes.OFFER,
@@ -66,6 +67,7 @@ export default function Offers() {
         detailedOfferModalData.offerId,
         detailedOfferModalData.offerType,
         true,
+        Action.OFFER_DETAIL,
         detailedOfferModalData.offer
       );
     }
@@ -226,7 +228,7 @@ export default function Offers() {
     console.log(offer);
     switch (action) {
       case Action.OFFER_DETAIL:
-        getOfferDetail(offer.key, offer.type, true, offer);
+        getOfferDetail(offer.key, offer.type, true, action, offer);
         break;
 
       case Action.DELETE: {
@@ -239,7 +241,9 @@ export default function Offers() {
               deleteOffer(offer.key);
             },
             text: t("deleteOfferConfirmation"),
+            id: offer.key,
           },
+          action,
         });
         setIsOpenModal(true);
         break;
@@ -271,6 +275,7 @@ export default function Offers() {
             fromRequirementTable: false,
             canceledByCreator: true,
           },
+          action,
         });
         setIsOpenModal(true);
         break;

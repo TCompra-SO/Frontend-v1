@@ -45,6 +45,11 @@ export default function ModalContainer(props: ModalContainerProps) {
   const { updateIdAndActionQueue, deleteFromIdAndActionQueue } =
     useContext(LoadingDataContext);
 
+  /** Para CancelPurchaseOrderModal */
+
+  const useCancelRequirementHook = useCancelRequirement();
+  const useCancelOfferHook = useCancelOffer();
+
   /** Variables para solicitud */
 
   const [additionalApiParams, setAdditionalApiParams] = useState<UseApiType>({
@@ -65,11 +70,6 @@ export default function ModalContainer(props: ModalContainerProps) {
     apiParams,
   });
 
-  /** Para CancelPurchaseOrderModal */
-
-  const useCancelRequirementHook = useCancelRequirement();
-  const useCancelOfferHook = useCancelOffer();
-
   /** Acciones para solicitud */
 
   useEffect(() => {
@@ -82,11 +82,19 @@ export default function ModalContainer(props: ModalContainerProps) {
             Action.REPUBLISH
           );
           break;
+        case ModalTypes.CANCEL_PURCHASE_ORDER:
+            updateIdAndActionQueue(
+              props.content.data.requirementId,
+              Action.
+            );
+          break;
       }
     } else
       switch (props.content.type) {
         case ModalTypes.REPUBLISH_REQUIREMENT:
           deleteFromIdAndActionQueue(props.content.data.requirementId);
+          break;
+        case ModalTypes.CONFIRM:
           break;
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -96,6 +104,21 @@ export default function ModalContainer(props: ModalContainerProps) {
     if (apiParams.service) useApiHook.fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
+
+  /** Caso especial */
+
+  useEffect(() => {
+    if (props.content.type == ModalTypes.CONFIRM && props.content.data.id && props.content.data.action != Action.NONE)
+      if (props.content.data.loading) {
+        if (props.content.data.id)
+          updateIdAndActionQueue(
+            props.content.data.id,
+            props.content.data.action
+          );
+      } else if (props.content.data.id)
+        deleteFromIdAndActionQueue(props.content.data.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.content.data]);
 
   /** Reset */
 

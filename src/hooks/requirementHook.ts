@@ -201,6 +201,7 @@ export function useCancelOffer() {
 
 export function useGetOffersByRequirementId() {
   const { t } = useTranslation();
+  const [action, setAction] = useState<Action>(Action.NONE);
   const { showNotification } = useShowNotification();
   const { showLoadingMessage } = useShowLoadingMessage();
   const {
@@ -229,6 +230,7 @@ export function useGetOffersByRequirementId() {
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: null,
@@ -247,6 +249,7 @@ export function useGetOffersByRequirementId() {
       updateAllPurchaseOrdersViewOffers(false);
       updateAllSalesOrdersViewOffers(false);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -331,6 +334,7 @@ export function useGetOffersByRequirementId() {
                   forPurchaseOrder: requirementData.forPurchaseOrder,
                   filters: requirementData.filters ?? filters,
                 },
+                action,
               });
             else if (requirementData.requirement)
               setDataModal({
@@ -341,6 +345,7 @@ export function useGetOffersByRequirementId() {
                   forPurchaseOrder: requirementData.forPurchaseOrder,
                   filters: requirementData.filters ?? filters,
                 },
+                action,
               });
           } else showNotification("error", t("errorOccurred"));
         } else if (error) {
@@ -376,10 +381,13 @@ export function useGetOffersByRequirementId() {
     forPurchaseOrder: boolean,
     page: number,
     pageSize: number,
+    action: Action,
     req?: Requirement,
     filters?: OfferFilters,
     purchaseOrderId?: string
   ) {
+    showLoadingMessage(true);
+    setAction(action);
     if (tableType == TableTypes.REQUIREMENT)
       updateMyRequirementsLoadingViewOffers(true);
     else if (tableType == TableTypes.PURCHASE_ORDER_SUBUSER)
@@ -388,10 +396,10 @@ export function useGetOffersByRequirementId() {
       updateAllPurchaseOrdersViewOffers(true);
     else if (tableType == TableTypes.ALL_SALES_ORDERS)
       updateAllSalesOrdersViewOffers(true);
-    showLoadingMessage(true);
     setDataModal({
       type: ModalTypes.NONE,
       data: {},
+      action: Action.NONE,
     });
     setRequirementData({
       requirementId: reqId,
@@ -427,12 +435,14 @@ export function useShowDetailOffer() {
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
 
   async function getOfferDetail(
     offerId: string,
     type: RequirementType,
     useUserData: boolean,
+    action: Action,
     offerData?: Offer
   ) {
     try {
@@ -440,6 +450,7 @@ export function useShowDetailOffer() {
       setDataModal({
         type: ModalTypes.NONE,
         data: {},
+        action: Action.NONE,
       });
       if (!offerData) {
         const { offer } = await getOfferById(
@@ -465,6 +476,7 @@ export function useShowDetailOffer() {
                 offer,
                 basicRateData,
               },
+              action,
             });
           else showNotification("error", t("errorOccurred"));
         } else showNotification("error", t("errorOccurred"));
@@ -481,6 +493,7 @@ export function useShowDetailOffer() {
               offer: offerData,
               basicRateData,
             },
+            action,
           });
         else showNotification("error", t("errorOccurred"));
       }
@@ -520,6 +533,7 @@ export function useCulminate() {
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: null,
@@ -551,6 +565,7 @@ export function useCulminate() {
             isOffer: culminateData.isOffer,
             requirementOrOfferId: culminateData.idToFinish,
           },
+          action: culminateData.action,
         });
       } else if (error) {
         showNotification("error", errorMsg);
@@ -576,6 +591,7 @@ export function useCulminate() {
     setDataModal({
       type: ModalTypes.NONE,
       data: {},
+      action: Action.NONE,
     });
     setCulminateData({
       type,

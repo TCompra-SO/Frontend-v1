@@ -6,6 +6,7 @@ import AddImagesField from "../../common/formFields/AddImagesField";
 import AddDocumentField from "../../common/formFields/AddDocumentField";
 import ButtonContainer from "../../containers/ButtonContainer";
 import {
+  Action,
   ErrorMsgRequestType,
   ErrorRequestType,
   ImageRequestLabels,
@@ -334,6 +335,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
             text: t("noSavedRequiredDocListCertification"),
             showOnlyAcceptButton: true,
           },
+          action: Action.NONE,
         }}
         isOpen={isOpenModal}
         onClose={() => setIsOpenModal(false)}

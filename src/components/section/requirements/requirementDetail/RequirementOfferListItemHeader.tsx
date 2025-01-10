@@ -43,6 +43,7 @@ export default function RequirementOfferListItemHeader({
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
   const items = [
     {
@@ -99,6 +100,7 @@ export default function RequirementOfferListItemHeader({
               canceledByCreator: false,
               onCancelSuccess: props.showStateAndActions.onCancelSuccess,
             },
+            action,
           });
           setIsOpenModal(true);
           break;
@@ -110,6 +112,7 @@ export default function RequirementOfferListItemHeader({
               requirement: props.showStateAndActions.requirement,
               onSuccess: handleSuccessfulSelection,
             },
+            action,
           });
           setIsOpenModal(true);
           break;
@@ -128,6 +131,7 @@ export default function RequirementOfferListItemHeader({
               type: props.offer.type,
               isOffer: true,
             },
+            action,
           });
           setIsOpenModal(true);
         }

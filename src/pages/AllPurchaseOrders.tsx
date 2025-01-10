@@ -54,6 +54,7 @@ export default function AllPurchaseOrders() {
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
   const [tableContent, setTableContent] = useState<TableTypeAllPurchaseOrders>({
     type: TableTypes.ALL_PURCHASE_ORDERS,
@@ -232,6 +233,7 @@ export default function AllPurchaseOrders() {
           true,
           1,
           noPaginationPageSize,
+          action,
           undefined,
           purchaseOrder.filters
         );

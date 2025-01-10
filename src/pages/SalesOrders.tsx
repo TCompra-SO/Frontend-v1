@@ -63,10 +63,12 @@ export default function SalesOrders() {
   const { viewHistorySalesModalData } = useContext(ModalsContext);
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
+  const [action, setAction] = useState<Action>(Action.NONE);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
   const [tableContent, setTableContent] = useState<TableTypeSalesOrder>({
     type: TableTypes.SALES_ORDER,
@@ -101,6 +103,7 @@ export default function SalesOrders() {
         true,
         1,
         noPaginationPageSize,
+        Action.VIEW_HISTORY,
         viewHistorySalesModalData.requirement,
         viewHistorySalesModalData.filters
       );
@@ -297,11 +300,13 @@ export default function SalesOrders() {
       data: {
         user,
       },
+      action: action,
     });
     setIsOpenModal(true);
   }
 
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
+    setAction(action);
     switch (action) {
       case Action.VIEW_CUSTOMER:
         setApiParamsUser({
@@ -353,6 +358,7 @@ export default function SalesOrders() {
           true,
           1,
           noPaginationPageSize,
+          action,
           undefined,
           purchaseOrder.filters
         );
@@ -366,6 +372,7 @@ export default function SalesOrders() {
             fromRequirementTable: false,
             canceledByCreator: type == PurchaseOrderTableTypes.ISSUED,
           },
+          action,
         });
         setIsOpenModal(true);
         break;

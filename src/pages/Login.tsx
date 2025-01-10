@@ -7,7 +7,12 @@ import {
 } from "../models/Requests";
 import { useDispatch } from "react-redux";
 import { setUid, setUser, setEmail } from "../redux/userSlice";
-import { DocType, ModalTypes, RegisterTypeId } from "../utilities/types";
+import {
+  Action,
+  DocType,
+  ModalTypes,
+  RegisterTypeId,
+} from "../utilities/types";
 import useApi from "../hooks/useApi";
 import {
   loginService,
@@ -221,7 +226,6 @@ export default function Login(props: LoginProps) {
   return (
     <>
       <ModalContainer
-        className=""
         content={{
           type: ModalTypes.INPUT_EMAIL,
           data: {
@@ -231,6 +235,7 @@ export default function Login(props: LoginProps) {
             buttonText: t("acceptButton"),
           },
           title: t("inputYourEmail"),
+          action: Action.NONE,
         }}
         isOpen={isOpenModal}
         onClose={handleCloseModal}

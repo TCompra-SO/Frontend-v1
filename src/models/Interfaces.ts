@@ -33,6 +33,7 @@ import useApi, { UseApiType } from "../hooks/useApi";
 export interface CommonModalType {
   title?: React.ReactNode;
   type: ModalTypes;
+  action: Action;
 }
 
 export interface ModalCancelPurchaseOrder extends CommonModalType {
@@ -108,6 +109,7 @@ export interface ModalConfirmation extends CommonModalType {
     onAnswer: (ok: boolean) => void;
     loading?: boolean;
     showOnlyAcceptButton?: boolean;
+    id?: string;
   };
 }
 

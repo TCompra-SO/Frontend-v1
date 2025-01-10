@@ -68,6 +68,7 @@ export default function Requirements() {
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
   const [tableContent, setTableContent] = useState<TableTypeRequirement>({
     type: TableTypes.REQUIREMENT,
@@ -91,6 +92,7 @@ export default function Requirements() {
         false,
         1,
         noPaginationPageSize,
+        Action.SHOW_OFFERS,
         detailedRequirementModalData.requirement
       );
     }
@@ -258,6 +260,7 @@ export default function Requirements() {
           false,
           1,
           noPaginationPageSize,
+          action,
           requirement
         );
         break;
@@ -280,6 +283,7 @@ export default function Requirements() {
               setDataModal({
                 type: ModalTypes.OFFER_SUMMARY,
                 data: { offer, requirement: requirement, user: fullUser },
+                action,
               });
               setIsOpenModal(true);
             } else {
@@ -296,6 +300,7 @@ export default function Requirements() {
         setDataModal({
           type: ModalTypes.REPUBLISH_REQUIREMENT,
           data: { requirementId: requirement.key, type: requirement.type },
+          action,
         });
         setIsOpenModal(true);
         break;
@@ -322,7 +327,9 @@ export default function Requirements() {
               deleteRequirement(requirement.key);
             },
             text: t("deleteRequirementConfirmation"),
+            id: requirement.key,
           },
+          action,
         });
         setIsOpenModal(true);
         break;
@@ -340,6 +347,7 @@ export default function Requirements() {
               fromRequirementTable: true,
               canceledByCreator: false,
             },
+            action,
           });
           setIsOpenModal(true);
         } else if (requirement.state == RequirementState.PUBLISHED)

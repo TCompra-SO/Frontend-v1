@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import ButtonContainer from "../../containers/ButtonContainer";
 import {
+  Action,
   ErrorMsgRequestType,
   ErrorRequestType,
   ModalTypes,
@@ -66,6 +67,7 @@ export default function SelectDocumentsToSendCertificateModal(
     data: {
       onDocumentAdded: handleOnDocumentAdded,
     },
+    action: Action.ADD_CERTIFICATES,
   });
   const [checked, setChecked] = useState<boolean[]>(
     Array(docs.length).fill(false)

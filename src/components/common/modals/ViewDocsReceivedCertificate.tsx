@@ -7,6 +7,7 @@ import {
 import TextAreaContainer from "../../containers/TextAreaContainer";
 import { Lengths } from "../../../utilities/lengths";
 import {
+  Action,
   CertificationState,
   ErrorMsgRequestType,
   ErrorRequestType,
@@ -40,6 +41,7 @@ export default function ViewDocsReceivedCertificate(
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
 
   /** Para certificar o rechazar */
@@ -81,6 +83,7 @@ export default function ViewDocsReceivedCertificate(
           userName: props.data.companyName,
         },
       },
+      action: Action.SELECT_CERT_TO_SEND,
     });
     setIsOpenModal(true);
     props.onClose();

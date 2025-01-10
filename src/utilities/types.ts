@@ -165,6 +165,9 @@ export enum Action {
   EDIT_DOCUMENT_LIST_TO_REQUEST = 29,
   VIEW = 30,
   VIEw_SALES_ORDERS = 31,
+  SELECT_CERT_TO_SEND = 32,
+  SEND_MESSAGE = 33,
+  SHOW_USER_INFO = 34,
 }
 
 export const ActionLabel: {
@@ -202,6 +205,9 @@ export const ActionLabel: {
   [Action.VIEW]: "view",
   [Action.VIEw_SALES_ORDERS]: "viewSalesOrders",
   [Action.NONE]: "none",
+  [Action.SELECT_CERT_TO_SEND]: "selectDocsToSend",
+  [Action.SEND_MESSAGE]: "send",
+  [Action.SHOW_USER_INFO]: "showUserInfo",
 };
 
 export const ActionByStateRequirement: {

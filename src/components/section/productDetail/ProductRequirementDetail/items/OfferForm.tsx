@@ -27,6 +27,7 @@ import {
   getValidationOfferService,
 } from "../../../../../services/requests/offerService";
 import {
+  Action,
   CanOfferType,
   CantOfferMotives,
   CertificationState,
@@ -458,6 +459,7 @@ export default function OfferForm(props: OfferFormProps) {
               userId:
                 props.requirement.subUser?.uid ?? props.requirement?.user.uid,
             },
+            action: Action.SEND_MESSAGE,
           }}
           isOpen={isOpenModal}
           onClose={() => setIsOpenModal(false)}
