@@ -38,10 +38,12 @@ interface ModalContainerProps extends ModalProps {
   className?: string;
   maskClosable?: boolean;
   onClose: (e?: React.SyntheticEvent<Element, Event>) => any;
+  loadingConfirm?: boolean;
 }
 
 export default function ModalContainer(props: ModalContainerProps) {
   const { showLoadingMessage } = useShowLoadingMessage();
+  const [blockedIds, setBlockedIds] = useState<string[]>([]);
   const { updateIdAndActionQueue, deleteFromIdAndActionQueue } =
     useContext(LoadingDataContext);
 
@@ -75,28 +77,36 @@ export default function ModalContainer(props: ModalContainerProps) {
   useEffect(() => {
     showLoadingMessage(useApiHook.loading);
     if (useApiHook.loading) {
+      let id: string = "";
       switch (props.content.type) {
         case ModalTypes.REPUBLISH_REQUIREMENT:
-          updateIdAndActionQueue(
-            props.content.data.requirementId,
-            Action.REPUBLISH
-          );
+          id = props.content.data.requirementId;
           break;
-        case ModalTypes.CANCEL_PURCHASE_ORDER:
-            updateIdAndActionQueue(
-              props.content.data.requirementId,
-              Action.
-            );
+        case ModalTypes.RATE_USER:
+        case ModalTypes.RATE_CANCELED:
+          id = props.content.data.requirementOrOfferId;
           break;
       }
-    } else
+      if (id) {
+        setBlockedIds((prev) => [...prev, id]);
+        updateIdAndActionQueue(id, props.content.action);
+      }
+    } else {
+      let currentId: string = "";
       switch (props.content.type) {
         case ModalTypes.REPUBLISH_REQUIREMENT:
-          deleteFromIdAndActionQueue(props.content.data.requirementId);
+          currentId = props.content.data.requirementId;
           break;
-        case ModalTypes.CONFIRM:
+        case ModalTypes.RATE_CANCELED:
+        case ModalTypes.RATE_USER:
+          currentId = props.content.data.requirementOrOfferId;
           break;
       }
+      if (currentId) {
+        deleteFromIdAndActionQueue(currentId);
+        setBlockedIds((prev) => prev.filter((id) => id != currentId));
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [useApiHook.loading]);
 
@@ -105,40 +115,72 @@ export default function ModalContainer(props: ModalContainerProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
 
-  /** Caso especial */
+  /** Casos especiales */
 
   useEffect(() => {
-    if (props.content.type == ModalTypes.CONFIRM && props.content.data.id && props.content.data.action != Action.NONE)
-      if (props.content.data.loading) {
-        if (props.content.data.id)
-          updateIdAndActionQueue(
-            props.content.data.id,
-            props.content.data.action
-          );
-      } else if (props.content.data.id)
-        deleteFromIdAndActionQueue(props.content.data.id);
+    if (
+      props.content.type == ModalTypes.CONFIRM &&
+      props.content.data.id &&
+      props.content.action != Action.NONE
+    ) {
+      const id = props.content.data.id;
+      if (props.loadingConfirm) {
+        setBlockedIds((prev) => [...prev, id]);
+        updateIdAndActionQueue(id, props.content.action);
+      } else {
+        setBlockedIds((prev) => prev.filter((idn) => idn != id));
+        deleteFromIdAndActionQueue(id);
+      }
+    }
+  }, [props.loadingConfirm]);
+
+  useEffect(() => {
+    if (
+      props.content.type == ModalTypes.CANCEL_PURCHASE_ORDER &&
+      props.content.action == Action.CANCEL_REQUIREMENT
+    ) {
+      const id = props.content.data.requirementId;
+      if (useCancelRequirementHook.loadingCancelRequirement) {
+        setBlockedIds((prev) => [...prev, id]);
+        updateIdAndActionQueue(id, props.content.action);
+      } else {
+        setBlockedIds((prev) => prev.filter((idn) => idn != id));
+        deleteFromIdAndActionQueue(id);
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.content.data]);
+  }, [useCancelRequirementHook.loadingCancelRequirement]);
 
-  /** Reset */
+  useEffect(() => {
+    console.log(
+      useCancelOfferHook.loadingCancelOffer,
+      props.content.type,
+      props.content.action
+    );
+    if (
+      props.content.type == ModalTypes.CANCEL_PURCHASE_ORDER &&
+      props.content.action == Action.CANCEL_OFFER
+    ) {
+      const id = props.content.data.requirementId;
+      if (useCancelOfferHook.loadingCancelOffer) {
+        setBlockedIds((prev) => [...prev, id]);
+        updateIdAndActionQueue(id, props.content.action);
+      } else {
+        setBlockedIds((prev) => prev.filter((idn) => idn != id));
+        deleteFromIdAndActionQueue(id);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useCancelOfferHook.loadingCancelOffer]);
 
-  // useEffect(() => {
-  //   if (!props.isOpen) {
-  //     if (props.content.type == ModalTypes.CANCEL_PURCHASE_ORDER) {
-  //       useCancelOfferHook.resetCancelOffer();
-  //       useCancelRequirementHook.resetCancelRequirement();
-  //     } else {
-  //       setAdditionalApiParams({
-  //         functionToExecute: () => {},
-  //       });
-  //       setApiParams({
-  //         service: null,
-  //         method: "get",
-  //       });
-  //     }
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [props.isOpen]);
+  /** Cleanup */
+
+  useEffect(() => {
+    return () => {
+      blockedIds.forEach((id) => deleteFromIdAndActionQueue(id));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /** Funciones */
 

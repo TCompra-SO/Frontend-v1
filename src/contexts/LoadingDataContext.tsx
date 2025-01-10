@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import { Action } from "../utilities/types";
 
 interface LoadingDataContextType {
@@ -76,9 +76,9 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
     Record<string, Action>
   >({});
 
-  // useEffect(() => {
-  //   console.log(idAndActionQueue);
-  // }, [idAndActionQueue]);
+  useEffect(() => {
+    console.log(idAndActionQueue);
+  }, [idAndActionQueue]);
 
   function updateMyPurchaseOrdersLoadingPdf(val: boolean | undefined) {
     setMyPurchaseOrdersLoadingPdf(val ? true : false);

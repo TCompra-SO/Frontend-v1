@@ -70,8 +70,18 @@ export default function CancelPurchaseOrderModal(
       return;
     }
     if (props.fromRequirementTable)
-      cancelRequirement(props.requirementId, text.trim());
-    else cancelOffer(props.offerId, props.canceledByCreator, text.trim());
+      cancelRequirement(
+        props.requirementId,
+        Action.CANCEL_REQUIREMENT,
+        text.trim()
+      );
+    else
+      cancelOffer(
+        props.offerId,
+        props.canceledByCreator,
+        Action.CANCEL_OFFER,
+        text.trim()
+      );
   }
 
   return (

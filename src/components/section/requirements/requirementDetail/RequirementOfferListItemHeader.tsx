@@ -22,6 +22,7 @@ import FrontImage from "../../../common/utils/FrontImage";
 import RateStarCount from "../../../common/utils/RateStarCount";
 
 interface RequirementOfferListItemProps {
+  requirementId: string;
   offer: Offer;
   style?: React.CSSProperties;
   onClose: () => any;
@@ -130,6 +131,7 @@ export default function RequirementOfferListItemHeader({
               basicRateData: data,
               type: props.offer.type,
               isOffer: true,
+              requirementOrOfferId: props.requirementId,
             },
             action,
           });

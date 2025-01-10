@@ -351,7 +351,7 @@ export default function Requirements() {
           });
           setIsOpenModal(true);
         } else if (requirement.state == RequirementState.PUBLISHED)
-          cancelRequirement(requirement.key);
+          cancelRequirement(requirement.key, action);
         break;
       }
     }
@@ -398,6 +398,7 @@ export default function Requirements() {
         isOpen={isOpenModal}
         onClose={handleCloseModal}
         style={mainModalScrollStyle}
+        loadingConfirm={loadingDelete}
       />
       <TablePageContent
         title={t("myRequirements")}

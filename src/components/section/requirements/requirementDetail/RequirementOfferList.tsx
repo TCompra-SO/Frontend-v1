@@ -165,6 +165,7 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
                   onCancelSuccess: handleCancelSuccess,
                 }}
                 onClose={props.onClose}
+                requirementId={props.requirement.key}
               />
               <RequirementOfferListItemBody offer={offer} showUserData={true} />
             </div>

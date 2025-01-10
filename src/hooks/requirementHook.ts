@@ -52,8 +52,12 @@ export function useCancelRequirement() {
   const { t } = useTranslation();
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
+  const { updateIdAndActionQueue, deleteFromIdAndActionQueue } =
+    useContext(LoadingDataContext);
 
-  const [apiParamsCancel, setApiParamsCancel] = useState<useApiParams>({
+  const [apiParamsCancel, setApiParamsCancel] = useState<
+    useApiParams<CancelRequirementRequest>
+  >({
     service: null,
     method: "get",
   });
@@ -72,6 +76,14 @@ export function useCancelRequirement() {
   });
 
   useEffect(() => {
+    return () => {
+      if (apiParamsCancel.dataToSend?.requerimentID)
+        deleteFromIdAndActionQueue(apiParamsCancel.dataToSend.requerimentID);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     showLoadingMessage(loadingCancel);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingCancel]);
@@ -82,15 +94,25 @@ export function useCancelRequirement() {
   }, [apiParamsCancel]);
 
   useEffect(() => {
-    if (responseDataCancel) {
-      showNotification("success", t("requirementCanceledSuccessfully"));
-    } else if (errorCancel) {
-      showNotification("error", errorMsgCancel);
+    try {
+      if (responseDataCancel) {
+        showNotification("success", t("requirementCanceledSuccessfully"));
+      } else if (errorCancel) {
+        showNotification("error", errorMsgCancel);
+      }
+      if (responseDataCancel || errorCancel)
+        if (apiParamsCancel.dataToSend?.requerimentID)
+          deleteFromIdAndActionQueue(apiParamsCancel.dataToSend.requerimentID);
+    } catch (err) {
+      showNotification("error", t("errorOccurred"));
+      if (apiParamsCancel.dataToSend?.requerimentID)
+        deleteFromIdAndActionQueue(apiParamsCancel.dataToSend.requerimentID);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataCancel, errorCancel]);
 
-  function cancelRequirement(reqId: string, motive?: string) {
+  function cancelRequirement(reqId: string, action: Action, motive?: string) {
+    updateIdAndActionQueue(reqId, action);
     const data: CancelRequirementRequest = {
       requerimentID: reqId,
       reason: motive,
@@ -125,8 +147,10 @@ export function useCancelOffer() {
   const { t } = useTranslation();
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
+  const { updateIdAndActionQueue, deleteFromIdAndActionQueue } =
+    useContext(LoadingDataContext);
 
-  const [apiParams, setApiParams] = useState<useApiParams>({
+  const [apiParams, setApiParams] = useState<useApiParams<CancelOfferRequest>>({
     service: null,
     method: "get",
   });
@@ -145,6 +169,14 @@ export function useCancelOffer() {
   });
 
   useEffect(() => {
+    return () => {
+      if (apiParams.dataToSend?.offerID)
+        deleteFromIdAndActionQueue(apiParams.dataToSend.offerID);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     showLoadingMessage(loading);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
@@ -155,10 +187,19 @@ export function useCancelOffer() {
   }, [apiParams]);
 
   useEffect(() => {
-    if (responseData) {
-      showNotification("success", t("offerCanceledSuccessfully"));
-    } else if (error) {
-      showNotification("error", errorMsg);
+    try {
+      if (responseData) {
+        showNotification("success", t("offerCanceledSuccessfully"));
+      } else if (error) {
+        showNotification("error", errorMsg);
+      }
+      if (responseData || error)
+        if (apiParams.dataToSend?.offerID)
+          deleteFromIdAndActionQueue(apiParams.dataToSend.offerID);
+    } catch (err) {
+      showNotification("error", t("errorOccurred"));
+      if (apiParams.dataToSend?.offerID)
+        deleteFromIdAndActionQueue(apiParams.dataToSend.offerID);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -166,8 +207,10 @@ export function useCancelOffer() {
   function cancelOffer(
     offerId: string,
     canceledByCreator: boolean,
+    action: Action,
     motive?: string
   ) {
+    updateIdAndActionQueue(offerId, action);
     const data: CancelOfferRequest = {
       offerID: offerId,
       reason: motive,
