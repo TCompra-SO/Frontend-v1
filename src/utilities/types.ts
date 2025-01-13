@@ -292,6 +292,11 @@ export const ActionCertificateFiles: {
 
 /*********/
 
+export enum OrderType {
+  ASC = 1,
+  DESC = 2,
+}
+
 export enum CommonFilter {
   ALL = allSelect,
   ASC = 1,

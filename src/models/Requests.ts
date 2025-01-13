@@ -1,6 +1,7 @@
 import {
   CertificationState,
   CommonFilter,
+  OrderType,
   RegisterTypeId,
   UserRoles,
 } from "../utilities/types";
@@ -201,4 +202,13 @@ export interface HomeFilterRequest {
   companyId?: number;
   page: number;
   pageSize: number;
+}
+
+export interface SearchGoodsRequest {
+  keyWords?: string;
+  userId: string;
+  page: number;
+  pageSize: number;
+  fieldName?: string;
+  orderType: OrderType;
 }

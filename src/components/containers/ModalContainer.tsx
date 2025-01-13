@@ -132,6 +132,7 @@ export default function ModalContainer(props: ModalContainerProps) {
         deleteFromIdAndActionQueue(id);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.loadingConfirm]);
 
   useEffect(() => {

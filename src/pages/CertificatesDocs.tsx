@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import { mainModalScrollStyle, pageSizeOptionsSt } from "../utilities/globals";
@@ -149,6 +149,10 @@ export default function CertificatesDocs() {
     getCertificatesList(page, pageSize);
   }
 
+  function handleSearch(e: ChangeEvent<HTMLInputElement>) {
+    console.log(e.target.value);
+  }
+
   return (
     <>
       <ModalContainer
@@ -164,7 +168,7 @@ export default function CertificatesDocs() {
         subtitle={t("myDocuments")}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
-        hideSearch={true}
+        onSearch={handleSearch}
         additionalContentHeader={
           <Row gutter={[10, 10]}>
             <ButtonContainer
