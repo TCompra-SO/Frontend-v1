@@ -86,6 +86,9 @@ export default function ActionColumn(
                             key: action,
                             label: t(ActionLabel[action]),
                             onClick: () => onButtonClick(action, record),
+                            disabled: idAndActionQueue[record?.key]
+                              ? true
+                              : false,
                           });
                         return acc;
                       },

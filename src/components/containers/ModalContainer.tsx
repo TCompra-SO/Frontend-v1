@@ -123,6 +123,7 @@ export default function ModalContainer(props: ModalContainerProps) {
       props.content.data.id &&
       props.content.action != Action.NONE
     ) {
+      console.log(33333333);
       const id = props.content.data.id;
       if (props.loadingConfirm) {
         setBlockedIds((prev) => [...prev, id]);

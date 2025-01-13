@@ -318,6 +318,7 @@ export default function Offers() {
         isOpen={isOpenModal}
         onClose={handleCloseModal}
         style={mainModalScrollStyle}
+        loadingConfirm={loadingDelete}
       />
       <TablePageContent
         title={t("myOffers")}
