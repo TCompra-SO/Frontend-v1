@@ -44,6 +44,7 @@ export interface ModalCancelPurchaseOrder extends CommonModalType {
     fromRequirementTable: boolean;
     canceledByCreator: boolean;
     onCancelSuccess?: (offerId: string) => void;
+    rowId: string;
   };
 }
 
@@ -69,6 +70,7 @@ export interface ModalRateCanceled extends CommonModalType {
     type: RequirementType;
     isOffer: boolean;
     requirementOrOfferId: string;
+    rowId: string;
   };
 }
 
@@ -79,6 +81,7 @@ export interface ModalRateUser extends CommonModalType {
     type: RequirementType;
     isOffer: boolean;
     requirementOrOfferId: string;
+    rowId: string;
   };
 }
 

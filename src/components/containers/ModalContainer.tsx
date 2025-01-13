@@ -84,7 +84,7 @@ export default function ModalContainer(props: ModalContainerProps) {
           break;
         case ModalTypes.RATE_USER:
         case ModalTypes.RATE_CANCELED:
-          id = props.content.data.requirementOrOfferId;
+          id = props.content.data.rowId;
           break;
       }
       if (id) {
@@ -99,7 +99,7 @@ export default function ModalContainer(props: ModalContainerProps) {
           break;
         case ModalTypes.RATE_CANCELED:
         case ModalTypes.RATE_USER:
-          currentId = props.content.data.requirementOrOfferId;
+          currentId = props.content.data.rowId;
           break;
       }
       if (currentId) {
@@ -123,7 +123,6 @@ export default function ModalContainer(props: ModalContainerProps) {
       props.content.data.id &&
       props.content.action != Action.NONE
     ) {
-      console.log(33333333);
       const id = props.content.data.id;
       if (props.loadingConfirm) {
         setBlockedIds((prev) => [...prev, id]);
@@ -141,7 +140,7 @@ export default function ModalContainer(props: ModalContainerProps) {
       props.content.type == ModalTypes.CANCEL_PURCHASE_ORDER &&
       props.content.action == Action.CANCEL_REQUIREMENT
     ) {
-      const id = props.content.data.requirementId;
+      const id = props.content.data.rowId;
       if (useCancelRequirementHook.loadingCancelRequirement) {
         setBlockedIds((prev) => [...prev, id]);
         updateIdAndActionQueue(id, props.content.action);
@@ -154,16 +153,11 @@ export default function ModalContainer(props: ModalContainerProps) {
   }, [useCancelRequirementHook.loadingCancelRequirement]);
 
   useEffect(() => {
-    console.log(
-      useCancelOfferHook.loadingCancelOffer,
-      props.content.type,
-      props.content.action
-    );
     if (
       props.content.type == ModalTypes.CANCEL_PURCHASE_ORDER &&
       props.content.action == Action.CANCEL_OFFER
     ) {
-      const id = props.content.data.requirementId;
+      const id = props.content.data.rowId;
       if (useCancelOfferHook.loadingCancelOffer) {
         setBlockedIds((prev) => [...prev, id]);
         updateIdAndActionQueue(id, props.content.action);

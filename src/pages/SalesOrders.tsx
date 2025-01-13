@@ -84,6 +84,7 @@ export default function SalesOrders() {
     return () => {
       updateMyPurchaseOrdersLoadingPdf(false);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /** Obtener subsección */
@@ -330,6 +331,7 @@ export default function SalesOrders() {
         if (type == PurchaseOrderTableTypes.ISSUED) {
           // Buscar en oferta de liquidación
           getBasicRateData(
+            purchaseOrder.key,
             purchaseOrder.requirementId, // r3v para liquidación vendedor (creador de liquidación) emite
             purchaseOrder.offerId,
             true,
@@ -342,6 +344,7 @@ export default function SalesOrders() {
           //
           // Buscar en liquidación
           getBasicRateData(
+            purchaseOrder.key,
             purchaseOrder.offerId, // cliente (ofertante) recibe
             purchaseOrder.requirementId,
             false,
@@ -371,6 +374,7 @@ export default function SalesOrders() {
             requirementId: purchaseOrder.requirementId,
             fromRequirementTable: false,
             canceledByCreator: type == PurchaseOrderTableTypes.ISSUED,
+            rowId: purchaseOrder.key,
           },
           action,
         });

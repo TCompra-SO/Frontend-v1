@@ -126,10 +126,11 @@ export default function ActionColumn(
                         key: action,
                         label: t(ActionLabel[action]),
                         onClick: () => onButtonClick(action, record),
-                        disabled:
-                          action == Action.DOWNLOAD_PURCHASE_ORDER
-                            ? myPurchaseOrdersLoadingPdf
-                            : undefined,
+                        disabled: idAndActionQueue[record?.key]
+                          ? true
+                          : action == Action.DOWNLOAD_PURCHASE_ORDER
+                          ? myPurchaseOrdersLoadingPdf
+                          : false,
                       });
                       return acc;
                     },
@@ -157,10 +158,11 @@ export default function ActionColumn(
                         key: action,
                         label: t(ActionLabel[action]),
                         onClick: () => onButtonClick(action, record),
-                        disabled:
-                          action == Action.DOWNLOAD_PURCHASE_ORDER
-                            ? myPurchaseOrdersLoadingPdf
-                            : undefined,
+                        disabled: idAndActionQueue[record?.key]
+                          ? true
+                          : action == Action.DOWNLOAD_PURCHASE_ORDER
+                          ? myPurchaseOrdersLoadingPdf
+                          : false,
                       });
                       return acc;
                     },

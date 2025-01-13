@@ -333,6 +333,7 @@ export default function PurchaseOrders() {
           if (purchaseOrder.type == RequirementType.GOOD)
             // r3v falta servicios
             getBasicRateData(
+              purchaseOrder.key,
               purchaseOrder.requirementId,
               purchaseOrder.offerId,
               true,
@@ -345,6 +346,7 @@ export default function PurchaseOrders() {
           if (purchaseOrder.type == RequirementType.GOOD)
             // Buscar en requerimiento
             getBasicRateData(
+              purchaseOrder.key,
               purchaseOrder.offerId,
               purchaseOrder.requirementId,
               false,
@@ -374,6 +376,7 @@ export default function PurchaseOrders() {
             requirementId: purchaseOrder.requirementId,
             fromRequirementTable: false,
             canceledByCreator: type == PurchaseOrderTableTypes.RECEIVED,
+            rowId: purchaseOrder.key,
           },
           action,
         });

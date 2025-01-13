@@ -566,12 +566,14 @@ export function useCulminate() {
     idToFinish: string;
     idToGetData: string;
     action: Action;
+    rowId: string;
   }>({
     type: RequirementType.GOOD,
     isOffer: false,
     action: Action.FINISH,
     idToFinish: "",
     idToGetData: "",
+    rowId: "",
   });
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -607,6 +609,7 @@ export function useCulminate() {
             type: culminateData.type,
             isOffer: culminateData.isOffer,
             requirementOrOfferId: culminateData.idToFinish,
+            rowId: culminateData.rowId,
           },
           action: culminateData.action,
         });
@@ -623,6 +626,7 @@ export function useCulminate() {
   }, [responseData, error]);
 
   function getBasicRateData(
+    rowId: string,
     idToFinish: string,
     idToGetData: string,
     useOfferService: boolean,
@@ -642,7 +646,9 @@ export function useCulminate() {
       idToFinish,
       idToGetData,
       action,
+      rowId,
     });
+    console.log(idToGetData);
     setApiParams({
       service: useOfferService
         ? getBasicRateDataOfferService(idToGetData)

@@ -100,6 +100,7 @@ export default function RequirementOfferListItemHeader({
               fromRequirementTable: false,
               canceledByCreator: false,
               onCancelSuccess: props.showStateAndActions.onCancelSuccess,
+              rowId: props.showStateAndActions.requirement.key,
             },
             action,
           });
@@ -132,6 +133,7 @@ export default function RequirementOfferListItemHeader({
               type: props.offer.type,
               isOffer: true,
               requirementOrOfferId: props.requirementId,
+              rowId: props.requirementId,
             },
             action,
           });

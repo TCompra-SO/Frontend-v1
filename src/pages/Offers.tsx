@@ -257,6 +257,7 @@ export default function Offers() {
       case Action.RATE_CANCELED: {
         getBasicRateData(
           offer.key,
+          offer.key,
           offer.requirementId,
           false,
           false,
@@ -274,6 +275,7 @@ export default function Offers() {
             requirementId: offer.requirementId,
             fromRequirementTable: false,
             canceledByCreator: true,
+            rowId: offer.key,
           },
           action,
         });
@@ -283,6 +285,7 @@ export default function Offers() {
 
       case Action.FINISH: {
         getBasicRateData(
+          offer.key,
           offer.key,
           offer.requirementId,
           false,

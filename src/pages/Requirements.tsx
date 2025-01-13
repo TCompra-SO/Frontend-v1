@@ -302,6 +302,7 @@ export default function Requirements() {
         if (requirement.offerId)
           getBasicRateData(
             requirement.key,
+            requirement.key,
             requirement.offerId,
             true,
             true,
@@ -339,6 +340,7 @@ export default function Requirements() {
               requirementId: requirement.key,
               fromRequirementTable: true,
               canceledByCreator: false,
+              rowId: requirement.key,
             },
             action,
           });
