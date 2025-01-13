@@ -128,3 +128,12 @@ export function homeFilterService(): HttpService {
     type: "RE-HO-FI",
   };
 }
+
+export function searchRequirementsService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.requirements
+    }${ApiRoutes.requirements.searchRequirements}`,
+    type: "RE-SE-RE",
+  };
+}

@@ -73,6 +73,7 @@ export const ApiRoutes = {
     culminate: "culminate/",
     cancel: "canceled/",
     searchMainFilters: "searchMainFilters",
+    searchRequirements: "searchProductsByUser",
   },
   requirement: {
     create: "create/",

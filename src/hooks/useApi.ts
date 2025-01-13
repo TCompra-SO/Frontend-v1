@@ -44,7 +44,6 @@ export default function useApi<T = any>(
 
   async function fetchData() {
     reset();
-
     if (service) {
       setLoading(true);
       try {

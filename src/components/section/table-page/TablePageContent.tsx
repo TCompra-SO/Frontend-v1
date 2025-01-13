@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { TableType } from "../../../models/Interfaces";
 import GeneralTable from "../../common/GeneralTable/GeneralTable";
 import { OnChangePageAndPageSizeType } from "../../../utilities/types";
+import { maxLengthStringToSearch } from "../../../utilities/globals";
 
 interface TablePageContentProps {
   title: string;
@@ -59,6 +60,7 @@ export default function TablePageContent(props: TablePageContentProps) {
                 prefix={<SearchOutlined />}
                 className="form-control"
                 onChange={props.onSearch}
+                maxLength={maxLengthStringToSearch}
               />
             </Col>
           )}

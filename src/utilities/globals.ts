@@ -23,8 +23,6 @@ export const mediumModalWidth: number = 450;
 export const smallModalWidth: number = 350;
 export const columnWidth: number = 100;
 
-export const searchSinceLength: number = 3;
-
 export const certifiedCompaniesOpt: number = 3;
 export const phoneCode: string = "+51";
 
@@ -37,6 +35,11 @@ export const defaultRequirementImage: string =
   "/src/assets/images/img-prod.svg";
 
 export const onlyLettersAndNumbers: RegExp = /[^a-zA-Z0-9áéíóúÁÉÍÓÚ]/g;
+
+export const companySearchAfterMseconds: number = 400;
+export const tableSearchAfterMseconds: number = 400;
+export const maxLengthStringToSearch: number = 25;
+export const searchSinceLength: number = 3;
 
 // local storage keys
 export const userDataKey: string = "udata";

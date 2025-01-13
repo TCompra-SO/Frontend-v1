@@ -5,8 +5,16 @@ import {
   IdValueObj,
   useApiParams,
 } from "../models/Interfaces";
-import { defaultCountry, maxDocSizeMb, maxImageSizeMb } from "./globals";
 import {
+  defaultCountry,
+  maxDocSizeMb,
+  maxImageSizeMb,
+  maxLengthStringToSearch,
+  onlyLettersAndNumbers,
+  pageSizeOptionsSt,
+} from "./globals";
+import {
+  EntityType,
   ErrorMsgRequestType,
   ErrorRequestType,
   PurchaseOrderTableTypes,
@@ -21,6 +29,7 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import dayjs from "dayjs";
 import i18next from "i18next";
 import httpErrorInterceptor from "../interceptors/httpErrorInterceptor";
+import { SearchTableRequest } from "../models/Requests";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -295,4 +304,23 @@ export function generateShortId(): string {
   const timestamp = Date.now().toString(36).slice(-4);
   const random = Math.random().toString(36).substring(2, 6);
   return `${timestamp}${random}`;
+}
+
+// Procesa string de búsqueda
+export function getSearchString(val: string) {
+  return val
+    .trim()
+    .replace(onlyLettersAndNumbers, "")
+    .slice(0, maxLengthStringToSearch);
+}
+
+// Retorna request inicial de tablas
+export function getInitialTableRequest(userId: string, userType: EntityType) {
+  const val: SearchTableRequest = {
+    userId,
+    page: 1,
+    pageSize: pageSizeOptionsSt[0],
+    typeUser: userType,
+  };
+  return val;
 }

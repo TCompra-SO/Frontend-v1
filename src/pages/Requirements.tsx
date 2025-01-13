@@ -7,6 +7,7 @@ import {
   RequirementType,
   TableTypes,
   OnChangePageAndPageSizeTypeParams,
+  EntityType,
 } from "../utilities/types";
 import { Requirement } from "../models/MainInterfaces";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
@@ -21,12 +22,10 @@ import {
   mainModalScrollStyle,
   noPaginationPageSize,
   pageSizeOptionsSt,
+  tableSearchAfterMseconds,
 } from "../utilities/globals";
 import useApi from "../hooks/useApi";
-import {
-  deleteRequirementService,
-  getRequirementsBySubUserService,
-} from "../services/requests/requirementService";
+import { deleteRequirementService } from "../services/requests/requirementService";
 import { transformDataToRequirement } from "../utilities/transform";
 import { useLocation } from "react-router-dom";
 import {
@@ -47,23 +46,32 @@ import {
 } from "../hooks/requirementHook";
 import { ModalsContext } from "../contexts/ModalsContext";
 import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
+import { debounce } from "lodash";
+import useSearchTable from "../hooks/useSearchTable";
 
 export default function Requirements() {
   const { t } = useTranslation();
-  const { showLoadingMessage } = useShowLoadingMessage();
-  const { showNotification } = useShowNotification();
   const location = useLocation();
-  const [loadingTable, setLoadingTable] = useState(true);
   const { detailedRequirementModalData } = useContext(ModalsContext);
-  const [type, setType] = useState(getRouteType(location.pathname));
-  const [isOpenModal, setIsOpenModal] = useState(false);
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
+  const { showLoadingMessage } = useShowLoadingMessage();
+  const { showNotification } = useShowNotification();
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
   const { cancelRequirement } = useCancelRequirement();
   const { getBasicRateData, modalDataRate } = useCulminate();
+  const { searchTable, responseData, error, errorMsg } = useSearchTable(
+    dataUser.uid,
+    TableTypes.REQUIREMENT,
+    EntityType.SUBUSER
+  );
+  const [loadingTable, setLoadingTable] = useState(true);
+  const [type, setType] = useState(getRouteType(location.pathname));
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const [total, setTotal] = useState(0);
+  const [searchValue, setSearchValue] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -117,20 +125,10 @@ export default function Requirements() {
 
   /* Obtener lista inicialmente */
 
-  const [apiParams, setApiParams] = useState<useApiParams>({
-    service: getRequirementsBySubUserService(
-      dataUser.uid,
-      1,
-      pageSizeOptionsSt[0]
-    ),
-    method: "get",
-  });
-
-  const { responseData, error, errorMsg, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
+  useEffect(() => {
+    searchTable(1, pageSizeOptionsSt[0]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     setType(getRouteType(location.pathname));
@@ -147,11 +145,6 @@ export default function Requirements() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
-
-  useEffect(() => {
-    if (apiParams.service) fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParams]);
 
   useEffect(() => {
     if (responseData) {
@@ -231,7 +224,7 @@ export default function Requirements() {
           mainDataUser
         )
       );
-      setTotal(responseData.res?.totalDocuments);
+      setTotal(responseData.res?.total);
       setTableContent({
         type: TableTypes.REQUIREMENT,
         data,
@@ -364,9 +357,12 @@ export default function Requirements() {
     });
   }
 
-  function handleSearch(e: ChangeEvent<HTMLInputElement>) {
-    console.log(e.target.value);
-  }
+  const handleSearch = debounce((e: ChangeEvent<HTMLInputElement>) => {
+    // setLoadingTable(true);
+    setSearchValue(e.target.value);
+    setCurrentPage(1);
+    searchTable(1, pageSizeOptionsSt[0], e.target.value);
+  }, tableSearchAfterMseconds);
 
   function handleCloseModal() {
     setIsOpenModal(false);
@@ -375,19 +371,10 @@ export default function Requirements() {
   function handleChangePageAndPageSize({
     page,
     pageSize,
-    filters,
-    extra,
   }: OnChangePageAndPageSizeTypeParams) {
-    console.log(extra);
-    if (!filters || (filters && filters.state === null)) {
-      setLoadingTable(true);
-      setApiParams({
-        service: getRequirementsBySubUserService(dataUser.uid, page, pageSize),
-        method: "get",
-      });
-    } else if (filters && filters.state) {
-      setTotal(extra?.currentDataSource.length ?? 0);
-    }
+    setCurrentPage(page);
+    setLoadingTable(true);
+    searchTable(page, pageSize, searchValue);
   }
 
   return (

@@ -1,6 +1,7 @@
 import {
   CertificationState,
   CommonFilter,
+  EntityType,
   OrderType,
   RegisterTypeId,
   UserRoles,
@@ -204,11 +205,12 @@ export interface HomeFilterRequest {
   pageSize: number;
 }
 
-export interface SearchGoodsRequest {
+export interface SearchTableRequest {
   keyWords?: string;
   userId: string;
   page: number;
   pageSize: number;
   fieldName?: string;
-  orderType: OrderType;
+  orderType?: OrderType;
+  typeUser: EntityType;
 }

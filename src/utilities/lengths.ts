@@ -83,8 +83,4 @@ export const Lengths = {
     min: 3,
     max: 50,
   },
-  companyNameSearch: {
-    min: 0,
-    max: 25,
-  },
 };
