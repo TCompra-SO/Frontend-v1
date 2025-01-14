@@ -128,7 +128,7 @@ export default function Requirements() {
   /* Obtener lista inicialmente */
 
   useEffect(() => {
-    searchTable(1, currentPageSize);
+    searchTable(currentPage, currentPageSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -154,6 +154,7 @@ export default function Requirements() {
     if (responseData) {
       setTableData();
     } else if (error) {
+      setCurrentPage(1);
       setTotal(0);
       setTableContent({
         type: TableTypes.REQUIREMENT,
@@ -372,7 +373,7 @@ export default function Requirements() {
     // setLoadingTable(true);
     setSearchValue(e.target.value);
     setCurrentPage(1);
-    searchTable(1, currentPageSize, e.target.value);
+    searchTable(currentPage, currentPageSize, e.target.value);
   }, tableSearchAfterMseconds);
 
   function handleCloseModal() {

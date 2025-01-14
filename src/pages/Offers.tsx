@@ -25,10 +25,7 @@ import {
   getRouteType,
 } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
-import {
-  deleteOfferService,
-  getOffersBySubUserService,
-} from "../services/requests/offerService";
+import { deleteOfferService } from "../services/requests/offerService";
 import useApi from "../hooks/useApi";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
@@ -54,6 +51,8 @@ export default function Offers() {
   const [type, setType] = useState(getRouteType(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPageSize, setCurrentPageSize] = useState(pageSizeOptionsSt[0]);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
@@ -67,6 +66,8 @@ export default function Offers() {
     nameColumnHeader: t("offers"),
     onButtonClick: handleOnButtonClick,
     total: 0,
+    page: currentPage,
+    pageSize: currentPageSize,
   });
 
   /** Verificar si hay una solicitud pendiente */
@@ -103,7 +104,7 @@ export default function Offers() {
   /** Cargar datos iniciales */
 
   useEffect(() => {
-    searchTable(1, pageSizeOptionsSt[0]);
+    searchTable(currentPage, currentPageSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -111,6 +112,7 @@ export default function Offers() {
     if (responseData) {
       setData();
     } else if (error) {
+      setCurrentPage(1);
       setTableContent({
         type: TableTypes.OFFER,
         data: [],
@@ -119,6 +121,8 @@ export default function Offers() {
         nameColumnHeader: t("offers"),
         onButtonClick: handleOnButtonClick,
         total: 0,
+        page: currentPage,
+        pageSize: currentPageSize,
       });
       showNotification("error", errorMsg);
     }
@@ -176,6 +180,8 @@ export default function Offers() {
         ...prev,
         //total: 80, // r3v
         subType: type,
+        page: currentPage,
+        pageSize: currentPageSize,
       };
     });
   }, [type]);
@@ -201,6 +207,8 @@ export default function Offers() {
         nameColumnHeader: t("offers"),
         onButtonClick: handleOnButtonClick,
         total: responseData.res?.totalDocuments,
+        page: currentPage,
+        pageSize: currentPageSize,
       });
     } catch (error) {
       console.log(error);
@@ -298,15 +306,17 @@ export default function Offers() {
   }
 
   const handleSearch = debounce((e: ChangeEvent<HTMLInputElement>) => {
+    setCurrentPage(1);
     setSearchValue(e.target.value);
-    // setCurrentPage(1);
-    searchTable(1, pageSizeOptionsSt[0], e.target.value);
+    searchTable(currentPage, currentPageSize, e.target.value);
   }, tableSearchAfterMseconds);
 
   function handleChangePageAndPageSize({
     page,
     pageSize,
   }: OnChangePageAndPageSizeTypeParams) {
+    setCurrentPage(page);
+    setCurrentPageSize(pageSize);
     searchTable(page, pageSize, searchValue);
   }
 
