@@ -101,6 +101,7 @@ export const ApiRoutes = {
     culminate: "culminate/",
     getValidation: "getValidation/",
     cancel: "canceled/",
+    searchOffers: "searchOffersByUser",
   },
   score: {
     registerScore: "registerScore/",

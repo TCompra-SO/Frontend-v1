@@ -116,3 +116,12 @@ export function cancelOfferService(): HttpService {
     type: "OF-CAN",
   };
 }
+
+export function searchOffersService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+      ApiRoutes.offers.searchOffers
+    }`,
+    type: "OF-SE-OF",
+  };
+}

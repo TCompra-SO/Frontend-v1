@@ -72,7 +72,7 @@ export default function Requirements() {
   const [total, setTotal] = useState(0);
   const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [currentPageSize, setCurrentPageSize] = useState(pageSizeOptionsSt[0]);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
@@ -86,6 +86,8 @@ export default function Requirements() {
     nameColumnHeader: t(getLabelFromRequirementType(type)),
     onButtonClick: handleOnButtonClick,
     total,
+    page: currentPage,
+    pageSize: currentPageSize,
   });
 
   /** Verificar si hay una solicitud pendiente */
@@ -126,7 +128,7 @@ export default function Requirements() {
   /* Obtener lista inicialmente */
 
   useEffect(() => {
-    searchTable(1, pageSizeOptionsSt[0]);
+    searchTable(1, currentPageSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -139,6 +141,8 @@ export default function Requirements() {
       return {
         ...prev,
         //total: 100, // r3v
+        page: currentPage,
+        pageSize: currentPageSize,
         subType: type,
         nameColumnHeader: t(getLabelFromRequirementType(type)),
       };
@@ -159,6 +163,8 @@ export default function Requirements() {
         nameColumnHeader: t(getLabelFromRequirementType(type)),
         onButtonClick: handleOnButtonClick,
         total,
+        page: currentPage,
+        pageSize: currentPageSize,
       });
       setLoadingTable(false);
       showNotification("error", errorMsg);
@@ -215,6 +221,7 @@ export default function Requirements() {
   /** Funciones */
 
   async function setTableData() {
+    console.log("got data");
     try {
       const data: Requirement[] = responseData.data.map((e: any) =>
         transformDataToRequirement(
@@ -233,6 +240,8 @@ export default function Requirements() {
         nameColumnHeader: t("goods"),
         onButtonClick: handleOnButtonClick,
         total,
+        page: currentPage,
+        pageSize: currentPageSize,
       });
     } catch (error) {
       console.log(error);
@@ -363,7 +372,7 @@ export default function Requirements() {
     // setLoadingTable(true);
     setSearchValue(e.target.value);
     setCurrentPage(1);
-    searchTable(1, pageSizeOptionsSt[0], e.target.value);
+    searchTable(1, currentPageSize, e.target.value);
   }, tableSearchAfterMseconds);
 
   function handleCloseModal() {
@@ -375,6 +384,7 @@ export default function Requirements() {
     pageSize,
   }: OnChangePageAndPageSizeTypeParams) {
     setCurrentPage(page);
+    setCurrentPageSize(pageSize);
     setLoadingTable(true);
     searchTable(page, pageSize, searchValue);
   }

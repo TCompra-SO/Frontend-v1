@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Offer } from "../models/MainInterfaces";
 import {
   Action,
+  EntityType,
   ModalTypes,
   OnChangePageAndPageSizeTypeParams,
   TableTypes,
@@ -14,7 +15,11 @@ import {
   useApiParams,
 } from "../models/Interfaces";
 import TablePageContent from "../components/section/table-page/TablePageContent";
-import { mainModalScrollStyle, pageSizeOptionsSt } from "../utilities/globals";
+import {
+  mainModalScrollStyle,
+  pageSizeOptionsSt,
+  tableSearchAfterMseconds,
+} from "../utilities/globals";
 import {
   getLabelFromRequirementType,
   getRouteType,
@@ -31,19 +36,24 @@ import { transformToOfferFromGetOffersByEntityOrSubUser } from "../utilities/tra
 import { ModalsContext } from "../contexts/ModalsContext";
 import { useCulminate, useShowDetailOffer } from "../hooks/requirementHook";
 import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
+import useSearchTable from "../hooks/useSearchTable";
+import { debounce } from "lodash";
 
 export default function Offers() {
   const { t } = useTranslation();
   const location = useLocation();
-  const { showNotification } = useShowNotification();
-  const { showLoadingMessage } = useShowLoadingMessage();
-  const { detailedOfferModalData } = useContext(ModalsContext);
-  const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
+  const { detailedOfferModalData } = useContext(ModalsContext);
+  const { showNotification } = useShowNotification();
+  const { showLoadingMessage } = useShowLoadingMessage();
+  const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
+  const { getBasicRateData, modalDataRate } = useCulminate();
+  const { searchTable, responseData, error, errorMsg, loading } =
+    useSearchTable(dataUser.uid, TableTypes.OFFER, EntityType.SUBUSER);
   const [type, setType] = useState(getRouteType(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const { getBasicRateData, modalDataRate } = useCulminate();
+  const [searchValue, setSearchValue] = useState("");
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
@@ -92,21 +102,10 @@ export default function Offers() {
 
   /** Cargar datos iniciales */
 
-  const [apiParams, setApiParams] = useState<useApiParams>({
-    service: getOffersBySubUserService(dataUser.uid, 1, pageSizeOptionsSt[0]),
-    method: "get",
-  });
-
-  const { loading, responseData, error, errorMsg, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
-
   useEffect(() => {
-    if (apiParams.service) fetchData();
+    searchTable(1, pageSizeOptionsSt[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParams]);
+  }, []);
 
   useEffect(() => {
     if (responseData) {
@@ -298,19 +297,17 @@ export default function Offers() {
     }
   }
 
-  function handleSearch(e: ChangeEvent<HTMLInputElement>) {
-    console.log(e.target.value);
-  }
+  const handleSearch = debounce((e: ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+    // setCurrentPage(1);
+    searchTable(1, pageSizeOptionsSt[0], e.target.value);
+  }, tableSearchAfterMseconds);
 
   function handleChangePageAndPageSize({
     page,
     pageSize,
   }: OnChangePageAndPageSizeTypeParams) {
-    // setLoadingTable(true);
-    setApiParams({
-      service: getOffersBySubUserService(dataUser.uid, page, pageSize),
-      method: "get",
-    });
+    searchTable(page, pageSize, searchValue);
   }
 
   return (

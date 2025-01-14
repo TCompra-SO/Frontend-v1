@@ -6,15 +6,13 @@ import { EntityType, TableTypes } from "../utilities/types";
 import { searchRequirementsService } from "../services/requests/requirementService";
 import { searchSinceLength } from "../utilities/globals";
 import { getSearchString } from "../utilities/globalFunctions";
+import { searchOffersService } from "../services/requests/offerService";
 
 export default function useSearchTable(
   uid: string,
-  type: TableTypes,
-  entityType: EntityType
+  tableType: TableTypes,
+  entityType: EntityType // subuser: registros de usuario | otro: registros de usuario + subusuarios
 ) {
-  const [lastSearchValue, setLastSearchValue] = useState("");
-  const [tableType] = useState<TableTypes>(type);
-  const [searchType] = useState<EntityType>(entityType); // subuser: registros de usuario | otro: registros de usuario + subusuarios
   const [apiParams, setApiParams] = useState<useApiParams<SearchTableRequest>>({
     service: null,
     method: "get",
@@ -33,36 +31,24 @@ export default function useSearchTable(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
 
-  // useEffect(() => {
-  //   if (error) {
-  //     showNotification("error", errorMsg);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [error]);
-
   function reset() {
     setApiParams({
       service: null,
       method: "get",
     });
     resetUseApi();
-    setLastSearchValue("");
   }
 
   function searchTable(page: number, pageSize: number, keyWords?: string) {
     const newKeyWords = getSearchString(keyWords ?? "");
-    console.log(keyWords);
-    if (
-      (newKeyWords != lastSearchValue &&
-        newKeyWords.length >= searchSinceLength) ||
-      !keyWords
-    ) {
-      console.log("¿====");
-      if (newKeyWords) setLastSearchValue(newKeyWords);
+    if (newKeyWords.length >= searchSinceLength || !keyWords) {
       let service: HttpService | null = null;
       switch (tableType) {
         case TableTypes.REQUIREMENT:
           service = searchRequirementsService();
+          break;
+        case TableTypes.OFFER:
+          service = searchOffersService();
           break;
       }
       setApiParams({
@@ -73,7 +59,7 @@ export default function useSearchTable(
           page,
           pageSize,
           keyWords: keyWords === undefined ? keyWords : newKeyWords,
-          typeUser: searchType,
+          typeUser: entityType,
         },
       });
     }
