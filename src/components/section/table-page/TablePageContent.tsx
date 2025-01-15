@@ -61,6 +61,7 @@ export default function TablePageContent(props: TablePageContentProps) {
                 className="form-control"
                 onChange={props.onSearch}
                 maxLength={maxLengthStringToSearch}
+                allowClear
               />
             </Col>
           )}

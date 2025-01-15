@@ -8,9 +8,12 @@ import {
   locationColumnKey,
 } from "../../../../utilities/globals";
 import { IdValueMap, IdValueObj } from "../../../../models/Interfaces";
+import { FieldSort } from "../../../../models/Requests";
+import { getSortOrderFromFieldSort } from "../../../../utilities/globalFunctions";
 
 export default function LocationColumn(
   hidden: boolean = false,
+  fieldSort?: FieldSort,
   noSorter?: boolean
 ) {
   const { t } = useTranslation();
@@ -36,11 +39,9 @@ export default function LocationColumn(
     dataIndex: "location",
     key: locationColumnKey,
     align: "center",
-    sorter: noSorter
-      ? undefined
-      : (a, b) =>
-          cities[a.location]?.value.localeCompare(cities[b.location]?.value),
+    sorter: noSorter ? undefined : true,
     showSorterTooltip: false,
+    sortOrder: getSortOrderFromFieldSort(locationColumnKey, fieldSort),
     width: "130px",
     hidden,
     render: (_, { location }) => (

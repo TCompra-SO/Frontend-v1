@@ -339,13 +339,32 @@ export function getParamsFromSorter(
     sorter.columnKey &&
     typeof sorter.columnKey === "string"
   ) {
-    console.log(sorter.columnKey);
-    if (fieldNameObj[sorter.columnKey]) {
+    const tempOrderType = sorter.order
+      ? sorter.order == "descend"
+        ? OrderType.DESC
+        : OrderType.ASC
+      : undefined;
+    if (fieldNameObj[sorter.columnKey] && tempOrderType) {
       const fs: FieldSort = {
         fieldName: fieldNameObj[sorter.columnKey],
-        orderType: sorter.order == "descend" ? OrderType.DESC : OrderType.ASC,
+        orderType: tempOrderType,
+        columnKey: sorter.columnKey,
       };
       return fs;
     }
   }
+}
+
+// Función para mostrar ícono de sort en columna si la columna está ordenada
+export function getSortOrderFromFieldSort(
+  columnKey: string,
+  fieldSort: FieldSort | undefined
+) {
+  return fieldSort?.columnKey == columnKey
+    ? fieldSort?.orderType
+      ? fieldSort?.orderType == OrderType.ASC
+        ? "ascend"
+        : "descend"
+      : undefined
+    : undefined;
 }

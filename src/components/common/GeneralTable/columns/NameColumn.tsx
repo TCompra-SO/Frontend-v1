@@ -7,13 +7,15 @@ import {
   SubUserBase,
 } from "../../../../models/MainInterfaces";
 import {
-  OrderType,
   PurchaseOrderTableTypes,
   TableTypes,
 } from "../../../../utilities/types";
 import { useContext } from "react";
 import { ListsContext } from "../../../../contexts/ListsContext";
-import { getLabelFromRole } from "../../../../utilities/globalFunctions";
+import {
+  getLabelFromRole,
+  getSortOrderFromFieldSort,
+} from "../../../../utilities/globalFunctions";
 import { useTranslation } from "react-i18next";
 import { nameColumnKey } from "../../../../utilities/globals";
 import { FieldSort } from "../../../../models/Requests";
@@ -26,7 +28,6 @@ export default function NameColumn(
   extraParam?: any,
   noSorter?: boolean
 ) {
-  console.log(fieldSort);
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { categoryData } = context;
@@ -74,8 +75,7 @@ export default function NameColumn(
     key: nameColumnKey,
     align: "center",
     hidden,
-    // sortDirections: ["ascend", "descend"],
-    sorter: true,
+    sorter: noSorter ? undefined : true,
     // sorter: noSorter
     //   ? undefined
     //   : (a, b) => {
@@ -140,12 +140,7 @@ export default function NameColumn(
     //       return 0;
     //     },
     showSorterTooltip: false,
-    sortOrder:
-      fieldSort?.fieldName == nameColumnKey
-        ? fieldSort?.orderType == OrderType.ASC
-          ? "ascend"
-          : "descend"
-        : undefined,
+    sortOrder: getSortOrderFromFieldSort(nameColumnKey, fieldSort),
     render: (_, record) => {
       return (
         <>

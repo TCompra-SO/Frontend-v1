@@ -382,7 +382,7 @@ export default function Requirements() {
     setSearchValue(e.target.value);
     setCurrentPage(1);
     searchTable(
-      currentPage,
+      1,
       currentPageSize,
       e.target.value,
       fieldSort?.fieldName,
@@ -407,7 +407,6 @@ export default function Requirements() {
       fieldNameSearchRequestRequirement
     );
     setFieldSort(sortParams);
-
     searchTable(
       page,
       pageSize,

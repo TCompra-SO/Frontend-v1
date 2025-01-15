@@ -9,9 +9,12 @@ import { useContext } from "react";
 import { ListsContext } from "../../../../contexts/ListsContext";
 import { Coins } from "../../../../utilities/types";
 import { priceColumnKey } from "../../../../utilities/globals";
+import { FieldSort } from "../../../../models/Requests";
+import { getSortOrderFromFieldSort } from "../../../../utilities/globalFunctions";
 
 export default function PriceColumn(
   hidden: boolean = false,
+  fieldSort?: FieldSort,
   noSorter?: boolean
 ) {
   const { t } = useTranslation();
@@ -32,8 +35,9 @@ export default function PriceColumn(
         {record.price}
       </div>
     ),
-    sorter: noSorter ? undefined : (a, b) => a.price - b.price,
+    sorter: noSorter ? undefined : true,
     showSorterTooltip: false,
+    sortOrder: getSortOrderFromFieldSort(priceColumnKey, fieldSort),
     width: "130px",
   };
   return col;

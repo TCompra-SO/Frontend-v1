@@ -208,6 +208,7 @@ export interface HomeFilterRequest {
 export interface FieldSort {
   fieldName?: string;
   orderType?: OrderType;
+  columnKey?: string;
 }
 
 export interface SearchTableRequest extends FieldSort {

@@ -71,11 +71,15 @@ export const stateColumnKey: string = "state";
 export const typeColumnKey: string = "type";
 export const viewColumnKey: string = "view";
 
+// Columnas para requerimientos
+export const reqDateColumnKey: string = "publishDate";
+
 // Parámetros para búsqueda en tabla
 export const fieldNameSearchRequestRequirement: Record<string, string> = {
   [nameColumnKey]: "name",
-  publishDate: "publish_date",
+  [reqDateColumnKey]: "publish_date",
   [locationColumnKey]: "cityName",
   [priceColumnKey]: "budget",
   userName: "userName",
+  [offersColumnKey]: "number_offers",
 };
