@@ -1,12 +1,11 @@
 import { PurchaseOrder } from "../models/MainInterfaces";
 import {
   Action,
+  EntityType,
   ModalTypes,
-  OnChangePageAndPageSizeTypeParams,
   PurchaseOrderTableTypes,
   RequirementType,
   TableTypes,
-  UserRoles,
 } from "../utilities/types";
 import { useTranslation } from "react-i18next";
 import {
@@ -14,12 +13,13 @@ import {
   TableTypePurchaseOrder,
   useApiParams,
 } from "../models/Interfaces";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import useApi from "../hooks/useApi";
 import { getUserService } from "../services/requests/authService";
 import {
+  getFieldNameObjForOrders,
   getLabelFromPurchaseOrderType,
   getPurchaseOrderType,
   openPurchaseOrderPdf,
@@ -31,14 +31,9 @@ import {
 import {
   mainModalScrollStyle,
   noPaginationPageSize,
-  pageSizeOptionsSt,
 } from "../utilities/globals";
 import { useLocation } from "react-router-dom";
-import {
-  getPurchaseOrderPDFService,
-  getPurchaseOrdersByClientEntityService,
-  getPurchaseOrdersByProviderEntityService,
-} from "../services/requests/purchaseOrderService";
+import { getPurchaseOrderPDFService } from "../services/requests/purchaseOrderService";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
@@ -48,20 +43,33 @@ import {
   useGetOffersByRequirementId,
 } from "../hooks/requirementHooks";
 import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
+import useSearchTable, {
+  useFilterSortPaginationForTable,
+} from "../hooks/searchTableHooks";
 
 export default function PurchaseOrders() {
-  const { showLoadingMessage } = useShowLoadingMessage();
   const { t } = useTranslation();
   const location = useLocation();
-  const { showNotification } = useShowNotification();
   const uid = useSelector((state: MainState) => state.user.uid);
-  const role = useSelector((state: MainState) => state.user.typeID);
-  const [type, setType] = useState(getPurchaseOrderType(location.pathname));
+  // const role = useSelector((state: MainState) => state.user.typeID);
   const { updateMyPurchaseOrdersLoadingPdf } = useContext(LoadingDataContext);
   const { viewHistoryModalData } = useContext(ModalsContext);
+  const { showLoadingMessage } = useShowLoadingMessage();
+  const { showNotification } = useShowNotification();
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
   const { getBasicRateData, modalDataRate } = useCulminate();
+  const [type, setType] = useState(getPurchaseOrderType(location.pathname));
+  const { searchTable, responseData, error, errorMsg, loading } =
+    useSearchTable(uid, TableTypes.PURCHASE_ORDER, EntityType.SUBUSER, type);
+  const {
+    currentPage,
+    currentPageSize,
+    setCurrentPage,
+    fieldSort,
+    handleChangePageAndPageSize,
+    handleSearch,
+  } = useFilterSortPaginationForTable();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [action, setAction] = useState<Action>(Action.NONE);
   const [dataModal, setDataModal] = useState<ModalContent>({
@@ -77,6 +85,9 @@ export default function PurchaseOrders() {
     nameColumnHeader: t("user"),
     onButtonClick: handleOnButtonClick,
     total: 0,
+    page: currentPage,
+    pageSize: currentPageSize,
+    fieldSort,
   });
 
   useEffect(() => {
@@ -129,62 +140,49 @@ export default function PurchaseOrders() {
 
   /** Para obtener datos iniciales y datos de proveedor/cliente */
 
-  const [apiParams, setApiParams] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-  const { loading, responseData, error, errorMsg, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
-
   useEffect(() => {
-    switch (type) {
-      case PurchaseOrderTableTypes.ISSUED:
-        setApiParams({
-          service: getPurchaseOrdersByClientEntityService(
-            uid,
-            role == UserRoles.ADMIN ? UserRoles.BUYER : role,
-            1,
-            pageSizeOptionsSt[0]
-          ),
-          method: "get",
-        });
-        break;
-      case PurchaseOrderTableTypes.RECEIVED:
-        setApiParams({
-          service: getPurchaseOrdersByProviderEntityService(
-            uid,
-            role == UserRoles.ADMIN ? UserRoles.BUYER : role,
-            1,
-            pageSizeOptionsSt[0]
-          ),
-          method: "get",
-        });
-        break;
-    }
+    searchTable({ page: currentPage, pageSize: currentPageSize });
+    // switch (type) {
+    //   case PurchaseOrderTableTypes.ISSUED:
+    //     setApiParams({
+    //       service: getPurchaseOrdersByClientEntityService(
+    //         uid,
+    //         role == UserRoles.ADMIN ? UserRoles.BUYER : role,
+    //         1,
+    //         pageSizeOptionsSt[0]
+    //       ),
+    //       method: "get",
+    //     });
+    //     break;
+    //   case PurchaseOrderTableTypes.RECEIVED:
+    //     setApiParams({
+    //       service: getPurchaseOrdersByProviderEntityService(
+    //         uid,
+    //         role == UserRoles.ADMIN ? UserRoles.BUYER : role,
+    //         1,
+    //         pageSizeOptionsSt[0]
+    //       ),
+    //       method: "get",
+    //     });
+    //     break;
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
-
-  useEffect(() => {
-    if (apiParams.service) fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParams]);
 
   useEffect(() => {
     if (responseData) {
       setTableData();
     } else if (error) {
-      setTableContent({
-        type: TableTypes.PURCHASE_ORDER,
+      setCurrentPage(1);
+      setTableContent((prev) => ({
+        ...prev,
         data: [],
         subType: type,
-        hiddenColumns: [],
-        nameColumnHeader: t("user"),
-        onButtonClick: handleOnButtonClick,
         total: 0,
-      });
+        page: currentPage,
+        pageSize: currentPageSize,
+        fieldSort,
+      }));
       showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -275,15 +273,15 @@ export default function PurchaseOrders() {
         transformToPurchaseOrder(po)
       );
 
-      setTableContent({
-        type: TableTypes.PURCHASE_ORDER,
+      setTableContent((prev) => ({
+        ...prev,
         data,
         subType: type,
-        hiddenColumns: [],
-        nameColumnHeader: t("user"),
-        onButtonClick: handleOnButtonClick,
-        total: responseData.res?.totalDocuments,
-      });
+        total: responseData.res?.total,
+        page: currentPage,
+        pageSize: currentPageSize,
+        fieldSort,
+      }));
     } catch (error) {
       console.log(error);
       showNotification("error", t("errorOccurred"));
@@ -385,40 +383,36 @@ export default function PurchaseOrders() {
     }
   }
 
-  function handleSearch(e: ChangeEvent<HTMLInputElement>) {
-    console.log(e.target.value);
-  }
-
-  function handleChangePageAndPageSize({
-    page,
-    pageSize,
-  }: OnChangePageAndPageSizeTypeParams) {
-    // setLoadingTable(true);
-    switch (type) {
-      case PurchaseOrderTableTypes.ISSUED:
-        setApiParams({
-          service: getPurchaseOrdersByClientEntityService(
-            uid,
-            role == UserRoles.ADMIN ? UserRoles.BUYER : role,
-            page,
-            pageSize
-          ),
-          method: "get",
-        });
-        break;
-      case PurchaseOrderTableTypes.RECEIVED:
-        setApiParams({
-          service: getPurchaseOrdersByProviderEntityService(
-            uid,
-            role == UserRoles.ADMIN ? UserRoles.BUYER : role,
-            page,
-            pageSize
-          ),
-          method: "get",
-        });
-        break;
-    }
-  }
+  // function handleChangePageAndPageSize({
+  //   page,
+  //   pageSize,
+  // }: OnChangePageAndPageSizeTypeParams) {
+  //   // setLoadingTable(true);
+  //   switch (type) {
+  //     case PurchaseOrderTableTypes.ISSUED:
+  //       setApiParams({
+  //         service: getPurchaseOrdersByClientEntityService(
+  //           uid,
+  //           role == UserRoles.ADMIN ? UserRoles.BUYER : role,
+  //           page,
+  //           pageSize
+  //         ),
+  //         method: "get",
+  //       });
+  //       break;
+  //     case PurchaseOrderTableTypes.RECEIVED:
+  //       setApiParams({
+  //         service: getPurchaseOrdersByProviderEntityService(
+  //           uid,
+  //           role == UserRoles.ADMIN ? UserRoles.BUYER : role,
+  //           page,
+  //           pageSize
+  //         ),
+  //         method: "get",
+  //       });
+  //       break;
+  //   }
+  // }
 
   return (
     <>
@@ -437,9 +431,15 @@ export default function PurchaseOrders() {
         )}`}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
-        onSearch={handleSearch}
+        onSearch={(e) => handleSearch(e, searchTable)}
         loading={loading}
-        onChangePageAndPageSize={handleChangePageAndPageSize}
+        onChangePageAndPageSize={(params) =>
+          handleChangePageAndPageSize(
+            params,
+            getFieldNameObjForOrders(type),
+            searchTable
+          )
+        }
       />
     </>
   );

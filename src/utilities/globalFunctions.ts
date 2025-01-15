@@ -7,6 +7,8 @@ import {
 } from "../models/Interfaces";
 import {
   defaultCountry,
+  fieldNameSearchRequestOrderClient,
+  fieldNameSearchRequestOrderProvider,
   maxDocSizeMb,
   maxImageSizeMb,
   maxLengthStringToSearch,
@@ -367,4 +369,10 @@ export function getSortOrderFromFieldSort(
         : "descend"
       : undefined
     : undefined;
+}
+
+export function getFieldNameObjForOrders(type: PurchaseOrderTableTypes) {
+  return type == PurchaseOrderTableTypes.ISSUED
+    ? fieldNameSearchRequestOrderProvider
+    : fieldNameSearchRequestOrderClient;
 }

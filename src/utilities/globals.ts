@@ -74,8 +74,11 @@ export const viewColumnKey: string = "view";
 // Columnas custom
 export const reqDateColumnKey: string = "publishDate";
 export const offerDateColumnKey: string = "publishDate";
+export const purcOrderReqTitleColumnKey: string = "requirementTitle";
+export const purcOrderDateColumnKey: string = "selectionDate";
+export const purcOrderOfferTitleColumnKey: string = "offerTitle";
 
-// Parámetros para búsqueda en tabla
+// Parámetros para sort en tabla
 export const fieldNameSearchRequestRequirement: Record<string, string> = {
   [nameColumnKey]: "name",
   [reqDateColumnKey]: "publish_date",
@@ -91,4 +94,17 @@ export const fieldNameSearchRequestOffer: Record<string, string> = {
   [offerDateColumnKey]: "publishDate",
   [priceColumnKey]: "budget",
   userName: "userName",
+};
+export const fieldNameSearchRequestOrder: Record<string, string> = {
+  [purcOrderReqTitleColumnKey]: "requerimentTitle",
+  [purcOrderDateColumnKey]: "createDate",
+  [purcOrderOfferTitleColumnKey]: "offerTitle",
+};
+export const fieldNameSearchRequestOrderClient: Record<string, string> = {
+  ...fieldNameSearchRequestOrder,
+  [nameColumnKey]: "userNameClient",
+};
+export const fieldNameSearchRequestOrderProvider: Record<string, string> = {
+  ...fieldNameSearchRequestOrder,
+  [nameColumnKey]: "nameUserProvider",
 };

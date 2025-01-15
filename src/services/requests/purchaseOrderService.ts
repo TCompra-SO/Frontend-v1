@@ -64,3 +64,21 @@ export function getPurchaseOrdersByProviderEntityService(
     type: "PO-GET-ENT-P",
   };
 }
+
+export function searchPurchaseOrdersByClientService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.purchaseOrder
+    }${ApiRoutes.purchaseOrder.searchPurchaseOrdersByClient}`,
+    type: "PO-SE-CL",
+  };
+}
+
+export function searchPurchaseOrdersByProviderService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
+      ApiMainRoutes.purchaseOrder
+    }${ApiRoutes.purchaseOrder.searchPurchaseOrdersByProvider}`,
+    type: "PO-SE-PR",
+  };
+}

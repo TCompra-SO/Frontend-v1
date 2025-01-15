@@ -1,12 +1,16 @@
 import { Table, TableProps } from "antd";
 import {
   OnChangePageAndPageSizeType,
+  PurchaseOrderTableTypes,
   TableColumns,
   TableTypes,
 } from "../../../utilities/types";
 import {
   offerDateColumnKey,
   pageSizeOptionsSt,
+  purcOrderDateColumnKey,
+  purcOrderOfferTitleColumnKey,
+  purcOrderReqTitleColumnKey,
   reqDateColumnKey,
 } from "../../../utilities/globals";
 import ImageColumn from "./columns/ImageColumn";
@@ -431,17 +435,23 @@ export default function GeneralTable(props: GeneralTableProps) {
           props.content.fieldSort,
           props.content.subType
         ),
-
         GeneralColumnString(
-          t("requirement"),
-          "requirementTitle",
+          t(
+            props.content.subType == PurchaseOrderTableTypes.ISSUED
+              ? "myRequirement"
+              : "myOffer"
+          ),
+          props.content.subType == PurchaseOrderTableTypes.ISSUED
+            ? purcOrderReqTitleColumnKey
+            : purcOrderOfferTitleColumnKey,
           true,
           130,
-          visibility[TableColumns.REQUIREMENT]
+          visibility[TableColumns.REQUIREMENT],
+          props.content.fieldSort
         ),
         GeneralDateColumn(
           t("selectionDateAbbrev"),
-          "selectionDate",
+          purcOrderDateColumnKey,
           visibility[TableColumns.SELECTION_DATE],
           props.content.fieldSort
         ),
@@ -744,7 +754,8 @@ export default function GeneralTable(props: GeneralTableProps) {
           false,
           90,
           visibility[TableColumns.SUBTYPE],
-          false,
+          props.content.fieldSort,
+          true,
           getLabelFromPurchaseOrderType
         ),
         TypeColumn(visibility[TableColumns.TYPE]),

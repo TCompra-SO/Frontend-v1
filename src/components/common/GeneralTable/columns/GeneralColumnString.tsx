@@ -1,7 +1,11 @@
 import { Flex } from "antd";
 import { ColumnType } from "antd/es/table";
-import { getNestedValue } from "../../../../utilities/globalFunctions";
+import {
+  getNestedValue,
+  getSortOrderFromFieldSort,
+} from "../../../../utilities/globalFunctions";
 import { useTranslation } from "react-i18next";
+import { FieldSort } from "../../../../models/Requests";
 
 export default function GeneralColumnString(
   nameColumn: string,
@@ -9,7 +13,9 @@ export default function GeneralColumnString(
   truncate: boolean,
   width: number = 130,
   hidden: boolean = false,
-  sorter: boolean = true,
+  // sorter: boolean = true,
+  fieldSort?: FieldSort,
+  noSorter?: boolean,
   getLabelFunction?: (type: any) => string
 ) {
   const { t } = useTranslation();
@@ -44,12 +50,8 @@ export default function GeneralColumnString(
         )}
       </>
     ),
-    sorter: sorter
-      ? (a, b) =>
-          getNestedValue(dataIndex, a)?.localeCompare(
-            getNestedValue(dataIndex, b)
-          )
-      : false,
+    sorter: noSorter ? undefined : true,
+    sortOrder: getSortOrderFromFieldSort(dataIndex, fieldSort),
     showSorterTooltip: false,
   };
   if (!truncate) col.width = width;

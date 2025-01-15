@@ -113,6 +113,8 @@ export const ApiRoutes = {
     getPurchaseOrderPDF: "getpurchaseOrderPDF/",
     getPurchaseOrdersByProvider: "getPurchaseOrdersByProvider/",
     getPurchaseOrdersByClient: "getPurchaseOrdersByClient/",
+    searchPurchaseOrdersByProvider: "searchPurchaseOrdersByProvider",
+    searchPurchaseOrdersByClient: "searchPurchaseOrdersByClient",
   },
   certificate: {
     uploadCertificate: "uploadCertificate",

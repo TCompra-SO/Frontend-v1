@@ -6,6 +6,8 @@ import {
   EntityType,
   OnChangePageAndPageSizeTypeParams,
   OrderType,
+  PurchaseOrderTableTypes,
+  RequirementType,
   TableTypes,
 } from "../utilities/types";
 import { searchRequirementsService } from "../services/requests/requirementService";
@@ -20,6 +22,10 @@ import {
 } from "../utilities/globalFunctions";
 import { searchOffersService } from "../services/requests/offerService";
 import { debounce } from "lodash";
+import {
+  searchPurchaseOrdersByClientService,
+  searchPurchaseOrdersByProviderService,
+} from "../services/requests/purchaseOrderService";
 
 type SearchTableTypeParams = {
   page: number;
@@ -32,7 +38,8 @@ type SearchTableTypeParams = {
 export default function useSearchTable(
   uid: string,
   tableType: TableTypes,
-  entityType: EntityType // subuser: registros de usuario | otro: registros de usuario + subusuarios
+  entityType: EntityType, // subuser: registros de usuario | otro: registros de usuario + subusuarios
+  subType?: RequirementType | PurchaseOrderTableTypes
 ) {
   const [apiParams, setApiParams] = useState<useApiParams<SearchTableRequest>>({
     service: null,
@@ -77,6 +84,11 @@ export default function useSearchTable(
         case TableTypes.OFFER:
           service = searchOffersService();
           break;
+        case TableTypes.PURCHASE_ORDER:
+          if (subType == PurchaseOrderTableTypes.ISSUED)
+            service = searchPurchaseOrdersByClientService();
+          else if (subType == PurchaseOrderTableTypes.RECEIVED)
+            service = searchPurchaseOrdersByProviderService();
       }
       setApiParams({
         service,

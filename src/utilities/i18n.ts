@@ -164,7 +164,9 @@ const resources = {
       // Sections
       myProfile: "My Profile",
       myRequirements: "My Requirements",
+      myRequirement: "My Requirement",
       myOffers: "My Offers",
+      myOffer: "My Offer",
       myPurchaseOrders: "My Purchase Orders",
       rrhh: "Human Resources",
       createUsers: "Create users",
@@ -682,7 +684,9 @@ const resources = {
       // Sections
       myProfile: "Mi Perfil",
       myRequirements: "Mis Requerimientos",
+      myRequirement: "Mi Requerimiento",
       myOffers: "Mis Ofertas",
+      myOffer: "Mi Oferta",
       myPurchaseOrders: "Mis Órdenes de compra",
       rrhh: "RR. HH.",
       createUsers: "Crear usuarios",
