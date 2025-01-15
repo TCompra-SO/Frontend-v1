@@ -2,10 +2,18 @@ import { useEffect, useState } from "react";
 import { HttpService, useApiParams } from "../models/Interfaces";
 import { SearchTableRequest } from "../models/Requests";
 import useApi from "./useApi";
-import { EntityType, OrderType, TableTypes } from "../utilities/types";
+import {
+  EntityType,
+  OnChangePageAndPageSizeTypeParams,
+  OrderType,
+  TableTypes,
+} from "../utilities/types";
 import { searchRequirementsService } from "../services/requests/requirementService";
 import { searchSinceLength } from "../utilities/globals";
-import { getSearchString } from "../utilities/globalFunctions";
+import {
+  getParamsFromSorter,
+  getSearchString,
+} from "../utilities/globalFunctions";
 import { searchOffersService } from "../services/requests/offerService";
 
 export default function useSearchTable(
@@ -72,6 +80,25 @@ export default function useSearchTable(
       });
     }
   }
+
+  // function handleChangePageAndPageSize(
+  //   { page, pageSize, sorter }: OnChangePageAndPageSizeTypeParams,
+  //   setCurrentPage: (val: number) => void,
+  //   setCurrentPageSize: (val: number) => void,
+  //   fieldNameObj: Record<string, string>
+  // ) {
+  //   setCurrentPage(page);
+  //   setCurrentPageSize(pageSize);
+  //   const sortParams = getParamsFromSorter(sorter, fieldNameObj);
+  //   setFieldSort(sortParams);
+  //   searchTable(
+  //     page,
+  //     pageSize,
+  //     searchValue,
+  //     sortParams?.fieldName,
+  //     sortParams?.orderType
+  //   );
+  // }
 
   return {
     responseData,

@@ -162,17 +162,15 @@ export default function Requirements() {
     } else if (error) {
       setCurrentPage(1);
       setTotal(0);
-      setTableContent({
-        type: TableTypes.REQUIREMENT,
-        data: [],
-        subType: type,
-        hiddenColumns: [TableColumns.CATEGORY],
-        nameColumnHeader: t(getLabelFromRequirementType(type)),
-        onButtonClick: handleOnButtonClick,
-        total,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
+      setTableContent((prev) => {
+        return {
+          ...prev,
+          data: [],
+          total,
+          page: currentPage,
+          pageSize: currentPageSize,
+          fieldSort,
+        };
       });
       setLoadingTable(false);
       showNotification("error", errorMsg);
@@ -240,17 +238,15 @@ export default function Requirements() {
         )
       );
       setTotal(responseData.res?.totalDocuments);
-      setTableContent({
-        type: TableTypes.REQUIREMENT,
-        data,
-        subType: RequirementType.GOOD,
-        hiddenColumns: [TableColumns.CATEGORY],
-        nameColumnHeader: t("goods"),
-        onButtonClick: handleOnButtonClick,
-        total,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
+      setTableContent((prev) => {
+        return {
+          ...prev,
+          data,
+          total,
+          page: currentPage,
+          pageSize: currentPageSize,
+          fieldSort,
+        };
       });
     } catch (error) {
       console.log(error);
