@@ -5,6 +5,7 @@ import {
   TableTypes,
 } from "../../../utilities/types";
 import {
+  offerDateColumnKey,
   pageSizeOptionsSt,
   reqDateColumnKey,
 } from "../../../utilities/globals";
@@ -391,14 +392,18 @@ export default function GeneralTable(props: GeneralTableProps) {
         visibility[TableColumns.NAME],
         props.content.fieldSort
       ),
-      RequirementColumn(true, visibility[TableColumns.REQUIREMENT]),
+      RequirementColumn(
+        true,
+        visibility[TableColumns.REQUIREMENT],
+        props.content.fieldSort
+      ),
       LocationColumn(
         visibility[TableColumns.LOCATION],
         props.content.fieldSort
       ),
       GeneralDateColumn(
         t("dateColumn"),
-        "publishDate",
+        offerDateColumnKey,
         visibility[TableColumns.PUBLISH_DATE],
         props.content.fieldSort
       ),
@@ -509,7 +514,11 @@ export default function GeneralTable(props: GeneralTableProps) {
         props.content.fieldSort
       ),
       GeneralColumnString(t("user"), "subUser.name", true),
-      RequirementColumn(true, visibility[TableColumns.REQUIREMENT]),
+      RequirementColumn(
+        true,
+        visibility[TableColumns.REQUIREMENT],
+        props.content.fieldSort
+      ),
       GeneralDateColumn(
         t("dateColumn"),
         "publishDate",

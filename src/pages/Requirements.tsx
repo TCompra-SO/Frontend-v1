@@ -142,17 +142,15 @@ export default function Requirements() {
   }, [location]);
 
   useEffect(() => {
-    setTableContent((prev) => {
-      return {
-        ...prev,
-        //total: 100, // r3v
-        page: currentPage,
-        pageSize: currentPageSize,
-        subType: type,
-        nameColumnHeader: t(getLabelFromRequirementType(type)),
-        fieldSort,
-      };
-    });
+    setTableContent((prev) => ({
+      ...prev,
+      //total: 100, // r3v
+      page: currentPage,
+      pageSize: currentPageSize,
+      subType: type,
+      nameColumnHeader: t(getLabelFromRequirementType(type)),
+      fieldSort,
+    }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
@@ -162,16 +160,14 @@ export default function Requirements() {
     } else if (error) {
       setCurrentPage(1);
       setTotal(0);
-      setTableContent((prev) => {
-        return {
-          ...prev,
-          data: [],
-          total,
-          page: currentPage,
-          pageSize: currentPageSize,
-          fieldSort,
-        };
-      });
+      setTableContent((prev) => ({
+        ...prev,
+        data: [],
+        total,
+        page: currentPage,
+        pageSize: currentPageSize,
+        fieldSort,
+      }));
       setLoadingTable(false);
       showNotification("error", errorMsg);
     }
@@ -238,16 +234,14 @@ export default function Requirements() {
         )
       );
       setTotal(responseData.res?.totalDocuments);
-      setTableContent((prev) => {
-        return {
-          ...prev,
-          data,
-          total,
-          page: currentPage,
-          pageSize: currentPageSize,
-          fieldSort,
-        };
-      });
+      setTableContent((prev) => ({
+        ...prev,
+        data,
+        total,
+        page: currentPage,
+        pageSize: currentPageSize,
+        fieldSort,
+      }));
     } catch (error) {
       console.log(error);
       showNotification("error", t("errorOccurred"));

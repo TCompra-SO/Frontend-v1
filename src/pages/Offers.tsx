@@ -1,14 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { Offer } from "../models/MainInterfaces";
-import {
-  Action,
-  EntityType,
-  ModalTypes,
-  OnChangePageAndPageSizeTypeParams,
-  TableTypes,
-} from "../utilities/types";
+import { Action, EntityType, ModalTypes, TableTypes } from "../utilities/types";
 import ModalContainer from "../components/containers/ModalContainer";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   ModalContent,
   TableTypeOffer,
@@ -16,9 +10,8 @@ import {
 } from "../models/Interfaces";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import {
+  fieldNameSearchRequestOffer,
   mainModalScrollStyle,
-  pageSizeOptionsSt,
-  tableSearchAfterMseconds,
 } from "../utilities/globals";
 import {
   getLabelFromRequirementType,
@@ -33,8 +26,9 @@ import { transformToOfferFromGetOffersByEntityOrSubUser } from "../utilities/tra
 import { ModalsContext } from "../contexts/ModalsContext";
 import { useCulminate, useShowDetailOffer } from "../hooks/requirementHooks";
 import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
-import useSearchTable from "../hooks/searchTableHooks";
-import { debounce } from "lodash";
+import useSearchTable, {
+  useFilterSortPaginationForTable,
+} from "../hooks/searchTableHooks";
 
 export default function Offers() {
   const { t } = useTranslation();
@@ -50,14 +44,19 @@ export default function Offers() {
     useSearchTable(dataUser.uid, TableTypes.OFFER, EntityType.SUBUSER);
   const [type, setType] = useState(getRouteType(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [currentPageSize, setCurrentPageSize] = useState(pageSizeOptionsSt[0]);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
     action: Action.NONE,
   });
+  const {
+    currentPage,
+    currentPageSize,
+    setCurrentPage,
+    handleChangePageAndPageSize,
+    handleSearch,
+    fieldSort,
+  } = useFilterSortPaginationForTable();
   const [tableContent, setTableContent] = useState<TableTypeOffer>({
     type: TableTypes.OFFER,
     data: [],
@@ -68,6 +67,7 @@ export default function Offers() {
     total: 0,
     page: currentPage,
     pageSize: currentPageSize,
+    fieldSort,
   });
 
   /** Verificar si hay una solicitud pendiente */
@@ -104,7 +104,7 @@ export default function Offers() {
   /** Cargar datos iniciales */
 
   useEffect(() => {
-    searchTable(currentPage, currentPageSize);
+    searchTable({ page: currentPage, pageSize: currentPageSize });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -113,17 +113,14 @@ export default function Offers() {
       setData();
     } else if (error) {
       setCurrentPage(1);
-      setTableContent({
-        type: TableTypes.OFFER,
+      setTableContent((prev) => ({
+        ...prev,
         data: [],
-        subType: type,
-        hiddenColumns: [],
-        nameColumnHeader: t("offers"),
-        onButtonClick: handleOnButtonClick,
         total: 0,
         page: currentPage,
         pageSize: currentPageSize,
-      });
+        fieldSort,
+      }));
       showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -175,15 +172,15 @@ export default function Offers() {
   }, [location]);
 
   useEffect(() => {
-    setTableContent((prev) => {
-      return {
-        ...prev,
-        //total: 80, // r3v
-        subType: type,
-        page: currentPage,
-        pageSize: currentPageSize,
-      };
-    });
+    setTableContent((prev) => ({
+      ...prev,
+      //total: 80, // r3v
+      subType: type,
+      page: currentPage,
+      pageSize: currentPageSize,
+      fieldSort,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
   /** Funciones */
@@ -199,17 +196,14 @@ export default function Offers() {
         )
       );
 
-      setTableContent({
-        type: TableTypes.OFFER,
-        data: data,
-        subType: type,
-        hiddenColumns: [],
-        nameColumnHeader: t("offers"),
-        onButtonClick: handleOnButtonClick,
-        total: responseData.res?.totalDocuments,
+      setTableContent((prev) => ({
+        ...prev,
+        data,
         page: currentPage,
         pageSize: currentPageSize,
-      });
+        fieldSort,
+        total: responseData.res?.totalDocuments,
+      }));
     } catch (error) {
       console.log(error);
       showNotification("error", t("errorOccurred"));
@@ -305,21 +299,6 @@ export default function Offers() {
     }
   }
 
-  const handleSearch = debounce((e: ChangeEvent<HTMLInputElement>) => {
-    setCurrentPage(1);
-    setSearchValue(e.target.value);
-    searchTable(currentPage, currentPageSize, e.target.value);
-  }, tableSearchAfterMseconds);
-
-  function handleChangePageAndPageSize({
-    page,
-    pageSize,
-  }: OnChangePageAndPageSizeTypeParams) {
-    setCurrentPage(page);
-    setCurrentPageSize(pageSize);
-    searchTable(page, pageSize, searchValue);
-  }
-
   return (
     <>
       <ModalContainer
@@ -336,9 +315,15 @@ export default function Offers() {
         subtitle={`${t("listOf")} ${t(getLabelFromRequirementType(type))}`}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
-        onSearch={handleSearch}
+        onSearch={(e) => handleSearch(e, searchTable)}
         loading={loading}
-        onChangePageAndPageSize={handleChangePageAndPageSize}
+        onChangePageAndPageSize={(params) =>
+          handleChangePageAndPageSize(
+            params,
+            fieldNameSearchRequestOffer,
+            searchTable
+          )
+        }
       />
     </>
   );

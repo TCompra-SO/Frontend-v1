@@ -71,8 +71,9 @@ export const stateColumnKey: string = "state";
 export const typeColumnKey: string = "type";
 export const viewColumnKey: string = "view";
 
-// Columnas para requerimientos
+// Columnas custom
 export const reqDateColumnKey: string = "publishDate";
+export const offerDateColumnKey: string = "publishDate";
 
 // Parámetros para búsqueda en tabla
 export const fieldNameSearchRequestRequirement: Record<string, string> = {
@@ -82,4 +83,12 @@ export const fieldNameSearchRequestRequirement: Record<string, string> = {
   [priceColumnKey]: "budget",
   userName: "userName",
   [offersColumnKey]: "number_offers",
+};
+export const fieldNameSearchRequestOffer: Record<string, string> = {
+  [nameColumnKey]: "name",
+  [requirementColumnKey]: "requerimentTitle",
+  [locationColumnKey]: "cityName",
+  [offerDateColumnKey]: "publishDate",
+  [priceColumnKey]: "budget",
+  userName: "userName",
 };
