@@ -24,7 +24,7 @@ import {
 } from "../utilities/transform";
 import { pageRoutes } from "../utilities/routes";
 import { pageSizeOptionsSt } from "../utilities/globals";
-import useShowNotification from "../hooks/utilHook";
+import useShowNotification from "../hooks/utilHooks";
 
 export default function AllRequirements() {
   const { t } = useTranslation();

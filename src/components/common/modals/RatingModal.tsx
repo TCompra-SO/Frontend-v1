@@ -23,7 +23,7 @@ import { CommonModalProps } from "../../../models/Interfaces";
 import { CulminateRequest } from "../../../models/Requests";
 import { culminateRequirementService } from "../../../services/requests/requirementService";
 import { culminateOfferService } from "../../../services/requests/offerService";
-import useShowNotification from "../../../hooks/utilHook";
+import useShowNotification from "../../../hooks/utilHooks";
 
 interface RatingModalProps extends CommonModalProps {
   basicRateData: BasicRateData;

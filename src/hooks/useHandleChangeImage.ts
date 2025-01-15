@@ -1,7 +1,7 @@
 import { checkImage } from "../utilities/globalFunctions";
 import { maxImageSizeMb } from "../utilities/globals";
 import { useTranslation } from "react-i18next";
-import useShowNotification from "./utilHook";
+import useShowNotification from "./utilHooks";
 
 export function useHandleChangeImage() {
   const { t } = useTranslation();

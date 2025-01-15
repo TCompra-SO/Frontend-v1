@@ -43,7 +43,7 @@ import {
   getSubUserService,
   updateProfileSubUserService,
 } from "../services/requests/subUserService";
-import useShowNotification from "../hooks/utilHook";
+import useShowNotification from "../hooks/utilHooks";
 
 export default function MyProfile() {
   const { t } = useTranslation();

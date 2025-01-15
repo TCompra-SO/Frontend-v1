@@ -8,7 +8,7 @@ import ProfileMenu from "../items/ProfileMenu";
 import useWindowSize from "../../../../hooks/useWindowSize";
 import { windowSize } from "../../../../utilities/globals";
 import { useTranslation } from "react-i18next";
-import { useLogout } from "../../../../hooks/authHook";
+import { useLogout } from "../../../../hooks/authHooks";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../../models/Redux";
 import { getSectionFromRoute } from "../../../../utilities/globalFunctions";

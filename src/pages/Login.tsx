@@ -26,7 +26,7 @@ import {
   useEmailRules,
   usePasswordRules,
   useRucRules,
-} from "../hooks/validators";
+} from "../hooks/validatorHooks";
 import InputContainer from "../components/containers/InputContainer";
 import SelectContainer from "../components/containers/SelectContainer";
 import ButtonContainer from "../components/containers/ButtonContainer";
@@ -35,8 +35,8 @@ import { equalServices } from "../utilities/globalFunctions";
 import ModalContainer from "../components/containers/ModalContainer";
 import { AxiosError } from "axios";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
-import { useLoadUserInfo } from "../hooks/authHook";
-import useShowNotification from "../hooks/utilHook";
+import { useLoadUserInfo } from "../hooks/authHooks";
+import useShowNotification from "../hooks/utilHooks";
 
 const LoginType = {
   LOGIN: "login",

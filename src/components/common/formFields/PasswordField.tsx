@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import InputContainer from "../../containers/InputContainer";
 import { Form } from "antd";
-import { usePasswordRules } from "../../../hooks/validators";
+import { usePasswordRules } from "../../../hooks/validatorHooks";
 import { ReactNode } from "react";
 
 interface PasswordFieldProps {

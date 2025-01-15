@@ -18,7 +18,7 @@ import {
   useDeleteCertificate,
   useGetCertificatesList,
   useGetRequiredDocsCert,
-} from "../hooks/certificateHook";
+} from "../hooks/certificateHooks";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 

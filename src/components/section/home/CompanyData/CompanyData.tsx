@@ -14,7 +14,7 @@ import {
   verifyCertificationByUserIdAndCompanyId,
 } from "../../../../services/complete/generalServices";
 import { useTranslation } from "react-i18next";
-import useShowNotification from "../../../../hooks/utilHook";
+import useShowNotification from "../../../../hooks/utilHooks";
 
 export default function CompanyData() {
   const { t } = useTranslation();

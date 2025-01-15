@@ -28,9 +28,9 @@ import {
 } from "../utilities/transform";
 import { getBaseDataUserService } from "../services/requests/authService";
 import { mainModalScrollStyle, pageSizeOptionsSt } from "../utilities/globals";
-import { useShowDetailOffer } from "../hooks/requirementHook";
+import { useShowDetailOffer } from "../hooks/requirementHooks";
 import ModalContainer from "../components/containers/ModalContainer";
-import useShowNotification from "../hooks/utilHook";
+import useShowNotification from "../hooks/utilHooks";
 
 export default function AllOffers() {
   const { t } = useTranslation();

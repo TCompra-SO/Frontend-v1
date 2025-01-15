@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { createContext, ReactNode, useState } from "react";
 import { NotificationData } from "../models/Interfaces";
-import useShowNotification from "../hooks/utilHook";
+import useShowNotification from "../hooks/utilHooks";
 
 interface RequestQueueItem {
   response: any;

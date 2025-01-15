@@ -42,7 +42,7 @@ import {
   getPurchaseOrdersByClientEntityService,
   getPurchaseOrdersByProviderEntityService,
 } from "../services/requests/purchaseOrderService";
-import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 
 export default function Users() {
   const { t } = useTranslation();

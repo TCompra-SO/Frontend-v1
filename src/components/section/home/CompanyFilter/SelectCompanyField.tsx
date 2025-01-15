@@ -11,7 +11,7 @@ import {
   searchSinceLength,
 } from "../../../../utilities/globals";
 import { debounce } from "lodash";
-import { useSearchCompanyByName } from "../../../../hooks/authHook";
+import { useSearchCompanyByName } from "../../../../hooks/authHooks";
 import { getSearchString } from "../../../../utilities/globalFunctions";
 
 interface SelectCompanyFieldProps {

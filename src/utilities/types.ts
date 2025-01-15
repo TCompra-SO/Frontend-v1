@@ -482,6 +482,7 @@ export type OnChangePageAndPageSizeTypeParams = {
   sorter?: SorterResult<any> | SorterResult<any>[];
   extra?: TableCurrentDataSource<any>;
 };
+
 export type OnChangePageAndPageSizeType = (
   params: OnChangePageAndPageSizeTypeParams
 ) => void;

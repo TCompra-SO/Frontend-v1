@@ -46,9 +46,9 @@ import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import {
   useCulminate,
   useGetOffersByRequirementId,
-} from "../hooks/requirementHook";
+} from "../hooks/requirementHooks";
 import { ModalsContext } from "../contexts/ModalsContext";
-import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 
 export default function SalesOrders() {
   const { t } = useTranslation();

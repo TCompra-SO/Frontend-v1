@@ -25,7 +25,7 @@ import SimpleLoading from "../../../pages/utils/SimpleLoading";
 import {
   useGetCertificatesList,
   useGetRequiredDocsCert,
-} from "../../../hooks/certificateHook";
+} from "../../../hooks/certificateHooks";
 import {
   resendCertificatesService,
   sendCertificationRequestService,
@@ -36,7 +36,7 @@ import {
 } from "../../../models/Requests";
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
-import useShowNotification from "../../../hooks/utilHook";
+import useShowNotification from "../../../hooks/utilHooks";
 
 interface SelectDocumentsToSendCertificateModalProps extends CommonModalProps {
   data: SelectDocsModalData;

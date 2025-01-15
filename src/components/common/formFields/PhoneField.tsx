@@ -1,7 +1,7 @@
 import { Form, Space } from "antd";
 import { useTranslation } from "react-i18next";
 import InputContainer from "../../containers/InputContainer";
-import { usePhoneRules } from "../../../hooks/validators";
+import { usePhoneRules } from "../../../hooks/validatorHooks";
 import { phoneCode } from "../../../utilities/globals";
 import { ReactNode } from "react";
 

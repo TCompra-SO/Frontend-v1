@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { maxImageSizeMb, maxImagesQuantity } from "../../../utilities/globals";
 import { checkImage } from "../../../utilities/globalFunctions";
-import useShowNotification from "../../../hooks/utilHook";
+import useShowNotification from "../../../hooks/utilHooks";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 

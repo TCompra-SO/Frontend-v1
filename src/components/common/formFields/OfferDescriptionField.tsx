@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useOfferDescriptionRules } from "../../../hooks/validators";
+import { useOfferDescriptionRules } from "../../../hooks/validatorHooks";
 import { Form } from "antd";
 import InputContainer from "../../containers/InputContainer";
 

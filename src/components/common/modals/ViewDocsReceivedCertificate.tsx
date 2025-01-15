@@ -20,7 +20,7 @@ import ModalContainer from "../../containers/ModalContainer";
 import { mainModalScrollStyle } from "../../../utilities/globals";
 import { updateCertificationStateService } from "../../../services/requests/certificateService";
 import { UpdateCertificationStateRequest } from "../../../models/Requests";
-import useShowNotification from "../../../hooks/utilHook";
+import useShowNotification from "../../../hooks/utilHooks";
 
 interface ViewDocsReceivedCertificateProps extends CommonModalProps {
   data: CertificationItem;

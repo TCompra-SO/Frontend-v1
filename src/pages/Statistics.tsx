@@ -7,7 +7,7 @@ import useApi from "../hooks/useApi";
 import { getStatisticsService } from "../services/requests/reportsService";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
-import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 import { transformToStatistics } from "../utilities/transform";
 
 export default function Statistics() {

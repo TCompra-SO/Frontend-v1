@@ -6,11 +6,10 @@ import {
   TableColumns,
   RequirementType,
   TableTypes,
-  OnChangePageAndPageSizeTypeParams,
   EntityType,
 } from "../utilities/types";
 import { Requirement } from "../models/MainInterfaces";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   ModalContent,
   TableTypeRequirement,
@@ -22,8 +21,6 @@ import {
   fieldNameSearchRequestRequirement,
   mainModalScrollStyle,
   noPaginationPageSize,
-  pageSizeOptionsSt,
-  tableSearchAfterMseconds,
 } from "../utilities/globals";
 import useApi from "../hooks/useApi";
 import { deleteRequirementService } from "../services/requests/requirementService";
@@ -31,7 +28,6 @@ import { transformDataToRequirement } from "../utilities/transform";
 import { useLocation } from "react-router-dom";
 import {
   getLabelFromRequirementType,
-  getParamsFromSorter,
   getRouteType,
 } from "../utilities/globalFunctions";
 import { useSelector } from "react-redux";
@@ -45,12 +41,12 @@ import {
   useCancelRequirement,
   useCulminate,
   useGetOffersByRequirementId,
-} from "../hooks/requirementHook";
+} from "../hooks/requirementHooks";
 import { ModalsContext } from "../contexts/ModalsContext";
-import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
-import { debounce } from "lodash";
-import useSearchTable from "../hooks/useSearchTable";
-import { FieldSort } from "../models/Requests";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
+import useSearchTable, {
+  useFilterSortPaginationForTable,
+} from "../hooks/searchTableHooks";
 
 export default function Requirements() {
   const { t } = useTranslation();
@@ -69,14 +65,18 @@ export default function Requirements() {
     TableTypes.REQUIREMENT,
     EntityType.SUBUSER
   );
+  const {
+    currentPage,
+    currentPageSize,
+    setCurrentPage,
+    fieldSort,
+    handleChangePageAndPageSize,
+    handleSearch,
+  } = useFilterSortPaginationForTable();
   const [loadingTable, setLoadingTable] = useState(true);
   const [type, setType] = useState(getRouteType(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [total, setTotal] = useState(0);
-  const [searchValue, setSearchValue] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [fieldSort, setFieldSort] = useState<FieldSort | undefined>({});
-  const [currentPageSize, setCurrentPageSize] = useState(pageSizeOptionsSt[0]);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
@@ -133,7 +133,7 @@ export default function Requirements() {
   /* Obtener lista inicialmente */
 
   useEffect(() => {
-    searchTable(currentPage, currentPageSize);
+    searchTable({ page: currentPage, pageSize: currentPageSize });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -373,43 +373,8 @@ export default function Requirements() {
     });
   }
 
-  const handleSearch = debounce((e: ChangeEvent<HTMLInputElement>) => {
-    // setLoadingTable(true);
-    setSearchValue(e.target.value);
-    setCurrentPage(1);
-    searchTable(
-      1,
-      currentPageSize,
-      e.target.value,
-      fieldSort?.fieldName,
-      fieldSort?.orderType
-    );
-  }, tableSearchAfterMseconds);
-
   function handleCloseModal() {
     setIsOpenModal(false);
-  }
-
-  function handleChangePageAndPageSize({
-    page,
-    pageSize,
-    sorter,
-  }: OnChangePageAndPageSizeTypeParams) {
-    setLoadingTable(true);
-    setCurrentPage(page);
-    setCurrentPageSize(pageSize);
-    const sortParams = getParamsFromSorter(
-      sorter,
-      fieldNameSearchRequestRequirement
-    );
-    setFieldSort(sortParams);
-    searchTable(
-      page,
-      pageSize,
-      searchValue,
-      sortParams?.fieldName,
-      sortParams?.orderType
-    );
   }
 
   return (
@@ -428,9 +393,16 @@ export default function Requirements() {
         subtitle={`${t("listOf")} ${t(getLabelFromRequirementType(type))}`}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
-        onSearch={handleSearch}
+        onSearch={(e) => handleSearch(e, searchTable)}
         loading={loadingTable}
-        onChangePageAndPageSize={handleChangePageAndPageSize}
+        onChangePageAndPageSize={(params) =>
+          handleChangePageAndPageSize(
+            params,
+            fieldNameSearchRequestRequirement,
+            searchTable,
+            setLoadingTable
+          )
+        }
         total={total}
       />
     </>

@@ -7,8 +7,8 @@ import { Action, ActionLabel } from "../../../utilities/types";
 import {
   useCancelOffer,
   useCancelRequirement,
-} from "../../../hooks/requirementHook";
-import useShowNotification from "../../../hooks/utilHook";
+} from "../../../hooks/requirementHooks";
+import useShowNotification from "../../../hooks/utilHooks";
 
 interface CancelPurchaseOrderModalProps {
   onClose: () => any;

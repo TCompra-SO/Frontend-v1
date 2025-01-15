@@ -31,9 +31,9 @@ import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { transformToOfferFromGetOffersByEntityOrSubUser } from "../utilities/transform";
 import { ModalsContext } from "../contexts/ModalsContext";
-import { useCulminate, useShowDetailOffer } from "../hooks/requirementHook";
-import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
-import useSearchTable from "../hooks/useSearchTable";
+import { useCulminate, useShowDetailOffer } from "../hooks/requirementHooks";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
+import useSearchTable from "../hooks/searchTableHooks";
 import { debounce } from "lodash";
 
 export default function Offers() {

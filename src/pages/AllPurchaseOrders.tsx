@@ -36,8 +36,8 @@ import {
   pageSizeOptionsSt,
 } from "../utilities/globals";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
-import { useGetOffersByRequirementId } from "../hooks/requirementHook";
-import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
+import { useGetOffersByRequirementId } from "../hooks/requirementHooks";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 
 export default function AllPurchaseOrders() {
   const { t } = useTranslation();

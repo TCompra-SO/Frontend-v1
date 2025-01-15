@@ -19,7 +19,7 @@ import {
   verifyCertificationByUserIdAndCompanyId,
 } from "../services/complete/generalServices";
 import { UpdateRequiredDocsRequest } from "../models/Requests";
-import useShowNotification, { useShowLoadingMessage } from "./utilHook";
+import useShowNotification, { useShowLoadingMessage } from "./utilHooks";
 
 export function useGetCertificatesList() {
   const { t } = useTranslation();

@@ -12,7 +12,7 @@ import {
   RequirementType,
   ResponseRequestType,
 } from "../../../utilities/types";
-import useShowNotification from "../../../hooks/utilHook";
+import useShowNotification from "../../../hooks/utilHooks";
 
 interface RequirementModalRepublishProps extends CommonModalProps {
   requirementId: string;

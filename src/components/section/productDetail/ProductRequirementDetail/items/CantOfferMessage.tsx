@@ -23,7 +23,7 @@ import useApi from "../../../../../hooks/useApi";
 import { ModalsContext } from "../../../../../contexts/ModalsContext";
 import useShowNotification, {
   useShowLoadingMessage,
-} from "../../../../../hooks/utilHook";
+} from "../../../../../hooks/utilHooks";
 
 interface CantOfferMessageProps {
   offerId: string;

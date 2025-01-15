@@ -46,8 +46,8 @@ import { ModalsContext } from "../contexts/ModalsContext";
 import {
   useCulminate,
   useGetOffersByRequirementId,
-} from "../hooks/requirementHook";
-import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
+} from "../hooks/requirementHooks";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 
 export default function PurchaseOrders() {
   const { showLoadingMessage } = useShowLoadingMessage();

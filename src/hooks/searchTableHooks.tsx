@@ -1,0 +1,160 @@
+import { ChangeEvent, useEffect, useState } from "react";
+import { HttpService, useApiParams } from "../models/Interfaces";
+import { FieldSort, SearchTableRequest } from "../models/Requests";
+import useApi from "./useApi";
+import {
+  EntityType,
+  OnChangePageAndPageSizeTypeParams,
+  OrderType,
+  TableTypes,
+} from "../utilities/types";
+import { searchRequirementsService } from "../services/requests/requirementService";
+import {
+  pageSizeOptionsSt,
+  searchSinceLength,
+  tableSearchAfterMseconds,
+} from "../utilities/globals";
+import {
+  getParamsFromSorter,
+  getSearchString,
+} from "../utilities/globalFunctions";
+import { searchOffersService } from "../services/requests/offerService";
+import { debounce } from "lodash";
+
+type SearchTableTypeParams = {
+  page: number;
+  pageSize: number;
+  keyWords?: string;
+  fieldName?: string;
+  orderType?: OrderType;
+};
+
+export default function useSearchTable(
+  uid: string,
+  tableType: TableTypes,
+  entityType: EntityType // subuser: registros de usuario | otro: registros de usuario + subusuarios
+) {
+  const [apiParams, setApiParams] = useState<useApiParams<SearchTableRequest>>({
+    service: null,
+    method: "get",
+  });
+  const {
+    responseData,
+    error,
+    errorMsg,
+    fetchData,
+    loading,
+    reset: resetUseApi,
+  } = useApi<SearchTableRequest>(apiParams);
+
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  function reset() {
+    setApiParams({
+      service: null,
+      method: "get",
+    });
+    resetUseApi();
+  }
+
+  function searchTable({
+    page,
+    pageSize,
+    keyWords,
+    fieldName,
+    orderType,
+  }: SearchTableTypeParams) {
+    const newKeyWords = getSearchString(keyWords ?? "");
+    if (newKeyWords.length >= searchSinceLength || !keyWords) {
+      let service: HttpService | null = null;
+      switch (tableType) {
+        case TableTypes.REQUIREMENT:
+          service = searchRequirementsService();
+          break;
+        case TableTypes.OFFER:
+          service = searchOffersService();
+          break;
+      }
+      setApiParams({
+        service,
+        method: "post",
+        dataToSend: {
+          userId: uid,
+          page,
+          pageSize,
+          keyWords: keyWords === undefined ? keyWords : newKeyWords,
+          typeUser: entityType,
+          fieldName,
+          orderType,
+        },
+      });
+    }
+  }
+
+  return {
+    responseData,
+    loading,
+    error,
+    errorMsg,
+    searchTable,
+    resetSearchTable: reset,
+    apiParams,
+  };
+}
+
+export function useFilterSortPaginationForTable() {
+  const [searchValue, setSearchValue] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [fieldSort, setFieldSort] = useState<FieldSort | undefined>({});
+  const [currentPageSize, setCurrentPageSize] = useState(pageSizeOptionsSt[0]);
+
+  const handleSearch = debounce(
+    (
+      e: ChangeEvent<HTMLInputElement>,
+      searchTable: (params: SearchTableTypeParams) => void
+    ) => {
+      setSearchValue(e.target.value);
+      setCurrentPage(1);
+      searchTable({
+        page: 1,
+        pageSize: currentPageSize,
+        keyWords: e.target.value,
+        fieldName: fieldSort?.fieldName,
+        orderType: fieldSort?.orderType,
+      });
+    },
+    tableSearchAfterMseconds
+  );
+
+  function handleChangePageAndPageSize(
+    { page, pageSize, sorter }: OnChangePageAndPageSizeTypeParams,
+    fieldNameObj: Record<string, string>,
+    searchTable: (params: SearchTableTypeParams) => void,
+    setLoadingTable?: (val: boolean) => void
+  ) {
+    if (setLoadingTable) setLoadingTable(true);
+    setCurrentPage(page);
+    setCurrentPageSize(pageSize);
+    const sortParams = getParamsFromSorter(sorter, fieldNameObj);
+    setFieldSort(sortParams);
+    searchTable({
+      page,
+      pageSize,
+      keyWords: searchValue,
+      fieldName: sortParams?.fieldName,
+      orderType: sortParams?.orderType,
+    });
+  }
+
+  return {
+    currentPage,
+    currentPageSize,
+    fieldSort,
+    handleChangePageAndPageSize,
+    handleSearch,
+    setCurrentPage,
+  };
+}

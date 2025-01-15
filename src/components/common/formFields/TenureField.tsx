@@ -2,7 +2,7 @@ import { Form } from "antd";
 import { useTranslation } from "react-i18next";
 import { ReactNode } from "react";
 import InputNumberContainer from "../../containers/InputNumberContainer";
-import { useTenureRules } from "../../../hooks/validators";
+import { useTenureRules } from "../../../hooks/validatorHooks";
 
 interface TenureFieldProps {
   edit?: boolean;

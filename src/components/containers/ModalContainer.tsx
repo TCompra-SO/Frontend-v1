@@ -27,8 +27,8 @@ import useApi, { UseApiType } from "../../hooks/useApi";
 import {
   useCancelOffer,
   useCancelRequirement,
-} from "../../hooks/requirementHook";
-import { useShowLoadingMessage } from "../../hooks/utilHook";
+} from "../../hooks/requirementHooks";
+import { useShowLoadingMessage } from "../../hooks/utilHooks";
 import { LoadingDataContext } from "../../contexts/LoadingDataContext";
 
 interface ModalContainerProps extends ModalProps {

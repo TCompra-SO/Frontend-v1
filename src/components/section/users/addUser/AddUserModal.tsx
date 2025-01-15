@@ -30,7 +30,7 @@ import { equalServices } from "../../../../utilities/globalFunctions";
 import PasswordField from "../../../common/formFields/PasswordField";
 import { newPasswordService } from "../../../../services/requests/authService";
 import { SubUserProfile } from "../../../../models/MainInterfaces";
-import useShowNotification from "../../../../hooks/utilHook";
+import useShowNotification from "../../../../hooks/utilHooks";
 
 interface AddUserModalProps {
   onClose: () => void;

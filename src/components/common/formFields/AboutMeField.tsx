@@ -1,6 +1,6 @@
 import { Form } from "antd";
 import { useTranslation } from "react-i18next";
-import { useAboutMeRules } from "../../../hooks/validators";
+import { useAboutMeRules } from "../../../hooks/validatorHooks";
 import InputContainer from "../../containers/InputContainer";
 import { ReactNode } from "react";
 

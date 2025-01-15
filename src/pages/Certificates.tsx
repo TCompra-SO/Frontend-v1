@@ -27,7 +27,7 @@ import {
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { transformToCertificationItem } from "../utilities/transform";
-import useShowNotification from "../hooks/utilHook";
+import useShowNotification from "../hooks/utilHooks";
 
 export default function Certificates() {
   const location = useLocation();

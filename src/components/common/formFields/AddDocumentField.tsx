@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { maxDocSizeMb, maxDocsQuantity } from "../../../utilities/globals";
 import { checkDoc } from "../../../utilities/globalFunctions";
-import useShowNotification from "../../../hooks/utilHook";
+import useShowNotification from "../../../hooks/utilHooks";
 
 export default function AddDocumentField({
   forOffer = false,

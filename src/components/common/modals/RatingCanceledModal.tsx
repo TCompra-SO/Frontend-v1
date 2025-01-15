@@ -24,7 +24,7 @@ import SubUserName from "../utils/SubUserName";
 import { CommonModalProps } from "../../../models/Interfaces";
 import { RegisterScoreRequest } from "../../../models/Requests";
 import { registerScoreService } from "../../../services/requests/scoreService";
-import useShowNotification from "../../../hooks/utilHook";
+import useShowNotification from "../../../hooks/utilHooks";
 
 interface RatingCanceledModalProps extends CommonModalProps {
   basicRateData: BasicRateData;

@@ -27,10 +27,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../../../../utilities/routes";
 import ButtonContainer from "../../../containers/ButtonContainer";
-import { useGetOffersByRequirementId } from "../../../../hooks/requirementHook";
+import { useGetOffersByRequirementId } from "../../../../hooks/requirementHooks";
 import useShowNotification, {
   useShowLoadingMessage,
-} from "../../../../hooks/utilHook";
+} from "../../../../hooks/utilHooks";
 
 interface SubUserTableModalProps {
   user: SubUserBase | null;
