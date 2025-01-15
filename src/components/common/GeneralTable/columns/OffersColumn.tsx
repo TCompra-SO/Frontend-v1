@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { LoadingDataContext } from "../../../../contexts/LoadingDataContext";
 import ButtonContainer from "../../../containers/ButtonContainer";
+import { offersColumnKey } from "../../../../utilities/globals";
 
 export default function OffersColumn(
   type: TableTypes,
@@ -21,7 +22,7 @@ export default function OffersColumn(
   const col: ColumnType<Requirement | BasicRequirement> = {
     title: t("offersColumn"),
     dataIndex: "numberOffers",
-    key: "offers",
+    key: offersColumnKey,
     align: "center",
     sorter: noSorter ? undefined : (a, b) => a.numberOffers - b.numberOffers,
     showSorterTooltip: false,

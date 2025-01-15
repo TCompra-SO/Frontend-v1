@@ -26,6 +26,7 @@ import {
   RequirementState,
   TableTypes,
 } from "../../../../utilities/types";
+import { stateColumnKey } from "../../../../utilities/globals";
 
 export default function StateColumn(
   type: TableTypes,
@@ -47,7 +48,7 @@ export default function StateColumn(
     | CertificationItem
   > = {
     title: t("stateColumn"),
-    key: "state",
+    key: stateColumnKey,
     align: "center",
     dataIndex: "state",
     showSorterTooltip: false,

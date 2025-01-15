@@ -19,6 +19,7 @@ import {
 import { useTranslation } from "react-i18next";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import {
+  fieldNameSearchRequestRequirement,
   mainModalScrollStyle,
   noPaginationPageSize,
   pageSizeOptionsSt,
@@ -30,6 +31,7 @@ import { transformDataToRequirement } from "../utilities/transform";
 import { useLocation } from "react-router-dom";
 import {
   getLabelFromRequirementType,
+  getParamsFromSorter,
   getRouteType,
 } from "../utilities/globalFunctions";
 import { useSelector } from "react-redux";
@@ -48,6 +50,7 @@ import { ModalsContext } from "../contexts/ModalsContext";
 import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
 import { debounce } from "lodash";
 import useSearchTable from "../hooks/useSearchTable";
+import { FieldSort } from "../models/Requests";
 
 export default function Requirements() {
   const { t } = useTranslation();
@@ -72,6 +75,7 @@ export default function Requirements() {
   const [total, setTotal] = useState(0);
   const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [fieldSort, setFieldSort] = useState<FieldSort | undefined>({});
   const [currentPageSize, setCurrentPageSize] = useState(pageSizeOptionsSt[0]);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -88,6 +92,7 @@ export default function Requirements() {
     total,
     page: currentPage,
     pageSize: currentPageSize,
+    fieldSort,
   });
 
   /** Verificar si hay una solicitud pendiente */
@@ -145,6 +150,7 @@ export default function Requirements() {
         pageSize: currentPageSize,
         subType: type,
         nameColumnHeader: t(getLabelFromRequirementType(type)),
+        fieldSort,
       };
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -166,6 +172,7 @@ export default function Requirements() {
         total,
         page: currentPage,
         pageSize: currentPageSize,
+        fieldSort,
       });
       setLoadingTable(false);
       showNotification("error", errorMsg);
@@ -232,7 +239,7 @@ export default function Requirements() {
           mainDataUser
         )
       );
-      setTotal(responseData.res?.total);
+      setTotal(responseData.res?.totalDocuments);
       setTableContent({
         type: TableTypes.REQUIREMENT,
         data,
@@ -243,6 +250,7 @@ export default function Requirements() {
         total,
         page: currentPage,
         pageSize: currentPageSize,
+        fieldSort,
       });
     } catch (error) {
       console.log(error);
@@ -373,7 +381,13 @@ export default function Requirements() {
     // setLoadingTable(true);
     setSearchValue(e.target.value);
     setCurrentPage(1);
-    searchTable(currentPage, currentPageSize, e.target.value);
+    searchTable(
+      currentPage,
+      currentPageSize,
+      e.target.value,
+      fieldSort?.fieldName,
+      fieldSort?.orderType
+    );
   }, tableSearchAfterMseconds);
 
   function handleCloseModal() {
@@ -383,11 +397,24 @@ export default function Requirements() {
   function handleChangePageAndPageSize({
     page,
     pageSize,
+    sorter,
   }: OnChangePageAndPageSizeTypeParams) {
+    setLoadingTable(true);
     setCurrentPage(page);
     setCurrentPageSize(pageSize);
-    setLoadingTable(true);
-    searchTable(page, pageSize, searchValue);
+    const sortParams = getParamsFromSorter(
+      sorter,
+      fieldNameSearchRequestRequirement
+    );
+    setFieldSort(sortParams);
+
+    searchTable(
+      page,
+      pageSize,
+      searchValue,
+      sortParams?.fieldName,
+      sortParams?.orderType
+    );
   }
 
   return (

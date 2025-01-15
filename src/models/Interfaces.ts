@@ -27,6 +27,7 @@ import {
   SubUserBase,
 } from "./MainInterfaces";
 import useApi, { UseApiType } from "../hooks/useApi";
+import { FieldSort } from "./Requests";
 
 /******** Modals *******/
 
@@ -226,6 +227,7 @@ export interface TableHiddenColumns {
   total?: number;
   page?: number;
   pageSize?: number;
+  fieldSort?: FieldSort;
   hiddenColumns: TableColumns[];
   nameColumnHeader: string;
   onButtonClick: (action: Action, data: any) => void;

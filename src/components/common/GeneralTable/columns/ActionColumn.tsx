@@ -13,7 +13,7 @@ import {
   TableTypes,
 } from "../../../../utilities/types";
 import { useTranslation } from "react-i18next";
-import { allItems } from "../../../../utilities/globals";
+import { actionColumnKey, allItems } from "../../../../utilities/globals";
 import { ItemType } from "antd/es/menu/interface";
 import { Offer } from "../../../../models/MainInterfaces";
 import { LoadingDataContext } from "../../../../contexts/LoadingDataContext";
@@ -32,7 +32,7 @@ export default function ActionColumn(
 
   const col: ColumnType<any> = {
     title: t("actionsColumn"),
-    key: "action",
+    key: actionColumnKey,
     align: "center",
     showSorterTooltip: false,
     width: "130px",

@@ -17,6 +17,7 @@ import {
   EntityType,
   ErrorMsgRequestType,
   ErrorRequestType,
+  OrderType,
   PurchaseOrderTableTypes,
   RequirementType,
   ResponseRequestType,
@@ -29,7 +30,8 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import dayjs from "dayjs";
 import i18next from "i18next";
 import httpErrorInterceptor from "../interceptors/httpErrorInterceptor";
-import { SearchTableRequest } from "../models/Requests";
+import { FieldSort, SearchTableRequest } from "../models/Requests";
+import { SorterResult } from "antd/es/table/interface";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -323,4 +325,27 @@ export function getInitialTableRequest(userId: string, userType: EntityType) {
     typeUser: userType,
   };
   return val;
+}
+
+// Retorna parámetros para búsqueda con orden en tabla
+export function getParamsFromSorter(
+  sorter: SorterResult<any> | SorterResult<any>[] | undefined,
+  fieldNameObj: Record<string, string>
+) {
+  if (
+    sorter &&
+    !Array.isArray(sorter) &&
+    Object.keys(sorter).length > 0 &&
+    sorter.columnKey &&
+    typeof sorter.columnKey === "string"
+  ) {
+    console.log(sorter.columnKey);
+    if (fieldNameObj[sorter.columnKey]) {
+      const fs: FieldSort = {
+        fieldName: fieldNameObj[sorter.columnKey],
+        orderType: sorter.order == "descend" ? OrderType.DESC : OrderType.ASC,
+      };
+      return fs;
+    }
+  }
 }

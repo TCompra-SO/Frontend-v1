@@ -2,6 +2,7 @@ import { ColumnType } from "antd/es/table";
 import { Offer, PurchaseOrder } from "../../../../models/MainInterfaces";
 import { Flex } from "antd";
 import { useTranslation } from "react-i18next";
+import { requirementColumnKey } from "../../../../utilities/globals";
 
 export default function RequirementColumn(
   isRequirement: boolean,
@@ -12,7 +13,7 @@ export default function RequirementColumn(
   const col: ColumnType<Offer | PurchaseOrder> = {
     title: isRequirement ? t("requirement") : t("sale"),
     dataIndex: "requirementTitle",
-    key: "name",
+    key: requirementColumnKey,
     align: "center",
     hidden,
     sorter: (a, b) => a.requirementTitle.localeCompare(b.requirementTitle),

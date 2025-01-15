@@ -205,12 +205,15 @@ export interface HomeFilterRequest {
   pageSize: number;
 }
 
-export interface SearchTableRequest {
+export interface FieldSort {
+  fieldName?: string;
+  orderType?: OrderType;
+}
+
+export interface SearchTableRequest extends FieldSort {
   keyWords?: string;
   userId: string;
   page: number;
   pageSize: number;
-  fieldName?: string;
-  orderType?: OrderType;
   typeUser: EntityType;
 }

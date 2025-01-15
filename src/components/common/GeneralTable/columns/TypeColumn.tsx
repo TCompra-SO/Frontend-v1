@@ -7,6 +7,7 @@ import {
 } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
 import { getLabelFromRequirementType } from "../../../../utilities/globalFunctions";
+import { typeColumnKey } from "../../../../utilities/globals";
 
 export default function TypeColumn(hidden: boolean = false) {
   const { t } = useTranslation();
@@ -20,7 +21,7 @@ export default function TypeColumn(hidden: boolean = false) {
     title: t("type"),
     dataIndex: "type",
     align: "center",
-    key: "type",
+    key: typeColumnKey,
     hidden,
     width: 100,
     render: (_, record) => (

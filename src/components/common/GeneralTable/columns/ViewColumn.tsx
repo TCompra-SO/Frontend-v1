@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Action, TableTypes } from "../../../../utilities/types";
 import { useContext } from "react";
 import { LoadingDataContext } from "../../../../contexts/LoadingDataContext";
+import { viewColumnKey } from "../../../../utilities/globals";
 
 export default function ViewColumn(
   type: TableTypes,
@@ -19,7 +20,7 @@ export default function ViewColumn(
 
   const col: ColumnType<any> = {
     title: t("actionColumn"),
-    key: "action",
+    key: viewColumnKey,
     align: "center",
     showSorterTooltip: false,
     width: "100px",

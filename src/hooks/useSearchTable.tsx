@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { HttpService, useApiParams } from "../models/Interfaces";
 import { SearchTableRequest } from "../models/Requests";
 import useApi from "./useApi";
-import { EntityType, TableTypes } from "../utilities/types";
+import { EntityType, OrderType, TableTypes } from "../utilities/types";
 import { searchRequirementsService } from "../services/requests/requirementService";
 import { searchSinceLength } from "../utilities/globals";
 import { getSearchString } from "../utilities/globalFunctions";
@@ -39,7 +39,13 @@ export default function useSearchTable(
     resetUseApi();
   }
 
-  function searchTable(page: number, pageSize: number, keyWords?: string) {
+  function searchTable(
+    page: number,
+    pageSize: number,
+    keyWords?: string,
+    fieldName?: string,
+    orderType?: OrderType
+  ) {
     const newKeyWords = getSearchString(keyWords ?? "");
     if (newKeyWords.length >= searchSinceLength || !keyWords) {
       let service: HttpService | null = null;
@@ -60,6 +66,8 @@ export default function useSearchTable(
           pageSize,
           keyWords: keyWords === undefined ? keyWords : newKeyWords,
           typeUser: entityType,
+          fieldName,
+          orderType,
         },
       });
     }

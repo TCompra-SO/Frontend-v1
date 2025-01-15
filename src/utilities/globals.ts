@@ -57,3 +57,25 @@ export const mainModalScrollStyle: React.CSSProperties = {
   maxHeight: "95vh",
   overflowY: "scroll",
 };
+
+// Nombre de columnas
+export const nameColumnKey: string = "name";
+export const actionColumnKey: string = "action";
+export const categoryColumnKey: string = "category";
+export const documentColumnKey: string = "document";
+export const locationColumnKey: string = "location";
+export const offersColumnKey: string = "offers";
+export const priceColumnKey: string = "price";
+export const requirementColumnKey: string = "requirement";
+export const stateColumnKey: string = "state";
+export const typeColumnKey: string = "type";
+export const viewColumnKey: string = "view";
+
+// Parámetros para búsqueda en tabla
+export const fieldNameSearchRequestRequirement: Record<string, string> = {
+  [nameColumnKey]: "name",
+  publishDate: "publish_date",
+  [locationColumnKey]: "cityName",
+  [priceColumnKey]: "budget",
+  userName: "userName",
+};

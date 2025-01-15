@@ -3,7 +3,10 @@ import { BasicRequirement } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
 import { useContext, useEffect, useState } from "react";
 import { ListsContext } from "../../../../contexts/ListsContext";
-import { defaultCountry } from "../../../../utilities/globals";
+import {
+  defaultCountry,
+  locationColumnKey,
+} from "../../../../utilities/globals";
 import { IdValueMap, IdValueObj } from "../../../../models/Interfaces";
 
 export default function LocationColumn(
@@ -31,7 +34,7 @@ export default function LocationColumn(
   const col: ColumnType<BasicRequirement> = {
     title: t("locationColumn"),
     dataIndex: "location",
-    key: "location",
+    key: locationColumnKey,
     align: "center",
     sorter: noSorter
       ? undefined

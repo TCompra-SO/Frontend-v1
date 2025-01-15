@@ -148,7 +148,7 @@ export default function GeneralTable(props: GeneralTableProps) {
     style: { width: "100%" },
     bordered: false,
     onChange: (pagination, filters, sorter, extra) => {
-      console.log(pagination);
+      console.log(pagination, filters, sorter);
       if (
         props.onChangePageAndPageSize &&
         pagination.current &&
@@ -409,6 +409,7 @@ export default function GeneralTable(props: GeneralTableProps) {
           props.content.type,
           props.content.nameColumnHeader,
           visibility[TableColumns.NAME],
+          props.content.fieldSort,
           props.content.subType
         ),
 
@@ -823,6 +824,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         TableTypes.REQUIREMENT,
         props.content.nameColumnHeader,
         visibility[TableColumns.NAME],
+        props.content.fieldSort,
         null,
         true
       ),

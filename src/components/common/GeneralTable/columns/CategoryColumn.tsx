@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { TableTypes } from "../../../../utilities/types";
 import { useContext } from "react";
 import { ListsContext } from "../../../../contexts/ListsContext";
+import { categoryColumnKey } from "../../../../utilities/globals";
 
 export default function CategoryColumn(
   type: TableTypes,
@@ -19,7 +20,7 @@ export default function CategoryColumn(
   const col: ColumnType<Requirement | BasicRequirement> = {
     title: t("categoryColumn"),
     dataIndex: "category",
-    key: "category",
+    key: categoryColumnKey,
     align: "center",
     sorter: (a, b) =>
       categoryData[a.category]?.value.localeCompare(

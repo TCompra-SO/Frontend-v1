@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { ListsContext } from "../../../../contexts/ListsContext";
 import { Coins } from "../../../../utilities/types";
+import { priceColumnKey } from "../../../../utilities/globals";
 
 export default function PriceColumn(
   hidden: boolean = false,
@@ -21,7 +22,7 @@ export default function PriceColumn(
     title: t("priceColumn"),
     dataIndex: "price",
     align: "center",
-    key: "price",
+    key: priceColumnKey,
     hidden,
     render: (_, record) => (
       <div style={{ textAlign: "left" }} className="t-flex dato-table">
