@@ -65,10 +65,11 @@ export default function PurchaseOrders() {
   const {
     currentPage,
     currentPageSize,
-    setCurrentPage,
     fieldSort,
+    setCurrentPage,
     handleChangePageAndPageSize,
     handleSearch,
+    reset,
   } = useFilterSortPaginationForTable();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [action, setAction] = useState<Action>(Action.NONE);
@@ -141,7 +142,12 @@ export default function PurchaseOrders() {
   /** Para obtener datos iniciales y datos de proveedor/cliente */
 
   useEffect(() => {
-    searchTable({ page: currentPage, pageSize: currentPageSize });
+    reset();
+    searchTable({
+      page: 1,
+      pageSize: currentPageSize,
+    });
+    // searchTable({ page: currentPage, pageSize: currentPageSize });
     // switch (type) {
     //   case PurchaseOrderTableTypes.ISSUED:
     //     setApiParams({

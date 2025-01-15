@@ -148,8 +148,8 @@ export function useFilterSortPaginationForTable() {
     setLoadingTable?: (val: boolean) => void
   ) {
     if (setLoadingTable) setLoadingTable(true);
-    setCurrentPage(page);
     setCurrentPageSize(pageSize);
+    setCurrentPage(page);
     const sortParams = getParamsFromSorter(sorter, fieldNameObj);
     setFieldSort(sortParams);
     searchTable({
@@ -161,6 +161,12 @@ export function useFilterSortPaginationForTable() {
     });
   }
 
+  function reset() {
+    setCurrentPage(1);
+    setFieldSort({});
+    setSearchValue("");
+  }
+
   return {
     currentPage,
     currentPageSize,
@@ -168,5 +174,6 @@ export function useFilterSortPaginationForTable() {
     handleChangePageAndPageSize,
     handleSearch,
     setCurrentPage,
+    reset,
   };
 }
