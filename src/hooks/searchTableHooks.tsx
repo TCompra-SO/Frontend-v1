@@ -89,6 +89,14 @@ export default function useSearchTable(
             service = searchPurchaseOrdersByClientService();
           else if (subType == PurchaseOrderTableTypes.RECEIVED)
             service = searchPurchaseOrdersByProviderService();
+          break;
+        case TableTypes.SALES_ORDER:
+          if (subType == PurchaseOrderTableTypes.ISSUED)
+            // r3v cambiar endpoints
+            service = searchPurchaseOrdersByClientService();
+          else if (subType == PurchaseOrderTableTypes.RECEIVED)
+            service = searchPurchaseOrdersByProviderService();
+          break;
       }
       setApiParams({
         service,
