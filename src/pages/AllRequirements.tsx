@@ -27,7 +27,7 @@ export default function AllRequirements() {
   const { showNotification } = useShowNotification();
   const { searchTable, responseData, error, errorMsg } = useSearchTable(
     dataUser.uid,
-    TableTypes.REQUIREMENT,
+    TableTypes.ALL_REQUIREMENTS,
     dataUser.typeEntity
   );
   const {

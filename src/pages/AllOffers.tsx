@@ -1,25 +1,14 @@
 import { useTranslation } from "react-i18next";
 import TablePageContent from "../components/section/table-page/TablePageContent";
-import { ChangeEvent, useEffect, useState } from "react";
-import {
-  ModalContent,
-  TableTypeAllOffers,
-  useApiParams,
-} from "../models/Interfaces";
-import {
-  Action,
-  ModalTypes,
-  OnChangePageAndPageSizeTypeParams,
-  TableTypes,
-} from "../utilities/types";
+import { useEffect, useState } from "react";
+import { ModalContent, TableTypeAllOffers } from "../models/Interfaces";
+import { Action, ModalTypes, TableTypes } from "../utilities/types";
 import { BaseUser, Offer } from "../models/MainInterfaces";
 import makeRequest, {
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
-import useApi from "../hooks/useApi";
-import { getOffersByEntityService } from "../services/requests/offerService";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import {
@@ -27,18 +16,38 @@ import {
   transformToOfferFromGetOffersByEntityOrSubUser,
 } from "../utilities/transform";
 import { getBaseDataUserService } from "../services/requests/authService";
-import { mainModalScrollStyle, pageSizeOptionsSt } from "../utilities/globals";
+import {
+  fieldNameSearchRequestOffer,
+  mainModalScrollStyle,
+} from "../utilities/globals";
 import { useShowDetailOffer } from "../hooks/requirementHooks";
 import ModalContainer from "../components/containers/ModalContainer";
 import useShowNotification from "../hooks/utilHooks";
+import useSearchTable, {
+  useFilterSortPaginationForTable,
+} from "../hooks/searchTableHooks";
 
 export default function AllOffers() {
   const { t } = useTranslation();
   const location = useLocation();
-  const { showNotification } = useShowNotification();
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const dataUser = useSelector((state: MainState) => state.user);
   const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
+  const { showNotification } = useShowNotification();
+  const { searchTable, responseData, error, errorMsg } = useSearchTable(
+    dataUser.uid,
+    TableTypes.ALL_OFFERS,
+    dataUser.typeEntity
+  );
+  const {
+    currentPage,
+    currentPageSize,
+    setCurrentPage,
+    fieldSort,
+    handleChangePageAndPageSize,
+    handleSearch,
+    reset,
+  } = useFilterSortPaginationForTable();
   const [type, setType] = useState(getRouteType(location.pathname));
   const [loadingTable, setLoadingTable] = useState(true);
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -54,38 +63,32 @@ export default function AllOffers() {
     nameColumnHeader: t("offers"),
     onButtonClick: handleOnButtonClick,
     total: 0,
+    page: currentPage,
+    pageSize: currentPageSize,
+    fieldSort,
   });
 
   /** Obtener datos de tabla */
 
-  const [apiParams, setApiParams] = useState<useApiParams>({
-    service: getOffersByEntityService(dataUser.uid, 1, pageSizeOptionsSt[0]),
-    method: "get",
-  });
-
-  const { responseData, error, errorMsg, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
-
   useEffect(() => {
-    if (apiParams.service) fetchData();
+    reset();
+    searchTable({ page: 1, pageSize: currentPageSize });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParams]);
+  }, [type]);
 
   useEffect(() => {
     if (responseData) {
       setData();
     } else if (error) {
-      setTableContent({
-        type: TableTypes.ALL_OFFERS,
+      setCurrentPage(1);
+      setTableContent((prev) => ({
+        ...prev,
         data: [],
-        hiddenColumns: [],
-        nameColumnHeader: t("offers"),
-        onButtonClick: handleOnButtonClick,
         total: 0,
-      });
+        page: currentPage,
+        pageSize: currentPageSize,
+        fieldSort,
+      }));
       setLoadingTable(false);
       showNotification("error", errorMsg);
     }
@@ -97,17 +100,6 @@ export default function AllOffers() {
   useEffect(() => {
     setType(getRouteType(location.pathname));
   }, [location]);
-
-  useEffect(() => {
-    setTableContent((prev) => {
-      return {
-        ...prev,
-        // total: 100, // r3v
-        subType: type,
-        nameColumnHeader: t(getLabelFromRequirementType(type)),
-      };
-    });
-  }, [type]);
 
   /** Abrir detalle de oferta */
 
@@ -162,15 +154,14 @@ export default function AllOffers() {
           }
         })
       );
-
-      setTableContent({
-        type: TableTypes.ALL_OFFERS,
-        data: data,
-        hiddenColumns: [],
-        nameColumnHeader: t("offers"),
-        onButtonClick: handleOnButtonClick,
+      setTableContent((prev) => ({
+        ...prev,
+        data,
         total: responseData.res?.totalDocuments,
-      });
+        page: currentPage,
+        pageSize: currentPageSize,
+        fieldSort,
+      }));
     } catch (error) {
       console.log(error);
       showNotification("error", t("errorOccurred"));
@@ -179,24 +170,9 @@ export default function AllOffers() {
     }
   }
 
-  function handleSearch(e: ChangeEvent<HTMLInputElement>) {
-    console.log(e.target.value);
-  }
-
   function handleOnButtonClick(action: Action, offer: Offer) {
     if (action == Action.VIEW_OFFER)
       getOfferDetail(offer.key, offer.type, true, action, offer);
-  }
-
-  function handleChangePageAndPageSize({
-    page,
-    pageSize,
-  }: OnChangePageAndPageSizeTypeParams) {
-    setLoadingTable(true);
-    setApiParams({
-      service: getOffersByEntityService(dataUser.uid, page, pageSize),
-      method: "get",
-    });
   }
 
   return (
@@ -214,9 +190,16 @@ export default function AllOffers() {
         subtitle={`${t("listOf")}  ${t(getLabelFromRequirementType(type))}`}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
-        onSearch={handleSearch}
+        onSearch={(e) => handleSearch(e, searchTable)}
         loading={loadingTable}
-        onChangePageAndPageSize={handleChangePageAndPageSize}
+        onChangePageAndPageSize={(params) =>
+          handleChangePageAndPageSize(
+            params,
+            fieldNameSearchRequestOffer,
+            searchTable,
+            setLoadingTable
+          )
+        }
       />
     </>
   );
