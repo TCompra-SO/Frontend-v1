@@ -33,6 +33,7 @@ import {
 import { transformToPurchaseOrder } from "../utilities/transform";
 import ModalContainer from "../components/containers/ModalContainer";
 import {
+  fieldNameSearchRequestAllOrder,
   mainModalScrollStyle,
   noPaginationPageSize,
   pageSizeOptionsSt,
@@ -40,18 +41,32 @@ import {
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import { useGetOffersByRequirementId } from "../hooks/requirementHooks";
 import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
+import useSearchTable, {
+  useFilterSortPaginationForTable,
+} from "../hooks/searchTableHooks";
 
 export default function AllSalesOrders() {
   const { t } = useTranslation();
   const location = useLocation();
   const uid = useSelector((state: MainState) => state.user.uid);
-  const role = useSelector((state: MainState) => state.user.typeID);
+  const entityType = useSelector((state: MainState) => state.user.typeEntity);
   const { showLoadingMessage } = useShowLoadingMessage();
   const { updateAllSalesOrdersLoadingPdf } = useContext(LoadingDataContext);
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
   const { showNotification } = useShowNotification();
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
+  const { searchTable, responseData, error, errorMsg, loading } =
+    useSearchTable(uid, TableTypes.ALL_PURCHASE_ORDERS, entityType, type);
+  const {
+    currentPage,
+    currentPageSize,
+    setCurrentPage,
+    fieldSort,
+    handleChangePageAndPageSize,
+    handleSearch,
+    reset,
+  } = useFilterSortPaginationForTable();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -297,9 +312,15 @@ export default function AllSalesOrders() {
         )}`}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
-        onSearch={handleSearch}
+        onSearch={(e) => handleSearch(e, searchTable)}
         loading={loading}
-        onChangePageAndPageSize={handleChangePageAndPageSize}
+        onChangePageAndPageSize={(params) =>
+          handleChangePageAndPageSize(
+            params,
+            fieldNameSearchRequestAllOrder,
+            searchTable
+          )
+        }
       />
     </>
   );

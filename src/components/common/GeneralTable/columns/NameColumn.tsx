@@ -52,8 +52,8 @@ export default function NameColumn(
       break;
     case TableTypes.ALL_PURCHASE_ORDERS:
       if (extraParam == PurchaseOrderTableTypes.ISSUED)
-        dataIndex = "subUserNameProvider";
-      else dataIndex = "subUserNameClient";
+        dataIndex = "subUserNameClient";
+      else dataIndex = "subUserNameProvider";
       break;
     case TableTypes.SALES_ORDER:
       if (extraParam == PurchaseOrderTableTypes.ISSUED)
@@ -62,8 +62,8 @@ export default function NameColumn(
       break;
     case TableTypes.ALL_SALES_ORDERS:
       if (extraParam == PurchaseOrderTableTypes.ISSUED)
-        dataIndex = "subUserNameClient";
-      else dataIndex = "subUserNameProvider";
+        dataIndex = "subUserNameProvider";
+      else dataIndex = "subUserNameClient";
       break;
   }
 
@@ -163,16 +163,16 @@ export default function NameColumn(
                   : (record as BasicPurchaseOrder).userNameClient)}
               {type === TableTypes.ALL_PURCHASE_ORDERS &&
                 (extraParam == PurchaseOrderTableTypes.ISSUED
-                  ? (record as BasicPurchaseOrder).subUserNameProvider
-                  : (record as BasicPurchaseOrder).subUserNameClient)}
+                  ? (record as BasicPurchaseOrder).subUserNameClient
+                  : (record as BasicPurchaseOrder).subUserNameProvider)}
               {type === TableTypes.SALES_ORDER &&
                 (extraParam == PurchaseOrderTableTypes.ISSUED
                   ? (record as BasicPurchaseOrder).userNameClient
                   : (record as BasicPurchaseOrder).userNameProvider)}
               {type === TableTypes.ALL_SALES_ORDERS &&
                 (extraParam == PurchaseOrderTableTypes.ISSUED
-                  ? (record as BasicPurchaseOrder).subUserNameClient
-                  : (record as BasicPurchaseOrder).subUserNameProvider)}
+                  ? (record as BasicPurchaseOrder).subUserNameProvider
+                  : (record as BasicPurchaseOrder).subUserNameClient)}
             </div>
             {(type == TableTypes.REQUIREMENT ||
               type == TableTypes.USERS ||

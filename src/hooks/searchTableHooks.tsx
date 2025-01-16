@@ -87,19 +87,22 @@ export default function useSearchTable(
           service = searchOffersService();
           break;
         case TableTypes.PURCHASE_ORDER:
+        case TableTypes.ALL_PURCHASE_ORDERS:
           if (subType == PurchaseOrderTableTypes.ISSUED)
             service = searchPurchaseOrdersByClientService();
           else if (subType == PurchaseOrderTableTypes.RECEIVED)
             service = searchPurchaseOrdersByProviderService();
           break;
         case TableTypes.SALES_ORDER:
+        case TableTypes.ALL_SALES_ORDERS:
           if (subType == PurchaseOrderTableTypes.ISSUED)
             // r3v cambiar endpoints
-            service = searchPurchaseOrdersByClientService();
-          else if (subType == PurchaseOrderTableTypes.RECEIVED)
             service = searchPurchaseOrdersByProviderService();
+          else if (subType == PurchaseOrderTableTypes.RECEIVED)
+            service = searchPurchaseOrdersByClientService();
           break;
       }
+      console.log("dds", service, tableType, subType);
       setApiParams({
         service,
         method: "post",

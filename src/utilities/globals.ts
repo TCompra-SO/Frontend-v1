@@ -103,9 +103,17 @@ export const fieldNameSearchRequestOrder: Record<string, string> = {
 };
 export const fieldNameSearchRequestOrderClient: Record<string, string> = {
   ...fieldNameSearchRequestOrder,
-  [nameColumnKey]: "userNameProvider",
+  [nameColumnKey]: "nameUserProvider",
 };
 export const fieldNameSearchRequestOrderProvider: Record<string, string> = {
   ...fieldNameSearchRequestOrder,
-  [nameColumnKey]: "nameUserClient",
+  [nameColumnKey]: "userNameClient",
+};
+export const fieldNameSearchRequestAllOrderClient: Record<string, string> = {
+  ...fieldNameSearchRequestOrder,
+  [nameColumnKey]: "nameSubUserClient",
+};
+export const fieldNameSearchRequestAllOrderProvider: Record<string, string> = {
+  ...fieldNameSearchRequestOrder,
+  [nameColumnKey]: "nameSubUserProvider",
 };

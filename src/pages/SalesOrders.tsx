@@ -393,7 +393,7 @@ export default function SalesOrders() {
         onChangePageAndPageSize={(params) =>
           handleChangePageAndPageSize(
             params,
-            getFieldNameObjForOrders(type),
+            getFieldNameObjForOrders(TableTypes.SALES_ORDER, type),
             searchTable
           )
         }

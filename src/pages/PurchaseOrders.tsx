@@ -392,7 +392,7 @@ export default function PurchaseOrders() {
         onChangePageAndPageSize={(params) =>
           handleChangePageAndPageSize(
             params,
-            getFieldNameObjForOrders(type),
+            getFieldNameObjForOrders(TableTypes.PURCHASE_ORDER, type),
             searchTable
           )
         }

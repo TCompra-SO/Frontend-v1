@@ -574,21 +574,24 @@ export default function GeneralTable(props: GeneralTableProps) {
           props.content.type,
           props.content.nameColumnHeader,
           visibility[TableColumns.NAME],
-          props.content.fieldSort
+          props.content.fieldSort,
+          props.content.subType
         ),
         GeneralColumnString(
           t("requirement"),
-          "requirementTitle",
+          purcOrderReqTitleColumnKey,
           true,
           130,
-          visibility[TableColumns.REQUIREMENT]
+          visibility[TableColumns.REQUIREMENT],
+          props.content.fieldSort
         ),
         GeneralColumnString(
           t("offer"),
-          "offerTitle",
+          purcOrderOfferTitleColumnKey,
           true,
           130,
-          visibility[TableColumns.OFFER]
+          visibility[TableColumns.OFFER],
+          props.content.fieldSort
         ),
         GeneralDateColumn(
           t("creationDateAbbrev"),

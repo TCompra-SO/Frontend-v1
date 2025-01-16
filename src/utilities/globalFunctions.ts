@@ -7,6 +7,8 @@ import {
 } from "../models/Interfaces";
 import {
   defaultCountry,
+  fieldNameSearchRequestAllOrderClient,
+  fieldNameSearchRequestAllOrderProvider,
   fieldNameSearchRequestOrderClient,
   fieldNameSearchRequestOrderProvider,
   maxDocSizeMb,
@@ -23,6 +25,7 @@ import {
   PurchaseOrderTableTypes,
   RequirementType,
   ResponseRequestType,
+  TableTypes,
   TimeMeasurement,
   UserClass,
   UserRoles,
@@ -371,8 +374,32 @@ export function getSortOrderFromFieldSort(
     : undefined;
 }
 
-export function getFieldNameObjForOrders(type: PurchaseOrderTableTypes) {
-  return type == PurchaseOrderTableTypes.ISSUED
-    ? fieldNameSearchRequestOrderProvider
-    : fieldNameSearchRequestOrderClient;
+export function getFieldNameObjForOrders(
+  tableType:
+    | TableTypes.PURCHASE_ORDER
+    | TableTypes.SALES_ORDER
+    | TableTypes.ALL_PURCHASE_ORDERS
+    | TableTypes.ALL_SALES_ORDERS,
+  type: PurchaseOrderTableTypes
+) {
+  if (
+    tableType == TableTypes.ALL_PURCHASE_ORDERS ||
+    tableType == TableTypes.ALL_SALES_ORDERS
+  )
+    if (tableType == TableTypes.ALL_PURCHASE_ORDERS)
+      return type == PurchaseOrderTableTypes.ISSUED
+        ? fieldNameSearchRequestAllOrderClient
+        : fieldNameSearchRequestAllOrderProvider;
+    else
+      return type == PurchaseOrderTableTypes.ISSUED
+        ? fieldNameSearchRequestAllOrderProvider
+        : fieldNameSearchRequestAllOrderClient;
+  if (tableType == TableTypes.PURCHASE_ORDER)
+    return type == PurchaseOrderTableTypes.ISSUED
+      ? fieldNameSearchRequestOrderClient
+      : fieldNameSearchRequestOrderProvider;
+  else
+    return type == PurchaseOrderTableTypes.ISSUED
+      ? fieldNameSearchRequestOrderProvider
+      : fieldNameSearchRequestOrderClient;
 }
