@@ -79,9 +79,11 @@ export default function useSearchTable(
       let service: HttpService | null = null;
       switch (tableType) {
         case TableTypes.REQUIREMENT:
+        case TableTypes.ALL_REQUIREMENTS:
           service = searchRequirementsService();
           break;
         case TableTypes.OFFER:
+        case TableTypes.ALL_OFFERS:
           service = searchOffersService();
           break;
         case TableTypes.PURCHASE_ORDER:

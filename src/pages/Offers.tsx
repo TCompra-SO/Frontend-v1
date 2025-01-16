@@ -56,6 +56,7 @@ export default function Offers() {
     handleChangePageAndPageSize,
     handleSearch,
     fieldSort,
+    reset,
   } = useFilterSortPaginationForTable();
   const [tableContent, setTableContent] = useState<TableTypeOffer>({
     type: TableTypes.OFFER,
@@ -104,9 +105,10 @@ export default function Offers() {
   /** Cargar datos iniciales */
 
   useEffect(() => {
-    searchTable({ page: currentPage, pageSize: currentPageSize });
+    reset();
+    searchTable({ page: 1, pageSize: currentPageSize });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [type]);
 
   useEffect(() => {
     if (responseData) {
@@ -170,18 +172,6 @@ export default function Offers() {
   useEffect(() => {
     setType(getRouteType(location.pathname));
   }, [location]);
-
-  useEffect(() => {
-    setTableContent((prev) => ({
-      ...prev,
-      //total: 80, // r3v
-      subType: type,
-      page: currentPage,
-      pageSize: currentPageSize,
-      fieldSort,
-    }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type]);
 
   /** Funciones */
 

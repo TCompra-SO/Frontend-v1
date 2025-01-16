@@ -7,11 +7,13 @@ import {
 } from "../../../utilities/types";
 import {
   offerDateColumnKey,
+  offersColumnKey,
   pageSizeOptionsSt,
   purcOrderDateColumnKey,
   purcOrderOfferTitleColumnKey,
   purcOrderReqTitleColumnKey,
   reqDateColumnKey,
+  userNameColumnKey,
 } from "../../../utilities/globals";
 import ImageColumn from "./columns/ImageColumn";
 import NameColumn from "./columns/NameColumn";
@@ -481,7 +483,14 @@ export default function GeneralTable(props: GeneralTableProps) {
         visibility[TableColumns.NAME],
         props.content.fieldSort
       ),
-      GeneralColumnString(t("user"), "subUser.name", true),
+      GeneralColumnString(
+        t("user"),
+        userNameColumnKey,
+        true,
+        undefined,
+        visibility[TableColumns.USERNAME],
+        props.content.fieldSort
+      ),
       GeneralDateColumn(
         t("dateColumn"),
         "publishDate",
@@ -502,8 +511,10 @@ export default function GeneralTable(props: GeneralTableProps) {
       // ),
       GeneralColumnNumber(
         t("offers"),
-        "numberOffers",
-        visibility[TableColumns.OFFERS]
+        offersColumnKey,
+        visibility[TableColumns.OFFERS],
+        92,
+        props.content.fieldSort
       ),
       StateColumn(props.content.type, visibility[TableColumns.STATE]),
       ViewColumn(
@@ -523,7 +534,14 @@ export default function GeneralTable(props: GeneralTableProps) {
         visibility[TableColumns.NAME],
         props.content.fieldSort
       ),
-      GeneralColumnString(t("user"), "subUser.name", true),
+      GeneralColumnString(
+        t("user"),
+        userNameColumnKey,
+        true,
+        undefined,
+        visibility[TableColumns.USERNAME],
+        props.content.fieldSort
+      ),
       RequirementColumn(
         true,
         visibility[TableColumns.REQUIREMENT],
@@ -627,19 +645,22 @@ export default function GeneralTable(props: GeneralTableProps) {
         t("goods"),
         "numGoods",
         visibility[TableColumns.GOODS],
-        85
+        85,
+        props.content.fieldSort
       ),
       GeneralColumnNumber(
         t("serviceAbbrev"),
         "numServices",
         visibility[TableColumns.SERVICES],
-        85
+        85,
+        props.content.fieldSort
       ),
       GeneralColumnNumber(
         t("salesAbbrev"),
         "numSales",
         visibility[TableColumns.SALES],
-        85
+        85,
+        props.content.fieldSort
       ),
       ActionColumn(
         props.content.type,
@@ -676,7 +697,9 @@ export default function GeneralTable(props: GeneralTableProps) {
       GeneralColumnNumber(
         t("offers"),
         "numberOffers",
-        visibility[TableColumns.OFFERS]
+        visibility[TableColumns.OFFERS],
+        undefined,
+        props.content.fieldSort
       ),
       StateColumn(
         TableTypes.REQUIREMENT_SUBUSER,

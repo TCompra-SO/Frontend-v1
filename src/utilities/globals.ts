@@ -64,7 +64,7 @@ export const actionColumnKey: string = "action";
 export const categoryColumnKey: string = "category";
 export const documentColumnKey: string = "document";
 export const locationColumnKey: string = "location";
-export const offersColumnKey: string = "offers";
+export const offersColumnKey: string = "numberOffers";
 export const priceColumnKey: string = "price";
 export const requirementColumnKey: string = "requirement";
 export const stateColumnKey: string = "state";
@@ -77,6 +77,7 @@ export const offerDateColumnKey: string = "publishDate";
 export const purcOrderReqTitleColumnKey: string = "requirementTitle";
 export const purcOrderDateColumnKey: string = "selectionDate";
 export const purcOrderOfferTitleColumnKey: string = "offerTitle";
+export const userNameColumnKey: string = "userName";
 
 // Parámetros para sort en tabla
 export const fieldNameSearchRequestRequirement: Record<string, string> = {
@@ -84,7 +85,7 @@ export const fieldNameSearchRequestRequirement: Record<string, string> = {
   [reqDateColumnKey]: "publish_date",
   [locationColumnKey]: "cityName",
   [priceColumnKey]: "budget",
-  userName: "userName",
+  [userNameColumnKey]: "userName",
   [offersColumnKey]: "number_offers",
 };
 export const fieldNameSearchRequestOffer: Record<string, string> = {
@@ -93,7 +94,7 @@ export const fieldNameSearchRequestOffer: Record<string, string> = {
   [locationColumnKey]: "cityName",
   [offerDateColumnKey]: "publishDate",
   [priceColumnKey]: "budget",
-  userName: "userName",
+  [userNameColumnKey]: "userName",
 };
 export const fieldNameSearchRequestOrder: Record<string, string> = {
   [purcOrderReqTitleColumnKey]: "requerimentTitle",

@@ -13,7 +13,6 @@ export default function GeneralColumnString(
   truncate: boolean,
   width: number = 130,
   hidden: boolean = false,
-  // sorter: boolean = true,
   fieldSort?: FieldSort,
   noSorter?: boolean,
   getLabelFunction?: (type: any) => string

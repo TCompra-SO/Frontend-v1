@@ -1,18 +1,23 @@
 import { ColumnType } from "antd/es/table";
+import { FieldSort } from "../../../../models/Requests";
+import { getSortOrderFromFieldSort } from "../../../../utilities/globalFunctions";
 
 export default function GeneralColumnNumber(
   nameColumn: string,
   dataIndex: string,
   hidden: boolean = false,
-  width?: number
+  width?: number,
+  fieldSort?: FieldSort,
+  noSorter?: boolean
 ) {
   const col: ColumnType<any> = {
     title: nameColumn,
     dataIndex,
     key: dataIndex,
     align: "center",
-    sorter: (a, b) => a[dataIndex] - b[dataIndex],
+    sorter: noSorter ? undefined : true,
     showSorterTooltip: false,
+    sortOrder: getSortOrderFromFieldSort(dataIndex, fieldSort),
     width: width ?? 75,
     hidden,
     render: (_, record) => {

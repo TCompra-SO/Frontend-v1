@@ -72,6 +72,7 @@ export default function Requirements() {
     fieldSort,
     handleChangePageAndPageSize,
     handleSearch,
+    reset,
   } = useFilterSortPaginationForTable();
   const [loadingTable, setLoadingTable] = useState(true);
   const [type, setType] = useState(getRouteType(location.pathname));
@@ -133,26 +134,14 @@ export default function Requirements() {
   /* Obtener lista inicialmente */
 
   useEffect(() => {
-    searchTable({ page: currentPage, pageSize: currentPageSize });
+    reset();
+    searchTable({ page: 1, pageSize: currentPageSize });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [type]);
 
   useEffect(() => {
     setType(getRouteType(location.pathname));
   }, [location]);
-
-  useEffect(() => {
-    setTableContent((prev) => ({
-      ...prev,
-      //total: 100, // r3v
-      page: currentPage,
-      pageSize: currentPageSize,
-      subType: type,
-      nameColumnHeader: t(getLabelFromRequirementType(type)),
-      fieldSort,
-    }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type]);
 
   useEffect(() => {
     if (responseData) {
@@ -162,6 +151,7 @@ export default function Requirements() {
       setTotal(0);
       setTableContent((prev) => ({
         ...prev,
+        nameColumnHeader: t(getLabelFromRequirementType(type)),
         data: [],
         total,
         page: currentPage,
@@ -223,7 +213,6 @@ export default function Requirements() {
   /** Funciones */
 
   async function setTableData() {
-    console.log("got data");
     try {
       const data: Requirement[] = responseData.data.map((e: any) =>
         transformDataToRequirement(
@@ -236,6 +225,7 @@ export default function Requirements() {
       setTotal(responseData.res?.totalDocuments);
       setTableContent((prev) => ({
         ...prev,
+        nameColumnHeader: t(getLabelFromRequirementType(type)),
         data,
         total,
         page: currentPage,

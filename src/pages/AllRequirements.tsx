@@ -1,38 +1,44 @@
 import { useTranslation } from "react-i18next";
 import TablePageContent from "../components/section/table-page/TablePageContent";
-import { ChangeEvent, useEffect, useState } from "react";
-import { TableTypeAllRequirements, useApiParams } from "../models/Interfaces";
+import { useEffect, useState } from "react";
+import { TableTypeAllRequirements } from "../models/Interfaces";
+import { Action, TableTypes } from "../utilities/types";
+import { BasicRequirement } from "../models/MainInterfaces";
 import {
-  Action,
-  OnChangePageAndPageSizeTypeParams,
-  TableTypes,
-} from "../utilities/types";
-import { BaseUser, BasicRequirement } from "../models/MainInterfaces";
-import makeRequest, {
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
 import { useLocation, useNavigate } from "react-router-dom";
-import useApi from "../hooks/useApi";
-import { getRequirementsByEntityService } from "../services/requests/requirementService";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
-import { getBaseDataUserService } from "../services/requests/authService";
-import {
-  transformDataToRequirement,
-  transformToBaseUser,
-} from "../utilities/transform";
+import { transformDataToBasicRequirement } from "../utilities/transform";
 import { pageRoutes } from "../utilities/routes";
-import { pageSizeOptionsSt } from "../utilities/globals";
+import { fieldNameSearchRequestRequirement } from "../utilities/globals";
 import useShowNotification from "../hooks/utilHooks";
+import useSearchTable, {
+  useFilterSortPaginationForTable,
+} from "../hooks/searchTableHooks";
 
 export default function AllRequirements() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const { showNotification } = useShowNotification();
   const dataUser = useSelector((state: MainState) => state.user);
-  const mainDataUser = useSelector((state: MainState) => state.mainUser);
+  const { showNotification } = useShowNotification();
+  const { searchTable, responseData, error, errorMsg } = useSearchTable(
+    dataUser.uid,
+    TableTypes.REQUIREMENT,
+    dataUser.typeEntity
+  );
+  const {
+    currentPage,
+    currentPageSize,
+    setCurrentPage,
+    fieldSort,
+    handleChangePageAndPageSize,
+    handleSearch,
+    reset,
+  } = useFilterSortPaginationForTable();
   const [type, setType] = useState(getRouteType(location.pathname));
   const [loadingTable, setLoadingTable] = useState(true);
   const [tableContent, setTableContent] = useState<TableTypeAllRequirements>({
@@ -42,44 +48,33 @@ export default function AllRequirements() {
     nameColumnHeader: t(getLabelFromRequirementType(type)),
     onButtonClick: handleOnButtonClick,
     total: 0,
+    page: currentPage,
+    pageSize: currentPageSize,
+    fieldSort,
   });
 
   /** Obtener datos de tabla */
 
-  const [apiParams, setApiParams] = useState<useApiParams>({
-    service: getRequirementsByEntityService(
-      dataUser.uid,
-      1,
-      pageSizeOptionsSt[0]
-    ),
-    method: "get",
-  });
-
-  const { responseData, error, errorMsg, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
-
   useEffect(() => {
-    if (apiParams.service) {
-      fetchData();
-    }
+    reset();
+    searchTable({ page: 1, pageSize: currentPageSize });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParams]);
+  }, [type]);
 
   useEffect(() => {
     if (responseData) {
       setData();
     } else if (error) {
-      setTableContent({
-        type: TableTypes.ALL_REQUIREMENTS,
-        data: [],
-        hiddenColumns: [],
+      setCurrentPage(1);
+      setTableContent((prev) => ({
+        ...prev,
         nameColumnHeader: t(getLabelFromRequirementType(type)),
-        onButtonClick: handleOnButtonClick,
+        data: [],
         total: 0,
-      });
+        page: currentPage,
+        pageSize: currentPageSize,
+        fieldSort,
+      }));
       setLoadingTable(false);
       showNotification("error", errorMsg);
     }
@@ -92,71 +87,24 @@ export default function AllRequirements() {
     setType(getRouteType(location.pathname));
   }, [location]);
 
-  useEffect(() => {
-    setTableContent((prev) => {
-      return {
-        ...prev,
-        //total: 100, // r3v
-        subType: type,
-        nameColumnHeader: t(getLabelFromRequirementType(type)),
-      };
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type]);
-
   /** Funciones */
 
   async function setData() {
     try {
-      const subUsers: { [key: string]: BaseUser } = {};
-      const pendingRequests: { [key: string]: Promise<any> } = {};
-
       const data = await Promise.all(
         responseData.data.map(async (e: any) => {
-          if (e.subUser == dataUser.uid) {
-            return transformDataToRequirement(
-              e,
-              type,
-              dataUser,
-              mainDataUser,
-              true
-            );
-          } else {
-            // If the subUser's data is not cached and there's no ongoing request for it
-            if (!Object.prototype.hasOwnProperty.call(subUsers, e.subUser)) {
-              // If there's no request in progress for this subUser, initiate one
-              if (!pendingRequests[e.subUser]) {
-                pendingRequests[e.subUser] = makeRequest({
-                  service: getBaseDataUserService(e.subUser),
-                  method: "get",
-                }).then(({ responseData }: any) => {
-                  const { subUser } = transformToBaseUser(responseData.data[0]);
-                  subUsers[e.subUser] = subUser;
-                  // Clean up the pending request after it resolves
-                  delete pendingRequests[e.subUser];
-                });
-              }
-              // Wait for the request to resolve if it's already in progress
-              await pendingRequests[e.subUser];
-            }
-            return transformDataToRequirement(
-              e,
-              type,
-              subUsers[e.subUser],
-              dataUser
-            );
-          }
+          return transformDataToBasicRequirement(e, type);
         })
       );
-
-      setTableContent({
-        type: TableTypes.ALL_REQUIREMENTS,
-        data: data,
-        hiddenColumns: [],
+      setTableContent((prev) => ({
+        ...prev,
         nameColumnHeader: t(getLabelFromRequirementType(type)),
-        onButtonClick: handleOnButtonClick,
+        data,
         total: responseData.res?.totalDocuments,
-      });
+        page: currentPage,
+        pageSize: currentPageSize,
+        fieldSort,
+      }));
     } catch (error) {
       console.log(error);
       showNotification("error", t("errorOccurred"));
@@ -165,24 +113,9 @@ export default function AllRequirements() {
     }
   }
 
-  function handleSearch(e: ChangeEvent<HTMLInputElement>) {
-    console.log(e.target.value);
-  }
-
   function handleOnButtonClick(action: Action, requirement: BasicRequirement) {
     if (action == Action.VIEW_REQUIREMENT)
       navigate(`${pageRoutes.productDetail}/${requirement.key}`);
-  }
-
-  function handleChangePageAndPageSize({
-    page,
-    pageSize,
-  }: OnChangePageAndPageSizeTypeParams) {
-    setLoadingTable(true);
-    setApiParams({
-      service: getRequirementsByEntityService(dataUser.uid, page, pageSize),
-      method: "get",
-    });
   }
 
   return (
@@ -192,9 +125,16 @@ export default function AllRequirements() {
       subtitle={`${t("listOf")} ${t(getLabelFromRequirementType(type))}`}
       subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
       table={tableContent}
-      onSearch={handleSearch}
+      onSearch={(e) => handleSearch(e, searchTable)}
       loading={loadingTable}
-      onChangePageAndPageSize={handleChangePageAndPageSize}
+      onChangePageAndPageSize={(params) =>
+        handleChangePageAndPageSize(
+          params,
+          fieldNameSearchRequestRequirement,
+          searchTable,
+          setLoadingTable
+        )
+      }
     />
   );
 }

@@ -23,7 +23,7 @@ export interface BaseRequirementOffer extends BaseInterface {
 }
 
 export interface BasicRequirement extends BaseRequirementOffer {
-  user: BaseUser;
+  user?: BaseUser;
   subUser?: BaseUser;
   publishDate: string;
   category: number;
@@ -35,9 +35,11 @@ export interface BasicRequirement extends BaseRequirementOffer {
   offerId?: string;
   offerUserId?: string;
   offerSubUserId?: string;
+  userName: string;
 }
 
 export interface Requirement extends BasicRequirement {
+  user: BaseUser;
   description: string;
   expirationDate: string;
   image?: string[];
