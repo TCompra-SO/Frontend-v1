@@ -179,7 +179,7 @@ export default function AllSalesOrders() {
         ...prev,
         data,
         subType: type,
-        total: responseData.res?.total,
+        total: responseData.res?.totalDocuments,
         page: currentPage,
         pageSize: currentPageSize,
         fieldSort,

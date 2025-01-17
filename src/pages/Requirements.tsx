@@ -241,7 +241,7 @@ export default function Requirements() {
   }
 
   async function handleOnButtonClick(action: Action, requirement: Requirement) {
-    console.log(requirement);
+    // console.log(requirement);
     switch (action) {
       case Action.SHOW_OFFERS: {
         getOffersByRequirementId(

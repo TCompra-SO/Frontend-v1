@@ -36,6 +36,7 @@ export interface BasicRequirement extends BaseRequirementOffer {
   offerUserId?: string;
   offerSubUserId?: string;
   userName: string;
+  subUserName: string;
 }
 
 export interface Requirement extends BasicRequirement {

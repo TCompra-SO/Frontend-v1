@@ -124,8 +124,7 @@ export default function AllOffers() {
               e,
               type,
               dataUser,
-              mainDataUser,
-              true
+              mainDataUser
             );
           } else {
             // Check if we already have data for the subUser in cache
@@ -171,6 +170,7 @@ export default function AllOffers() {
   }
 
   function handleOnButtonClick(action: Action, offer: Offer) {
+    console.log(offer);
     if (action == Action.VIEW_OFFER)
       getOfferDetail(offer.key, offer.type, true, action, offer);
   }

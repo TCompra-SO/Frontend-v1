@@ -138,7 +138,8 @@ export default function ModalContainer(props: ModalContainerProps) {
   useEffect(() => {
     if (
       props.content.type == ModalTypes.CANCEL_PURCHASE_ORDER &&
-      props.content.action == Action.CANCEL_REQUIREMENT
+      (props.content.action == Action.CANCEL_REQUIREMENT ||
+        props.content.action == Action.CANCEL)
     ) {
       const id = props.content.data.rowId;
       if (useCancelRequirementHook.loadingCancelRequirement) {
@@ -155,7 +156,8 @@ export default function ModalContainer(props: ModalContainerProps) {
   useEffect(() => {
     if (
       props.content.type == ModalTypes.CANCEL_PURCHASE_ORDER &&
-      props.content.action == Action.CANCEL_OFFER
+      (props.content.action == Action.CANCEL_OFFER ||
+        props.content.action == Action.CANCEL)
     ) {
       const id = props.content.data.rowId;
       if (useCancelOfferHook.loadingCancelOffer) {
