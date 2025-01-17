@@ -60,10 +60,12 @@ export default function Requirements() {
     useGetOffersByRequirementId();
   const { cancelRequirement } = useCancelRequirement();
   const { getBasicRateData, modalDataRate } = useCulminate();
+  const [type, setType] = useState(getRouteType(location.pathname));
   const { searchTable, responseData, error, errorMsg } = useSearchTable(
     dataUser.uid,
     TableTypes.REQUIREMENT,
-    EntityType.SUBUSER
+    EntityType.SUBUSER,
+    type
   );
   const {
     currentPage,
@@ -75,7 +77,6 @@ export default function Requirements() {
     reset,
   } = useFilterSortPaginationForTable();
   const [loadingTable, setLoadingTable] = useState(true);
-  const [type, setType] = useState(getRouteType(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [total, setTotal] = useState(0);
   const [dataModal, setDataModal] = useState<ModalContent>({

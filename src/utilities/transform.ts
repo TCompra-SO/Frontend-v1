@@ -80,6 +80,7 @@ export function transformDataToBasicRequirement(
     title: data.title,
     key: data.key,
     type,
+    expirationDate: data.completion_date,
   };
   if (data.winOffer) {
     req.offerId = data.winOffer.uid;

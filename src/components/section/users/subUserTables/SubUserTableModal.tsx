@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import {
   Action,
   ModalTypes,
+  OnChangePageAndPageSizeType,
   PurchaseOrderTableTypes,
   RequirementType,
   TableTypes,
@@ -31,6 +32,7 @@ import { useGetOffersByRequirementId } from "../../../../hooks/requirementHooks"
 import useShowNotification, {
   useShowLoadingMessage,
 } from "../../../../hooks/utilHooks";
+import { FieldSort } from "../../../../models/Requests";
 
 interface SubUserTableModalProps {
   user: SubUserBase | null;
@@ -54,11 +56,10 @@ interface SubUserTableModalProps {
   onTabChange: (tabId: RequirementType | PurchaseOrderTableTypes) => void;
   loading: boolean | undefined;
   tableType: TableTypes;
-  onChangePageAndPageSize?: (
-    page: number,
-    pageSize: number,
-    subType: RequirementType | PurchaseOrderTableTypes
-  ) => void;
+  onChangePageAndPageSize?: OnChangePageAndPageSizeType;
+  currentPage: number;
+  currentPageSize: number;
+  fieldSort: FieldSort | undefined;
 }
 
 export default function SubUserTableModal(props: SubUserTableModalProps) {
@@ -305,10 +306,11 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
                     nameColumnHeader: t("requirements"),
                     onButtonClick: handleOnButtonClick,
                     total: props.content.total,
+                    page: props.currentPage,
+                    pageSize: props.currentPageSize,
+                    fieldSort: props.fieldSort,
                   }}
-                  onChangePageAndPageSize={({ page, pageSize }) =>
-                    props.onChangePageAndPageSize?.(page, pageSize, subType)
-                  }
+                  onChangePageAndPageSize={props.onChangePageAndPageSize}
                   loading={props.loading}
                 />
               </div>
@@ -325,10 +327,11 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
                     nameColumnHeader: t("offers"),
                     onButtonClick: handleOnButtonClick,
                     total: props.content.total,
+                    page: props.currentPage,
+                    pageSize: props.currentPageSize,
+                    fieldSort: props.fieldSort,
                   }}
-                  onChangePageAndPageSize={({ page, pageSize }) =>
-                    props.onChangePageAndPageSize?.(page, pageSize, subType)
-                  }
+                  onChangePageAndPageSize={props.onChangePageAndPageSize}
                   loading={props.loading}
                 />
               </div>
@@ -346,10 +349,11 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
                     onButtonClick: handleOnButtonClick,
                     subType: props.content.subType,
                     total: props.content.total,
+                    page: props.currentPage,
+                    pageSize: props.currentPageSize,
+                    fieldSort: props.fieldSort,
                   }}
-                  onChangePageAndPageSize={({ page, pageSize }) =>
-                    props.onChangePageAndPageSize?.(page, pageSize, subType)
-                  }
+                  onChangePageAndPageSize={props.onChangePageAndPageSize}
                   loading={props.loading}
                 />
               </div>

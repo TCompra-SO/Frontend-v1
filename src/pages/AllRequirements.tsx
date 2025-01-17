@@ -25,10 +25,12 @@ export default function AllRequirements() {
   const location = useLocation();
   const dataUser = useSelector((state: MainState) => state.user);
   const { showNotification } = useShowNotification();
+  const [type, setType] = useState(getRouteType(location.pathname));
   const { searchTable, responseData, error, errorMsg } = useSearchTable(
     dataUser.uid,
     TableTypes.ALL_REQUIREMENTS,
-    dataUser.typeEntity
+    dataUser.typeEntity,
+    type
   );
   const {
     currentPage,
@@ -39,7 +41,6 @@ export default function AllRequirements() {
     handleSearch,
     reset,
   } = useFilterSortPaginationForTable();
-  const [type, setType] = useState(getRouteType(location.pathname));
   const [loadingTable, setLoadingTable] = useState(true);
   const [tableContent, setTableContent] = useState<TableTypeAllRequirements>({
     type: TableTypes.ALL_REQUIREMENTS,

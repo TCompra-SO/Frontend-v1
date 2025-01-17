@@ -272,7 +272,6 @@ export default function OfferForm(props: OfferFormProps) {
       !isPremium
     ) {
       setCantOfferMotive(CantOfferMotives.ONLY_PREMIUM);
-
       return;
     } else {
       if (props.requirement) {

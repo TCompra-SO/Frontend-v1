@@ -22,16 +22,20 @@ export interface BaseRequirementOffer extends BaseInterface {
   title: string;
 }
 
-export interface BasicRequirement extends BaseRequirementOffer {
-  user?: BaseUser;
-  subUser?: BaseUser;
-  publishDate: string;
-  category: number;
-  location: number;
-  coin: number;
+export interface RequirementItemSubUser extends BaseRequirementOffer {
   price: number;
+  publishDate: string;
+  expirationDate: string;
   numberOffers: number;
   state: RequirementState;
+  coin: number;
+}
+
+export interface BasicRequirement extends RequirementItemSubUser {
+  user?: BaseUser;
+  subUser?: BaseUser;
+  category: number;
+  location: number;
   offerId?: string;
   offerUserId?: string;
   offerSubUserId?: string;
@@ -42,7 +46,6 @@ export interface BasicRequirement extends BaseRequirementOffer {
 export interface Requirement extends BasicRequirement {
   user: BaseUser;
   description: string;
-  expirationDate: string;
   image?: string[];
   document?: string[];
   warranty?: number;
@@ -53,15 +56,18 @@ export interface Requirement extends BasicRequirement {
   allowedBidder: number[];
 }
 
-export interface BasicOffer extends BaseRequirementOffer {
+export interface OfferItemSubUser extends BaseRequirementOffer {
+  requirementTitle: string;
+  price: number;
+  publishDate: string;
+  state: OfferState;
+  coin: number;
+}
+
+export interface BasicOffer extends OfferItemSubUser {
   user: BaseUser;
   subUser?: BaseUser;
-  requirementTitle: string;
   requirementId: string;
-  publishDate: string;
-  coin: number;
-  price: number;
-  state: OfferState;
 }
 
 export interface Offer extends BasicOffer {
@@ -184,23 +190,6 @@ export interface SubUserProfile extends SubUserBase {
   cityID: number;
   companyID: string;
   phone: string;
-}
-
-export interface RequirementItemSubUser extends BaseRequirementOffer {
-  price: number;
-  publishDate: string;
-  expirationDate: string;
-  numberOffers: number;
-  state: RequirementState;
-  coin: number;
-}
-
-export interface OfferItemSubUser extends BaseRequirementOffer {
-  requirementTitle: string;
-  price: number;
-  publishDate: string;
-  state: OfferState;
-  coin: number;
 }
 
 export interface CertificateFile {
