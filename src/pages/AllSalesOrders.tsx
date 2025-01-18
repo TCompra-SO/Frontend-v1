@@ -15,6 +15,7 @@ import {
 } from "../utilities/types";
 import { PurchaseOrder } from "../models/MainInterfaces";
 import {
+  getFieldNameObjForOrders,
   getLabelFromPurchaseOrderType,
   getLabelFromRequirementType,
   getPurchaseOrderType,
@@ -28,7 +29,6 @@ import { getPurchaseOrderPDFService } from "../services/requests/purchaseOrderSe
 import { transformToPurchaseOrder } from "../utilities/transform";
 import ModalContainer from "../components/containers/ModalContainer";
 import {
-  fieldNameSearchRequestRequirement,
   mainModalScrollStyle,
   noPaginationPageSize,
 } from "../utilities/globals";
@@ -51,7 +51,7 @@ export default function AllSalesOrders() {
   const { showNotification } = useShowNotification();
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
   const { searchTable, responseData, error, errorMsg, loading } =
-    useSearchTable(uid, TableTypes.ALL_PURCHASE_ORDERS, entityType, type);
+    useSearchTable(uid, TableTypes.ALL_SALES_ORDERS, entityType, type);
   const {
     currentPage,
     currentPageSize,
@@ -243,7 +243,7 @@ export default function AllSalesOrders() {
         onChangePageAndPageSize={(params) =>
           handleChangePageAndPageSize(
             params,
-            fieldNameSearchRequestRequirement,
+            getFieldNameObjForOrders(TableTypes.ALL_SALES_ORDERS, type),
             searchTable
           )
         }
