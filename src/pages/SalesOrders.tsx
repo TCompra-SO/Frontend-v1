@@ -264,7 +264,7 @@ export default function SalesOrders() {
         ...prev,
         data,
         subType: type,
-        total: responseData.res?.total,
+        total: responseData.res?.totalDocuments,
         page: currentPage,
         pageSize: currentPageSize,
         fieldSort,

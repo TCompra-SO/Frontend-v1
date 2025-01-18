@@ -152,6 +152,7 @@ export default function PurchaseOrders() {
       page: 1,
       pageSize: currentPageSize,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
   useEffect(() => {
@@ -263,7 +264,7 @@ export default function PurchaseOrders() {
         ...prev,
         data,
         subType: type,
-        total: responseData.res?.total,
+        total: responseData.res?.totalDocuments,
         page: currentPage,
         pageSize: currentPageSize,
         fieldSort,

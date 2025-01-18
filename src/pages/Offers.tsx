@@ -40,9 +40,9 @@ export default function Offers() {
   const { showLoadingMessage } = useShowLoadingMessage();
   const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
   const { getBasicRateData, modalDataRate } = useCulminate();
-  const { searchTable, responseData, error, errorMsg, loading } =
-    useSearchTable(dataUser.uid, TableTypes.OFFER, EntityType.SUBUSER);
   const [type, setType] = useState(getRouteType(location.pathname));
+  const { searchTable, responseData, error, errorMsg, loading } =
+    useSearchTable(dataUser.uid, TableTypes.OFFER, EntityType.SUBUSER, type);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,

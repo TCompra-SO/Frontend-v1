@@ -13,6 +13,9 @@ import {
   purcOrderOfferTitleColumnKey,
   purcOrderReqTitleColumnKey,
   reqDateColumnKey,
+  reqExpDateColumnKey,
+  requirementColumnKey,
+  titleColumnKey,
   userNameColumnKey,
 } from "../../../utilities/globals";
 import ImageColumn from "./columns/ImageColumn";
@@ -678,30 +681,30 @@ export default function GeneralTable(props: GeneralTableProps) {
     columns = [
       GeneralColumnString(
         t("title"),
-        "title",
+        titleColumnKey,
         true,
         130,
-        visibility[TableColumns.NAME]
+        visibility[TableColumns.NAME],
+        props.content.fieldSort
       ),
       PriceColumn(visibility[TableColumns.PRICE], props.content.fieldSort),
       GeneralDateColumn(
         t("publishDateAbbrev"),
-        "publishDate",
+        reqDateColumnKey,
         visibility[TableColumns.PUBLISH_DATE],
         props.content.fieldSort
       ),
       GeneralDateColumn(
         t("expirationDateAbbrev"),
-        "expirationDate",
+        reqExpDateColumnKey,
         visibility[TableColumns.EXPIRATION_DATE],
         props.content.fieldSort
       ),
-      TypeColumn(visibility[TableColumns.TYPE]),
       GeneralColumnNumber(
         t("offers"),
-        "numberOffers",
+        offersColumnKey,
         visibility[TableColumns.OFFERS],
-        undefined,
+        92,
         props.content.fieldSort
       ),
       StateColumn(
@@ -721,26 +724,27 @@ export default function GeneralTable(props: GeneralTableProps) {
     columns = [
       GeneralColumnString(
         t("title"),
-        "title",
+        titleColumnKey,
         true,
         130,
-        visibility[TableColumns.NAME]
+        visibility[TableColumns.NAME],
+        props.content.fieldSort
       ),
       GeneralColumnString(
         t("requirement"),
-        "requirementTitle",
+        requirementColumnKey,
         true,
         130,
-        visibility[TableColumns.REQUIREMENT]
+        visibility[TableColumns.REQUIREMENT],
+        props.content.fieldSort
       ),
       PriceColumn(visibility[TableColumns.PRICE], props.content.fieldSort),
       GeneralDateColumn(
-        t("selectionDateAbbrev"),
-        "selectionDate",
+        t("dateColumn"),
+        offerDateColumnKey,
         visibility[TableColumns.SELECTION_DATE],
         props.content.fieldSort
       ),
-      TypeColumn(visibility[TableColumns.TYPE]),
       StateColumn(TableTypes.OFFER_SUBUSER, visibility[TableColumns.STATE]),
       ViewColumn(
         TableTypes.OFFER_SUBUSER,

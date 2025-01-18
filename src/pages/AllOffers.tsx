@@ -34,10 +34,12 @@ export default function AllOffers() {
   const dataUser = useSelector((state: MainState) => state.user);
   const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
   const { showNotification } = useShowNotification();
+  const [type, setType] = useState(getRouteType(location.pathname));
   const { searchTable, responseData, error, errorMsg } = useSearchTable(
     dataUser.uid,
     TableTypes.ALL_OFFERS,
-    dataUser.typeEntity
+    dataUser.typeEntity,
+    type
   );
   const {
     currentPage,
@@ -48,7 +50,6 @@ export default function AllOffers() {
     handleSearch,
     reset,
   } = useFilterSortPaginationForTable();
-  const [type, setType] = useState(getRouteType(location.pathname));
   const [loadingTable, setLoadingTable] = useState(true);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
@@ -124,8 +125,7 @@ export default function AllOffers() {
               e,
               type,
               dataUser,
-              mainDataUser,
-              true
+              mainDataUser
             );
           } else {
             // Check if we already have data for the subUser in cache
@@ -171,6 +171,7 @@ export default function AllOffers() {
   }
 
   function handleOnButtonClick(action: Action, offer: Offer) {
+    console.log(offer);
     if (action == Action.VIEW_OFFER)
       getOfferDetail(offer.key, offer.type, true, action, offer);
   }

@@ -68,6 +68,7 @@ export function transformDataToBasicRequirement(
   type: RequirementType
 ) {
   const req: BasicRequirement = {
+    subUserName: data.subUserName,
     userName: data.userName,
     publishDate: data.publishDate,
     category: data.category,
@@ -79,6 +80,7 @@ export function transformDataToBasicRequirement(
     title: data.title,
     key: data.key,
     type,
+    expirationDate: data.completion_date,
   };
   if (data.winOffer) {
     req.offerId = data.winOffer.uid;
@@ -169,6 +171,7 @@ export async function transformFromGetRequirementByIdToRequirement(
       numberOffers: data.number_offers,
       type,
       userName: data.userName,
+      subUserName: data.subUserName,
     };
     if (data.winOffer) {
       req.offerId = data.winOffer.uid;

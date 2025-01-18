@@ -67,39 +67,52 @@ export default function useSearchTable(
     resetUseApi();
   }
 
-  function searchTable({
-    page,
-    pageSize,
-    keyWords,
-    fieldName,
-    orderType,
-  }: SearchTableTypeParams) {
+  function searchTable(
+    { page, pageSize, keyWords, fieldName, orderType }: SearchTableTypeParams,
+    tableTypeParam?: TableTypes,
+    subTypeParam?: RequirementType | PurchaseOrderTableTypes,
+    uidParam?: string
+  ) {
+    const stUid: string = uidParam ?? uid;
+    const stTableType: TableTypes = tableTypeParam ?? tableType;
+    const stSubType: RequirementType | PurchaseOrderTableTypes | undefined =
+      subTypeParam ?? subType;
+    console.log("=====", stTableType, stSubType);
     const newKeyWords = getSearchString(keyWords ?? "");
     if (newKeyWords.length >= searchSinceLength || !keyWords) {
       let service: HttpService | null = null;
-      switch (tableType) {
+      switch (stTableType) {
         case TableTypes.REQUIREMENT:
         case TableTypes.ALL_REQUIREMENTS:
-          service = searchRequirementsService();
+          if (stSubType == RequirementType.GOOD)
+            service = searchRequirementsService();
+          // r3v endpoints para servicios y liquidaciones
+          else if (stSubType == RequirementType.SERVICE)
+            service = searchRequirementsService();
+          else if (stSubType == RequirementType.SALE)
+            service = searchRequirementsService();
           break;
         case TableTypes.OFFER:
         case TableTypes.ALL_OFFERS:
-          service = searchOffersService();
+          if (stSubType == RequirementType.GOOD)
+            service = searchOffersService();
+          else if (stSubType == RequirementType.SERVICE)
+            service = searchOffersService();
+          else if (stSubType == RequirementType.SALE)
+            service = searchOffersService();
           break;
         case TableTypes.PURCHASE_ORDER:
-        case TableTypes.ALL_PURCHASE_ORDERS:
-          if (subType == PurchaseOrderTableTypes.ISSUED)
+          if (stSubType == PurchaseOrderTableTypes.ISSUED)
             service = searchPurchaseOrdersByClientService();
-          else if (subType == PurchaseOrderTableTypes.RECEIVED)
+          else if (stSubType == PurchaseOrderTableTypes.RECEIVED)
             service = searchPurchaseOrdersByProviderService();
           break;
         case TableTypes.SALES_ORDER:
-        case TableTypes.ALL_SALES_ORDERS:
-          if (subType == PurchaseOrderTableTypes.ISSUED)
+          if (stSubType == PurchaseOrderTableTypes.ISSUED)
             // r3v cambiar endpoints
-            service = searchPurchaseOrdersByProviderService();
-          else if (subType == PurchaseOrderTableTypes.RECEIVED)
             service = searchPurchaseOrdersByClientService();
+          else if (stSubType == PurchaseOrderTableTypes.RECEIVED)
+            service = searchPurchaseOrdersByProviderService();
           break;
       }
       console.log("dds", service, tableType, subType);
@@ -107,7 +120,7 @@ export default function useSearchTable(
         service,
         method: "post",
         dataToSend: {
-          userId: uid,
+          userId: stUid,
           page,
           pageSize,
           keyWords: keyWords === undefined ? keyWords : newKeyWords,
