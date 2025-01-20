@@ -72,6 +72,9 @@ export interface ModalRateCanceled extends CommonModalType {
     isOffer: boolean;
     requirementOrOfferId: string;
     rowId: string;
+    onSuccess?: (id: string) => void;
+    onExecute?: (id: string) => void;
+    onError?: (id: string) => void;
   };
 }
 

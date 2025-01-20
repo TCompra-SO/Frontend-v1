@@ -120,7 +120,6 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
       ...prevObject,
       state: RequirementState.SELECTED,
     }));
-
     setOffersCopy((prev) => {
       const indexToUpdate = prev.findIndex((offer) => offer.key === offerId);
       if (indexToUpdate !== -1) {
@@ -140,10 +139,24 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
     }));
     setOffersCopy((prev) => {
       const indexToUpdate = prev.findIndex((offer) => offer.key === offerId);
+      console.log(indexToUpdate);
       if (indexToUpdate !== -1) {
         prev[indexToUpdate] = {
           ...prev[indexToUpdate],
           state: OfferState.CANCELED,
+        };
+      }
+      return prev;
+    });
+  }
+
+  function handleRateCancel(offerId: string, showOption?: boolean) {
+    setOffersCopy((prev) => {
+      const indexToUpdate = prev.findIndex((offer) => offer.key === offerId);
+      if (indexToUpdate !== -1) {
+        prev[indexToUpdate] = {
+          ...prev[indexToUpdate],
+          cancelRated: showOption ? false : true,
         };
       }
       return prev;
@@ -161,8 +174,9 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
                 showStateAndActions={{
                   show: !props.forPurchaseOrder,
                   requirement: reqCopy,
-                  onSuccessfulSelection: handleSuccessfulSelection,
+                  onSelectionSuccess: handleSuccessfulSelection,
                   onCancelSuccess: handleCancelSuccess,
+                  onRateCancel: handleRateCancel,
                 }}
                 onClose={props.onClose}
                 requirementId={props.requirement.key}

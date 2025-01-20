@@ -27,10 +27,9 @@ export default function CancelPurchaseOrderModal(
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
   const [text, setText] = useState<string>("");
-  const { cancelRequirement, loadingCancelRequirement, responseDataCancelReq } =
+  const { cancelRequirement, loadingCancelRequirement } =
     props.useCancelRequirementHook;
-  const { cancelOffer, loadingCancelOffer, responseDataCancelOffer } =
-    props.useCancelOfferHook;
+  const { cancelOffer, loadingCancelOffer } = props.useCancelOfferHook;
 
   /** Cerrar modal */
 
@@ -43,20 +42,6 @@ export default function CancelPurchaseOrderModal(
     if (loadingCancelRequirement === false) props.onClose();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingCancelRequirement]);
-
-  /** Realizar acción al cancelar exitosamente */
-
-  useEffect(() => {
-    if (responseDataCancelOffer && props.onCancelSuccess)
-      props.onCancelSuccess(props.offerId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataCancelOffer]);
-
-  useEffect(() => {
-    if (responseDataCancelReq && props.onCancelSuccess)
-      props.onCancelSuccess(props.offerId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataCancelReq]);
 
   /** Funciones */
 

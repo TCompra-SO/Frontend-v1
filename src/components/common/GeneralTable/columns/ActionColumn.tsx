@@ -77,9 +77,13 @@ export default function ActionColumn(
                 ? type == TableTypes.OFFER
                   ? ActionByState[key].reduce<ItemType[]>(
                       (acc, action: Action) => {
-                        const canceledByCreator = (record as Offer)
-                          .canceledByCreator;
-                        if (action == Action.RATE_CANCELED && canceledByCreator)
+                        const { canceledByCreator, cancelRated } =
+                          record as Offer;
+                        if (
+                          action == Action.RATE_CANCELED &&
+                          (canceledByCreator ||
+                            (!canceledByCreator && cancelRated))
+                        )
                           return acc;
                         else
                           acc.push({

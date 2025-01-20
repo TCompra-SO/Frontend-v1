@@ -87,6 +87,7 @@ export interface Offer extends BasicOffer {
   delivered?: boolean;
   canceledByCreator?: boolean;
   includesDelivery?: boolean;
+  cancelRated?: boolean;
 }
 
 export interface BasicPurchaseOrderItemSubUser extends BaseInterface {

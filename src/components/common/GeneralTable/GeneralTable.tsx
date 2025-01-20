@@ -44,6 +44,7 @@ import {
   CertificateFile,
   CertificationItem,
   SubUserBase,
+  KeyInterface,
 } from "../../../models/MainInterfaces";
 import { ColumnType } from "antd/es/table";
 import { useTranslation } from "react-i18next";
@@ -71,6 +72,7 @@ export default function GeneralTable(props: GeneralTableProps) {
   const pageSizeOptions = pageSizeOptionsSt;
 
   let columns: Array<
+    | ColumnType<KeyInterface>
     | ColumnType<Offer>
     | ColumnType<Requirement>
     | ColumnType<PurchaseOrder>

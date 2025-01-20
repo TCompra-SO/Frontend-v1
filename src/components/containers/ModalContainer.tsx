@@ -86,6 +86,9 @@ export default function ModalContainer(props: ModalContainerProps) {
         case ModalTypes.RATE_CANCELED:
           id = props.content.data.rowId;
           break;
+        case ModalTypes.VIEW_DOCS_RECEIVED_CERT:
+          id = props.content.data.data.key;
+          break;
       }
       if (id) {
         setBlockedIds((prev) => [...prev, id]);
@@ -101,6 +104,9 @@ export default function ModalContainer(props: ModalContainerProps) {
         case ModalTypes.RATE_USER:
           currentId = props.content.data.rowId;
           break;
+        case ModalTypes.VIEW_DOCS_RECEIVED_CERT:
+          currentId = props.content.data.data.key;
+          break;
       }
       if (currentId) {
         deleteFromIdAndActionQueue(currentId);
@@ -115,7 +121,7 @@ export default function ModalContainer(props: ModalContainerProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
 
-  /** Casos especiales */
+  /** Modal de confirmación */
 
   useEffect(() => {
     if (
@@ -124,7 +130,6 @@ export default function ModalContainer(props: ModalContainerProps) {
       props.content.action != Action.NONE
     ) {
       const id = props.content.data.id;
-      console.log(111111111111, id);
       if (props.loadingConfirm) {
         setBlockedIds((prev) => [...prev, id]);
         updateIdAndActionQueue(id, props.content.action);
@@ -135,6 +140,8 @@ export default function ModalContainer(props: ModalContainerProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.loadingConfirm]);
+
+  /** CancelPurchaseOrderModal */
 
   useEffect(() => {
     if (
@@ -171,6 +178,26 @@ export default function ModalContainer(props: ModalContainerProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [useCancelOfferHook.loadingCancelOffer]);
+
+  /** Realizar acción al cancelar exitosamente */
+
+  useEffect(() => {
+    if (
+      props.content.type == ModalTypes.CANCEL_PURCHASE_ORDER &&
+      useCancelOfferHook.responseDataCancelOffer
+    )
+      props.content.data.onCancelSuccess?.(props.content.data.offerId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useCancelOfferHook.responseDataCancelOffer]);
+
+  useEffect(() => {
+    if (
+      props.content.type == ModalTypes.CANCEL_PURCHASE_ORDER &&
+      useCancelRequirementHook.responseDataCancelReq
+    )
+      props.content.data.onCancelSuccess?.(props.content.data.offerId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useCancelRequirementHook.responseDataCancelReq]);
 
   /** Cleanup */
 
@@ -246,6 +273,9 @@ export default function ModalContainer(props: ModalContainerProps) {
             type={props.content.data.type}
             isOffer={props.content.data.isOffer}
             onClose={props.onClose}
+            onSuccess={props.content.data.onSuccess}
+            onExecute={props.content.data.onExecute}
+            onError={props.content.data.onError}
             {...commonModalProps}
           />
         );

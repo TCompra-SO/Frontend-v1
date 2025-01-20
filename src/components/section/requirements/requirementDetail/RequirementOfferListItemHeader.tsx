@@ -30,8 +30,9 @@ interface RequirementOfferListItemProps {
     | {
         show: true;
         requirement: Requirement;
-        onSuccessfulSelection: (offerId: string) => void;
+        onSelectionSuccess: (offerId: string) => void;
         onCancelSuccess?: (offerId: string) => void;
+        onRateCancel?: (offerId: string, showOption?: boolean) => void;
       }
     | { show: false };
 }
@@ -61,7 +62,7 @@ export default function RequirementOfferListItemHeader({
       items.push({
         label: t(ActionLabel[Action.CANCEL_PURCHASE_ORDER]),
         key: Action.CANCEL_PURCHASE_ORDER,
-        onClick: () => onOpenModal(Action.CANCEL_PURCHASE_ORDER), // r3v completar
+        onClick: () => onOpenModal(Action.CANCEL_PURCHASE_ORDER),
       });
     if (
       props.offer.state == OfferState.ACTIVE &&
@@ -75,7 +76,8 @@ export default function RequirementOfferListItemHeader({
     }
     if (
       props.offer.state == OfferState.CANCELED &&
-      props.offer.canceledByCreator // r3v
+      props.offer.canceledByCreator &&
+      !props.offer.cancelRated
     )
       items.push({
         label: t(ActionLabel[Action.RATE_CANCELED]),
@@ -86,6 +88,12 @@ export default function RequirementOfferListItemHeader({
 
   function handleOnCloseModal() {
     setIsOpenModal(false);
+  }
+
+  function onRateCancelError(id: string) {
+    if (props.showStateAndActions.show) {
+      props.showStateAndActions.onRateCancel?.(id, true);
+    }
   }
 
   function onOpenModal(action: Action) {
@@ -112,7 +120,7 @@ export default function RequirementOfferListItemHeader({
             data: {
               offer: props.offer,
               requirement: props.showStateAndActions.requirement,
-              onSuccess: handleSuccessfulSelection,
+              onSuccess: props.showStateAndActions.onSelectionSuccess,
             },
             action,
           });
@@ -134,19 +142,15 @@ export default function RequirementOfferListItemHeader({
               isOffer: true,
               requirementOrOfferId: props.requirementId,
               rowId: props.requirementId,
+              onExecute: props.showStateAndActions.onRateCancel,
+              onError: onRateCancelError,
             },
             action,
           });
           setIsOpenModal(true);
+          break;
         }
       }
-    }
-  }
-
-  function handleSuccessfulSelection(offerId: string) {
-    if (props.showStateAndActions.show) {
-      props.showStateAndActions.onSuccessfulSelection(offerId);
-      props.onClose();
     }
   }
 
