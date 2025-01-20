@@ -51,7 +51,6 @@ import GeneralColumnNumber from "./columns/GeneralColumnNumber";
 import TypeColumn from "./columns/TypeColumn";
 import ViewColumn from "./columns/ViewColumn";
 import DocumentColumn from "./columns/DocumentColumn";
-import { getLabelFromPurchaseOrderType } from "../../../utilities/globalFunctions";
 import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../../../utilities/routes";
 import RequirementInfo from "../../section/requirements/requirementDetail/RequirementInfo";
@@ -161,7 +160,7 @@ export default function GeneralTable(props: GeneralTableProps) {
     style: { width: "100%" },
     bordered: false,
     onChange: (pagination, filters, sorter, extra) => {
-      console.log(pagination, filters, sorter);
+      // console.log(pagination, filters, sorter);
       if (
         props.onChangePageAndPageSize &&
         pagination.current &&
@@ -498,7 +497,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       ),
       GeneralDateColumn(
         t("dateColumn"),
-        "publishDate",
+        reqDateColumnKey,
         visibility[TableColumns.PUBLISH_DATE],
         props.content.fieldSort
       ),
@@ -507,7 +506,6 @@ export default function GeneralTable(props: GeneralTableProps) {
         visibility[TableColumns.LOCATION],
         props.content.fieldSort
       ),
-
       PriceColumn(visibility[TableColumns.PRICE], props.content.fieldSort),
       // OffersColumn(
       //   props.content.type,
@@ -554,7 +552,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       ),
       GeneralDateColumn(
         t("dateColumn"),
-        "publishDate",
+        offerDateColumnKey,
         visibility[TableColumns.PUBLISH_DATE],
         props.content.fieldSort
       ),
@@ -604,7 +602,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         ),
         GeneralDateColumn(
           t("creationDateAbbrev"),
-          "selectionDate",
+          purcOrderDateColumnKey,
           visibility[TableColumns.PUBLISH_DATE],
           props.content.fieldSort
         ),
@@ -766,33 +764,25 @@ export default function GeneralTable(props: GeneralTableProps) {
       columns = [
         GeneralColumnString(
           t("requirement"),
-          "requirementTitle",
+          requirementColumnKey,
           true,
           130,
-          visibility[TableColumns.REQUIREMENT]
-        ),
-        GeneralColumnString(
-          t("offer"),
-          "offerTitle",
-          true,
-          130,
-          visibility[TableColumns.OFFER]
-        ),
-        GeneralDateColumn(
-          t("selectionDateAbbrev"),
-          "selectionDate",
-          visibility[TableColumns.SELECTION_DATE],
+          visibility[TableColumns.REQUIREMENT],
           props.content.fieldSort
         ),
         GeneralColumnString(
-          t("class"),
-          "subType",
-          false,
-          90,
-          visibility[TableColumns.SUBTYPE],
-          props.content.fieldSort,
+          t("offer"),
+          purcOrderOfferTitleColumnKey,
           true,
-          getLabelFromPurchaseOrderType
+          130,
+          visibility[TableColumns.OFFER],
+          props.content.fieldSort
+        ),
+        GeneralDateColumn(
+          t("dateColumn"),
+          purcOrderDateColumnKey,
+          visibility[TableColumns.SELECTION_DATE],
+          props.content.fieldSort
         ),
         TypeColumn(visibility[TableColumns.TYPE]),
         DocumentColumn(
