@@ -124,6 +124,7 @@ export default function ModalContainer(props: ModalContainerProps) {
       props.content.action != Action.NONE
     ) {
       const id = props.content.data.id;
+      console.log(111111111111, id);
       if (props.loadingConfirm) {
         setBlockedIds((prev) => [...prev, id]);
         updateIdAndActionQueue(id, props.content.action);

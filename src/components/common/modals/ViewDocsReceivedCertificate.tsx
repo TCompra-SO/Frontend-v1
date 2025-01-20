@@ -77,7 +77,7 @@ export default function ViewDocsReceivedCertificate(
     setDataModal({
       type: ModalTypes.SELECT_DOCS_CERT,
       data: {
-        certificationId: props.data.uid,
+        certificationId: props.data.key,
         data: {
           userId: props.data.companyId,
           userName: props.data.companyName,
@@ -96,7 +96,7 @@ export default function ViewDocsReceivedCertificate(
     }
     setCertApproved(approve);
     const data: UpdateCertificationStateRequest = {
-      certificateID: props.data.uid,
+      certificateID: props.data.key,
       state: approve
         ? CertificationState.CERTIFIED
         : CertificationState.REJECTED,

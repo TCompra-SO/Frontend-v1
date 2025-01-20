@@ -80,6 +80,7 @@ export const purcOrderDateColumnKey: string = "selectionDate";
 export const purcOrderOfferTitleColumnKey: string = "offerTitle";
 export const userNameColumnKey: string = "subUserName";
 export const titleColumnKey: string = "title";
+export const certDocDateColumnKey: string = "creationDate";
 
 // Parámetros para sort en tabla
 export const fieldNameSearchRequestRequirement: Record<string, string> = {

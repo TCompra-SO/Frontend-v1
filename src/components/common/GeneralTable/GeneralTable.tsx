@@ -6,6 +6,7 @@ import {
   TableTypes,
 } from "../../../utilities/types";
 import {
+  certDocDateColumnKey,
   offerDateColumnKey,
   offersColumnKey,
   pageSizeOptionsSt,
@@ -808,13 +809,6 @@ export default function GeneralTable(props: GeneralTableProps) {
 
   function getMyDocumentsCertificateColumns() {
     columns = [
-      // GeneralColumnString(
-      //   t("name"),
-      //   "name",
-      //   true,
-      //   130,
-      //   visibility[TableColumns.NAME]
-      // ),
       NameColumn(
         props.content.type,
         t("name"),
@@ -826,7 +820,14 @@ export default function GeneralTable(props: GeneralTableProps) {
         "documentName",
         true,
         130,
-        visibility[TableColumns.DOCUMENT]
+        visibility[TableColumns.DOCUMENT],
+        props.content.fieldSort
+      ),
+      GeneralDateColumn(
+        t("dateColumn"),
+        certDocDateColumnKey,
+        visibility[TableColumns.CREATION_DATE],
+        props.content.fieldSort
       ),
       ActionColumn(
         props.content.type,

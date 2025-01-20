@@ -356,17 +356,18 @@ export function transformToSubUserProfile(data: any) {
 
 export function transformToCertificateFile(data: any) {
   const doc: CertificateFile = {
-    uid: data.uid,
+    key: data.uid,
     name: data.name,
     documentName: data.documentName,
     url: data.url,
+    creationDate: data.creationDate,
   };
   return doc;
 }
 
 export function transformToCertificationItem(data: any) {
   const cert: CertificationItem = {
-    uid: data.uid,
+    key: data.uid,
     companyId: data.companyId,
     companyName: data.companyName,
     companyDocument: data.companyDocument,

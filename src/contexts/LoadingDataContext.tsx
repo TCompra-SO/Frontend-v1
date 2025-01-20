@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import { Action } from "../utilities/types";
 
 interface LoadingDataContextType {
@@ -22,6 +22,9 @@ interface LoadingDataContextType {
 
   createRequirementLoading: boolean;
   updateCreateRequirementLoading: (val: boolean | undefined) => void;
+
+  changeCertificationStateLoading: boolean;
+  updateChangeCertificationStateLoading: (val: boolean | undefined) => void;
 
   // Para acciones
   idAndActionQueue: Record<string, Action>;
@@ -51,6 +54,8 @@ export const LoadingDataContext = createContext<LoadingDataContextType>({
   idAndActionQueue: {},
   updateIdAndActionQueue: () => {},
   deleteFromIdAndActionQueue: () => {},
+  changeCertificationStateLoading: false,
+  updateChangeCertificationStateLoading: () => {},
 });
 
 export function LoadingDataProvider({ children }: { children: ReactNode }) {
@@ -72,9 +77,15 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
     useState(false);
   const [createRequirementLoading, setCreateRequirementLoading] =
     useState(false);
+  const [changeCertificationStateLoading, setChangeCertificationStateLoading] =
+    useState(false);
   const [idAndActionQueue, setIdAndActionQueue] = useState<
     Record<string, Action>
   >({});
+
+  useEffect(() => {
+    console.log(idAndActionQueue);
+  }, [idAndActionQueue]);
 
   function updateMyPurchaseOrdersLoadingPdf(val: boolean | undefined) {
     setMyPurchaseOrdersLoadingPdf(val ? true : false);
@@ -112,6 +123,10 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
     setCreateRequirementLoading(val ? true : false);
   }
 
+  function updateChangeCertificationStateLoading(val: boolean | undefined) {
+    setChangeCertificationStateLoading(val ? true : false);
+  }
+
   function updateIdAndActionQueue(id: string, action: Action) {
     setIdAndActionQueue((prev) => ({
       ...prev,
@@ -139,6 +154,7 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
         allPurchaseOrdersViewOffers,
         allSalesOrdersViewOffers,
         createRequirementLoading,
+        changeCertificationStateLoading,
         idAndActionQueue,
         updateMyPurchaseOrdersLoadingPdf,
         updateSubUserPurchaseOrdersLoadingPdf,
@@ -151,6 +167,7 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
         updateCreateRequirementLoading,
         updateIdAndActionQueue,
         deleteFromIdAndActionQueue,
+        updateChangeCertificationStateLoading,
       }}
     >
       {children}

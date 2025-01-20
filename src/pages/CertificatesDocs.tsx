@@ -119,7 +119,7 @@ export default function CertificatesDocs() {
         openDocument(certificate.url);
         break;
       case Action.DELETE:
-        deleteDoc(certificate.uid);
+        deleteDoc(certificate.key);
         break;
     }
   }
@@ -161,6 +161,7 @@ export default function CertificatesDocs() {
         isOpen={isOpenModal}
         onClose={handleCloseModal}
         style={mainModalScrollStyle}
+        loadingConfirm={loadingDeleteCert}
       />
       <TablePageContent
         title={t("certificates")}

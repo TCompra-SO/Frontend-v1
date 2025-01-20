@@ -86,7 +86,7 @@ export default function SelectDocumentsToSendCertificateModal(
     if (certificateList) {
       setDocs(certificateList);
       const indexes = certificateList.map((item, i) => {
-        if (certificateIds.includes(item.uid)) return i;
+        if (certificateIds.includes(item.key)) return i;
         return -1;
       });
       const temp: boolean[] = Array(certificateList.length).fill(false);
@@ -146,11 +146,11 @@ export default function SelectDocumentsToSendCertificateModal(
     if (certificateList && certificateList[index]) {
       if (value)
         setCertificateIds((prev) => {
-          return [...prev, certificateList[index].uid];
+          return [...prev, certificateList[index].key];
         });
       else
         setCertificateIds((prevList) =>
-          prevList.filter((item) => item != certificateList[index].uid)
+          prevList.filter((item) => item != certificateList[index].key)
         );
       setChecked((prev) => {
         const newArray = [...prev];

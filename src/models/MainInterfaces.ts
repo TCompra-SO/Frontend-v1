@@ -13,8 +13,11 @@ import {
 } from "../utilities/types";
 import { OfferFilters } from "./Interfaces";
 
-export interface BaseInterface {
+export interface KeyInterface {
   key: string;
+}
+
+export interface BaseInterface extends KeyInterface {
   type: RequirementType;
 }
 
@@ -192,16 +195,14 @@ export interface SubUserProfile extends SubUserBase {
   phone: string;
 }
 
-export interface CertificateFile {
-  uid: string;
+export interface CertificateFile extends KeyInterface {
   name: string;
   documentName: string;
   url: string;
-  state?: CertificationState;
+  creationDate: string;
 }
 
-export interface CertificationItem {
-  uid: string;
+export interface CertificationItem extends KeyInterface {
   companyId: string;
   companyName: string;
   companyDocument: string;
