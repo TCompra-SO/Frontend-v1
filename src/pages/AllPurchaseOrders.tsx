@@ -77,6 +77,7 @@ export default function AllPurchaseOrders() {
     return () => {
       updateAllPurchaseOrdersLoadingPdf(false);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /** Obtener tipo */
@@ -175,7 +176,7 @@ export default function AllPurchaseOrders() {
         ...prev,
         data,
         subType: type,
-        total: responseData.res?.total,
+        total: responseData.res?.totalDocuments,
         page: currentPage,
         pageSize: currentPageSize,
         fieldSort,

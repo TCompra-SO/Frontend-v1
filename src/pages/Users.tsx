@@ -475,6 +475,7 @@ export default function Users() {
               handleChangePageAndPageSize(
                 params,
                 getFieldNameObjForOrders(
+                  TableTypes.PURCHASE_ORDER,
                   subTypeOrder == PurchaseOrderTableTypes.ISSUED ||
                     subTypeOrder == PurchaseOrderTableTypes.RECEIVED
                     ? subTypeOrder
@@ -509,6 +510,7 @@ export default function Users() {
               handleChangePageAndPageSize(
                 params,
                 getFieldNameObjForOrders(
+                  TableTypes.SALES_ORDER,
                   subTypeOrder == PurchaseOrderTableTypes.ISSUED ||
                     subTypeOrder == PurchaseOrderTableTypes.RECEIVED
                     ? subTypeOrder

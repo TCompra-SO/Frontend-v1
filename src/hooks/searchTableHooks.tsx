@@ -77,7 +77,6 @@ export default function useSearchTable(
     const stTableType: TableTypes = tableTypeParam ?? tableType;
     const stSubType: RequirementType | PurchaseOrderTableTypes | undefined =
       subTypeParam ?? subType;
-    console.log("=====", stTableType, stSubType);
     const newKeyWords = getSearchString(keyWords ?? "");
     if (newKeyWords.length >= searchSinceLength || !keyWords) {
       let service: HttpService | null = null;
@@ -102,20 +101,22 @@ export default function useSearchTable(
             service = searchOffersService();
           break;
         case TableTypes.PURCHASE_ORDER:
+        case TableTypes.ALL_PURCHASE_ORDERS:
           if (stSubType == PurchaseOrderTableTypes.ISSUED)
             service = searchPurchaseOrdersByClientService();
           else if (stSubType == PurchaseOrderTableTypes.RECEIVED)
             service = searchPurchaseOrdersByProviderService();
           break;
         case TableTypes.SALES_ORDER:
+        case TableTypes.ALL_SALES_ORDERS:
           if (stSubType == PurchaseOrderTableTypes.ISSUED)
             // r3v cambiar endpoints
-            service = searchPurchaseOrdersByClientService();
-          else if (stSubType == PurchaseOrderTableTypes.RECEIVED)
             service = searchPurchaseOrdersByProviderService();
+          else if (stSubType == PurchaseOrderTableTypes.RECEIVED)
+            service = searchPurchaseOrdersByClientService();
           break;
       }
-      console.log("dds", service, tableType, subType);
+      // console.log("dds", service, tableType, subType);
       setApiParams({
         service,
         method: "post",

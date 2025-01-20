@@ -443,7 +443,9 @@ export default function GeneralTable(props: GeneralTableProps) {
         GeneralColumnString(
           t(
             props.content.subType == PurchaseOrderTableTypes.ISSUED
-              ? "myRequirement"
+              ? props.content.type == TableTypes.PURCHASE_ORDER
+                ? "myRequirement"
+                : "mySale"
               : "myOffer"
           ),
           props.content.subType == PurchaseOrderTableTypes.ISSUED
@@ -581,7 +583,11 @@ export default function GeneralTable(props: GeneralTableProps) {
           props.content.subType
         ),
         GeneralColumnString(
-          t("requirement"),
+          t(
+            props.content.type == TableTypes.ALL_PURCHASE_ORDERS
+              ? "requirement"
+              : "sale"
+          ),
           purcOrderReqTitleColumnKey,
           true,
           130,

@@ -259,7 +259,6 @@ export default function PurchaseOrders() {
       const data = responseData.data.map((po: any) =>
         transformToPurchaseOrder(po)
       );
-
       setTableContent((prev) => ({
         ...prev,
         data,
