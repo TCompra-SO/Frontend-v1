@@ -37,6 +37,7 @@ import i18next from "i18next";
 import httpErrorInterceptor from "../interceptors/httpErrorInterceptor";
 import { FieldSort, SearchTableRequest } from "../models/Requests";
 import { SorterResult } from "antd/es/table/interface";
+import store from "../redux/store";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -223,6 +224,7 @@ export default async function makeRequest<T = any>({
   dataToSend,
   token,
 }: useApiParams<T>) {
+  const userToken = store.getState().user.token;
   let responseData: ResponseRequestType = null;
   let errorMsg: ErrorMsgRequestType = null;
   let error: ErrorRequestType = null;
@@ -234,7 +236,11 @@ export default async function makeRequest<T = any>({
         url: service.url,
         data: dataToSend,
         headers: {
-          Authorization: token ? `Bearer ${token}` : undefined,
+          Authorization: token
+            ? `Bearer ${token}`
+            : userToken
+            ? `Bearer ${userToken}`
+            : undefined,
           "Content-Type": "application/json",
         },
       };

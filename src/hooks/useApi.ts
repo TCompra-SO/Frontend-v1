@@ -8,6 +8,8 @@ import {
   ErrorRequestType,
   ResponseRequestType,
 } from "../utilities/types";
+import { useSelector } from "react-redux";
+import { MainState } from "../models/Redux";
 
 export interface UseApiType {
   saveInQueue?: boolean;
@@ -30,6 +32,7 @@ export default function useApi<T = any>(
     },
   }
 ) {
+  const userToken = useSelector((state: MainState) => state.user.token);
   const { t } = useTranslation();
   const [loading, setLoading] = useState<boolean | undefined>(undefined);
   const [responseData, setResponseData] = useState<ResponseRequestType>(null);
@@ -53,7 +56,11 @@ export default function useApi<T = any>(
           data: dataToSend,
           headers: includeHeader
             ? {
-                Authorization: token ? `Bearer ${token}` : undefined,
+                Authorization: token
+                  ? `Bearer ${token}`
+                  : userToken
+                  ? `Bearer ${userToken}`
+                  : undefined,
                 "Content-Type": "application/json",
               }
             : {
