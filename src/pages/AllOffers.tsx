@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next";
-import TablePageContent from "../components/section/table-page/TablePageContent";
-import { useEffect, useState } from "react";
+import TablePageContent, {
+  TablePageContentRef,
+} from "../components/section/table-page/TablePageContent";
+import { useEffect, useRef, useState } from "react";
 import { ModalContent, TableTypeAllOffers } from "../models/Interfaces";
 import { Action, ModalTypes, TableTypes } from "../utilities/types";
 import { BaseUser, Offer } from "../models/MainInterfaces";
@@ -32,6 +34,7 @@ export default function AllOffers() {
   const location = useLocation();
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const dataUser = useSelector((state: MainState) => state.user);
+  const searchValueRef = useRef<TablePageContentRef>(null);
   const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
   const { showNotification } = useShowNotification();
   const [type, setType] = useState(getRouteType(location.pathname));
@@ -72,6 +75,7 @@ export default function AllOffers() {
   /** Obtener datos de tabla */
 
   useEffect(() => {
+    clearSearchValue();
     reset();
     searchTable({ page: 1, pageSize: currentPageSize });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -112,6 +116,12 @@ export default function AllOffers() {
   }, [modalDataOfferDetail]);
 
   /** Funciones */
+
+  function clearSearchValue() {
+    if (searchValueRef.current) {
+      searchValueRef.current.resetSearchValue();
+    }
+  }
 
   async function setData() {
     try {
@@ -201,6 +211,7 @@ export default function AllOffers() {
             setLoadingTable
           )
         }
+        ref={searchValueRef}
       />
     </>
   );

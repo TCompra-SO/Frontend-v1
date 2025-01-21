@@ -2,13 +2,15 @@ import { useTranslation } from "react-i18next";
 import { Offer } from "../models/MainInterfaces";
 import { Action, EntityType, ModalTypes, TableTypes } from "../utilities/types";
 import ModalContainer from "../components/containers/ModalContainer";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   ModalContent,
   TableTypeOffer,
   useApiParams,
 } from "../models/Interfaces";
-import TablePageContent from "../components/section/table-page/TablePageContent";
+import TablePageContent, {
+  TablePageContentRef,
+} from "../components/section/table-page/TablePageContent";
 import {
   fieldNameSearchRequestOffer,
   mainModalScrollStyle,
@@ -35,6 +37,7 @@ export default function Offers() {
   const location = useLocation();
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
+  const searchValueRef = useRef<TablePageContentRef>(null);
   const { detailedOfferModalData } = useContext(ModalsContext);
   const { showNotification } = useShowNotification();
   const { showLoadingMessage } = useShowLoadingMessage();
@@ -105,6 +108,7 @@ export default function Offers() {
   /** Cargar datos iniciales */
 
   useEffect(() => {
+    clearSearchValue();
     reset();
     searchTable({ page: 1, pageSize: currentPageSize });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -174,6 +178,12 @@ export default function Offers() {
   }, [location]);
 
   /** Funciones */
+
+  function clearSearchValue() {
+    if (searchValueRef.current) {
+      searchValueRef.current.resetSearchValue();
+    }
+  }
 
   async function setData() {
     try {
@@ -316,6 +326,7 @@ export default function Offers() {
             searchTable
           )
         }
+        ref={searchValueRef}
       />
     </>
   );

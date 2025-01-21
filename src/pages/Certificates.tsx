@@ -1,6 +1,8 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
-import TablePageContent from "../components/section/table-page/TablePageContent";
+import TablePageContent, {
+  TablePageContentRef,
+} from "../components/section/table-page/TablePageContent";
 import { mainModalScrollStyle, pageSizeOptionsSt } from "../utilities/globals";
 import {
   ModalContent,
@@ -31,9 +33,10 @@ import useShowNotification from "../hooks/utilHooks";
 
 export default function Certificates() {
   const location = useLocation();
-  const { showNotification } = useShowNotification();
   const { t } = useTranslation();
   const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
+  const searchValueRef = useRef<TablePageContentRef>(null);
+  const { showNotification } = useShowNotification();
   const [type, setType] = useState(getLastSegmentFromRoute(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [total, setTotal] = useState(0);
@@ -102,6 +105,7 @@ export default function Certificates() {
   }, [location]);
 
   useEffect(() => {
+    clearSearchValue();
     switch (type) {
       case pageSubRoutes.sent:
         setApiParamsCertif({
@@ -128,6 +132,12 @@ export default function Certificates() {
   }, [type]);
 
   /** Funciones */
+
+  function clearSearchValue() {
+    if (searchValueRef.current) {
+      searchValueRef.current.resetSearchValue();
+    }
+  }
 
   function setTableData() {
     try {
@@ -254,6 +264,7 @@ export default function Certificates() {
         onChangePageAndPageSize={handleChangePageAndPageSize}
         total={total}
         onSearch={handleSearch}
+        ref={searchValueRef}
       />
     </>
   );

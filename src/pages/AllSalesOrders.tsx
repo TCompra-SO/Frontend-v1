@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next";
-import TablePageContent from "../components/section/table-page/TablePageContent";
-import { useContext, useEffect, useState } from "react";
+import TablePageContent, {
+  TablePageContentRef,
+} from "../components/section/table-page/TablePageContent";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   ModalContent,
   TableTypeAllSalesOrders,
@@ -44,6 +46,7 @@ export default function AllSalesOrders() {
   const location = useLocation();
   const uid = useSelector((state: MainState) => state.user.uid);
   const entityType = useSelector((state: MainState) => state.user.typeEntity);
+  const searchValueRef = useRef<TablePageContentRef>(null);
   const { showLoadingMessage } = useShowLoadingMessage();
   const { updateAllSalesOrdersLoadingPdf } = useContext(LoadingDataContext);
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
@@ -105,6 +108,7 @@ export default function AllSalesOrders() {
   /** Obtener datos de tabla */
 
   useEffect(() => {
+    clearSearchValue();
     reset();
     searchTable({ page: 1, pageSize: currentPageSize });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -170,7 +174,13 @@ export default function AllSalesOrders() {
 
   /** Funciones */
 
-  async function setTableData() {
+  function clearSearchValue() {
+    if (searchValueRef.current) {
+      searchValueRef.current.resetSearchValue();
+    }
+  }
+
+  function setTableData() {
     try {
       const data = responseData.data.map((po: any) =>
         transformToPurchaseOrder(po)
@@ -247,6 +257,7 @@ export default function AllSalesOrders() {
             searchTable
           )
         }
+        ref={searchValueRef}
       />
     </>
   );

@@ -9,14 +9,16 @@ import {
   EntityType,
 } from "../utilities/types";
 import { Requirement } from "../models/MainInterfaces";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   ModalContent,
   TableTypeRequirement,
   useApiParams,
 } from "../models/Interfaces";
 import { useTranslation } from "react-i18next";
-import TablePageContent from "../components/section/table-page/TablePageContent";
+import TablePageContent, {
+  TablePageContentRef,
+} from "../components/section/table-page/TablePageContent";
 import {
   fieldNameSearchRequestRequirement,
   mainModalScrollStyle,
@@ -54,6 +56,7 @@ export default function Requirements() {
   const { detailedRequirementModalData } = useContext(ModalsContext);
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
+  const searchValueRef = useRef<TablePageContentRef>(null);
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
@@ -135,6 +138,7 @@ export default function Requirements() {
   /* Obtener lista inicialmente */
 
   useEffect(() => {
+    clearSearchValue();
     reset();
     searchTable({ page: 1, pageSize: currentPageSize });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -212,6 +216,12 @@ export default function Requirements() {
   }, [responseDataDelete, errorDelete]);
 
   /** Funciones */
+
+  function clearSearchValue() {
+    if (searchValueRef.current) {
+      searchValueRef.current.resetSearchValue();
+    }
+  }
 
   async function setTableData() {
     try {
@@ -389,6 +399,7 @@ export default function Requirements() {
           )
         }
         total={total}
+        ref={searchValueRef}
       />
     </>
   );

@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next";
-import TablePageContent from "../components/section/table-page/TablePageContent";
-import { useEffect, useState } from "react";
+import TablePageContent, {
+  TablePageContentRef,
+} from "../components/section/table-page/TablePageContent";
+import { useEffect, useRef, useState } from "react";
 import { TableTypeAllRequirements } from "../models/Interfaces";
 import { Action, TableTypes } from "../utilities/types";
 import { BasicRequirement } from "../models/MainInterfaces";
@@ -24,6 +26,7 @@ export default function AllRequirements() {
   const navigate = useNavigate();
   const location = useLocation();
   const dataUser = useSelector((state: MainState) => state.user);
+  const searchValueRef = useRef<TablePageContentRef>(null);
   const { showNotification } = useShowNotification();
   const [type, setType] = useState(getRouteType(location.pathname));
   const { searchTable, responseData, error, errorMsg } = useSearchTable(
@@ -57,6 +60,7 @@ export default function AllRequirements() {
   /** Obtener datos de tabla */
 
   useEffect(() => {
+    clearSearchValue();
     reset();
     searchTable({ page: 1, pageSize: currentPageSize });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -89,6 +93,12 @@ export default function AllRequirements() {
   }, [location]);
 
   /** Funciones */
+
+  function clearSearchValue() {
+    if (searchValueRef.current) {
+      searchValueRef.current.resetSearchValue();
+    }
+  }
 
   async function setData() {
     try {
@@ -136,6 +146,7 @@ export default function AllRequirements() {
           setLoadingTable
         )
       }
+      ref={searchValueRef}
     />
   );
 }

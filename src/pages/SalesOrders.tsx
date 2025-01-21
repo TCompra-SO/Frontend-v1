@@ -13,9 +13,11 @@ import {
   TableTypeSalesOrder,
   useApiParams,
 } from "../models/Interfaces";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
-import TablePageContent from "../components/section/table-page/TablePageContent";
+import TablePageContent, {
+  TablePageContentRef,
+} from "../components/section/table-page/TablePageContent";
 import useApi from "../hooks/useApi";
 import { getUserService } from "../services/requests/authService";
 import {
@@ -52,6 +54,7 @@ export default function SalesOrders() {
   const { t } = useTranslation();
   const location = useLocation();
   const uid = useSelector((state: MainState) => state.user.uid);
+  const searchValueRef = useRef<TablePageContentRef>(null);
   const { updateMyPurchaseOrdersLoadingPdf } = useContext(LoadingDataContext);
   const { viewHistorySalesModalData } = useContext(ModalsContext);
   const { showNotification } = useShowNotification();
@@ -145,6 +148,7 @@ export default function SalesOrders() {
   /** Para obtener datos iniciales y datos de proveedor/cliente */
 
   useEffect(() => {
+    clearSearchValue();
     reset();
     setNameHeader(
       type == PurchaseOrderTableTypes.ISSUED ? t("customer") : t("seller")
@@ -254,6 +258,12 @@ export default function SalesOrders() {
   }, [responseDataPdf, errorPdf]);
 
   /** Funciones */
+
+  function clearSearchValue() {
+    if (searchValueRef.current) {
+      searchValueRef.current.resetSearchValue();
+    }
+  }
 
   async function setTableData() {
     try {
@@ -397,6 +407,7 @@ export default function SalesOrders() {
             searchTable
           )
         }
+        ref={searchValueRef}
       />
     </>
   );
