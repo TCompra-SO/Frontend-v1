@@ -672,7 +672,6 @@ export function useGetRequirementList() {
     pageSize?: number,
     params?: HomeFilterRequest
   ) {
-    console.log("new page", page, params);
     try {
       setLoading(true);
       const { responseData }: any = await makeRequest({

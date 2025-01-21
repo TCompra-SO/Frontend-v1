@@ -2,6 +2,8 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import { Requirement } from "../models/MainInterfaces";
 import { useGetRequirementList } from "../hooks/requirementHooks";
 import { HomeFilterRequest } from "../models/Requests";
+import { MainState } from "../models/Redux";
+import { useSelector } from "react-redux";
 
 interface HomeContextType {
   userId: string;
@@ -33,6 +35,7 @@ export const HomeContext = createContext<HomeContextType>({
 });
 
 export function HomeProvider({ children }: { children: ReactNode }) {
+  const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const [userId, setUserId] = useState("");
   const [useFilter, setUseFilter] = useState<null | boolean>(null);
   const {
@@ -44,8 +47,8 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    console.log(page);
-  }, [page]);
+    if (!isLoggedIn) setUserId("");
+  }, [isLoggedIn]);
 
   useEffect(() => {
     if (useFilter === false) setPage(1);

@@ -6,8 +6,6 @@ import { Avatar, Spin } from "antd";
 import {
   companySearchAfterMseconds,
   defaultUserImage,
-  maxLengthStringToSearch,
-  onlyLettersAndNumbers,
   searchSinceLength,
 } from "../../../../utilities/globals";
 import { debounce } from "lodash";

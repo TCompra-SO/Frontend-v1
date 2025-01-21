@@ -34,7 +34,6 @@ export default function Home() {
     loadingRequirementList,
     totalRequirementList,
   } = useContext(HomeContext);
-  useSocket();
   const [tableContent, setTableContent] = useState<TableTypeHome>({
     type: TableTypes.HOME,
     data: requirementList,
@@ -48,6 +47,7 @@ export default function Home() {
         navigate(`${pageRoutes.productDetail}/${req.key}`);
     },
   });
+  useSocket();
 
   /** Mostrar datos iniciales */
 

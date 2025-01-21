@@ -14,7 +14,7 @@ export const userInitialState: UserState = {
   planID: 0,
   typeEntity: EntityType.PERSON,
   document: "",
-  isPremium: true,
+  isPremium: false,
 };
 
 export const userSlice = createSlice({
@@ -47,6 +47,7 @@ export const userSlice = createSlice({
       state.typeEntity = action.payload.typeEntity;
       state.document = action.payload.document;
       state.image = action.payload.image;
+      state.isPremium = true; // r3v
     },
     setUid: (state, action) => {
       state.uid = action.payload;

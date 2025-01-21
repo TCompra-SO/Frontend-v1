@@ -22,6 +22,7 @@ import { HomeFilterRequest } from "../../../../../models/Requests";
 export default function HomeFilters() {
   const { t } = useTranslation();
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
+  const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const [form] = Form.useForm();
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [hideFilters, setHideFilters] = useState(true);
@@ -37,6 +38,12 @@ export default function HomeFilters() {
     page: 1,
     pageSize: pageSizeOptionsSt[0],
   });
+
+  /** Reset al cerrar sesión */
+
+  useEffect(() => {
+    if (!isLoggedIn) resetFilters();
+  }, [isLoggedIn]);
 
   /** Paginación */
 

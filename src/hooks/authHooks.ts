@@ -34,7 +34,7 @@ export function useLogout() {
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const logoutKey: string = "logout";
 
-  const logout = () => {
+  function logout() {
     if (isLoggedIn) {
       localStorage.removeItem(tokenKey);
       localStorage.removeItem(userDataKey);
@@ -43,7 +43,7 @@ export function useLogout() {
       localStorage.setItem(logoutKey, Date.now().toString());
       localStorage.removeItem(logoutKey);
     }
-  };
+  }
 
   useEffect(() => {
     function handleStorageChange(event: StorageEvent) {
