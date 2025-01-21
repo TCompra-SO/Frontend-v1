@@ -382,6 +382,11 @@ export default function Requirements() {
         style={mainModalScrollStyle}
         loadingConfirm={loadingDelete}
       />
+      {/* <ModalContainer // para seleccionar oferta
+        content={dataModal}
+        isOpen={isOpenModal}
+        onClose={handleOnCloseModal}
+      /> */}
       <TablePageContent
         title={t("myRequirements")}
         titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
