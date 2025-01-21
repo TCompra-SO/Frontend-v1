@@ -62,7 +62,7 @@ export default function AllRequirements() {
   useEffect(() => {
     clearSearchValue();
     reset();
-    searchTable({ page: 1, pageSize: currentPageSize });
+    searchTable({ page: 1, pageSize: currentPageSize }, setLoadingTable);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 

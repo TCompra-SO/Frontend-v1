@@ -353,6 +353,7 @@ export default function Users() {
         reset();
         searchTable(
           { page: 1, pageSize: currentPageSize },
+          undefined,
           TableTypes.REQUIREMENT,
           RequirementType.GOOD,
           user.uid
@@ -364,6 +365,7 @@ export default function Users() {
         reset();
         searchTable(
           { page: 1, pageSize: currentPageSize },
+          undefined,
           TableTypes.OFFER,
           RequirementType.GOOD,
           user.uid
@@ -375,6 +377,7 @@ export default function Users() {
         reset();
         searchTable(
           { page: 1, pageSize: currentPageSize },
+          undefined,
           TableTypes.PURCHASE_ORDER,
           PurchaseOrderTableTypes.ISSUED,
           user.uid
@@ -386,6 +389,7 @@ export default function Users() {
         reset();
         searchTable(
           { page: 1, pageSize: currentPageSize },
+          undefined,
           TableTypes.SALES_ORDER,
           PurchaseOrderTableTypes.ISSUED,
           user.uid
@@ -543,7 +547,12 @@ export default function Users() {
       ) {
         setSubTypeOrder(tabId);
         reset();
-        searchTable({ page: 1, pageSize: currentPageSize }, tableType, tabId);
+        searchTable(
+          { page: 1, pageSize: currentPageSize },
+          undefined,
+          tableType,
+          tabId
+        );
       }
     }
   }

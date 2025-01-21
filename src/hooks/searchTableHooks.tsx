@@ -69,6 +69,7 @@ export default function useSearchTable(
 
   function searchTable(
     { page, pageSize, keyWords, fieldName, orderType }: SearchTableTypeParams,
+    setLoadingTable?: (val: boolean) => void,
     tableTypeParam?: TableTypes,
     subTypeParam?: RequirementType | PurchaseOrderTableTypes,
     uidParam?: string
@@ -79,6 +80,7 @@ export default function useSearchTable(
       subTypeParam ?? subType;
     const newKeyWords = getSearchString(keyWords ?? "");
     if (newKeyWords.length >= searchSinceLength || !keyWords) {
+      setLoadingTable?.(true);
       let service: HttpService | null = null;
       switch (stTableType) {
         case TableTypes.REQUIREMENT:
@@ -174,7 +176,7 @@ export function useFilterSortPaginationForTable() {
     searchTable: (params: SearchTableTypeParams) => void,
     setLoadingTable?: (val: boolean) => void
   ) {
-    if (setLoadingTable) setLoadingTable(true);
+    setLoadingTable?.(true);
     setCurrentPageSize(pageSize);
     setCurrentPage(page);
     const sortParams = getParamsFromSorter(sorter, fieldNameObj);
