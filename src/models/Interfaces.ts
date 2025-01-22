@@ -58,6 +58,10 @@ export interface ModalDetailedRequirement extends CommonModalType {
     forPurchaseOrder: boolean;
     filters?: OfferFilters;
   };
+  selectOffer?: {
+    setDataModalSelectOffer: (val: ModalContent) => void;
+    setIsOpenModalSelectOffer: (val: boolean) => void;
+  };
 }
 
 export interface ModalOfferSummary extends CommonModalType {

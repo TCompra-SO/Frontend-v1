@@ -88,6 +88,13 @@ export default function Requirements() {
     data: {},
     action: Action.NONE,
   });
+  const [isOpenModalSelectOffer, setIsOpenModalSelectOffer] = useState(false);
+  const [dataModalSelectOffer, setDataModalSelectOffer] =
+    useState<ModalContent>({
+      type: ModalTypes.NONE,
+      data: {},
+      action: Action.NONE,
+    });
   const [tableContent, setTableContent] = useState<TableTypeRequirement>({
     type: TableTypes.REQUIREMENT,
     data: [],
@@ -124,10 +131,16 @@ export default function Requirements() {
   /** Para mostrar modales */
 
   useEffect(() => {
-    if (modalDataOffersByRequirementId.type !== ModalTypes.NONE) {
-      setDataModal(modalDataOffersByRequirementId);
+    if (
+      modalDataOffersByRequirementId.type === ModalTypes.DETAILED_REQUIREMENT
+    ) {
+      setDataModal({
+        ...modalDataOffersByRequirementId,
+        selectOffer: { setDataModalSelectOffer, setIsOpenModalSelectOffer },
+      });
       setIsOpenModal(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalDataOffersByRequirementId]);
 
   useEffect(() => {
@@ -386,11 +399,11 @@ export default function Requirements() {
         style={mainModalScrollStyle}
         loadingConfirm={loadingDelete}
       />
-      {/* <ModalContainer // para seleccionar oferta
-        content={dataModal}
-        isOpen={isOpenModal}
-        onClose={handleOnCloseModal}
-      /> */}
+      <ModalContainer // para seleccionar oferta
+        content={dataModalSelectOffer}
+        isOpen={isOpenModalSelectOffer}
+        onClose={() => setIsOpenModalSelectOffer(false)}
+      />
       <TablePageContent
         title={t("myRequirements")}
         titleIcon={<i className="fa-regular fa-dolly c-default"></i>}

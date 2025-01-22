@@ -35,6 +35,8 @@ interface RequirementOfferListItemProps {
         onRateCancel?: (offerId: string, showOption?: boolean) => void;
       }
     | { show: false };
+  setDataModalSelectOffer?: (val: ModalContent) => void;
+  setIsOpenModalSelectOffer?: (val: boolean) => void;
 }
 
 export default function RequirementOfferListItemHeader({
@@ -115,7 +117,7 @@ export default function RequirementOfferListItemHeader({
           setIsOpenModal(true);
           break;
         case Action.SELECT_OFFER:
-          setDataModal({
+          props.setDataModalSelectOffer?.({
             type: ModalTypes.SELECT_OFFER,
             data: {
               offer: props.offer,
@@ -124,7 +126,7 @@ export default function RequirementOfferListItemHeader({
             },
             action,
           });
-          setIsOpenModal(true);
+          props.setIsOpenModalSelectOffer?.(true);
           break;
         case Action.RATE_CANCELED: {
           const data: BasicRateData = {

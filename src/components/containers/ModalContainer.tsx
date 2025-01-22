@@ -220,6 +220,12 @@ export default function ModalContainer(props: ModalContainerProps) {
             forPurchaseOrder={props.content.data.forPurchaseOrder}
             filters={props.content.data.filters}
             onClose={props.onClose}
+            setDataModalSelectOffer={
+              props.content.selectOffer?.setDataModalSelectOffer
+            }
+            setIsOpenModalSelectOffer={
+              props.content.selectOffer?.setIsOpenModalSelectOffer
+            }
           />
         );
       }
