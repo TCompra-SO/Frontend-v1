@@ -1,9 +1,10 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { HttpService, useApiParams } from "../models/Interfaces";
-import { FieldSort, SearchTableRequest } from "../models/Requests";
+import { FieldFilter, FieldSort, SearchTableRequest } from "../models/Requests";
 import useApi from "./useApi";
 import {
   EntityType,
+  Filters,
   OnChangePageAndPageSizeTypeParams,
   OrderType,
   PurchaseOrderTableTypes,
@@ -17,7 +18,7 @@ import {
   tableSearchAfterMseconds,
 } from "../utilities/globals";
 import {
-  getParamsFromSorter,
+  getParamsFromSorterAndFilter,
   getSearchString,
 } from "../utilities/globalFunctions";
 import { searchOffersService } from "../services/requests/offerService";
@@ -26,6 +27,7 @@ import {
   searchPurchaseOrdersByClientService,
   searchPurchaseOrdersByProviderService,
 } from "../services/requests/purchaseOrderService";
+import { FilterValue } from "antd/lib/table/interface";
 
 type SearchTableTypeParams = {
   page: number;
@@ -33,6 +35,8 @@ type SearchTableTypeParams = {
   keyWords?: string;
   fieldName?: string;
   orderType?: OrderType;
+  filterData?: FilterValue;
+  filterColumn?: string;
 };
 
 export default function useSearchTable(
@@ -68,7 +72,15 @@ export default function useSearchTable(
   }
 
   function searchTable(
-    { page, pageSize, keyWords, fieldName, orderType }: SearchTableTypeParams,
+    {
+      page,
+      pageSize,
+      keyWords,
+      fieldName,
+      orderType,
+      filterColumn,
+      filterData,
+    }: SearchTableTypeParams,
     setLoadingTable?: (val: boolean) => void,
     tableTypeParam?: TableTypes,
     subTypeParam?: RequirementType | PurchaseOrderTableTypes,
@@ -130,6 +142,8 @@ export default function useSearchTable(
           typeUser: entityType,
           fieldName,
           orderType,
+          filterColumn,
+          filterData,
         },
       });
     }
@@ -150,7 +164,9 @@ export function useFilterSortPaginationForTable() {
   const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [fieldSort, setFieldSort] = useState<FieldSort | undefined>({});
+  const [fieldFilter, setFieldFilter] = useState<FieldFilter | undefined>({});
   const [currentPageSize, setCurrentPageSize] = useState(pageSizeOptionsSt[0]);
+  const [filteredInfo, setFilteredInfo] = useState<Filters | undefined>({});
 
   const handleSearch = debounce(
     (
@@ -165,34 +181,66 @@ export function useFilterSortPaginationForTable() {
         keyWords: e.target.value,
         fieldName: fieldSort?.fieldName,
         orderType: fieldSort?.orderType,
+        filterColumn: fieldFilter?.filterColumn,
+        filterData: fieldFilter?.filterData,
       });
     },
     tableSearchAfterMseconds
   );
 
   function handleChangePageAndPageSize(
-    { page, pageSize, sorter }: OnChangePageAndPageSizeTypeParams,
+    { page, pageSize, sorter, filters }: OnChangePageAndPageSizeTypeParams,
     fieldNameObj: Record<string, string>,
     searchTable: (params: SearchTableTypeParams) => void,
     setLoadingTable?: (val: boolean) => void
   ) {
+    console.log(filters);
     setLoadingTable?.(true);
     setCurrentPageSize(pageSize);
     setCurrentPage(page);
-    const sortParams = getParamsFromSorter(sorter, fieldNameObj);
-    setFieldSort(sortParams);
+    const newFilteredInfo = getNewFilteredInfo(filteredInfo, filters);
+    const { fieldSort, fieldFilter } = getParamsFromSorterAndFilter(
+      sorter,
+      newFilteredInfo,
+      fieldNameObj
+    );
+    setFieldSort(fieldSort);
+    setFieldFilter(fieldFilter);
+    setFilteredInfo(newFilteredInfo);
     searchTable({
       page,
       pageSize,
       keyWords: searchValue,
-      fieldName: sortParams?.fieldName,
-      orderType: sortParams?.orderType,
+      fieldName: fieldSort?.fieldName,
+      orderType: fieldSort?.orderType,
+      filterColumn: fieldFilter?.filterColumn,
+      filterData: fieldFilter?.filterData,
     });
+  }
+
+  // Mantiene sólo el filtro más reciente
+  function getNewFilteredInfo(
+    prev: Filters | undefined,
+    filters: Filters | undefined
+  ) {
+    if (filters) {
+      const newFilters = Object.keys(filters);
+      if (newFilters.length <= 1) return filters;
+      else {
+        const prevFilter = Object.keys(prev || {})[0];
+        for (let i = 0; i < newFilters.length; i++) {
+          if (newFilters[i] != prevFilter)
+            return { [newFilters[i]]: filters[newFilters[i]] };
+        }
+      }
+    } else return filters;
   }
 
   function reset() {
     setCurrentPage(1);
     setFieldSort({});
+    setFieldFilter({});
+    setFilteredInfo({});
     setSearchValue("");
   }
 
@@ -200,6 +248,7 @@ export function useFilterSortPaginationForTable() {
     currentPage,
     currentPageSize,
     fieldSort,
+    filteredInfo,
     handleChangePageAndPageSize,
     handleSearch,
     setCurrentPage,

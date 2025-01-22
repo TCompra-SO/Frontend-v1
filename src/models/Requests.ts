@@ -1,3 +1,4 @@
+import { FilterValue } from "antd/lib/table/interface";
 import {
   CertificationState,
   CommonFilter,
@@ -211,7 +212,12 @@ export interface FieldSort {
   columnKey?: string;
 }
 
-export interface SearchTableRequest extends FieldSort {
+export interface FieldFilter {
+  filterData?: FilterValue;
+  filterColumn?: string;
+}
+
+export interface SearchTableRequest extends FieldSort, FieldFilter {
   keyWords?: string;
   userId: string;
   page: number;

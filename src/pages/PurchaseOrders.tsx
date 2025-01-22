@@ -68,6 +68,7 @@ export default function PurchaseOrders() {
     currentPage,
     currentPageSize,
     fieldSort,
+    filteredInfo,
     setCurrentPage,
     handleChangePageAndPageSize,
     handleSearch,
@@ -94,6 +95,7 @@ export default function PurchaseOrders() {
     page: currentPage,
     pageSize: currentPageSize,
     fieldSort,
+    filteredInfo,
   });
 
   useEffect(() => {
@@ -172,6 +174,7 @@ export default function PurchaseOrders() {
         page: currentPage,
         pageSize: currentPageSize,
         fieldSort,
+        filteredInfo,
         nameColumnHeader: nameHeader,
       }));
       showNotification("error", errorMsg);
@@ -277,6 +280,7 @@ export default function PurchaseOrders() {
         page: currentPage,
         pageSize: currentPageSize,
         fieldSort,
+        filteredInfo,
         nameColumnHeader: nameHeader,
       }));
     } catch (error) {

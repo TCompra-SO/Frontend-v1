@@ -82,7 +82,7 @@ export const userNameColumnKey: string = "subUserName";
 export const titleColumnKey: string = "title";
 export const certDocDateColumnKey: string = "creationDate";
 
-// Parámetros para sort en tabla
+// Parámetros para sort y filter en tabla
 export const fieldNameSearchRequestRequirement: Record<string, string> = {
   [nameColumnKey]: "name",
   [reqDateColumnKey]: "publish_date",
@@ -92,6 +92,7 @@ export const fieldNameSearchRequestRequirement: Record<string, string> = {
   [offersColumnKey]: "number_offers",
   [titleColumnKey]: "name",
   [reqExpDateColumnKey]: "completion_date",
+  [stateColumnKey]: "stateID",
 };
 export const fieldNameSearchRequestOffer: Record<string, string> = {
   [nameColumnKey]: "name",
@@ -101,11 +102,13 @@ export const fieldNameSearchRequestOffer: Record<string, string> = {
   [priceColumnKey]: "budget",
   [userNameColumnKey]: "subUserName",
   [titleColumnKey]: "name",
+  [stateColumnKey]: "stateID",
 };
 export const fieldNameSearchRequestOrder: Record<string, string> = {
   [purcOrderReqTitleColumnKey]: "requerimentTitle",
   [purcOrderDateColumnKey]: "createDate",
   [purcOrderOfferTitleColumnKey]: "offerTitle",
+  [stateColumnKey]: "stateID",
 };
 export const fieldNameSearchRequestOrderClient: Record<string, string> = {
   ...fieldNameSearchRequestOrder,

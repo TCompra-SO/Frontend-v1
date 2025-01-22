@@ -9,6 +9,7 @@ import {
   CommonFilter,
   PurchaseOrderTableTypes,
   CodeResponseCanOffer,
+  Filters,
 } from "../utilities/types";
 import {
   OfferItemSubUser,
@@ -231,6 +232,7 @@ export interface TableHiddenColumns {
   page?: number;
   pageSize?: number;
   fieldSort?: FieldSort;
+  filteredInfo?: Filters;
   hiddenColumns: TableColumns[];
   nameColumnHeader: string;
   onButtonClick: (action: Action, data: any) => void;

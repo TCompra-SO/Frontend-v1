@@ -7,11 +7,8 @@ import {
   smallModalWidth,
   allItems,
 } from "./globals";
-import {
-  FilterValue,
-  SorterResult,
-  TableCurrentDataSource,
-} from "antd/lib/table/interface";
+import { SorterResult, TableCurrentDataSource } from "antd/lib/table/interface";
+import { TableProps } from "antd";
 
 /**** Estados ***/
 
@@ -475,10 +472,13 @@ export type ErrorRequestType = AxiosError<any, any> | null;
 export type ErrorMsgRequestType = string | null;
 
 /** Tipos para paginación */
+type OnChange = NonNullable<TableProps["onChange"]>;
+export type Filters = Parameters<OnChange>[1];
+
 export type OnChangePageAndPageSizeTypeParams = {
   page: number;
   pageSize: number;
-  filters?: Record<string, FilterValue | null>;
+  filters?: Filters;
   sorter?: SorterResult<any> | SorterResult<any>[];
   extra?: TableCurrentDataSource<any>;
 };

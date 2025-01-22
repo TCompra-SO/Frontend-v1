@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import {
   Action,
+  Filters,
   ModalTypes,
   OnChangePageAndPageSizeType,
   PurchaseOrderTableTypes,
@@ -52,6 +53,12 @@ interface SubUserTableModalProps {
         tableContent: PurchaseOrderItemSubUser[];
         subType: PurchaseOrderTableTypes;
         total?: number;
+      }
+    | {
+        tableType: TableTypes.SALES_ORDER_SUBUSER;
+        tableContent: PurchaseOrderItemSubUser[];
+        subType: PurchaseOrderTableTypes;
+        total?: number;
       };
   onTabChange: (tabId: RequirementType | PurchaseOrderTableTypes) => void;
   loading: boolean | undefined;
@@ -60,6 +67,7 @@ interface SubUserTableModalProps {
   currentPage: number;
   currentPageSize: number;
   fieldSort: FieldSort | undefined;
+  filteredInfo: Filters | undefined;
 }
 
 export default function SubUserTableModal(props: SubUserTableModalProps) {
@@ -85,6 +93,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
     return () => {
       updateSubUserPurchaseOrdersLoadingPdf(false);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /** Determinar subType */
@@ -309,6 +318,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
                     page: props.currentPage,
                     pageSize: props.currentPageSize,
                     fieldSort: props.fieldSort,
+                    filteredInfo: props.filteredInfo,
                   }}
                   onChangePageAndPageSize={props.onChangePageAndPageSize}
                   loading={props.loading}
@@ -330,6 +340,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
                     page: props.currentPage,
                     pageSize: props.currentPageSize,
                     fieldSort: props.fieldSort,
+                    filteredInfo: props.filteredInfo,
                   }}
                   onChangePageAndPageSize={props.onChangePageAndPageSize}
                   loading={props.loading}
@@ -337,7 +348,8 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
               </div>
             </div>
           )}
-          {props.content.tableType == TableTypes.PURCHASE_ORDER_SUBUSER && (
+          {(props.content.tableType == TableTypes.PURCHASE_ORDER_SUBUSER ||
+            props.content.tableType == TableTypes.SALES_ORDER_SUBUSER) && (
             <div className="card-white" style={{ padding: 0 }}>
               <div className="table-responsive">
                 <GeneralTable
@@ -352,6 +364,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
                     page: props.currentPage,
                     pageSize: props.currentPageSize,
                     fieldSort: props.fieldSort,
+                    filteredInfo: props.filteredInfo,
                   }}
                   onChangePageAndPageSize={props.onChangePageAndPageSize}
                   loading={props.loading}

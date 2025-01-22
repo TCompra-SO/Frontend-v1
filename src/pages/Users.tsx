@@ -178,6 +178,7 @@ export default function Users() {
     currentPageSize,
     setCurrentPage,
     fieldSort,
+    filteredInfo,
     handleChangePageAndPageSize,
     handleSearch,
     reset,
@@ -432,6 +433,7 @@ export default function Users() {
             currentPage={currentPage}
             currentPageSize={currentPageSize}
             fieldSort={fieldSort}
+            filteredInfo={filteredInfo}
           />
         );
       case Action.VIEW_OFFERS:
@@ -456,6 +458,7 @@ export default function Users() {
             currentPage={currentPage}
             currentPageSize={currentPageSize}
             fieldSort={fieldSort}
+            filteredInfo={filteredInfo}
           />
         );
       case Action.VIEW_PURCHASE_ORDERS:
@@ -491,13 +494,14 @@ export default function Users() {
             currentPage={currentPage}
             currentPageSize={currentPageSize}
             fieldSort={fieldSort}
+            filteredInfo={filteredInfo}
           />
         );
       case Action.VIEw_SALES_ORDERS:
         return (
           <SubUserTableModal
             content={{
-              tableType: TableTypes.PURCHASE_ORDER_SUBUSER,
+              tableType: TableTypes.SALES_ORDER_SUBUSER,
               tableContent: orderList,
               subType:
                 subTypeOrder == PurchaseOrderTableTypes.ISSUED ||
@@ -526,6 +530,7 @@ export default function Users() {
             currentPage={currentPage}
             currentPageSize={currentPageSize}
             fieldSort={fieldSort}
+            filteredInfo={filteredInfo}
           />
         );
       default:

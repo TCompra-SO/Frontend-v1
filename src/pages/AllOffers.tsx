@@ -49,6 +49,7 @@ export default function AllOffers() {
     currentPageSize,
     setCurrentPage,
     fieldSort,
+    filteredInfo,
     handleChangePageAndPageSize,
     handleSearch,
     reset,
@@ -70,6 +71,7 @@ export default function AllOffers() {
     page: currentPage,
     pageSize: currentPageSize,
     fieldSort,
+    filteredInfo,
   });
 
   /** Obtener datos de tabla */
@@ -93,6 +95,7 @@ export default function AllOffers() {
         page: currentPage,
         pageSize: currentPageSize,
         fieldSort,
+        filteredInfo,
       }));
       setLoadingTable(false);
       showNotification("error", errorMsg);
@@ -171,6 +174,7 @@ export default function AllOffers() {
         page: currentPage,
         pageSize: currentPageSize,
         fieldSort,
+        filteredInfo,
       }));
     } catch (error) {
       console.log(error);

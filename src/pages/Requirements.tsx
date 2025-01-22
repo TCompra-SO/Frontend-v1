@@ -75,6 +75,7 @@ export default function Requirements() {
     currentPageSize,
     setCurrentPage,
     fieldSort,
+    filteredInfo,
     handleChangePageAndPageSize,
     handleSearch,
     reset,
@@ -98,6 +99,7 @@ export default function Requirements() {
     page: currentPage,
     pageSize: currentPageSize,
     fieldSort,
+    filteredInfo,
   });
 
   /** Verificar si hay una solicitud pendiente */
@@ -162,6 +164,7 @@ export default function Requirements() {
         page: currentPage,
         pageSize: currentPageSize,
         fieldSort,
+        filteredInfo,
       }));
       setLoadingTable(false);
       showNotification("error", errorMsg);
@@ -242,6 +245,7 @@ export default function Requirements() {
         page: currentPage,
         pageSize: currentPageSize,
         fieldSort,
+        filteredInfo,
       }));
     } catch (error) {
       console.log(error);

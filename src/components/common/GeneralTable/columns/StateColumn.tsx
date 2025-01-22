@@ -20,6 +20,8 @@ import {
 import { useTranslation } from "react-i18next";
 import {
   CertificationState,
+  Filters,
+  OfferState,
   OrderConfirmation,
   PurchaseOrderState,
   PurchaseOrderTableTypes,
@@ -31,10 +33,10 @@ import { stateColumnKey } from "../../../../utilities/globals";
 export default function StateColumn(
   type: TableTypes,
   hidden: boolean = false,
+  filteredInfo?: Filters,
   extraParam?: any
 ) {
   const { t } = useTranslation();
-
   const col: ColumnType<
     | Requirement
     | Offer
@@ -54,6 +56,8 @@ export default function StateColumn(
     showSorterTooltip: false,
     width: "113px",
     hidden,
+    filteredValue: filteredInfo?.[stateColumnKey] || null,
+
     filters:
       type == TableTypes.SENT_CERT || type == TableTypes.RECEIVED_CERT
         ? [
@@ -78,25 +82,57 @@ export default function StateColumn(
               value: CertificationState.RESENT,
             },
           ]
-        : // : type == TableTypes.REQUIREMENT
-          // ? Object.values(RequirementState)
-          //     .filter(
-          //       (state) => RequirementStateMeta[Number(state) as RequirementState]
-          //     )
-          //     .map((state) => {
-          //       return {
-          //         text: RequirementStateMeta[Number(state) as RequirementState]
-          //           ?.label,
-          //         value: Number(state) as RequirementState,
-          //       };
-          //     })
-          undefined,
+        : type == TableTypes.REQUIREMENT ||
+          type == TableTypes.ALL_REQUIREMENTS ||
+          type == TableTypes.REQUIREMENT_SUBUSER
+        ? Object.values(RequirementState)
+            .filter(
+              (state) => RequirementStateMeta[Number(state) as RequirementState]
+            )
+            .map((state) => {
+              return {
+                text: t(
+                  RequirementStateMeta[Number(state) as RequirementState]?.label
+                ),
+                value: Number(state) as RequirementState,
+              };
+            })
+        : type == TableTypes.OFFER ||
+          type == TableTypes.ALL_OFFERS ||
+          type == TableTypes.OFFER_SUBUSER
+        ? Object.values(OfferState)
+            .filter((state) => OfferStateMeta[Number(state) as OfferState])
+            .map((state) => {
+              return {
+                text: t(OfferStateMeta[Number(state) as OfferState]?.label),
+                value: Number(state) as OfferState,
+              };
+            })
+        : type == TableTypes.PURCHASE_ORDER ||
+          type == TableTypes.ALL_PURCHASE_ORDERS ||
+          type == TableTypes.SALES_ORDER ||
+          type == TableTypes.ALL_SALES_ORDERS ||
+          type == TableTypes.PURCHASE_ORDER_SUBUSER ||
+          type == TableTypes.SALES_ORDER_SUBUSER
+        ? Object.values(PurchaseOrderState)
+            .filter(
+              (state) =>
+                PurchaseOrderStateMeta[Number(state) as PurchaseOrderState]
+            )
+            .map((state) => {
+              return {
+                text: t(
+                  PurchaseOrderStateMeta[Number(state) as PurchaseOrderState]
+                    ?.label
+                ),
+                value: Number(state) as PurchaseOrderState,
+              };
+            })
+        : undefined,
     onFilter:
       type == TableTypes.SENT_CERT || type == TableTypes.RECEIVED_CERT
         ? (value, record) => record.state == value
-        : // : type == TableTypes.REQUIREMENT
-          // ? (value, record) => record.state == value
-          undefined,
+        : undefined,
 
     render: (_, record) => {
       let label: string = "";

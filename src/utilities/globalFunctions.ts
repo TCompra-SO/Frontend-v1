@@ -35,9 +35,10 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import dayjs from "dayjs";
 import i18next from "i18next";
 import httpErrorInterceptor from "../interceptors/httpErrorInterceptor";
-import { FieldSort, SearchTableRequest } from "../models/Requests";
+import { FieldFilter, FieldSort, SearchTableRequest } from "../models/Requests";
 import { SorterResult } from "antd/es/table/interface";
 import store from "../redux/store";
+import { FilterValue } from "antd/lib/table/interface";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -339,10 +340,13 @@ export function getInitialTableRequest(userId: string, userType: EntityType) {
 }
 
 // Retorna parámetros para búsqueda con orden en tabla
-export function getParamsFromSorter(
+export function getParamsFromSorterAndFilter(
   sorter: SorterResult<any> | SorterResult<any>[] | undefined,
+  filter: Record<string, FilterValue | null> | undefined,
   fieldNameObj: Record<string, string>
 ) {
+  let fs: FieldSort | undefined = undefined;
+  let ff: FieldFilter | undefined = undefined;
   if (
     sorter &&
     !Array.isArray(sorter) &&
@@ -356,14 +360,26 @@ export function getParamsFromSorter(
         : OrderType.ASC
       : undefined;
     if (fieldNameObj[sorter.columnKey] && tempOrderType) {
-      const fs: FieldSort = {
+      fs = {
         fieldName: fieldNameObj[sorter.columnKey],
         orderType: tempOrderType,
         columnKey: sorter.columnKey,
       };
-      return fs;
     }
   }
+  if (filter) {
+    const keys = Object.keys(filter);
+    if (keys.length > 0) {
+      ff = {
+        filterData: filter[keys[0]] ?? [],
+        filterColumn: fieldNameObj[keys[0]],
+      };
+    }
+  }
+  return {
+    fieldSort: fs,
+    fieldFilter: ff,
+  };
 }
 
 // Función para mostrar ícono de sort en columna si la columna está ordenada

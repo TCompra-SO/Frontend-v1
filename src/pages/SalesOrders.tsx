@@ -69,6 +69,7 @@ export default function SalesOrders() {
     currentPage,
     currentPageSize,
     fieldSort,
+    filteredInfo,
     setCurrentPage,
     handleChangePageAndPageSize,
     handleSearch,
@@ -95,6 +96,7 @@ export default function SalesOrders() {
     page: currentPage,
     pageSize: currentPageSize,
     fieldSort,
+    filteredInfo,
   });
 
   useEffect(() => {
@@ -173,6 +175,7 @@ export default function SalesOrders() {
         page: currentPage,
         pageSize: currentPageSize,
         fieldSort,
+        filteredInfo,
         nameColumnHeader: nameHeader,
       }));
       showNotification("error", errorMsg);
@@ -278,6 +281,7 @@ export default function SalesOrders() {
         page: currentPage,
         pageSize: currentPageSize,
         fieldSort,
+        filteredInfo,
         nameColumnHeader: nameHeader,
       }));
     } catch (error) {

@@ -286,6 +286,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         ></Table>
       );
     case TableTypes.PURCHASE_ORDER_SUBUSER:
+    case TableTypes.SALES_ORDER_SUBUSER:
       getPurchaseOrderSubUserColumns();
       return (
         <Table
@@ -385,7 +386,11 @@ export default function GeneralTable(props: GeneralTableProps) {
         visibility[TableColumns.OFFERS],
         props.content.fieldSort
       ),
-      StateColumn(props.content.type, visibility[TableColumns.STATE]),
+      StateColumn(
+        props.content.type,
+        visibility[TableColumns.STATE],
+        props.content.filteredInfo
+      ),
       ActionColumn(
         props.content.type,
         props.content.onButtonClick,
@@ -419,7 +424,11 @@ export default function GeneralTable(props: GeneralTableProps) {
         props.content.fieldSort
       ),
       PriceColumn(visibility[TableColumns.PRICE], props.content.fieldSort),
-      StateColumn(props.content.type, visibility[TableColumns.STATE]),
+      StateColumn(
+        props.content.type,
+        visibility[TableColumns.STATE],
+        props.content.filteredInfo
+      ),
       ActionColumn(
         props.content.type,
         props.content.onButtonClick,
@@ -459,15 +468,15 @@ export default function GeneralTable(props: GeneralTableProps) {
           props.content.fieldSort
         ),
         GeneralDateColumn(
-          t("selectionDateAbbrev"),
+          t("dateColumn"),
           purcOrderDateColumnKey,
           visibility[TableColumns.SELECTION_DATE],
           props.content.fieldSort
         ),
-        TypeColumn(visibility[TableColumns.TYPE]),
         StateColumn(
           props.content.type,
           visibility[TableColumns.STATE],
+          props.content.filteredInfo,
           props.content.subType
         ),
         ActionColumn(
@@ -477,6 +486,8 @@ export default function GeneralTable(props: GeneralTableProps) {
           props.content.subType
         ),
       ];
+      if (props.content.type == TableTypes.PURCHASE_ORDER)
+        columns.splice(3, 0, TypeColumn(visibility[TableColumns.TYPE]));
       return columns;
     }
     return [];
@@ -522,7 +533,11 @@ export default function GeneralTable(props: GeneralTableProps) {
         92,
         props.content.fieldSort
       ),
-      StateColumn(props.content.type, visibility[TableColumns.STATE]),
+      StateColumn(
+        props.content.type,
+        visibility[TableColumns.STATE],
+        props.content.filteredInfo
+      ),
       ViewColumn(
         TableTypes.ALL_REQUIREMENTS,
         props.content.onButtonClick,
@@ -560,7 +575,11 @@ export default function GeneralTable(props: GeneralTableProps) {
         props.content.fieldSort
       ),
       PriceColumn(visibility[TableColumns.PRICE], props.content.fieldSort),
-      StateColumn(props.content.type, visibility[TableColumns.STATE]),
+      StateColumn(
+        props.content.type,
+        visibility[TableColumns.STATE],
+        props.content.filteredInfo
+      ),
       ViewColumn(
         props.content.type,
         props.content.onButtonClick,
@@ -604,12 +623,11 @@ export default function GeneralTable(props: GeneralTableProps) {
           props.content.fieldSort
         ),
         GeneralDateColumn(
-          t("creationDateAbbrev"),
+          t("dateColumn"),
           purcOrderDateColumnKey,
           visibility[TableColumns.PUBLISH_DATE],
           props.content.fieldSort
         ),
-        TypeColumn(visibility[TableColumns.TYPE]),
         DocumentColumn(
           props.content.type,
           props.content.onButtonClick,
@@ -618,6 +636,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         StateColumn(
           props.content.type,
           visibility[TableColumns.STATE],
+          props.content.filteredInfo,
           props.content.subType
         ),
         ViewColumn(
@@ -626,7 +645,8 @@ export default function GeneralTable(props: GeneralTableProps) {
           visibility[TableColumns.VIEW]
         ),
       ];
-
+      if (props.content.type == TableTypes.ALL_PURCHASE_ORDERS)
+        columns.splice(4, 0, TypeColumn(visibility[TableColumns.TYPE]));
       return columns;
     }
     return [];
@@ -716,7 +736,8 @@ export default function GeneralTable(props: GeneralTableProps) {
       ),
       StateColumn(
         TableTypes.REQUIREMENT_SUBUSER,
-        visibility[TableColumns.STATE]
+        visibility[TableColumns.STATE],
+        props.content.filteredInfo
       ),
       ViewColumn(
         TableTypes.REQUIREMENT_SUBUSER,
@@ -752,7 +773,11 @@ export default function GeneralTable(props: GeneralTableProps) {
         visibility[TableColumns.SELECTION_DATE],
         props.content.fieldSort
       ),
-      StateColumn(TableTypes.OFFER_SUBUSER, visibility[TableColumns.STATE]),
+      StateColumn(
+        TableTypes.OFFER_SUBUSER,
+        visibility[TableColumns.STATE],
+        props.content.filteredInfo
+      ),
       ViewColumn(
         TableTypes.OFFER_SUBUSER,
         props.content.onButtonClick,
@@ -763,7 +788,10 @@ export default function GeneralTable(props: GeneralTableProps) {
   }
 
   function getPurchaseOrderSubUserColumns() {
-    if (props.content.type == TableTypes.PURCHASE_ORDER_SUBUSER) {
+    if (
+      props.content.type == TableTypes.PURCHASE_ORDER_SUBUSER ||
+      props.content.type == TableTypes.SALES_ORDER_SUBUSER
+    ) {
       columns = [
         GeneralColumnString(
           t("requirement"),
@@ -787,7 +815,6 @@ export default function GeneralTable(props: GeneralTableProps) {
           visibility[TableColumns.SELECTION_DATE],
           props.content.fieldSort
         ),
-        TypeColumn(visibility[TableColumns.TYPE]),
         DocumentColumn(
           props.content.type,
           props.content.onButtonClick,
@@ -796,6 +823,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         StateColumn(
           TableTypes.PURCHASE_ORDER_SUBUSER,
           visibility[TableColumns.STATE],
+          props.content.filteredInfo,
           props.content.subType
         ),
         ViewColumn(
@@ -804,6 +832,8 @@ export default function GeneralTable(props: GeneralTableProps) {
           visibility[TableColumns.VIEW]
         ),
       ];
+      if (props.content.type == TableTypes.PURCHASE_ORDER_SUBUSER)
+        columns.splice(3, 0, TypeColumn(visibility[TableColumns.TYPE]));
       return columns;
     }
     return [];
@@ -862,7 +892,11 @@ export default function GeneralTable(props: GeneralTableProps) {
         visibility[TableColumns.CREATION_DATE],
         props.content.fieldSort
       ),
-      StateColumn(TableTypes.SENT_CERT, visibility[TableColumns.STATE]),
+      StateColumn(
+        TableTypes.SENT_CERT,
+        visibility[TableColumns.STATE],
+        props.content.filteredInfo
+      ),
       ViewColumn(
         TableTypes.SENT_CERT,
         props.content.onButtonClick,
@@ -893,7 +927,11 @@ export default function GeneralTable(props: GeneralTableProps) {
         visibility[TableColumns.CREATION_DATE],
         props.content.fieldSort
       ),
-      StateColumn(props.content.type, visibility[TableColumns.STATE]),
+      StateColumn(
+        props.content.type,
+        visibility[TableColumns.STATE],
+        props.content.filteredInfo
+      ),
       ViewColumn(
         TableTypes.SENT_CERT,
         props.content.onButtonClick,

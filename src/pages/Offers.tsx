@@ -59,6 +59,7 @@ export default function Offers() {
     handleChangePageAndPageSize,
     handleSearch,
     fieldSort,
+    filteredInfo,
     reset,
   } = useFilterSortPaginationForTable();
   const [tableContent, setTableContent] = useState<TableTypeOffer>({
@@ -72,6 +73,7 @@ export default function Offers() {
     page: currentPage,
     pageSize: currentPageSize,
     fieldSort,
+    filteredInfo,
   });
 
   /** Verificar si hay una solicitud pendiente */
@@ -126,6 +128,7 @@ export default function Offers() {
         page: currentPage,
         pageSize: currentPageSize,
         fieldSort,
+        filteredInfo,
       }));
       showNotification("error", errorMsg);
     }
@@ -202,6 +205,7 @@ export default function Offers() {
         page: currentPage,
         pageSize: currentPageSize,
         fieldSort,
+        filteredInfo,
         total: responseData.res?.totalDocuments,
       }));
     } catch (error) {
