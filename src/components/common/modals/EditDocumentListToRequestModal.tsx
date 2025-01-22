@@ -5,7 +5,7 @@ import ButtonContainer from "../../containers/ButtonContainer";
 import { Form } from "antd";
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
-import { useUpdateRequiredDocsCert } from "../../../hooks/certificateHook";
+import { useUpdateRequiredDocsCert } from "../../../hooks/certificateHooks";
 import { useEffect } from "react";
 
 interface EditDocumentListToRequestModalProps {

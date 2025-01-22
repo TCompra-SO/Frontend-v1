@@ -19,17 +19,20 @@ import {
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
-import FrontImage from "../FrontImage";
-import SubUserName from "../SubUserName";
+import FrontImage from "../utils/FrontImage";
+import SubUserName from "../utils/SubUserName";
 import { CommonModalProps } from "../../../models/Interfaces";
 import { RegisterScoreRequest } from "../../../models/Requests";
 import { registerScoreService } from "../../../services/requests/scoreService";
-import useShowNotification from "../../../hooks/utilHook";
+import useShowNotification from "../../../hooks/utilHooks";
 
 interface RatingCanceledModalProps extends CommonModalProps {
   basicRateData: BasicRateData;
   type: RequirementType;
   isOffer: boolean;
+  onSuccess?: (id: string) => void;
+  onExecute?: (id: string) => void;
+  onError?: (id: string) => void;
   onClose: () => any;
 }
 
@@ -50,8 +53,10 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
       ) {
         if (responseData) {
           showNotification("success", t("scoreSavedSuccessfully"));
+          props.onSuccess?.(props.basicRateData.uid);
           props.onClose();
         } else if (error) {
+          props.onError?.(props.basicRateData.uid);
           showNotification("error", errorMsg);
         }
       },
@@ -68,6 +73,7 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
       showNotification("info", t("mustAnswerQuestion"));
       return;
     }
+    props.onExecute?.(props.basicRateData.uid);
     const data: RegisterScoreRequest = {
       typeScore: userClass == UserClass.CUSTOMER ? "Client" : "Provider",
       uidEntity: props.basicRateData.userId,

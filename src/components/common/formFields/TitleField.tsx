@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useTitleRules } from "../../../hooks/validators";
+import { useTitleRules } from "../../../hooks/validatorHooks";
 import { Form } from "antd";
 import InputContainer from "../../containers/InputContainer";
 

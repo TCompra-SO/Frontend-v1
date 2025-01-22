@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { createContext, ReactNode, useState } from "react";
 import { NotificationData } from "../models/Interfaces";
-import useShowNotification from "../hooks/utilHook";
+import useShowNotification from "../hooks/utilHooks";
 
 interface RequestQueueItem {
   response: any;
@@ -54,10 +54,8 @@ export function RequestProvider({ children }: { children: ReactNode }) {
 
     if (updates.response) {
       if (requestQueue[requestId]) {
-        console.log("444444");
       }
     } else if (updates.error) {
-      console.log("44444dd4");
     }
     setRequestQueue((prevQueue) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

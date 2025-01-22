@@ -1,8 +1,8 @@
 import { Tooltip } from "antd";
-import { getScore } from "../../utilities/globalFunctions";
+import { getScore } from "../../../utilities/globalFunctions";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
-import { RateStartCountType } from "../../utilities/types";
+import { RateStartCountType } from "../../../utilities/types";
 
 interface RateStarCountProps {
   score: number | undefined;

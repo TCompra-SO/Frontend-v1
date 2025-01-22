@@ -5,13 +5,27 @@ import {
   IdValueObj,
   useApiParams,
 } from "../models/Interfaces";
-import { defaultCountry, maxDocSizeMb, maxImageSizeMb } from "./globals";
 import {
+  defaultCountry,
+  fieldNameSearchRequestAllOrderClient,
+  fieldNameSearchRequestAllOrderProvider,
+  fieldNameSearchRequestOrderClient,
+  fieldNameSearchRequestOrderProvider,
+  maxDocSizeMb,
+  maxImageSizeMb,
+  maxLengthStringToSearch,
+  onlyLettersAndNumbers,
+  pageSizeOptionsSt,
+} from "./globals";
+import {
+  EntityType,
   ErrorMsgRequestType,
   ErrorRequestType,
+  OrderType,
   PurchaseOrderTableTypes,
   RequirementType,
   ResponseRequestType,
+  TableTypes,
   TimeMeasurement,
   UserClass,
   UserRoles,
@@ -21,6 +35,10 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import dayjs from "dayjs";
 import i18next from "i18next";
 import httpErrorInterceptor from "../interceptors/httpErrorInterceptor";
+import { FieldFilter, FieldSort, SearchTableRequest } from "../models/Requests";
+import { SorterResult } from "antd/es/table/interface";
+import store from "../redux/store";
+import { FilterValue } from "antd/lib/table/interface";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -207,6 +225,7 @@ export default async function makeRequest<T = any>({
   dataToSend,
   token,
 }: useApiParams<T>) {
+  const userToken = store.getState().user.token;
   let responseData: ResponseRequestType = null;
   let errorMsg: ErrorMsgRequestType = null;
   let error: ErrorRequestType = null;
@@ -218,7 +237,11 @@ export default async function makeRequest<T = any>({
         url: service.url,
         data: dataToSend,
         headers: {
-          Authorization: token ? `Bearer ${token}` : undefined,
+          Authorization: token
+            ? `Bearer ${token}`
+            : userToken
+            ? `Bearer ${userToken}`
+            : undefined,
           "Content-Type": "application/json",
         },
       };
@@ -295,4 +318,110 @@ export function generateShortId(): string {
   const timestamp = Date.now().toString(36).slice(-4);
   const random = Math.random().toString(36).substring(2, 6);
   return `${timestamp}${random}`;
+}
+
+// Procesa string de búsqueda
+export function getSearchString(val: string) {
+  return val
+    .trim()
+    .replace(onlyLettersAndNumbers, "")
+    .slice(0, maxLengthStringToSearch);
+}
+
+// Retorna request inicial de tablas
+export function getInitialTableRequest(userId: string, userType: EntityType) {
+  const val: SearchTableRequest = {
+    userId,
+    page: 1,
+    pageSize: pageSizeOptionsSt[0],
+    typeUser: userType,
+  };
+  return val;
+}
+
+// Retorna parámetros para búsqueda con orden en tabla
+export function getParamsFromSorterAndFilter(
+  sorter: SorterResult<any> | SorterResult<any>[] | undefined,
+  filter: Record<string, FilterValue | null> | undefined,
+  fieldNameObj: Record<string, string>
+) {
+  let fs: FieldSort | undefined = undefined;
+  let ff: FieldFilter | undefined = undefined;
+  if (
+    sorter &&
+    !Array.isArray(sorter) &&
+    Object.keys(sorter).length > 0 &&
+    sorter.columnKey &&
+    typeof sorter.columnKey === "string"
+  ) {
+    const tempOrderType = sorter.order
+      ? sorter.order == "descend"
+        ? OrderType.DESC
+        : OrderType.ASC
+      : undefined;
+    if (fieldNameObj[sorter.columnKey] && tempOrderType) {
+      fs = {
+        fieldName: fieldNameObj[sorter.columnKey],
+        orderType: tempOrderType,
+        columnKey: sorter.columnKey,
+      };
+    }
+  }
+  if (filter) {
+    const keys = Object.keys(filter);
+    if (keys.length > 0) {
+      ff = {
+        filterData: filter[keys[0]] ?? [],
+        filterColumn: fieldNameObj[keys[0]],
+      };
+    }
+  }
+  return {
+    fieldSort: fs,
+    fieldFilter: ff,
+  };
+}
+
+// Función para mostrar ícono de sort en columna si la columna está ordenada
+export function getSortOrderFromFieldSort(
+  columnKey: string,
+  fieldSort: FieldSort | undefined
+) {
+  return fieldSort?.columnKey == columnKey
+    ? fieldSort?.orderType
+      ? fieldSort?.orderType == OrderType.ASC
+        ? "ascend"
+        : "descend"
+      : undefined
+    : undefined;
+}
+
+export function getFieldNameObjForOrders(
+  tableType:
+    | TableTypes.PURCHASE_ORDER
+    | TableTypes.SALES_ORDER
+    | TableTypes.ALL_PURCHASE_ORDERS
+    | TableTypes.ALL_SALES_ORDERS,
+  type: PurchaseOrderTableTypes
+) {
+  if (
+    tableType == TableTypes.ALL_PURCHASE_ORDERS ||
+    tableType == TableTypes.ALL_SALES_ORDERS
+  )
+    if (tableType == TableTypes.ALL_PURCHASE_ORDERS)
+      return type == PurchaseOrderTableTypes.ISSUED
+        ? fieldNameSearchRequestAllOrderClient
+        : fieldNameSearchRequestAllOrderProvider;
+    else
+      return type == PurchaseOrderTableTypes.ISSUED
+        ? fieldNameSearchRequestAllOrderProvider
+        : fieldNameSearchRequestAllOrderClient;
+  if (tableType == TableTypes.PURCHASE_ORDER)
+    return type == PurchaseOrderTableTypes.ISSUED
+      ? fieldNameSearchRequestOrderClient
+      : fieldNameSearchRequestOrderProvider;
+  else
+    return type == PurchaseOrderTableTypes.ISSUED
+      ? fieldNameSearchRequestOrderProvider
+      : fieldNameSearchRequestOrderClient;
 }

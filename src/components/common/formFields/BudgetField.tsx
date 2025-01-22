@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Form } from "antd";
 import InputNumberContainer from "../../containers/InputNumberContainer";
-import { useBudgetRules } from "../../../hooks/validators";
+import { useBudgetRules } from "../../../hooks/validatorHooks";
 
 interface BudgetFieldProps {
   required: boolean;

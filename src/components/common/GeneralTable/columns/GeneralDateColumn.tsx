@@ -1,11 +1,14 @@
 import { ColumnType } from "antd/es/table";
 import dayjs from "dayjs";
 import { dateFormat } from "../../../../utilities/globals";
+import { FieldSort } from "../../../../models/Requests";
+import { getSortOrderFromFieldSort } from "../../../../utilities/globalFunctions";
 
 export default function GeneralDateColumn(
   nameColumn: string,
   dataIndex: string,
   hidden: boolean = false,
+  fieldSort?: FieldSort,
   noSorter?: boolean
 ) {
   const col: ColumnType<any> = {
@@ -17,10 +20,8 @@ export default function GeneralDateColumn(
     ellipsis: true,
     width: "110px",
     hidden,
-    sorter: noSorter
-      ? undefined
-      : (a, b) => (dayjs(a[dataIndex]).isBefore(dayjs(b[dataIndex])) ? -1 : 1),
-
+    sorter: noSorter ? undefined : true,
+    sortOrder: getSortOrderFromFieldSort(dataIndex, fieldSort),
     render: (_, record) => {
       const value: dayjs.Dayjs = dayjs(record[dataIndex]);
 

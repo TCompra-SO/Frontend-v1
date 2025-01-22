@@ -23,11 +23,12 @@ import AuthRoleGuard from "./components/guards/AuthRoleGuard.tsx";
 import { RolesForSection, RolesForSubSection } from "./utilities/roles.ts";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "./redux/loadingSlice.ts";
-import { useLoadUserInfo } from "./hooks/authHook.ts";
+import { useLoadUserInfo } from "./hooks/authHooks.ts";
 import MainHeader from "./components/section/header/MainHeader.tsx";
 import { LoadingDataProvider } from "./contexts/LoadingDataContext.tsx";
 import { getSectionFromRoute } from "./utilities/globalFunctions.ts";
 import { ModalsProvider } from "./contexts/ModalsContext.tsx";
+import { HomeProvider } from "./contexts/Homecontext.tsx";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
@@ -138,7 +139,9 @@ function App() {
                     element={
                       <Suspense fallback={<LoadingPage />}>
                         <MainHeader />
-                        <Home></Home>
+                        <HomeProvider>
+                          <Home></Home>
+                        </HomeProvider>
                       </Suspense>
                     }
                   />

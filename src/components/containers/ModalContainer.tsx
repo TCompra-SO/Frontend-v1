@@ -1,4 +1,4 @@
-import { ModalTypes, ModalWidth } from "../../utilities/types";
+import { Action, ModalTypes, ModalWidth } from "../../utilities/types";
 import RequirementDetail from "../section/requirements/requirementDetail/RequirementDetail";
 import RequirementModalOfferSelected from "../section/requirements/RequirementModalOfferSelected";
 import { ModalProps } from "antd/lib";
@@ -15,20 +15,21 @@ import RatingModal from "../common/modals/RatingModal";
 import ConfirmationModal from "../common/modals/ConfirmationModal";
 import InputEmailModal from "../common/modals/InputEmailModal";
 import NoContentModalContainer from "./NoContentModalContainer";
-import OfferDetailModal from "../section/offers/offerDetail/OfferDetailModal";
+import OfferDetailModal from "../section/offers/OfferDetailModal";
 import UserInfoModal from "../common/modals/UserInfoModal";
 import AddCertificatesModal from "../common/modals/AddCertificatesModal";
 import EditDocumentListToRequestModal from "../common/modals/EditDocumentListToRequestModal";
 import ViewDocsReceivedCertificate from "../common/modals/ViewDocsReceivedCertificate";
 import SelectDocumentsToSendCertificateModal from "../common/modals/SelectDocumentsToSendCertificateModal";
 import SendMessageModal from "../common/modals/SendMessageModal";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import useApi, { UseApiType } from "../../hooks/useApi";
 import {
   useCancelOffer,
   useCancelRequirement,
-} from "../../hooks/requirementHook";
-import { useShowLoadingMessage } from "../../hooks/utilHook";
+} from "../../hooks/requirementHooks";
+import { useShowLoadingMessage } from "../../hooks/utilHooks";
+import { LoadingDataContext } from "../../contexts/LoadingDataContext";
 
 interface ModalContainerProps extends ModalProps {
   content: ModalContent;
@@ -37,10 +38,19 @@ interface ModalContainerProps extends ModalProps {
   className?: string;
   maskClosable?: boolean;
   onClose: (e?: React.SyntheticEvent<Element, Event>) => any;
+  loadingConfirm?: boolean;
 }
 
 export default function ModalContainer(props: ModalContainerProps) {
   const { showLoadingMessage } = useShowLoadingMessage();
+  const [blockedIds, setBlockedIds] = useState<string[]>([]);
+  const { updateIdAndActionQueue, deleteFromIdAndActionQueue } =
+    useContext(LoadingDataContext);
+
+  /** Para CancelPurchaseOrderModal */
+
+  const useCancelRequirementHook = useCancelRequirement();
+  const useCancelOfferHook = useCancelOffer();
 
   /** Variables para solicitud */
 
@@ -62,15 +72,47 @@ export default function ModalContainer(props: ModalContainerProps) {
     apiParams,
   });
 
-  /** Para CancelPurchaseOrderModal */
-
-  const useCancelRequirementHook = useCancelRequirement();
-  const useCancelOfferHook = useCancelOffer();
-
   /** Acciones para solicitud */
 
   useEffect(() => {
     showLoadingMessage(useApiHook.loading);
+    if (useApiHook.loading) {
+      let id: string = "";
+      switch (props.content.type) {
+        case ModalTypes.REPUBLISH_REQUIREMENT:
+          id = props.content.data.requirementId;
+          break;
+        case ModalTypes.RATE_USER:
+        case ModalTypes.RATE_CANCELED:
+          id = props.content.data.rowId;
+          break;
+        case ModalTypes.VIEW_DOCS_RECEIVED_CERT:
+          id = props.content.data.data.key;
+          break;
+      }
+      if (id) {
+        setBlockedIds((prev) => [...prev, id]);
+        updateIdAndActionQueue(id, props.content.action);
+      }
+    } else {
+      let currentId: string = "";
+      switch (props.content.type) {
+        case ModalTypes.REPUBLISH_REQUIREMENT:
+          currentId = props.content.data.requirementId;
+          break;
+        case ModalTypes.RATE_CANCELED:
+        case ModalTypes.RATE_USER:
+          currentId = props.content.data.rowId;
+          break;
+        case ModalTypes.VIEW_DOCS_RECEIVED_CERT:
+          currentId = props.content.data.data.key;
+          break;
+      }
+      if (currentId) {
+        deleteFromIdAndActionQueue(currentId);
+        setBlockedIds((prev) => prev.filter((id) => id != currentId));
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [useApiHook.loading]);
 
@@ -79,25 +121,92 @@ export default function ModalContainer(props: ModalContainerProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
 
-  /** Reset */
+  /** Modal de confirmación */
 
-  // useEffect(() => {
-  //   if (!props.isOpen) {
-  //     if (props.content.type == ModalTypes.CANCEL_PURCHASE_ORDER) {
-  //       useCancelOfferHook.resetCancelOffer();
-  //       useCancelRequirementHook.resetCancelRequirement();
-  //     } else {
-  //       setAdditionalApiParams({
-  //         functionToExecute: () => {},
-  //       });
-  //       setApiParams({
-  //         service: null,
-  //         method: "get",
-  //       });
-  //     }
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [props.isOpen]);
+  useEffect(() => {
+    if (
+      props.content.type == ModalTypes.CONFIRM &&
+      props.content.data.id &&
+      props.content.action != Action.NONE
+    ) {
+      const id = props.content.data.id;
+      if (props.loadingConfirm) {
+        setBlockedIds((prev) => [...prev, id]);
+        updateIdAndActionQueue(id, props.content.action);
+      } else {
+        setBlockedIds((prev) => prev.filter((idn) => idn != id));
+        deleteFromIdAndActionQueue(id);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.loadingConfirm]);
+
+  /** CancelPurchaseOrderModal */
+
+  useEffect(() => {
+    if (
+      props.content.type == ModalTypes.CANCEL_PURCHASE_ORDER &&
+      (props.content.action == Action.CANCEL_REQUIREMENT ||
+        props.content.action == Action.CANCEL)
+    ) {
+      const id = props.content.data.rowId;
+      if (useCancelRequirementHook.loadingCancelRequirement) {
+        setBlockedIds((prev) => [...prev, id]);
+        updateIdAndActionQueue(id, props.content.action);
+      } else {
+        setBlockedIds((prev) => prev.filter((idn) => idn != id));
+        deleteFromIdAndActionQueue(id);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useCancelRequirementHook.loadingCancelRequirement]);
+
+  useEffect(() => {
+    if (
+      props.content.type == ModalTypes.CANCEL_PURCHASE_ORDER &&
+      (props.content.action == Action.CANCEL_OFFER ||
+        props.content.action == Action.CANCEL)
+    ) {
+      const id = props.content.data.rowId;
+      if (useCancelOfferHook.loadingCancelOffer) {
+        setBlockedIds((prev) => [...prev, id]);
+        updateIdAndActionQueue(id, props.content.action);
+      } else {
+        setBlockedIds((prev) => prev.filter((idn) => idn != id));
+        deleteFromIdAndActionQueue(id);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useCancelOfferHook.loadingCancelOffer]);
+
+  /** Realizar acción al cancelar exitosamente */
+
+  useEffect(() => {
+    if (
+      props.content.type == ModalTypes.CANCEL_PURCHASE_ORDER &&
+      useCancelOfferHook.responseDataCancelOffer
+    )
+      props.content.data.onCancelSuccess?.(props.content.data.offerId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useCancelOfferHook.responseDataCancelOffer]);
+
+  useEffect(() => {
+    if (
+      props.content.type == ModalTypes.CANCEL_PURCHASE_ORDER &&
+      useCancelRequirementHook.responseDataCancelReq
+    )
+      props.content.data.onCancelSuccess?.(props.content.data.offerId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useCancelRequirementHook.responseDataCancelReq]);
+
+  /** Cleanup */
+
+  useEffect(() => {
+    return () => {
+      blockedIds.forEach((id) => deleteFromIdAndActionQueue(id));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /** Funciones */
 
@@ -164,6 +273,9 @@ export default function ModalContainer(props: ModalContainerProps) {
             type={props.content.data.type}
             isOffer={props.content.data.isOffer}
             onClose={props.onClose}
+            onSuccess={props.content.data.onSuccess}
+            onExecute={props.content.data.onExecute}
+            onError={props.content.data.onError}
             {...commonModalProps}
           />
         );

@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import { Action, TableTypes } from "../../../../utilities/types";
 import { useContext } from "react";
 import { LoadingDataContext } from "../../../../contexts/LoadingDataContext";
+import { viewColumnKey } from "../../../../utilities/globals";
+import { KeyInterface } from "../../../../models/MainInterfaces";
 
 export default function ViewColumn(
   type: TableTypes,
@@ -15,17 +17,18 @@ export default function ViewColumn(
     subUserRequirementsViewOffers,
     allPurchaseOrdersViewOffers,
     allSalesOrdersViewOffers,
+    idAndActionQueue,
   } = useContext(LoadingDataContext);
 
-  const col: ColumnType<any> = {
+  const col: ColumnType<KeyInterface> = {
     title: t("actionColumn"),
-    key: "action",
+    key: viewColumnKey,
     align: "center",
     showSorterTooltip: false,
     width: "100px",
     fixed: "right",
     hidden,
-    render: (record) => {
+    render: (_, record) => {
       let action: Action = Action.VIEW_REQUIREMENTS;
       switch (type) {
         case TableTypes.REQUIREMENT:
@@ -64,7 +67,11 @@ export default function ViewColumn(
                 ? allPurchaseOrdersViewOffers
                 : type == TableTypes.ALL_SALES_ORDERS
                 ? allSalesOrdersViewOffers
-                : undefined
+                : type == TableTypes.RECEIVED_CERT
+                ? idAndActionQueue[record.key]
+                  ? true
+                  : false
+                : false
             }
           />
         </div>

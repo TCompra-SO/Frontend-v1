@@ -3,11 +3,17 @@ import { BasicRequirement } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
 import { useContext, useEffect, useState } from "react";
 import { ListsContext } from "../../../../contexts/ListsContext";
-import { defaultCountry } from "../../../../utilities/globals";
+import {
+  defaultCountry,
+  locationColumnKey,
+} from "../../../../utilities/globals";
 import { IdValueMap, IdValueObj } from "../../../../models/Interfaces";
+import { FieldSort } from "../../../../models/Requests";
+import { getSortOrderFromFieldSort } from "../../../../utilities/globalFunctions";
 
 export default function LocationColumn(
   hidden: boolean = false,
+  fieldSort?: FieldSort,
   noSorter?: boolean
 ) {
   const { t } = useTranslation();
@@ -31,13 +37,11 @@ export default function LocationColumn(
   const col: ColumnType<BasicRequirement> = {
     title: t("locationColumn"),
     dataIndex: "location",
-    key: "location",
+    key: locationColumnKey,
     align: "center",
-    sorter: noSorter
-      ? undefined
-      : (a, b) =>
-          cities[a.location]?.value.localeCompare(cities[b.location]?.value),
+    sorter: noSorter ? undefined : true,
     showSorterTooltip: false,
+    sortOrder: getSortOrderFromFieldSort(locationColumnKey, fieldSort),
     width: "130px",
     hidden,
     render: (_, { location }) => (

@@ -6,27 +6,26 @@ import {
   TableColumns,
   RequirementType,
   TableTypes,
-  OnChangePageAndPageSizeTypeParams,
+  EntityType,
 } from "../utilities/types";
 import { Requirement } from "../models/MainInterfaces";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   ModalContent,
   TableTypeRequirement,
   useApiParams,
 } from "../models/Interfaces";
 import { useTranslation } from "react-i18next";
-import TablePageContent from "../components/section/table-page/TablePageContent";
+import TablePageContent, {
+  TablePageContentRef,
+} from "../components/section/table-page/TablePageContent";
 import {
+  fieldNameSearchRequestRequirement,
   mainModalScrollStyle,
   noPaginationPageSize,
-  pageSizeOptionsSt,
 } from "../utilities/globals";
 import useApi from "../hooks/useApi";
-import {
-  deleteRequirementService,
-  getRequirementsBySubUserService,
-} from "../services/requests/requirementService";
+import { deleteRequirementService } from "../services/requests/requirementService";
 import { transformDataToRequirement } from "../utilities/transform";
 import { useLocation } from "react-router-dom";
 import {
@@ -39,39 +38,55 @@ import {
   getBaseUserForUserSubUser,
   getFullUser,
   getOfferById,
-} from "../services/complete/general";
+} from "../services/complete/generalServices";
 import {
   useCancelRequirement,
   useCulminate,
   useGetOffersByRequirementId,
-} from "../hooks/requirementHook";
+} from "../hooks/requirementHooks";
 import { ModalsContext } from "../contexts/ModalsContext";
-import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
-import {
-  FilterValue,
-  SorterResult,
-  TableCurrentDataSource,
-} from "antd/lib/table/interface";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
+import useSearchTable, {
+  useFilterSortPaginationForTable,
+} from "../hooks/searchTableHooks";
 
 export default function Requirements() {
   const { t } = useTranslation();
-  const { showLoadingMessage } = useShowLoadingMessage();
-  const { showNotification } = useShowNotification();
   const location = useLocation();
-  const [loadingTable, setLoadingTable] = useState(true);
   const { detailedRequirementModalData } = useContext(ModalsContext);
-  const [type, setType] = useState(getRouteType(location.pathname));
-  const [isOpenModal, setIsOpenModal] = useState(false);
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
+  const searchValueRef = useRef<TablePageContentRef>(null);
+  const { showLoadingMessage } = useShowLoadingMessage();
+  const { showNotification } = useShowNotification();
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
   const { cancelRequirement } = useCancelRequirement();
   const { getBasicRateData, modalDataRate } = useCulminate();
-
+  const [type, setType] = useState(getRouteType(location.pathname));
+  const { searchTable, responseData, error, errorMsg } = useSearchTable(
+    dataUser.uid,
+    TableTypes.REQUIREMENT,
+    EntityType.SUBUSER,
+    type
+  );
+  const {
+    currentPage,
+    currentPageSize,
+    setCurrentPage,
+    fieldSort,
+    filteredInfo,
+    handleChangePageAndPageSize,
+    handleSearch,
+    reset,
+  } = useFilterSortPaginationForTable();
+  const [loadingTable, setLoadingTable] = useState(true);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [total, setTotal] = useState(0);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
   const [tableContent, setTableContent] = useState<TableTypeRequirement>({
     type: TableTypes.REQUIREMENT,
@@ -80,7 +95,11 @@ export default function Requirements() {
     hiddenColumns: [TableColumns.CATEGORY],
     nameColumnHeader: t(getLabelFromRequirementType(type)),
     onButtonClick: handleOnButtonClick,
-    total: 0,
+    total,
+    page: currentPage,
+    pageSize: currentPageSize,
+    fieldSort,
+    filteredInfo,
   });
 
   /** Verificar si hay una solicitud pendiente */
@@ -95,6 +114,7 @@ export default function Requirements() {
         false,
         1,
         noPaginationPageSize,
+        Action.SHOW_OFFERS,
         detailedRequirementModalData.requirement
       );
     }
@@ -119,55 +139,33 @@ export default function Requirements() {
 
   /* Obtener lista inicialmente */
 
-  const [apiParams, setApiParams] = useState<useApiParams>({
-    service: getRequirementsBySubUserService(
-      dataUser.uid,
-      1,
-      pageSizeOptionsSt[0]
-    ),
-    method: "get",
-  });
-
-  const { responseData, error, errorMsg, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
+  useEffect(() => {
+    clearSearchValue();
+    reset();
+    searchTable({ page: 1, pageSize: currentPageSize }, setLoadingTable);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type]);
 
   useEffect(() => {
     setType(getRouteType(location.pathname));
   }, [location]);
 
   useEffect(() => {
-    setTableContent((prev) => {
-      return {
-        ...prev,
-        //total: 100, // r3v
-        subType: type,
-        nameColumnHeader: t(getLabelFromRequirementType(type)),
-      };
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type]);
-
-  useEffect(() => {
-    if (apiParams.service) fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParams]);
-
-  useEffect(() => {
     if (responseData) {
       setTableData();
     } else if (error) {
-      setTableContent({
-        type: TableTypes.REQUIREMENT,
-        data: [],
-        subType: type,
-        hiddenColumns: [TableColumns.CATEGORY],
+      setCurrentPage(1);
+      setTotal(0);
+      setTableContent((prev) => ({
+        ...prev,
         nameColumnHeader: t(getLabelFromRequirementType(type)),
-        onButtonClick: handleOnButtonClick,
-        total: 0,
-      });
+        data: [],
+        total,
+        page: currentPage,
+        pageSize: currentPageSize,
+        fieldSort,
+        filteredInfo,
+      }));
       setLoadingTable(false);
       showNotification("error", errorMsg);
     }
@@ -222,6 +220,12 @@ export default function Requirements() {
 
   /** Funciones */
 
+  function clearSearchValue() {
+    if (searchValueRef.current) {
+      searchValueRef.current.resetSearchValue();
+    }
+  }
+
   async function setTableData() {
     try {
       const data: Requirement[] = responseData.data.map((e: any) =>
@@ -232,15 +236,17 @@ export default function Requirements() {
           mainDataUser
         )
       );
-      setTableContent({
-        type: TableTypes.REQUIREMENT,
+      setTotal(responseData.res?.totalDocuments);
+      setTableContent((prev) => ({
+        ...prev,
+        nameColumnHeader: t(getLabelFromRequirementType(type)),
         data,
-        subType: RequirementType.GOOD,
-        hiddenColumns: [TableColumns.CATEGORY],
-        nameColumnHeader: t("goods"),
-        onButtonClick: handleOnButtonClick,
-        total: responseData.res?.totalDocuments,
-      });
+        total,
+        page: currentPage,
+        pageSize: currentPageSize,
+        fieldSort,
+        filteredInfo,
+      }));
     } catch (error) {
       console.log(error);
       showNotification("error", t("errorOccurred"));
@@ -250,7 +256,7 @@ export default function Requirements() {
   }
 
   async function handleOnButtonClick(action: Action, requirement: Requirement) {
-    console.log(requirement);
+    // console.log(requirement);
     switch (action) {
       case Action.SHOW_OFFERS: {
         getOffersByRequirementId(
@@ -260,6 +266,7 @@ export default function Requirements() {
           false,
           1,
           noPaginationPageSize,
+          action,
           requirement
         );
         break;
@@ -282,6 +289,7 @@ export default function Requirements() {
               setDataModal({
                 type: ModalTypes.OFFER_SUMMARY,
                 data: { offer, requirement: requirement, user: fullUser },
+                action,
               });
               setIsOpenModal(true);
             } else {
@@ -298,6 +306,7 @@ export default function Requirements() {
         setDataModal({
           type: ModalTypes.REPUBLISH_REQUIREMENT,
           data: { requirementId: requirement.key, type: requirement.type },
+          action,
         });
         setIsOpenModal(true);
         break;
@@ -305,6 +314,7 @@ export default function Requirements() {
       case Action.FINISH: {
         if (requirement.offerId)
           getBasicRateData(
+            requirement.key,
             requirement.key,
             requirement.offerId,
             true,
@@ -324,7 +334,9 @@ export default function Requirements() {
               deleteRequirement(requirement.key);
             },
             text: t("deleteRequirementConfirmation"),
+            id: requirement.key,
           },
+          action,
         });
         setIsOpenModal(true);
         break;
@@ -341,11 +353,13 @@ export default function Requirements() {
               requirementId: requirement.key,
               fromRequirementTable: true,
               canceledByCreator: false,
+              rowId: requirement.key,
             },
+            action,
           });
           setIsOpenModal(true);
         } else if (requirement.state == RequirementState.PUBLISHED)
-          cancelRequirement(requirement.key);
+          cancelRequirement(requirement.key, action);
         break;
       }
     }
@@ -358,28 +372,8 @@ export default function Requirements() {
     });
   }
 
-  function handleSearch(e: ChangeEvent<HTMLInputElement>) {
-    console.log(e.target.value);
-  }
-
   function handleCloseModal() {
     setIsOpenModal(false);
-  }
-
-  function handleChangePageAndPageSize({
-    page,
-    pageSize,
-    filters,
-    extra,
-  }: OnChangePageAndPageSizeTypeParams) {
-    console.log(extra);
-    if (!filters || (filters && filters.state === null)) {
-      setLoadingTable(true);
-      setApiParams({
-        service: getRequirementsBySubUserService(dataUser.uid, page, pageSize),
-        method: "get",
-      });
-    }
   }
 
   return (
@@ -390,16 +384,31 @@ export default function Requirements() {
         isOpen={isOpenModal}
         onClose={handleCloseModal}
         style={mainModalScrollStyle}
+        loadingConfirm={loadingDelete}
       />
+      {/* <ModalContainer // para seleccionar oferta
+        content={dataModal}
+        isOpen={isOpenModal}
+        onClose={handleOnCloseModal}
+      /> */}
       <TablePageContent
         title={t("myRequirements")}
         titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
         subtitle={`${t("listOf")} ${t(getLabelFromRequirementType(type))}`}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
-        onSearch={handleSearch}
+        onSearch={(e) => handleSearch(e, searchTable)}
         loading={loadingTable}
-        onChangePageAndPageSize={handleChangePageAndPageSize}
+        onChangePageAndPageSize={(params) =>
+          handleChangePageAndPageSize(
+            params,
+            fieldNameSearchRequestRequirement,
+            searchTable,
+            setLoadingTable
+          )
+        }
+        total={total}
+        ref={searchValueRef}
       />
     </>
   );

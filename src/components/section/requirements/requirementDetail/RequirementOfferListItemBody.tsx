@@ -7,8 +7,8 @@ import { ListsContext } from "../../../../contexts/ListsContext";
 import { useContext, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { IdValueMap, IdValueObj } from "../../../../models/Interfaces";
-import PriceInHeader from "../../../common/PriceInHeader";
-import ImagesAndDocs from "../../../common/ImagesAndDocs";
+import PriceInHeader from "../../../common/utils/PriceInHeader";
+import ImagesAndDocs from "../../../common/utils/ImagesAndDocs";
 
 interface RequirementOfferListItemBodyProps {
   offer: Offer;

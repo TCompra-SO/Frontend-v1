@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useDescriptionCRRules } from "../../../hooks/validators";
+import { useDescriptionCRRules } from "../../../hooks/validatorHooks";
 import { Form } from "antd";
 import TextAreaContainer from "../../containers/TextAreaContainer";
 

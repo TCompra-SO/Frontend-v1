@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { MainState } from "../models/Redux";
 import { decryptData } from "../utilities/crypto";
-import { getBaseUserForUserSubUser } from "../services/complete/general";
+import { getBaseUserForUserSubUser } from "../services/complete/generalServices";
 import { searchCompanyByNameService } from "../services/requests/authService";
 import useApi from "./useApi";
 import { useApiParams } from "../models/Interfaces";
@@ -34,7 +34,7 @@ export function useLogout() {
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const logoutKey: string = "logout";
 
-  const logout = () => {
+  function logout() {
     if (isLoggedIn) {
       localStorage.removeItem(tokenKey);
       localStorage.removeItem(userDataKey);
@@ -43,7 +43,7 @@ export function useLogout() {
       localStorage.setItem(logoutKey, Date.now().toString());
       localStorage.removeItem(logoutKey);
     }
-  };
+  }
 
   useEffect(() => {
     function handleStorageChange(event: StorageEvent) {

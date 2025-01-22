@@ -1,53 +1,67 @@
 import { useTranslation } from "react-i18next";
 import { Offer } from "../models/MainInterfaces";
-import {
-  Action,
-  ModalTypes,
-  OnChangePageAndPageSizeTypeParams,
-  TableTypes,
-} from "../utilities/types";
+import { Action, EntityType, ModalTypes, TableTypes } from "../utilities/types";
 import ModalContainer from "../components/containers/ModalContainer";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   ModalContent,
   TableTypeOffer,
   useApiParams,
 } from "../models/Interfaces";
-import TablePageContent from "../components/section/table-page/TablePageContent";
-import { mainModalScrollStyle, pageSizeOptionsSt } from "../utilities/globals";
+import TablePageContent, {
+  TablePageContentRef,
+} from "../components/section/table-page/TablePageContent";
+import {
+  fieldNameSearchRequestOffer,
+  mainModalScrollStyle,
+} from "../utilities/globals";
 import {
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
-import {
-  deleteOfferService,
-  getOffersBySubUserService,
-} from "../services/requests/offerService";
+import { deleteOfferService } from "../services/requests/offerService";
 import useApi from "../hooks/useApi";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { transformToOfferFromGetOffersByEntityOrSubUser } from "../utilities/transform";
 import { ModalsContext } from "../contexts/ModalsContext";
-import { useCulminate, useShowDetailOffer } from "../hooks/requirementHook";
-import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
+import { useCulminate, useShowDetailOffer } from "../hooks/requirementHooks";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
+import useSearchTable, {
+  useFilterSortPaginationForTable,
+} from "../hooks/searchTableHooks";
 
 export default function Offers() {
   const { t } = useTranslation();
   const location = useLocation();
-  const { showNotification } = useShowNotification();
-  const { showLoadingMessage } = useShowLoadingMessage();
-  const { detailedOfferModalData } = useContext(ModalsContext);
-  const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
-  const [type, setType] = useState(getRouteType(location.pathname));
-  const [isOpenModal, setIsOpenModal] = useState(false);
+  const searchValueRef = useRef<TablePageContentRef>(null);
+  const { detailedOfferModalData } = useContext(ModalsContext);
+  const { showNotification } = useShowNotification();
+  const { showLoadingMessage } = useShowLoadingMessage();
+  const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
   const { getBasicRateData, modalDataRate } = useCulminate();
+  const [type, setType] = useState(getRouteType(location.pathname));
+  const { searchTable, responseData, error, errorMsg, loading } =
+    useSearchTable(dataUser.uid, TableTypes.OFFER, EntityType.SUBUSER, type);
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
+  const {
+    currentPage,
+    currentPageSize,
+    setCurrentPage,
+    handleChangePageAndPageSize,
+    handleSearch,
+    fieldSort,
+    filteredInfo,
+    reset,
+  } = useFilterSortPaginationForTable();
   const [tableContent, setTableContent] = useState<TableTypeOffer>({
     type: TableTypes.OFFER,
     data: [],
@@ -56,6 +70,10 @@ export default function Offers() {
     nameColumnHeader: t("offers"),
     onButtonClick: handleOnButtonClick,
     total: 0,
+    page: currentPage,
+    pageSize: currentPageSize,
+    fieldSort,
+    filteredInfo,
   });
 
   /** Verificar si hay una solicitud pendiente */
@@ -66,6 +84,7 @@ export default function Offers() {
         detailedOfferModalData.offerId,
         detailedOfferModalData.offerType,
         true,
+        Action.OFFER_DETAIL,
         detailedOfferModalData.offer
       );
     }
@@ -90,35 +109,27 @@ export default function Offers() {
 
   /** Cargar datos iniciales */
 
-  const [apiParams, setApiParams] = useState<useApiParams>({
-    service: getOffersBySubUserService(dataUser.uid, 1, pageSizeOptionsSt[0]),
-    method: "get",
-  });
-
-  const { loading, responseData, error, errorMsg, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
-
   useEffect(() => {
-    if (apiParams.service) fetchData();
+    clearSearchValue();
+    reset();
+    searchTable({ page: 1, pageSize: currentPageSize });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParams]);
+  }, [type]);
 
   useEffect(() => {
     if (responseData) {
       setData();
     } else if (error) {
-      setTableContent({
-        type: TableTypes.OFFER,
+      setCurrentPage(1);
+      setTableContent((prev) => ({
+        ...prev,
         data: [],
-        subType: type,
-        hiddenColumns: [],
-        nameColumnHeader: t("offers"),
-        onButtonClick: handleOnButtonClick,
         total: 0,
-      });
+        page: currentPage,
+        pageSize: currentPageSize,
+        fieldSort,
+        filteredInfo,
+      }));
       showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -169,17 +180,13 @@ export default function Offers() {
     setType(getRouteType(location.pathname));
   }, [location]);
 
-  useEffect(() => {
-    setTableContent((prev) => {
-      return {
-        ...prev,
-        //total: 80, // r3v
-        subType: type,
-      };
-    });
-  }, [type]);
-
   /** Funciones */
+
+  function clearSearchValue() {
+    if (searchValueRef.current) {
+      searchValueRef.current.resetSearchValue();
+    }
+  }
 
   async function setData() {
     try {
@@ -192,15 +199,15 @@ export default function Offers() {
         )
       );
 
-      setTableContent({
-        type: TableTypes.OFFER,
-        data: data,
-        subType: type,
-        hiddenColumns: [],
-        nameColumnHeader: t("offers"),
-        onButtonClick: handleOnButtonClick,
+      setTableContent((prev) => ({
+        ...prev,
+        data,
+        page: currentPage,
+        pageSize: currentPageSize,
+        fieldSort,
+        filteredInfo,
         total: responseData.res?.totalDocuments,
-      });
+      }));
     } catch (error) {
       console.log(error);
       showNotification("error", t("errorOccurred"));
@@ -226,7 +233,7 @@ export default function Offers() {
     console.log(offer);
     switch (action) {
       case Action.OFFER_DETAIL:
-        getOfferDetail(offer.key, offer.type, true, offer);
+        getOfferDetail(offer.key, offer.type, true, action, offer);
         break;
 
       case Action.DELETE: {
@@ -239,7 +246,9 @@ export default function Offers() {
               deleteOffer(offer.key);
             },
             text: t("deleteOfferConfirmation"),
+            id: offer.key,
           },
+          action,
         });
         setIsOpenModal(true);
         break;
@@ -252,6 +261,7 @@ export default function Offers() {
 
       case Action.RATE_CANCELED: {
         getBasicRateData(
+          offer.key,
           offer.key,
           offer.requirementId,
           false,
@@ -270,7 +280,9 @@ export default function Offers() {
             requirementId: offer.requirementId,
             fromRequirementTable: false,
             canceledByCreator: true,
+            rowId: offer.key,
           },
+          action,
         });
         setIsOpenModal(true);
         break;
@@ -278,6 +290,7 @@ export default function Offers() {
 
       case Action.FINISH: {
         getBasicRateData(
+          offer.key,
           offer.key,
           offer.requirementId,
           false,
@@ -290,21 +303,6 @@ export default function Offers() {
     }
   }
 
-  function handleSearch(e: ChangeEvent<HTMLInputElement>) {
-    console.log(e.target.value);
-  }
-
-  function handleChangePageAndPageSize({
-    page,
-    pageSize,
-  }: OnChangePageAndPageSizeTypeParams) {
-    // setLoadingTable(true);
-    setApiParams({
-      service: getOffersBySubUserService(dataUser.uid, page, pageSize),
-      method: "get",
-    });
-  }
-
   return (
     <>
       <ModalContainer
@@ -313,16 +311,26 @@ export default function Offers() {
         isOpen={isOpenModal}
         onClose={handleCloseModal}
         style={mainModalScrollStyle}
+        loadingConfirm={loadingDelete}
       />
       <TablePageContent
         title={t("myOffers")}
         titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
-        subtitle={`${t("listOf")} ${t(getLabelFromRequirementType(type))}`}
+        subtitle={`${t("listOf")} ${t("offers")} - ${t(
+          getLabelFromRequirementType(type)
+        )}`}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
-        onSearch={handleSearch}
+        onSearch={(e) => handleSearch(e, searchTable)}
         loading={loading}
-        onChangePageAndPageSize={handleChangePageAndPageSize}
+        onChangePageAndPageSize={(params) =>
+          handleChangePageAndPageSize(
+            params,
+            fieldNameSearchRequestOffer,
+            searchTable
+          )
+        }
+        ref={searchValueRef}
       />
     </>
   );

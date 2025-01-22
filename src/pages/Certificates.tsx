@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
-import TablePageContent from "../components/section/table-page/TablePageContent";
+import TablePageContent, {
+  TablePageContentRef,
+} from "../components/section/table-page/TablePageContent";
 import { mainModalScrollStyle, pageSizeOptionsSt } from "../utilities/globals";
 import {
   ModalContent,
@@ -27,18 +29,21 @@ import {
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { transformToCertificationItem } from "../utilities/transform";
-import useShowNotification from "../hooks/utilHook";
+import useShowNotification from "../hooks/utilHooks";
 
 export default function Certificates() {
   const location = useLocation();
-  const { showNotification } = useShowNotification();
   const { t } = useTranslation();
   const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
+  const searchValueRef = useRef<TablePageContentRef>(null);
+  const { showNotification } = useShowNotification();
   const [type, setType] = useState(getLastSegmentFromRoute(location.pathname));
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [total, setTotal] = useState(0);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
   const [tableContent, setTableContent] = useState<
     TableTypeCertificatesReceived | TableTypeCertificatesSent
@@ -48,7 +53,7 @@ export default function Certificates() {
     hiddenColumns: [],
     nameColumnHeader: t("name"),
     onButtonClick: handleOnButtonClick,
-    total: 0,
+    total,
   });
 
   /** Obtener lista de solicitudes de certificación */
@@ -79,13 +84,14 @@ export default function Certificates() {
     if (responseDataCertif) {
       setTableData();
     } else if (errorCertif) {
+      setTotal(0);
       setTableContent({
         type: TableTypes.SENT_CERT | TableTypes.RECEIVED_CERT,
         data: [],
         hiddenColumns: [],
         nameColumnHeader: t("name"),
         onButtonClick: handleOnButtonClick,
-        total: 0,
+        total,
       });
       showNotification("error", errorMsgCertif);
     }
@@ -99,6 +105,7 @@ export default function Certificates() {
   }, [location]);
 
   useEffect(() => {
+    clearSearchValue();
     switch (type) {
       case pageSubRoutes.sent:
         setApiParamsCertif({
@@ -126,11 +133,18 @@ export default function Certificates() {
 
   /** Funciones */
 
+  function clearSearchValue() {
+    if (searchValueRef.current) {
+      searchValueRef.current.resetSearchValue();
+    }
+  }
+
   function setTableData() {
     try {
       const data: CertificationItem[] = responseDataCertif.data.map((e: any) =>
         transformToCertificationItem(e)
       );
+      setTotal(responseDataCertif.res?.totalDocuments);
       setTableContent({
         type:
           type == pageSubRoutes.received
@@ -140,7 +154,7 @@ export default function Certificates() {
         hiddenColumns: [],
         nameColumnHeader: t("name"),
         onButtonClick: handleOnButtonClick,
-        total: responseDataCertif.res?.totalDocuments,
+        total,
       });
     } catch (error) {
       console.log(error);
@@ -163,6 +177,7 @@ export default function Certificates() {
               data: certificate,
               readonly: true,
             },
+            action,
           });
           setIsOpenModal(true);
           break;
@@ -176,6 +191,7 @@ export default function Certificates() {
               docs: certificate.certificates,
               data: certificate,
             },
+            action,
           });
           setIsOpenModal(true);
           break;
@@ -186,25 +202,43 @@ export default function Certificates() {
   function handleChangePageAndPageSize({
     page,
     pageSize,
+    filters,
+    extra,
   }: OnChangePageAndPageSizeTypeParams) {
     switch (type) {
       case pageSubRoutes.sent:
-        setApiParamsCertif({
-          service: getSentRequestsByEntityService(mainUserUid, page, pageSize),
-          method: "get",
-        });
+        if (!filters || (filters && filters.state === null)) {
+          setApiParamsCertif({
+            service: getSentRequestsByEntityService(
+              mainUserUid,
+              page,
+              pageSize
+            ),
+            method: "get",
+          });
+        } else if (filters && filters.state) {
+          setTotal(extra?.currentDataSource.length ?? 0);
+        }
         break;
       case pageSubRoutes.received:
-        setApiParamsCertif({
-          service: getReceivedRequestsByEntityService(
-            mainUserUid,
-            page,
-            pageSize
-          ),
-          method: "get",
-        });
+        if (!filters || (filters && filters.state === null)) {
+          setApiParamsCertif({
+            service: getReceivedRequestsByEntityService(
+              mainUserUid,
+              page,
+              pageSize
+            ),
+            method: "get",
+          });
+        } else if (filters && filters.state) {
+          setTotal(extra?.currentDataSource.length ?? 0);
+        }
         break;
     }
+  }
+
+  function handleSearch(e: ChangeEvent<HTMLInputElement>) {
+    console.log(e.target.value);
   }
 
   return (
@@ -226,9 +260,11 @@ export default function Certificates() {
         }
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
-        hideSearch={true}
         loading={loadingCertif}
         onChangePageAndPageSize={handleChangePageAndPageSize}
+        total={total}
+        onSearch={handleSearch}
+        ref={searchValueRef}
       />
     </>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import { mainModalScrollStyle, pageSizeOptionsSt } from "../utilities/globals";
@@ -18,7 +18,7 @@ import {
   useDeleteCertificate,
   useGetCertificatesList,
   useGetRequiredDocsCert,
-} from "../hooks/certificateHook";
+} from "../hooks/certificateHooks";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 
@@ -37,6 +37,7 @@ export default function CertificatesDocs() {
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
   const [tableContent, setTableContent] = useState<TableTypeMyDocuments>({
     type: TableTypes.MY_DOCUMENTS,
@@ -85,6 +86,7 @@ export default function CertificatesDocs() {
         data: {
           text: requiredDocs,
         },
+        action: Action.EDIT_DOCUMENT_LIST_TO_REQUEST,
       });
       setIsOpenModal(true);
     }
@@ -101,6 +103,7 @@ export default function CertificatesDocs() {
       case Action.ADD_CERTIFICATES:
         setDataModal({
           type: ModalTypes.ADD_CERTIFICATES,
+          action,
         });
         setIsOpenModal(true);
         break;
@@ -116,7 +119,7 @@ export default function CertificatesDocs() {
         openDocument(certificate.url);
         break;
       case Action.DELETE:
-        deleteDoc(certificate.uid);
+        deleteDoc(certificate.key);
         break;
     }
   }
@@ -132,7 +135,9 @@ export default function CertificatesDocs() {
           setIsOpenModal(false);
         },
         text: t("deleteDocumentConfirmation"),
+        id: uid,
       },
+      action: Action.DELETE,
     });
     setIsOpenModal(true);
   }
@@ -144,6 +149,10 @@ export default function CertificatesDocs() {
     getCertificatesList(page, pageSize);
   }
 
+  function handleSearch(e: ChangeEvent<HTMLInputElement>) {
+    console.log(e.target.value);
+  }
+
   return (
     <>
       <ModalContainer
@@ -152,6 +161,7 @@ export default function CertificatesDocs() {
         isOpen={isOpenModal}
         onClose={handleCloseModal}
         style={mainModalScrollStyle}
+        loadingConfirm={loadingDeleteCert}
       />
       <TablePageContent
         title={t("certificates")}
@@ -159,7 +169,7 @@ export default function CertificatesDocs() {
         subtitle={t("myDocuments")}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
-        hideSearch={true}
+        onSearch={handleSearch}
         additionalContentHeader={
           <Row gutter={[10, 10]}>
             <ButtonContainer

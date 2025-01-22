@@ -7,6 +7,7 @@ import {
 import TextAreaContainer from "../../containers/TextAreaContainer";
 import { Lengths } from "../../../utilities/lengths";
 import {
+  Action,
   CertificationState,
   ErrorMsgRequestType,
   ErrorRequestType,
@@ -19,7 +20,7 @@ import ModalContainer from "../../containers/ModalContainer";
 import { mainModalScrollStyle } from "../../../utilities/globals";
 import { updateCertificationStateService } from "../../../services/requests/certificateService";
 import { UpdateCertificationStateRequest } from "../../../models/Requests";
-import useShowNotification from "../../../hooks/utilHook";
+import useShowNotification from "../../../hooks/utilHooks";
 
 interface ViewDocsReceivedCertificateProps extends CommonModalProps {
   data: CertificationItem;
@@ -40,6 +41,7 @@ export default function ViewDocsReceivedCertificate(
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
 
   /** Para certificar o rechazar */
@@ -75,12 +77,13 @@ export default function ViewDocsReceivedCertificate(
     setDataModal({
       type: ModalTypes.SELECT_DOCS_CERT,
       data: {
-        certificationId: props.data.uid,
+        certificationId: props.data.key,
         data: {
           userId: props.data.companyId,
           userName: props.data.companyName,
         },
       },
+      action: Action.SELECT_CERT_TO_SEND,
     });
     setIsOpenModal(true);
     props.onClose();
@@ -93,7 +96,7 @@ export default function ViewDocsReceivedCertificate(
     }
     setCertApproved(approve);
     const data: UpdateCertificationStateRequest = {
-      certificateID: props.data.uid,
+      certificateID: props.data.key,
       state: approve
         ? CertificationState.CERTIFIED
         : CertificationState.REJECTED,

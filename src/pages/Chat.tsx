@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import ContentHeader from "../components/common/ContentHeader";
+import ContentHeader from "../components/common/utils/ContentHeader";
 import ChatList from "../components/section/chat/ChatList/ChatList";
 import ChatBody from "../components/section/chat/ChatBody/ChatBody";
 import { ChatListData, ChatMessage } from "../models/MainInterfaces";

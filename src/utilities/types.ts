@@ -7,11 +7,8 @@ import {
   smallModalWidth,
   allItems,
 } from "./globals";
-import {
-  FilterValue,
-  SorterResult,
-  TableCurrentDataSource,
-} from "antd/lib/table/interface";
+import { SorterResult, TableCurrentDataSource } from "antd/lib/table/interface";
+import { TableProps } from "antd";
 
 /**** Estados ***/
 
@@ -165,6 +162,9 @@ export enum Action {
   EDIT_DOCUMENT_LIST_TO_REQUEST = 29,
   VIEW = 30,
   VIEw_SALES_ORDERS = 31,
+  SELECT_CERT_TO_SEND = 32,
+  SEND_MESSAGE = 33,
+  SHOW_USER_INFO = 34,
 }
 
 export const ActionLabel: {
@@ -202,6 +202,9 @@ export const ActionLabel: {
   [Action.VIEW]: "view",
   [Action.VIEw_SALES_ORDERS]: "viewSalesOrders",
   [Action.NONE]: "none",
+  [Action.SELECT_CERT_TO_SEND]: "selectDocsToSend",
+  [Action.SEND_MESSAGE]: "send",
+  [Action.SHOW_USER_INFO]: "showUserInfo",
 };
 
 export const ActionByStateRequirement: {
@@ -285,6 +288,11 @@ export const ActionCertificateFiles: {
 };
 
 /*********/
+
+export enum OrderType {
+  ASC = 1,
+  DESC = 2,
+}
 
 export enum CommonFilter {
   ALL = allSelect,
@@ -464,13 +472,17 @@ export type ErrorRequestType = AxiosError<any, any> | null;
 export type ErrorMsgRequestType = string | null;
 
 /** Tipos para paginación */
+type OnChange = NonNullable<TableProps["onChange"]>;
+export type Filters = Parameters<OnChange>[1];
+
 export type OnChangePageAndPageSizeTypeParams = {
   page: number;
   pageSize: number;
-  filters?: Record<string, FilterValue | null>;
+  filters?: Filters;
   sorter?: SorterResult<any> | SorterResult<any>[];
   extra?: TableCurrentDataSource<any>;
 };
+
 export type OnChangePageAndPageSizeType = (
   params: OnChangePageAndPageSizeTypeParams
 ) => void;

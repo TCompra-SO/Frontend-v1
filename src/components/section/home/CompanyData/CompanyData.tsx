@@ -12,9 +12,9 @@ import { MainState } from "../../../../models/Redux";
 import {
   getFullUser,
   verifyCertificationByUserIdAndCompanyId,
-} from "../../../../services/complete/general";
+} from "../../../../services/complete/generalServices";
 import { useTranslation } from "react-i18next";
-import useShowNotification from "../../../../hooks/utilHook";
+import useShowNotification from "../../../../hooks/utilHooks";
 
 export default function CompanyData() {
   const { t } = useTranslation();
@@ -38,6 +38,7 @@ export default function CompanyData() {
         verifyCertificationState(userId);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   /** Funciones */

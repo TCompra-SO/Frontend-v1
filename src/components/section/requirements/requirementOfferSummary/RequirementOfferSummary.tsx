@@ -1,7 +1,7 @@
 import { Offer, User } from "../../../../models/MainInterfaces";
 import RequirementOfferListItemBody from "../requirementDetail/RequirementOfferListItemBody";
 import { useTranslation } from "react-i18next";
-import FrontImage from "../../../common/FrontImage";
+import FrontImage from "../../../common/utils/FrontImage";
 import RequirementInfoNoTags from "../requirementDetail/RequirementInfoNoTags";
 import { DocType, EntityType } from "../../../../utilities/types";
 

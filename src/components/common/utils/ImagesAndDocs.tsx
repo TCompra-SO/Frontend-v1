@@ -1,9 +1,9 @@
 import { useRef } from "react";
-import { openDocument } from "../../utilities/globalFunctions";
+import { openDocument } from "../../../utilities/globalFunctions";
 import {
   ImagePreviewGroupContainer,
   ImagePreviewGroupContainerRef,
-} from "../containers/ImagePreviewGroupContainer";
+} from "../../containers/ImagePreviewGroupContainer";
 
 interface ImagesAndDocsProps {
   image: string[] | undefined;

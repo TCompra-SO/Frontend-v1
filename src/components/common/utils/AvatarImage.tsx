@@ -1,8 +1,8 @@
 import {
   defaultRequirementImage,
   defaultUserImage,
-} from "../../utilities/globals";
-import AvatarContainer from "../containers/AvatarContainer";
+} from "../../../utilities/globals";
+import AvatarContainer from "../../containers/AvatarContainer";
 
 interface FrontImageProps {
   image: string | string[] | undefined;

@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { defaultUserImage } from "../../../../../utilities/globals";
 import { FullUser } from "../../../../../models/MainInterfaces";
-import RateStarCount from "../../../../common/RateStarCount";
+import RateStarCount from "../../../../common/utils/RateStarCount";
 import { RateStartCountType } from "../../../../../utilities/types";
 import { Tooltip } from "antd";
 

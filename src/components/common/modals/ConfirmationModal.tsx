@@ -4,19 +4,19 @@ import { useTranslation } from "react-i18next";
 interface ConfirmationModalProps {
   text: React.ReactNode;
   icon?: React.ReactNode;
-  onClose: (e: React.SyntheticEvent<Element, Event>) => any;
+  onClose: () => any;
   onAnswer: (ok: boolean) => any;
   loading?: boolean;
   showOnlyAcceptButton?: boolean;
 }
 export default function ConfirmationModal(props: ConfirmationModalProps) {
-  function closeModal(e: React.SyntheticEvent<Element, Event>, ok: boolean) {
-    props.onAnswer(ok);
-    // if (props.loading !== undefined)
-    props.onClose(e);
-  }
-
   const { t } = useTranslation();
+
+  function closeModal(ok: boolean) {
+    props.onAnswer(ok);
+    // if (!ok)
+    props.onClose();
+  }
 
   return (
     <div className="modal-card">
@@ -28,14 +28,14 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
         <div className="alert-info text-center">{props.text}</div>
         <div className="t-flex gap-15 wd-100 alert-btn">
           <ButtonContainer
-            onClick={(e) => closeModal(e, true)}
+            onClick={() => closeModal(true)}
             children={t("acceptButton")}
             className="btn btn-default alert-boton"
             loading={props.loading}
           />
           {!props.showOnlyAcceptButton && (
             <ButtonContainer
-              onClick={(e) => closeModal(e, false)}
+              onClick={() => closeModal(false)}
               children={t("cancelButton")}
               className="btn btn-second alert-boton"
             />

@@ -14,7 +14,7 @@ import {
   UploadCertificateLabels,
 } from "../../../utilities/types";
 import { uploadCertificateService } from "../../../services/requests/certificateService";
-import useShowNotification from "../../../hooks/utilHook";
+import useShowNotification from "../../../hooks/utilHooks";
 import { useTranslation } from "react-i18next";
 
 interface AddCertificatesModalProps extends CommonModalProps {

@@ -1,49 +1,28 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { io } from "socket.io-client";
-import { Requirement } from "../models/MainInterfaces";
-import makeRequest from "../utilities/globalFunctions";
-import { getRequirementsService } from "../services/requests/requirementService";
-import { getRequirementFromData } from "../services/complete/general";
 import { pageSizeOptionsSt } from "../utilities/globals";
+import { HomeContext } from "../contexts/Homecontext";
 
-export default function useSocket(page: number) {
-  const [requirements, setRequirements] = useState<Requirement[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [total, setTotal] = useState(0);
+export default function useSocket() {
+  const { useFilter, retrieveRequirements, page } = useContext(HomeContext);
   const socketAPI = io(import.meta.env.VITE_SOCKET_URL);
 
   useEffect(() => {
-    getData();
+    if (!useFilter) getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  }, [page, useFilter]);
 
   async function getData() {
-    setLoading(true);
-    try {
-      const { responseData }: any = await makeRequest({
-        service: getRequirementsService(page, pageSizeOptionsSt[0]),
-        method: "get",
-      });
-      if (responseData) {
-        const data: (Requirement | null)[] = await Promise.all(
-          responseData.data.map(async (e: any) => getRequirementFromData(e))
-        );
-        setRequirements(data.filter((req) => req !== null));
-        setTotal(responseData.res?.totalDocuments);
-      }
-    } catch (error) {
-      console.log(error);
-      setRequirements([]);
-    }
-    setLoading(false);
+    retrieveRequirements(page, pageSizeOptionsSt[0]);
   }
 
   useEffect(() => {
     async function fetchData() {
       socketAPI.on("getRequeriments", async () => {
-        if (page == 1) {
-          getData();
-        }
+        if (!useFilter)
+          if (page == 1) {
+            getData();
+          }
       });
     }
 
@@ -55,5 +34,5 @@ export default function useSocket(page: number) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  return { requirements, loading, totalRequirements: total };
+  return {};
 }

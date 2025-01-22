@@ -1,6 +1,5 @@
 import { Dropdown, MenuProps, Space } from "antd";
 import Premium from "../items/Premium";
-import Notification from "../items/Notification";
 import Chat from "../items/Chat";
 import UserName from "../items/UserName";
 import Logout from "../items/Logout";
@@ -9,7 +8,7 @@ import ProfileMenu from "../items/ProfileMenu";
 import useWindowSize from "../../../../hooks/useWindowSize";
 import { windowSize } from "../../../../utilities/globals";
 import { useTranslation } from "react-i18next";
-import { useLogout } from "../../../../hooks/authHook";
+import { useLogout } from "../../../../hooks/authHooks";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../../models/Redux";
 import { getSectionFromRoute } from "../../../../utilities/globalFunctions";
@@ -18,6 +17,7 @@ import ButtonContainer from "../../../containers/ButtonContainer";
 import { useNavigate } from "react-router-dom";
 import { UserRoles } from "../../../../utilities/types";
 import ControlPanel from "../items/ControlPanel";
+import Notifications from "../../notifications/Notifications";
 
 interface MainHeaderNoModalsProps {
   onShowMenu?: (show: boolean) => void;
@@ -56,10 +56,11 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
     </Space>
   );
   const notifItem: ReactNode = (
-    <Space style={{ margin: "-10px 0" }}>
-      <Notification forDropdown />
-      {t("notifications")}
-    </Space>
+    // <Space style={{ margin: "-10px 0" }}>
+    //   <Notifications forDropdown />
+    //   {t("notifications")}
+    // </Space>
+    <Notifications forDropdown includeText />
   );
   const chatItem: ReactNode = (
     <Space style={{ margin: "-10px 0" }}>
@@ -205,7 +206,7 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
             {width > windowSize.md && (
               <>
                 <Chat />
-                <Notification />
+                <Notifications />
               </>
             )}
             <UserName />

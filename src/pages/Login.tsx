@@ -7,7 +7,12 @@ import {
 } from "../models/Requests";
 import { useDispatch } from "react-redux";
 import { setUid, setUser, setEmail } from "../redux/userSlice";
-import { DocType, ModalTypes, RegisterTypeId } from "../utilities/types";
+import {
+  Action,
+  DocType,
+  ModalTypes,
+  RegisterTypeId,
+} from "../utilities/types";
 import useApi from "../hooks/useApi";
 import {
   loginService,
@@ -21,7 +26,7 @@ import {
   useEmailRules,
   usePasswordRules,
   useRucRules,
-} from "../hooks/validators";
+} from "../hooks/validatorHooks";
 import InputContainer from "../components/containers/InputContainer";
 import SelectContainer from "../components/containers/SelectContainer";
 import ButtonContainer from "../components/containers/ButtonContainer";
@@ -30,8 +35,8 @@ import { equalServices } from "../utilities/globalFunctions";
 import ModalContainer from "../components/containers/ModalContainer";
 import { AxiosError } from "axios";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
-import { useLoadUserInfo } from "../hooks/authHook";
-import useShowNotification from "../hooks/utilHook";
+import { useLoadUserInfo } from "../hooks/authHooks";
+import useShowNotification from "../hooks/utilHooks";
 
 const LoginType = {
   LOGIN: "login",
@@ -221,7 +226,6 @@ export default function Login(props: LoginProps) {
   return (
     <>
       <ModalContainer
-        className=""
         content={{
           type: ModalTypes.INPUT_EMAIL,
           data: {
@@ -231,6 +235,7 @@ export default function Login(props: LoginProps) {
             buttonText: t("acceptButton"),
           },
           title: t("inputYourEmail"),
+          action: Action.NONE,
         }}
         isOpen={isOpenModal}
         onClose={handleCloseModal}

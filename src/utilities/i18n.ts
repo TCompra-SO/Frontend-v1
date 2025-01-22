@@ -164,7 +164,10 @@ const resources = {
       // Sections
       myProfile: "My Profile",
       myRequirements: "My Requirements",
+      myRequirement: "My Requirement",
+      mySale: "My sale",
       myOffers: "My Offers",
+      myOffer: "My Offer",
       myPurchaseOrders: "My Purchase Orders",
       rrhh: "Human Resources",
       createUsers: "Create users",
@@ -329,6 +332,8 @@ const resources = {
       dataSavedSuccessfully: "Data saved successfully",
       certificationVerificationError: "Certification status could not be verified",
       alreadySentCertificationRequest: "A certification request was already sent to this company",
+      selectDocsToSend: "Select",
+      showUserInfo: "Show user data",
       // Other
       yes: "Yes",
       no: "No",
@@ -422,6 +427,7 @@ const resources = {
       user: "User",
       quantity: "Quantity",
       publishDateAbbrev: "Publish D.",
+      creationDateAbbrev: "Creation D.",
       expirationDateAbbrev: "Expiration D.",
       selectionDateAbbrev: "Selection D.",
       type: "Type",
@@ -513,7 +519,9 @@ const resources = {
       sendMessage: "Sed message",
       resent: "Resent",
       approvedCertifications: "Approved certifications",
-      total: "Total"
+      total: "Total",
+      items: "items",
+      of: 'of'
     },
   },
   es: {
@@ -677,7 +685,10 @@ const resources = {
       // Sections
       myProfile: "Mi Perfil",
       myRequirements: "Mis Requerimientos",
+      myRequirement: "Mi Requerimiento",
+      mySale: "Mi liquidación",
       myOffers: "Mis Ofertas",
+      myOffer: "Mi Oferta",
       myPurchaseOrders: "Mis Órdenes de compra",
       rrhh: "RR. HH.",
       createUsers: "Crear usuarios",
@@ -851,6 +862,8 @@ const resources = {
       dataSavedSuccessfully: "Datos guardados exitosamente",
       certificationVerificationError: "No se pudo verificar el estado de la certificación",
       alreadySentCertificationRequest: "Ya fue enviada una solicitud de certificación a esta empresa",
+      selectDocsToSend: "Seleccionar",
+      showUserInfo: "Mostrar datos de usuario",
       // Other
       yes: "Sí",
       no: "No",
@@ -946,6 +959,7 @@ const resources = {
       user: "Usuario",
       quantity: "Cantidad",
       publishDateAbbrev: "F. Publicación",
+      creationDateAbbrev: "F. Creación",
       expirationDateAbbrev: "F. Expiración",
       selectionDateAbbrev: "F. Selección",
       type: "Tipo",
@@ -1037,7 +1051,9 @@ const resources = {
       sendMessage: "Enviar mensaje",
       resent: "Reenviado",
       approvedCertifications: "Certificaciones aprobadas",
-      total: "Total"
+      total: "Total",
+      items: "items",
+      of: 'de'
     },
   },
 };

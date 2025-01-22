@@ -7,8 +7,8 @@ import { Action, ActionLabel } from "../../../utilities/types";
 import {
   useCancelOffer,
   useCancelRequirement,
-} from "../../../hooks/requirementHook";
-import useShowNotification from "../../../hooks/utilHook";
+} from "../../../hooks/requirementHooks";
+import useShowNotification from "../../../hooks/utilHooks";
 
 interface CancelPurchaseOrderModalProps {
   onClose: () => any;
@@ -27,10 +27,9 @@ export default function CancelPurchaseOrderModal(
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
   const [text, setText] = useState<string>("");
-  const { cancelRequirement, loadingCancelRequirement, responseDataCancelReq } =
+  const { cancelRequirement, loadingCancelRequirement } =
     props.useCancelRequirementHook;
-  const { cancelOffer, loadingCancelOffer, responseDataCancelOffer } =
-    props.useCancelOfferHook;
+  const { cancelOffer, loadingCancelOffer } = props.useCancelOfferHook;
 
   /** Cerrar modal */
 
@@ -44,20 +43,6 @@ export default function CancelPurchaseOrderModal(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingCancelRequirement]);
 
-  /** Realizar acción al cancelar exitosamente */
-
-  useEffect(() => {
-    if (responseDataCancelOffer && props.onCancelSuccess)
-      props.onCancelSuccess(props.offerId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataCancelOffer]);
-
-  useEffect(() => {
-    if (responseDataCancelReq && props.onCancelSuccess)
-      props.onCancelSuccess(props.offerId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataCancelReq]);
-
   /** Funciones */
 
   function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -70,8 +55,18 @@ export default function CancelPurchaseOrderModal(
       return;
     }
     if (props.fromRequirementTable)
-      cancelRequirement(props.requirementId, text.trim());
-    else cancelOffer(props.offerId, props.canceledByCreator, text.trim());
+      cancelRequirement(
+        props.requirementId,
+        Action.CANCEL_REQUIREMENT,
+        text.trim()
+      );
+    else
+      cancelOffer(
+        props.offerId,
+        props.canceledByCreator,
+        Action.CANCEL_OFFER,
+        text.trim()
+      );
   }
 
   return (

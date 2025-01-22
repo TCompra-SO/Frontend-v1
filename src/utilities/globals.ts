@@ -2,11 +2,12 @@ import React from "react";
 import { pageRoutes } from "./routes";
 
 export const dateFormat: string = "DD-MM-YYYY";
+export const dateFormatHomeSearch: string = "YYYY-MM-DD";
 export const dateFormatChatList: string = "DD/MM/YY";
 export const dateFormatChatBody: string = "DD/MM/YYYY";
 export const hourFormatChatBody: string = "h:mm a";
 export const TCompra: string = "TCompra";
-export const pageSizeOptionsSt: number[] = [10, 20, 50];
+export const pageSizeOptionsSt: number[] = [10, 20, 30];
 export const noPaginationPageSize: number = 100;
 export const allSelect: number = 999;
 export const defaultCountry: string = "01";
@@ -33,6 +34,13 @@ export const defaultUserImage: string = "/src/assets/images/user-default.svg";
 export const defaultRequirementImage: string =
   "/src/assets/images/img-prod.svg";
 
+export const onlyLettersAndNumbers: RegExp = /[^a-zA-Z0-9áéíóúÁÉÍÓÚ]/g;
+
+export const companySearchAfterMseconds: number = 400;
+export const tableSearchAfterMseconds: number = 400;
+export const maxLengthStringToSearch: number = 25;
+export const searchSinceLength: number = 3;
+
 // local storage keys
 export const userDataKey: string = "udata";
 export const tokenKey: string = "token";
@@ -48,4 +56,73 @@ export const windowSize = {
 export const mainModalScrollStyle: React.CSSProperties = {
   maxHeight: "95vh",
   overflowY: "scroll",
+};
+
+// Nombre de columnas
+export const nameColumnKey: string = "name";
+export const actionColumnKey: string = "action";
+export const categoryColumnKey: string = "category";
+export const documentColumnKey: string = "document";
+export const locationColumnKey: string = "location";
+export const offersColumnKey: string = "numberOffers";
+export const priceColumnKey: string = "price";
+export const requirementColumnKey: string = "requirementTitle";
+export const stateColumnKey: string = "state";
+export const typeColumnKey: string = "type";
+export const viewColumnKey: string = "view";
+
+// Columnas custom
+export const reqDateColumnKey: string = "publishDate";
+export const reqExpDateColumnKey: string = "expirationDate";
+export const offerDateColumnKey: string = "publishDate";
+export const purcOrderReqTitleColumnKey: string = "requirementTitle";
+export const purcOrderDateColumnKey: string = "selectionDate";
+export const purcOrderOfferTitleColumnKey: string = "offerTitle";
+export const userNameColumnKey: string = "subUserName";
+export const titleColumnKey: string = "title";
+export const certDocDateColumnKey: string = "creationDate";
+
+// Parámetros para sort y filter en tabla
+export const fieldNameSearchRequestRequirement: Record<string, string> = {
+  [nameColumnKey]: "name",
+  [reqDateColumnKey]: "publish_date",
+  [locationColumnKey]: "cityName",
+  [priceColumnKey]: "budget",
+  [userNameColumnKey]: "subUserName",
+  [offersColumnKey]: "number_offers",
+  [titleColumnKey]: "name",
+  [reqExpDateColumnKey]: "completion_date",
+  [stateColumnKey]: "stateID",
+};
+export const fieldNameSearchRequestOffer: Record<string, string> = {
+  [nameColumnKey]: "name",
+  [requirementColumnKey]: "requerimentTitle",
+  [locationColumnKey]: "cityName",
+  [offerDateColumnKey]: "publishDate",
+  [priceColumnKey]: "budget",
+  [userNameColumnKey]: "subUserName",
+  [titleColumnKey]: "name",
+  [stateColumnKey]: "stateID",
+};
+export const fieldNameSearchRequestOrder: Record<string, string> = {
+  [purcOrderReqTitleColumnKey]: "requerimentTitle",
+  [purcOrderDateColumnKey]: "createDate",
+  [purcOrderOfferTitleColumnKey]: "offerTitle",
+  [stateColumnKey]: "stateID",
+};
+export const fieldNameSearchRequestOrderClient: Record<string, string> = {
+  ...fieldNameSearchRequestOrder,
+  [nameColumnKey]: "nameUserProvider",
+};
+export const fieldNameSearchRequestOrderProvider: Record<string, string> = {
+  ...fieldNameSearchRequestOrder,
+  [nameColumnKey]: "userNameClient",
+};
+export const fieldNameSearchRequestAllOrderClient: Record<string, string> = {
+  ...fieldNameSearchRequestOrder,
+  [nameColumnKey]: "nameSubUserClient",
+};
+export const fieldNameSearchRequestAllOrderProvider: Record<string, string> = {
+  ...fieldNameSearchRequestOrder,
+  [nameColumnKey]: "nameSubUserProvider",
 };

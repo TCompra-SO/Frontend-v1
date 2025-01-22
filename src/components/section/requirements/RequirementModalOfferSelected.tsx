@@ -11,7 +11,7 @@ import { filterLabels } from "../../../utilities/colors";
 import { SelectOfferRequest } from "../../../models/Requests";
 import { CommonModalProps } from "../../../models/Interfaces";
 import { selectOfferService } from "../../../services/requests/requirementService";
-import useShowNotification from "../../../hooks/utilHook";
+import useShowNotification from "../../../hooks/utilHooks";
 import {
   ErrorMsgRequestType,
   ErrorRequestType,

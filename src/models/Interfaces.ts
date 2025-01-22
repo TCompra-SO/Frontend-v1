@@ -9,6 +9,7 @@ import {
   CommonFilter,
   PurchaseOrderTableTypes,
   CodeResponseCanOffer,
+  Filters,
 } from "../utilities/types";
 import {
   OfferItemSubUser,
@@ -27,12 +28,14 @@ import {
   SubUserBase,
 } from "./MainInterfaces";
 import useApi, { UseApiType } from "../hooks/useApi";
+import { FieldSort } from "./Requests";
 
 /******** Modals *******/
 
 export interface CommonModalType {
   title?: React.ReactNode;
   type: ModalTypes;
+  action: Action;
 }
 
 export interface ModalCancelPurchaseOrder extends CommonModalType {
@@ -43,6 +46,7 @@ export interface ModalCancelPurchaseOrder extends CommonModalType {
     fromRequirementTable: boolean;
     canceledByCreator: boolean;
     onCancelSuccess?: (offerId: string) => void;
+    rowId: string;
   };
 }
 
@@ -67,7 +71,11 @@ export interface ModalRateCanceled extends CommonModalType {
     basicRateData: BasicRateData;
     type: RequirementType;
     isOffer: boolean;
-    requirementOrOfferId?: string;
+    requirementOrOfferId: string;
+    rowId: string;
+    onSuccess?: (id: string) => void;
+    onExecute?: (id: string) => void;
+    onError?: (id: string) => void;
   };
 }
 
@@ -78,6 +86,7 @@ export interface ModalRateUser extends CommonModalType {
     type: RequirementType;
     isOffer: boolean;
     requirementOrOfferId: string;
+    rowId: string;
   };
 }
 
@@ -108,6 +117,7 @@ export interface ModalConfirmation extends CommonModalType {
     onAnswer: (ok: boolean) => void;
     loading?: boolean;
     showOnlyAcceptButton?: boolean;
+    id?: string;
   };
 }
 
@@ -219,6 +229,10 @@ export interface SelectDocsModalData {
 
 export interface TableHiddenColumns {
   total?: number;
+  page?: number;
+  pageSize?: number;
+  fieldSort?: FieldSort;
+  filteredInfo?: Filters;
   hiddenColumns: TableColumns[];
   nameColumnHeader: string;
   onButtonClick: (action: Action, data: any) => void;

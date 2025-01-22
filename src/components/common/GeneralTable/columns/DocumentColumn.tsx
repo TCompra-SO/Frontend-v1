@@ -8,6 +8,7 @@ import {
 import { Action, TableTypes } from "../../../../utilities/types";
 import { useContext } from "react";
 import { LoadingDataContext } from "../../../../contexts/LoadingDataContext";
+import { documentColumnKey } from "../../../../utilities/globals";
 
 export default function DocumentColumn(
   type: TableTypes,
@@ -23,7 +24,7 @@ export default function DocumentColumn(
 
   const col: ColumnType<PurchaseOrderItemSubUser | PurchaseOrder> = {
     title: t("document"),
-    key: "action",
+    key: documentColumnKey,
     align: "center",
     showSorterTooltip: false,
     width: "130px",

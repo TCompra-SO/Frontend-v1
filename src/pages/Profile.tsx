@@ -31,7 +31,7 @@ import TenureField from "../components/common/formFields/TenureField";
 import SpecialtyField from "../components/common/formFields/SpecialtyField";
 import AboutMeField from "../components/common/formFields/AboutMeField";
 import { useHandleChangeImage } from "../hooks/useHandleChangeImage";
-import useShowNotification from "../hooks/utilHook";
+import useShowNotification from "../hooks/utilHooks";
 // import LocationField from "../components/common/formFields/LocationField";
 
 interface ProfileProps {

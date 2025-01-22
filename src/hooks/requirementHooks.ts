@@ -4,10 +4,13 @@ import useApi from "./useApi";
 import {
   CancelOfferRequest,
   CancelRequirementRequest,
+  HomeFilterRequest,
 } from "../models/Requests";
 import {
   cancelRequirementService,
   getBasicRateDataReqService,
+  getRequirementsService,
+  homeFilterService,
 } from "../services/requests/requirementService";
 import { useTranslation } from "react-i18next";
 import {
@@ -28,7 +31,8 @@ import {
   getOfferById,
   getPurchaseOrderById,
   getRequirementById,
-} from "../services/complete/general";
+  getRequirementFromData,
+} from "../services/complete/generalServices";
 import makeRequest from "../utilities/globalFunctions";
 import {
   transformToBaseUser,
@@ -39,7 +43,8 @@ import { getBaseDataUserService } from "../services/requests/authService";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
-import useShowNotification, { useShowLoadingMessage } from "./utilHook";
+import useShowNotification, { useShowLoadingMessage } from "./utilHooks";
+import { pageSizeOptionsSt } from "../utilities/globals";
 
 /** useCancelRequirement */
 
@@ -47,8 +52,12 @@ export function useCancelRequirement() {
   const { t } = useTranslation();
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
+  const { updateIdAndActionQueue, deleteFromIdAndActionQueue } =
+    useContext(LoadingDataContext);
 
-  const [apiParamsCancel, setApiParamsCancel] = useState<useApiParams>({
+  const [apiParamsCancel, setApiParamsCancel] = useState<
+    useApiParams<CancelRequirementRequest>
+  >({
     service: null,
     method: "get",
   });
@@ -67,6 +76,14 @@ export function useCancelRequirement() {
   });
 
   useEffect(() => {
+    return () => {
+      if (apiParamsCancel.dataToSend?.requerimentID)
+        deleteFromIdAndActionQueue(apiParamsCancel.dataToSend.requerimentID);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     showLoadingMessage(loadingCancel);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingCancel]);
@@ -77,15 +94,25 @@ export function useCancelRequirement() {
   }, [apiParamsCancel]);
 
   useEffect(() => {
-    if (responseDataCancel) {
-      showNotification("success", t("requirementCanceledSuccessfully"));
-    } else if (errorCancel) {
-      showNotification("error", errorMsgCancel);
+    try {
+      if (responseDataCancel) {
+        showNotification("success", t("requirementCanceledSuccessfully"));
+      } else if (errorCancel) {
+        showNotification("error", errorMsgCancel);
+      }
+      if (responseDataCancel || errorCancel)
+        if (apiParamsCancel.dataToSend?.requerimentID)
+          deleteFromIdAndActionQueue(apiParamsCancel.dataToSend.requerimentID);
+    } catch (err) {
+      showNotification("error", t("errorOccurred"));
+      if (apiParamsCancel.dataToSend?.requerimentID)
+        deleteFromIdAndActionQueue(apiParamsCancel.dataToSend.requerimentID);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataCancel, errorCancel]);
 
-  function cancelRequirement(reqId: string, motive?: string) {
+  function cancelRequirement(reqId: string, action: Action, motive?: string) {
+    updateIdAndActionQueue(reqId, action);
     const data: CancelRequirementRequest = {
       requerimentID: reqId,
       reason: motive,
@@ -120,8 +147,10 @@ export function useCancelOffer() {
   const { t } = useTranslation();
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
+  const { updateIdAndActionQueue, deleteFromIdAndActionQueue } =
+    useContext(LoadingDataContext);
 
-  const [apiParams, setApiParams] = useState<useApiParams>({
+  const [apiParams, setApiParams] = useState<useApiParams<CancelOfferRequest>>({
     service: null,
     method: "get",
   });
@@ -140,6 +169,14 @@ export function useCancelOffer() {
   });
 
   useEffect(() => {
+    return () => {
+      if (apiParams.dataToSend?.offerID)
+        deleteFromIdAndActionQueue(apiParams.dataToSend.offerID);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     showLoadingMessage(loading);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
@@ -150,10 +187,19 @@ export function useCancelOffer() {
   }, [apiParams]);
 
   useEffect(() => {
-    if (responseData) {
-      showNotification("success", t("offerCanceledSuccessfully"));
-    } else if (error) {
-      showNotification("error", errorMsg);
+    try {
+      if (responseData) {
+        showNotification("success", t("offerCanceledSuccessfully"));
+      } else if (error) {
+        showNotification("error", errorMsg);
+      }
+      if (responseData || error)
+        if (apiParams.dataToSend?.offerID)
+          deleteFromIdAndActionQueue(apiParams.dataToSend.offerID);
+    } catch (err) {
+      showNotification("error", t("errorOccurred"));
+      if (apiParams.dataToSend?.offerID)
+        deleteFromIdAndActionQueue(apiParams.dataToSend.offerID);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -161,8 +207,10 @@ export function useCancelOffer() {
   function cancelOffer(
     offerId: string,
     canceledByCreator: boolean,
+    action: Action,
     motive?: string
   ) {
+    updateIdAndActionQueue(offerId, action);
     const data: CancelOfferRequest = {
       offerID: offerId,
       reason: motive,
@@ -196,6 +244,7 @@ export function useCancelOffer() {
 
 export function useGetOffersByRequirementId() {
   const { t } = useTranslation();
+  const [action, setAction] = useState<Action>(Action.NONE);
   const { showNotification } = useShowNotification();
   const { showLoadingMessage } = useShowLoadingMessage();
   const {
@@ -224,6 +273,7 @@ export function useGetOffersByRequirementId() {
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: null,
@@ -234,6 +284,16 @@ export function useGetOffersByRequirementId() {
     method: apiParams.method,
     dataToSend: apiParams.dataToSend,
   });
+
+  useEffect(() => {
+    return () => {
+      updateMyRequirementsLoadingViewOffers(false);
+      updateSubUserRequirementsViewOffers(false);
+      updateAllPurchaseOrdersViewOffers(false);
+      updateAllSalesOrdersViewOffers(false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
@@ -317,6 +377,7 @@ export function useGetOffersByRequirementId() {
                   forPurchaseOrder: requirementData.forPurchaseOrder,
                   filters: requirementData.filters ?? filters,
                 },
+                action,
               });
             else if (requirementData.requirement)
               setDataModal({
@@ -327,6 +388,7 @@ export function useGetOffersByRequirementId() {
                   forPurchaseOrder: requirementData.forPurchaseOrder,
                   filters: requirementData.filters ?? filters,
                 },
+                action,
               });
           } else showNotification("error", t("errorOccurred"));
         } else if (error) {
@@ -362,10 +424,13 @@ export function useGetOffersByRequirementId() {
     forPurchaseOrder: boolean,
     page: number,
     pageSize: number,
+    action: Action,
     req?: Requirement,
     filters?: OfferFilters,
     purchaseOrderId?: string
   ) {
+    showLoadingMessage(true);
+    setAction(action);
     if (tableType == TableTypes.REQUIREMENT)
       updateMyRequirementsLoadingViewOffers(true);
     else if (tableType == TableTypes.PURCHASE_ORDER_SUBUSER)
@@ -374,10 +439,10 @@ export function useGetOffersByRequirementId() {
       updateAllPurchaseOrdersViewOffers(true);
     else if (tableType == TableTypes.ALL_SALES_ORDERS)
       updateAllSalesOrdersViewOffers(true);
-    showLoadingMessage(true);
     setDataModal({
       type: ModalTypes.NONE,
       data: {},
+      action: Action.NONE,
     });
     setRequirementData({
       requirementId: reqId,
@@ -413,12 +478,14 @@ export function useShowDetailOffer() {
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
 
   async function getOfferDetail(
     offerId: string,
     type: RequirementType,
     useUserData: boolean,
+    action: Action,
     offerData?: Offer
   ) {
     try {
@@ -426,6 +493,7 @@ export function useShowDetailOffer() {
       setDataModal({
         type: ModalTypes.NONE,
         data: {},
+        action: Action.NONE,
       });
       if (!offerData) {
         const { offer } = await getOfferById(
@@ -451,6 +519,7 @@ export function useShowDetailOffer() {
                 offer,
                 basicRateData,
               },
+              action,
             });
           else showNotification("error", t("errorOccurred"));
         } else showNotification("error", t("errorOccurred"));
@@ -467,6 +536,7 @@ export function useShowDetailOffer() {
               offer: offerData,
               basicRateData,
             },
+            action,
           });
         else showNotification("error", t("errorOccurred"));
       }
@@ -496,16 +566,19 @@ export function useCulminate() {
     idToFinish: string;
     idToGetData: string;
     action: Action;
+    rowId: string;
   }>({
     type: RequirementType.GOOD,
     isOffer: false,
     action: Action.FINISH,
     idToFinish: "",
     idToGetData: "",
+    rowId: "",
   });
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: null,
@@ -536,7 +609,9 @@ export function useCulminate() {
             type: culminateData.type,
             isOffer: culminateData.isOffer,
             requirementOrOfferId: culminateData.idToFinish,
+            rowId: culminateData.rowId,
           },
+          action: culminateData.action,
         });
       } else if (error) {
         showNotification("error", errorMsg);
@@ -551,6 +626,7 @@ export function useCulminate() {
   }, [responseData, error]);
 
   function getBasicRateData(
+    rowId: string,
     idToFinish: string,
     idToGetData: string,
     useOfferService: boolean,
@@ -562,6 +638,7 @@ export function useCulminate() {
     setDataModal({
       type: ModalTypes.NONE,
       data: {},
+      action: Action.NONE,
     });
     setCulminateData({
       type,
@@ -569,7 +646,9 @@ export function useCulminate() {
       idToFinish,
       idToGetData,
       action,
+      rowId,
     });
+    console.log(idToGetData);
     setApiParams({
       service: useOfferService
         ? getBasicRateDataOfferService(idToGetData)
@@ -580,5 +659,50 @@ export function useCulminate() {
   return {
     getBasicRateData,
     modalDataRate: dataModal,
+  };
+}
+
+export function useGetRequirementList() {
+  const [requirements, setRequirements] = useState<Requirement[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  async function getRequirementList(
+    page: number,
+    pageSize?: number,
+    params?: HomeFilterRequest
+  ) {
+    try {
+      setLoading(true);
+      const { responseData }: any = await makeRequest({
+        service: params
+          ? homeFilterService()
+          : getRequirementsService(page, pageSize ?? pageSizeOptionsSt[0]),
+        method: params ? "post" : "get",
+        dataToSend: params ?? undefined,
+      });
+      if (responseData) {
+        const cache = new Map<string, any>(); // Scoped cache for this batch
+        const data: (Requirement | null)[] = await Promise.all(
+          responseData.data.map(async (e: any) =>
+            getRequirementFromData(e, undefined, undefined, cache)
+          )
+        );
+        setRequirements(data.filter((req) => req !== null));
+        setTotal(responseData.res?.totalDocuments);
+      }
+    } catch (error) {
+      console.log(error);
+      setRequirements([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return {
+    getRequirementList,
+    requirements,
+    total,
+    loading,
   };
 }

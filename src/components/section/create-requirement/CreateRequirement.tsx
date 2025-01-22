@@ -6,6 +6,7 @@ import AddImagesField from "../../common/formFields/AddImagesField";
 import AddDocumentField from "../../common/formFields/AddDocumentField";
 import ButtonContainer from "../../containers/ButtonContainer";
 import {
+  Action,
   ErrorMsgRequestType,
   ErrorRequestType,
   ImageRequestLabels,
@@ -45,8 +46,8 @@ import CanOfferField from "../../common/formFields/CanOfferField";
 import { uploadImagesRequirementService } from "../../../services/requests/imageService";
 import { uploadDocsRequirementService } from "../../../services/requests/documentService";
 import ModalContainer from "../../containers/ModalContainer";
-import { useGetRequiredDocsCert } from "../../../hooks/certificateHook";
-import useShowNotification from "../../../hooks/utilHook";
+import { useGetRequiredDocsCert } from "../../../hooks/certificateHooks";
+import useShowNotification from "../../../hooks/utilHooks";
 import { LoadingDataContext } from "../../../contexts/LoadingDataContext";
 import SimpleLoading from "../../../pages/utils/SimpleLoading";
 
@@ -334,6 +335,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
             text: t("noSavedRequiredDocListCertification"),
             showOnlyAcceptButton: true,
           },
+          action: Action.NONE,
         }}
         isOpen={isOpenModal}
         onClose={() => setIsOpenModal(false)}

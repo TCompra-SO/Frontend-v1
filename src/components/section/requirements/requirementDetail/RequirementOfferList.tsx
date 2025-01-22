@@ -31,25 +31,38 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
 
   useEffect(() => {
     setOffersCopy(() => {
-      let prev = [...props.offers];
+      let prev: Offer[] = [...props.offers];
+      let unmatchedOffers: Offer[] = [];
       // Ubicación y tiempo de entrega
-      if (filters.location != allSelect && filters.deliveryTime == allSelect)
-        prev = prev.filter((offer) => offer.location == filters.location);
-      else if (
+      if (filters.location != allSelect && filters.deliveryTime == allSelect) {
+        const { matched, unmatched } = filterOffers(
+          prev,
+          (offer) => offer.location == filters.location
+        );
+        prev = matched;
+        unmatchedOffers = unmatched;
+      } else if (
         filters.location == allSelect &&
         filters.deliveryTime != allSelect
-      )
-        prev = prev.filter(
+      ) {
+        const { matched, unmatched } = filterOffers(
+          prev,
           (offer) => offer.deliveryTime == filters.deliveryTime
         );
-      else if (
+        prev = matched;
+        unmatchedOffers = unmatched;
+      } else if (
         filters.location != allSelect &&
         filters.deliveryTime != allSelect
       ) {
-        prev = prev.filter((offer) => offer.location == filters.location);
-        prev = prev.filter(
-          (offer) => offer.deliveryTime == filters.deliveryTime
+        const { matched, unmatched } = filterOffers(
+          prev,
+          (offer) =>
+            offer.location == filters.location &&
+            offer.deliveryTime == filters.deliveryTime
         );
+        prev = matched;
+        unmatchedOffers = unmatched;
       }
       // Precio y garantía
       if (filters.price == CommonFilter.ASC)
@@ -80,17 +93,33 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
               : Infinity;
           return bVal - aVal;
         });
-      return prev;
+      return props.forPurchaseOrder ? prev.concat(unmatchedOffers) : prev;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
+
+  function filterOffers(
+    offers: Offer[],
+    condition: (offer: Offer) => boolean
+  ): { matched: Offer[]; unmatched: Offer[] } {
+    return offers.reduce(
+      (acc: { matched: Offer[]; unmatched: Offer[] }, offer) => {
+        if (condition(offer)) {
+          acc.matched.push(offer);
+        } else {
+          acc.unmatched.push(offer);
+        }
+        return acc;
+      },
+      { matched: [], unmatched: [] }
+    );
+  }
 
   function handleSuccessfulSelection(offerId: string) {
     setReqCopy((prevObject) => ({
       ...prevObject,
       state: RequirementState.SELECTED,
     }));
-
     setOffersCopy((prev) => {
       const indexToUpdate = prev.findIndex((offer) => offer.key === offerId);
       if (indexToUpdate !== -1) {
@@ -110,10 +139,24 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
     }));
     setOffersCopy((prev) => {
       const indexToUpdate = prev.findIndex((offer) => offer.key === offerId);
+      console.log(indexToUpdate);
       if (indexToUpdate !== -1) {
         prev[indexToUpdate] = {
           ...prev[indexToUpdate],
           state: OfferState.CANCELED,
+        };
+      }
+      return prev;
+    });
+  }
+
+  function handleRateCancel(offerId: string, showOption?: boolean) {
+    setOffersCopy((prev) => {
+      const indexToUpdate = prev.findIndex((offer) => offer.key === offerId);
+      if (indexToUpdate !== -1) {
+        prev[indexToUpdate] = {
+          ...prev[indexToUpdate],
+          cancelRated: showOption ? false : true,
         };
       }
       return prev;
@@ -131,10 +174,12 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
                 showStateAndActions={{
                   show: !props.forPurchaseOrder,
                   requirement: reqCopy,
-                  onSuccessfulSelection: handleSuccessfulSelection,
+                  onSelectionSuccess: handleSuccessfulSelection,
                   onCancelSuccess: handleCancelSuccess,
+                  onRateCancel: handleRateCancel,
                 }}
                 onClose={props.onClose}
+                requirementId={props.requirement.key}
               />
               <RequirementOfferListItemBody offer={offer} showUserData={true} />
             </div>

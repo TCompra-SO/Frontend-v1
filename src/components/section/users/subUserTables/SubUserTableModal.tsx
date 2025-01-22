@@ -1,7 +1,9 @@
 import { useTranslation } from "react-i18next";
 import {
   Action,
+  Filters,
   ModalTypes,
+  OnChangePageAndPageSizeType,
   PurchaseOrderTableTypes,
   RequirementType,
   TableTypes,
@@ -27,10 +29,11 @@ import {
 import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../../../../utilities/routes";
 import ButtonContainer from "../../../containers/ButtonContainer";
-import { useGetOffersByRequirementId } from "../../../../hooks/requirementHook";
+import { useGetOffersByRequirementId } from "../../../../hooks/requirementHooks";
 import useShowNotification, {
   useShowLoadingMessage,
-} from "../../../../hooks/utilHook";
+} from "../../../../hooks/utilHooks";
+import { FieldSort } from "../../../../models/Requests";
 
 interface SubUserTableModalProps {
   user: SubUserBase | null;
@@ -50,15 +53,21 @@ interface SubUserTableModalProps {
         tableContent: PurchaseOrderItemSubUser[];
         subType: PurchaseOrderTableTypes;
         total?: number;
+      }
+    | {
+        tableType: TableTypes.SALES_ORDER_SUBUSER;
+        tableContent: PurchaseOrderItemSubUser[];
+        subType: PurchaseOrderTableTypes;
+        total?: number;
       };
   onTabChange: (tabId: RequirementType | PurchaseOrderTableTypes) => void;
   loading: boolean | undefined;
   tableType: TableTypes;
-  onChangePageAndPageSize?: (
-    page: number,
-    pageSize: number,
-    subType: RequirementType | PurchaseOrderTableTypes
-  ) => void;
+  onChangePageAndPageSize?: OnChangePageAndPageSizeType;
+  currentPage: number;
+  currentPageSize: number;
+  fieldSort: FieldSort | undefined;
+  filteredInfo: Filters | undefined;
 }
 
 export default function SubUserTableModal(props: SubUserTableModalProps) {
@@ -77,7 +86,15 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
+
+  useEffect(() => {
+    return () => {
+      updateSubUserPurchaseOrdersLoadingPdf(false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /** Determinar subType */
 
@@ -160,6 +177,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
           true,
           1,
           noPaginationPageSize,
+          action,
           undefined,
           po.filters
         );
@@ -297,10 +315,12 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
                     nameColumnHeader: t("requirements"),
                     onButtonClick: handleOnButtonClick,
                     total: props.content.total,
+                    page: props.currentPage,
+                    pageSize: props.currentPageSize,
+                    fieldSort: props.fieldSort,
+                    filteredInfo: props.filteredInfo,
                   }}
-                  onChangePageAndPageSize={({ page, pageSize }) =>
-                    props.onChangePageAndPageSize?.(page, pageSize, subType)
-                  }
+                  onChangePageAndPageSize={props.onChangePageAndPageSize}
                   loading={props.loading}
                 />
               </div>
@@ -317,16 +337,19 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
                     nameColumnHeader: t("offers"),
                     onButtonClick: handleOnButtonClick,
                     total: props.content.total,
+                    page: props.currentPage,
+                    pageSize: props.currentPageSize,
+                    fieldSort: props.fieldSort,
+                    filteredInfo: props.filteredInfo,
                   }}
-                  onChangePageAndPageSize={({ page, pageSize }) =>
-                    props.onChangePageAndPageSize?.(page, pageSize, subType)
-                  }
+                  onChangePageAndPageSize={props.onChangePageAndPageSize}
                   loading={props.loading}
                 />
               </div>
             </div>
           )}
-          {props.content.tableType == TableTypes.PURCHASE_ORDER_SUBUSER && (
+          {(props.content.tableType == TableTypes.PURCHASE_ORDER_SUBUSER ||
+            props.content.tableType == TableTypes.SALES_ORDER_SUBUSER) && (
             <div className="card-white" style={{ padding: 0 }}>
               <div className="table-responsive">
                 <GeneralTable
@@ -338,10 +361,12 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
                     onButtonClick: handleOnButtonClick,
                     subType: props.content.subType,
                     total: props.content.total,
+                    page: props.currentPage,
+                    pageSize: props.currentPageSize,
+                    fieldSort: props.fieldSort,
+                    filteredInfo: props.filteredInfo,
                   }}
-                  onChangePageAndPageSize={({ page, pageSize }) =>
-                    props.onChangePageAndPageSize?.(page, pageSize, subType)
-                  }
+                  onChangePageAndPageSize={props.onChangePageAndPageSize}
                   loading={props.loading}
                 />
               </div>

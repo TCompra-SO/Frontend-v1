@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import ButtonContainer from "../../../../containers/ButtonContainer";
 import {
+  Action,
   CantOfferMotives,
   CertificationState,
   EntityType,
@@ -22,7 +23,7 @@ import useApi from "../../../../../hooks/useApi";
 import { ModalsContext } from "../../../../../contexts/ModalsContext";
 import useShowNotification, {
   useShowLoadingMessage,
-} from "../../../../../hooks/utilHook";
+} from "../../../../../hooks/utilHooks";
 
 interface CantOfferMessageProps {
   offerId: string;
@@ -49,6 +50,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
 
   /* Para eliminar */
@@ -221,7 +223,9 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
           });
         },
         text: t("deleteOfferConfirmation"),
+        id: props.offerId,
       },
+      action: Action.DELETE,
     });
     setIsOpenModal(true);
   }
@@ -237,6 +241,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
             userName: props.requirement.user.name,
           },
         },
+        action: Action.SELECT_CERT_TO_SEND,
       });
     setIsOpenModal(true);
   }

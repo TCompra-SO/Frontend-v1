@@ -3,7 +3,7 @@ import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import InputContainer from "../../containers/InputContainer";
 import { ReactNode } from "react";
-import { useEmailRules } from "../../../hooks/validators";
+import { useEmailRules } from "../../../hooks/validatorHooks";
 
 interface InputEmailModalProps {
   title?: React.ReactNode;

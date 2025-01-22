@@ -1,10 +1,24 @@
 import { Table, TableProps } from "antd";
 import {
   OnChangePageAndPageSizeType,
+  PurchaseOrderTableTypes,
   TableColumns,
   TableTypes,
 } from "../../../utilities/types";
-import { pageSizeOptionsSt } from "../../../utilities/globals";
+import {
+  certDocDateColumnKey,
+  offerDateColumnKey,
+  offersColumnKey,
+  pageSizeOptionsSt,
+  purcOrderDateColumnKey,
+  purcOrderOfferTitleColumnKey,
+  purcOrderReqTitleColumnKey,
+  reqDateColumnKey,
+  reqExpDateColumnKey,
+  requirementColumnKey,
+  titleColumnKey,
+  userNameColumnKey,
+} from "../../../utilities/globals";
 import ImageColumn from "./columns/ImageColumn";
 import NameColumn from "./columns/NameColumn";
 import LocationColumn from "./columns/LocationColumn";
@@ -30,6 +44,7 @@ import {
   CertificateFile,
   CertificationItem,
   SubUserBase,
+  KeyInterface,
 } from "../../../models/MainInterfaces";
 import { ColumnType } from "antd/es/table";
 import { useTranslation } from "react-i18next";
@@ -38,7 +53,6 @@ import GeneralColumnNumber from "./columns/GeneralColumnNumber";
 import TypeColumn from "./columns/TypeColumn";
 import ViewColumn from "./columns/ViewColumn";
 import DocumentColumn from "./columns/DocumentColumn";
-import { getLabelFromPurchaseOrderType } from "../../../utilities/globalFunctions";
 import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../../../utilities/routes";
 import RequirementInfo from "../../section/requirements/requirementDetail/RequirementInfo";
@@ -49,6 +63,7 @@ interface GeneralTableProps {
   loading?: boolean;
   onRowAction?: boolean;
   onChangePageAndPageSize?: OnChangePageAndPageSizeType;
+  total?: number;
 }
 
 export default function GeneralTable(props: GeneralTableProps) {
@@ -57,6 +72,7 @@ export default function GeneralTable(props: GeneralTableProps) {
   const pageSizeOptions = pageSizeOptionsSt;
 
   let columns: Array<
+    | ColumnType<KeyInterface>
     | ColumnType<Offer>
     | ColumnType<Requirement>
     | ColumnType<PurchaseOrder>
@@ -147,6 +163,7 @@ export default function GeneralTable(props: GeneralTableProps) {
     style: { width: "100%" },
     bordered: false,
     onChange: (pagination, filters, sorter, extra) => {
+      // console.log(pagination, filters, sorter);
       if (
         props.onChangePageAndPageSize &&
         pagination.current &&
@@ -164,9 +181,10 @@ export default function GeneralTable(props: GeneralTableProps) {
       pageSizeOptions,
       showSizeChanger: props.content.type != TableTypes.HOME,
       // onChange: props.onChangePageAndPageSize,
-      total: props.content.total,
-      showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
-      // current: 2,
+      total: props.total ?? props.content.total,
+      showTotal: (total, range) =>
+        `${range[0]}-${range[1]} ${t("of")} ${total} ${t("items")}`,
+      current: props.content.page,
     },
   };
 
@@ -268,6 +286,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         ></Table>
       );
     case TableTypes.PURCHASE_ORDER_SUBUSER:
+    case TableTypes.SALES_ORDER_SUBUSER:
       getPurchaseOrderSubUserColumns();
       return (
         <Table
@@ -346,22 +365,32 @@ export default function GeneralTable(props: GeneralTableProps) {
       NameColumn(
         props.content.type,
         props.content.nameColumnHeader,
-        visibility[TableColumns.NAME]
+        visibility[TableColumns.NAME],
+        props.content.fieldSort
       ),
       CategoryColumn(props.content.type, visibility[TableColumns.CATEGORY]),
-      LocationColumn(visibility[TableColumns.LOCATION]),
+      LocationColumn(
+        visibility[TableColumns.LOCATION],
+        props.content.fieldSort
+      ),
       GeneralDateColumn(
         t("dateColumn"),
-        "publishDate",
-        visibility[TableColumns.PUBLISH_DATE]
+        reqDateColumnKey,
+        visibility[TableColumns.PUBLISH_DATE],
+        props.content.fieldSort
       ),
-      PriceColumn(visibility[TableColumns.PRICE]),
+      PriceColumn(visibility[TableColumns.PRICE], props.content.fieldSort),
       OffersColumn(
         props.content.type,
         props.content.onButtonClick,
-        visibility[TableColumns.OFFERS]
+        visibility[TableColumns.OFFERS],
+        props.content.fieldSort
       ),
-      StateColumn(props.content.type, visibility[TableColumns.STATE]),
+      StateColumn(
+        props.content.type,
+        visibility[TableColumns.STATE],
+        props.content.filteredInfo
+      ),
       ActionColumn(
         props.content.type,
         props.content.onButtonClick,
@@ -376,17 +405,30 @@ export default function GeneralTable(props: GeneralTableProps) {
       NameColumn(
         props.content.type,
         props.content.nameColumnHeader,
-        visibility[TableColumns.NAME]
+        visibility[TableColumns.NAME],
+        props.content.fieldSort
       ),
-      RequirementColumn(true, visibility[TableColumns.REQUIREMENT]),
-      LocationColumn(visibility[TableColumns.LOCATION]),
+      RequirementColumn(
+        true,
+        visibility[TableColumns.REQUIREMENT],
+        props.content.fieldSort
+      ),
+      LocationColumn(
+        visibility[TableColumns.LOCATION],
+        props.content.fieldSort
+      ),
       GeneralDateColumn(
         t("dateColumn"),
-        "publishDate",
-        visibility[TableColumns.PUBLISH_DATE]
+        offerDateColumnKey,
+        visibility[TableColumns.PUBLISH_DATE],
+        props.content.fieldSort
       ),
-      PriceColumn(visibility[TableColumns.PRICE]),
-      StateColumn(props.content.type, visibility[TableColumns.STATE]),
+      PriceColumn(visibility[TableColumns.PRICE], props.content.fieldSort),
+      StateColumn(
+        props.content.type,
+        visibility[TableColumns.STATE],
+        props.content.filteredInfo
+      ),
       ActionColumn(
         props.content.type,
         props.content.onButtonClick,
@@ -406,25 +448,35 @@ export default function GeneralTable(props: GeneralTableProps) {
           props.content.type,
           props.content.nameColumnHeader,
           visibility[TableColumns.NAME],
+          props.content.fieldSort,
           props.content.subType
         ),
-
         GeneralColumnString(
-          t("requirement"),
-          "requirementTitle",
+          t(
+            props.content.subType == PurchaseOrderTableTypes.ISSUED
+              ? props.content.type == TableTypes.PURCHASE_ORDER
+                ? "myRequirement"
+                : "mySale"
+              : "myOffer"
+          ),
+          props.content.subType == PurchaseOrderTableTypes.ISSUED
+            ? purcOrderReqTitleColumnKey
+            : purcOrderOfferTitleColumnKey,
           true,
           130,
-          visibility[TableColumns.REQUIREMENT]
+          visibility[TableColumns.REQUIREMENT],
+          props.content.fieldSort
         ),
         GeneralDateColumn(
-          t("selectionDateAbbrev"),
-          "selectionDate",
-          visibility[TableColumns.SELECTION_DATE]
+          t("dateColumn"),
+          purcOrderDateColumnKey,
+          visibility[TableColumns.SELECTION_DATE],
+          props.content.fieldSort
         ),
-        TypeColumn(visibility[TableColumns.TYPE]),
         StateColumn(
           props.content.type,
           visibility[TableColumns.STATE],
+          props.content.filteredInfo,
           props.content.subType
         ),
         ActionColumn(
@@ -434,6 +486,8 @@ export default function GeneralTable(props: GeneralTableProps) {
           props.content.subType
         ),
       ];
+      if (props.content.type == TableTypes.PURCHASE_ORDER)
+        columns.splice(3, 0, TypeColumn(visibility[TableColumns.TYPE]));
       return columns;
     }
     return [];
@@ -444,18 +498,29 @@ export default function GeneralTable(props: GeneralTableProps) {
       NameColumn(
         props.content.type,
         props.content.nameColumnHeader,
-        visibility[TableColumns.NAME]
+        visibility[TableColumns.NAME],
+        props.content.fieldSort
       ),
-      GeneralColumnString(t("user"), "subUser.name", true),
+      GeneralColumnString(
+        t("user"),
+        userNameColumnKey,
+        true,
+        undefined,
+        visibility[TableColumns.USERNAME],
+        props.content.fieldSort
+      ),
       GeneralDateColumn(
         t("dateColumn"),
-        "publishDate",
-        visibility[TableColumns.PUBLISH_DATE]
+        reqDateColumnKey,
+        visibility[TableColumns.PUBLISH_DATE],
+        props.content.fieldSort
       ),
       // CategoryColumn(props.content.type, visibility[TableColumns.CATEGORY]),
-      LocationColumn(visibility[TableColumns.LOCATION]),
-
-      PriceColumn(visibility[TableColumns.PRICE]),
+      LocationColumn(
+        visibility[TableColumns.LOCATION],
+        props.content.fieldSort
+      ),
+      PriceColumn(visibility[TableColumns.PRICE], props.content.fieldSort),
       // OffersColumn(
       //   props.content.type,
       //   props.content.onButtonClick,
@@ -463,10 +528,16 @@ export default function GeneralTable(props: GeneralTableProps) {
       // ),
       GeneralColumnNumber(
         t("offers"),
-        "numberOffers",
-        visibility[TableColumns.OFFERS]
+        offersColumnKey,
+        visibility[TableColumns.OFFERS],
+        92,
+        props.content.fieldSort
       ),
-      StateColumn(props.content.type, visibility[TableColumns.STATE]),
+      StateColumn(
+        props.content.type,
+        visibility[TableColumns.STATE],
+        props.content.filteredInfo
+      ),
       ViewColumn(
         TableTypes.ALL_REQUIREMENTS,
         props.content.onButtonClick,
@@ -481,17 +552,34 @@ export default function GeneralTable(props: GeneralTableProps) {
       NameColumn(
         props.content.type,
         props.content.nameColumnHeader,
-        visibility[TableColumns.NAME]
+        visibility[TableColumns.NAME],
+        props.content.fieldSort
       ),
-      GeneralColumnString(t("user"), "subUser.name", true),
-      RequirementColumn(true, visibility[TableColumns.REQUIREMENT]),
+      GeneralColumnString(
+        t("user"),
+        userNameColumnKey,
+        true,
+        undefined,
+        visibility[TableColumns.USERNAME],
+        props.content.fieldSort
+      ),
+      RequirementColumn(
+        true,
+        visibility[TableColumns.REQUIREMENT],
+        props.content.fieldSort
+      ),
       GeneralDateColumn(
         t("dateColumn"),
-        "publishDate",
-        visibility[TableColumns.PUBLISH_DATE]
+        offerDateColumnKey,
+        visibility[TableColumns.PUBLISH_DATE],
+        props.content.fieldSort
       ),
-      PriceColumn(visibility[TableColumns.PRICE]),
-      StateColumn(props.content.type, visibility[TableColumns.STATE]),
+      PriceColumn(visibility[TableColumns.PRICE], props.content.fieldSort),
+      StateColumn(
+        props.content.type,
+        visibility[TableColumns.STATE],
+        props.content.filteredInfo
+      ),
       ViewColumn(
         props.content.type,
         props.content.onButtonClick,
@@ -510,28 +598,36 @@ export default function GeneralTable(props: GeneralTableProps) {
         NameColumn(
           props.content.type,
           props.content.nameColumnHeader,
-          visibility[TableColumns.NAME]
+          visibility[TableColumns.NAME],
+          props.content.fieldSort,
+          props.content.subType
         ),
         GeneralColumnString(
-          t("requirement"),
-          "requirementTitle",
+          t(
+            props.content.type == TableTypes.ALL_PURCHASE_ORDERS
+              ? "requirement"
+              : "sale"
+          ),
+          purcOrderReqTitleColumnKey,
           true,
           130,
-          visibility[TableColumns.REQUIREMENT]
+          visibility[TableColumns.REQUIREMENT],
+          props.content.fieldSort
         ),
         GeneralColumnString(
           t("offer"),
-          "offerTitle",
+          purcOrderOfferTitleColumnKey,
           true,
           130,
-          visibility[TableColumns.OFFER]
+          visibility[TableColumns.OFFER],
+          props.content.fieldSort
         ),
         GeneralDateColumn(
-          t("publishDateAbbrev"),
-          "publishDate",
-          visibility[TableColumns.PUBLISH_DATE]
+          t("dateColumn"),
+          purcOrderDateColumnKey,
+          visibility[TableColumns.PUBLISH_DATE],
+          props.content.fieldSort
         ),
-        TypeColumn(visibility[TableColumns.TYPE]),
         DocumentColumn(
           props.content.type,
           props.content.onButtonClick,
@@ -540,6 +636,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         StateColumn(
           props.content.type,
           visibility[TableColumns.STATE],
+          props.content.filteredInfo,
           props.content.subType
         ),
         ViewColumn(
@@ -548,7 +645,8 @@ export default function GeneralTable(props: GeneralTableProps) {
           visibility[TableColumns.VIEW]
         ),
       ];
-
+      if (props.content.type == TableTypes.ALL_PURCHASE_ORDERS)
+        columns.splice(4, 0, TypeColumn(visibility[TableColumns.TYPE]));
       return columns;
     }
     return [];
@@ -560,7 +658,8 @@ export default function GeneralTable(props: GeneralTableProps) {
       NameColumn(
         props.content.type,
         props.content.nameColumnHeader,
-        visibility[TableColumns.NAME]
+        visibility[TableColumns.NAME],
+        props.content.fieldSort
       ),
       GeneralColumnString(
         t("email"),
@@ -572,25 +671,29 @@ export default function GeneralTable(props: GeneralTableProps) {
       GeneralDateColumn(
         t("dateColumn"),
         "createdAt",
-        visibility[TableColumns.CREATION_DATE]
+        visibility[TableColumns.CREATION_DATE],
+        props.content.fieldSort
       ),
       GeneralColumnNumber(
         t("goods"),
         "numGoods",
         visibility[TableColumns.GOODS],
-        85
+        85,
+        props.content.fieldSort
       ),
       GeneralColumnNumber(
         t("serviceAbbrev"),
         "numServices",
         visibility[TableColumns.SERVICES],
-        85
+        85,
+        props.content.fieldSort
       ),
       GeneralColumnNumber(
         t("salesAbbrev"),
         "numSales",
         visibility[TableColumns.SALES],
-        85
+        85,
+        props.content.fieldSort
       ),
       ActionColumn(
         props.content.type,
@@ -605,31 +708,36 @@ export default function GeneralTable(props: GeneralTableProps) {
     columns = [
       GeneralColumnString(
         t("title"),
-        "title",
+        titleColumnKey,
         true,
         130,
-        visibility[TableColumns.NAME]
+        visibility[TableColumns.NAME],
+        props.content.fieldSort
       ),
-      PriceColumn(visibility[TableColumns.PRICE]),
+      PriceColumn(visibility[TableColumns.PRICE], props.content.fieldSort),
       GeneralDateColumn(
         t("publishDateAbbrev"),
-        "publishDate",
-        visibility[TableColumns.PUBLISH_DATE]
+        reqDateColumnKey,
+        visibility[TableColumns.PUBLISH_DATE],
+        props.content.fieldSort
       ),
       GeneralDateColumn(
         t("expirationDateAbbrev"),
-        "expirationDate",
-        visibility[TableColumns.EXPIRATION_DATE]
+        reqExpDateColumnKey,
+        visibility[TableColumns.EXPIRATION_DATE],
+        props.content.fieldSort
       ),
-      TypeColumn(visibility[TableColumns.TYPE]),
       GeneralColumnNumber(
         t("offers"),
-        "numberOffers",
-        visibility[TableColumns.OFFERS]
+        offersColumnKey,
+        visibility[TableColumns.OFFERS],
+        92,
+        props.content.fieldSort
       ),
       StateColumn(
         TableTypes.REQUIREMENT_SUBUSER,
-        visibility[TableColumns.STATE]
+        visibility[TableColumns.STATE],
+        props.content.filteredInfo
       ),
       ViewColumn(
         TableTypes.REQUIREMENT_SUBUSER,
@@ -644,26 +752,32 @@ export default function GeneralTable(props: GeneralTableProps) {
     columns = [
       GeneralColumnString(
         t("title"),
-        "title",
+        titleColumnKey,
         true,
         130,
-        visibility[TableColumns.NAME]
+        visibility[TableColumns.NAME],
+        props.content.fieldSort
       ),
       GeneralColumnString(
         t("requirement"),
-        "requirementTitle",
+        requirementColumnKey,
         true,
         130,
-        visibility[TableColumns.REQUIREMENT]
+        visibility[TableColumns.REQUIREMENT],
+        props.content.fieldSort
       ),
-      PriceColumn(visibility[TableColumns.PRICE]),
+      PriceColumn(visibility[TableColumns.PRICE], props.content.fieldSort),
       GeneralDateColumn(
-        t("selectionDateAbbrev"),
-        "selectionDate",
-        visibility[TableColumns.SELECTION_DATE]
+        t("dateColumn"),
+        offerDateColumnKey,
+        visibility[TableColumns.SELECTION_DATE],
+        props.content.fieldSort
       ),
-      TypeColumn(visibility[TableColumns.TYPE]),
-      StateColumn(TableTypes.OFFER_SUBUSER, visibility[TableColumns.STATE]),
+      StateColumn(
+        TableTypes.OFFER_SUBUSER,
+        visibility[TableColumns.STATE],
+        props.content.filteredInfo
+      ),
       ViewColumn(
         TableTypes.OFFER_SUBUSER,
         props.content.onButtonClick,
@@ -674,37 +788,33 @@ export default function GeneralTable(props: GeneralTableProps) {
   }
 
   function getPurchaseOrderSubUserColumns() {
-    if (props.content.type == TableTypes.PURCHASE_ORDER_SUBUSER) {
+    if (
+      props.content.type == TableTypes.PURCHASE_ORDER_SUBUSER ||
+      props.content.type == TableTypes.SALES_ORDER_SUBUSER
+    ) {
       columns = [
         GeneralColumnString(
           t("requirement"),
-          "requirementTitle",
+          requirementColumnKey,
           true,
           130,
-          visibility[TableColumns.REQUIREMENT]
+          visibility[TableColumns.REQUIREMENT],
+          props.content.fieldSort
         ),
         GeneralColumnString(
           t("offer"),
-          "offerTitle",
+          purcOrderOfferTitleColumnKey,
           true,
           130,
-          visibility[TableColumns.OFFER]
+          visibility[TableColumns.OFFER],
+          props.content.fieldSort
         ),
         GeneralDateColumn(
-          t("selectionDateAbbrev"),
-          "selectionDate",
-          visibility[TableColumns.SELECTION_DATE]
+          t("dateColumn"),
+          purcOrderDateColumnKey,
+          visibility[TableColumns.SELECTION_DATE],
+          props.content.fieldSort
         ),
-        GeneralColumnString(
-          t("class"),
-          "subType",
-          false,
-          90,
-          visibility[TableColumns.SUBTYPE],
-          false,
-          getLabelFromPurchaseOrderType
-        ),
-        TypeColumn(visibility[TableColumns.TYPE]),
         DocumentColumn(
           props.content.type,
           props.content.onButtonClick,
@@ -713,6 +823,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         StateColumn(
           TableTypes.PURCHASE_ORDER_SUBUSER,
           visibility[TableColumns.STATE],
+          props.content.filteredInfo,
           props.content.subType
         ),
         ViewColumn(
@@ -721,6 +832,8 @@ export default function GeneralTable(props: GeneralTableProps) {
           visibility[TableColumns.VIEW]
         ),
       ];
+      if (props.content.type == TableTypes.PURCHASE_ORDER_SUBUSER)
+        columns.splice(3, 0, TypeColumn(visibility[TableColumns.TYPE]));
       return columns;
     }
     return [];
@@ -728,20 +841,25 @@ export default function GeneralTable(props: GeneralTableProps) {
 
   function getMyDocumentsCertificateColumns() {
     columns = [
-      // GeneralColumnString(
-      //   t("name"),
-      //   "name",
-      //   true,
-      //   130,
-      //   visibility[TableColumns.NAME]
-      // ),
-      NameColumn(props.content.type, t("name"), visibility[TableColumns.NAME]),
+      NameColumn(
+        props.content.type,
+        t("name"),
+        visibility[TableColumns.NAME],
+        props.content.fieldSort
+      ),
       GeneralColumnString(
         t("document"),
         "documentName",
         true,
         130,
-        visibility[TableColumns.DOCUMENT]
+        visibility[TableColumns.DOCUMENT],
+        props.content.fieldSort
+      ),
+      GeneralDateColumn(
+        t("dateColumn"),
+        certDocDateColumnKey,
+        visibility[TableColumns.CREATION_DATE],
+        props.content.fieldSort
       ),
       ActionColumn(
         props.content.type,
@@ -771,9 +889,14 @@ export default function GeneralTable(props: GeneralTableProps) {
       GeneralDateColumn(
         t("dateColumn"),
         "creationDate",
-        visibility[TableColumns.CREATION_DATE]
+        visibility[TableColumns.CREATION_DATE],
+        props.content.fieldSort
       ),
-      StateColumn(TableTypes.SENT_CERT, visibility[TableColumns.STATE]),
+      StateColumn(
+        TableTypes.SENT_CERT,
+        visibility[TableColumns.STATE],
+        props.content.filteredInfo
+      ),
       ViewColumn(
         TableTypes.SENT_CERT,
         props.content.onButtonClick,
@@ -801,9 +924,14 @@ export default function GeneralTable(props: GeneralTableProps) {
       GeneralDateColumn(
         t("dateColumn"),
         "creationDate",
-        visibility[TableColumns.CREATION_DATE]
+        visibility[TableColumns.CREATION_DATE],
+        props.content.fieldSort
       ),
-      StateColumn(props.content.type, visibility[TableColumns.STATE]),
+      StateColumn(
+        props.content.type,
+        visibility[TableColumns.STATE],
+        props.content.filteredInfo
+      ),
       ViewColumn(
         TableTypes.SENT_CERT,
         props.content.onButtonClick,
@@ -820,22 +948,33 @@ export default function GeneralTable(props: GeneralTableProps) {
         TableTypes.REQUIREMENT,
         props.content.nameColumnHeader,
         visibility[TableColumns.NAME],
+        props.content.fieldSort,
         null,
         true
       ),
       CategoryColumn(TableTypes.REQUIREMENT, visibility[TableColumns.CATEGORY]),
-      LocationColumn(visibility[TableColumns.LOCATION], true),
+      LocationColumn(
+        visibility[TableColumns.LOCATION],
+        props.content.fieldSort,
+        true
+      ),
       GeneralDateColumn(
         t("dateColumn"),
         "publishDate",
         visibility[TableColumns.PUBLISH_DATE],
+        props.content.fieldSort,
         true
       ),
-      PriceColumn(visibility[TableColumns.PRICE], true),
+      PriceColumn(
+        visibility[TableColumns.PRICE],
+        props.content.fieldSort,
+        true
+      ),
       OffersColumn(
         TableTypes.HOME,
         props.content.onButtonClick,
         visibility[TableColumns.OFFERS],
+        props.content.fieldSort,
         true
       ),
       ViewColumn(

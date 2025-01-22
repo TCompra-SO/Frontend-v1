@@ -8,11 +8,15 @@ import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { LoadingDataContext } from "../../../../contexts/LoadingDataContext";
 import ButtonContainer from "../../../containers/ButtonContainer";
+import { offersColumnKey } from "../../../../utilities/globals";
+import { FieldSort } from "../../../../models/Requests";
+import { getSortOrderFromFieldSort } from "../../../../utilities/globalFunctions";
 
 export default function OffersColumn(
   type: TableTypes,
   onButtonClick: (action: Action, data: any) => void,
   hidden: boolean = false,
+  fieldSort?: FieldSort,
   noSorter?: boolean
 ) {
   const { t } = useTranslation();
@@ -21,10 +25,11 @@ export default function OffersColumn(
   const col: ColumnType<Requirement | BasicRequirement> = {
     title: t("offersColumn"),
     dataIndex: "numberOffers",
-    key: "offers",
+    key: offersColumnKey,
     align: "center",
-    sorter: noSorter ? undefined : (a, b) => a.numberOffers - b.numberOffers,
+    sorter: noSorter ? undefined : true,
     showSorterTooltip: false,
+    sortOrder: getSortOrderFromFieldSort(offersColumnKey, fieldSort),
     width: "92px",
     hidden,
     render: (_, record) => {

@@ -1,5 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { CertificationState, ModalTypes } from "../../../../../utilities/types";
+import {
+  Action,
+  CertificationState,
+  ModalTypes,
+} from "../../../../../utilities/types";
 import ModalContainer from "../../../../containers/ModalContainer";
 import { useState } from "react";
 import { ModalContent } from "../../../../../models/Interfaces";
@@ -19,6 +23,7 @@ export default function CertificationData(props: CertificationDataProps) {
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
+    action: Action.NONE,
   });
 
   function openGetCertifiedModal() {
@@ -32,6 +37,7 @@ export default function CertificationData(props: CertificationDataProps) {
           userName: props.user.name,
         },
       },
+      action: Action.SELECT_CERT_TO_SEND,
     });
     setIsOpenModal(true);
   }

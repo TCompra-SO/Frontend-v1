@@ -13,7 +13,7 @@ import {
   TableTypes,
 } from "../../../../utilities/types";
 import { useTranslation } from "react-i18next";
-import { allItems } from "../../../../utilities/globals";
+import { actionColumnKey, allItems } from "../../../../utilities/globals";
 import { ItemType } from "antd/es/menu/interface";
 import { Offer } from "../../../../models/MainInterfaces";
 import { LoadingDataContext } from "../../../../contexts/LoadingDataContext";
@@ -27,11 +27,12 @@ export default function ActionColumn(
   extraParam?: any
 ) {
   const { t } = useTranslation();
-  const { myPurchaseOrdersLoadingPdf } = useContext(LoadingDataContext);
+  const { myPurchaseOrdersLoadingPdf, idAndActionQueue } =
+    useContext(LoadingDataContext);
 
   const col: ColumnType<any> = {
     title: t("actionsColumn"),
-    key: "action",
+    key: actionColumnKey,
     align: "center",
     showSorterTooltip: false,
     width: "130px",
@@ -76,25 +77,34 @@ export default function ActionColumn(
                 ? type == TableTypes.OFFER
                   ? ActionByState[key].reduce<ItemType[]>(
                       (acc, action: Action) => {
-                        const canceledByCreator = (record as Offer)
-                          .canceledByCreator;
-                        if (action == Action.RATE_CANCELED && canceledByCreator)
+                        const { canceledByCreator, cancelRated } =
+                          record as Offer;
+                        if (
+                          action == Action.RATE_CANCELED &&
+                          (canceledByCreator ||
+                            (!canceledByCreator && cancelRated))
+                        )
                           return acc;
                         else
                           acc.push({
                             key: action,
                             label: t(ActionLabel[action]),
                             onClick: () => onButtonClick(action, record),
+                            disabled: idAndActionQueue[record?.key]
+                              ? true
+                              : false,
                           });
                         return acc;
                       },
                       []
                     )
                   : ActionByState[key].map((action: Action) => {
+                      // default
                       return {
                         key: action,
                         label: t(ActionLabel[action]),
                         onClick: () => onButtonClick(action, record),
+                        disabled: idAndActionQueue[record?.key] ? true : false,
                       };
                     })
                 : type == TableTypes.PURCHASE_ORDER
@@ -120,10 +130,11 @@ export default function ActionColumn(
                         key: action,
                         label: t(ActionLabel[action]),
                         onClick: () => onButtonClick(action, record),
-                        disabled:
-                          action == Action.DOWNLOAD_PURCHASE_ORDER
-                            ? myPurchaseOrdersLoadingPdf
-                            : undefined,
+                        disabled: idAndActionQueue[record?.key]
+                          ? true
+                          : action == Action.DOWNLOAD_PURCHASE_ORDER
+                          ? myPurchaseOrdersLoadingPdf
+                          : false,
                       });
                       return acc;
                     },
@@ -151,10 +162,11 @@ export default function ActionColumn(
                         key: action,
                         label: t(ActionLabel[action]),
                         onClick: () => onButtonClick(action, record),
-                        disabled:
-                          action == Action.DOWNLOAD_PURCHASE_ORDER
-                            ? myPurchaseOrdersLoadingPdf
-                            : undefined,
+                        disabled: idAndActionQueue[record?.key]
+                          ? true
+                          : action == Action.DOWNLOAD_PURCHASE_ORDER
+                          ? myPurchaseOrdersLoadingPdf
+                          : false,
                       });
                       return acc;
                     },

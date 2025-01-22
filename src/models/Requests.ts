@@ -1,6 +1,9 @@
+import { FilterValue } from "antd/lib/table/interface";
 import {
   CertificationState,
   CommonFilter,
+  EntityType,
+  OrderType,
   RegisterTypeId,
   UserRoles,
 } from "../utilities/types";
@@ -190,4 +193,34 @@ export interface ResendCertificatesRequest {
 export interface UpdateRequiredDocsRequest {
   companyID: string;
   requiredDocuments: string;
+}
+
+export interface HomeFilterRequest {
+  keyWords?: string;
+  location?: number;
+  category?: number;
+  startDate?: string;
+  endDate?: string;
+  companyId?: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface FieldSort {
+  fieldName?: string;
+  orderType?: OrderType;
+  columnKey?: string;
+}
+
+export interface FieldFilter {
+  filterData?: FilterValue;
+  filterColumn?: string;
+}
+
+export interface SearchTableRequest extends FieldSort, FieldFilter {
+  keyWords?: string;
+  userId: string;
+  page: number;
+  pageSize: number;
+  typeUser: EntityType;
 }

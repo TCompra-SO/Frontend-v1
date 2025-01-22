@@ -2,6 +2,7 @@ import { RequiredDocsForCert } from "../models/Interfaces";
 import {
   BaseUser,
   BasicRateData,
+  BasicRequirement,
   CertificateFile,
   CertificationItem,
   DisplayUser,
@@ -59,6 +60,34 @@ export function transformDataToRequirement(
     req.user = mainUser;
     req.subUser = user;
   } else req.user = user;
+  return req;
+}
+
+export function transformDataToBasicRequirement(
+  data: any,
+  type: RequirementType
+) {
+  const req: BasicRequirement = {
+    subUserName: data.subUserName,
+    userName: data.userName,
+    publishDate: data.publishDate,
+    category: data.category,
+    location: data.location,
+    coin: data.coin,
+    price: data.price,
+    numberOffers: data.numberOffers,
+    state: data.state,
+    title: data.title,
+    key: data.key,
+    type,
+    expirationDate: data.completion_date,
+  };
+  if (data.winOffer) {
+    req.offerId = data.winOffer.uid;
+    req.offerUserId = data.winOffer.entityID;
+    if (data.winOffer.entityID != data.winOffer.userID)
+      req.offerSubUserId = data.winOffer.userID;
+  }
   return req;
 }
 
@@ -141,6 +170,8 @@ export async function transformFromGetRequirementByIdToRequirement(
       subUser,
       numberOffers: data.number_offers,
       type,
+      userName: data.userName,
+      subUserName: data.subUserName,
     };
     if (data.winOffer) {
       req.offerId = data.winOffer.uid;
@@ -325,17 +356,18 @@ export function transformToSubUserProfile(data: any) {
 
 export function transformToCertificateFile(data: any) {
   const doc: CertificateFile = {
-    uid: data.uid,
+    key: data.uid,
     name: data.name,
     documentName: data.documentName,
     url: data.url,
+    creationDate: data.creationDate,
   };
   return doc;
 }
 
 export function transformToCertificationItem(data: any) {
   const cert: CertificationItem = {
-    uid: data.uid,
+    key: data.uid,
     companyId: data.companyId,
     companyName: data.companyName,
     companyDocument: data.companyDocument,

@@ -14,7 +14,7 @@ import useApi, { UseApiType } from "../../../hooks/useApi";
 import { CreateRequirementRequest } from "../../../models/Requests";
 import useShowNotification, {
   useShowLoadingMessage,
-} from "../../../hooks/utilHook";
+} from "../../../hooks/utilHooks";
 import { ProcessFlag, RequirementType } from "../../../utilities/types";
 import { LoadingDataContext } from "../../../contexts/LoadingDataContext";
 
@@ -43,6 +43,12 @@ export default function CreateRequirementFloatButton() {
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
 
   const [avoidClosingModal, setAvoidClosingModal] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      updateCreateRequirementLoading(false);
+    };
+  }, []);
 
   useEffect(() => {
     setIsHomePage(isHome(location.pathname));

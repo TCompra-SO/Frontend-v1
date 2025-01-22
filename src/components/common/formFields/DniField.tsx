@@ -1,4 +1,4 @@
-import { useDniRules, useRucRules } from "../../../hooks/validators";
+import { useDniRules, useRucRules } from "../../../hooks/validatorHooks";
 import { DocType } from "../../../utilities/types";
 import { Form } from "antd";
 import InputContainer from "../../containers/InputContainer";

@@ -1,17 +1,23 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import NoContentModalContainer from "../components/containers/NoContentModalContainer";
 import TablePageContent from "../components/section/table-page/TablePageContent";
 import AddUserModal from "../components/section/users/addUser/AddUserModal";
 import { useTranslation } from "react-i18next";
 import {
   Action,
+  EntityType,
   OnChangePageAndPageSizeTypeParams,
   PurchaseOrderTableTypes,
   RequirementType,
   TableTypes,
 } from "../utilities/types";
 import { TableTypeUsers, useApiParams } from "../models/Interfaces";
-import { mainModalScrollStyle, pageSizeOptionsSt } from "../utilities/globals";
+import {
+  fieldNameSearchRequestOffer,
+  fieldNameSearchRequestRequirement,
+  mainModalScrollStyle,
+  pageSizeOptionsSt,
+} from "../utilities/globals";
 import ButtonContainer from "../components/containers/ButtonContainer";
 import useApi from "../hooks/useApi";
 import {
@@ -20,7 +26,10 @@ import {
 } from "../services/requests/subUserService";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
-import { equalServices } from "../utilities/globalFunctions";
+import {
+  equalServices,
+  getFieldNameObjForOrders,
+} from "../utilities/globalFunctions";
 import SubUserTableModal from "../components/section/users/subUserTables/SubUserTableModal";
 import {
   OfferItemSubUser,
@@ -36,13 +45,10 @@ import {
   transformToSubUserBase,
   transformToSubUserProfile,
 } from "../utilities/transform";
-import { getRequirementsBySubUserService } from "../services/requests/requirementService";
-import { getOffersBySubUserService } from "../services/requests/offerService";
-import {
-  getPurchaseOrdersByClientEntityService,
-  getPurchaseOrdersByProviderEntityService,
-} from "../services/requests/purchaseOrderService";
-import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHook";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
+import useSearchTable, {
+  useFilterSortPaginationForTable,
+} from "../hooks/searchTableHooks";
 
 export default function Users() {
   const { t } = useTranslation();
@@ -52,9 +58,9 @@ export default function Users() {
   const uid = useSelector((state: MainState) => state.user.uid);
   const [action, setAction] = useState<Action>(Action.ADD_USER);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [subTypeOrder, setSubTypeOrder] = useState<PurchaseOrderTableTypes>(
-    PurchaseOrderTableTypes.ISSUED
-  );
+  const [subTypeOrder, setSubTypeOrder] = useState<
+    PurchaseOrderTableTypes | RequirementType
+  >(RequirementType.GOOD);
   const [userData, setUserData] = useState<SubUserBase | null>(null);
   const [userDataEdit, setUserDataEdit] = useState<SubUserProfile | null>(null);
   const [totalReq, setTotalReq] = useState(0);
@@ -64,6 +70,9 @@ export default function Users() {
   const [reqList, setReqList] = useState<RequirementItemSubUser[]>([]);
   const [offerList, setOfferList] = useState<OfferItemSubUser[]>([]);
   const [orderList, setOrderList] = useState<PurchaseOrderItemSubUser[]>([]);
+  const [tableType, setTableType] = useState<TableTypes>(
+    TableTypes.REQUIREMENT
+  );
   const [tableContent, setTableContent] = useState<TableTypeUsers>({
     type: TableTypes.USERS,
     data: [],
@@ -152,163 +161,74 @@ export default function Users() {
 
   /** Obtener lista de requerimientos */
 
-  const [apiParamsReq, setApiParamsReq] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
   const {
-    loading: loadingReq,
-    responseData: responseDataReq,
-    error: errorReq,
-    errorMsg: errorMsgReq,
-    fetchData: fetchDataReq,
-  } = useApi({
-    service: apiParamsReq.service,
-    method: apiParamsReq.method,
-    dataToSend: apiParamsReq.dataToSend,
-  });
+    searchTable,
+    responseData: responseDataTable,
+    error: errorTable,
+    errorMsg: errorMsgTable,
+    loading: loadingTable,
+  } = useSearchTable(
+    userData?.uid ?? "",
+    tableType,
+    EntityType.SUBUSER,
+    subTypeOrder
+  );
+  const {
+    currentPage,
+    currentPageSize,
+    setCurrentPage,
+    fieldSort,
+    filteredInfo,
+    handleChangePageAndPageSize,
+    handleSearch,
+    reset,
+  } = useFilterSortPaginationForTable();
 
   useEffect(() => {
-    if (!isOpenModal) showLoadingMessage(loadingReq);
+    if (!isOpenModal) showLoadingMessage(loadingTable);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingReq]);
+  }, [loadingTable]);
 
   useEffect(() => {
-    if (apiParamsReq.service) fetchDataReq();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsReq]);
-
-  useEffect(() => {
-    if (responseDataReq) {
-      setModalTableDataReq();
-    } else if (errorReq) {
-      setReqList([]);
-      setTotalReq(0);
-      showNotification("error", errorMsgReq);
+    if (responseDataTable) {
+      switch (tableType) {
+        case TableTypes.REQUIREMENT:
+          setModalTableDataReq();
+          break;
+        case TableTypes.OFFER:
+          setModalTableDataOffer();
+          break;
+        case TableTypes.PURCHASE_ORDER:
+          setModalTableDataOrder();
+          break;
+        case TableTypes.SALES_ORDER:
+          setModalTableDataSalesOrder();
+          break;
+      }
+    } else if (errorTable) {
+      switch (tableType) {
+        case TableTypes.REQUIREMENT:
+          setReqList([]);
+          setTotalReq(0);
+          break;
+        case TableTypes.OFFER:
+          setOfferList([]);
+          setTotalOffer(0);
+          break;
+        case TableTypes.PURCHASE_ORDER:
+          setOrderList([]);
+          setTotalPurc(0);
+          break;
+        case TableTypes.SALES_ORDER:
+          setOrderList([]);
+          setTotalSales(0);
+          break;
+      }
+      setCurrentPage(1);
+      showNotification("error", errorMsgTable);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataReq, errorReq]);
-
-  const [apiParamsOffer, setApiParamsOffer] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  /** Obtener lista de ofertas */
-
-  const {
-    loading: loadingOffer,
-    responseData: responseDataOffer,
-    error: errorOffer,
-    errorMsg: errorMsgOffer,
-    fetchData: fetchDataOffer,
-  } = useApi({
-    service: apiParamsOffer.service,
-    method: apiParamsOffer.method,
-    dataToSend: apiParamsOffer.dataToSend,
-  });
-
-  useEffect(() => {
-    if (!isOpenModal) showLoadingMessage(loadingOffer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingOffer]);
-
-  useEffect(() => {
-    if (apiParamsOffer.service) fetchDataOffer();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsOffer]);
-
-  useEffect(() => {
-    if (responseDataOffer) {
-      setModalTableDataOffer();
-    } else if (errorOffer) {
-      setOfferList([]);
-      setTotalOffer(0);
-      showNotification("error", errorMsgOffer);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataOffer, errorOffer]);
-
-  /** Obtener lista de órdenes de compra */
-
-  const [apiParamsOrder, setApiParamsOrder] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingOrder,
-    responseData: responseDataOrder,
-    error: errorOrder,
-    errorMsg: errorMsgOrder,
-    fetchData: fetchDataOrder,
-  } = useApi({
-    service: apiParamsOrder.service,
-    method: apiParamsOrder.method,
-    dataToSend: apiParamsOrder.dataToSend,
-  });
-
-  useEffect(() => {
-    if (!isOpenModal) showLoadingMessage(loadingOrder);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingOrder]);
-
-  useEffect(() => {
-    if (apiParamsOrder.service) fetchDataOrder();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsOrder]);
-
-  useEffect(() => {
-    if (responseDataOrder) {
-      setModalTableDataOrder();
-    } else if (errorOrder) {
-      setOrderList([]);
-      setTotalPurc(0);
-      showNotification("error", errorMsgOrder);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataOrder, errorOrder]);
-
-  /** Obtener lista de órdenes de venta */
-
-  const [apiParamsSales, setApiParamsSales] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingSales,
-    responseData: responseDataSales,
-    error: errorSales,
-    errorMsg: errorMsgSales,
-    fetchData: fetchDataSales,
-  } = useApi({
-    service: apiParamsSales.service,
-    method: apiParamsSales.method,
-    dataToSend: apiParamsSales.dataToSend,
-  });
-
-  useEffect(() => {
-    if (!isOpenModal) showLoadingMessage(loadingSales);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingSales]);
-
-  useEffect(() => {
-    if (apiParamsSales.service) fetchDataSales();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsSales]);
-
-  useEffect(() => {
-    if (responseDataSales) {
-      setModalTableDataSalesOrder();
-    } else if (errorSales) {
-      setOrderList([]);
-      setTotalSales(0);
-      showNotification("error", errorMsgSales);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataSales, errorSales]);
+  }, [responseDataTable, errorTable]);
 
   /** Funciones */
 
@@ -334,67 +254,71 @@ export default function Users() {
 
   function setModalTableDataReq() {
     try {
-      const data: RequirementItemSubUser[] = responseDataReq.data.map(
+      const data: RequirementItemSubUser[] = responseDataTable.data.map(
         (e: any) =>
           transformDataToRequirementItemSubUser(e, RequirementType.GOOD) // r3v
       );
-      setTotalReq(responseDataReq.res?.totalDocuments);
+      setTotalReq(responseDataTable.res?.totalDocuments);
       setReqList(data);
       handleOpenModal();
     } catch (error) {
       console.log(error);
       setReqList([]);
       setTotalReq(0);
+      setCurrentPage(1);
       showNotification("error", t("errorOccurred"));
     }
   }
 
   function setModalTableDataOffer() {
     try {
-      const data: OfferItemSubUser[] = responseDataOffer.data.map(
+      const data: OfferItemSubUser[] = responseDataTable.data.map(
         (e: any) => transformDataToOfferItemSubUser(e, RequirementType.GOOD) // r3v
       );
-      setTotalOffer(responseDataOffer.res?.totalDocuments);
+      setTotalOffer(responseDataTable.res?.totalDocuments);
       setOfferList(data);
       handleOpenModal();
     } catch (error) {
       console.log(error);
       setOfferList([]);
       setTotalOffer(0);
+      setCurrentPage(1);
       showNotification("error", t("errorOccurred"));
     }
   }
 
   function setModalTableDataOrder() {
     try {
-      const data: PurchaseOrderItemSubUser[] = responseDataOrder.data.map(
+      const data: PurchaseOrderItemSubUser[] = responseDataTable.data.map(
         (e: any) =>
           transformToPurchaseOrderItemSubUser(e, PurchaseOrderTableTypes.ISSUED) // r3v
       );
-      setTotalPurc(responseDataOrder.res?.totalDocuments);
+      setTotalPurc(responseDataTable.res?.totalDocuments);
       setOrderList(data);
       handleOpenModal();
     } catch (error) {
       console.log(error);
       setOrderList([]);
       setTotalPurc(0);
+      setCurrentPage(1);
       showNotification("error", t("errorOccurred"));
     }
   }
 
   function setModalTableDataSalesOrder() {
     try {
-      const data: PurchaseOrderItemSubUser[] = responseDataSales.data.map(
+      const data: PurchaseOrderItemSubUser[] = responseDataTable.data.map(
         (e: any) =>
           transformToPurchaseOrderItemSubUser(e, PurchaseOrderTableTypes.ISSUED) // r3v
       );
-      setTotalSales(responseDataSales.res?.totalDocuments);
+      setTotalSales(responseDataTable.res?.totalDocuments);
       setOrderList(data);
       handleOpenModal();
     } catch (error) {
       console.log(error);
       setOrderList([]);
       setTotalSales(0);
+      setCurrentPage(1);
       showNotification("error", t("errorOccurred"));
     }
   }
@@ -406,15 +330,11 @@ export default function Users() {
 
   function handleCloseModal() {
     setIsOpenModal(false);
-    setSubTypeOrder(PurchaseOrderTableTypes.ISSUED);
+    setSubTypeOrder(RequirementType.GOOD);
   }
 
   function handleOpenModal() {
     setIsOpenModal(true);
-  }
-
-  function handleSearch(e: ChangeEvent<HTMLInputElement>) {
-    console.log(e.target.value);
   }
 
   function handleOnActionClick(action: Action, user: SubUserBase) {
@@ -429,43 +349,52 @@ export default function Users() {
         });
         break;
       case Action.VIEW_REQUIREMENTS:
-        setApiParamsReq({
-          service: getRequirementsBySubUserService(
-            user.uid,
-            1,
-            pageSizeOptionsSt[0]
-          ),
-          method: "get",
-        });
+        setTableType(TableTypes.REQUIREMENT);
+        setSubTypeOrder(RequirementType.GOOD);
+        reset();
+        searchTable(
+          { page: 1, pageSize: currentPageSize },
+          undefined,
+          TableTypes.REQUIREMENT,
+          RequirementType.GOOD,
+          user.uid
+        );
         break;
       case Action.VIEW_OFFERS:
-        setApiParamsOffer({
-          service: getOffersBySubUserService(user.uid, 1, pageSizeOptionsSt[0]),
-          method: "get",
-        });
+        setTableType(TableTypes.OFFER);
+        setSubTypeOrder(RequirementType.GOOD);
+        reset();
+        searchTable(
+          { page: 1, pageSize: currentPageSize },
+          undefined,
+          TableTypes.OFFER,
+          RequirementType.GOOD,
+          user.uid
+        );
         break;
       case Action.VIEW_PURCHASE_ORDERS:
-        setApiParamsOrder({
-          service: getPurchaseOrdersByClientEntityService(
-            user.uid,
-            user.typeID,
-            1,
-            pageSizeOptionsSt[0]
-          ),
-          method: "get",
-        });
+        setTableType(TableTypes.PURCHASE_ORDER);
+        setSubTypeOrder(PurchaseOrderTableTypes.ISSUED);
+        reset();
+        searchTable(
+          { page: 1, pageSize: currentPageSize },
+          undefined,
+          TableTypes.PURCHASE_ORDER,
+          PurchaseOrderTableTypes.ISSUED,
+          user.uid
+        );
         break;
       case Action.VIEw_SALES_ORDERS:
-        setApiParamsSales({
-          service: getPurchaseOrdersByClientEntityService(
-            // r3v
-            user.uid,
-            user.typeID,
-            1,
-            pageSizeOptionsSt[0]
-          ),
-          method: "get",
-        });
+        setTableType(TableTypes.SALES_ORDER);
+        setSubTypeOrder(PurchaseOrderTableTypes.ISSUED);
+        reset();
+        searchTable(
+          { page: 1, pageSize: currentPageSize },
+          undefined,
+          TableTypes.SALES_ORDER,
+          PurchaseOrderTableTypes.ISSUED,
+          user.uid
+        );
         break;
     }
   }
@@ -492,9 +421,19 @@ export default function Users() {
             }}
             user={userData}
             onTabChange={handleTabChange}
-            loading={loadingReq}
+            loading={loadingTable}
             tableType={TableTypes.REQUIREMENT_SUBUSER}
-            onChangePageAndPageSize={handleChangePageAndPageSize}
+            onChangePageAndPageSize={(params) =>
+              handleChangePageAndPageSize(
+                params,
+                fieldNameSearchRequestRequirement,
+                searchTable
+              )
+            }
+            currentPage={currentPage}
+            currentPageSize={currentPageSize}
+            fieldSort={fieldSort}
+            filteredInfo={filteredInfo}
           />
         );
       case Action.VIEW_OFFERS:
@@ -507,9 +446,19 @@ export default function Users() {
             }}
             user={userData}
             onTabChange={handleTabChange}
-            loading={loadingOffer}
+            loading={loadingTable}
             tableType={TableTypes.OFFER_SUBUSER}
-            onChangePageAndPageSize={handleChangePageAndPageSize}
+            onChangePageAndPageSize={(params) =>
+              handleChangePageAndPageSize(
+                params,
+                fieldNameSearchRequestOffer,
+                searchTable
+              )
+            }
+            currentPage={currentPage}
+            currentPageSize={currentPageSize}
+            fieldSort={fieldSort}
+            filteredInfo={filteredInfo}
           />
         );
       case Action.VIEW_PURCHASE_ORDERS:
@@ -518,30 +467,70 @@ export default function Users() {
             content={{
               tableType: TableTypes.PURCHASE_ORDER_SUBUSER,
               tableContent: orderList,
-              subType: subTypeOrder,
+              subType:
+                subTypeOrder == PurchaseOrderTableTypes.ISSUED ||
+                subTypeOrder == PurchaseOrderTableTypes.RECEIVED
+                  ? subTypeOrder
+                  : PurchaseOrderTableTypes.ISSUED,
               total: totalPurc,
             }}
             user={userData}
             onTabChange={handleTabChange}
-            loading={loadingOrder}
+            loading={loadingTable}
             tableType={TableTypes.PURCHASE_ORDER_SUBUSER}
-            onChangePageAndPageSize={handleChangePageAndPageSize}
+            onChangePageAndPageSize={(params) =>
+              handleChangePageAndPageSize(
+                params,
+                getFieldNameObjForOrders(
+                  TableTypes.PURCHASE_ORDER,
+                  subTypeOrder == PurchaseOrderTableTypes.ISSUED ||
+                    subTypeOrder == PurchaseOrderTableTypes.RECEIVED
+                    ? subTypeOrder
+                    : PurchaseOrderTableTypes.ISSUED
+                ),
+                searchTable
+              )
+            }
+            currentPage={currentPage}
+            currentPageSize={currentPageSize}
+            fieldSort={fieldSort}
+            filteredInfo={filteredInfo}
           />
         );
       case Action.VIEw_SALES_ORDERS:
         return (
           <SubUserTableModal
             content={{
-              tableType: TableTypes.PURCHASE_ORDER_SUBUSER,
+              tableType: TableTypes.SALES_ORDER_SUBUSER,
               tableContent: orderList,
-              subType: subTypeOrder,
+              subType:
+                subTypeOrder == PurchaseOrderTableTypes.ISSUED ||
+                subTypeOrder == PurchaseOrderTableTypes.RECEIVED
+                  ? subTypeOrder
+                  : PurchaseOrderTableTypes.ISSUED,
               total: totalSales,
             }}
             user={userData}
             onTabChange={handleTabChange}
-            loading={loadingOrder}
+            loading={loadingTable}
             tableType={TableTypes.SALES_ORDER_SUBUSER}
-            onChangePageAndPageSize={handleChangePageAndPageSize}
+            onChangePageAndPageSize={(params) =>
+              handleChangePageAndPageSize(
+                params,
+                getFieldNameObjForOrders(
+                  TableTypes.SALES_ORDER,
+                  subTypeOrder == PurchaseOrderTableTypes.ISSUED ||
+                    subTypeOrder == PurchaseOrderTableTypes.RECEIVED
+                    ? subTypeOrder
+                    : PurchaseOrderTableTypes.ISSUED
+                ),
+                searchTable
+              )
+            }
+            currentPage={currentPage}
+            currentPageSize={currentPageSize}
+            fieldSort={fieldSort}
+            filteredInfo={filteredInfo}
           />
         );
       default:
@@ -551,243 +540,24 @@ export default function Users() {
 
   function handleTabChange(tabId: RequirementType | PurchaseOrderTableTypes) {
     if (userData) {
-      if (action == Action.VIEW_REQUIREMENTS) {
-        switch (tabId) {
-          case RequirementType.GOOD:
-            setApiParamsReq({
-              service: getRequirementsBySubUserService(
-                userData.uid,
-                1,
-                pageSizeOptionsSt[0]
-              ), // r3v para servicios y liquidaciones
-              method: "get",
-            });
-            break;
-          case RequirementType.SERVICE:
-            setApiParamsReq({
-              service: getRequirementsBySubUserService(
-                userData.uid,
-                1,
-                pageSizeOptionsSt[0]
-              ),
-              method: "get",
-            });
-            break;
-          case RequirementType.SALE:
-            setApiParamsReq({
-              service: getRequirementsBySubUserService(
-                userData.uid,
-                1,
-                pageSizeOptionsSt[0]
-              ),
-              method: "get",
-            });
-            break;
-        }
-      } else if (action == Action.VIEW_OFFERS) {
-        switch (tabId) {
-          case RequirementType.GOOD:
-            setApiParamsOffer({
-              service: getOffersBySubUserService(
-                userData.uid,
-                1,
-                pageSizeOptionsSt[0]
-              ), // r3v para servicios y liquidaciones
-              method: "get",
-            });
-            break;
-          case RequirementType.SERVICE:
-            setApiParamsOffer({
-              service: getOffersBySubUserService(
-                userData.uid,
-                1,
-                pageSizeOptionsSt[0]
-              ),
-              method: "get",
-            });
-            break;
-          case RequirementType.SALE:
-            setApiParamsOffer({
-              service: getOffersBySubUserService(
-                userData.uid,
-                1,
-                pageSizeOptionsSt[0]
-              ),
-              method: "get",
-            });
-            break;
-        }
-      } else if (action == Action.VIEW_PURCHASE_ORDERS) {
-        switch (tabId) {
-          case PurchaseOrderTableTypes.ISSUED:
-            setSubTypeOrder(tabId);
-            setApiParamsOrder({
-              service: getPurchaseOrdersByClientEntityService(
-                userData.uid,
-                userData.typeID,
-                1,
-                pageSizeOptionsSt[0]
-              ),
-              method: "get",
-            });
-            break;
-          case PurchaseOrderTableTypes.RECEIVED:
-            setSubTypeOrder(tabId);
-            setApiParamsOrder({
-              service: getPurchaseOrdersByProviderEntityService(
-                userData.uid,
-                userData.typeID,
-                1,
-                pageSizeOptionsSt[0]
-              ),
-              method: "get",
-            });
-            break;
-        }
-      } else if (action == Action.VIEw_SALES_ORDERS) {
-        // r3v cambiar a liq
-        switch (tabId) {
-          case PurchaseOrderTableTypes.ISSUED:
-            setApiParamsOrder({
-              service: getPurchaseOrdersByClientEntityService(
-                userData.uid,
-                userData.typeID,
-                1,
-                pageSizeOptionsSt[0]
-              ),
-              method: "get",
-            });
-            break;
-          case PurchaseOrderTableTypes.RECEIVED:
-            setApiParamsOrder({
-              service: getPurchaseOrdersByProviderEntityService(
-                userData.uid,
-                userData.typeID,
-                1,
-                pageSizeOptionsSt[0]
-              ),
-              method: "get",
-            });
-            break;
-        }
-      }
-    }
-  }
-
-  function handleChangePageAndPageSize(
-    page: number,
-    pageSize: number,
-    tabId: RequirementType | PurchaseOrderTableTypes
-  ) {
-    // setLoadingTable(true);
-    if (userData) {
-      if (action == Action.VIEW_REQUIREMENTS) {
-        switch (tabId) {
-          case RequirementType.GOOD:
-            setApiParamsReq({
-              service: getRequirementsBySubUserService(
-                userData.uid,
-                page,
-                pageSize
-              ), // r3v para servicios y liquidaciones
-              method: "get",
-            });
-            break;
-          case RequirementType.SERVICE:
-            setApiParamsReq({
-              service: getRequirementsBySubUserService(
-                userData.uid,
-                page,
-                pageSize
-              ),
-              method: "get",
-            });
-            break;
-          case RequirementType.SALE:
-            setApiParamsReq({
-              service: getRequirementsBySubUserService(
-                userData.uid,
-                page,
-                pageSize
-              ),
-              method: "get",
-            });
-            break;
-        }
-      } else if (action == Action.VIEW_OFFERS) {
-        switch (tabId) {
-          case RequirementType.GOOD:
-            setApiParamsOffer({
-              service: getOffersBySubUserService(userData.uid, page, pageSize), // r3v para servicios y liquidaciones
-              method: "get",
-            });
-            break;
-          case RequirementType.SERVICE:
-            setApiParamsOffer({
-              service: getOffersBySubUserService(userData.uid, page, pageSize),
-              method: "get",
-            });
-            break;
-          case RequirementType.SALE:
-            setApiParamsOffer({
-              service: getOffersBySubUserService(userData.uid, page, pageSize),
-              method: "get",
-            });
-            break;
-        }
-      } else if (action == Action.VIEW_PURCHASE_ORDERS) {
-        switch (tabId) {
-          case PurchaseOrderTableTypes.ISSUED:
-            setSubTypeOrder(tabId);
-            setApiParamsOrder({
-              service: getPurchaseOrdersByClientEntityService(
-                userData.uid,
-                userData.typeID,
-                page,
-                pageSize
-              ),
-              method: "get",
-            });
-            break;
-          case PurchaseOrderTableTypes.RECEIVED:
-            setSubTypeOrder(tabId);
-            setApiParamsOrder({
-              service: getPurchaseOrdersByProviderEntityService(
-                userData.uid,
-                userData.typeID,
-                page,
-                pageSize
-              ),
-              method: "get",
-            });
-            break;
-        }
-      } else if (action == Action.VIEw_SALES_ORDERS) {
-        // r3v cambiar a liq
-        switch (tabId) {
-          case PurchaseOrderTableTypes.ISSUED:
-            setApiParamsOrder({
-              service: getPurchaseOrdersByClientEntityService(
-                userData.uid,
-                userData.typeID,
-                page,
-                pageSize
-              ),
-              method: "get",
-            });
-            break;
-          case PurchaseOrderTableTypes.RECEIVED:
-            setApiParamsOrder({
-              service: getPurchaseOrdersByProviderEntityService(
-                userData.uid,
-                userData.typeID,
-                page,
-                pageSize
-              ),
-              method: "get",
-            });
-            break;
-        }
+      if (
+        ((action == Action.VIEW_REQUIREMENTS || action == Action.VIEW_OFFERS) &&
+          (tabId == RequirementType.GOOD ||
+            tabId == RequirementType.SERVICE ||
+            tabId == RequirementType.SALE)) ||
+        ((action == Action.VIEW_PURCHASE_ORDERS ||
+          action == Action.VIEw_SALES_ORDERS) &&
+          (tabId == PurchaseOrderTableTypes.ISSUED ||
+            tabId == PurchaseOrderTableTypes.RECEIVED))
+      ) {
+        setSubTypeOrder(tabId);
+        reset();
+        searchTable(
+          { page: 1, pageSize: currentPageSize },
+          undefined,
+          tableType,
+          tabId
+        );
       }
     }
   }
@@ -820,7 +590,7 @@ export default function Users() {
         subtitle={`${t("listOf")} ${t("users")}`}
         subtitleIcon={<i className="fa-regular fa-user-group sub-icon"></i>}
         table={tableContent}
-        onSearch={handleSearch}
+        onSearch={(e) => handleSearch(e, searchTable)}
         additionalContentHeader={
           <div>
             <ButtonContainer

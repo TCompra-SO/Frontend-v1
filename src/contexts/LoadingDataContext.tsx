@@ -1,4 +1,5 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
+import { Action } from "../utilities/types";
 
 interface LoadingDataContextType {
   myPurchaseOrdersLoadingPdf: boolean;
@@ -21,6 +22,14 @@ interface LoadingDataContextType {
 
   createRequirementLoading: boolean;
   updateCreateRequirementLoading: (val: boolean | undefined) => void;
+
+  changeCertificationStateLoading: boolean;
+  updateChangeCertificationStateLoading: (val: boolean | undefined) => void;
+
+  // Para acciones
+  idAndActionQueue: Record<string, Action>;
+  updateIdAndActionQueue: (id: string, action: Action) => void;
+  deleteFromIdAndActionQueue: (id: string) => void;
 }
 
 export const LoadingDataContext = createContext<LoadingDataContextType>({
@@ -42,6 +51,11 @@ export const LoadingDataContext = createContext<LoadingDataContextType>({
   updateAllSalesOrdersViewOffers: () => {},
   createRequirementLoading: false,
   updateCreateRequirementLoading: () => {},
+  idAndActionQueue: {},
+  updateIdAndActionQueue: () => {},
+  deleteFromIdAndActionQueue: () => {},
+  changeCertificationStateLoading: false,
+  updateChangeCertificationStateLoading: () => {},
 });
 
 export function LoadingDataProvider({ children }: { children: ReactNode }) {
@@ -63,6 +77,15 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
     useState(false);
   const [createRequirementLoading, setCreateRequirementLoading] =
     useState(false);
+  const [changeCertificationStateLoading, setChangeCertificationStateLoading] =
+    useState(false);
+  const [idAndActionQueue, setIdAndActionQueue] = useState<
+    Record<string, Action>
+  >({});
+
+  useEffect(() => {
+    console.log(idAndActionQueue);
+  }, [idAndActionQueue]);
 
   function updateMyPurchaseOrdersLoadingPdf(val: boolean | undefined) {
     setMyPurchaseOrdersLoadingPdf(val ? true : false);
@@ -97,8 +120,26 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
   }
 
   function updateCreateRequirementLoading(val: boolean | undefined) {
-    console.log(val);
     setCreateRequirementLoading(val ? true : false);
+  }
+
+  function updateChangeCertificationStateLoading(val: boolean | undefined) {
+    setChangeCertificationStateLoading(val ? true : false);
+  }
+
+  function updateIdAndActionQueue(id: string, action: Action) {
+    setIdAndActionQueue((prev) => ({
+      ...prev,
+      [id]: action,
+    }));
+  }
+
+  function deleteFromIdAndActionQueue(id: string) {
+    setIdAndActionQueue((prev) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { [id]: _, ...rest } = prev;
+      return rest;
+    });
   }
 
   return (
@@ -113,6 +154,8 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
         allPurchaseOrdersViewOffers,
         allSalesOrdersViewOffers,
         createRequirementLoading,
+        changeCertificationStateLoading,
+        idAndActionQueue,
         updateMyPurchaseOrdersLoadingPdf,
         updateSubUserPurchaseOrdersLoadingPdf,
         updateAllPurchaseOrdersLoadingPdf,
@@ -122,6 +165,9 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
         updateAllPurchaseOrdersViewOffers,
         updateAllSalesOrdersViewOffers,
         updateCreateRequirementLoading,
+        updateIdAndActionQueue,
+        deleteFromIdAndActionQueue,
+        updateChangeCertificationStateLoading,
       }}
     >
       {children}

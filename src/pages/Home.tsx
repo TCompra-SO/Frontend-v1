@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { TableTypeHome } from "../models/Interfaces.ts";
 import {
@@ -13,27 +13,32 @@ import { useTranslation } from "react-i18next";
 import Search from "../components/section/home/Search.tsx";
 import Footer from "../components/section/footer/Footer.tsx";
 import Ads from "../components/section/home/Ads.tsx";
-import CompanyFilter from "../components/section/home/CompanyFilter.tsx";
+import CompanyFilter from "../components/section/home/CompanyFilter/CompanyFilter.tsx";
 import CompanyData from "../components/section/home/CompanyData/CompanyData.tsx";
-import { HomeProvider } from "../contexts/Homecontext.tsx";
+import { HomeContext } from "../contexts/Homecontext.tsx";
 import HomeTable from "../components/section/home/HomeTable/HomeTable.tsx";
 import { Requirement } from "../models/MainInterfaces.ts";
 import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../utilities/routes.ts";
+import { MainState } from "../models/Redux.ts";
+import { useSelector } from "react-redux";
 
 export default function Home() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(1);
+  const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
   const {
-    requirements: tableData,
-    loading: loadingTable,
-    totalRequirements,
-  } = useSocket(currentPage);
+    page,
+    updatePage,
+    requirementList,
+    loadingRequirementList,
+    totalRequirementList,
+  } = useContext(HomeContext);
   const [tableContent, setTableContent] = useState<TableTypeHome>({
     type: TableTypes.HOME,
-    data: tableData,
-    total: totalRequirements,
+    data: requirementList,
+    total: totalRequirementList,
+    page: page,
     subType: RequirementType.GOOD,
     hiddenColumns: [TableColumns.CATEGORY],
     nameColumnHeader: t("goods"),
@@ -42,45 +47,52 @@ export default function Home() {
         navigate(`${pageRoutes.productDetail}/${req.key}`);
     },
   });
+  useSocket();
 
   /** Mostrar datos iniciales */
 
   useEffect(() => {
     setTableContent((prevContent) => ({
       ...prevContent,
-      data: tableData,
-      total: totalRequirements,
+      page,
+      data: requirementList,
+      total: totalRequirementList,
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tableData]);
+  }, [requirementList]);
 
   /** Funciones */
 
   function handleChangePageAndPageSize({
     page,
   }: OnChangePageAndPageSizeTypeParams) {
-    setCurrentPage(page);
+    updatePage(page);
   }
 
   return (
-    <HomeProvider>
+    <>
       <Search />
       <div className="t-flex f-column gap-20 section-detalles home-det">
         <div className="t-flex f-column gap-20 home-1">
-          <CompanyFilter />
-          <CompanyData />
-          <div className="titulo req-t">
-            {t("homeTableFirstHalf")} <span>{t("homeTableSecondHalf")}</span>
-          </div>
+          {isPremium && (
+            <>
+              <CompanyFilter />
+              <CompanyData />
+              <div className="titulo req-t">
+                {t("homeTableFirstHalf")}{" "}
+                <span>{t("homeTableSecondHalf")}</span>
+              </div>
+            </>
+          )}
           <HomeTable
             content={tableContent}
-            loadingTable={loadingTable}
+            loadingTable={loadingRequirementList}
             onChangePageAndPageSize={handleChangePageAndPageSize}
           />
         </div>
         <Ads />
       </div>
       <Footer />
-    </HomeProvider>
+    </>
   );
 }

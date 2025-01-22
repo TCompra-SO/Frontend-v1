@@ -26,10 +26,10 @@ import OTPInputContainer from "../../containers/OTPInputContainer";
 import { equalServices } from "../../../utilities/globalFunctions";
 import NoContentModalContainer from "../../containers/NoContentModalContainer";
 import InputContainer from "../../containers/InputContainer";
-import { usePasswordRules } from "../../../hooks/validators";
+import { usePasswordRules } from "../../../hooks/validatorHooks";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
-import useShowNotification from "../../../hooks/utilHook";
+import useShowNotification from "../../../hooks/utilHooks";
 
 const stepsIni: StepsItemContent[] = [
   {

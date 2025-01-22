@@ -72,6 +72,8 @@ export const ApiRoutes = {
     getRequirementsByEntity: "getRequerimentsByEntity/",
     culminate: "culminate/",
     cancel: "canceled/",
+    searchMainFilters: "searchMainFilters",
+    searchRequirements: "searchProductsByUser",
   },
   requirement: {
     create: "create/",
@@ -99,6 +101,7 @@ export const ApiRoutes = {
     culminate: "culminate/",
     getValidation: "getValidation/",
     cancel: "canceled/",
+    searchOffers: "searchOffersByUser",
   },
   score: {
     registerScore: "registerScore/",
@@ -110,6 +113,8 @@ export const ApiRoutes = {
     getPurchaseOrderPDF: "getpurchaseOrderPDF/",
     getPurchaseOrdersByProvider: "getPurchaseOrdersByProvider/",
     getPurchaseOrdersByClient: "getPurchaseOrdersByClient/",
+    searchPurchaseOrdersByProvider: "searchPurchaseOrdersByProvider",
+    searchPurchaseOrdersByClient: "searchPurchaseOrdersByClient",
   },
   certificate: {
     uploadCertificate: "uploadCertificate",

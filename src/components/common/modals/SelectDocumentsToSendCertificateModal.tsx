@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import ButtonContainer from "../../containers/ButtonContainer";
 import {
+  Action,
   ErrorMsgRequestType,
   ErrorRequestType,
   ModalTypes,
@@ -24,7 +25,7 @@ import SimpleLoading from "../../../pages/utils/SimpleLoading";
 import {
   useGetCertificatesList,
   useGetRequiredDocsCert,
-} from "../../../hooks/certificateHook";
+} from "../../../hooks/certificateHooks";
 import {
   resendCertificatesService,
   sendCertificationRequestService,
@@ -35,7 +36,7 @@ import {
 } from "../../../models/Requests";
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
-import useShowNotification from "../../../hooks/utilHook";
+import useShowNotification from "../../../hooks/utilHooks";
 
 interface SelectDocumentsToSendCertificateModalProps extends CommonModalProps {
   data: SelectDocsModalData;
@@ -52,6 +53,7 @@ export default function SelectDocumentsToSendCertificateModal(
   const { getRequiredDocsCert, requiredDocs, loadingRequiredDocs } =
     useGetRequiredDocsCert();
   const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
+  const [currentPage, setCurrentPage] = useState(1);
   const {
     certificateList,
     getCertificatesList,
@@ -65,6 +67,7 @@ export default function SelectDocumentsToSendCertificateModal(
     data: {
       onDocumentAdded: handleOnDocumentAdded,
     },
+    action: Action.ADD_CERTIFICATES,
   });
   const [checked, setChecked] = useState<boolean[]>(
     Array(docs.length).fill(false)
@@ -75,7 +78,7 @@ export default function SelectDocumentsToSendCertificateModal(
   /** Obtener lista de documentos */
 
   useEffect(() => {
-    getCertificatesList(1, pageSizeOptionsSt[0]);
+    getCertificatesList(currentPage, pageSizeOptionsSt[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -83,7 +86,7 @@ export default function SelectDocumentsToSendCertificateModal(
     if (certificateList) {
       setDocs(certificateList);
       const indexes = certificateList.map((item, i) => {
-        if (certificateIds.includes(item.uid)) return i;
+        if (certificateIds.includes(item.key)) return i;
         return -1;
       });
       const temp: boolean[] = Array(certificateList.length).fill(false);
@@ -130,10 +133,12 @@ export default function SelectDocumentsToSendCertificateModal(
   }
 
   function handleOnDocumentAdded() {
+    setCurrentPage(1);
     getCertificatesList(1, pageSizeOptionsSt[0]);
   }
 
   function onChangePageAndPageSize(page: number, pageSize: number) {
+    setCurrentPage(page);
     getCertificatesList(page, pageSize);
   }
 
@@ -141,11 +146,11 @@ export default function SelectDocumentsToSendCertificateModal(
     if (certificateList && certificateList[index]) {
       if (value)
         setCertificateIds((prev) => {
-          return [...prev, certificateList[index].uid];
+          return [...prev, certificateList[index].key];
         });
       else
         setCertificateIds((prevList) =>
-          prevList.filter((item) => item != certificateList[index].uid)
+          prevList.filter((item) => item != certificateList[index].key)
         );
       setChecked((prev) => {
         const newArray = [...prev];
@@ -261,6 +266,7 @@ export default function SelectDocumentsToSendCertificateModal(
               total={totalCertList}
               onChange={onChangePageAndPageSize}
               // showTotal={(total) => `${total}`}
+              current={currentPage}
             />
           </Flex>
           <div className="t-flex gap-15 wd-100 alert-btn">

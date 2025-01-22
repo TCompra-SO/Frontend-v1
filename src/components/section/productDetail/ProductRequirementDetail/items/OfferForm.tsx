@@ -27,6 +27,7 @@ import {
   getValidationOfferService,
 } from "../../../../../services/requests/offerService";
 import {
+  Action,
   CanOfferType,
   CantOfferMotives,
   CertificationState,
@@ -47,8 +48,8 @@ import { Requirement } from "../../../../../models/MainInterfaces";
 import makeRequest from "../../../../../utilities/globalFunctions";
 import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
 import ModalContainer from "../../../../containers/ModalContainer";
-import { verifyCertificationByUserIdAndCompanyId } from "../../../../../services/complete/general";
-import useShowNotification from "../../../../../hooks/utilHook";
+import { verifyCertificationByUserIdAndCompanyId } from "../../../../../services/complete/generalServices";
+import useShowNotification from "../../../../../hooks/utilHooks";
 
 function RowContainer({ children }: { children: ReactNode }) {
   return (
@@ -271,7 +272,6 @@ export default function OfferForm(props: OfferFormProps) {
       !isPremium
     ) {
       setCantOfferMotive(CantOfferMotives.ONLY_PREMIUM);
-
       return;
     } else {
       if (props.requirement) {
@@ -458,6 +458,7 @@ export default function OfferForm(props: OfferFormProps) {
               userId:
                 props.requirement.subUser?.uid ?? props.requirement?.user.uid,
             },
+            action: Action.SEND_MESSAGE,
           }}
           isOpen={isOpenModal}
           onClose={() => setIsOpenModal(false)}
