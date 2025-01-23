@@ -1,23 +1,30 @@
 import { Form, Upload, UploadFile } from "antd";
 import { RcFile, UploadChangeParam } from "antd/lib/upload";
-import { useRef, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { maxDocSizeMb, maxDocsQuantity } from "../../../utilities/globals";
 import { checkDoc } from "../../../utilities/globalFunctions";
 import useShowNotification from "../../../hooks/utilHooks";
 
+interface AddDocumentFieldProps {
+  forOffer?: boolean;
+  onlyUpload?: {
+    child: ReactNode;
+  };
+  multiple?: boolean;
+}
+
 export default function AddDocumentField({
   forOffer = false,
-}: {
-  forOffer?: boolean;
-}) {
+  onlyUpload,
+  multiple,
+}: AddDocumentFieldProps) {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
   const fileInputRefDoc = useRef<HTMLDivElement>(null);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   function handleClick() {
-    // Trigger the file input click event
     if (fileInputRefDoc.current) {
       fileInputRefDoc.current.click();
     }
@@ -48,7 +55,36 @@ export default function AddDocumentField({
     return false;
   }
 
-  return (
+  function renderUploadComponent() {
+    return (
+      <Upload
+        multiple={multiple}
+        accept=".pdf"
+        onChange={handleChange}
+        fileList={fileList}
+        maxCount={1}
+        listType="picture-card"
+        style={{ display: "none" }}
+        beforeUpload={checkDocBeforeUpload}
+        showUploadList={!onlyUpload}
+      >
+        <div style={{ display: "none" }} ref={fileInputRefDoc} />
+      </Upload>
+    );
+  }
+
+  return onlyUpload ? (
+    <>
+      <div
+        className="hide-upload"
+        style={{ marginBottom: "-4px" }}
+        onClick={handleClick}
+      >
+        {onlyUpload.child}
+        {renderUploadComponent()}
+      </div>
+    </>
+  ) : (
     <>
       <div className="hide-upload" style={forOffer ? { width: "100%" } : {}}>
         <div
@@ -58,20 +94,7 @@ export default function AddDocumentField({
         >
           <i className="fa-regular fa-file-lines"></i> {t("addDocument")}
         </div>
-        <Form.Item name="doc">
-          <Upload
-            multiple={true}
-            accept=".pdf"
-            onChange={handleChange}
-            fileList={fileList}
-            maxCount={1}
-            listType="picture-card"
-            style={{ display: "none" }}
-            beforeUpload={checkDocBeforeUpload}
-          >
-            <div style={{ display: "none" }} ref={fileInputRefDoc} />
-          </Upload>
-        </Form.Item>
+        <Form.Item name="doc">{renderUploadComponent()}</Form.Item>
       </div>
     </>
   );

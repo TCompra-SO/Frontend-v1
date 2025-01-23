@@ -7,6 +7,7 @@ import ChatBodyMessage from "./ChatBodyMessage";
 import { useEffect, useRef } from "react";
 import useWindowSize from "../../../../hooks/useWindowSize";
 import AddImagesField from "../../../common/formFields/AddImagesField";
+import AddDocumentField from "../../../common/formFields/AddDocumentField";
 
 interface ChatBodyProps {
   chatData: ChatListData;
@@ -76,6 +77,11 @@ export default function ChatBody(props: ChatBodyProps) {
         <AddImagesField
           onlyUpload={{
             child: <i className="fa-regular fa-camera mensaje-send"></i>,
+          }}
+        />
+        <AddDocumentField
+          onlyUpload={{
+            child: <i className="fa-regular fa-paperclip mensaje-send"></i>,
           }}
         />
         <InputContainer
