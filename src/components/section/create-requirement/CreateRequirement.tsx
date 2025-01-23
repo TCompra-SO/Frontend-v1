@@ -24,7 +24,10 @@ import {
 import { CreateRequirementRequest } from "../../../models/Requests";
 import { CommonModalProps, useApiParams } from "../../../models/Interfaces";
 import useApi, { UseApiType } from "../../../hooks/useApi";
-import { isDateEarlierThanTomorrow } from "../../../utilities/globalFunctions";
+import {
+  checkWarranty,
+  isDateEarlierThanTomorrow,
+} from "../../../utilities/globalFunctions";
 import { createRequirementService } from "../../../services/requests/requirementService";
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
@@ -84,22 +87,22 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   const { t } = useTranslation();
   const { createRequirementLoading, updateCreateRequirementLoading } =
     useContext(LoadingDataContext);
+  const { getRequiredDocsCert, requiredDocs, errorRequiredDocs } =
+    useGetRequiredDocsCert();
+  const { showNotification } = useShowNotification();
   const uid = useSelector((state: MainState) => state.user.uid);
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
-  const { showNotification } = useShowNotification();
   const [form] = Form.useForm();
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [showDocListToCetificate, setShowDocListToCetificate] = useState(false);
   const [certificatesRequired, setCertificatesRequired] = useState("");
-  const { getRequiredDocsCert, requiredDocs, errorRequiredDocs } =
-    useGetRequiredDocsCert();
   const [formDataImg, setFormDataImg] = useState<FormData | null>(null);
   const [formDataDoc, setFormDataDoc] = useState<FormData | null>(null);
-
   const formDataImgRef = useRef(formDataImg);
   const formDataDocRef = useRef(formDataDoc);
+  const [warrantyRequired, setWarrantyRequired] = useState(false);
 
   useEffect(() => {
     formDataDocRef.current = formDataDoc;
@@ -324,6 +327,20 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     }
   }
 
+  function checkWarrantyField() {
+    setWarrantyRequired(
+      checkWarranty(
+        form.getFieldValue("duration"),
+        form.getFieldValue("warranty")
+      )
+    );
+  }
+
+  function handleWhoCanOfferField(val: any) {
+    if (Array.isArray(val) && !val.includes(certifiedCompaniesOpt))
+      setShowDocListToCetificate(false);
+  }
+
   return (
     <>
       <ModalContainer
@@ -420,7 +437,11 @@ export default function CreateRequirement(props: CreateRequirementProps) {
                   <>
                     <div>
                       <LabelForCreateRequirement label={"whoCanMakeOffers"} />
-                      <CanOfferField type={type} onBlur={checkWhoCanOffer} />
+                      <CanOfferField
+                        type={type}
+                        onBlur={checkWhoCanOffer}
+                        handleOptionChange={handleWhoCanOfferField}
+                      />
                     </div>
                     {showDocListToCetificate && (
                       <div>
@@ -475,11 +496,18 @@ export default function CreateRequirement(props: CreateRequirementProps) {
                     <>
                       <Col xs={24} sm={24} md={6} lg={6} xl={6}>
                         <LabelForCreateRequirement label={"warranty"} />
-                        <WarrantyField required={false} />
+                        <WarrantyField
+                          required={warrantyRequired}
+                          onChange={() => checkWarrantyField()}
+                        />
                       </Col>
                       <Col xs={24} sm={24} md={6} lg={6} xl={6}>
                         <LabelForCreateRequirement label={"duration"} />
-                        <DurationField required={false} name="duration" />
+                        <DurationField
+                          required={warrantyRequired}
+                          name="duration"
+                          onChange={() => checkWarrantyField()}
+                        />
                       </Col>
                     </>
                   )}

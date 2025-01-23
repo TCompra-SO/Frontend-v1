@@ -7,10 +7,16 @@ interface DurationFieldProps {
   required: boolean;
   name: string;
   onlyItem?: boolean;
+  onChange?: (val: TimeMeasurement | undefined) => void;
 }
 
 export default function DurationField(props: DurationFieldProps) {
   const { t } = useTranslation();
+  const durList = [
+    { label: t("years"), value: TimeMeasurement.YEARS },
+    { label: t("months"), value: TimeMeasurement.MONTHS },
+    { label: t("days"), value: TimeMeasurement.DAYS },
+  ];
 
   return (
     <Form.Item
@@ -20,14 +26,12 @@ export default function DurationField(props: DurationFieldProps) {
       rules={[{ required: props.required }]}
     >
       <SelectContainer
+        allowClear
         placeholder={t(props.onlyItem ? "duration" : "select")}
         className="form-control"
         style={{ width: "100%" }}
-        options={[
-          { label: t("years"), value: TimeMeasurement.YEARS },
-          { label: t("months"), value: TimeMeasurement.MONTHS },
-          { label: t("days"), value: TimeMeasurement.DAYS },
-        ]}
+        options={durList}
+        onChange={(val) => props.onChange?.(val)}
       />
     </Form.Item>
   );

@@ -425,3 +425,11 @@ export function getFieldNameObjForOrders(
       ? fieldNameSearchRequestOrderProvider
       : fieldNameSearchRequestOrderClient;
 }
+
+// Verifica si los campos de garantía deben ser requeridos
+export function checkWarranty(durationVal: any, warrantyVal: any) {
+  return (
+    (durationVal !== null && durationVal !== undefined) ||
+    (warrantyVal !== null && warrantyVal !== undefined)
+  );
+}

@@ -30,7 +30,8 @@ export default function useSocket() {
 
     // Limpiar el socket al desmontar el componente
     return () => {
-      socketAPI.off("getRequeriments");
+      // socketAPI.off("getRequeriments");
+      socketAPI.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

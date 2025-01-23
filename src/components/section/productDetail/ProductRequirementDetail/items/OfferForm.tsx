@@ -45,7 +45,9 @@ import { uploadImagesOfferService } from "../../../../../services/requests/image
 import React from "react";
 import CantOfferMessage from "./CantOfferMessage";
 import { Requirement } from "../../../../../models/MainInterfaces";
-import makeRequest from "../../../../../utilities/globalFunctions";
+import makeRequest, {
+  checkWarranty,
+} from "../../../../../utilities/globalFunctions";
 import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
 import ModalContainer from "../../../../containers/ModalContainer";
 import { verifyCertificationByUserIdAndCompanyId } from "../../../../../services/complete/generalServices";
@@ -92,6 +94,7 @@ export default function OfferForm(props: OfferFormProps) {
   const [imgSuccess, setImgSuccess] = useState(ProcessFlag.NOT_INI);
   const [offerId, setOfferId] = useState<string>("");
   const [loadingForm, setLoadingForm] = useState(true);
+  const [warrantyRequired, setWarrantyRequired] = useState(false);
 
   useEffect(() => {
     if (cantOfferMotive != CantOfferMotives.INI) setLoadingForm(false);
@@ -446,6 +449,15 @@ export default function OfferForm(props: OfferFormProps) {
     checkIfUserCanOffer();
   }
 
+  function checkWarrantyField() {
+    setWarrantyRequired(
+      checkWarranty(
+        form.getFieldValue("duration"),
+        form.getFieldValue("warranty")
+      )
+    );
+  }
+
   return (
     <>
       {props.requirement && (
@@ -509,8 +521,16 @@ export default function OfferForm(props: OfferFormProps) {
                   <CurrencyField onlyItem disabled />
                 </RowContainer>
                 <RowContainer>
-                  <WarrantyField required={false} />
-                  <DurationField required={false} name={"duration"} onlyItem />
+                  <WarrantyField
+                    required={warrantyRequired}
+                    onChange={() => checkWarrantyField()}
+                  />
+                  <DurationField
+                    required={warrantyRequired}
+                    name={"duration"}
+                    onlyItem
+                    onChange={() => checkWarrantyField()}
+                  />
                   <SupportField />
                   <BudgetField required greaterThanZero />
                 </RowContainer>
