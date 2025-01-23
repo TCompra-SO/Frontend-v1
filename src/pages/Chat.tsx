@@ -3,7 +3,7 @@ import ContentHeader from "../components/common/utils/ContentHeader";
 import ChatList from "../components/section/chat/ChatList/ChatList";
 import ChatBody from "../components/section/chat/ChatBody/ChatBody";
 import { ChatListData, ChatMessage } from "../models/MainInterfaces";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useWindowSize from "../hooks/useWindowSize";
 import { windowSize } from "../utilities/globals";
 

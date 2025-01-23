@@ -6,6 +6,7 @@ import { dateFormatChatBody, windowSize } from "../../../../utilities/globals";
 import ChatBodyMessage from "./ChatBodyMessage";
 import { useEffect, useRef } from "react";
 import useWindowSize from "../../../../hooks/useWindowSize";
+import AddImagesField from "../../../common/formFields/AddImagesField";
 
 interface ChatBodyProps {
   chatData: ChatListData;
@@ -18,15 +19,15 @@ export default function ChatBody(props: ChatBodyProps) {
   const { width } = useWindowSize();
   const divRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [props.chatData]);
+
   function scrollToBottom() {
     if (divRef.current) {
       divRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [props.chatData]);
 
   return (
     <div
@@ -72,7 +73,11 @@ export default function ChatBody(props: ChatBodyProps) {
         </div>
       </div>
       <div className="t-flex gap-10 j-items chat-buscar">
-        <i className="fa-regular fa-camera mensaje-send"></i>
+        <AddImagesField
+          onlyUpload={{
+            child: <i className="fa-regular fa-camera mensaje-send"></i>,
+          }}
+        />
         <InputContainer
           type="text"
           className="form-transparent form-filter"
