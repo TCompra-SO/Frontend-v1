@@ -89,6 +89,9 @@ export default function ModalContainer(props: ModalContainerProps) {
         case ModalTypes.VIEW_DOCS_RECEIVED_CERT:
           id = props.content.data.data.key;
           break;
+        case ModalTypes.SELECT_OFFER:
+          id = props.content.data.requirement.key;
+          break;
       }
       if (id) {
         setBlockedIds((prev) => [...prev, id]);
@@ -106,6 +109,9 @@ export default function ModalContainer(props: ModalContainerProps) {
           break;
         case ModalTypes.VIEW_DOCS_RECEIVED_CERT:
           currentId = props.content.data.data.key;
+          break;
+        case ModalTypes.SELECT_OFFER:
+          currentId = props.content.data.requirement.key;
           break;
       }
       if (currentId) {

@@ -91,6 +91,7 @@ function App() {
   useEffect(() => {
     async function getUserData() {
       await loadUserInfo();
+      console.log("finished");
       dispatch(setIsLoading(false));
     }
     getUserData();

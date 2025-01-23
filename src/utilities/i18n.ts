@@ -334,6 +334,7 @@ const resources = {
       alreadySentCertificationRequest: "A certification request was already sent to this company",
       selectDocsToSend: "Select",
       showUserInfo: "Show user data",
+      sessionExpiredLoginAgain: "Your session has expired. Please log in again to continue",
       // Other
       yes: "Yes",
       no: "No",
@@ -864,6 +865,7 @@ const resources = {
       alreadySentCertificationRequest: "Ya fue enviada una solicitud de certificación a esta empresa",
       selectDocsToSend: "Seleccionar",
       showUserInfo: "Mostrar datos de usuario",
+      sessionExpiredLoginAgain: "Su sesión ha expirado. Por favor, inicie sesión nuevamente para continuar",
       // Other
       yes: "Sí",
       no: "No",
