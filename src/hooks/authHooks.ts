@@ -65,26 +65,26 @@ export function useLogout() {
 
 export function useLoadUserInfo() {
   const dispatch = useDispatch();
-  const logout = useLogout();
+  // const logout = useLogout();
 
-  function checkToken() {
-    try {
-      // check if token has expired.refresh token
-      // return true;
-      throw Error;
-    } catch (err) {
-      console.log("error in token");
-      logout();
-      return false;
-    }
-  }
+  // function checkToken() {
+  //   try {
+  //     // check if token has expired.refresh token
+  //     // return true;
+  //     throw Error;
+  //   } catch (err) {
+  //     console.log("error in token");
+  //     logout();
+  //     return false;
+  //   }
+  // }
 
   async function loadUserInfo() {
     const userData = localStorage.getItem(userDataKey);
     if (userData) {
       const userInfo = JSON.parse(decryptData(userData));
       // console.log(userInfo);
-      if (!checkToken()) return;
+      // if (!checkToken()) return;
       if (userInfo) {
         localStorage.setItem(tokenKey, userInfo.token);
         dispatch(
@@ -102,7 +102,6 @@ export function useLoadUserInfo() {
             ],
           })
         );
-
         const { user, subUser } = await getBaseUserForUserSubUser(
           userInfo.uid,
           true

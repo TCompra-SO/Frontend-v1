@@ -893,12 +893,12 @@ export default function GeneralTable(props: GeneralTableProps) {
         props.content.fieldSort
       ),
       StateColumn(
-        TableTypes.SENT_CERT,
+        props.content.type,
         visibility[TableColumns.STATE],
         props.content.filteredInfo
       ),
       ViewColumn(
-        TableTypes.SENT_CERT,
+        props.content.type,
         props.content.onButtonClick,
         visibility[TableColumns.VIEW]
       ),
@@ -933,7 +933,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         props.content.filteredInfo
       ),
       ViewColumn(
-        TableTypes.SENT_CERT,
+        props.content.type,
         props.content.onButtonClick,
         visibility[TableColumns.VIEW]
       ),

@@ -6,13 +6,13 @@ export default function LoadingPage() {
   return (
     <div
       style={{
-        position: "fixed", // Ensure it covers the entire screen
+        position: "fixed",
         top: 0,
         left: 0,
         width: "100%",
         height: "100%",
-        backgroundColor: "white", // Optional: Set a background color to hide the underlying content
-        zIndex: 9999, // Make sure it's on top of other content
+        backgroundColor: "white",
+        zIndex: 9999,
       }}
     >
       <Flex justify="center" align="center" style={{ height: "100vh" }}>

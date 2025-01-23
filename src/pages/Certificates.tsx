@@ -183,6 +183,7 @@ export default function Certificates() {
           break;
       }
     } else if (type == pageSubRoutes.received) {
+      console.log("sent", certificate.key);
       switch (action) {
         case Action.VIEW:
           setDataModal({
