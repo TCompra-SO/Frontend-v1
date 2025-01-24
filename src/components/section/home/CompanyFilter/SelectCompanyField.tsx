@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import SelectContainer from "../../../containers/SelectContainer";
 import { DocType } from "../../../../utilities/types";
-import { Avatar, Spin } from "antd";
+import { Avatar } from "antd";
 import {
   companySearchAfterMseconds,
   defaultUserImage,
