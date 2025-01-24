@@ -106,6 +106,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
 
   useEffect(() => {
     formDataDocRef.current = formDataDoc;
+    console.log(formDataDocRef, formDataDoc);
   }, [formDataDoc]);
 
   useEffect(() => {
@@ -280,6 +281,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     }
 
     if (values.doc && values.doc.fileList.length > 0) {
+      console.log(values.doc);
       const formDataDoc = new FormData();
       values.doc.fileList.forEach((file: UploadFile) => {
         if (file.originFileObj) {
@@ -295,6 +297,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     formDataImg: FormData | null,
     formDataDoc: FormData | null
   ) {
+    console.log(formDataDoc);
     if (reqId) {
       if (!formDataDoc) props.setDocSuccess(ProcessFlag.FIN_SUCCESS);
       if (!formDataImg) props.setImgSuccess(ProcessFlag.FIN_SUCCESS);
