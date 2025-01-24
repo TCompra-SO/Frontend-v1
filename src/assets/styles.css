@@ -1829,6 +1829,12 @@ body {
   color: #fff;
   background: #bc1373;
 }
+.btn-pink.active,
+.btn-pink:active {
+  color: #fff;
+  background: #bc1373;
+}
+
 .icon-home {
   background: rgb(255 255 255 / 20%);
   color: #fff;
