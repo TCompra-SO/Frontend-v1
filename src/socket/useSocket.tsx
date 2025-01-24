@@ -3,9 +3,16 @@ import { io } from "socket.io-client";
 import { pageSizeOptionsSt } from "../utilities/globals";
 import { HomeContext } from "../contexts/Homecontext";
 
+// Obtiene requerimientos sin considerar filtros
 export default function useSocket() {
-  const { useFilter, retrieveRequirements, page } = useContext(HomeContext);
+  const { useFilter, retrieveRequirements, page, type } =
+    useContext(HomeContext);
   const socketAPI = io(import.meta.env.VITE_SOCKET_URL);
+
+  useEffect(() => {
+    if (!useFilter) getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type]);
 
   useEffect(() => {
     if (!useFilter) getData();

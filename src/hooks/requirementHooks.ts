@@ -1,5 +1,10 @@
 import { useContext, useEffect, useState } from "react";
-import { ModalContent, OfferFilters, useApiParams } from "../models/Interfaces";
+import {
+  HttpService,
+  ModalContent,
+  OfferFilters,
+  useApiParams,
+} from "../models/Interfaces";
 import useApi from "./useApi";
 import {
   CancelOfferRequest,
@@ -9,8 +14,6 @@ import {
 import {
   cancelRequirementService,
   getBasicRateDataReqService,
-  getRequirementsService,
-  homeFilterService,
 } from "../services/requests/requirementService";
 import { useTranslation } from "react-i18next";
 import {
@@ -33,7 +36,10 @@ import {
   getRequirementById,
   getRequirementFromData,
 } from "../services/complete/generalServices";
-import makeRequest from "../utilities/globalFunctions";
+import makeRequest, {
+  getHomeFilterService,
+  getHomeRecordsService,
+} from "../utilities/globalFunctions";
 import {
   transformToBaseUser,
   transformToBasicRateData,
@@ -669,20 +675,25 @@ export function useGetRequirementList() {
 
   async function getRequirementList(
     page: number,
+    type: RequirementType,
     pageSize?: number,
     params?: HomeFilterRequest
   ) {
     try {
       setLoading(true);
+      let httpService: HttpService | null = null;
+      if (params) httpService = getHomeFilterService(type);
+      else {
+        const temp = getHomeRecordsService(type);
+        if (temp) httpService = temp(page, pageSize ?? pageSizeOptionsSt[0]);
+      }
       const { responseData }: any = await makeRequest({
-        service: params
-          ? homeFilterService()
-          : getRequirementsService(page, pageSize ?? pageSizeOptionsSt[0]),
+        service: httpService,
         method: params ? "post" : "get",
         dataToSend: params ?? undefined,
       });
       if (responseData) {
-        const cache = new Map<string, any>(); // Scoped cache for this batch
+        const cache = new Map<string, any>();
         const data: (Requirement | null)[] = await Promise.all(
           responseData.data.map(async (e: any) =>
             getRequirementFromData(e, undefined, undefined, cache)

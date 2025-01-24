@@ -39,6 +39,18 @@ import { FieldFilter, FieldSort, SearchTableRequest } from "../models/Requests";
 import { SorterResult } from "antd/es/table/interface";
 import store from "../redux/store";
 import { FilterValue } from "antd/lib/table/interface";
+import {
+  getRequirementsService,
+  homeRequirementFilterService,
+} from "../services/requests/requirementService";
+import {
+  getServicesService,
+  homeServiceFilterService,
+} from "../services/requests/serviceService";
+import {
+  getSalesService,
+  homeSaleFilterService,
+} from "../services/requests/saleService";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -432,4 +444,20 @@ export function checkWarranty(durationVal: any, warrantyVal: any) {
     (durationVal !== null && durationVal !== undefined) ||
     (warrantyVal !== null && warrantyVal !== undefined)
   );
+}
+
+// Retorna el servicio correcto para buscar con filtros en home
+export function getHomeFilterService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return homeRequirementFilterService();
+  if (type == RequirementType.SERVICE) return homeServiceFilterService();
+  if (type == RequirementType.SALE) return homeSaleFilterService();
+  return null;
+}
+
+// Retorna el servicio correcto para buscar sin filtros en home
+export function getHomeRecordsService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return getRequirementsService;
+  if (type == RequirementType.SERVICE) return getServicesService;
+  if (type == RequirementType.SALE) return getSalesService;
+  return null;
 }

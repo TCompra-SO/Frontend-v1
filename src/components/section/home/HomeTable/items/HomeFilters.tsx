@@ -23,7 +23,6 @@ export default function HomeFilters() {
   const { t } = useTranslation();
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
-  const { type, updateType } = useContext(HomeContext);
   const [form] = Form.useForm();
   const [hideFilters, setHideFilters] = useState(true);
   const {
@@ -33,11 +32,20 @@ export default function HomeFilters() {
     useFilter,
     updatePage,
     page,
+    type,
+    updateType,
   } = useContext(HomeContext);
   const [homeFilter, setHomeFilter] = useState<HomeFilterRequest>({
     page: 1,
     pageSize: pageSizeOptionsSt[0],
   });
+
+  /** Reset al cambiar tipo de tabla */
+
+  useEffect(() => {
+    resetFilters();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type]);
 
   /** Reset al cerrar sesión */
 

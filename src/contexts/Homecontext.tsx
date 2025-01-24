@@ -65,7 +65,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     pageSize?: number,
     params?: HomeFilterRequest
   ) {
-    getRequirementList(page, pageSize, params);
+    getRequirementList(page, type, pageSize, params);
   }
 
   function updateUserId(id: string) {
