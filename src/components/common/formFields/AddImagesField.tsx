@@ -12,6 +12,7 @@ interface AddImagesFieldProps {
   forOffer?: boolean;
   onlyUpload?: {
     child: ReactNode;
+    onChange: (files: UploadFile[]) => void;
   };
 }
 
@@ -43,6 +44,7 @@ export default function AddImagesField({
 
   function handleChange(info: UploadChangeParam<UploadFile<any>>) {
     setFileList(info.fileList);
+    onlyUpload?.onChange(info.fileList);
   }
 
   async function handlePreview(file: UploadFile) {

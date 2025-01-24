@@ -109,7 +109,6 @@ function App() {
             fontFamily: "Rubik",
             fontSize: 16,
           },
-
           components: {
             Table: {
               headerColor: tableHeaderTextColor,
@@ -123,6 +122,10 @@ function App() {
               darkItemBg: darkColor,
               darkSubMenuItemBg: darkColor,
               // itemBg: darkColor,
+            },
+            Badge: {
+              indicatorHeightSM: 12,
+              textFontSizeSM: 10,
             },
           },
         }}

@@ -11,6 +11,7 @@ import {
 import { debounce } from "lodash";
 import { useSearchCompanyByName } from "../../../../hooks/authHooks";
 import { getSearchString } from "../../../../utilities/globalFunctions";
+import SimpleLoading from "../../../../pages/utils/SimpleLoading";
 
 interface SelectCompanyFieldProps {
   forHomeFilter?: boolean;
@@ -53,7 +54,11 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
       className={`form-control ${
         props.forHomeFilter ? "f-empresa" : "form-filter"
       }`}
-      notFoundContent={loadingCompanyList ? <Spin size="small" /> : null}
+      notFoundContent={
+        loadingCompanyList ? (
+          <SimpleLoading style={{ marginLeft: "-10px" }} size="large" />
+        ) : null
+      }
       onChange={handleChange}
       onSearch={searchCompany}
       onClear={() => clearList()}

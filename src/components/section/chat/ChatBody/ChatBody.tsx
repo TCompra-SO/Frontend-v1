@@ -4,10 +4,12 @@ import InputContainer from "../../../containers/InputContainer";
 import dayjs from "dayjs";
 import { dateFormatChatBody, windowSize } from "../../../../utilities/globals";
 import ChatBodyMessage from "./ChatBodyMessage";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import useWindowSize from "../../../../hooks/useWindowSize";
 import AddImagesField from "../../../common/formFields/AddImagesField";
 import AddDocumentField from "../../../common/formFields/AddDocumentField";
+import { Badge, UploadFile } from "antd";
+import { primaryColor } from "../../../../utilities/colors";
 
 interface ChatBodyProps {
   chatData: ChatListData;
@@ -19,6 +21,8 @@ export default function ChatBody(props: ChatBodyProps) {
   const { t } = useTranslation();
   const { width } = useWindowSize();
   const divRef = useRef<HTMLDivElement>(null);
+  const [imgList, setImgList] = useState<UploadFile[]>([]);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   useEffect(() => {
     scrollToBottom();
@@ -74,16 +78,22 @@ export default function ChatBody(props: ChatBodyProps) {
         </div>
       </div>
       <div className="t-flex gap-10 j-items chat-buscar">
-        <AddImagesField
-          onlyUpload={{
-            child: <i className="fa-regular fa-camera mensaje-send"></i>,
-          }}
-        />
-        <AddDocumentField
-          onlyUpload={{
-            child: <i className="fa-regular fa-paperclip mensaje-send"></i>,
-          }}
-        />
+        <Badge count={imgList.length} size="small" color={primaryColor}>
+          <AddImagesField
+            onlyUpload={{
+              child: <i className="fa-regular fa-camera mensaje-send"></i>,
+              onChange: (files) => setImgList(files),
+            }}
+          />
+        </Badge>
+        <Badge count={fileList.length} size="small" color={primaryColor}>
+          <AddDocumentField
+            onlyUpload={{
+              child: <i className="fa-regular fa-paperclip mensaje-send"></i>,
+              onChange: (files) => setFileList(files),
+            }}
+          />
+        </Badge>
         <InputContainer
           type="text"
           className="form-transparent form-filter"

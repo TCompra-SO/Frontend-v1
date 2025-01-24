@@ -10,6 +10,7 @@ interface AddDocumentFieldProps {
   forOffer?: boolean;
   onlyUpload?: {
     child: ReactNode;
+    onChange: (files: UploadFile[]) => void;
   };
   multiple?: boolean;
 }
@@ -37,6 +38,7 @@ export default function AddDocumentField({
     // Only to show two recent uploaded files, and old ones will be replaced by the new
     // newFileList = newFileList.slice(-maxDocsQuantity);
     setFileList(info.fileList);
+    onlyUpload?.onChange(info.fileList);
   }
 
   function checkDocBeforeUpload(file: RcFile) {
