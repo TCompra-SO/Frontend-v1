@@ -1,6 +1,13 @@
 import { Form, GetProp, Image, Upload, UploadFile, UploadProps } from "antd";
 import { RcFile, UploadChangeParam } from "antd/lib/upload";
-import { ReactNode, useRef, useState } from "react";
+import {
+  forwardRef,
+  ReactNode,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { maxImageSizeMb, maxImagesQuantity } from "../../../utilities/globals";
 import { checkImage } from "../../../utilities/globalFunctions";
@@ -16,16 +23,33 @@ interface AddImagesFieldProps {
   };
 }
 
-export default function AddImagesField({
-  forOffer = false,
-  onlyUpload,
-}: AddImagesFieldProps) {
+export interface AddImagesFieldRef {
+  reset: () => void;
+}
+
+export const AddImagesField = forwardRef<
+  AddImagesFieldRef,
+  AddImagesFieldProps
+>(function AddImagesField({ forOffer = false, onlyUpload }, ref) {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const fileInputRef = useRef<HTMLDivElement>(null);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  useEffect(() => {
+    onlyUpload?.onChange(fileList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fileList]);
+
+  useImperativeHandle(ref, () => ({
+    reset: () => {
+      setFileList([]);
+      setPreviewOpen(false);
+      setPreviewImage("");
+    },
+  }));
 
   function handleClick() {
     if (fileInputRef.current) {
@@ -127,4 +151,5 @@ export default function AddImagesField({
       </div>
     </>
   );
-}
+});
+export default AddImagesField;

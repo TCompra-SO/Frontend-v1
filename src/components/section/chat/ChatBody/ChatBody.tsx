@@ -6,8 +6,12 @@ import { dateFormatChatBody, windowSize } from "../../../../utilities/globals";
 import ChatBodyMessage from "./ChatBodyMessage";
 import { useEffect, useRef, useState } from "react";
 import useWindowSize from "../../../../hooks/useWindowSize";
-import AddImagesField from "../../../common/formFields/AddImagesField";
-import AddDocumentField from "../../../common/formFields/AddDocumentField";
+import AddImagesField, {
+  AddImagesFieldRef,
+} from "../../../common/formFields/AddImagesField";
+import AddDocumentField, {
+  AddDocumentFieldRef,
+} from "../../../common/formFields/AddDocumentField";
 import { Badge, UploadFile } from "antd";
 import { primaryColor } from "../../../../utilities/colors";
 
@@ -21,8 +25,11 @@ export default function ChatBody(props: ChatBodyProps) {
   const { t } = useTranslation();
   const { width } = useWindowSize();
   const divRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<AddImagesFieldRef>(null);
+  const docRef = useRef<AddDocumentFieldRef>(null);
   const [imgList, setImgList] = useState<UploadFile[]>([]);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     scrollToBottom();
@@ -31,6 +38,15 @@ export default function ChatBody(props: ChatBodyProps) {
   function scrollToBottom() {
     if (divRef.current) {
       divRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
+  function sendMsg() {
+    if (imgRef.current) imgRef.current.reset();
+    if (docRef.current) docRef.current.reset();
+    if (message.trim()) {
+      console.log(message.trim());
+      setMessage("");
     }
   }
 
@@ -80,6 +96,7 @@ export default function ChatBody(props: ChatBodyProps) {
       <div className="t-flex gap-10 j-items chat-buscar">
         <Badge count={imgList.length} size="small" color={primaryColor}>
           <AddImagesField
+            ref={imgRef}
             onlyUpload={{
               child: <i className="fa-regular fa-camera mensaje-send"></i>,
               onChange: (files) => setImgList(files),
@@ -88,6 +105,7 @@ export default function ChatBody(props: ChatBodyProps) {
         </Badge>
         <Badge count={fileList.length} size="small" color={primaryColor}>
           <AddDocumentField
+            ref={docRef}
             onlyUpload={{
               child: <i className="fa-regular fa-paperclip mensaje-send"></i>,
               onChange: (files) => setFileList(files),
@@ -98,8 +116,13 @@ export default function ChatBody(props: ChatBodyProps) {
           type="text"
           className="form-transparent form-filter"
           placeholder={t("message")}
+          onChange={(e) => setMessage(e.currentTarget.value)}
+          value={message}
         />
-        <i className="fa-regular fa-paper-plane-top mensaje-send"></i>
+        <i
+          className="fa-regular fa-paper-plane-top mensaje-send"
+          onClick={sendMsg}
+        ></i>
       </div>
     </div>
   );

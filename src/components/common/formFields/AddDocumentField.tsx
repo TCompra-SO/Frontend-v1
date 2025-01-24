@@ -1,6 +1,13 @@
 import { Form, Upload, UploadFile } from "antd";
 import { RcFile, UploadChangeParam } from "antd/lib/upload";
-import { ReactNode, useRef, useState } from "react";
+import {
+  forwardRef,
+  ReactNode,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { maxDocSizeMb, maxDocsQuantity } from "../../../utilities/globals";
 import { checkDoc } from "../../../utilities/globalFunctions";
@@ -15,15 +22,29 @@ interface AddDocumentFieldProps {
   multiple?: boolean;
 }
 
-export default function AddDocumentField({
-  forOffer = false,
-  onlyUpload,
-  multiple,
-}: AddDocumentFieldProps) {
+export interface AddDocumentFieldRef {
+  reset: () => void;
+}
+
+export const AddDocumentField = forwardRef<
+  AddDocumentFieldRef,
+  AddDocumentFieldProps
+>(function AddDocumentField({ forOffer = false, onlyUpload, multiple }, ref) {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
   const fileInputRefDoc = useRef<HTMLDivElement>(null);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  useEffect(() => {
+    onlyUpload?.onChange(fileList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fileList]);
+
+  useImperativeHandle(ref, () => ({
+    reset: () => {
+      setFileList([]);
+    },
+  }));
 
   function handleClick() {
     if (fileInputRefDoc.current) {
@@ -38,7 +59,6 @@ export default function AddDocumentField({
     // Only to show two recent uploaded files, and old ones will be replaced by the new
     // newFileList = newFileList.slice(-maxDocsQuantity);
     setFileList(info.fileList);
-    onlyUpload?.onChange(info.fileList);
   }
 
   function checkDocBeforeUpload(file: RcFile) {
@@ -100,4 +120,6 @@ export default function AddDocumentField({
       </div>
     </>
   );
-}
+});
+
+export default AddDocumentField;
