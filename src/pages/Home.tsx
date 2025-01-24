@@ -28,6 +28,7 @@ export default function Home() {
   const navigate = useNavigate();
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
   const {
+    updateType,
     page,
     updatePage,
     requirementList,
@@ -60,6 +61,13 @@ export default function Home() {
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requirementList]);
+
+  /** Reset tabla actual */
+
+  useEffect(() => {
+    return () => updateType(RequirementType.GOOD);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /** Funciones */
 

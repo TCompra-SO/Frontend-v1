@@ -4,8 +4,11 @@ import { useGetRequirementList } from "../hooks/requirementHooks";
 import { HomeFilterRequest } from "../models/Requests";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
+import { RequirementType } from "../utilities/types";
 
 interface HomeContextType {
+  type: RequirementType;
+  updateType: (val: RequirementType) => void;
   userId: string;
   updateUserId: (id: string) => void;
   useFilter: boolean | null;
@@ -32,10 +35,13 @@ export const HomeContext = createContext<HomeContextType>({
   page: 1,
   updatePage: () => {},
   retrieveRequirements: () => {},
+  type: RequirementType.GOOD,
+  updateType: () => {},
 });
 
 export function HomeProvider({ children }: { children: ReactNode }) {
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
+  const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [userId, setUserId] = useState("");
   const [useFilter, setUseFilter] = useState<null | boolean>(null);
   const {
@@ -66,6 +72,10 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     setUserId(id);
   }
 
+  function updateType(val: RequirementType) {
+    setType(val);
+  }
+
   return (
     <HomeContext.Provider
       value={{
@@ -82,6 +92,9 @@ export function HomeProvider({ children }: { children: ReactNode }) {
         requirementList,
         totalRequirementList,
         loadingRequirementList,
+
+        type,
+        updateType,
       }}
     >
       {children}

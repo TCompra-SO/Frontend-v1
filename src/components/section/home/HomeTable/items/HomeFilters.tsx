@@ -23,8 +23,8 @@ export default function HomeFilters() {
   const { t } = useTranslation();
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
+  const { type, updateType } = useContext(HomeContext);
   const [form] = Form.useForm();
-  const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [hideFilters, setHideFilters] = useState(true);
   const {
     updateUseFilter,
@@ -119,7 +119,7 @@ export default function HomeFilters() {
         className={`btn btn-pink wd-33 t-flex f-column j-items gap-10 btn-pd ${
           type == reqType ? "active" : ""
         }`}
-        onClick={() => setType(reqType)}
+        onClick={() => updateType(reqType)}
       >
         <i className={icon}></i>{" "}
         <span className="req-btn-info">{t(label)}</span>

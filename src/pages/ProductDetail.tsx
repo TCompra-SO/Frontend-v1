@@ -81,7 +81,10 @@ export default function ProductDetail() {
 
   return (
     <>
-      <ProductDetailHeader reqTitle={requirement?.title} />
+      <ProductDetailHeader
+        reqTitle={requirement?.title}
+        type={requirement?.type}
+      />
       <ProductRequirementDetail requirement={requirement} />
       <Footer />
     </>
