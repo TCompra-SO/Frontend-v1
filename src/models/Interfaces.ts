@@ -29,6 +29,7 @@ import {
 } from "./MainInterfaces";
 import useApi, { UseApiType } from "../hooks/useApi";
 import { FieldSort } from "./Requests";
+import { FilterNames } from "../contexts/RequirementDetailContext";
 
 /******** Modals *******/
 
@@ -105,6 +106,8 @@ export interface ModalSelectOffer extends CommonModalType {
     offer: Offer;
     requirement: Requirement;
     onSuccess: (offerId: string) => void;
+    filters: OfferFilters;
+    filterNames: FilterNames;
   };
 }
 

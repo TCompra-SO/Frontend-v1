@@ -256,6 +256,8 @@ export default function ModalContainer(props: ModalContainerProps) {
             requirement={props.content.data.requirement}
             onSucces={props.content.data.onSuccess}
             onClose={props.onClose}
+            filterNames={props.content.data.filterNames}
+            filters={props.content.data.filters}
             {...commonModalProps}
           />
         );

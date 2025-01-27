@@ -15,11 +15,12 @@ import {
   RateStartCountType,
 } from "../../../../utilities/types";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ModalContent } from "../../../../models/Interfaces";
 import ModalContainer from "../../../containers/ModalContainer";
 import FrontImage from "../../../common/utils/FrontImage";
 import RateStarCount from "../../../common/utils/RateStarCount";
+import { requirementDetailContext } from "../../../../contexts/RequirementDetailContext";
 
 interface RequirementOfferListItemProps {
   requirementId: string;
@@ -43,6 +44,7 @@ export default function RequirementOfferListItemHeader({
   ...props
 }: RequirementOfferListItemProps) {
   const { t } = useTranslation();
+  const { filters, filterNames } = useContext(requirementDetailContext);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -123,6 +125,8 @@ export default function RequirementOfferListItemHeader({
               offer: props.offer,
               requirement: props.showStateAndActions.requirement,
               onSuccess: props.showStateAndActions.onSelectionSuccess,
+              filterNames,
+              filters,
             },
             action,
           });
