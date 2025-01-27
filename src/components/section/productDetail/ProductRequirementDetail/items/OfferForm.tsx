@@ -16,7 +16,7 @@ import BudgetField from "../../../../common/formFields/BudgetField";
 import AddImagesField from "../../../../common/formFields/AddImagesField";
 import AddDocumentField from "../../../../common/formFields/AddDocumentField";
 import { CreateOfferRequest } from "../../../../../models/Requests";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import {
   CanOfferResponse,
   useApiParams,
@@ -95,6 +95,8 @@ export default function OfferForm(props: OfferFormProps) {
   const [offerId, setOfferId] = useState<string>("");
   const [loadingForm, setLoadingForm] = useState(true);
   const [warrantyRequired, setWarrantyRequired] = useState(false);
+  const formDataImgRef = useRef(formDataImg);
+  const formDataDocRef = useRef(formDataDoc);
 
   useEffect(() => {
     if (cantOfferMotive != CantOfferMotives.INI) setLoadingForm(false);
@@ -104,6 +106,16 @@ export default function OfferForm(props: OfferFormProps) {
     form.setFieldValue("currency", props.requirement?.coin);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.requirement]);
+
+  /** Guardar imágenes y documentos */
+
+  useEffect(() => {
+    formDataDocRef.current = formDataDoc;
+  }, [formDataDoc]);
+
+  useEffect(() => {
+    formDataImgRef.current = formDataImg;
+  }, [formDataImg]);
 
   /** Verificar si el usuario puede ofertar */
 
@@ -156,12 +168,7 @@ export default function OfferForm(props: OfferFormProps) {
     error: errorImg,
     errorMsg: errorMsgImg,
     fetchData: fetchDataImg,
-  } = useApi<FormData>({
-    service: apiParamsImg.service,
-    method: apiParamsImg.method,
-    dataToSend: apiParamsImg.dataToSend,
-    token: apiParamsImg.token,
-  });
+  } = useApi<FormData>(apiParamsImg);
 
   useEffect(() => {
     if (apiParamsImg.service) fetchDataImg();
@@ -191,12 +198,7 @@ export default function OfferForm(props: OfferFormProps) {
     error: errorDoc,
     errorMsg: errorMsgDoc,
     fetchData: fetchDataDoc,
-  } = useApi<FormData>({
-    service: apiParamsDoc.service,
-    method: apiParamsDoc.method,
-    dataToSend: apiParamsDoc.dataToSend,
-    token: apiParamsDoc.token,
-  });
+  } = useApi<FormData>(apiParamsDoc);
 
   useEffect(() => {
     if (apiParamsDoc.service) fetchDataDoc();
@@ -420,6 +422,7 @@ export default function OfferForm(props: OfferFormProps) {
           service: uploadDocsOfferService(),
           method: "post",
           dataToSend: data,
+          includeHeader: false,
         });
       }
       if (formDataImg) {
@@ -429,6 +432,7 @@ export default function OfferForm(props: OfferFormProps) {
           service: uploadImagesOfferService(),
           method: "post",
           dataToSend: formDataImg,
+          includeHeader: false,
         });
       }
     } else {

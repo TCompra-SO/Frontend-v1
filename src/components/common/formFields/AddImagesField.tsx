@@ -25,6 +25,7 @@ interface AddImagesFieldProps {
 
 export interface AddImagesFieldRef {
   reset: () => void;
+  fileList: UploadFile[];
 }
 
 export const AddImagesField = forwardRef<
@@ -49,6 +50,7 @@ export const AddImagesField = forwardRef<
       setPreviewOpen(false);
       setPreviewImage("");
     },
+    fileList,
   }));
 
   function handleClick() {

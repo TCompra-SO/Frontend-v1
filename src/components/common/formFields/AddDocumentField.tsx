@@ -24,6 +24,7 @@ interface AddDocumentFieldProps {
 
 export interface AddDocumentFieldRef {
   reset: () => void;
+  fileList: UploadFile[];
 }
 
 export const AddDocumentField = forwardRef<
@@ -44,6 +45,7 @@ export const AddDocumentField = forwardRef<
     reset: () => {
       setFileList([]);
     },
+    fileList,
   }));
 
   function handleClick() {
