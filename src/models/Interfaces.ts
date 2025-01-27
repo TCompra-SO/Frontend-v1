@@ -10,6 +10,7 @@ import {
   PurchaseOrderTableTypes,
   CodeResponseCanOffer,
   Filters,
+  SocketChangeType,
 } from "../utilities/types";
 import {
   OfferItemSubUser,
@@ -474,4 +475,10 @@ export interface MainFilters {
   startDate: string;
   endDate: string;
   companyId: string;
+}
+
+export interface SocketResponse {
+  dataPack: any;
+  typeSocket: SocketChangeType;
+  key: string;
 }

@@ -1,13 +1,43 @@
 import { useContext, useEffect } from "react";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 import { pageSizeOptionsSt } from "../utilities/globals";
 import { HomeContext } from "../contexts/Homecontext";
 
-// Obtiene requerimientos sin considerar filtros
+let socketAPI: Socket | null = null; // Singleton instance of the socket
+
 export default function useSocket() {
-  const { useFilter, retrieveRequirements, page, type } =
+  const { useFilter, retrieveRequirements, page, type, updateChangesQueue } =
     useContext(HomeContext);
-  const socketAPI = io(import.meta.env.VITE_SOCKET_URL);
+
+  // Initialize socket connection once
+  useEffect(() => {
+    if (!socketAPI) {
+      socketAPI = io(import.meta.env.VITE_SOCKET_URL);
+
+      socketAPI.on("connect", () => {
+        console.log("Connected");
+        socketAPI?.emit("joinRoom", "homeRequeriment");
+      });
+
+      socketAPI.on("requeriment", (payload) => {
+        console.log("Nuevo requerimiento creado recibido:", payload);
+        updateChangesQueue(
+          payload.typeSocket,
+          payload.dataPack.data[0].key,
+          payload.dataPack.data[0]
+        );
+      });
+    }
+
+    // Cleanup when the component unmounts
+    return () => {
+      if (socketAPI) {
+        console.log("Socket disconnected");
+        socketAPI.disconnect();
+        socketAPI = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!useFilter) getData();
@@ -23,24 +53,5 @@ export default function useSocket() {
     retrieveRequirements(page, pageSizeOptionsSt[0]);
   }
 
-  useEffect(() => {
-    async function fetchData() {
-      socketAPI.on("getRequeriments", async () => {
-        if (!useFilter)
-          if (page == 1) {
-            getData();
-          }
-      });
-    }
-
-    fetchData();
-
-    // Limpiar el socket al desmontar el componente
-    return () => {
-      // socketAPI.off("getRequeriments");
-      socketAPI.disconnect();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   return {};
 }

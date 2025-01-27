@@ -4,7 +4,8 @@ import { useGetRequirementList } from "../hooks/requirementHooks";
 import { HomeFilterRequest } from "../models/Requests";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
-import { RequirementType } from "../utilities/types";
+import { RequirementType, SocketChangeType } from "../utilities/types";
+import { getRequirementFromData } from "../services/complete/generalServices";
 
 interface HomeContextType {
   type: RequirementType;
@@ -23,6 +24,7 @@ interface HomeContextType {
     pageSize?: number,
     params?: HomeFilterRequest
   ) => void;
+  updateChangesQueue: (type: SocketChangeType, key: string, data: any) => void;
 }
 
 export const HomeContext = createContext<HomeContextType>({
@@ -37,20 +39,49 @@ export const HomeContext = createContext<HomeContextType>({
   retrieveRequirements: () => {},
   type: RequirementType.GOOD,
   updateType: () => {},
+  updateChangesQueue: () => {},
 });
 
 export function HomeProvider({ children }: { children: ReactNode }) {
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
+  const [changesQueue, setChangesQueue] = useState<
+    { type: SocketChangeType; key: string; data: any }[]
+  >([]);
+  const [requirementList, setRequirementList] = useState<Requirement[]>([]);
+  const [totalRequirementList, setTotalRequirementList] = useState(0);
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [userId, setUserId] = useState("");
   const [useFilter, setUseFilter] = useState<null | boolean>(null);
   const {
     getRequirementList,
-    requirements: requirementList,
-    total: totalRequirementList,
+    requirements: requirementListOrig,
+    total: totalRequirementListOrig,
     loading: loadingRequirementList,
   } = useGetRequirementList();
   const [page, setPage] = useState(1);
+
+  // Copia de lista de requerimientos y total
+  useEffect(() => {
+    setRequirementList(requirementListOrig);
+  }, [requirementListOrig]);
+
+  useEffect(() => {
+    setTotalRequirementList(totalRequirementListOrig);
+  }, [totalRequirementListOrig]);
+
+  // Procesa cambios
+  useEffect(() => {
+    if (changesQueue.length === 0) return;
+    async function processQueue() {
+      const nextChange = changesQueue[0];
+      if (nextChange) {
+        await addNewRow(nextChange.data);
+        setChangesQueue((prevQueue) => prevQueue.slice(1));
+      }
+    }
+    processQueue();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [changesQueue]);
 
   useEffect(() => {
     if (!isLoggedIn) setUserId("");
@@ -76,6 +107,18 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     setType(val);
   }
 
+  function updateChangesQueue(type: SocketChangeType, key: string, data: any) {
+    setChangesQueue((prevQueue) => [...prevQueue, { type, key, data }]);
+  }
+
+  async function addNewRow(data: any) {
+    const newRequirement: Requirement = await getRequirementFromData(data);
+    setRequirementList((prev) => {
+      return [newRequirement, ...prev.slice(0, prev.length - 1)];
+    });
+    setTotalRequirementList(totalRequirementList + 1);
+  }
+
   return (
     <HomeContext.Provider
       value={{
@@ -95,6 +138,8 @@ export function HomeProvider({ children }: { children: ReactNode }) {
 
         type,
         updateType,
+
+        updateChangesQueue,
       }}
     >
       {children}

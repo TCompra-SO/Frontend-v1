@@ -486,3 +486,8 @@ export type OnChangePageAndPageSizeTypeParams = {
 export type OnChangePageAndPageSizeType = (
   params: OnChangePageAndPageSizeTypeParams
 ) => void;
+
+export enum SocketChangeType {
+  CREATE = 0,
+  UPDATE = 1,
+}

@@ -111,6 +111,11 @@ export default function Requirements() {
 
   /** Verificar si hay una solicitud pendiente */
 
+  // useEffect(() => {
+  //   showLoadingMessage(loadingGetOffersByRequirementId);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [loadingGetOffersByRequirementId]);
+
   useEffect(() => {
     if (detailedRequirementModalData.requirementId) {
       console.log(detailedRequirementModalData.requirementId);
@@ -205,7 +210,7 @@ export default function Requirements() {
   });
 
   useEffect(() => {
-    showLoadingMessage(loadingDelete);
+    showLoadingMessage(loadingDelete, "aaaaaaaaa");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingDelete]);
 

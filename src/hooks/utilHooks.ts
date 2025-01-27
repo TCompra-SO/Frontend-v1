@@ -29,13 +29,15 @@ export function useShowLoadingMessage() {
     show: boolean | undefined,
     textKey: string = "loading"
   ) {
+    // console.log(textKey, show);
+    // const message = getMessageApi();
     if (message && show)
       message.open({
         type: "loading",
         content: t(textKey),
         duration: 0,
       });
-    if (!show) message.destroy();
+    if (!show && message) message.destroy();
   }
 
   return { showLoadingMessage };

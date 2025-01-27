@@ -26,6 +26,7 @@ import { useSelector } from "react-redux";
 export default function Home() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  useSocket();
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
   const {
     updateType,
@@ -48,7 +49,6 @@ export default function Home() {
         navigate(`${pageRoutes.productDetail}/${req.key}`);
     },
   });
-  useSocket();
 
   /** Mostrar datos iniciales */
 
