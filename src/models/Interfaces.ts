@@ -477,8 +477,28 @@ export interface MainFilters {
   companyId: string;
 }
 
-export interface SocketResponse {
-  dataPack: any;
-  typeSocket: SocketChangeType;
+export interface SocketDataCreate {
+  code: number;
+  data: Record<string, any>[];
+  res: Record<string, any>;
+  success: boolean;
+}
+
+export interface SocketDataUpdate {
+  column: string;
+  value: any;
+}
+
+export interface SocketResponseCreate {
+  typeSocket: SocketChangeType.CREATE;
+  dataPack: SocketDataCreate;
   key: string;
 }
+
+export interface SocketResponseUpdate {
+  typeSocket: SocketChangeType.UPDATE;
+  dataPack: SocketDataUpdate;
+  key: string;
+}
+
+export type SocketResponse = SocketResponseCreate | SocketResponseUpdate;

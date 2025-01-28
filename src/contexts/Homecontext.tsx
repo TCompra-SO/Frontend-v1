@@ -6,6 +6,8 @@ import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { RequirementType, SocketChangeType } from "../utilities/types";
 import { getRequirementFromData } from "../services/complete/generalServices";
+import useSocketQueueHook from "../hooks/socketQueueHook";
+import { SocketResponse } from "../models/Interfaces";
 
 interface HomeContextType {
   type: RequirementType;
@@ -24,7 +26,7 @@ interface HomeContextType {
     pageSize?: number,
     params?: HomeFilterRequest
   ) => void;
-  updateChangesQueue: (type: SocketChangeType, key: string, data: any) => void;
+  updateChangesQueue: (payload: SocketResponse) => void;
 }
 
 export const HomeContext = createContext<HomeContextType>({
@@ -44,9 +46,7 @@ export const HomeContext = createContext<HomeContextType>({
 
 export function HomeProvider({ children }: { children: ReactNode }) {
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
-  const [changesQueue, setChangesQueue] = useState<
-    { type: SocketChangeType; key: string; data: any }[]
-  >([]);
+  const { updateChangesQueue } = useSocketQueueHook(addNewRow, addNewRow);
   const [requirementList, setRequirementList] = useState<Requirement[]>([]);
   const [totalRequirementList, setTotalRequirementList] = useState(0);
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
@@ -68,20 +68,6 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     setTotalRequirementList(totalRequirementListOrig);
   }, [totalRequirementListOrig]);
-
-  // Procesa cambios
-  useEffect(() => {
-    if (changesQueue.length === 0) return;
-    async function processQueue() {
-      const nextChange = changesQueue[0];
-      if (nextChange) {
-        await addNewRow(nextChange.data);
-        setChangesQueue((prevQueue) => prevQueue.slice(1));
-      }
-    }
-    processQueue();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [changesQueue]);
 
   useEffect(() => {
     if (!isLoggedIn) setUserId("");
@@ -105,10 +91,6 @@ export function HomeProvider({ children }: { children: ReactNode }) {
 
   function updateType(val: RequirementType) {
     setType(val);
-  }
-
-  function updateChangesQueue(type: SocketChangeType, key: string, data: any) {
-    setChangesQueue((prevQueue) => [...prevQueue, { type, key, data }]);
   }
 
   async function addNewRow(data: any) {

@@ -2,6 +2,8 @@ import { useContext, useEffect } from "react";
 import { io, Socket } from "socket.io-client";
 import { pageSizeOptionsSt } from "../utilities/globals";
 import { HomeContext } from "../contexts/Homecontext";
+import { SocketResponse } from "../models/Interfaces";
+import { SocketChangeType } from "../utilities/types";
 
 let socketAPI: Socket | null = null; // Singleton instance of the socket
 
@@ -19,13 +21,9 @@ export default function useSocket() {
         socketAPI?.emit("joinRoom", "homeRequeriment");
       });
 
-      socketAPI.on("requeriment", (payload) => {
+      socketAPI.on("requeriment", (payload: SocketResponse) => {
         console.log("Nuevo requerimiento creado recibido:", payload);
-        updateChangesQueue(
-          payload.typeSocket,
-          payload.dataPack.data[0].key,
-          payload.dataPack.data[0]
-        );
+        updateChangesQueue(payload);
       });
     }
 
