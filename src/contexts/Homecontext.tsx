@@ -6,8 +6,8 @@ import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { RequirementType, SocketChangeType } from "../utilities/types";
 import { getRequirementFromData } from "../services/complete/generalServices";
-import useSocketQueueHook from "../hooks/socketQueueHook";
-import { SocketResponse } from "../models/Interfaces";
+import useSocketQueueHook, { useAddNewRow } from "../hooks/socketQueueHook";
+import { SocketDataPackType, SocketResponse } from "../models/Interfaces";
 
 interface HomeContextType {
   type: RequirementType;
@@ -46,7 +46,6 @@ export const HomeContext = createContext<HomeContextType>({
 
 export function HomeProvider({ children }: { children: ReactNode }) {
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
-  const { updateChangesQueue } = useSocketQueueHook(addNewRow, addNewRow);
   const [requirementList, setRequirementList] = useState<Requirement[]>([]);
   const [totalRequirementList, setTotalRequirementList] = useState(0);
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
@@ -59,6 +58,14 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     loading: loadingRequirementList,
   } = useGetRequirementList();
   const [page, setPage] = useState(1);
+  const { addNewRow, updateRow } = useAddNewRow(
+    (data: SocketDataPackType) => getRequirementFromData(data),
+    requirementList,
+    setRequirementList,
+    totalRequirementList,
+    setTotalRequirementList
+  );
+  const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
 
   // Copia de lista de requerimientos y total
   useEffect(() => {
@@ -93,13 +100,13 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     setType(val);
   }
 
-  async function addNewRow(data: any) {
-    const newRequirement: Requirement = await getRequirementFromData(data);
-    setRequirementList((prev) => {
-      return [newRequirement, ...prev.slice(0, prev.length - 1)];
-    });
-    setTotalRequirementList(totalRequirementList + 1);
-  }
+  // async function addNewRow(data: any) {
+  //   const newRequirement: Requirement = await getRequirementFromData(data);
+  //   setRequirementList((prev) => {
+  //     return [newRequirement, ...prev.slice(0, prev.length - 1)];
+  //   });
+  //   setTotalRequirementList(totalRequirementList + 1);
+  // }
 
   return (
     <HomeContext.Provider

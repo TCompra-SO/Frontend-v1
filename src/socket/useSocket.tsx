@@ -3,7 +3,6 @@ import { io, Socket } from "socket.io-client";
 import { pageSizeOptionsSt } from "../utilities/globals";
 import { HomeContext } from "../contexts/Homecontext";
 import { SocketResponse } from "../models/Interfaces";
-import { SocketChangeType } from "../utilities/types";
 
 let socketAPI: Socket | null = null; // Singleton instance of the socket
 
@@ -23,7 +22,7 @@ export default function useSocket() {
 
       socketAPI.on("requeriment", (payload: SocketResponse) => {
         console.log("Nuevo requerimiento creado recibido:", payload);
-        updateChangesQueue(payload);
+        if (page == 1 && !useFilter) updateChangesQueue(payload);
       });
     }
 

@@ -5,6 +5,7 @@ import ModalContainer from "../components/containers/ModalContainer";
 import { useContext, useEffect, useRef, useState } from "react";
 import {
   ModalContent,
+  SocketDataPackType,
   TableTypeOffer,
   useApiParams,
 } from "../models/Interfaces";
@@ -31,6 +32,7 @@ import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
+import useSocketQueueHook, { useAddNewRow } from "../hooks/socketQueueHook";
 
 export default function Offers() {
   const { t } = useTranslation();
@@ -47,6 +49,8 @@ export default function Offers() {
   const { searchTable, responseData, error, errorMsg, loading } =
     useSearchTable(dataUser.uid, TableTypes.OFFER, EntityType.SUBUSER, type);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [offerList, setOfferList] = useState<Offer[]>([]);
+  const [total, setTotal] = useState(0);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
@@ -64,17 +68,45 @@ export default function Offers() {
   } = useFilterSortPaginationForTable();
   const [tableContent, setTableContent] = useState<TableTypeOffer>({
     type: TableTypes.OFFER,
-    data: [],
+    data: offerList,
     subType: type,
     hiddenColumns: [],
     nameColumnHeader: t("offers"),
     onButtonClick: handleOnButtonClick,
-    total: 0,
+    total,
     page: currentPage,
     pageSize: currentPageSize,
     fieldSort,
     filteredInfo,
   });
+  const { addNewRow, updateRow } = useAddNewRow(
+    (data: SocketDataPackType) =>
+      transformToOfferFromGetOffersByEntityOrSubUser(
+        data,
+        type,
+        dataUser,
+        mainDataUser
+      ),
+    offerList,
+    setOfferList,
+    total,
+    setTotal
+  );
+  const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
+
+  /** Actualiza el contenido de tabla */
+
+  useEffect(() => {
+    setTableContent((prev) => ({
+      ...prev,
+      data: offerList,
+      total,
+      page: currentPage,
+      pageSize: currentPageSize,
+      fieldSort,
+      filteredInfo,
+    }));
+  }, [offerList]);
 
   /** Verificar si hay una solicitud pendiente */
 
@@ -121,15 +153,8 @@ export default function Offers() {
       setData();
     } else if (error) {
       setCurrentPage(1);
-      setTableContent((prev) => ({
-        ...prev,
-        data: [],
-        total: 0,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
-        filteredInfo,
-      }));
+      setTotal(0);
+      setOfferList([]);
       showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -198,16 +223,8 @@ export default function Offers() {
           mainDataUser
         )
       );
-
-      setTableContent((prev) => ({
-        ...prev,
-        data,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
-        filteredInfo,
-        total: responseData.res?.totalDocuments,
-      }));
+      setTotal(responseData.res?.totalDocuments);
+      setOfferList(data);
     } catch (error) {
       console.log(error);
       showNotification("error", t("errorOccurred"));
