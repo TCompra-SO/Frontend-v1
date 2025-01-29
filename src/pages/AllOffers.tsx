@@ -3,7 +3,11 @@ import TablePageContent, {
   TablePageContentRef,
 } from "../components/section/table-page/TablePageContent";
 import { useEffect, useRef, useState } from "react";
-import { ModalContent, TableTypeAllOffers } from "../models/Interfaces";
+import {
+  ModalContent,
+  SocketDataPackType,
+  TableTypeAllOffers,
+} from "../models/Interfaces";
 import { Action, ModalTypes, TableTypes } from "../utilities/types";
 import { BaseUser, Offer } from "../models/MainInterfaces";
 import makeRequest, {
@@ -28,6 +32,7 @@ import useShowNotification from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
+import useSocketQueueHook, { useAddNewRow } from "../hooks/socketQueueHook";
 
 export default function AllOffers() {
   const { t } = useTranslation();
@@ -54,6 +59,8 @@ export default function AllOffers() {
     handleSearch,
     reset,
   } = useFilterSortPaginationForTable();
+  const [offerList, setOfferList] = useState<Offer[]>([]);
+  const [total, setTotal] = useState(0);
   const [loadingTable, setLoadingTable] = useState(true);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
@@ -63,16 +70,45 @@ export default function AllOffers() {
   });
   const [tableContent, setTableContent] = useState<TableTypeAllOffers>({
     type: TableTypes.ALL_OFFERS,
-    data: [],
+    data: offerList,
     hiddenColumns: [],
     nameColumnHeader: t("offers"),
     onButtonClick: handleOnButtonClick,
-    total: 0,
+    total,
     page: currentPage,
     pageSize: currentPageSize,
     fieldSort,
     filteredInfo,
   });
+  const { addNewRow, updateRow } = useAddNewRow(
+    (data: SocketDataPackType) =>
+      transformToOfferFromGetOffersByEntityOrSubUser(
+        data,
+        type,
+        dataUser,
+        mainDataUser
+      ),
+    offerList,
+    setOfferList,
+    total,
+    setTotal
+  );
+  const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
+
+  /** Actualiza el contenido de tabla */
+
+  useEffect(() => {
+    setTableContent((prev) => ({
+      ...prev,
+      data: offerList,
+      total,
+      page: currentPage,
+      pageSize: currentPageSize,
+      fieldSort,
+      filteredInfo,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [offerList]);
 
   /** Obtener datos de tabla */
 
@@ -88,15 +124,8 @@ export default function AllOffers() {
       setData();
     } else if (error) {
       setCurrentPage(1);
-      setTableContent((prev) => ({
-        ...prev,
-        data: [],
-        total: 0,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
-        filteredInfo,
-      }));
+      setTotal(0);
+      setOfferList([]);
       setLoadingTable(false);
       showNotification("error", errorMsg);
     }
@@ -167,15 +196,8 @@ export default function AllOffers() {
           }
         })
       );
-      setTableContent((prev) => ({
-        ...prev,
-        data,
-        total: responseData.res?.totalDocuments,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
-        filteredInfo,
-      }));
+      setTotal(responseData.res?.totalDocuments);
+      setOfferList(data);
     } catch (error) {
       console.log(error);
       showNotification("error", t("errorOccurred"));

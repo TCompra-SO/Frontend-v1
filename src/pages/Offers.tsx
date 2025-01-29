@@ -106,6 +106,7 @@ export default function Offers() {
       fieldSort,
       filteredInfo,
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offerList]);
 
   /** Verificar si hay una solicitud pendiente */

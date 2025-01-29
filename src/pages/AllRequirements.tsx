@@ -3,7 +3,10 @@ import TablePageContent, {
   TablePageContentRef,
 } from "../components/section/table-page/TablePageContent";
 import { useEffect, useRef, useState } from "react";
-import { TableTypeAllRequirements } from "../models/Interfaces";
+import {
+  SocketDataPackType,
+  TableTypeAllRequirements,
+} from "../models/Interfaces";
 import { Action, TableTypes } from "../utilities/types";
 import { BasicRequirement } from "../models/MainInterfaces";
 import {
@@ -20,6 +23,7 @@ import useShowNotification from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
+import useSocketQueueHook, { useAddNewRow } from "../hooks/socketQueueHook";
 
 export default function AllRequirements() {
   const { t } = useTranslation();
@@ -46,18 +50,46 @@ export default function AllRequirements() {
     reset,
   } = useFilterSortPaginationForTable();
   const [loadingTable, setLoadingTable] = useState(true);
+  const [requirementList, setRequirementList] = useState<BasicRequirement[]>(
+    []
+  );
+  const [total, setTotal] = useState(0);
   const [tableContent, setTableContent] = useState<TableTypeAllRequirements>({
     type: TableTypes.ALL_REQUIREMENTS,
-    data: [],
+    data: requirementList,
     hiddenColumns: [],
     nameColumnHeader: t(getLabelFromRequirementType(type)),
     onButtonClick: handleOnButtonClick,
-    total: 0,
+    total,
     page: currentPage,
     pageSize: currentPageSize,
     fieldSort,
     filteredInfo,
   });
+  const { addNewRow, updateRow } = useAddNewRow(
+    (data: SocketDataPackType) => transformDataToBasicRequirement(data, type),
+    requirementList,
+    setRequirementList,
+    total,
+    setTotal
+  );
+  const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
+
+  /** Actualiza el contenido de tabla */
+
+  useEffect(() => {
+    setTableContent((prev) => ({
+      ...prev,
+      nameColumnHeader: t(getLabelFromRequirementType(type)),
+      data: requirementList,
+      total,
+      page: currentPage,
+      pageSize: currentPageSize,
+      fieldSort,
+      filteredInfo,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requirementList]);
 
   /** Obtener datos de tabla */
 
@@ -73,23 +105,15 @@ export default function AllRequirements() {
       setData();
     } else if (error) {
       setCurrentPage(1);
-      setTableContent((prev) => ({
-        ...prev,
-        nameColumnHeader: t(getLabelFromRequirementType(type)),
-        data: [],
-        total: 0,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
-        filteredInfo,
-      }));
+      setTotal(0);
+      setRequirementList([]);
       setLoadingTable(false);
       showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
-  /* Actualizar tabla */
+  /* Obtiene nuevo tipo de tabla */
 
   useEffect(() => {
     setType(getRouteType(location.pathname));
@@ -110,16 +134,8 @@ export default function AllRequirements() {
           return transformDataToBasicRequirement(e, type);
         })
       );
-      setTableContent((prev) => ({
-        ...prev,
-        nameColumnHeader: t(getLabelFromRequirementType(type)),
-        data,
-        total: responseData.res?.totalDocuments,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
-        filteredInfo,
-      }));
+      setTotal(responseData.res?.totalDocuments);
+      setRequirementList(data);
     } catch (error) {
       console.log(error);
       showNotification("error", t("errorOccurred"));

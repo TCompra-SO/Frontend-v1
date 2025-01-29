@@ -10,6 +10,7 @@ import {
 import { useTranslation } from "react-i18next";
 import {
   ModalContent,
+  SocketDataPackType,
   TableTypePurchaseOrder,
   useApiParams,
 } from "../models/Interfaces";
@@ -28,6 +29,7 @@ import {
 } from "../utilities/globalFunctions";
 import {
   transformToFullUser,
+  transformToOfferFromGetOffersByEntityOrSubUser,
   transformToPurchaseOrder,
 } from "../utilities/transform";
 import {
@@ -48,6 +50,7 @@ import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
+import useSocketQueueHook, { useAddNewRow } from "../hooks/socketQueueHook";
 
 export default function PurchaseOrders() {
   const { t } = useTranslation();
@@ -76,6 +79,10 @@ export default function PurchaseOrders() {
   } = useFilterSortPaginationForTable();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [action, setAction] = useState<Action>(Action.NONE);
+  const [purchaseOrderList, setPurchaseOrderList] = useState<PurchaseOrder[]>(
+    []
+  );
+  const [total, setTotal] = useState(0);
   const [nameHeader, setNameHeader] = useState(
     type == PurchaseOrderTableTypes.ISSUED ? t("seller") : t("customer")
   );
@@ -86,17 +93,44 @@ export default function PurchaseOrders() {
   });
   const [tableContent, setTableContent] = useState<TableTypePurchaseOrder>({
     type: TableTypes.PURCHASE_ORDER,
-    data: [],
+    data: purchaseOrderList,
     subType: type,
     hiddenColumns: [],
     nameColumnHeader: nameHeader,
     onButtonClick: handleOnButtonClick,
-    total: 0,
+    total,
     page: currentPage,
     pageSize: currentPageSize,
     fieldSort,
     filteredInfo,
   });
+  const { addNewRow, updateRow } = useAddNewRow(
+    (data: SocketDataPackType) => transformToPurchaseOrder(data),
+    purchaseOrderList,
+    setPurchaseOrderList,
+    total,
+    setTotal
+  );
+  const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
+
+  /** Actualiza el contenido de tabla */
+
+  useEffect(() => {
+    setTableContent((prev) => ({
+      ...prev,
+      data: purchaseOrderList,
+      subType: type,
+      total,
+      page: currentPage,
+      pageSize: currentPageSize,
+      fieldSort,
+      filteredInfo,
+      nameColumnHeader: nameHeader,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [purchaseOrderList]);
+
+  /** Reset flag */
 
   useEffect(() => {
     return () => {
@@ -166,17 +200,8 @@ export default function PurchaseOrders() {
       setTableData();
     } else if (error) {
       setCurrentPage(1);
-      setTableContent((prev) => ({
-        ...prev,
-        data: [],
-        subType: type,
-        total: 0,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
-        filteredInfo,
-        nameColumnHeader: nameHeader,
-      }));
+      setTotal(0);
+      setPurchaseOrderList([]);
       showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -272,17 +297,8 @@ export default function PurchaseOrders() {
       const data = responseData.data.map((po: any) =>
         transformToPurchaseOrder(po)
       );
-      setTableContent((prev) => ({
-        ...prev,
-        data,
-        subType: type,
-        total: responseData.res?.totalDocuments,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
-        filteredInfo,
-        nameColumnHeader: nameHeader,
-      }));
+      setTotal(responseData.res?.totalDocuments);
+      setPurchaseOrderList(data);
     } catch (error) {
       console.log(error);
       showNotification("error", t("errorOccurred"));

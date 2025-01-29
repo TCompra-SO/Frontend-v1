@@ -4,7 +4,7 @@ import { useGetRequirementList } from "../hooks/requirementHooks";
 import { HomeFilterRequest } from "../models/Requests";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
-import { RequirementType, SocketChangeType } from "../utilities/types";
+import { RequirementType } from "../utilities/types";
 import { getRequirementFromData } from "../services/complete/generalServices";
 import useSocketQueueHook, { useAddNewRow } from "../hooks/socketQueueHook";
 import { SocketDataPackType, SocketResponse } from "../models/Interfaces";

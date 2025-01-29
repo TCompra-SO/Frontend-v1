@@ -134,6 +134,7 @@ export default function Requirements() {
       fieldSort,
       filteredInfo,
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requirementList]);
 
   /** Verificar si hay una solicitud pendiente */
