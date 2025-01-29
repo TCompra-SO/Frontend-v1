@@ -672,6 +672,7 @@ export function useGetRequirementList() {
   const [requirements, setRequirements] = useState<Requirement[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [usersCache, setUsersCache] = useState<Map<string, any>>(new Map());
 
   async function getRequirementList(
     page: number,
@@ -694,11 +695,13 @@ export function useGetRequirementList() {
       });
       if (responseData) {
         const cache = new Map<string, any>();
+        setUsersCache(cache);
         const data: (Requirement | null)[] = await Promise.all(
           responseData.data.map(async (e: any) =>
             getRequirementFromData(e, undefined, undefined, cache)
           )
         );
+        setUsersCache(cache);
         setRequirements(data.filter((req) => req !== null));
         setTotal(responseData.res?.totalDocuments);
       }
@@ -715,5 +718,6 @@ export function useGetRequirementList() {
     requirements,
     total,
     loading,
+    usersCache,
   };
 }

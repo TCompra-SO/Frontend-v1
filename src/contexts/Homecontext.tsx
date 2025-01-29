@@ -58,10 +58,12 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     requirements: requirementListOrig,
     total: totalRequirementListOrig,
     loading: loadingRequirementList,
+    usersCache,
   } = useGetRequirementList();
   const [page, setPage] = useState(1);
   const { addNewRow, updateRow } = useAddOrUpdateRow(
-    (data: SocketDataPackType) => getRequirementFromData(data),
+    (data: SocketDataPackType) =>
+      getRequirementFromData(data, undefined, undefined, usersCache),
     requirementList,
     setRequirementList,
     totalRequirementList,
@@ -69,7 +71,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   );
   const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
 
-  // Copia de lista de requerimientos y total
+  // Copia de lista de requerimientos
   useEffect(() => {
     setRequirementList(requirementListOrig);
   }, [requirementListOrig]);
