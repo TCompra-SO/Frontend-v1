@@ -27,7 +27,11 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
 
   const searchCompany = debounce((newValue: string) => {
     const temp = getSearchString(newValue);
-    if (lastSearchValue != temp && temp.length >= searchSinceLength) {
+    if (
+      typeof temp === "string" &&
+      lastSearchValue != temp &&
+      temp.length >= searchSinceLength
+    ) {
       searchCompanyByName(temp);
       setLastSearchValue(temp);
     } else {

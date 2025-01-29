@@ -53,6 +53,7 @@ import useSearchTable, {
 import useSocketQueueHook, {
   useAddOrUpdateRow,
 } from "../hooks/socketQueueHook";
+import useSocket from "../socket/useSocket";
 
 export default function SalesOrders() {
   const { t } = useTranslation();
@@ -67,7 +68,7 @@ export default function SalesOrders() {
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
-  const { searchTable, responseData, error, errorMsg, loading } =
+  const { searchTable, responseData, error, errorMsg, loading, apiParams } =
     useSearchTable(uid, TableTypes.SALES_ORDER, EntityType.SUBUSER, type);
   const {
     currentPage,
@@ -112,6 +113,13 @@ export default function SalesOrders() {
     setTotal
   );
   const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
+  useSocket(
+    TableTypes.SALES_ORDER,
+    type,
+    currentPage,
+    apiParams.dataToSend,
+    updateChangesQueue
+  );
 
   /** Actualiza el contenido de tabla */
 

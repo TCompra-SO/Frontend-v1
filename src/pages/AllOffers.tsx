@@ -35,6 +35,7 @@ import useSearchTable, {
 import useSocketQueueHook, {
   useAddOrUpdateRow,
 } from "../hooks/socketQueueHook";
+import useSocket from "../socket/useSocket";
 
 export default function AllOffers() {
   const { t } = useTranslation();
@@ -45,12 +46,13 @@ export default function AllOffers() {
   const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
   const { showNotification } = useShowNotification();
   const [type, setType] = useState(getRouteType(location.pathname));
-  const { searchTable, responseData, error, errorMsg } = useSearchTable(
-    dataUser.uid,
-    TableTypes.ALL_OFFERS,
-    dataUser.typeEntity,
-    type
-  );
+  const { searchTable, responseData, error, errorMsg, apiParams } =
+    useSearchTable(
+      dataUser.uid,
+      TableTypes.ALL_OFFERS,
+      dataUser.typeEntity,
+      type
+    );
   const {
     currentPage,
     currentPageSize,
@@ -108,6 +110,13 @@ export default function AllOffers() {
     setTotal
   );
   const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
+  useSocket(
+    TableTypes.ALL_OFFERS,
+    type,
+    currentPage,
+    apiParams.dataToSend,
+    updateChangesQueue
+  );
 
   /** Actualiza el contenido de tabla */
 

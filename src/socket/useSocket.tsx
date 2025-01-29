@@ -3,17 +3,22 @@ import { io, Socket } from "socket.io-client";
 import {
   PurchaseOrderTableTypes,
   RequirementType,
+  SocketChangeType,
   TableTypes,
 } from "../utilities/types";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { SocketResponse } from "../models/Interfaces";
+import { SearchTableRequest } from "../models/Requests";
+import { hasNoSortNorFilter } from "../utilities/globalFunctions";
 
 let socketAPI: Socket | null = null;
 
 export default function useSocket(
   tableType: TableTypes,
   subType: RequirementType | PurchaseOrderTableTypes,
+  page: number,
+  searchTableRequest: SearchTableRequest | undefined,
   updateChangesQueue: (payload: SocketResponse) => void
 ) {
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
@@ -34,8 +39,17 @@ export default function useSocket(
       });
 
       socketAPI.on("updateRoom", (data: SocketResponse) => {
-        console.log("Recibimos esto de la sala", data);
-        if (uid == data.userId) updateChangesQueue(data);
+        console.log("Received", data);
+        const isAllTypeTableVar = isAllTypeTable();
+        if (
+          (isAllTypeTableVar || (!isAllTypeTableVar && uid == data.userId)) &&
+          (data.typeSocket == SocketChangeType.UPDATE ||
+            (data.typeSocket == SocketChangeType.CREATE &&
+              page == 1 &&
+              searchTableRequest &&
+              hasNoSortNorFilter(searchTableRequest)))
+        )
+          updateChangesQueue(data);
       });
     }
 
@@ -83,5 +97,14 @@ export default function useSocket(
         roomName = "roomRequeriment";
     }
     return roomName;
+  }
+
+  function isAllTypeTable() {
+    return (
+      tableType == TableTypes.ALL_REQUIREMENTS ||
+      tableType == TableTypes.ALL_OFFERS ||
+      tableType == TableTypes.ALL_PURCHASE_ORDERS ||
+      tableType == TableTypes.ALL_SALES_ORDERS
+    );
   }
 }

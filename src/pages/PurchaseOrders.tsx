@@ -29,7 +29,6 @@ import {
 } from "../utilities/globalFunctions";
 import {
   transformToFullUser,
-  transformToOfferFromGetOffersByEntityOrSubUser,
   transformToPurchaseOrder,
 } from "../utilities/transform";
 import {
@@ -53,6 +52,7 @@ import useSearchTable, {
 import useSocketQueueHook, {
   useAddOrUpdateRow,
 } from "../hooks/socketQueueHook";
+import useSocket from "../socket/useSocket";
 
 export default function PurchaseOrders() {
   const { t } = useTranslation();
@@ -67,7 +67,7 @@ export default function PurchaseOrders() {
     useGetOffersByRequirementId();
   const { getBasicRateData, modalDataRate } = useCulminate();
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
-  const { searchTable, responseData, error, errorMsg, loading } =
+  const { searchTable, responseData, error, errorMsg, loading, apiParams } =
     useSearchTable(uid, TableTypes.PURCHASE_ORDER, EntityType.SUBUSER, type);
   const {
     currentPage,
@@ -114,6 +114,13 @@ export default function PurchaseOrders() {
     setTotal
   );
   const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
+  useSocket(
+    TableTypes.PURCHASE_ORDER,
+    type,
+    currentPage,
+    apiParams.dataToSend,
+    updateChangesQueue
+  );
 
   /** Actualiza el contenido de tabla */
 

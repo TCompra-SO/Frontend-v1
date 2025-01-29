@@ -333,11 +333,15 @@ export function generateShortId(): string {
 }
 
 // Procesa string de búsqueda
-export function getSearchString(val: string) {
-  return val
-    .trim()
+export function getSearchString(
+  val: string | undefined,
+  returnUndefined: boolean = false
+) {
+  const search = val
+    ?.trim()
     .replace(onlyLettersAndNumbers, "")
     .slice(0, maxLengthStringToSearch);
+  return !returnUndefined ? search : search === "" ? undefined : search;
 }
 
 // Retorna request inicial de tablas
@@ -381,7 +385,11 @@ export function getParamsFromSorterAndFilter(
   }
   if (filter) {
     const keys = Object.keys(filter);
-    if (keys.length > 0) {
+    if (
+      keys.length > 0 &&
+      filter[keys[0]] !== undefined &&
+      filter[keys[0]] !== null
+    ) {
       ff = {
         filterData: filter[keys[0]] ?? [],
         filterColumn: fieldNameObj[keys[0]],
@@ -408,6 +416,7 @@ export function getSortOrderFromFieldSort(
     : undefined;
 }
 
+// Retorna los nombres de campos a enviarse al servidor cuando se ordena y/o filtra órdenes de compra/venta
 export function getFieldNameObjForOrders(
   tableType:
     | TableTypes.PURCHASE_ORDER
@@ -460,4 +469,16 @@ export function getHomeRecordsService(type: RequirementType) {
   if (type == RequirementType.SERVICE) return getServicesService;
   if (type == RequirementType.SALE) return getSalesService;
   return null;
+}
+
+// Verifica si la solicitud de búsqueda no incluye parámetros de filtro ni de orden
+export function hasNoSortNorFilter(request: SearchTableRequest): boolean {
+  const hasValidOptionalFields =
+    request.fieldName === undefined &&
+    request.orderType === undefined &&
+    request.columnKey === undefined &&
+    request.filterData === undefined &&
+    request.filterColumn === undefined &&
+    request.keyWords === undefined;
+  return hasValidOptionalFields;
 }

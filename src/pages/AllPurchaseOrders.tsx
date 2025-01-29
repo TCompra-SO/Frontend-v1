@@ -37,6 +37,7 @@ import useSearchTable, {
 import useSocketQueueHook, {
   useAddOrUpdateRow,
 } from "../hooks/socketQueueHook";
+import useSocket from "../socket/useSocket";
 
 export default function AllPurchaseOrders() {
   const { t } = useTranslation();
@@ -50,7 +51,7 @@ export default function AllPurchaseOrders() {
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
-  const { searchTable, responseData, error, errorMsg, loading } =
+  const { searchTable, responseData, error, errorMsg, loading, apiParams } =
     useSearchTable(uid, TableTypes.ALL_PURCHASE_ORDERS, entityType, type);
   const {
     currentPage,
@@ -93,6 +94,13 @@ export default function AllPurchaseOrders() {
     setTotal
   );
   const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
+  useSocket(
+    TableTypes.ALL_PURCHASE_ORDERS,
+    type,
+    currentPage,
+    apiParams.dataToSend,
+    updateChangesQueue
+  );
 
   /** Actualiza el contenido de tabla */
 

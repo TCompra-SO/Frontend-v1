@@ -35,6 +35,7 @@ import useSearchTable, {
 import useSocketQueueHook, {
   useAddOrUpdateRow,
 } from "../hooks/socketQueueHook";
+import useSocket from "../socket/useSocket";
 
 export default function Offers() {
   const { t } = useTranslation();
@@ -48,7 +49,7 @@ export default function Offers() {
   const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
   const { getBasicRateData, modalDataRate } = useCulminate();
   const [type, setType] = useState(getRouteType(location.pathname));
-  const { searchTable, responseData, error, errorMsg, loading } =
+  const { searchTable, responseData, error, errorMsg, loading, apiParams } =
     useSearchTable(dataUser.uid, TableTypes.OFFER, EntityType.SUBUSER, type);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [offerList, setOfferList] = useState<Offer[]>([]);
@@ -95,6 +96,13 @@ export default function Offers() {
     setTotal
   );
   const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
+  useSocket(
+    TableTypes.OFFER,
+    type,
+    currentPage,
+    apiParams.dataToSend,
+    updateChangesQueue
+  );
 
   /** Actualiza el contenido de tabla */
 
