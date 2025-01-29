@@ -1,54 +1,87 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { io, Socket } from "socket.io-client";
-import { pageSizeOptionsSt } from "../utilities/globals";
-import { HomeContext } from "../contexts/Homecontext";
+import {
+  PurchaseOrderTableTypes,
+  RequirementType,
+  TableTypes,
+} from "../utilities/types";
+import { useSelector } from "react-redux";
+import { MainState } from "../models/Redux";
 import { SocketResponse } from "../models/Interfaces";
 
-let socketAPI: Socket | null = null; // Singleton instance of the socket
+let socketAPI: Socket | null = null;
 
-export default function useSocket() {
-  const { useFilter, retrieveRequirements, page, type, updateChangesQueue } =
-    useContext(HomeContext);
+export default function useSocket(
+  tableType: TableTypes,
+  subType: RequirementType | PurchaseOrderTableTypes,
+  updateChangesQueue: (payload: SocketResponse) => void
+) {
+  const mainUid = useSelector((state: MainState) => state.mainUser.uid);
+  const uid = useSelector((state: MainState) => state.user.uid);
 
-  // Initialize socket connection once
   useEffect(() => {
     if (!socketAPI) {
       socketAPI = io(import.meta.env.VITE_SOCKET_URL);
 
       socketAPI.on("connect", () => {
         console.log("Connected");
-        socketAPI?.emit("joinRoom", "homeRequeriment");
+        const roomName = getRoomName();
+        if (roomName) socketAPI?.emit("joinRoom", roomName + mainUid);
       });
 
-      socketAPI.on("requeriment", (payload: SocketResponse) => {
-        console.log("Nuevo requerimiento creado recibido:", payload);
-        if (page == 1 && !useFilter) updateChangesQueue(payload);
+      socketAPI.on("joinedRoom", (message) => {
+        console.log(message);
+      });
+
+      socketAPI.on("updateRoom", (data: SocketResponse) => {
+        console.log("Recibimos esto de la sala", data);
+        if (uid == data.userId) updateChangesQueue(data);
       });
     }
 
-    // Cleanup when the component unmounts
     return () => {
       if (socketAPI) {
-        console.log("Socket disconnected");
+        console.log("Disconnected");
         socketAPI.disconnect();
         socketAPI = null;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (!useFilter) getData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type]);
-
-  useEffect(() => {
-    if (!useFilter) getData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, useFilter]);
-
-  async function getData() {
-    retrieveRequirements(page, pageSizeOptionsSt[0]);
+  function getRoomName() {
+    let roomName: string = "";
+    if (
+      tableType == TableTypes.REQUIREMENT ||
+      tableType == TableTypes.ALL_REQUIREMENTS
+    ) {
+      if (subType == RequirementType.GOOD) roomName = "roomRequeriment";
+      else if (subType == RequirementType.SERVICE) roomName = "roomRequeriment";
+      else if (subType == RequirementType.SALE) roomName = "roomRequeriment";
+    }
+    if (tableType == TableTypes.OFFER || tableType == TableTypes.ALL_OFFERS) {
+      if (subType == RequirementType.GOOD) roomName = "roomRequeriment";
+      else if (subType == RequirementType.SERVICE) roomName = "roomRequeriment";
+      else if (subType == RequirementType.SALE) roomName = "roomRequeriment";
+    }
+    if (
+      tableType == TableTypes.PURCHASE_ORDER ||
+      tableType == TableTypes.ALL_PURCHASE_ORDERS
+    ) {
+      if (subType == PurchaseOrderTableTypes.ISSUED)
+        roomName = "roomRequeriment";
+      else if (subType == PurchaseOrderTableTypes.RECEIVED)
+        roomName = "roomRequeriment";
+    }
+    if (
+      tableType == TableTypes.SALES_ORDER ||
+      tableType == TableTypes.ALL_SALES_ORDERS
+    ) {
+      if (subType == PurchaseOrderTableTypes.ISSUED)
+        roomName = "roomRequeriment";
+      else if (subType == PurchaseOrderTableTypes.RECEIVED)
+        roomName = "roomRequeriment";
+    }
+    return roomName;
   }
-
-  return {};
 }

@@ -50,7 +50,9 @@ import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
-import useSocketQueueHook, { useAddNewRow } from "../hooks/socketQueueHook";
+import useSocketQueueHook, {
+  useAddOrUpdateRow,
+} from "../hooks/socketQueueHook";
 
 export default function SalesOrders() {
   const { t } = useTranslation();
@@ -102,7 +104,7 @@ export default function SalesOrders() {
     fieldSort,
     filteredInfo,
   });
-  const { addNewRow, updateRow } = useAddNewRow(
+  const { addNewRow, updateRow } = useAddOrUpdateRow(
     (data: SocketDataPackType) => transformToPurchaseOrder(data),
     salesOrderList,
     setSalesOrderList,

@@ -50,7 +50,10 @@ import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
-import useSocketQueueHook, { useAddNewRow } from "../hooks/socketQueueHook";
+import useSocketQueueHook, {
+  useAddOrUpdateRow,
+} from "../hooks/socketQueueHook";
+import useSocket from "../socket/useSocket";
 
 export default function Requirements() {
   const { t } = useTranslation();
@@ -111,7 +114,7 @@ export default function Requirements() {
     fieldSort,
     filteredInfo,
   });
-  const { addNewRow, updateRow } = useAddNewRow(
+  const { addNewRow, updateRow } = useAddOrUpdateRow(
     (data: SocketDataPackType) =>
       transformDataToRequirement(data, type, dataUser, mainDataUser),
     requirementList,
@@ -120,6 +123,7 @@ export default function Requirements() {
     setTotal
   );
   const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
+  useSocket(TableTypes.REQUIREMENT, type, updateChangesQueue);
 
   /** Actualiza el contenido de tabla */
 

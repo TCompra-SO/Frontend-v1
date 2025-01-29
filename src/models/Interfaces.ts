@@ -478,16 +478,17 @@ export interface MainFilters {
 }
 
 export interface SocketDataPack {
-  code: number;
+  // code: number;
   data: Record<string, any>[];
-  res: Record<string, any>;
-  success: boolean;
+  // res: Record<string, any>;
+  // success: boolean;
 }
 
 export interface SocketResponse {
   typeSocket: SocketChangeType;
   dataPack: SocketDataPack;
   key: string;
+  userId: string;
 }
 
 export type SocketDataPackType = SocketResponse["dataPack"]["data"][number];

@@ -6,7 +6,9 @@ import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { RequirementType } from "../utilities/types";
 import { getRequirementFromData } from "../services/complete/generalServices";
-import useSocketQueueHook, { useAddNewRow } from "../hooks/socketQueueHook";
+import useSocketQueueHook, {
+  useAddOrUpdateRow,
+} from "../hooks/socketQueueHook";
 import { SocketDataPackType, SocketResponse } from "../models/Interfaces";
 
 interface HomeContextType {
@@ -58,7 +60,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     loading: loadingRequirementList,
   } = useGetRequirementList();
   const [page, setPage] = useState(1);
-  const { addNewRow, updateRow } = useAddNewRow(
+  const { addNewRow, updateRow } = useAddOrUpdateRow(
     (data: SocketDataPackType) => getRequirementFromData(data),
     requirementList,
     setRequirementList,
@@ -99,14 +101,6 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   function updateType(val: RequirementType) {
     setType(val);
   }
-
-  // async function addNewRow(data: any) {
-  //   const newRequirement: Requirement = await getRequirementFromData(data);
-  //   setRequirementList((prev) => {
-  //     return [newRequirement, ...prev.slice(0, prev.length - 1)];
-  //   });
-  //   setTotalRequirementList(totalRequirementList + 1);
-  // }
 
   return (
     <HomeContext.Provider

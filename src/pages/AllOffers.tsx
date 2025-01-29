@@ -32,7 +32,9 @@ import useShowNotification from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
-import useSocketQueueHook, { useAddNewRow } from "../hooks/socketQueueHook";
+import useSocketQueueHook, {
+  useAddOrUpdateRow,
+} from "../hooks/socketQueueHook";
 
 export default function AllOffers() {
   const { t } = useTranslation();
@@ -62,6 +64,9 @@ export default function AllOffers() {
   const [offerList, setOfferList] = useState<Offer[]>([]);
   const [total, setTotal] = useState(0);
   const [loadingTable, setLoadingTable] = useState(true);
+  const [subUsersCache, setSubUsersCache] = useState<{
+    [key: string]: BaseUser;
+  }>({});
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -80,14 +85,23 @@ export default function AllOffers() {
     fieldSort,
     filteredInfo,
   });
-  const { addNewRow, updateRow } = useAddNewRow(
-    (data: SocketDataPackType) =>
-      transformToOfferFromGetOffersByEntityOrSubUser(
-        data,
-        type,
-        dataUser,
-        mainDataUser
-      ),
+  const { addNewRow, updateRow } = useAddOrUpdateRow(
+    (data: SocketDataPackType) => {
+      if (data.subUser == dataUser.uid)
+        transformToOfferFromGetOffersByEntityOrSubUser(
+          data,
+          type,
+          dataUser,
+          mainDataUser
+        );
+      else
+        transformToOfferFromGetOffersByEntityOrSubUser(
+          data,
+          type,
+          subUsersCache[data.subUser],
+          dataUser
+        );
+    },
     offerList,
     setOfferList,
     total,
@@ -196,6 +210,7 @@ export default function AllOffers() {
           }
         })
       );
+      setSubUsersCache(subUsers);
       setTotal(responseData.res?.totalDocuments);
       setOfferList(data);
     } catch (error) {

@@ -8,7 +8,6 @@ import {
   TableColumns,
   TableTypes,
 } from "../utilities/types.ts";
-import useSocket from "../socket/useSocket.tsx";
 import { useTranslation } from "react-i18next";
 import Search from "../components/section/home/Search.tsx";
 import Footer from "../components/section/footer/Footer.tsx";
@@ -22,11 +21,12 @@ import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../utilities/routes.ts";
 import { MainState } from "../models/Redux.ts";
 import { useSelector } from "react-redux";
+import useHomeSocket from "../socket/useHomeSocket.tsx";
 
 export default function Home() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  useSocket();
+  useHomeSocket();
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
   const {
     updateType,

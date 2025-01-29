@@ -130,7 +130,6 @@ export default function useSearchTable(
             service = searchPurchaseOrdersByClientService();
           break;
       }
-      // console.log("dds", service, tableType, subType);
       setApiParams({
         service,
         method: "post",

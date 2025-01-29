@@ -41,7 +41,7 @@ export default function useSocketQueueHook(
   return { updateChangesQueue };
 }
 
-export function useAddNewRow(
+export function useAddOrUpdateRow(
   transformData: (
     data: SocketResponse["dataPack"]["data"][number]
   ) => any | Promise<any>,
