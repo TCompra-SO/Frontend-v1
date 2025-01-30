@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import {
   PurchaseOrderTableTypes,
@@ -23,6 +23,16 @@ export default function useSocket(
 ) {
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const uid = useSelector((state: MainState) => state.user.uid);
+  const pageRef = useRef(page);
+  const searchTableRequestRef = useRef(searchTableRequest);
+
+  useEffect(() => {
+    pageRef.current = page;
+  }, [page]);
+
+  useEffect(() => {
+    searchTableRequestRef.current = searchTableRequest;
+  }, [searchTableRequest]);
 
   useEffect(() => {
     if (!socketAPI) {
@@ -45,9 +55,9 @@ export default function useSocket(
           (isAllTypeTableVar || (!isAllTypeTableVar && uid == data.userId)) &&
           (data.typeSocket == SocketChangeType.UPDATE ||
             (data.typeSocket == SocketChangeType.CREATE &&
-              page == 1 &&
-              searchTableRequest &&
-              hasNoSortNorFilter(searchTableRequest)))
+              pageRef.current == 1 &&
+              searchTableRequestRef.current &&
+              hasNoSortNorFilter(searchTableRequestRef.current)))
         )
           updateChangesQueue(data);
       });
