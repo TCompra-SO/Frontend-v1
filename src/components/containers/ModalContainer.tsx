@@ -333,6 +333,7 @@ export default function ModalContainer(props: ModalContainerProps) {
           <OfferDetailModal
             offer={props.content.data.offer}
             basicRateData={props.content.data.basicRateData}
+            showActions={props.content.data.showActions}
           />
         );
       }

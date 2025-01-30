@@ -1,6 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { Offer } from "../models/MainInterfaces";
-import { Action, EntityType, ModalTypes, TableTypes } from "../utilities/types";
+import {
+  Action,
+  EntityType,
+  ModalTypes,
+  OfferState,
+  TableTypes,
+} from "../utilities/types";
 import ModalContainer from "../components/containers/ModalContainer";
 import { useContext, useEffect, useRef, useState } from "react";
 import {
@@ -128,6 +134,7 @@ export default function Offers() {
         detailedOfferModalData.offerType,
         true,
         Action.OFFER_DETAIL,
+        true,
         detailedOfferModalData.offer
       );
     }
@@ -261,9 +268,15 @@ export default function Offers() {
     console.log(offer);
     switch (action) {
       case Action.OFFER_DETAIL:
-        getOfferDetail(offer.key, offer.type, true, action, offer);
+        getOfferDetail(
+          offer.key,
+          offer.type,
+          true,
+          action,
+          offer.state != OfferState.ELIMINATED,
+          offer
+        );
         break;
-
       case Action.DELETE: {
         setDataModal({
           type: ModalTypes.CONFIRM,

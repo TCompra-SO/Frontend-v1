@@ -234,7 +234,7 @@ export const ActionByStateOffer: { [key in OfferState]: Array<Action> } = {
     Action.OFFER_DETAIL,
     Action.CHAT,
   ],
-  [OfferState.ELIMINATED]: [],
+  [OfferState.ELIMINATED]: [Action.OFFER_DETAIL],
 };
 
 export const ActionByStatePurchaseOrder: {

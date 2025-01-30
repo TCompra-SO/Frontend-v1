@@ -492,6 +492,7 @@ export function useShowDetailOffer() {
     type: RequirementType,
     useUserData: boolean,
     action: Action,
+    showActions: boolean,
     offerData?: Offer
   ) {
     try {
@@ -516,7 +517,7 @@ export function useShowDetailOffer() {
           const { basicRateData } = await getBasicRateData(
             offer.requirementId,
             false,
-            RequirementType.GOOD //r3v
+            type
           );
           if (basicRateData)
             setDataModal({
@@ -524,6 +525,7 @@ export function useShowDetailOffer() {
               data: {
                 offer,
                 basicRateData,
+                showActions,
               },
               action,
             });
@@ -541,6 +543,7 @@ export function useShowDetailOffer() {
             data: {
               offer: offerData,
               basicRateData,
+              showActions,
             },
             action,
           });

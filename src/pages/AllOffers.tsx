@@ -8,7 +8,7 @@ import {
   SocketDataPackType,
   TableTypeAllOffers,
 } from "../models/Interfaces";
-import { Action, ModalTypes, TableTypes } from "../utilities/types";
+import { Action, ModalTypes, OfferState, TableTypes } from "../utilities/types";
 import { BaseUser, Offer } from "../models/MainInterfaces";
 import makeRequest, {
   getLabelFromRequirementType,
@@ -233,7 +233,17 @@ export default function AllOffers() {
   function handleOnButtonClick(action: Action, offer: Offer) {
     console.log(offer);
     if (action == Action.VIEW_OFFER)
-      getOfferDetail(offer.key, offer.type, true, action, offer);
+      getOfferDetail(
+        offer.key,
+        offer.type,
+        true,
+        action,
+        offer.state != OfferState.ELIMINATED
+          ? (offer.subUser && dataUser.uid == offer.subUser.uid) ||
+              (!offer.subUser && dataUser.uid == offer.user.uid)
+          : false,
+        offer
+      );
   }
 
   return (

@@ -143,6 +143,7 @@ export interface ModalOfferDetail extends CommonModalType {
   data: {
     offer: Offer;
     basicRateData: BasicRateData;
+    showActions: boolean;
   };
 }
 
