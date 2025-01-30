@@ -26,10 +26,10 @@ import {
   noPaginationPageSize,
 } from "../utilities/globals";
 import useApi from "../hooks/useApi";
-import { deleteRequirementService } from "../services/requests/requirementService";
 import { transformDataToRequirement } from "../utilities/transform";
 import { useLocation } from "react-router-dom";
 import {
+  getDeleteRecordService,
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
@@ -401,12 +401,13 @@ export default function Requirements() {
               fromRequirementTable: true,
               canceledByCreator: false,
               rowId: requirement.key,
+              type: requirement.type,
             },
             action,
           });
           setIsOpenModal(true);
         } else if (requirement.state == RequirementState.PUBLISHED)
-          cancelRequirement(requirement.key, action);
+          cancelRequirement(requirement.key, action, requirement.type);
         break;
       }
     }
@@ -414,7 +415,7 @@ export default function Requirements() {
 
   function deleteRequirement(requirementId: string) {
     setApiParamsDelete({
-      service: deleteRequirementService(requirementId),
+      service: getDeleteRecordService(type)?.(requirementId),
       method: "get",
     });
   }

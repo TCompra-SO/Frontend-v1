@@ -11,10 +11,6 @@ import {
   CancelRequirementRequest,
   HomeFilterRequest,
 } from "../models/Requests";
-import {
-  cancelRequirementService,
-  getBasicRateDataReqService,
-} from "../services/requests/requirementService";
 import { useTranslation } from "react-i18next";
 import {
   cancelOfferService,
@@ -37,6 +33,8 @@ import {
   getRequirementFromData,
 } from "../services/complete/generalServices";
 import makeRequest, {
+  getCancelRecordService,
+  getGetBasicRateDataRecordService,
   getHomeFilterService,
   getHomeRecordsService,
 } from "../utilities/globalFunctions";
@@ -117,14 +115,19 @@ export function useCancelRequirement() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataCancel, errorCancel]);
 
-  function cancelRequirement(reqId: string, action: Action, motive?: string) {
+  function cancelRequirement(
+    reqId: string,
+    action: Action,
+    type: RequirementType,
+    motive?: string
+  ) {
     updateIdAndActionQueue(reqId, action);
     const data: CancelRequirementRequest = {
       requerimentID: reqId,
       reason: motive,
     };
     setApiParamsCancel({
-      service: cancelRequirementService(),
+      service: getCancelRecordService(type),
       method: "post",
       dataToSend: data,
     });
@@ -661,7 +664,7 @@ export function useCulminate() {
     setApiParams({
       service: useOfferService
         ? getBasicRateDataOfferService(idToGetData)
-        : getBasicRateDataReqService(idToGetData),
+        : getGetBasicRateDataRecordService(type)?.(idToGetData),
       method: "get",
     });
   }

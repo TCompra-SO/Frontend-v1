@@ -49,6 +49,7 @@ export interface ModalCancelPurchaseOrder extends CommonModalType {
     canceledByCreator: boolean;
     onCancelSuccess?: (offerId: string) => void;
     rowId: string;
+    type: RequirementType;
   };
 }
 
@@ -370,7 +371,7 @@ export interface HttpService {
 }
 
 export interface useApiParams<T = any> {
-  service: HttpService | null;
+  service: HttpService | null | undefined;
   method: "get" | "post" | "put" | "delete";
   dataToSend?: T;
   token?: string;

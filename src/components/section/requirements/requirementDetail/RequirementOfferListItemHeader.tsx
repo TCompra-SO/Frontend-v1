@@ -113,6 +113,7 @@ export default function RequirementOfferListItemHeader({
               canceledByCreator: false,
               onCancelSuccess: props.showStateAndActions.onCancelSuccess,
               rowId: props.showStateAndActions.requirement.key,
+              type: props.offer.type,
             },
             action,
           });

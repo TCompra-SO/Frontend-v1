@@ -31,7 +31,7 @@ export function getSaleByIdService(
   };
 }
 
-export function selectOfferService(): HttpService {
+export function selectSaleOfferService(): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements
@@ -40,7 +40,7 @@ export function selectOfferService(): HttpService {
   };
 }
 
-export function getBasicRateDataReqService(id: string): HttpService {
+export function getBasicRateDataSaleService(id: string): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements

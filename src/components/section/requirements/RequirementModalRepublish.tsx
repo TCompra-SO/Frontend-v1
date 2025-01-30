@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
-import { isDateEarlierThanTomorrow } from "../../../utilities/globalFunctions";
+import {
+  getRepublishRecordService,
+  isDateEarlierThanTomorrow,
+} from "../../../utilities/globalFunctions";
 import { CommonModalProps } from "../../../models/Interfaces";
-import { republishRequirementService } from "../../../services/requests/requirementService";
 import {
   ErrorMsgRequestType,
   ErrorRequestType,
@@ -63,7 +65,7 @@ export default function RequirementModalRepublish(
       return;
     }
     props.setApiParams({
-      service: republishRequirementService(),
+      service: getRepublishRecordService(props.type),
       method: "post",
       dataToSend: {
         uid: props.requirementId,

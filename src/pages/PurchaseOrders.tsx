@@ -401,6 +401,7 @@ export default function PurchaseOrders() {
             fromRequirementTable: false,
             canceledByCreator: type == PurchaseOrderTableTypes.RECEIVED,
             rowId: purchaseOrder.key,
+            type: purchaseOrder.type,
           },
           action,
         });

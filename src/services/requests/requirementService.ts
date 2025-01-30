@@ -34,7 +34,7 @@ export function getRequirementByIdService(
   };
 }
 
-export function selectOfferService(): HttpService {
+export function selectRequirementOfferService(): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements

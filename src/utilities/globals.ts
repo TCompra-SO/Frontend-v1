@@ -42,6 +42,9 @@ export const tableSearchAfterMseconds: number = 400;
 export const maxLengthStringToSearch: number = 25;
 export const searchSinceLength: number = 3;
 
+export const typeParamNameInRoute: string = "type";
+export const reqIdParamNameInRoute: string = "requirementId";
+
 // local storage keys
 export const userDataKey: string = "udata";
 export const tokenKey: string = "token";

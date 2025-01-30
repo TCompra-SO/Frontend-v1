@@ -26,13 +26,12 @@ import { CommonModalProps, useApiParams } from "../../../models/Interfaces";
 import useApi, { UseApiType } from "../../../hooks/useApi";
 import {
   checkWarranty,
+  getCreateRecordService,
   isDateEarlierThanTomorrow,
 } from "../../../utilities/globalFunctions";
-import { createRequirementService } from "../../../services/requests/requirementService";
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
-import { createSaleService } from "../../../services/requests/saleService";
 import TitleField from "../../common/formFields/TitleField";
 import DescriptionCRField from "../../common/formFields/DescriptionCRField";
 import CategoryField from "../../common/formFields/CategoryField";
@@ -261,10 +260,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
 
     console.log(values, data);
     props.setApiParams({
-      service:
-        type == RequirementType.SALE
-          ? createSaleService()
-          : createRequirementService(),
+      service: getCreateRecordService(type),
       method: "post",
       dataToSend: data,
     });

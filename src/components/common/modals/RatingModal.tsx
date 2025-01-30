@@ -12,6 +12,7 @@ import RatingContainer from "../../containers/RatingContainer";
 import { BasicRateData } from "../../../models/MainInterfaces";
 import {
   calculateFinalScore,
+  getCulminateRequirementService,
   getUserClass,
 } from "../../../utilities/globalFunctions";
 import ButtonContainer from "../../containers/ButtonContainer";
@@ -21,7 +22,6 @@ import FrontImage from "../utils/FrontImage";
 import SubUserName from "../utils/SubUserName";
 import { CommonModalProps } from "../../../models/Interfaces";
 import { CulminateRequest } from "../../../models/Requests";
-import { culminateRequirementService } from "../../../services/requests/requirementService";
 import { culminateOfferService } from "../../../services/requests/offerService";
 import useShowNotification from "../../../hooks/utilHooks";
 
@@ -137,7 +137,7 @@ export default function RatingModal(props: RatingModalProps) {
     else data.offerID = props.requirementOrOfferId;
     props.setApiParams({
       service: props.isOffer
-        ? culminateRequirementService()
+        ? getCulminateRequirementService(props.type)
         : culminateOfferService(),
       method: "post",
       dataToSend: data,

@@ -18,9 +18,17 @@ import { uploadImagesRequirementService } from "../services/requests/imageServic
 import { createOfferService } from "../services/requests/offerService";
 import {
   cancelRequirementService,
-  selectOfferService,
+  selectRequirementOfferService,
 } from "../services/requests/requirementService";
+import {
+  cancelSaleService,
+  selectSaleOfferService,
+} from "../services/requests/saleService";
 import { registerScoreService } from "../services/requests/scoreService";
+import {
+  cancelServiceService,
+  selectServiceOfferService,
+} from "../services/requests/serviceService";
 import {
   changeRoleSubUserService,
   registerSubUserService,
@@ -205,7 +213,8 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
       }
       break;
-    case selectOfferService().type:
+    case selectRequirementOfferService().type:
+    case selectServiceOfferService().type:
       switch (code) {
         case 400:
           erroMsg = "requirementDoesNotExist";
@@ -221,10 +230,33 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
       }
       break;
+    case selectSaleOfferService().type:
+      switch (code) {
+        case 400:
+          erroMsg = "saleDoesNotExist";
+          break;
+        case 403:
+          erroMsg = "saleOfferNotFound";
+          break;
+        case 404:
+          erroMsg = "offerWasAlreadySelected";
+          break;
+        case 405:
+          erroMsg = "cantOfferToSale";
+          break;
+      }
+      break;
     case cancelRequirementService().type:
+    case cancelServiceService().type:
       switch (code) {
         case 400:
           erroMsg = "cantCancelRequirementSupplierFinished";
+      }
+      break;
+    case cancelSaleService().type:
+      switch (code) {
+        case 400:
+          erroMsg = "cantCancelSaleClientFinished";
       }
       break;
     case sendCertificationRequestService().type:

@@ -46,7 +46,7 @@ export default function Home() {
     nameColumnHeader: t("goods"),
     onButtonClick: (action: Action, req: Requirement) => {
       if (action == Action.VIEW_REQUIREMENT)
-        navigate(`${pageRoutes.productDetail}/${req.key}`);
+        navigate(`${pageRoutes.productDetail}/${req.type}/${req.key}`);
     },
   });
 

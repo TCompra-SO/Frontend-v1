@@ -9,7 +9,6 @@ import SelectContainer from "../../containers/SelectContainer";
 import { filterLabels } from "../../../utilities/colors";
 import { SelectOfferRequest } from "../../../models/Requests";
 import { CommonModalProps, OfferFilters } from "../../../models/Interfaces";
-import { selectOfferService } from "../../../services/requests/requirementService";
 import useShowNotification from "../../../hooks/utilHooks";
 import {
   ErrorMsgRequestType,
@@ -17,6 +16,7 @@ import {
   ResponseRequestType,
 } from "../../../utilities/types";
 import { FilterNames } from "../../../contexts/RequirementDetailContext";
+import { getSelectOfferService } from "../../../utilities/globalFunctions";
 
 interface RequirementModalOfferSelectedProps extends CommonModalProps {
   offer: Offer;
@@ -73,7 +73,7 @@ export default function RequirementModalOfferSelected({
     if (notes) data.observation = notes;
     console.log(data);
     props.setApiParams({
-      service: selectOfferService(),
+      service: getSelectOfferService(props.requirement.type),
       method: "post",
       dataToSend: data,
     });

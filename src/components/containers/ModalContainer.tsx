@@ -246,6 +246,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             onCancelSuccess={props.content.data.onCancelSuccess}
             useCancelRequirementHook={useCancelRequirementHook}
             useCancelOfferHook={useCancelOfferHook}
+            type={props.content.data.type}
           />
         );
       }

@@ -322,6 +322,7 @@ export default function Offers() {
             fromRequirementTable: false,
             canceledByCreator: true,
             rowId: offer.key,
+            type: offer.type,
           },
           action,
         });

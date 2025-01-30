@@ -11,7 +11,6 @@ import {
   RequirementType,
   TableTypes,
 } from "../utilities/types";
-import { searchRequirementsService } from "../services/requests/requirementService";
 import {
   pageSizeOptionsSt,
   searchSinceLength,
@@ -19,6 +18,7 @@ import {
 } from "../utilities/globals";
 import {
   getParamsFromSorterAndFilter,
+  getSearchRequirementsService,
   getSearchString,
 } from "../utilities/globalFunctions";
 import { searchOffersService } from "../services/requests/offerService";
@@ -123,13 +123,7 @@ export default function useSearchTable(
     switch (stTableType) {
       case TableTypes.REQUIREMENT:
       case TableTypes.ALL_REQUIREMENTS:
-        if (stSubType == RequirementType.GOOD)
-          service = searchRequirementsService();
-        // r3v endpoints para servicios y liquidaciones
-        else if (stSubType == RequirementType.SERVICE)
-          service = searchRequirementsService();
-        else if (stSubType == RequirementType.SALE)
-          service = searchRequirementsService();
+        service = getSearchRequirementsService(stSubType);
         break;
       case TableTypes.OFFER:
       case TableTypes.ALL_OFFERS:

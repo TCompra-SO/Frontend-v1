@@ -29,6 +29,10 @@ import { LoadingDataProvider } from "./contexts/LoadingDataContext.tsx";
 import { getSectionFromRoute } from "./utilities/globalFunctions.ts";
 import { ModalsProvider } from "./contexts/ModalsContext.tsx";
 import { HomeProvider } from "./contexts/Homecontext.tsx";
+import {
+  reqIdParamNameInRoute,
+  typeParamNameInRoute,
+} from "./utilities/globals.ts";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
@@ -148,7 +152,7 @@ function App() {
                       }
                     />
                     <Route
-                      path={`${pageRoutes.productDetail}/:requirementId`}
+                      path={`${pageRoutes.productDetail}/:${typeParamNameInRoute}/:${reqIdParamNameInRoute}`}
                       element={
                         <Suspense fallback={<LoadingPage />}>
                           <AuthRoleGuard

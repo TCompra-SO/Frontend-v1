@@ -40,16 +40,43 @@ import { SorterResult } from "antd/es/table/interface";
 import store from "../redux/store";
 import { FilterValue } from "antd/lib/table/interface";
 import {
+  cancelRequirementService,
+  createRequirementService,
+  culminateRequirementService,
+  deleteRequirementService,
+  getBasicRateDataReqService,
+  getRequirementByIdService,
   getRequirementsService,
   homeRequirementFilterService,
+  republishRequirementService,
+  searchRequirementsService,
+  selectRequirementOfferService,
 } from "../services/requests/requirementService";
 import {
+  cancelServiceService,
+  createServiceService,
+  culminateServiceService,
+  deleteServiceService,
+  getBasicRateDataServiceService,
+  getServiceByIdService,
   getServicesService,
   homeServiceFilterService,
+  republishServiceService,
+  searchServicesService,
+  selectServiceOfferService,
 } from "../services/requests/serviceService";
 import {
+  cancelSaleService,
+  createSaleService,
+  culminateSaleService,
+  deleteSaleService,
+  getBasicRateDataSaleService,
+  getSaleByIdService,
   getSalesService,
   homeSaleFilterService,
+  republishSaleService,
+  searchSalesService,
+  selectSaleOfferService,
 } from "../services/requests/saleService";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
@@ -83,8 +110,8 @@ export function checkDoc(file: File) {
 
 // Determina si dos servicios http son iguales
 export function equalServices(
-  serv1: HttpService | null,
-  serv2: HttpService | null
+  serv1: HttpService | null | undefined,
+  serv2: HttpService | null | undefined
 ) {
   if (serv1 && serv2) return serv1.type === serv2.type;
   if (!serv1 && !serv2) return true;
@@ -455,22 +482,6 @@ export function checkWarranty(durationVal: any, warrantyVal: any) {
   );
 }
 
-// Retorna el servicio correcto para buscar con filtros en home
-export function getHomeFilterService(type: RequirementType) {
-  if (type == RequirementType.GOOD) return homeRequirementFilterService();
-  if (type == RequirementType.SERVICE) return homeServiceFilterService();
-  if (type == RequirementType.SALE) return homeSaleFilterService();
-  return null;
-}
-
-// Retorna el servicio correcto para buscar sin filtros en home
-export function getHomeRecordsService(type: RequirementType) {
-  if (type == RequirementType.GOOD) return getRequirementsService;
-  if (type == RequirementType.SERVICE) return getServicesService;
-  if (type == RequirementType.SALE) return getSalesService;
-  return null;
-}
-
 // Verifica si la solicitud de búsqueda no incluye parámetros de filtro ni de orden
 export function hasNoSortNorFilter(request: SearchTableRequest): boolean {
   const hasValidOptionalFields =
@@ -481,4 +492,93 @@ export function hasNoSortNorFilter(request: SearchTableRequest): boolean {
     request.filterColumn === undefined &&
     request.keyWords === undefined;
   return hasValidOptionalFields;
+}
+
+export function isRequirementType(n: number) {
+  return (
+    n == RequirementType.GOOD ||
+    n == RequirementType.SERVICE ||
+    n == RequirementType.SALE
+  );
+}
+
+/** Funciones que retornan el servicio correcto según tipo */
+
+export function getHomeFilterService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return homeRequirementFilterService();
+  if (type == RequirementType.SERVICE) return homeServiceFilterService();
+  if (type == RequirementType.SALE) return homeSaleFilterService();
+  return null;
+}
+
+export function getHomeRecordsService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return getRequirementsService;
+  if (type == RequirementType.SERVICE) return getServicesService;
+  if (type == RequirementType.SALE) return getSalesService;
+  return null;
+}
+
+export function getCreateRecordService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return createRequirementService();
+  if (type == RequirementType.SERVICE) return createServiceService();
+  if (type == RequirementType.SALE) return createSaleService();
+  return null;
+}
+
+export function getGetRecordByIdService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return getRequirementByIdService;
+  if (type == RequirementType.SERVICE) return getServiceByIdService;
+  if (type == RequirementType.SALE) return getSaleByIdService;
+  return null;
+}
+
+export function getSelectOfferService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return selectRequirementOfferService();
+  if (type == RequirementType.SERVICE) return selectServiceOfferService();
+  if (type == RequirementType.SALE) return selectSaleOfferService();
+  return null;
+}
+
+export function getGetBasicRateDataRecordService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return getBasicRateDataReqService;
+  if (type == RequirementType.SERVICE) return getBasicRateDataServiceService;
+  if (type == RequirementType.SALE) return getBasicRateDataSaleService;
+  return null;
+}
+
+export function getDeleteRecordService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return deleteRequirementService;
+  if (type == RequirementType.SERVICE) return deleteServiceService;
+  if (type == RequirementType.SALE) return deleteSaleService;
+  return null;
+}
+
+export function getRepublishRecordService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return republishRequirementService();
+  if (type == RequirementType.SERVICE) return republishServiceService();
+  if (type == RequirementType.SALE) return republishSaleService();
+  return null;
+}
+
+export function getCulminateRequirementService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return culminateRequirementService();
+  if (type == RequirementType.SERVICE) return culminateServiceService();
+  if (type == RequirementType.SALE) return culminateSaleService();
+  return null;
+}
+
+export function getCancelRecordService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return cancelRequirementService();
+  if (type == RequirementType.SERVICE) return cancelServiceService();
+  if (type == RequirementType.SALE) return cancelSaleService();
+  return null;
+}
+
+export function getSearchRequirementsService(
+  type: RequirementType | PurchaseOrderTableTypes | undefined
+) {
+  if (type == RequirementType.GOOD) return searchRequirementsService();
+  if (type == RequirementType.SERVICE) return searchServicesService();
+  if (type == RequirementType.SALE) return searchSalesService();
+  return null;
 }

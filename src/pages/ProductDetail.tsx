@@ -1,11 +1,8 @@
-// import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useApiParams } from "../models/Interfaces";
 import useApi from "../hooks/useApi";
 import { Params, useNavigate, useParams } from "react-router-dom";
-import { equalServices } from "../utilities/globalFunctions";
-import { getRequirementByIdService } from "../services/requests/requirementService";
 import { pageRoutes } from "../utilities/routes";
 import { setIsLoading } from "../redux/loadingSlice";
 import { Requirement } from "../models/MainInterfaces";
@@ -14,11 +11,16 @@ import { RequirementType } from "../utilities/types";
 import ProductRequirementDetail from "../components/section/productDetail/ProductRequirementDetail/ProductRequirementDetail";
 import ProductDetailHeader from "../components/section/productDetail/ProductDetailHeader";
 import Footer from "../components/section/footer/Footer";
+import {
+  getGetRecordByIdService,
+  isRequirementType,
+} from "../utilities/globalFunctions";
 
 export default function ProductDetail() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { requirementId } = useParams<Params>();
+  const { type } = useParams<Params>();
   const [requirement, setRequirement] = useState<Requirement>();
 
   const [apiParams, setApiParams] = useState<useApiParams>({
@@ -32,15 +34,18 @@ export default function ProductDetail() {
   });
 
   useEffect(() => {
-    if (equalServices(apiParams.service, getRequirementByIdService("", false)))
-      dispatch(setIsLoading(loading));
+    setIsLoading(true);
+  }, []);
+
+  useEffect(() => {
+    dispatch(setIsLoading(loading));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
   useEffect(() => {
-    if (requirementId) {
+    if (requirementId && isRequirementType(Number(type))) {
       setApiParams({
-        service: getRequirementByIdService(requirementId, false),
+        service: getGetRecordByIdService(Number(type))?.(requirementId, false),
         method: "get",
       });
     } else navigate(pageRoutes.home);
@@ -54,18 +59,10 @@ export default function ProductDetail() {
 
   useEffect(() => {
     if (responseData) {
-      if (
-        equalServices(apiParams.service, getRequirementByIdService("", false))
-      ) {
-        setRequirementData(responseData);
-      }
+      setRequirementData(responseData);
     } else if (error) {
-      if (
-        equalServices(apiParams.service, getRequirementByIdService("", false))
-      ) {
-        navigate(pageRoutes.home);
-        return;
-      }
+      navigate(pageRoutes.home);
+      return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
