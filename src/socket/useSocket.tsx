@@ -61,7 +61,7 @@ export default function useSocket(
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [subType]);
 
   function getRoomName() {
     let roomName: string = "";
