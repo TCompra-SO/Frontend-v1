@@ -216,7 +216,7 @@ export const ActionByStateRequirement: {
   [RequirementState.FINISHED]: [Action.SHOW_SUMMARY],
   [RequirementState.PUBLISHED]: [Action.DELETE, Action.CANCEL_REQUIREMENT],
   [RequirementState.SELECTED]: [Action.CANCEL_REQUIREMENT, Action.FINISH],
-  [RequirementState.ELIMINATED]: [],
+  [RequirementState.ELIMINATED]: [Action.VIEW],
 };
 
 export const ActionByStateOffer: { [key in OfferState]: Array<Action> } = {

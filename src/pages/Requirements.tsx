@@ -240,7 +240,7 @@ export default function Requirements() {
   });
 
   useEffect(() => {
-    showLoadingMessage(loadingDelete, "aaaaaaaaa");
+    showLoadingMessage(loadingDelete);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingDelete]);
 
@@ -292,6 +292,7 @@ export default function Requirements() {
   async function handleOnButtonClick(action: Action, requirement: Requirement) {
     // console.log(requirement);
     switch (action) {
+      case Action.VIEW:
       case Action.SHOW_OFFERS: {
         getOffersByRequirementId(
           TableTypes.REQUIREMENT,
