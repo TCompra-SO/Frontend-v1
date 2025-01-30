@@ -29,7 +29,6 @@ import { LoadingDataProvider } from "./contexts/LoadingDataContext.tsx";
 import { getSectionFromRoute } from "./utilities/globalFunctions.ts";
 import { ModalsProvider } from "./contexts/ModalsContext.tsx";
 import { HomeProvider } from "./contexts/Homecontext.tsx";
-import MessageContextHolder from "./components/common/utils/MessageContextHolder.tsx";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
@@ -131,7 +130,6 @@ function App() {
           },
         }}
       >
-        <MessageContextHolder />
         <AntdApp>
           <HomeProvider>
             <ListsProvider>

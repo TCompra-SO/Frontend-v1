@@ -31,13 +31,14 @@ export function useShowLoadingMessage() {
   ) {
     // console.log(textKey, show);
     // const message = getMessageApi();
-    if (message && show)
+    if (message && show) {
       message.open({
         type: "loading",
         content: t(textKey),
         duration: 0,
       });
-    if (!show && message) message.destroy();
+    }
+    if (show === false && message) message.destroy();
   }
 
   return { showLoadingMessage };
