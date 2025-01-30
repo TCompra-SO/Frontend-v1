@@ -292,7 +292,19 @@ export default function Requirements() {
   async function handleOnButtonClick(action: Action, requirement: Requirement) {
     // console.log(requirement);
     switch (action) {
-      case Action.VIEW:
+      case Action.VIEW: {
+        getOffersByRequirementId(
+          TableTypes.REQUIREMENT,
+          requirement.key,
+          requirement.type,
+          true,
+          1,
+          noPaginationPageSize,
+          action,
+          requirement
+        );
+        break;
+      }
       case Action.SHOW_OFFERS: {
         getOffersByRequirementId(
           TableTypes.REQUIREMENT,
