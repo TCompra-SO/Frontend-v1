@@ -15,16 +15,18 @@ import {
 } from "../services/requests/certificateService";
 import { uploadDocsRequirementService } from "../services/requests/documentService";
 import { uploadImagesRequirementService } from "../services/requests/imageService";
-import { createOfferService } from "../services/requests/offerService";
+import { createReqOfferService } from "../services/requests/requirementOfferService";
 import {
   cancelRequirementService,
   selectRequirementOfferService,
 } from "../services/requests/requirementService";
+import { createSaleOfferService } from "../services/requests/saleOfferService";
 import {
   cancelSaleService,
   selectSaleOfferService,
 } from "../services/requests/saleService";
 import { registerScoreService } from "../services/requests/scoreService";
+import { createServiceOfferService } from "../services/requests/serviceOfferService";
 import {
   cancelServiceService,
   selectServiceOfferService,
@@ -184,7 +186,8 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
       }
       break;
-    case createOfferService().type:
+    case createReqOfferService().type:
+    case createServiceOfferService().type:
       switch (code) {
         case 403:
           erroMsg = "errorOccurredLoginAgain";
@@ -197,6 +200,22 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
         case 401:
           erroMsg = "requirementNotFound";
+          break;
+      }
+      break;
+    case createSaleOfferService().type:
+      switch (code) {
+        case 403:
+          erroMsg = "errorOccurredLoginAgain";
+          break;
+        case 409:
+          erroMsg = "alreadyMadeOffer";
+          break;
+        case 404:
+          erroMsg = "cantOfferToYourOwnSale";
+          break;
+        case 401:
+          erroMsg = "saleNotFound";
           break;
       }
       break;

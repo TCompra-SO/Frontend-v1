@@ -5,6 +5,7 @@ import {
   EntityType,
   ModalTypes,
   OfferState,
+  RequirementType,
   TableTypes,
 } from "../utilities/types";
 import ModalContainer from "../components/containers/ModalContainer";
@@ -23,11 +24,11 @@ import {
   mainModalScrollStyle,
 } from "../utilities/globals";
 import {
+  getDeleteOfferService,
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
-import { deleteOfferService } from "../services/requests/offerService";
 import useApi from "../hooks/useApi";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
@@ -253,9 +254,9 @@ export default function Offers() {
     setIsOpenModal(false);
   }
 
-  function deleteOffer(offerId: string) {
+  function deleteOffer(offerId: string, type: RequirementType) {
     setApiParamsDelete({
-      service: deleteOfferService(offerId),
+      service: getDeleteOfferService(type)?.(offerId),
       method: "get",
     });
   }
@@ -284,7 +285,7 @@ export default function Offers() {
             loading: loadingDelete,
             onAnswer: (ok: boolean) => {
               if (!ok) return;
-              deleteOffer(offer.key);
+              deleteOffer(offer.key, offer.type);
             },
             text: t("deleteOfferConfirmation"),
             id: offer.key,

@@ -78,6 +78,37 @@ import {
   searchSalesService,
   selectSaleOfferService,
 } from "../services/requests/saleService";
+import {
+  cancelReqOfferService,
+  createReqOfferService,
+  culminateReqOfferService,
+  deleteReqOfferService,
+  getBasicRateDataReqOfferService,
+  getReqOfferByIdService,
+  getReqOffersByRequirementIdService,
+  getValidationReqOfferService,
+  searchReqOffersService,
+} from "../services/requests/requirementOfferService";
+import {
+  cancelServiceOfferService,
+  culminateServiceOfferService,
+  deleteServiceOfferService,
+  getBasicRateDataServiceOfferService,
+  getServiceOfferByIdService,
+  getServiceOffersByServiceIdService,
+  getValidationServiceOfferService,
+  searchServiceOffersService,
+} from "../services/requests/serviceOfferService";
+import {
+  cancelSaleOfferService,
+  culminateSaleOfferService,
+  deleteSaleOfferService,
+  getBasicRateDataSaleOfferService,
+  getSaleOfferByIdService,
+  getSaleOffersBySaleIdService,
+  getValidationSaleOfferService,
+  searchSaleOffersService,
+} from "../services/requests/saleOfferService";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -560,7 +591,7 @@ export function getRepublishRecordService(type: RequirementType) {
   return null;
 }
 
-export function getCulminateRequirementService(type: RequirementType) {
+export function getCulminateRecordService(type: RequirementType) {
   if (type == RequirementType.GOOD) return culminateRequirementService();
   if (type == RequirementType.SERVICE) return culminateServiceService();
   if (type == RequirementType.SALE) return culminateSaleService();
@@ -574,11 +605,78 @@ export function getCancelRecordService(type: RequirementType) {
   return null;
 }
 
-export function getSearchRequirementsService(
+export function getSearchRecordsService(
   type: RequirementType | PurchaseOrderTableTypes | undefined
 ) {
   if (type == RequirementType.GOOD) return searchRequirementsService();
   if (type == RequirementType.SERVICE) return searchServicesService();
   if (type == RequirementType.SALE) return searchSalesService();
+  return null;
+}
+
+export function getCreateOfferService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return createReqOfferService();
+  if (type == RequirementType.SERVICE) return searchServicesService();
+  if (type == RequirementType.SALE) return searchSalesService();
+  return null;
+}
+
+export function getGetOfferByIdService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return getReqOfferByIdService;
+  if (type == RequirementType.SERVICE) return getServiceOfferByIdService;
+  if (type == RequirementType.SALE) return getSaleOfferByIdService;
+  return null;
+}
+
+export function getGetOffersByRecordIdService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return getReqOffersByRequirementIdService;
+  if (type == RequirementType.SERVICE)
+    return getServiceOffersByServiceIdService;
+  if (type == RequirementType.SALE) return getSaleOffersBySaleIdService;
+  return null;
+}
+
+export function getGetBasicRateDataRecordOfferService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return getBasicRateDataReqOfferService;
+  if (type == RequirementType.SERVICE)
+    return getBasicRateDataServiceOfferService;
+  if (type == RequirementType.SALE) return getBasicRateDataSaleOfferService;
+  return null;
+}
+
+export function getDeleteOfferService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return deleteReqOfferService;
+  if (type == RequirementType.SERVICE) return deleteServiceOfferService;
+  if (type == RequirementType.SALE) return deleteSaleOfferService;
+  return null;
+}
+
+export function getCulminateOfferService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return culminateReqOfferService();
+  if (type == RequirementType.SERVICE) return culminateServiceOfferService();
+  if (type == RequirementType.SALE) return culminateSaleOfferService();
+  return null;
+}
+
+export function getGetValidationOfferService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return getValidationReqOfferService;
+  if (type == RequirementType.SERVICE) return getValidationServiceOfferService;
+  if (type == RequirementType.SALE) return getValidationSaleOfferService;
+  return null;
+}
+
+export function getCancelOfferService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return cancelReqOfferService();
+  if (type == RequirementType.SERVICE) return cancelServiceOfferService();
+  if (type == RequirementType.SALE) return cancelSaleOfferService();
+  return null;
+}
+
+export function getSearchOffersService(
+  type: RequirementType | PurchaseOrderTableTypes | undefined
+) {
+  if (type == RequirementType.GOOD) return searchReqOffersService();
+  if (type == RequirementType.SERVICE) return searchServiceOffersService();
+  if (type == RequirementType.SALE) return searchSaleOffersService();
   return null;
 }

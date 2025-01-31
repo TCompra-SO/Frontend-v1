@@ -13,11 +13,6 @@ import {
 } from "../models/Requests";
 import { useTranslation } from "react-i18next";
 import {
-  cancelOfferService,
-  getBasicRateDataOfferService,
-  getOffersByRequirementIdService,
-} from "../services/requests/offerService";
-import {
   Action,
   EntityType,
   ModalTypes,
@@ -34,7 +29,10 @@ import {
 } from "../services/complete/generalServices";
 import makeRequest, {
   getCancelRecordService,
+  getCancelOfferService,
+  getGetBasicRateDataRecordOfferService,
   getGetBasicRateDataRecordService,
+  getGetOffersByRecordIdService,
   getHomeFilterService,
   getHomeRecordsService,
 } from "../utilities/globalFunctions";
@@ -215,6 +213,7 @@ export function useCancelOffer() {
 
   function cancelOffer(
     offerId: string,
+    type: RequirementType,
     canceledByCreator: boolean,
     action: Action,
     motive?: string
@@ -226,7 +225,7 @@ export function useCancelOffer() {
       canceledByCreator,
     };
     setApiParams({
-      service: cancelOfferService(),
+      service: getCancelOfferService(type),
       method: "post",
       dataToSend: data,
     });
@@ -463,7 +462,7 @@ export function useGetOffersByRequirementId() {
       tableType,
     });
     setApiParams({
-      service: getOffersByRequirementIdService(reqId, page, pageSize),
+      service: getGetOffersByRecordIdService(typeReq)?.(reqId, page, pageSize),
       method: "get",
     });
   }
@@ -663,7 +662,7 @@ export function useCulminate() {
     console.log(idToGetData);
     setApiParams({
       service: useOfferService
-        ? getBasicRateDataOfferService(idToGetData)
+        ? getGetBasicRateDataRecordOfferService(type)?.(idToGetData)
         : getGetBasicRateDataRecordService(type)?.(idToGetData),
       method: "get",
     });

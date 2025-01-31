@@ -1,8 +1,10 @@
 import { BaseUser } from "../../models/MainInterfaces";
 import { UserState } from "../../models/Redux";
 import makeRequest, {
+  getGetBasicRateDataRecordOfferService,
   getGetBasicRateDataRecordService,
   getGetRecordByIdService,
+  getGetOfferByIdService,
 } from "../../utilities/globalFunctions";
 import {
   transformDataToRequirement,
@@ -24,10 +26,6 @@ import {
   getRequiredDocumentsService,
   verifyCertificationService,
 } from "../requests/certificateService";
-import {
-  getBasicRateDataOfferService,
-  getOfferByIdService,
-} from "../requests/offerService";
 import { getPurchaseOrderByIdService } from "../requests/purchaseOrderService";
 
 export async function getBaseUserForUserSubUser(
@@ -67,7 +65,7 @@ export async function getOfferById(
   mainUser?: BaseUser | UserState
 ) {
   const { responseData, error, errorMsg } = await makeRequest({
-    service: getOfferByIdService(id),
+    service: getGetOfferByIdService(type)?.(id),
     method: "get",
   });
 
@@ -147,7 +145,7 @@ export async function getBasicRateData(
 ) {
   const { responseData, error, errorMsg } = await makeRequest({
     service: useOfferService
-      ? getBasicRateDataOfferService(idToGetData)
+      ? getGetBasicRateDataRecordOfferService(type)?.(idToGetData)
       : getGetBasicRateDataRecordService(type)?.(idToGetData),
     method: "get",
   });

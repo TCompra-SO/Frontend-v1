@@ -236,8 +236,10 @@ const resources = {
       certifyYourCompany: "Certify your company",
       improveYourCompanysImage: "Improve significantly your company's image.",
       cantOfferToYourOwnRequirement: "You cannot offer to your own requirement",
-      alreadyMadeOffer: "You have already made an offer on this requirement",
+      cantOfferToYourOwnSale: "You cannot offer to your own sale",
+      alreadyMadeOffer: "You have already made an offer",
       requirementNotFound: "The requirement could not be found",
+      saleNotFound: "The sale could not be found",
       errorOccurredLoginAgain: "An error occurred. Log in again",
       offerCreatedSuccessfully: "Offer created successfully",
       offerCreatedSuccessfullyNoDocOrImages:
@@ -762,8 +764,11 @@ const resources = {
       improveYourCompanysImage: "Mejora notablemente la imagen de tu empresa.",
       cantOfferToYourOwnRequirement:
         "No puedes ofertar a tu propio requerimiento",
-      alreadyMadeOffer: "Ya haz realizado una oferta a este requerimiento",
+      cantOfferToYourOwnSale:
+        "No puedes ofertar a tu propia liquidación",
+      alreadyMadeOffer: "Ya haz realizado una oferta",
       requirementNotFound: "No se ha podido encontrar el requerimiento",
+      saleNotFound: "No se ha podido encontrar la liquidación",
       errorOccurredLoginAgain: "Se produjo un error. Inicie sesión nuevamente",
       offerCreatedSuccessfully: "Oferta creada exitosamente",
       offerCreatedSuccessfullyNoDocOrImages:

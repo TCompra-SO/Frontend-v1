@@ -18,10 +18,10 @@ import {
 } from "../utilities/globals";
 import {
   getParamsFromSorterAndFilter,
-  getSearchRequirementsService,
+  getSearchOffersService,
+  getSearchRecordsService,
   getSearchString,
 } from "../utilities/globalFunctions";
-import { searchOffersService } from "../services/requests/offerService";
 import { debounce } from "lodash";
 import {
   searchPurchaseOrdersByClientService,
@@ -123,15 +123,11 @@ export default function useSearchTable(
     switch (stTableType) {
       case TableTypes.REQUIREMENT:
       case TableTypes.ALL_REQUIREMENTS:
-        service = getSearchRequirementsService(stSubType);
+        service = getSearchRecordsService(stSubType);
         break;
       case TableTypes.OFFER:
       case TableTypes.ALL_OFFERS:
-        if (stSubType == RequirementType.GOOD) service = searchOffersService();
-        else if (stSubType == RequirementType.SERVICE)
-          service = searchOffersService();
-        else if (stSubType == RequirementType.SALE)
-          service = searchOffersService();
+        service = getSearchOffersService(stSubType);
         break;
       case TableTypes.PURCHASE_ORDER:
       case TableTypes.ALL_PURCHASE_ORDERS:

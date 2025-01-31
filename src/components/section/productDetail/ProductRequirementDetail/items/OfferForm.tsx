@@ -23,10 +23,6 @@ import {
 } from "../../../../../models/Interfaces";
 import useApi from "../../../../../hooks/useApi";
 import {
-  createOfferService,
-  getValidationOfferService,
-} from "../../../../../services/requests/offerService";
-import {
   Action,
   CanOfferType,
   CantOfferMotives,
@@ -47,6 +43,8 @@ import CantOfferMessage from "./CantOfferMessage";
 import { Requirement } from "../../../../../models/MainInterfaces";
 import makeRequest, {
   checkWarranty,
+  getCreateOfferService,
+  getGetValidationOfferService,
 } from "../../../../../utilities/globalFunctions";
 import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
 import ModalContainer from "../../../../containers/ModalContainer";
@@ -281,7 +279,10 @@ export default function OfferForm(props: OfferFormProps) {
     } else {
       if (props.requirement) {
         const { responseData }: any = await makeRequest({
-          service: getValidationOfferService(uid, props.requirement.key),
+          service: getGetValidationOfferService(props.requirement.type)?.(
+            uid,
+            props.requirement.key
+          ),
           method: "get",
         });
 
@@ -402,7 +403,9 @@ export default function OfferForm(props: OfferFormProps) {
 
   function submit(data: CreateOfferRequest) {
     setApiParams({
-      service: createOfferService(),
+      service: props.requirement
+        ? getCreateOfferService(props.requirement?.type)
+        : null,
       method: "post",
       dataToSend: data,
     });

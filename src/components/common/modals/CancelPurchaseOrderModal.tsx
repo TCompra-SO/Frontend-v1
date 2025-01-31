@@ -65,6 +65,7 @@ export default function CancelPurchaseOrderModal(
     else
       cancelOffer(
         props.offerId,
+        props.type,
         props.canceledByCreator,
         Action.CANCEL_OFFER,
         text.trim()
