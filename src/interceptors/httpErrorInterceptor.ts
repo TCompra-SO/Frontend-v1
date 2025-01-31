@@ -13,24 +13,28 @@ import {
   sendCertificationRequestService,
   verifyCertificationService,
 } from "../services/requests/certificateService";
-import { uploadDocsRequirementService } from "../services/requests/documentService";
-import { uploadImagesRequirementService } from "../services/requests/imageService";
-import { createReqOfferService } from "../services/requests/requirementOfferService";
+import { createReqOfferService } from "../services/requests/good/requirementOfferService";
 import {
   cancelRequirementService,
   selectRequirementOfferService,
-} from "../services/requests/requirementService";
-import { createSaleOfferService } from "../services/requests/saleOfferService";
+  uploadDocsRequirementService,
+  uploadImagesRequirementService,
+} from "../services/requests/good/requirementService";
+import { createSaleOfferService } from "../services/requests/sale/saleOfferService";
 import {
   cancelSaleService,
   selectSaleOfferService,
-} from "../services/requests/saleService";
+  uploadDocsSaleService,
+  uploadImagesSaleService,
+} from "../services/requests/sale/saleService";
 import { registerScoreService } from "../services/requests/scoreService";
-import { createServiceOfferService } from "../services/requests/serviceOfferService";
+import { createServiceOfferService } from "../services/requests/service/serviceOfferService";
 import {
   cancelServiceService,
   selectServiceOfferService,
-} from "../services/requests/serviceService";
+  uploadDocsServiceService,
+  uploadImagesServiceService,
+} from "../services/requests/service/serviceService";
 import {
   changeRoleSubUserService,
   registerSubUserService,
@@ -220,9 +224,13 @@ export default function httpErrorInterceptor(error: any, type: string): string {
       }
       break;
     case uploadDocsRequirementService().type:
+    case uploadDocsServiceService().type:
+    case uploadDocsSaleService().type:
       erroMsg = "errorOccurredUploadingDocs";
       break;
     case uploadImagesRequirementService().type:
+    case uploadImagesServiceService().type:
+    case uploadImagesSaleService().type:
       erroMsg = "errorOccurredUploadingImgs";
       break;
     case registerScoreService().type:

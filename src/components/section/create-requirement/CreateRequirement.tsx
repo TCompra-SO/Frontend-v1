@@ -27,6 +27,8 @@ import useApi, { UseApiType } from "../../../hooks/useApi";
 import {
   checkWarranty,
   getCreateRecordService,
+  getUploadDocsRecordService,
+  getUploadImagesRecordService,
   isDateEarlierThanTomorrow,
 } from "../../../utilities/globalFunctions";
 import { MainState } from "../../../models/Redux";
@@ -45,8 +47,6 @@ import WarrantyField from "../../common/formFields/WarrantyField";
 import DurationField from "../../common/formFields/DurationField";
 import ItemConditionField from "../../common/formFields/ItemConditionField";
 import CanOfferField from "../../common/formFields/CanOfferField";
-import { uploadImagesRequirementService } from "../../../services/requests/imageService";
-import { uploadDocsRequirementService } from "../../../services/requests/documentService";
 import ModalContainer from "../../containers/ModalContainer";
 import { useGetRequiredDocsCert } from "../../../hooks/certificateHooks";
 import useShowNotification from "../../../hooks/utilHooks";
@@ -134,6 +134,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
           props.setReqSuccess(ProcessFlag.FIN_SUCCESS);
           uploadImgsAndDocs(
             responseData.data?.[0]?.key,
+            type,
             formDataImgRef.current,
             formDataDocRef.current
           );
@@ -288,6 +289,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
 
   function uploadImgsAndDocs(
     reqId: string | undefined,
+    type: RequirementType,
     formDataImg: FormData | null,
     formDataDoc: FormData | null
   ) {
@@ -301,7 +303,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         const data: FormData = formDataDoc;
         data.append(ImageRequestLabels.UID, reqId);
         props.setApiParamsDoc({
-          service: uploadDocsRequirementService(),
+          service: getUploadDocsRecordService(type),
           method: "post",
           dataToSend: data,
           includeHeader: false,
@@ -311,7 +313,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         const data: FormData = formDataImg;
         data.append(ImageRequestLabels.UID, reqId);
         props.setApiParamsImg({
-          service: uploadImagesRequirementService(),
+          service: getUploadImagesRecordService(type),
           method: "post",
           dataToSend: data,
           includeHeader: false,

@@ -51,7 +51,9 @@ import {
   republishRequirementService,
   searchRequirementsService,
   selectRequirementOfferService,
-} from "../services/requests/requirementService";
+  uploadDocsRequirementService,
+  uploadImagesRequirementService,
+} from "../services/requests/good/requirementService";
 import {
   cancelServiceService,
   createServiceService,
@@ -64,7 +66,9 @@ import {
   republishServiceService,
   searchServicesService,
   selectServiceOfferService,
-} from "../services/requests/serviceService";
+  uploadDocsServiceService,
+  uploadImagesServiceService,
+} from "../services/requests/service/serviceService";
 import {
   cancelSaleService,
   createSaleService,
@@ -77,7 +81,9 @@ import {
   republishSaleService,
   searchSalesService,
   selectSaleOfferService,
-} from "../services/requests/saleService";
+  uploadDocsSaleService,
+  uploadImagesSaleService,
+} from "../services/requests/sale/saleService";
 import {
   cancelReqOfferService,
   createReqOfferService,
@@ -88,7 +94,9 @@ import {
   getReqOffersByRequirementIdService,
   getValidationReqOfferService,
   searchReqOffersService,
-} from "../services/requests/requirementOfferService";
+  uploadDocsReqOfferService,
+  uploadImagesReqOfferService,
+} from "../services/requests/good/requirementOfferService";
 import {
   cancelServiceOfferService,
   culminateServiceOfferService,
@@ -98,7 +106,9 @@ import {
   getServiceOffersByServiceIdService,
   getValidationServiceOfferService,
   searchServiceOffersService,
-} from "../services/requests/serviceOfferService";
+  uploadDocsServiceOfferService,
+  uploadImagesServiceOfferService,
+} from "../services/requests/service/serviceOfferService";
 import {
   cancelSaleOfferService,
   culminateSaleOfferService,
@@ -108,7 +118,9 @@ import {
   getSaleOffersBySaleIdService,
   getValidationSaleOfferService,
   searchSaleOffersService,
-} from "../services/requests/saleOfferService";
+  uploadDocsSaleOfferService,
+  uploadImagesSaleOfferService,
+} from "../services/requests/sale/saleOfferService";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -678,5 +690,33 @@ export function getSearchOffersService(
   if (type == RequirementType.GOOD) return searchReqOffersService();
   if (type == RequirementType.SERVICE) return searchServiceOffersService();
   if (type == RequirementType.SALE) return searchSaleOffersService();
+  return null;
+}
+
+export function getUploadDocsRecordService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return uploadDocsRequirementService();
+  if (type == RequirementType.SERVICE) return uploadDocsServiceService();
+  if (type == RequirementType.SALE) return uploadDocsSaleService();
+  return null;
+}
+
+export function getUploadDocsOfferService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return uploadDocsReqOfferService();
+  if (type == RequirementType.SERVICE) return uploadDocsServiceOfferService();
+  if (type == RequirementType.SALE) return uploadDocsSaleOfferService();
+  return null;
+}
+
+export function getUploadImagesOfferService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return uploadImagesReqOfferService();
+  if (type == RequirementType.SERVICE) return uploadImagesServiceOfferService();
+  if (type == RequirementType.SALE) return uploadImagesSaleOfferService();
+  return null;
+}
+
+export function getUploadImagesRecordService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return uploadImagesRequirementService();
+  if (type == RequirementType.SERVICE) return uploadImagesServiceService();
+  if (type == RequirementType.SALE) return uploadImagesSaleService();
   return null;
 }

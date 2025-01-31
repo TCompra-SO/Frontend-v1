@@ -36,8 +36,6 @@ import {
   RequirementType,
   UserRoles,
 } from "../../../../../utilities/types";
-import { uploadDocsOfferService } from "../../../../../services/requests/documentService";
-import { uploadImagesOfferService } from "../../../../../services/requests/imageService";
 import React from "react";
 import CantOfferMessage from "./CantOfferMessage";
 import { Requirement } from "../../../../../models/MainInterfaces";
@@ -45,6 +43,8 @@ import makeRequest, {
   checkWarranty,
   getCreateOfferService,
   getGetValidationOfferService,
+  getUploadDocsOfferService,
+  getUploadImagesOfferService,
 } from "../../../../../utilities/globalFunctions";
 import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
 import ModalContainer from "../../../../containers/ModalContainer";
@@ -422,7 +422,9 @@ export default function OfferForm(props: OfferFormProps) {
         const data: FormData = formDataDoc;
         data.append(ImageRequestLabels.UID, offerIdResponse);
         setApiParamsDoc({
-          service: uploadDocsOfferService(),
+          service: props.requirement
+            ? getUploadDocsOfferService(props.requirement.type)
+            : null,
           method: "post",
           dataToSend: data,
           includeHeader: false,
@@ -432,7 +434,9 @@ export default function OfferForm(props: OfferFormProps) {
         const data: FormData = formDataImg;
         data.append(ImageRequestLabels.UID, offerIdResponse);
         setApiParamsImg({
-          service: uploadImagesOfferService(),
+          service: props.requirement
+            ? getUploadImagesOfferService(props.requirement.type)
+            : null,
           method: "post",
           dataToSend: formDataImg,
           includeHeader: false,

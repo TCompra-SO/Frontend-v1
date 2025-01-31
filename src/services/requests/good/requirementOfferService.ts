@@ -1,5 +1,5 @@
-import { HttpService } from "../../models/Interfaces";
-import { ApiMainRoutes, ApiRoutes } from "../../utilities/routes";
+import { HttpService } from "../../../models/Interfaces";
+import { ApiMainRoutes, ApiRoutes } from "../../../utilities/routes";
 
 export function createReqOfferService(): HttpService {
   return {
@@ -114,5 +114,23 @@ export function searchReqOffersService(): HttpService {
       ApiRoutes.offers.searchOffers
     }`,
     type: "OFRE-SE-OF",
+  };
+}
+
+export function uploadDocsReqOfferService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.documents}${
+      ApiRoutes.documents.uploadDocumentsOffer
+    }`,
+    type: "OFRE-DO-UP",
+  };
+}
+
+export function uploadImagesReqOfferService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.images}${
+      ApiRoutes.images.uploadImagesOffer
+    }`,
+    type: "OFRE-IM-UP",
   };
 }

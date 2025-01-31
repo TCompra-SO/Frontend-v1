@@ -1,5 +1,5 @@
-import { HttpService } from "../../models/Interfaces";
-import { ApiMainRoutes, ApiRoutes } from "../../utilities/routes";
+import { HttpService } from "../../../models/Interfaces";
+import { ApiMainRoutes, ApiRoutes } from "../../../utilities/routes";
 
 export function getSalesService(page: number, pageSize: number): HttpService {
   return {
@@ -132,5 +132,23 @@ export function searchSalesService(): HttpService {
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.searchRequirements}`,
     type: "SA-SE-RE",
+  };
+}
+
+export function uploadDocsSaleService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.documents}${
+      ApiRoutes.documents.uploadDocumentsReq
+    }`,
+    type: "SA-DO-UP",
+  };
+}
+
+export function uploadImagesSaleService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.images}${
+      ApiRoutes.images.uploadImagesReq
+    }`,
+    type: "SA-IM-UP",
   };
 }
