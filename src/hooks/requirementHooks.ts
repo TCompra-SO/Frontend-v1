@@ -26,7 +26,7 @@ import {
   getPurchaseOrderById,
   getRequirementById,
   getRequirementFromData,
-} from "../services/complete/generalServices";
+} from "../services/general/generalServices";
 import makeRequest, {
   getCancelRecordService,
   getCancelOfferService,
@@ -321,7 +321,8 @@ export function useGetOffersByRequirementId() {
             !requirementData.filters
           ) {
             const { purchaseOrder } = await getPurchaseOrderById(
-              requirementData.purchaseOrderId
+              requirementData.purchaseOrderId,
+              requirementData.type
             );
             if (purchaseOrder) filters = purchaseOrder.filters;
           }

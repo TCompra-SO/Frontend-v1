@@ -19,8 +19,10 @@ import { useContext, useEffect, useState } from "react";
 import { LoadingDataContext } from "../../../../contexts/LoadingDataContext";
 import { ModalContent, useApiParams } from "../../../../models/Interfaces";
 import useApi from "../../../../hooks/useApi";
-import { openPurchaseOrderPdf } from "../../../../utilities/globalFunctions";
-import { getPurchaseOrderPDFService } from "../../../../services/requests/purchaseOrderService";
+import {
+  getGetOrderPDFService,
+  openPurchaseOrderPdf,
+} from "../../../../utilities/globalFunctions";
 import ModalContainer from "../../../containers/ModalContainer";
 import {
   mainModalScrollStyle,
@@ -163,7 +165,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
         const po = data as PurchaseOrderItemSubUser;
         if (!loadingPdf)
           setApiParamsPdf({
-            service: getPurchaseOrderPDFService(po.key),
+            service: getGetOrderPDFService(po.type)?.(po.key),
             method: "get",
           });
         break;

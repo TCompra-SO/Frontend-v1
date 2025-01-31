@@ -5,6 +5,7 @@ import makeRequest, {
   getGetBasicRateDataRecordService,
   getGetRecordByIdService,
   getGetOfferByIdService,
+  getGetOrderByIdService,
 } from "../../utilities/globalFunctions";
 import {
   transformDataToRequirement,
@@ -26,7 +27,6 @@ import {
   getRequiredDocumentsService,
   verifyCertificationService,
 } from "../requests/certificateService";
-import { getPurchaseOrderByIdService } from "../requests/purchaseOrderService";
 
 export async function getBaseUserForUserSubUser(
   uid: string,
@@ -123,9 +123,9 @@ export async function getRequirementById(id: string, type: RequirementType) {
   };
 }
 
-export async function getPurchaseOrderById(id: string) {
+export async function getPurchaseOrderById(id: string, type: RequirementType) {
   const { responseData, error, errorMsg } = await makeRequest({
-    service: getPurchaseOrderByIdService(id),
+    service: getGetOrderByIdService(type)?.(id),
     method: "get",
   });
 

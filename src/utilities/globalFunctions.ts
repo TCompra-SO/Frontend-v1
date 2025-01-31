@@ -121,6 +121,24 @@ import {
   uploadDocsSaleOfferService,
   uploadImagesSaleOfferService,
 } from "../services/requests/sale/saleOfferService";
+import {
+  getReqPurchaseOrderByIdService,
+  getReqPurchaseOrderPDFService,
+  searchReqPurchaseOrdersByClientService,
+  searchReqPurchaseOrdersByProviderService,
+} from "../services/requests/good/requirementPurchaseOrderService";
+import {
+  getServicePurchaseOrderByIdService,
+  getServicePurchaseOrderPDFService,
+  searchServicePurchaseOrdersByClientService,
+  searchServicePurchaseOrdersByProviderService,
+} from "../services/requests/service/servicePurchaseOrderService";
+import {
+  getSalesOrderByIdService,
+  getSalesOrderPDFService,
+  searchSalesOrdersByClientService,
+  searchSalesOrdersByProviderService,
+} from "../services/requests/sale/salesOrderService";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -718,5 +736,42 @@ export function getUploadImagesRecordService(type: RequirementType) {
   if (type == RequirementType.GOOD) return uploadImagesRequirementService();
   if (type == RequirementType.SERVICE) return uploadImagesServiceService();
   if (type == RequirementType.SALE) return uploadImagesSaleService();
+  return null;
+}
+
+export function getGetOrderPDFService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return getReqPurchaseOrderPDFService;
+  if (type == RequirementType.SERVICE) return getServicePurchaseOrderPDFService;
+  if (type == RequirementType.SALE) return getSalesOrderPDFService;
+  return null;
+}
+
+export function getGetOrderByIdService(type: RequirementType) {
+  if (type == RequirementType.GOOD) return getReqPurchaseOrderByIdService;
+  if (type == RequirementType.SERVICE)
+    return getServicePurchaseOrderByIdService;
+  if (type == RequirementType.SALE) return getSalesOrderByIdService;
+  return null;
+}
+
+export function getSearchOrdersByClientService(
+  type: RequirementType | PurchaseOrderTableTypes | undefined
+) {
+  if (type == RequirementType.GOOD)
+    return searchReqPurchaseOrdersByClientService();
+  if (type == RequirementType.SERVICE)
+    return searchServicePurchaseOrdersByClientService();
+  if (type == RequirementType.SALE) return searchSalesOrdersByClientService();
+  return null;
+}
+
+export function getSearchOrdersByProviderService(
+  type: RequirementType | PurchaseOrderTableTypes | undefined
+) {
+  if (type == RequirementType.GOOD)
+    return searchReqPurchaseOrdersByProviderService();
+  if (type == RequirementType.SERVICE)
+    return searchServicePurchaseOrdersByProviderService();
+  if (type == RequirementType.SALE) return searchSalesOrdersByProviderService();
   return null;
 }

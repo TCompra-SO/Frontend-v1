@@ -5,7 +5,7 @@ import { HomeFilterRequest } from "../models/Requests";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { RequirementType } from "../utilities/types";
-import { getRequirementFromData } from "../services/complete/generalServices";
+import { getRequirementFromData } from "../services/general/generalServices";
 import useSocketQueueHook, {
   useAddOrUpdateRow,
 } from "../hooks/socketQueueHook";

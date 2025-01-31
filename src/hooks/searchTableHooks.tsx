@@ -19,14 +19,12 @@ import {
 import {
   getParamsFromSorterAndFilter,
   getSearchOffersService,
+  getSearchOrdersByClientService,
+  getSearchOrdersByProviderService,
   getSearchRecordsService,
   getSearchString,
 } from "../utilities/globalFunctions";
 import { debounce } from "lodash";
-import {
-  searchPurchaseOrdersByClientService,
-  searchPurchaseOrdersByProviderService,
-} from "../services/requests/purchaseOrderService";
 import { FilterValue } from "antd/lib/table/interface";
 
 type SearchTableTypeParams = {
@@ -132,17 +130,16 @@ export default function useSearchTable(
       case TableTypes.PURCHASE_ORDER:
       case TableTypes.ALL_PURCHASE_ORDERS:
         if (stSubType == PurchaseOrderTableTypes.ISSUED)
-          service = searchPurchaseOrdersByClientService();
+          service = getSearchOrdersByClientService(stSubType);
         else if (stSubType == PurchaseOrderTableTypes.RECEIVED)
-          service = searchPurchaseOrdersByProviderService();
+          service = getSearchOrdersByProviderService(stSubType);
         break;
       case TableTypes.SALES_ORDER:
       case TableTypes.ALL_SALES_ORDERS:
         if (stSubType == PurchaseOrderTableTypes.ISSUED)
-          // r3v cambiar endpoints
-          service = searchPurchaseOrdersByProviderService();
+          service = getSearchOrdersByProviderService(stSubType);
         else if (stSubType == PurchaseOrderTableTypes.RECEIVED)
-          service = searchPurchaseOrdersByClientService();
+          service = getSearchOrdersByClientService(stSubType);
         break;
     }
     return service;

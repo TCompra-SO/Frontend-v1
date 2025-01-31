@@ -48,7 +48,7 @@ import makeRequest, {
 } from "../../../../../utilities/globalFunctions";
 import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
 import ModalContainer from "../../../../containers/ModalContainer";
-import { verifyCertificationByUserIdAndCompanyId } from "../../../../../services/complete/generalServices";
+import { verifyCertificationByUserIdAndCompanyId } from "../../../../../services/general/generalServices";
 import useShowNotification from "../../../../../hooks/utilHooks";
 
 function RowContainer({ children }: { children: ReactNode }) {

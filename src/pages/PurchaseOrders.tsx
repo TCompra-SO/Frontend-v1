@@ -23,6 +23,7 @@ import useApi from "../hooks/useApi";
 import { getUserService } from "../services/requests/authService";
 import {
   getFieldNameObjForOrders,
+  getGetOrderPDFService,
   getLabelFromPurchaseOrderType,
   getPurchaseOrderType,
   openPurchaseOrderPdf,
@@ -36,7 +37,6 @@ import {
   noPaginationPageSize,
 } from "../utilities/globals";
 import { useLocation } from "react-router-dom";
-import { getPurchaseOrderPDFService } from "../services/requests/purchaseOrderService";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
@@ -347,7 +347,9 @@ export default function PurchaseOrders() {
         break;
       case Action.DOWNLOAD_PURCHASE_ORDER:
         setApiParamsPdf({
-          service: getPurchaseOrderPDFService(purchaseOrder.key),
+          service: getGetOrderPDFService(purchaseOrder.type)?.(
+            purchaseOrder.key
+          ),
           method: "get",
         });
         break;

@@ -13,6 +13,7 @@ import { Action, ModalTypes, TableTypes } from "../utilities/types";
 import { PurchaseOrder } from "../models/MainInterfaces";
 import {
   getFieldNameObjForOrders,
+  getGetOrderPDFService,
   getLabelFromPurchaseOrderType,
   getPurchaseOrderType,
   openPurchaseOrderPdf,
@@ -21,7 +22,6 @@ import { useLocation } from "react-router-dom";
 import useApi from "../hooks/useApi";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
-import { getPurchaseOrderPDFService } from "../services/requests/purchaseOrderService";
 import { transformToPurchaseOrder } from "../utilities/transform";
 import ModalContainer from "../components/containers/ModalContainer";
 import {
@@ -231,7 +231,9 @@ export default function AllPurchaseOrders() {
       case Action.DOWNLOAD_PURCHASE_ORDER:
         if (!loadingPdf)
           setApiParamsPdf({
-            service: getPurchaseOrderPDFService(purchaseOrder.key),
+            service: getGetOrderPDFService(purchaseOrder.type)?.(
+              purchaseOrder.key
+            ),
             method: "get",
           });
         break;
