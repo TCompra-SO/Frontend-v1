@@ -89,15 +89,16 @@ export default function AllOffers() {
   });
   const { addNewRow, updateRow } = useAddOrUpdateRow(
     (data: SocketDataPackType) => {
+      console.log(subUsersCache, data.subUser);
       if (data.subUser == dataUser.uid)
-        transformToOfferFromGetOffersByEntityOrSubUser(
+        return transformToOfferFromGetOffersByEntityOrSubUser(
           data,
           type,
           dataUser,
           mainDataUser
         );
       else
-        transformToOfferFromGetOffersByEntityOrSubUser(
+        return transformToOfferFromGetOffersByEntityOrSubUser(
           data,
           type,
           subUsersCache[data.subUser],

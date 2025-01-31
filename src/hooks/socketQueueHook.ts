@@ -32,7 +32,7 @@ export default function useSocketQueueHook(
       ...prevQueue,
       {
         type: payload.typeSocket,
-        key: payload.dataPack.data[0].key, //payload.key,
+        key: payload.key,
         data: payload,
       },
     ]);
@@ -52,15 +52,21 @@ export function useAddOrUpdateRow(
 ) {
   async function addNewRow(data: SocketResponse) {
     const newElem = await transformData(data["dataPack"]["data"][0]);
-    setList([newElem, ...list.slice(0, list.length - 1)]);
-    setTotal(total + 1);
+    if (newElem) {
+      setList([newElem, ...list.slice(0, list.length - 1)]);
+      setTotal(total + 1);
+    }
   }
 
   async function updateRow(data: SocketResponse) {
+    console.log("calling", data);
     const ind = list.findIndex((item) => item.key === data.key);
     if (ind != -1) {
+      console.log("updatinf");
       const updElem = await transformData(data["dataPack"]["data"][0]);
-      setList([...list.slice(0, ind), updElem, ...list.slice(ind + 1)]);
+      console.log(updElem);
+      if (updElem)
+        setList([...list.slice(0, ind), updElem, ...list.slice(ind + 1)]);
     }
   }
   return { updateRow, addNewRow };

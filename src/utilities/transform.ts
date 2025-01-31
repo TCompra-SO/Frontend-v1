@@ -219,7 +219,6 @@ export function transformToOfferFromGetOffersByEntityOrSubUser(
     offer.user = mainUser;
     offer.subUser = user;
   } else offer.user = user;
-
   return offer;
 }
 

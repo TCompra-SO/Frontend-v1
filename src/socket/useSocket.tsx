@@ -79,12 +79,12 @@ export default function useSocket(
       tableType == TableTypes.REQUIREMENT ||
       tableType == TableTypes.ALL_REQUIREMENTS
     ) {
-      if (subType == RequirementType.GOOD) roomName = "roomRequeriment";
+      if (subType == RequirementType.GOOD) roomName = "roomRequerimentProduct";
       else if (subType == RequirementType.SERVICE) roomName = "roomRequeriment";
       else if (subType == RequirementType.SALE) roomName = "roomRequeriment";
     }
     if (tableType == TableTypes.OFFER || tableType == TableTypes.ALL_OFFERS) {
-      if (subType == RequirementType.GOOD) roomName = "roomRequeriment";
+      if (subType == RequirementType.GOOD) roomName = "roomOfferProduct";
       else if (subType == RequirementType.SERVICE) roomName = "roomRequeriment";
       else if (subType == RequirementType.SALE) roomName = "roomRequeriment";
     }
