@@ -80,6 +80,19 @@ export function useDateOnwardValidator(tlds: string[]) {
   return validateDateOnward;
 }
 
+const validateTrimmedMinMax = (rule: RuleObject, value: string) => {
+  if (!value) return Promise.resolve(); // Skip validation if empty
+
+  const trimmedValue = value.trim(); // Trim only for validation
+  if (rule.min && trimmedValue.length < rule.min) {
+    return Promise.reject(new Error(`Must be at least ${rule.min} characters`));
+  }
+  if (rule.max && trimmedValue.length > rule.max) {
+    return Promise.reject(new Error(`Cannot exceed ${rule.max} characters`));
+  }
+  return Promise.resolve();
+};
+
 /** Rules */
 
 export function useAddressRules(required: boolean) {
@@ -214,6 +227,7 @@ export function useTitleRules(required: boolean) {
     },
     {
       min: Lengths.title.min,
+      validator: validateTrimmedMinMax,
     },
     {
       max: Lengths.title.max,
