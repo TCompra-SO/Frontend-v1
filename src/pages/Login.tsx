@@ -37,6 +37,7 @@ import { AxiosError } from "axios";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { useLoadUserInfo } from "../hooks/authHooks";
 import useShowNotification from "../hooks/utilHooks";
+import { loginKey } from "../utilities/globals";
 
 const LoginType = {
   LOGIN: "login",
@@ -200,6 +201,7 @@ export default function Login(props: LoginProps) {
       await loadUserInfo();
       showNotification("success", t("welcome"));
       props.closeLoginModal();
+      localStorage.setItem(loginKey, Date.now().toString());
     }
   }
 

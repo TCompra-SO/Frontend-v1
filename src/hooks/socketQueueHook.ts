@@ -97,9 +97,7 @@ export function useAddOrUpdateRow(
               ...list.slice(ind + 1),
             ]);
           else insertElementInArray(updElem, ind);
-        } else {
-          insertElementInArray(updElem, ind);
-        }
+        } else insertElementInArray(updElem, ind);
       }
     }
   }

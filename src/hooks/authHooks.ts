@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import {
+  loginKey,
+  logoutKey,
   navigateToAfterLoggingOut,
   tokenKey,
   userDataKey,
@@ -31,8 +33,8 @@ import { transformToDisplayUser } from "../utilities/transform";
 export function useLogout() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const loadUserInfo = useLoadUserInfo();
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
-  const logoutKey: string = "logout";
 
   function logout() {
     if (isLoggedIn) {
@@ -46,10 +48,13 @@ export function useLogout() {
   }
 
   useEffect(() => {
-    function handleStorageChange(event: StorageEvent) {
+    async function handleStorageChange(event: StorageEvent) {
       if (event.key === logoutKey) {
         dispatch(setIsLoggedIn(false));
         navigate(navigateToAfterLoggingOut);
+      } else if (event.key === loginKey) {
+        await loadUserInfo();
+        localStorage.removeItem(loginKey);
       }
     }
     window.addEventListener("storage", handleStorageChange);

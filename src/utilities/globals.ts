@@ -48,6 +48,8 @@ export const reqIdParamNameInRoute: string = "requirementId";
 // local storage keys
 export const userDataKey: string = "udata";
 export const tokenKey: string = "token";
+export const logoutKey: string = "logout";
+export const loginKey: string = "login";
 
 /* Window size (>=) */
 export const windowSize = {
