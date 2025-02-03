@@ -90,6 +90,7 @@ export default function Offers() {
     filteredInfo,
   });
   const { addNewRow, updateRow } = useAddOrUpdateRow(
+    TableTypes.OFFER,
     (data: SocketDataPackType) =>
       transformToOfferFromGetOffersByEntityOrSubUser(
         data,

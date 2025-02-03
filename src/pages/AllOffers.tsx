@@ -88,6 +88,7 @@ export default function AllOffers() {
     filteredInfo,
   });
   const { addNewRow, updateRow } = useAddOrUpdateRow(
+    TableTypes.ALL_OFFERS,
     (data: SocketDataPackType) => {
       console.log(subUsersCache, data.subUser);
       if (data.subUser == dataUser.uid)

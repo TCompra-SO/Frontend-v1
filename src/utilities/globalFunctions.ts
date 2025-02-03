@@ -777,5 +777,5 @@ export function getSearchOrdersByProviderService(
 }
 
 export function getProductDetailRoute(id: string, type: RequirementType) {
-  return `${pageRoutes.productDetail}/:${type}/:${id}`;
+  return `${pageRoutes.productDetail}/${type}/${id}`;
 }

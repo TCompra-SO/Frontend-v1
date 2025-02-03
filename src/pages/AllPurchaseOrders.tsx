@@ -87,6 +87,7 @@ export default function AllPurchaseOrders() {
     filteredInfo,
   });
   const { addNewRow, updateRow } = useAddOrUpdateRow(
+    TableTypes.ALL_PURCHASE_ORDERS,
     (data: SocketDataPackType) => transformToPurchaseOrder(data),
     purchaseOrderList,
     setPurchaseOrderList,

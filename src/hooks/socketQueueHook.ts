@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
-import { RequirementState, SocketChangeType } from "../utilities/types";
+import {
+  RequirementState,
+  SocketChangeType,
+  TableTypes,
+} from "../utilities/types";
 import { SocketResponse } from "../models/Interfaces";
-import { Requirement } from "../models/MainInterfaces";
+import { BasicRequirement, Requirement } from "../models/MainInterfaces";
 
 export default function useSocketQueueHook(
   createCallback: (data: SocketResponse) => void | Promise<void>,
@@ -43,6 +47,7 @@ export default function useSocketQueueHook(
 }
 
 export function useAddOrUpdateRow(
+  tableType: TableTypes,
   transformData: (
     data: SocketResponse["dataPack"]["data"][number]
   ) => any | Promise<any>,
@@ -50,7 +55,7 @@ export function useAddOrUpdateRow(
   setList: (list: any[]) => void,
   total: number,
   setTotal: (total: number) => void,
-  isHomeList: boolean = false
+  page?: number
 ) {
   async function addNewRow(data: SocketResponse) {
     const newElem = await transformData(data["dataPack"]["data"][0]);
@@ -68,18 +73,40 @@ export function useAddOrUpdateRow(
       const updElem = await transformData(data["dataPack"]["data"][0]);
       console.log(updElem);
       if (updElem) {
-        if (!isHomeList)
-          setList([...list.slice(0, ind), updElem, ...list.slice(ind + 1)]);
-        else {
+        if (tableType == TableTypes.HOME) {
           const requirement: Requirement = updElem as Requirement;
           if (requirement.state != RequirementState.PUBLISHED) {
             setList([...list.slice(0, ind), ...list.slice(ind + 1)]);
             setTotal(total - 1);
-          } else
-            setList([...list.slice(0, ind), updElem, ...list.slice(ind + 1)]);
+          } else insertElementInArray(updElem, ind);
+        } else if (
+          tableType == TableTypes.REQUIREMENT ||
+          tableType == TableTypes.ALL_REQUIREMENTS
+        ) {
+          const requirement = updElem as BasicRequirement;
+          // Verificar si requerimiento ha sido republicado
+          if (
+            (list[ind] as BasicRequirement).state !=
+              RequirementState.PUBLISHED &&
+            requirement.state == RequirementState.PUBLISHED &&
+            page == 1
+          )
+            setList([
+              requirement,
+              ...list.slice(0, ind),
+              ...list.slice(ind + 1),
+            ]);
+          else insertElementInArray(updElem, ind);
+        } else {
+          insertElementInArray(updElem, ind);
         }
       }
     }
   }
+
+  function insertElementInArray(updElem: any, ind: number) {
+    setList([...list.slice(0, ind), updElem, ...list.slice(ind + 1)]);
+  }
+
   return { updateRow, addNewRow };
 }

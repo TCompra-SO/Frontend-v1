@@ -71,11 +71,13 @@ export default function AllRequirements() {
     filteredInfo,
   });
   const { addNewRow, updateRow } = useAddOrUpdateRow(
+    TableTypes.ALL_REQUIREMENTS,
     (data: SocketDataPackType) => transformDataToBasicRequirement(data, type),
     requirementList,
     setRequirementList,
     total,
-    setTotal
+    setTotal,
+    currentPage
   );
   const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
   useSocket(

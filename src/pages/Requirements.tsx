@@ -116,12 +116,14 @@ export default function Requirements() {
     filteredInfo,
   });
   const { addNewRow, updateRow } = useAddOrUpdateRow(
+    TableTypes.REQUIREMENT,
     (data: SocketDataPackType) =>
       transformDataToRequirement(data, type, dataUser, mainDataUser),
     requirementList,
     setRequirementList,
     total,
-    setTotal
+    setTotal,
+    currentPage
   );
   const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
   useSocket(

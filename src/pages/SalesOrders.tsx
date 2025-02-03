@@ -106,6 +106,7 @@ export default function SalesOrders() {
     filteredInfo,
   });
   const { addNewRow, updateRow } = useAddOrUpdateRow(
+    TableTypes.SALES_ORDER,
     (data: SocketDataPackType) => transformToPurchaseOrder(data),
     salesOrderList,
     setSalesOrderList,

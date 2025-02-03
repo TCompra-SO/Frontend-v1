@@ -4,7 +4,7 @@ import { useGetRequirementList } from "../hooks/requirementHooks";
 import { HomeFilterRequest } from "../models/Requests";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
-import { RequirementType } from "../utilities/types";
+import { RequirementType, TableTypes } from "../utilities/types";
 import { getRequirementFromData } from "../services/general/generalServices";
 import useSocketQueueHook, {
   useAddOrUpdateRow,
@@ -62,13 +62,13 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   } = useGetRequirementList();
   const [page, setPage] = useState(1);
   const { addNewRow, updateRow } = useAddOrUpdateRow(
+    TableTypes.HOME,
     (data: SocketDataPackType) =>
       getRequirementFromData(data, undefined, undefined, usersCache),
     requirementList,
     setRequirementList,
     totalRequirementList,
-    setTotalRequirementList,
-    true
+    setTotalRequirementList
   );
   const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
 
