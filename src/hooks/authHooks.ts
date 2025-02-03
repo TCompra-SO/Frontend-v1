@@ -13,22 +13,51 @@ import {
 } from "../redux/mainUserSlice";
 import {
   setBaseUser,
+  setEmail,
   setFullUser,
   setIsLoggedIn,
+  setUid,
   setUser,
   userInitialState,
 } from "../redux/userSlice";
 
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { MainState } from "../models/Redux";
 import { decryptData } from "../utilities/crypto";
 import { getBaseUserForUserSubUser } from "../services/general/generalServices";
-import { searchCompanyByNameService } from "../services/requests/authService";
-import useApi from "./useApi";
-import { useApiParams } from "../models/Interfaces";
-import { DisplayUser } from "../models/MainInterfaces";
-import { transformToDisplayUser } from "../utilities/transform";
+import useShowNotification from "./utilHooks";
+import { useTranslation } from "react-i18next";
+
+export function useLogin() {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const loadUserInfo = useLoadUserInfo();
+  const { showNotification } = useShowNotification();
+
+  async function login(responseData: any) {
+    dispatch(setUser(responseData));
+    await loadUserInfo();
+    showNotification("success", t("welcome"));
+    localStorage.setItem(loginKey, Date.now().toString());
+  }
+
+  return login;
+}
+
+export function useRegister() {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const { showNotification } = useShowNotification();
+
+  async function register(responseData: any, email: string) {
+    showNotification("success", t("registerUserSuccess"));
+    dispatch(setUid(responseData.res?.uid));
+    dispatch(setEmail(email));
+  }
+
+  return register;
+}
 
 export function useLogout() {
   const navigate = useNavigate();
@@ -130,56 +159,4 @@ export function useLoadUserInfo() {
   }
 
   return loadUserInfo;
-}
-
-export function useSearchCompanyByName() {
-  const [companyList, setCompanyList] = useState<DisplayUser[]>([]);
-  const [apiParams, setApiParams] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-  const { loading, responseData, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
-
-  useEffect(() => {
-    if (apiParams.service) fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParams]);
-
-  useEffect(() => {
-    if (responseData) {
-      try {
-        setCompanyList(
-          responseData.data?.map((item: any) => transformToDisplayUser(item))
-        );
-      } catch (err) {
-        console.log(err);
-      } finally {
-        // showLoadingMessage(message, false);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseData]);
-
-  function searchCompanyByName(query: string) {
-    setCompanyList([]);
-    setApiParams({
-      service: searchCompanyByNameService(query),
-      method: "get",
-    });
-  }
-
-  function clearList() {
-    setCompanyList([]);
-  }
-
-  return {
-    searchCompanyByName,
-    clearList,
-    loadingCompanyList: loading,
-    companyList,
-  };
 }

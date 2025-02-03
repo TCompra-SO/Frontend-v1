@@ -6,7 +6,7 @@ import {
   RegisterRequest,
 } from "../models/Requests";
 import { useDispatch } from "react-redux";
-import { setUid, setUser, setEmail } from "../redux/userSlice";
+import { setUid, setEmail } from "../redux/userSlice";
 import {
   Action,
   DocType,
@@ -19,7 +19,6 @@ import {
   registerService,
 } from "../services/requests/authService";
 import { useApiParams } from "../models/Interfaces";
-
 import { useTranslation } from "react-i18next";
 import {
   useDniRules,
@@ -35,9 +34,8 @@ import { equalServices } from "../utilities/globalFunctions";
 import ModalContainer from "../components/containers/ModalContainer";
 import { AxiosError } from "axios";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
-import { useLoadUserInfo } from "../hooks/authHooks";
+import { useLogin, useRegister } from "../hooks/authHooks";
 import useShowNotification from "../hooks/utilHooks";
-import { loginKey } from "../utilities/globals";
 
 const LoginType = {
   LOGIN: "login",
@@ -55,11 +53,12 @@ export default function Login(props: LoginProps) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
+  const login = useLogin();
+  const register = useRegister();
   const { emailRules } = useEmailRules(true);
   const { passwordRules } = usePasswordRules(true);
   const { dniRules } = useDniRules(true);
   const { rucRules } = useRucRules(true);
-  const loadUserInfo = useLoadUserInfo();
   const [checkedTermsConditions, setCheckedTermsConditions] = useState(false);
   const [validDoc, setValidDoc] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -192,16 +191,11 @@ export default function Login(props: LoginProps) {
 
   async function afterSubmit() {
     if (loginType == LoginType.REGISTER) {
-      dispatch(setUid(responseData.res.uid));
-      showNotification("success", t("registerUserSuccess"));
-      dispatch(setEmail(form.getFieldValue("email")));
+      register(responseData, form.getFieldValue("email"));
       props.onRegisterSuccess(docType);
     } else {
-      dispatch(setUser(responseData));
-      await loadUserInfo();
-      showNotification("success", t("welcome"));
+      login(responseData);
       props.closeLoginModal();
-      localStorage.setItem(loginKey, Date.now().toString());
     }
   }
 

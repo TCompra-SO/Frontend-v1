@@ -1,5 +1,11 @@
 import { App } from "antd";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { DisplayUser } from "../models/MainInterfaces";
+import { useApiParams } from "../models/Interfaces";
+import useApi from "./useApi";
+import { transformToDisplayUser } from "../utilities/transform";
+import { searchCompanyByNameService } from "../services/requests/authService";
 
 export default function useShowNotification() {
   const { notification: api } = App.useApp();
@@ -42,4 +48,56 @@ export function useShowLoadingMessage() {
   }
 
   return { showLoadingMessage };
+}
+
+export function useSearchCompanyByName() {
+  const [companyList, setCompanyList] = useState<DisplayUser[]>([]);
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+  const { loading, responseData, fetchData } = useApi({
+    service: apiParams.service,
+    method: apiParams.method,
+    dataToSend: apiParams.dataToSend,
+  });
+
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      try {
+        setCompanyList(
+          responseData.data?.map((item: any) => transformToDisplayUser(item))
+        );
+      } catch (err) {
+        console.log(err);
+      } finally {
+        // showLoadingMessage(message, false);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData]);
+
+  function searchCompanyByName(query: string) {
+    setCompanyList([]);
+    setApiParams({
+      service: searchCompanyByNameService(query),
+      method: "get",
+    });
+  }
+
+  function clearList() {
+    setCompanyList([]);
+  }
+
+  return {
+    searchCompanyByName,
+    clearList,
+    loadingCompanyList: loading,
+    companyList,
+  };
 }

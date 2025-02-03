@@ -9,9 +9,9 @@ import {
   searchSinceLength,
 } from "../../../../utilities/globals";
 import { debounce } from "lodash";
-import { useSearchCompanyByName } from "../../../../hooks/authHooks";
 import { getSearchString } from "../../../../utilities/globalFunctions";
 import SimpleLoading from "../../../../pages/utils/SimpleLoading";
+import { useSearchCompanyByName } from "../../../../hooks/utilHooks";
 
 interface SelectCompanyFieldProps {
   forHomeFilter?: boolean;
