@@ -24,7 +24,7 @@ export default function useHomeSocket() {
       });
 
       socketAPI.on("requeriment", (payload: SocketResponse) => {
-        console.log("Nuevo requerimiento creado recibido:", payload);
+        console.log("Nuevo requerimiento recibido:", payload);
         if (pageRef.current == 1 && !useFilterRef.current)
           updateChangesQueue(payload);
       });

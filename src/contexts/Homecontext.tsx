@@ -67,7 +67,8 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     requirementList,
     setRequirementList,
     totalRequirementList,
-    setTotalRequirementList
+    setTotalRequirementList,
+    true
   );
   const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
 

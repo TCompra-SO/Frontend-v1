@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { SocketChangeType } from "../utilities/types";
+import { RequirementState, SocketChangeType } from "../utilities/types";
 import { SocketResponse } from "../models/Interfaces";
+import { Requirement } from "../models/MainInterfaces";
 
 export default function useSocketQueueHook(
   createCallback: (data: SocketResponse) => void | Promise<void>,
@@ -48,7 +49,8 @@ export function useAddOrUpdateRow(
   list: any[],
   setList: (list: any[]) => void,
   total: number,
-  setTotal: (total: number) => void
+  setTotal: (total: number) => void,
+  isHomeList: boolean = false
 ) {
   async function addNewRow(data: SocketResponse) {
     const newElem = await transformData(data["dataPack"]["data"][0]);
@@ -65,8 +67,18 @@ export function useAddOrUpdateRow(
       console.log("updatinf");
       const updElem = await transformData(data["dataPack"]["data"][0]);
       console.log(updElem);
-      if (updElem)
-        setList([...list.slice(0, ind), updElem, ...list.slice(ind + 1)]);
+      if (updElem) {
+        if (!isHomeList)
+          setList([...list.slice(0, ind), updElem, ...list.slice(ind + 1)]);
+        else {
+          const requirement: Requirement = updElem as Requirement;
+          if (requirement.state != RequirementState.PUBLISHED) {
+            setList([...list.slice(0, ind), ...list.slice(ind + 1)]);
+            setTotal(total - 1);
+          } else
+            setList([...list.slice(0, ind), updElem, ...list.slice(ind + 1)]);
+        }
+      }
     }
   }
   return { updateRow, addNewRow };
