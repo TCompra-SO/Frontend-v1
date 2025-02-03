@@ -18,10 +18,10 @@ import { HomeContext } from "../contexts/Homecontext.tsx";
 import HomeTable from "../components/section/home/HomeTable/HomeTable.tsx";
 import { Requirement } from "../models/MainInterfaces.ts";
 import { useNavigate } from "react-router-dom";
-import { pageRoutes } from "../utilities/routes.ts";
 import { MainState } from "../models/Redux.ts";
 import { useSelector } from "react-redux";
 import useHomeSocket from "../socket/useHomeSocket.tsx";
+import { getProductDetailRoute } from "../utilities/globalFunctions.ts";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -46,7 +46,7 @@ export default function Home() {
     nameColumnHeader: t("goods"),
     onButtonClick: (action: Action, req: Requirement) => {
       if (action == Action.VIEW_REQUIREMENT)
-        navigate(`${pageRoutes.productDetail}/${req.type}/${req.key}`);
+        navigate(getProductDetailRoute(req.key, req.type));
     },
   });
 

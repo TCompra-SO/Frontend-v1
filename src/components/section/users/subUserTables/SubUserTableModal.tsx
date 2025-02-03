@@ -21,6 +21,7 @@ import { ModalContent, useApiParams } from "../../../../models/Interfaces";
 import useApi from "../../../../hooks/useApi";
 import {
   getGetOrderPDFService,
+  getProductDetailRoute,
   openPurchaseOrderPdf,
 } from "../../../../utilities/globalFunctions";
 import ModalContainer from "../../../containers/ModalContainer";
@@ -29,7 +30,6 @@ import {
   noPaginationPageSize,
 } from "../../../../utilities/globals";
 import { useNavigate } from "react-router-dom";
-import { pageRoutes } from "../../../../utilities/routes";
 import ButtonContainer from "../../../containers/ButtonContainer";
 import { useGetOffersByRequirementId } from "../../../../hooks/requirementHooks";
 import useShowNotification, {
@@ -186,9 +186,8 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
         break;
       }
       case Action.VIEW_REQUIREMENT: {
-        navigate(
-          `${pageRoutes.productDetail}/${(data as RequirementItemSubUser).key}`
-        );
+        const dataReq = data as RequirementItemSubUser;
+        navigate(getProductDetailRoute(dataReq.key, dataReq.type));
       }
     }
   }

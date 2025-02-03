@@ -775,3 +775,7 @@ export function getSearchOrdersByProviderService(
   if (type == RequirementType.SALE) return searchSalesOrdersByProviderService();
   return null;
 }
+
+export function getProductDetailRoute(id: string, type: RequirementType) {
+  return `${pageRoutes.productDetail}/:${type}/:${id}`;
+}

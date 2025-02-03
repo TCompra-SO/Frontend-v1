@@ -11,13 +11,13 @@ import { Action, TableTypes } from "../utilities/types";
 import { BasicRequirement } from "../models/MainInterfaces";
 import {
   getLabelFromRequirementType,
+  getProductDetailRoute,
   getRouteType,
 } from "../utilities/globalFunctions";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { transformDataToBasicRequirement } from "../utilities/transform";
-import { pageRoutes } from "../utilities/routes";
 import { fieldNameSearchRequestRequirement } from "../utilities/globals";
 import useShowNotification from "../hooks/utilHooks";
 import useSearchTable, {
@@ -157,7 +157,7 @@ export default function AllRequirements() {
 
   function handleOnButtonClick(action: Action, requirement: BasicRequirement) {
     if (action == Action.VIEW_REQUIREMENT)
-      navigate(`${pageRoutes.productDetail}/${requirement.key}`);
+      navigate(getProductDetailRoute(requirement.key, requirement.type));
   }
 
   return (

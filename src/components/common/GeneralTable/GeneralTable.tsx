@@ -54,9 +54,9 @@ import TypeColumn from "./columns/TypeColumn";
 import ViewColumn from "./columns/ViewColumn";
 import DocumentColumn from "./columns/DocumentColumn";
 import { useNavigate } from "react-router-dom";
-import { pageRoutes } from "../../../utilities/routes";
 import RequirementInfo from "../../section/requirements/requirementDetail/RequirementInfo";
 import { useState } from "react";
+import { getProductDetailRoute } from "../../../utilities/globalFunctions";
 
 interface GeneralTableProps {
   content: TableType;
@@ -200,7 +200,7 @@ export default function GeneralTable(props: GeneralTableProps) {
               ? (record: Requirement) => {
                   return {
                     onClick: () =>
-                      navigate(`${pageRoutes.productDetail}/${record.key}`),
+                      navigate(getProductDetailRoute(record.key, record.type)),
                   };
                 }
               : undefined
