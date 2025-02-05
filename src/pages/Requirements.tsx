@@ -122,8 +122,7 @@ export default function Requirements() {
     requirementList,
     setRequirementList,
     total,
-    setTotal,
-    currentPage
+    setTotal
   );
   const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
   useSocket(

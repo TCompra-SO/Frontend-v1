@@ -28,7 +28,10 @@ interface HomeContextType {
     pageSize?: number,
     params?: HomeFilterRequest
   ) => void;
-  updateChangesQueue: (payload: SocketResponse) => void;
+  updateChangesQueue: (
+    payload: SocketResponse,
+    canAddRowUpdate: boolean
+  ) => void;
 }
 
 export const HomeContext = createContext<HomeContextType>({

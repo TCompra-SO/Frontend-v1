@@ -3,7 +3,7 @@ import { io, Socket } from "socket.io-client";
 import { pageSizeOptionsSt } from "../utilities/globals";
 import { HomeContext } from "../contexts/Homecontext";
 import { SocketResponse } from "../models/Interfaces";
-import { RequirementType } from "../utilities/types";
+import { RequirementType, SocketChangeType } from "../utilities/types";
 
 let socketAPI: Socket | null = null;
 
@@ -37,13 +37,14 @@ export default function useHomeSocket() {
 
       socketAPI.on("updateRoom", (payload: SocketResponse) => {
         console.log("Nuevo requerimiento recibido:", payload);
-        if (pageRef.current == 1 && !useFilterRef.current)
-          updateChangesQueue(payload);
+        const canAddRow: boolean =
+          pageRef.current == 1 && !useFilterRef.current;
+        if (
+          payload.typeSocket == SocketChangeType.UPDATE ||
+          (payload.typeSocket == SocketChangeType.CREATE && canAddRow)
+        )
+          updateChangesQueue(payload, canAddRow);
       });
-
-      // socketAPI.on("updateRoom", (data) => {
-      //   console.log("Recibimos esto de la sala", data);
-      // });
     }
 
     return () => {

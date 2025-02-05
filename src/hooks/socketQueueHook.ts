@@ -9,10 +9,18 @@ import { BasicRequirement, Requirement } from "../models/MainInterfaces";
 
 export default function useSocketQueueHook(
   createCallback: (data: SocketResponse) => void | Promise<void>,
-  updateCallback: (data: SocketResponse) => void | Promise<void>
+  updateCallback: (
+    data: SocketResponse,
+    canAddRow: boolean
+  ) => void | Promise<void>
 ) {
   const [changesQueue, setChangesQueue] = useState<
-    { type: SocketChangeType; key: string; data: SocketResponse }[]
+    {
+      type: SocketChangeType;
+      key: string;
+      data: SocketResponse;
+      canAddRowUpdate: boolean;
+    }[]
   >([]);
 
   // Procesa cambios
@@ -24,7 +32,7 @@ export default function useSocketQueueHook(
       if (nextChange.type == SocketChangeType.CREATE) {
         await createCallback(nextChange.data);
       } else if (nextChange.type == SocketChangeType.UPDATE)
-        await updateCallback(nextChange.data);
+        await updateCallback(nextChange.data, nextChange.canAddRowUpdate);
       setChangesQueue((prevQueue) => prevQueue.slice(1));
     }
 
@@ -32,13 +40,17 @@ export default function useSocketQueueHook(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [changesQueue]);
 
-  function updateChangesQueue(payload: SocketResponse) {
+  function updateChangesQueue(
+    payload: SocketResponse,
+    canAddRowUpdate: boolean = true
+  ) {
     setChangesQueue((prevQueue) => [
       ...prevQueue,
       {
         type: payload.typeSocket,
         key: payload.key,
         data: payload,
+        canAddRowUpdate,
       },
     ]);
   }
@@ -54,31 +66,33 @@ export function useAddOrUpdateRow(
   list: any[],
   setList: (list: any[]) => void,
   total: number,
-  setTotal: (total: number) => void,
-  page?: number
+  setTotal: (total: number) => void
 ) {
-  async function addNewRow(data: SocketResponse) {
-    const newElem = await transformData(data["dataPack"]["data"][0]);
+  async function addNewRow(
+    data: SocketResponse,
+    transformedData?: any,
+    increaseTotal: boolean = true
+  ) {
+    const newElem =
+      transformedData ?? (await transformData(data["dataPack"]["data"][0]));
     if (newElem) {
       setList([newElem, ...list.slice(0, list.length - 1)]);
-      setTotal(total + 1);
+      if (increaseTotal) setTotal(total + 1);
     }
   }
 
-  async function updateRow(data: SocketResponse) {
-    console.log("calling", data);
+  async function updateRow(data: SocketResponse, canAddRow: boolean) {
     const ind = list.findIndex((item) => item.key === data.key);
     if (ind != -1) {
-      console.log("updatinf");
       const updElem = await transformData(data["dataPack"]["data"][0]);
-      console.log(updElem);
+      console.log("updating", updElem);
       if (updElem) {
         if (tableType == TableTypes.HOME) {
           const requirement: Requirement = updElem as Requirement;
           if (requirement.state != RequirementState.PUBLISHED) {
             setList([...list.slice(0, ind), ...list.slice(ind + 1)]);
             setTotal(total - 1);
-          } else insertElementInArray(updElem, ind);
+          } else if (canAddRow) insertElementInArray(updElem, ind);
         } else if (
           tableType == TableTypes.REQUIREMENT ||
           tableType == TableTypes.ALL_REQUIREMENTS
@@ -89,7 +103,7 @@ export function useAddOrUpdateRow(
             (list[ind] as BasicRequirement).state !=
               RequirementState.PUBLISHED &&
             requirement.state == RequirementState.PUBLISHED &&
-            page == 1
+            canAddRow
           )
             setList([
               requirement,
@@ -99,6 +113,15 @@ export function useAddOrUpdateRow(
           else insertElementInArray(updElem, ind);
         } else insertElementInArray(updElem, ind);
       }
+    } else if (
+      tableType == TableTypes.HOME ||
+      tableType == TableTypes.REQUIREMENT ||
+      tableType == TableTypes.ALL_REQUIREMENTS
+    ) {
+      // caso republicar requerimiento
+      const updElem = await transformData(data["dataPack"]["data"][0]);
+      if (updElem.state == RequirementState.PUBLISHED && canAddRow)
+        addNewRow(data, updElem, tableType == TableTypes.HOME);
     }
   }
 

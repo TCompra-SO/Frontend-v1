@@ -19,7 +19,10 @@ export default function useSocket(
   subType: RequirementType | PurchaseOrderTableTypes,
   page: number,
   searchTableRequest: SearchTableRequest | undefined,
-  updateChangesQueue: (payload: SocketResponse) => void
+  updateChangesQueue: (
+    payload: SocketResponse,
+    canAddRowUpdate: boolean
+  ) => void
 ) {
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const uid = useSelector((state: MainState) => state.user.uid);
@@ -51,15 +54,16 @@ export default function useSocket(
       socketAPI.on("updateRoom", (data: SocketResponse) => {
         console.log("Received", data);
         const isAllTypeTableVar = isAllTypeTable();
+        const canAddRow = pageRef.current == 1;
         if (
           (isAllTypeTableVar || (!isAllTypeTableVar && uid == data.userId)) &&
           (data.typeSocket == SocketChangeType.UPDATE ||
             (data.typeSocket == SocketChangeType.CREATE &&
-              pageRef.current == 1 &&
+              canAddRow &&
               searchTableRequestRef.current &&
               hasNoSortNorFilter(searchTableRequestRef.current)))
         )
-          updateChangesQueue(data);
+          updateChangesQueue(data, canAddRow);
       });
     }
 

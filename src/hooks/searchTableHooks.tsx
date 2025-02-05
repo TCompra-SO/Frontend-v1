@@ -95,7 +95,7 @@ export default function useSearchTable(
     ) {
       setLoadingTable?.(true);
       const service: HttpService | null = getService(stTableType, stSubType);
-      console.log(service, stTableType, stSubType);
+      // console.log(service, stTableType, stSubType);
       setApiParams({
         service,
         method: "post",

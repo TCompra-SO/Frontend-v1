@@ -182,8 +182,15 @@ export default function GeneralTable(props: GeneralTableProps) {
       showSizeChanger: props.content.type != TableTypes.HOME,
       // onChange: props.onChangePageAndPageSize,
       total: props.total ?? props.content.total,
-      showTotal: (total, range) =>
-        `${range[0]}-${range[1]} ${t("of")} ${total} ${t("items")}`,
+      showTotal: (total, range) => {
+        const actualLastItemIndex = Math.min(
+          range[1],
+          props.content.data.length
+        );
+        return `${range[0]}-${actualLastItemIndex} ${t("of")} ${total} ${t(
+          "items"
+        )}`;
+      },
       current: props.content.page,
     },
   };
