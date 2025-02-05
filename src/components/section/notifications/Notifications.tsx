@@ -40,8 +40,8 @@ const notifications: NotificationData[] = [
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
-    action: Action.VIEW_REQUIREMENT,
-    targetId: "IXTsSCZ4weL9Mq82gSoN",
+    action: Action.DOWNLOAD_PURCHASE_ORDER,
+    targetId: "bm9PdrQ5mGhtdvbGEPg5",
     targetType: RequirementType.GOOD,
   },
   {
@@ -54,8 +54,8 @@ const notifications: NotificationData[] = [
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
-    action: Action.VIEW_REQUIREMENT,
-    targetId: "IXTsSCZ4weL9Mq82gSoN",
+    action: Action.VIEW_OFFER,
+    targetId: "4T0umjVzDazp0rlK3wcm",
     targetType: RequirementType.GOOD,
   },
   {
