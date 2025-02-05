@@ -586,6 +586,10 @@
   .mch-2 {
     display: none;
   }
+
+  .user-opt {
+    width: 150px;
+  }
 }
 
 /* Estilos para pantallas medianas (tablets) */
@@ -737,6 +741,13 @@
 
     height: 90px;
   }
+
+  .content-galeria {
+    height: calc(100vh - 268px) !important;
+  }
+  .archivo-preview {
+    max-height: calc(100vh - 433px) !important;
+  }
 }
 
 /* Estilos para pantallas grandes (escritorios) */
@@ -813,6 +824,14 @@
     padding: 21px;
 
     height: calc(100vh - 228px);
+  }
+
+  .content-galeria {
+    height: calc(100vh - 288px);
+    margin: 21px;
+  }
+  .archivo-preview {
+    max-height: calc(100vh - 453px);
   }
 }
 

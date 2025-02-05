@@ -53,7 +53,11 @@ export default function ChatBody(props: ChatBodyProps) {
   return (
     <div
       className="card-white mch-2 t-flex f-column gap-5"
-      style={width <= windowSize.sm ? { display: "flex" } : {}}
+      style={
+        width <= windowSize.sm
+          ? { display: "flex", position: "relative" }
+          : { position: "relative" }
+      }
     >
       <div className="chat-info t-flex gap-10 j-items">
         {props.chatData.userImage ? (
@@ -123,6 +127,43 @@ export default function ChatBody(props: ChatBodyProps) {
           className="fa-regular fa-paper-plane-top mensaje-send"
           onClick={sendMsg}
         ></i>
+      </div>
+      <div className="galeria-upload">
+        <div className="content-galeria gap-20">
+          <div className="text-truncate name-documento">
+            Nombre-del-documento.pdf
+          </div>
+          <div className="archivo-preview">
+            {/* <img
+              src={defaultRequirementImage}
+              alt=""
+              className="imagen-preview"
+            /> */}
+            <i className="fa-regular fa-file-doc fa-8x c-default"></i>
+          </div>
+          <div className="t-flex galeria-min m-0">
+            <div>
+              <img src="img/back-01.jpg" className="img-min" />
+              <i className="fa-solid fa-circle-xmark img-trash"></i>
+            </div>
+            <div>
+              <img src="img/back-02.jpg" className="img-min" />
+              <i className="fa-solid fa-circle-xmark img-trash"></i>
+            </div>
+            <div>
+              <img src="img/back-03.jpg" className="img-min" />
+              <i className="fa-solid fa-circle-xmark img-trash"></i>
+            </div>
+            <div>
+              <img src="img/back-04.jpg" className="img-min" />
+              <i className="fa-solid fa-circle-xmark img-trash"></i>
+            </div>
+          </div>
+          <div className="t-flex gap-10">
+            <button className="btn btn-pm btn-white">Cancelar</button>
+            <button className="btn btn-pm btn-default">Enviar</button>
+          </div>
+        </div>
       </div>
     </div>
   );

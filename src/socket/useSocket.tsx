@@ -97,18 +97,18 @@ export default function useSocket(
       tableType == TableTypes.ALL_PURCHASE_ORDERS
     ) {
       if (subType == PurchaseOrderTableTypes.ISSUED)
-        roomName = "roomRequeriment";
+        roomName = "roomPurchaseOrderClientProduct";
       else if (subType == PurchaseOrderTableTypes.RECEIVED)
-        roomName = "roomRequeriment";
+        roomName = "roomPurchaseOrderProviderProduct";
     }
     if (
       tableType == TableTypes.SALES_ORDER ||
       tableType == TableTypes.ALL_SALES_ORDERS
     ) {
       if (subType == PurchaseOrderTableTypes.ISSUED)
-        roomName = "roomRequeriment";
+        roomName = "roomPurchaseOrderProviderProduct";
       else if (subType == PurchaseOrderTableTypes.RECEIVED)
-        roomName = "roomRequeriment";
+        roomName = "roomPurchaseOrderClientProduct";
     }
     return roomName;
   }

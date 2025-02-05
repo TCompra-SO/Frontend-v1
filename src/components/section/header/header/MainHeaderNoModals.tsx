@@ -190,7 +190,7 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
           {props.onShowMenu && (
             <>
               <i
-                className="fa-solid fa-bars-progress i-menu"
+                className="fa-solid fa-bars i-menu"
                 style={showMenuButtonStyle}
                 onClick={() => props.onShowMenu?.(true)}
               ></i>
