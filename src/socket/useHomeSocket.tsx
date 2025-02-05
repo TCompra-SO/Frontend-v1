@@ -36,7 +36,7 @@ export default function useHomeSocket() {
       });
 
       socketAPI.on("updateRoom", (payload: SocketResponse) => {
-        console.log("Nuevo requerimiento recibido:", payload);
+        console.log("Nuevos datos recibido:", payload);
         const canAddRow: boolean =
           pageRef.current == 1 && !useFilterRef.current;
         if (
