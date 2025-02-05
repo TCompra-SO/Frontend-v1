@@ -7,6 +7,7 @@ import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
 import { useUpdateRequiredDocsCert } from "../../../hooks/certificateHooks";
 import { useEffect } from "react";
+import { useTrimmedMinMaxValidator } from "../../../hooks/validatorHooks";
 
 interface EditDocumentListToRequestModalProps {
   text: string;
@@ -49,8 +50,11 @@ export default function EditDocumentListToRequestModal(
               labelCol={{ span: 0 }}
               rules={[
                 { required: true },
-                { min: Lengths.docListToRequest.min },
-                { max: Lengths.docListToRequest.max },
+                {
+                  min: Lengths.docListToRequest.min,
+                  max: Lengths.docListToRequest.max,
+                  validator: useTrimmedMinMaxValidator(),
+                },
               ]}
               style={{ width: "100%" }}
             >
