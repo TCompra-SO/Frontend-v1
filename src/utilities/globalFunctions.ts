@@ -555,12 +555,15 @@ export function hasNoSortNorFilter(request: SearchTableRequest): boolean {
   return hasValidOptionalFields;
 }
 
-export function isRequirementType(n: number) {
-  return (
+export function isRequirementType(n: any) {
+  const temp =
     n == RequirementType.GOOD ||
     n == RequirementType.SERVICE ||
-    n == RequirementType.SALE
-  );
+    n == RequirementType.SALE;
+  return {
+    result: temp,
+    val: temp ? (n as RequirementType) : null,
+  };
 }
 
 /** Funciones que retornan el servicio correcto según tipo */
@@ -754,7 +757,7 @@ export function getGetOrderByIdService(type: RequirementType) {
   return null;
 }
 
-export function getSearchOrdersByClientService(
+export function getSearchOrdersByClientService( //r3v debe ser solo un endpoint para bienes y servicios
   type: RequirementType | PurchaseOrderTableTypes | undefined
 ) {
   if (type == RequirementType.GOOD)
@@ -765,7 +768,7 @@ export function getSearchOrdersByClientService(
   return null;
 }
 
-export function getSearchOrdersByProviderService(
+export function getSearchOrdersByProviderService( // debe ser solo un endpoint para bienes y servicios
   type: RequirementType | PurchaseOrderTableTypes | undefined
 ) {
   if (type == RequirementType.GOOD)

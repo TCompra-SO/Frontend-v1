@@ -165,6 +165,7 @@ export enum Action {
   SELECT_CERT_TO_SEND = 32,
   SEND_MESSAGE = 33,
   SHOW_USER_INFO = 34,
+  VIEW_SALES_ORDER = 35,
 }
 
 export const ActionLabel: {
@@ -205,6 +206,7 @@ export const ActionLabel: {
   [Action.SELECT_CERT_TO_SEND]: "selectDocsToSend",
   [Action.SEND_MESSAGE]: "send",
   [Action.SHOW_USER_INFO]: "showUserInfo",
+  [Action.VIEW_SALES_ORDER]: "view",
 };
 
 export const ActionByStateRequirement: {

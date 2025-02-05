@@ -23,10 +23,8 @@ import useApi from "../hooks/useApi";
 import { getUserService } from "../services/requests/authService";
 import {
   getFieldNameObjForOrders,
-  getGetOrderPDFService,
   getLabelFromPurchaseOrderType,
   getPurchaseOrderType,
-  openPurchaseOrderPdf,
 } from "../utilities/globalFunctions";
 import {
   transformToFullUser,
@@ -45,7 +43,10 @@ import {
   useCulminate,
   useGetOffersByRequirementId,
 } from "../hooks/requirementHooks";
-import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
+import useShowNotification, {
+  useDownloadPdfOrder,
+  useShowLoadingMessage,
+} from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
@@ -66,6 +67,7 @@ export default function PurchaseOrders() {
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
   const { getBasicRateData, modalDataRate } = useCulminate();
+  const downloadPdfOrder = useDownloadPdfOrder();
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
   const { searchTable, responseData, error, errorMsg, loading, apiParams } =
     useSearchTable(uid, TableTypes.PURCHASE_ORDER, EntityType.SUBUSER, type);
@@ -255,45 +257,6 @@ export default function PurchaseOrders() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataUser, errorUser]);
 
-  /* Para descargar pdf de orden de compra */
-
-  const [apiParamsPdf, setApiParamsPdf] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingPdf,
-    responseData: responseDataPdf,
-    error: errorPdf,
-    errorMsg: errorMsgPdf,
-    fetchData: fetchDataPdf,
-  } = useApi({
-    service: apiParamsPdf.service,
-    method: apiParamsPdf.method,
-    dataToSend: apiParamsPdf.dataToSend,
-  });
-
-  useEffect(() => {
-    updateMyPurchaseOrdersLoadingPdf(loadingPdf);
-    showLoadingMessage(loadingPdf);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingPdf]);
-
-  useEffect(() => {
-    if (apiParamsPdf.service) fetchDataPdf();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsPdf]);
-
-  useEffect(() => {
-    if (responseDataPdf) {
-      openPurchaseOrderPdf(responseDataPdf);
-    } else if (errorPdf) {
-      showNotification("error", errorMsgPdf);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataPdf, errorPdf]);
-
   /** Funciones */
 
   function clearSearchValue() {
@@ -347,12 +310,7 @@ export default function PurchaseOrders() {
         });
         break;
       case Action.DOWNLOAD_PURCHASE_ORDER:
-        setApiParamsPdf({
-          service: getGetOrderPDFService(purchaseOrder.type)?.(
-            purchaseOrder.key
-          ),
-          method: "get",
-        });
+        downloadPdfOrder(purchaseOrder.key, purchaseOrder.type);
         break;
       case Action.FINISH:
         if (type == PurchaseOrderTableTypes.ISSUED) {

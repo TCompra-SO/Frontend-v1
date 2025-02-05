@@ -80,18 +80,27 @@ export function useDateOnwardValidator(tlds: string[]) {
   return validateDateOnward;
 }
 
-const validateTrimmedMinMax = (rule: RuleObject, value: string) => {
-  if (!value) return Promise.resolve(); // Skip validation if empty
+export function useTrimmedMinMaxValidator() {
+  const { t } = useTranslation();
 
-  const trimmedValue = value.trim(); // Trim only for validation
-  if (rule.min && trimmedValue.length < rule.min) {
-    return Promise.reject(new Error(`Must be at least ${rule.min} characters`));
+  function validateTrimmedMinMax(rule: RuleObject, value: string) {
+    if (!value) return Promise.resolve();
+
+    const trimmedValue = value.trim();
+    if (rule.min && trimmedValue.length < rule.min) {
+      return Promise.reject(
+        new Error(`${t("minCharMessage")} ${rule.min} ${t("characters")}`)
+      );
+    }
+    if (rule.max && trimmedValue.length > rule.max) {
+      return Promise.reject(
+        new Error(`${t("maxCharMessage")} ${rule.max} ${t("characters")}`)
+      );
+    }
+    return Promise.resolve();
   }
-  if (rule.max && trimmedValue.length > rule.max) {
-    return Promise.reject(new Error(`Cannot exceed ${rule.max} characters`));
-  }
-  return Promise.resolve();
-};
+  return validateTrimmedMinMax;
+}
 
 /** Rules */
 
@@ -227,11 +236,12 @@ export function useTitleRules(required: boolean) {
     },
     {
       min: Lengths.title.min,
-      validator: validateTrimmedMinMax,
-    },
-    {
       max: Lengths.title.max,
+      validator: useTrimmedMinMaxValidator(),
     },
+    // {
+    //   max: Lengths.title.max,
+    // },
     {
       validator: useNoBlankSpacesValidator(),
     },

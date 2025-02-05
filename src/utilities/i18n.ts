@@ -337,7 +337,10 @@ const resources = {
       selectDocsToSend: "Select",
       showUserInfo: "Show user data",
       sessionExpiredLoginAgain: "Your session has expired. Please log in again to continue",
+      minCharMessage: "Enter at least",
+      maxCharMessage: "Enter up to",
       // Other
+      characters: "characters",
       yes: "Yes",
       no: "No",
       select: "Select",
@@ -871,7 +874,10 @@ const resources = {
       selectDocsToSend: "Seleccionar",
       showUserInfo: "Mostrar datos de usuario",
       sessionExpiredLoginAgain: "Su sesión ha expirado. Por favor, inicie sesión nuevamente para continuar",
+      minCharMessage: "Ingrese al menos",
+      maxCharMessage: "Puede ingresar hasta",
       // Other
+      characters: "caracteres",
       yes: "Sí",
       no: "No",
       select: "Seleccione",

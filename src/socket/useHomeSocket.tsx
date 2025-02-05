@@ -3,6 +3,7 @@ import { io, Socket } from "socket.io-client";
 import { pageSizeOptionsSt } from "../utilities/globals";
 import { HomeContext } from "../contexts/Homecontext";
 import { SocketResponse } from "../models/Interfaces";
+import { RequirementType } from "../utilities/types";
 
 let socketAPI: Socket | null = null;
 
@@ -20,14 +21,29 @@ export default function useHomeSocket() {
 
       socketAPI.on("connect", () => {
         console.log("Connected");
-        socketAPI?.emit("joinRoom", "homeRequeriment");
+        socketAPI?.emit(
+          "joinRoom",
+          type == RequirementType.GOOD
+            ? "homeRequerimentProduct"
+            : type == RequirementType.SERVICE
+            ? "homeRequerimentService"
+            : "homeRequerimentLiquidation"
+        );
       });
 
-      socketAPI.on("requeriment", (payload: SocketResponse) => {
+      socketAPI.on("joinedRoom", (message) => {
+        console.log(message);
+      });
+
+      socketAPI.on("updateRoom", (payload: SocketResponse) => {
         console.log("Nuevo requerimiento recibido:", payload);
         if (pageRef.current == 1 && !useFilterRef.current)
           updateChangesQueue(payload);
       });
+
+      // socketAPI.on("updateRoom", (data) => {
+      //   console.log("Recibimos esto de la sala", data);
+      // });
     }
 
     return () => {

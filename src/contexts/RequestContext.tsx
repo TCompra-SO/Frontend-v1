@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { createContext, ReactNode, useState } from "react";
-import { NotificationData } from "../models/Interfaces";
+import { SystemNotificationData } from "../models/Interfaces";
 import useShowNotification from "../hooks/utilHooks";
 
 interface RequestQueueItem {
@@ -13,7 +13,7 @@ interface RequestContextType {
   executeAfterResponseOrError: (
     requestId: string,
     updates: Partial<RequestQueueItem>,
-    notificationData?: NotificationData
+    SystemNotificationData?: SystemNotificationData
   ) => void;
   pushToRequestQueue: (
     requestId: string,
@@ -45,10 +45,13 @@ export function RequestProvider({ children }: { children: ReactNode }) {
   function executeAfterResponseOrError(
     requestId: string,
     updates: Partial<RequestQueueItem>,
-    notificationData?: NotificationData
+    SystemNotificationData?: SystemNotificationData
   ) {
-    if (notificationData) {
-      showNotification(notificationData.type, notificationData.description);
+    if (SystemNotificationData) {
+      showNotification(
+        SystemNotificationData.type,
+        SystemNotificationData.description
+      );
     }
     requestQueue[requestId].functionToExecute();
 

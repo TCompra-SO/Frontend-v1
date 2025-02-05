@@ -458,7 +458,7 @@ export interface RequiredDocsForCert {
   requiredDocuments: string;
 }
 
-export interface NotificationData {
+export interface SystemNotificationData {
   type: "success" | "error" | "info" | "warning";
   description: string | null;
 }
@@ -494,3 +494,18 @@ export interface SocketResponse {
 }
 
 export type SocketDataPackType = SocketResponse["dataPack"]["data"][number];
+
+export interface NotificationData {
+  id: string;
+  title: string;
+  body: string;
+  date: string;
+  time: string;
+  senderImage?: string;
+  senderId: string;
+  senderName: string;
+  receiverId: string;
+  action: Action;
+  targetId: string;
+  targetType: RequirementType | PurchaseOrderTableTypes;
+}

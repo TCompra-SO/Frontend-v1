@@ -95,6 +95,7 @@ export default function useSearchTable(
     ) {
       setLoadingTable?.(true);
       const service: HttpService | null = getService(stTableType, stSubType);
+      console.log(service, stTableType, stSubType);
       setApiParams({
         service,
         method: "post",
@@ -130,16 +131,17 @@ export default function useSearchTable(
       case TableTypes.PURCHASE_ORDER:
       case TableTypes.ALL_PURCHASE_ORDERS:
         if (stSubType == PurchaseOrderTableTypes.ISSUED)
-          service = getSearchOrdersByClientService(stSubType);
+          service = getSearchOrdersByClientService(RequirementType.GOOD);
+        // r3v debería ser solo uno
         else if (stSubType == PurchaseOrderTableTypes.RECEIVED)
-          service = getSearchOrdersByProviderService(stSubType);
+          service = getSearchOrdersByProviderService(RequirementType.GOOD);
         break;
       case TableTypes.SALES_ORDER:
       case TableTypes.ALL_SALES_ORDERS:
         if (stSubType == PurchaseOrderTableTypes.ISSUED)
-          service = getSearchOrdersByProviderService(stSubType);
+          service = getSearchOrdersByProviderService(RequirementType.SALE);
         else if (stSubType == PurchaseOrderTableTypes.RECEIVED)
-          service = getSearchOrdersByClientService(stSubType);
+          service = getSearchOrdersByClientService(RequirementType.SALE);
         break;
     }
     return service;

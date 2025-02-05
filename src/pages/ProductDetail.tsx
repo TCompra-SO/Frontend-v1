@@ -43,9 +43,10 @@ export default function ProductDetail() {
   }, [loading]);
 
   useEffect(() => {
-    if (requirementId && isRequirementType(Number(type))) {
+    const { result, val } = isRequirementType(Number(type));
+    if (requirementId && result && val) {
       setApiParams({
-        service: getGetRecordByIdService(Number(type))?.(requirementId, false),
+        service: getGetRecordByIdService(val)?.(requirementId, false),
         method: "get",
       });
     } else navigate(pageRoutes.home);
