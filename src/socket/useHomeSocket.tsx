@@ -8,8 +8,14 @@ import { RequirementType, SocketChangeType } from "../utilities/types";
 let socketAPI: Socket | null = null;
 
 export default function useHomeSocket() {
-  const { useFilter, retrieveRequirements, page, type, updateChangesQueue } =
-    useContext(HomeContext);
+  const {
+    useFilter,
+    retrieveRequirements,
+    page,
+    type,
+    updateChangesQueue,
+    resetChangesQueue,
+  } = useContext(HomeContext);
   const useFilterRef = useRef(useFilter);
   const pageRef = useRef(page);
 
@@ -71,6 +77,7 @@ export default function useHomeSocket() {
   }, [page, useFilter]);
 
   async function getData() {
+    resetChangesQueue();
     retrieveRequirements(page, pageSizeOptionsSt[0]);
   }
 }

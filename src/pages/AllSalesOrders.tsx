@@ -58,8 +58,6 @@ export default function AllSalesOrders() {
     useGetOffersByRequirementId();
   const { showNotification } = useShowNotification();
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
-  const { searchTable, responseData, error, errorMsg, loading, apiParams } =
-    useSearchTable(uid, TableTypes.ALL_SALES_ORDERS, entityType, type);
   const {
     currentPage,
     currentPageSize,
@@ -99,7 +97,18 @@ export default function AllSalesOrders() {
     total,
     setTotal
   );
-  const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
+  const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
+    addNewRow,
+    updateRow
+  );
+  const { searchTable, responseData, error, errorMsg, loading, apiParams } =
+    useSearchTable(
+      uid,
+      TableTypes.ALL_SALES_ORDERS,
+      entityType,
+      type,
+      resetChangesQueue
+    );
   useSocket(
     TableTypes.ALL_SALES_ORDERS,
     type,

@@ -55,7 +55,11 @@ export default function useSocketQueueHook(
     ]);
   }
 
-  return { updateChangesQueue };
+  function resetChangesQueue() {
+    setChangesQueue([]);
+  }
+
+  return { updateChangesQueue, resetChangesQueue };
 }
 
 export function useAddOrUpdateRow(

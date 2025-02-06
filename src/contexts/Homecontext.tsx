@@ -32,6 +32,7 @@ interface HomeContextType {
     payload: SocketResponse,
     canAddRowUpdate: boolean
   ) => void;
+  resetChangesQueue: () => void;
 }
 
 export const HomeContext = createContext<HomeContextType>({
@@ -47,6 +48,7 @@ export const HomeContext = createContext<HomeContextType>({
   type: RequirementType.GOOD,
   updateType: () => {},
   updateChangesQueue: () => {},
+  resetChangesQueue: () => {},
 });
 
 export function HomeProvider({ children }: { children: ReactNode }) {
@@ -73,7 +75,10 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     totalRequirementList,
     setTotalRequirementList
   );
-  const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
+  const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
+    addNewRow,
+    updateRow
+  );
 
   // Copia de lista de requerimientos
   useEffect(() => {
@@ -129,6 +134,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
         updateType,
 
         updateChangesQueue,
+        resetChangesQueue,
       }}
     >
       {children}
