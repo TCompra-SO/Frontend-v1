@@ -140,7 +140,6 @@ export default function Requirements() {
   /** Actualiza el contenido de tabla */
 
   useEffect(() => {
-    console.log(requirementList);
     setTableContent((prev) => ({
       ...prev,
       data: requirementList,

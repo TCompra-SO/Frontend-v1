@@ -22,6 +22,7 @@ import { MainState } from "../models/Redux.ts";
 import { useSelector } from "react-redux";
 import useHomeSocket from "../socket/useHomeSocket.tsx";
 import { getProductDetailRoute } from "../utilities/globalFunctions.ts";
+import { pageSizeOptionsSt } from "../utilities/globals.ts";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -35,6 +36,7 @@ export default function Home() {
     requirementList,
     loadingRequirementList,
     totalRequirementList,
+    retrieveLastSearchRequeriments,
   } = useContext(HomeContext);
   const [tableContent, setTableContent] = useState<TableTypeHome>({
     type: TableTypes.HOME,
@@ -53,6 +55,11 @@ export default function Home() {
   /** Mostrar datos iniciales */
 
   useEffect(() => {
+    // if (
+    //   requirementList.length <= pageSizeOptionsSt[0] / 2 &&
+    //   totalRequirementList > pageSizeOptionsSt[0]
+    // )
+    //   retrieveLastSearchRequeriments();
     setTableContent((prevContent) => ({
       ...prevContent,
       page,

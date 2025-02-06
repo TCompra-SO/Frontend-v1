@@ -33,6 +33,7 @@ interface HomeContextType {
     canAddRowUpdate: boolean
   ) => void;
   resetChangesQueue: () => void;
+  retrieveLastSearchRequeriments: () => void;
 }
 
 export const HomeContext = createContext<HomeContextType>({
@@ -45,6 +46,7 @@ export const HomeContext = createContext<HomeContextType>({
   page: 1,
   updatePage: () => {},
   retrieveRequirements: () => {},
+  retrieveLastSearchRequeriments: () => {},
   type: RequirementType.GOOD,
   updateType: () => {},
   updateChangesQueue: () => {},
@@ -79,6 +81,15 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     addNewRow,
     updateRow
   );
+  const [lastSearchParams, setLastSearchParams] = useState<{
+    page: number;
+    pageSize: number | undefined;
+    params: HomeFilterRequest | undefined;
+  }>({
+    page: 0,
+    pageSize: undefined,
+    params: undefined,
+  });
 
   // Copia de lista de requerimientos
   useEffect(() => {
@@ -102,7 +113,22 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     pageSize?: number,
     params?: HomeFilterRequest
   ) {
+    resetChangesQueue();
     getRequirementList(page, type, pageSize, params);
+    setLastSearchParams({
+      page,
+      pageSize,
+      params,
+    });
+  }
+
+  function retrieveLastSearchRequeriments() {
+    if (lastSearchParams.page)
+      retrieveRequirements(
+        lastSearchParams.page,
+        lastSearchParams.pageSize,
+        lastSearchParams.params
+      );
   }
 
   function updateUserId(id: string) {
@@ -126,6 +152,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
           setPage(val);
         },
         retrieveRequirements,
+        retrieveLastSearchRequeriments,
         requirementList,
         totalRequirementList,
         loadingRequirementList,
