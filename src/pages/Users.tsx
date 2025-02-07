@@ -149,7 +149,7 @@ export default function Users() {
   useEffect(() => {
     if (responseDataUser) {
       if (equalServices(apiParamsUser.service, getSubUserService(""))) {
-        setUserDataEdit(transformToSubUserProfile(responseDataUser));
+        setUserDataEdit(transformToSubUserProfile(responseDataUser[0]));
         handleOpenModal();
       }
     } else if (errorUser) {

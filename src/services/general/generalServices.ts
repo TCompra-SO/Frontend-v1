@@ -131,7 +131,7 @@ export async function getPurchaseOrderById(id: string, type: RequirementType) {
 
   return {
     purchaseOrder: responseData
-      ? transformToPurchaseOrder(responseData.data)
+      ? transformToPurchaseOrder(responseData.data[0])
       : null,
     error,
     errorMsg,

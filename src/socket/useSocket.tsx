@@ -55,7 +55,9 @@ export default function useSocket(
         console.log("Received", data);
         const isAllTypeTableVar = isAllTypeTable();
         const canAddRow = pageRef.current == 1;
+
         if (
+          // Agregar cambios a cola si la tabla es de  tipo All o si el cambio pertenece a usuario
           (isAllTypeTableVar || (!isAllTypeTableVar && uid == data.userId)) &&
           (data.typeSocket == SocketChangeType.UPDATE ||
             (data.typeSocket == SocketChangeType.CREATE &&

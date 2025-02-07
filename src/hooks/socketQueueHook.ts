@@ -78,15 +78,7 @@ export function useAddOrUpdateRow(
     increaseTotal: boolean = true
   ) {
     const newElem =
-      transformedData ??
-      (await transformData(
-        tableType == TableTypes.ALL_PURCHASE_ORDERS ||
-          tableType == TableTypes.ALL_SALES_ORDERS ||
-          tableType == TableTypes.PURCHASE_ORDER ||
-          tableType == TableTypes.SALES_ORDER
-          ? data["dataPack"]["data"]
-          : data["dataPack"]["data"][0]
-      ));
+      transformedData ?? (await transformData(data["dataPack"]["data"][0]));
     if (newElem) {
       setList([newElem, ...list.slice(0, list.length - 1)]);
       if (increaseTotal) setTotal(total + 1);
@@ -96,14 +88,7 @@ export function useAddOrUpdateRow(
   async function updateRow(data: SocketResponse, canAddRow: boolean) {
     const ind = list.findIndex((item) => item.key === data.key);
     if (ind != -1) {
-      const updElem = await transformData(
-        tableType == TableTypes.ALL_PURCHASE_ORDERS ||
-          tableType == TableTypes.ALL_SALES_ORDERS ||
-          tableType == TableTypes.PURCHASE_ORDER ||
-          tableType == TableTypes.SALES_ORDER
-          ? data["dataPack"]["data"]
-          : data["dataPack"]["data"][0]
-      );
+      const updElem = await transformData(data["dataPack"]["data"][0]);
       console.log("updating", updElem);
       if (updElem) {
         if (tableType == TableTypes.HOME) {
