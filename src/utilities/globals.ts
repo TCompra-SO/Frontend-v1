@@ -45,6 +45,8 @@ export const searchSinceLength: number = 3;
 export const typeParamNameInRoute: string = "type";
 export const reqIdParamNameInRoute: string = "requirementId";
 
+export const homePageSize: number = pageSizeOptionsSt[0];
+
 // local storage keys
 export const userDataKey: string = "udata";
 export const tokenKey: string = "token";

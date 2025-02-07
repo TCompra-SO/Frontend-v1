@@ -686,6 +686,7 @@ export function useGetRequirementList() {
     pageSize?: number,
     params?: HomeFilterRequest
   ) {
+    let success: boolean = false;
     try {
       setLoading(true);
       let httpService: HttpService | null = null;
@@ -694,7 +695,7 @@ export function useGetRequirementList() {
         const temp = getHomeRecordsService(type);
         if (temp) httpService = temp(page, pageSize ?? pageSizeOptionsSt[0]);
       }
-      const { responseData }: any = await makeRequest({
+      const { responseData, error } = await makeRequest({
         service: httpService,
         method: params ? "post" : "get",
         dataToSend: params ?? undefined,
@@ -710,13 +711,19 @@ export function useGetRequirementList() {
         setUsersCache(cache);
         setRequirements(data.filter((req) => req !== null));
         setTotal(responseData.res?.totalDocuments);
+        success = true;
+      } else if (error) {
+        setTotal(0);
+        setRequirements([]);
       }
     } catch (error) {
       console.log(error);
+      setTotal(0);
       setRequirements([]);
     } finally {
       setLoading(false);
     }
+    return success;
   }
 
   return {

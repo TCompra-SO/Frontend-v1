@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
-import { pageSizeOptionsSt } from "../utilities/globals";
+import { homePageSize } from "../utilities/globals";
 import { HomeContext } from "../contexts/Homecontext";
 import { SocketResponse } from "../models/Interfaces";
 import { RequirementType, SocketChangeType } from "../utilities/types";
@@ -71,7 +71,7 @@ export default function useHomeSocket() {
   }, [page, useFilter]);
 
   async function getData() {
-    retrieveRequirements(page, pageSizeOptionsSt[0]);
+    retrieveRequirements(page, homePageSize);
   }
 
   function retrievePageAgain() {}

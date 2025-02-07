@@ -149,7 +149,7 @@ export default function Users() {
   useEffect(() => {
     if (responseDataUser) {
       if (equalServices(apiParamsUser.service, getSubUserService(""))) {
-        setUserDataEdit(transformToSubUserProfile(responseDataUser[0]));
+        setUserDataEdit(transformToSubUserProfile(responseDataUser[0], true));
         handleOpenModal();
       }
     } else if (errorUser) {
@@ -238,6 +238,7 @@ export default function Users() {
       if (responseData.data.length > 0) {
         data = responseData.data.map((e: any) => transformToSubUserBase(e));
       }
+
       setTableContent({
         type: TableTypes.USERS,
         data,

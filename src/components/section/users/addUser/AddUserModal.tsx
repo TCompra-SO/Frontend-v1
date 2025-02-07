@@ -287,7 +287,6 @@ export default function AddUserModal(props: AddUserModalProps) {
       email: values.email,
       password: values.password1,
     };
-
     if (values.password1) {
       setChangePassword(true);
       setApiParamsNewPass({

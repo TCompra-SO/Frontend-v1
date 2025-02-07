@@ -114,21 +114,28 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     params?: HomeFilterRequest
   ) {
     resetChangesQueue();
-    getRequirementList(page, type, pageSize, params);
     setLastSearchParams({
       page,
       pageSize,
       params,
     });
+    return getRequirementList(page, type, pageSize, params);
   }
 
-  function retrieveLastSearchRequeriments() {
-    if (lastSearchParams.page)
-      retrieveRequirements(
+  async function retrieveLastSearchRequeriments() {
+    if (lastSearchParams.page) {
+      const success = await retrieveRequirements(
         lastSearchParams.page,
         lastSearchParams.pageSize,
         lastSearchParams.params
       );
+      if (!success && page - 1 > 0)
+        await retrieveRequirements(
+          lastSearchParams.page - 1,
+          lastSearchParams.pageSize,
+          lastSearchParams.params
+        );
+    }
   }
 
   function updateUserId(id: string) {

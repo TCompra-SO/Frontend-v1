@@ -342,7 +342,7 @@ export function transformToSubUserBase(data: any) {
   return subUser;
 }
 
-export function transformToSubUserProfile(data: any) {
+export function transformToSubUserProfile(data: any, forSubuser?: boolean) {
   const subUser: SubUserProfile = {
     ...transformToSubUserBase(data),
     address: data.address,
@@ -350,6 +350,7 @@ export function transformToSubUserProfile(data: any) {
     companyID: data.companyID,
     phone: data.phone,
   };
+  if (forSubuser) subUser.uid = data.uid;
   return subUser;
 }
 

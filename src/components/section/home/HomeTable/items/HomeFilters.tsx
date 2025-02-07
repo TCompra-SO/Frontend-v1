@@ -13,7 +13,7 @@ import SelectCompanyField from "../../CompanyFilter/SelectCompanyField";
 import RangeDateField from "../../../../common/formFields/RangeDateField";
 import {
   dateFormatHomeSearch,
-  pageSizeOptionsSt,
+  homePageSize,
 } from "../../../../../utilities/globals";
 import dayjs from "dayjs";
 import { HomeContext } from "../../../../../contexts/Homecontext";
@@ -37,7 +37,7 @@ export default function HomeFilters() {
   } = useContext(HomeContext);
   const [homeFilter, setHomeFilter] = useState<HomeFilterRequest>({
     page: 1,
-    pageSize: pageSizeOptionsSt[0],
+    pageSize: homePageSize,
   });
 
   /** Reset al cambiar tipo de tabla */
@@ -60,7 +60,7 @@ export default function HomeFilters() {
     if (useFilter) {
       const newPageFilter = homeFilter;
       newPageFilter.page = page;
-      retrieveRequirements(page, pageSizeOptionsSt[0], newPageFilter);
+      retrieveRequirements(page, homePageSize, newPageFilter);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [homeFilter, page]);
@@ -92,7 +92,7 @@ export default function HomeFilters() {
             : undefined,
         companyId: values.companyId,
         page: 1,
-        pageSize: pageSizeOptionsSt[0],
+        pageSize: homePageSize,
       };
       updatePage(1);
       setHomeFilter(filter);
