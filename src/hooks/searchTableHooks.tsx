@@ -41,7 +41,8 @@ export default function useSearchTable(
   uid: string,
   tableType: TableTypes,
   entityType: EntityType, // subuser: registros de usuario | otro: registros de usuario + subusuarios
-  subType?: RequirementType | PurchaseOrderTableTypes
+  subType: RequirementType | PurchaseOrderTableTypes,
+  resetChangesQueue?: () => void
 ) {
   const [apiParams, setApiParams] = useState<useApiParams<SearchTableRequest>>({
     service: null,
@@ -84,6 +85,7 @@ export default function useSearchTable(
     subTypeParam?: RequirementType | PurchaseOrderTableTypes,
     uidParam?: string
   ) {
+    resetChangesQueue?.();
     const stUid: string = uidParam ?? uid;
     const stTableType: TableTypes = tableTypeParam ?? tableType;
     const stSubType: RequirementType | PurchaseOrderTableTypes | undefined =

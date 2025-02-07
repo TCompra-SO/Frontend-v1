@@ -20,6 +20,10 @@ interface AddDocumentFieldProps {
     onChange: (files: UploadFile[]) => void;
   };
   multiple?: boolean;
+  customChildToUpload?: {
+    child: ReactNode;
+    handleChange: (fileName: string) => void;
+  };
 }
 
 export interface AddDocumentFieldRef {
@@ -30,7 +34,10 @@ export interface AddDocumentFieldRef {
 export const AddDocumentField = forwardRef<
   AddDocumentFieldRef,
   AddDocumentFieldProps
->(function AddDocumentField({ forOffer = false, onlyUpload, multiple }, ref) {
+>(function AddDocumentField(
+  { forOffer = false, onlyUpload, multiple, customChildToUpload },
+  ref
+) {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
   const fileInputRefDoc = useRef<HTMLDivElement>(null);
@@ -60,6 +67,11 @@ export const AddDocumentField = forwardRef<
     // 1. Limit the number of uploaded files
     // Only to show two recent uploaded files, and old ones will be replaced by the new
     // newFileList = newFileList.slice(-maxDocsQuantity);
+
+    if (customChildToUpload && info.fileList.length > 0) {
+      customChildToUpload.handleChange(info.fileList[0].name);
+    } else if (customChildToUpload && info.fileList.length == 0)
+      customChildToUpload.handleChange("");
     setFileList(info.fileList);
   }
 
@@ -79,20 +91,25 @@ export const AddDocumentField = forwardRef<
     return false;
   }
 
-  function renderUploadComponent() {
+  function renderUploadComponent(customChild?: ReactNode) {
     return (
       <Upload
         multiple={multiple}
         accept=".pdf"
         onChange={handleChange}
         fileList={fileList}
-        maxCount={1}
+        maxCount={maxDocsQuantity}
         listType="picture-card"
         style={{ display: "none" }}
         beforeUpload={checkDocBeforeUpload}
         showUploadList={!onlyUpload}
       >
         <div style={{ display: "none" }} ref={fileInputRefDoc} />
+        {customChild
+          ? fileList.length >= maxDocsQuantity
+            ? null
+            : customChild
+          : null}
       </Upload>
     );
   }
@@ -108,6 +125,16 @@ export const AddDocumentField = forwardRef<
         {renderUploadComponent()}
       </div>
     </>
+  ) : customChildToUpload ? (
+    <div
+      className={
+        customChildToUpload && fileList.length >= maxDocsQuantity
+          ? "hide-upload"
+          : ""
+      }
+    >
+      {renderUploadComponent(customChildToUpload.child)}
+    </div>
   ) : (
     <>
       <div className="hide-upload" style={forOffer ? { width: "100%" } : {}}>

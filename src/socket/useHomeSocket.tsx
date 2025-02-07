@@ -73,4 +73,8 @@ export default function useHomeSocket() {
   async function getData() {
     retrieveRequirements(page, pageSizeOptionsSt[0]);
   }
+
+  function retrievePageAgain() {}
+
+  return { retrievePageAgain };
 }

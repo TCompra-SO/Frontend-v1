@@ -69,8 +69,6 @@ export default function PurchaseOrders() {
   const { getBasicRateData, modalDataRate } = useCulminate();
   const downloadPdfOrder = useDownloadPdfOrder();
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
-  const { searchTable, responseData, error, errorMsg, loading, apiParams } =
-    useSearchTable(uid, TableTypes.PURCHASE_ORDER, EntityType.SUBUSER, type);
   const {
     currentPage,
     currentPageSize,
@@ -116,7 +114,18 @@ export default function PurchaseOrders() {
     total,
     setTotal
   );
-  const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
+  const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
+    addNewRow,
+    updateRow
+  );
+  const { searchTable, responseData, error, errorMsg, loading, apiParams } =
+    useSearchTable(
+      uid,
+      TableTypes.PURCHASE_ORDER,
+      EntityType.SUBUSER,
+      type,
+      resetChangesQueue
+    );
   useSocket(
     TableTypes.PURCHASE_ORDER,
     type,

@@ -36,13 +36,6 @@ export default function AllRequirements() {
   const searchValueRef = useRef<TablePageContentRef>(null);
   const { showNotification } = useShowNotification();
   const [type, setType] = useState(getRouteType(location.pathname));
-  const { searchTable, responseData, error, errorMsg, apiParams } =
-    useSearchTable(
-      dataUser.uid,
-      TableTypes.ALL_REQUIREMENTS,
-      dataUser.typeEntity,
-      type
-    );
   const {
     currentPage,
     currentPageSize,
@@ -78,7 +71,18 @@ export default function AllRequirements() {
     total,
     setTotal
   );
-  const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
+  const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
+    addNewRow,
+    updateRow
+  );
+  const { searchTable, responseData, error, errorMsg, apiParams } =
+    useSearchTable(
+      dataUser.uid,
+      TableTypes.ALL_REQUIREMENTS,
+      dataUser.typeEntity,
+      type,
+      resetChangesQueue
+    );
   useSocket(
     TableTypes.ALL_REQUIREMENTS,
     type,

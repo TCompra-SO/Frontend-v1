@@ -70,13 +70,6 @@ export default function Requirements() {
   const { getBasicRateData, modalDataRate } = useCulminate();
   const [type, setType] = useState(getRouteType(location.pathname));
   const [requirementList, setRequirementList] = useState<Requirement[]>([]);
-  const { searchTable, responseData, error, errorMsg, apiParams } =
-    useSearchTable(
-      dataUser.uid,
-      TableTypes.REQUIREMENT,
-      EntityType.SUBUSER,
-      type
-    );
   const {
     currentPage,
     currentPageSize,
@@ -124,7 +117,18 @@ export default function Requirements() {
     total,
     setTotal
   );
-  const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
+  const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
+    addNewRow,
+    updateRow
+  );
+  const { searchTable, responseData, error, errorMsg, apiParams } =
+    useSearchTable(
+      dataUser.uid,
+      TableTypes.REQUIREMENT,
+      EntityType.SUBUSER,
+      type,
+      resetChangesQueue
+    );
   useSocket(
     TableTypes.REQUIREMENT,
     type,

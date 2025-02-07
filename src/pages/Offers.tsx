@@ -56,8 +56,6 @@ export default function Offers() {
   const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
   const { getBasicRateData, modalDataRate } = useCulminate();
   const [type, setType] = useState(getRouteType(location.pathname));
-  const { searchTable, responseData, error, errorMsg, loading, apiParams } =
-    useSearchTable(dataUser.uid, TableTypes.OFFER, EntityType.SUBUSER, type);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [offerList, setOfferList] = useState<Offer[]>([]);
   const [total, setTotal] = useState(0);
@@ -103,7 +101,18 @@ export default function Offers() {
     total,
     setTotal
   );
-  const { updateChangesQueue } = useSocketQueueHook(addNewRow, updateRow);
+  const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
+    addNewRow,
+    updateRow
+  );
+  const { searchTable, responseData, error, errorMsg, loading, apiParams } =
+    useSearchTable(
+      dataUser.uid,
+      TableTypes.OFFER,
+      EntityType.SUBUSER,
+      type,
+      resetChangesQueue
+    );
   useSocket(
     TableTypes.OFFER,
     type,

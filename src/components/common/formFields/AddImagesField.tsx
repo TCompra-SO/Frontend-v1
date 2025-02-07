@@ -21,6 +21,10 @@ interface AddImagesFieldProps {
     child: ReactNode;
     onChange: (files: UploadFile[]) => void;
   };
+  customChildToUpload?: {
+    child: ReactNode;
+    handlePreview: (previewFile: string, fileName: string) => void;
+  };
 }
 
 export interface AddImagesFieldRef {
@@ -31,7 +35,10 @@ export interface AddImagesFieldRef {
 export const AddImagesField = forwardRef<
   AddImagesFieldRef,
   AddImagesFieldProps
->(function AddImagesField({ forOffer = false, onlyUpload }, ref) {
+>(function AddImagesField(
+  { forOffer = false, onlyUpload, customChildToUpload },
+  ref
+) {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -69,6 +76,10 @@ export const AddImagesField = forwardRef<
   }
 
   function handleChange(info: UploadChangeParam<UploadFile<any>>) {
+    if (customChildToUpload && info.fileList.length > 0) {
+      handlePreview(info.fileList[0]);
+    } else if (customChildToUpload && info.fileList.length == 0)
+      customChildToUpload.handlePreview("", "");
     setFileList(info.fileList);
     onlyUpload?.onChange(info.fileList);
   }
@@ -77,8 +88,15 @@ export const AddImagesField = forwardRef<
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as FileType);
     }
-    setPreviewImage(file.url || (file.preview as string));
-    setPreviewOpen(true);
+    if (customChildToUpload)
+      customChildToUpload.handlePreview(
+        file.url || (file.preview as string),
+        file.name
+      );
+    else {
+      setPreviewImage(file.url || (file.preview as string));
+      setPreviewOpen(true);
+    }
   }
 
   function checkImageBeforeUpload(file: RcFile) {
@@ -98,7 +116,7 @@ export const AddImagesField = forwardRef<
     return validImage && validSize ? false : Upload.LIST_IGNORE;
   }
 
-  function renderUploadComponent() {
+  function renderUploadComponent(customChild?: ReactNode) {
     return (
       <Upload
         accept="image/*"
@@ -112,6 +130,11 @@ export const AddImagesField = forwardRef<
         beforeUpload={checkImageBeforeUpload}
       >
         <div style={{ display: "none" }} ref={fileInputRef} />
+        {customChild
+          ? fileList.length >= maxImagesQuantity
+            ? null
+            : customChild
+          : null}
       </Upload>
     );
   }
@@ -127,6 +150,16 @@ export const AddImagesField = forwardRef<
         {renderUploadComponent()}
       </div>
     </>
+  ) : customChildToUpload ? (
+    <div
+      className={
+        customChildToUpload && fileList.length >= maxImagesQuantity
+          ? "hide-upload"
+          : ""
+      }
+    >
+      {renderUploadComponent(customChildToUpload.child)}
+    </div>
   ) : (
     <>
       <div className="hide-upload" style={forOffer ? { width: "100%" } : {}}>
