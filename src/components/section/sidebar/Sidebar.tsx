@@ -312,15 +312,62 @@ export default function Sidebar(props: SidebarProps) {
                   ]
                 }`}
                 common
-                onClick={() =>
+                onClick={() => {
+                  toggleMenu(
+                    `${pageRoutes.myPurchaseOrders}-${pageSubRoutes.issued}`
+                  );
                   redirectTo(
                     `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issued}`
-                  )
-                }
+                  );
+                }}
               >
                 <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
                 {t("issuedPl")}
+                <i className="fa-solid fa-chevron-down i-sub text-center"></i>
               </ButtonContainer>
+              <div
+                className="sub-menu t-flex"
+                style={{
+                  display: menuVisibility[
+                    `${pageRoutes.myPurchaseOrders}-${pageSubRoutes.issued}`
+                  ]
+                    ? "block"
+                    : "none",
+                }}
+              >
+                <ButtonContainer
+                  className={`${buttonClass} ${
+                    menuFocus[
+                      `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issued}/${pageSubRoutes.goods}`
+                    ]
+                  }`}
+                  common
+                  onClick={() =>
+                    redirectTo(
+                      `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issued}/${pageSubRoutes.goods}`
+                    )
+                  }
+                >
+                  <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
+                  {t("goods")}
+                </ButtonContainer>
+                <ButtonContainer
+                  className={`${buttonClass} ${
+                    menuFocus[
+                      `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issued}/${pageSubRoutes.services}`
+                    ]
+                  }`}
+                  common
+                  onClick={() =>
+                    redirectTo(
+                      `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issued}/${pageSubRoutes.services}`
+                    )
+                  }
+                >
+                  <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
+                  {t("services")}
+                </ButtonContainer>
+              </div>
               <ButtonContainer
                 className={`${buttonClass} ${
                   menuFocus[
@@ -328,15 +375,62 @@ export default function Sidebar(props: SidebarProps) {
                   ]
                 }`}
                 common
-                onClick={() =>
+                onClick={() => {
+                  toggleMenu(
+                    `${pageRoutes.myPurchaseOrders}-${pageSubRoutes.received}`
+                  );
                   redirectTo(
                     `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.received}`
-                  )
-                }
+                  );
+                }}
               >
                 <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
                 {t("receivedPl")}
+                <i className="fa-solid fa-chevron-down i-sub text-center"></i>
               </ButtonContainer>
+              <div
+                className="sub-menu t-flex"
+                style={{
+                  display: menuVisibility[
+                    `${pageRoutes.myPurchaseOrders}-${pageSubRoutes.received}`
+                  ]
+                    ? "block"
+                    : "none",
+                }}
+              >
+                <ButtonContainer
+                  className={`${buttonClass} ${
+                    menuFocus[
+                      `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.received}/${pageSubRoutes.goods}`
+                    ]
+                  }`}
+                  common
+                  onClick={() =>
+                    redirectTo(
+                      `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.received}/${pageSubRoutes.goods}`
+                    )
+                  }
+                >
+                  <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
+                  {t("goods")}
+                </ButtonContainer>
+                <ButtonContainer
+                  className={`${buttonClass} ${
+                    menuFocus[
+                      `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.received}/${pageSubRoutes.services}`
+                    ]
+                  }`}
+                  common
+                  onClick={() =>
+                    redirectTo(
+                      `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.received}/${pageSubRoutes.services}`
+                    )
+                  }
+                >
+                  <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
+                  {t("services")}
+                </ButtonContainer>
+              </div>
             </div>
           </>
         )}
@@ -672,15 +766,62 @@ export default function Sidebar(props: SidebarProps) {
                     ]
                   }`}
                   common
-                  onClick={() =>
+                  onClick={() => {
+                    toggleMenu(
+                      `${pageRoutes.allPurchaseOrders}-${pageSubRoutes.issued}`
+                    );
                     redirectTo(
                       `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.issued}`
-                    )
-                  }
+                    );
+                  }}
                 >
                   <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
                   {t("issuedPl")}
+                  <i className="fa-solid fa-chevron-down i-sub text-center"></i>
                 </ButtonContainer>
+                <div
+                  className="sub-menu t-flex"
+                  style={{
+                    display: menuVisibility[
+                      `${pageRoutes.allPurchaseOrders}-${pageSubRoutes.issued}`
+                    ]
+                      ? "block"
+                      : "none",
+                  }}
+                >
+                  <ButtonContainer
+                    className={`${buttonClass} ${
+                      menuFocus[
+                        `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.issued}/${pageSubRoutes.goods}`
+                      ]
+                    }`}
+                    common
+                    onClick={() =>
+                      redirectTo(
+                        `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.issued}/${pageSubRoutes.goods}`
+                      )
+                    }
+                  >
+                    <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
+                    {t("goods")}
+                  </ButtonContainer>
+                  <ButtonContainer
+                    className={`${buttonClass} ${
+                      menuFocus[
+                        `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.issued}/${pageSubRoutes.services}`
+                      ]
+                    }`}
+                    common
+                    onClick={() =>
+                      redirectTo(
+                        `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.issued}/${pageSubRoutes.services}`
+                      )
+                    }
+                  >
+                    <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
+                    {t("services")}
+                  </ButtonContainer>
+                </div>
                 <ButtonContainer
                   className={`${buttonClass} ${
                     menuFocus[
@@ -688,15 +829,62 @@ export default function Sidebar(props: SidebarProps) {
                     ]
                   }`}
                   common
-                  onClick={() =>
+                  onClick={() => {
+                    toggleMenu(
+                      `${pageRoutes.allPurchaseOrders}-${pageSubRoutes.received}`
+                    );
                     redirectTo(
                       `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.received}`
-                    )
-                  }
+                    );
+                  }}
                 >
                   <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
                   {t("receivedPl")}
+                  <i className="fa-solid fa-chevron-down i-sub text-center"></i>
                 </ButtonContainer>
+                <div
+                  className="sub-menu t-flex"
+                  style={{
+                    display: menuVisibility[
+                      `${pageRoutes.allPurchaseOrders}-${pageSubRoutes.received}`
+                    ]
+                      ? "block"
+                      : "none",
+                  }}
+                >
+                  <ButtonContainer
+                    className={`${buttonClass} ${
+                      menuFocus[
+                        `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.received}/${pageSubRoutes.goods}`
+                      ]
+                    }`}
+                    common
+                    onClick={() =>
+                      redirectTo(
+                        `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.received}/${pageSubRoutes.goods}`
+                      )
+                    }
+                  >
+                    <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
+                    {t("goods")}
+                  </ButtonContainer>
+                  <ButtonContainer
+                    className={`${buttonClass} ${
+                      menuFocus[
+                        `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.received}/${pageSubRoutes.services}`
+                      ]
+                    }`}
+                    common
+                    onClick={() =>
+                      redirectTo(
+                        `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.received}/${pageSubRoutes.services}`
+                      )
+                    }
+                  >
+                    <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>{" "}
+                    {t("services")}
+                  </ButtonContainer>
+                </div>
               </div>
             </>
           )}
