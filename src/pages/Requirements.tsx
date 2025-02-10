@@ -155,11 +155,6 @@ export default function Requirements() {
 
   /** Verificar si hay una solicitud pendiente */
 
-  // useEffect(() => {
-  //   showLoadingMessage(loadingGetOffersByRequirementId);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [loadingGetOffersByRequirementId]);
-
   useEffect(() => {
     if (detailedRequirementModalData.requirementId) {
       console.log(detailedRequirementModalData.requirementId);
@@ -180,6 +175,7 @@ export default function Requirements() {
   /** Para mostrar modales */
 
   useEffect(() => {
+    console.log(modalDataOffersByRequirementId);
     if (
       modalDataOffersByRequirementId.type === ModalTypes.DETAILED_REQUIREMENT
     ) {

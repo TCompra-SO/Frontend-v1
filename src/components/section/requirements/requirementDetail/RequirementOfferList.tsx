@@ -142,7 +142,6 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
     }));
     setOffersCopy((prev) => {
       const indexToUpdate = prev.findIndex((offer) => offer.key === offerId);
-      console.log(indexToUpdate);
       if (indexToUpdate !== -1) {
         prev[indexToUpdate] = {
           ...prev[indexToUpdate],
