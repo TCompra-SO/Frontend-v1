@@ -10,6 +10,7 @@ import {
   PurchaseOrderTableTypes,
   CertificationState,
   OrderConfirmation,
+  CanOfferType,
 } from "../utilities/types";
 import { OfferFilters } from "./Interfaces";
 
@@ -56,7 +57,7 @@ export interface Requirement extends BasicRequirement {
   used?: Usage;
   deliveryTime: number;
   paymentMethod: number;
-  allowedBidder: number[];
+  allowedBidder: CanOfferType[];
 }
 
 export interface OfferItemSubUser extends BaseRequirementOffer {

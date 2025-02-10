@@ -242,42 +242,28 @@ export default function OfferForm(props: OfferFormProps) {
 
     if (!isLoggedIn) {
       setCantOfferMotive(CantOfferMotives.NOT_LOGGED_IN);
-
       return;
-    } else if (
-      props.requirement &&
-      ((!props.requirement.subUser && props.requirement.user.uid == uid) || // requerimiento no fue creado por subusuario
-        (props.requirement.subUser && props.requirement.subUser.uid == uid)) // requerimiento fue creado por subusuario
-    ) {
-      setCantOfferMotive(CantOfferMotives.IS_CREATOR);
-
-      return;
-    } else if (
-      role == UserRoles.LEGAL ||
-      role == UserRoles.NONE ||
-      (role == UserRoles.BUYER &&
-        props.requirement?.type != RequirementType.SALE) ||
-      (role == UserRoles.SELLER &&
-        props.requirement?.type == RequirementType.SALE)
-    ) {
-      setCantOfferMotive(CantOfferMotives.NO_ALLOWED_ROLE);
-
-      return;
-    } else if (
-      props.requirement &&
-      props.requirement.state != RequirementState.PUBLISHED
-    ) {
-      setCantOfferMotive(CantOfferMotives.CHANGED_STATE);
-      return;
-    } else if (
-      props.requirement &&
-      props.requirement.allowedBidder.includes(CanOfferType.PREMIUM) &&
-      !isPremium
-    ) {
-      setCantOfferMotive(CantOfferMotives.ONLY_PREMIUM);
-      return;
-    } else {
-      if (props.requirement) {
+    } else if (props.requirement) {
+      if (
+        (!props.requirement.subUser && props.requirement.user.uid == uid) || // requerimiento no fue creado por subusuario
+        (props.requirement.subUser && props.requirement.subUser.uid == uid) // requerimiento fue creado por subusuario
+      ) {
+        setCantOfferMotive(CantOfferMotives.IS_CREATOR);
+        return;
+      } else if (
+        role == UserRoles.LEGAL ||
+        role == UserRoles.NONE ||
+        (role == UserRoles.BUYER &&
+          props.requirement.type != RequirementType.SALE) ||
+        (role == UserRoles.SELLER &&
+          props.requirement.type == RequirementType.SALE)
+      ) {
+        setCantOfferMotive(CantOfferMotives.NO_ALLOWED_ROLE);
+        return;
+      } else if (props.requirement.state != RequirementState.PUBLISHED) {
+        setCantOfferMotive(CantOfferMotives.CHANGED_STATE);
+        return;
+      } else {
         const { responseData }: any = await makeRequest({
           service: getGetValidationOfferService(props.requirement.type)?.(
             uid,
@@ -316,33 +302,42 @@ export default function OfferForm(props: OfferFormProps) {
             case CodeResponseCanOffer.MAIN_ACCOUNT_IS_CREATOR:
               setCantOfferMotive(CantOfferMotives.MAIN_ACCOUNT_IS_CREATOR);
               return;
-            // case CodeResponseCanOffer.NONE:
-            // setCantOfferMotive(CantOfferMotives.NONE);
-            // return;
           }
         }
-
-        if (
-          props.requirement.allowedBidder.includes(
-            CanOfferType.CERTIFIED_COMPANY
-          )
-        ) {
-          const { certState: certResult, error: errorCert } =
-            await verifyCertificationByUserIdAndCompanyId(
-              mainUid,
-              props.requirement.user.uid
-            );
-          if (errorCert)
-            showNotification("error", t("certificationVerificationError"));
-          setIsCertified(certResult ?? CertificationState.NONE);
-          if (certResult != CertificationState.CERTIFIED) {
-            setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED);
-            return;
-          }
-        }
+        if (!(await verifyAllowedBidders(props.requirement))) return;
       }
     }
     setCantOfferMotive(CantOfferMotives.NONE);
+  }
+
+  async function verifyAllowedBidders(requirement: Requirement) {
+    const verifyAllowedBidder: boolean[] = [];
+    for (const ab of requirement.allowedBidder) {
+      if (ab == CanOfferType.ALL) {
+        setCantOfferMotive(CantOfferMotives.NONE);
+        return true;
+      }
+      if (ab == CanOfferType.PREMIUM) {
+        if (!isPremium) {
+          setCantOfferMotive(CantOfferMotives.ONLY_PREMIUM);
+          verifyAllowedBidder.push(false);
+        } else verifyAllowedBidder.push(true);
+      } else if (ab == CanOfferType.CERTIFIED_COMPANY) {
+        const { certState: certResult, error: errorCert } =
+          await verifyCertificationByUserIdAndCompanyId(
+            mainUid,
+            requirement.user.uid
+          );
+        if (errorCert)
+          showNotification("error", t("certificationVerificationError"));
+        setIsCertified(certResult ?? CertificationState.NONE);
+        if (certResult != CertificationState.CERTIFIED) {
+          setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED);
+          verifyAllowedBidder.push(false);
+        } else verifyAllowedBidder.push(true);
+      }
+    }
+    return verifyAllowedBidder.includes(true);
   }
 
   function createOffer(values: any) {
