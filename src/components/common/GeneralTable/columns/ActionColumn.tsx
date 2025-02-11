@@ -23,7 +23,7 @@ import { useContext } from "react";
 // extraParam tiene diferentes significados según el tipo de tabla
 export default function ActionColumn(
   type: TableTypes,
-  onButtonClick: (action: Action, data: any) => void,
+  onButtonClick: (action: Action, data: any, subAction?: Action) => void,
   hidden: boolean = false,
   extraParam?: any
 ) {
@@ -104,15 +104,21 @@ export default function ActionColumn(
                       return {
                         key: action,
                         label: t(ActionLabel[action]),
-                        onClick: () => onButtonClick(action, record),
+                        onClick: Object.prototype.hasOwnProperty.call(
+                          SubActions,
+                          action
+                        )
+                          ? undefined
+                          : () => onButtonClick(action, record),
                         disabled: idAndActionQueue[record?.key] ? true : false,
                         children: Object.prototype.hasOwnProperty.call(
                           SubActions,
                           action
                         )
                           ? SubActions[action].map((a) => ({
-                              key: a,
+                              key: `${action.toString()}-${a.toString()}`,
                               label: t(ActionLabel[a]),
+                              onClick: () => onButtonClick(action, record, a),
                             }))
                           : undefined,
                       };

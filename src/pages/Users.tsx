@@ -29,6 +29,7 @@ import { useSelector } from "react-redux";
 import {
   equalServices,
   getFieldNameObjForOrders,
+  isRequirementType,
 } from "../utilities/globalFunctions";
 import SubUserTableModal from "../components/section/users/subUserTables/SubUserTableModal";
 import {
@@ -58,9 +59,10 @@ export default function Users() {
   const uid = useSelector((state: MainState) => state.user.uid);
   const [action, setAction] = useState<Action>(Action.ADD_USER);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [subTypeOrder, setSubTypeOrder] = useState<
-    PurchaseOrderTableTypes | RequirementType
-  >(RequirementType.GOOD);
+  const [subTypeOrder, setSubTypeOrder] = useState<PurchaseOrderTableTypes>(
+    PurchaseOrderTableTypes.ISSUED
+  );
+  const [subType, setSubType] = useState<RequirementType>(RequirementType.GOOD);
   const [userData, setUserData] = useState<SubUserBase | null>(null);
   const [userDataEdit, setUserDataEdit] = useState<SubUserProfile | null>(null);
   const [totalReq, setTotalReq] = useState(0);
@@ -164,6 +166,8 @@ export default function Users() {
     userData?.uid ?? "",
     tableType,
     EntityType.SUBUSER,
+    subType,
+    undefined,
     subTypeOrder
   );
   const {
@@ -324,14 +328,19 @@ export default function Users() {
 
   function handleCloseModal() {
     setIsOpenModal(false);
-    setSubTypeOrder(RequirementType.GOOD);
+    setSubTypeOrder(PurchaseOrderTableTypes.ISSUED);
+    setSubType(RequirementType.GOOD);
   }
 
   function handleOpenModal() {
     setIsOpenModal(true);
   }
 
-  function handleOnActionClick(action: Action, user: SubUserBase) {
+  function handleOnActionClick(
+    action: Action,
+    user: SubUserBase,
+    subAction?: Action
+  ) {
     setAction(action);
     setUserData(user);
     switch (action) {
@@ -344,7 +353,7 @@ export default function Users() {
         break;
       case Action.VIEW_REQUIREMENTS:
         setTableType(TableTypes.REQUIREMENT);
-        setSubTypeOrder(RequirementType.GOOD);
+        setSubType(RequirementType.GOOD);
         reset();
         searchTable(
           { page: 1, pageSize: currentPageSize },
@@ -356,7 +365,7 @@ export default function Users() {
         break;
       case Action.VIEW_OFFERS:
         setTableType(TableTypes.OFFER);
-        setSubTypeOrder(RequirementType.GOOD);
+        setSubType(RequirementType.GOOD);
         reset();
         searchTable(
           { page: 1, pageSize: currentPageSize },
@@ -367,18 +376,26 @@ export default function Users() {
         );
         break;
       case Action.VIEW_PURCHASE_ORDERS:
-        setTableType(TableTypes.PURCHASE_ORDER);
-        setSubTypeOrder(PurchaseOrderTableTypes.ISSUED);
-        reset();
-        searchTable(
-          { page: 1, pageSize: currentPageSize },
-          undefined,
-          TableTypes.PURCHASE_ORDER,
-          PurchaseOrderTableTypes.ISSUED,
-          user.uid
-        );
+        if (subAction == Action.GOODS || subAction == Action.SERVICES) {
+          if (subAction == Action.GOODS) setSubType(RequirementType.GOOD);
+          if (subAction == Action.SERVICES) setSubType(RequirementType.SERVICE);
+          setTableType(TableTypes.PURCHASE_ORDER);
+          setSubTypeOrder(PurchaseOrderTableTypes.ISSUED);
+          reset();
+          searchTable(
+            { page: 1, pageSize: currentPageSize },
+            undefined,
+            TableTypes.PURCHASE_ORDER,
+            subAction == Action.GOODS
+              ? RequirementType.GOOD
+              : RequirementType.SERVICE,
+            user.uid,
+            PurchaseOrderTableTypes.ISSUED
+          );
+        }
         break;
       case Action.VIEw_SALES_ORDERS:
+        setSubType(RequirementType.SALE);
         setTableType(TableTypes.SALES_ORDER);
         setSubTypeOrder(PurchaseOrderTableTypes.ISSUED);
         reset();
@@ -386,8 +403,9 @@ export default function Users() {
           { page: 1, pageSize: currentPageSize },
           undefined,
           TableTypes.SALES_ORDER,
-          PurchaseOrderTableTypes.ISSUED,
-          user.uid
+          RequirementType.SALE,
+          user.uid,
+          PurchaseOrderTableTypes.ISSUED
         );
         break;
     }
@@ -461,11 +479,7 @@ export default function Users() {
             content={{
               tableType: TableTypes.PURCHASE_ORDER_SUBUSER,
               tableContent: orderList,
-              subType:
-                subTypeOrder == PurchaseOrderTableTypes.ISSUED ||
-                subTypeOrder == PurchaseOrderTableTypes.RECEIVED
-                  ? subTypeOrder
-                  : PurchaseOrderTableTypes.ISSUED,
+              subType: subTypeOrder,
               total: totalPurc,
             }}
             user={userData}
@@ -477,10 +491,7 @@ export default function Users() {
                 params,
                 getFieldNameObjForOrders(
                   TableTypes.PURCHASE_ORDER,
-                  subTypeOrder == PurchaseOrderTableTypes.ISSUED ||
-                    subTypeOrder == PurchaseOrderTableTypes.RECEIVED
-                    ? subTypeOrder
-                    : PurchaseOrderTableTypes.ISSUED
+                  subTypeOrder
                 ),
                 searchTable
               )
@@ -497,11 +508,7 @@ export default function Users() {
             content={{
               tableType: TableTypes.SALES_ORDER_SUBUSER,
               tableContent: orderList,
-              subType:
-                subTypeOrder == PurchaseOrderTableTypes.ISSUED ||
-                subTypeOrder == PurchaseOrderTableTypes.RECEIVED
-                  ? subTypeOrder
-                  : PurchaseOrderTableTypes.ISSUED,
+              subType: subTypeOrder,
               total: totalSales,
             }}
             user={userData}
@@ -511,13 +518,7 @@ export default function Users() {
             onChangePageAndPageSize={(params) =>
               handleChangePageAndPageSize(
                 params,
-                getFieldNameObjForOrders(
-                  TableTypes.SALES_ORDER,
-                  subTypeOrder == PurchaseOrderTableTypes.ISSUED ||
-                    subTypeOrder == PurchaseOrderTableTypes.RECEIVED
-                    ? subTypeOrder
-                    : PurchaseOrderTableTypes.ISSUED
-                ),
+                getFieldNameObjForOrders(TableTypes.SALES_ORDER, subTypeOrder),
                 searchTable
               )
             }
@@ -544,14 +545,30 @@ export default function Users() {
           (tabId == PurchaseOrderTableTypes.ISSUED ||
             tabId == PurchaseOrderTableTypes.RECEIVED))
       ) {
-        setSubTypeOrder(tabId);
         reset();
-        searchTable(
-          { page: 1, pageSize: currentPageSize },
-          undefined,
-          tableType,
-          tabId
-        );
+        if (
+          action == Action.VIEW_REQUIREMENTS ||
+          action == Action.VIEW_OFFERS
+        ) {
+          setSubType(tabId as RequirementType);
+          searchTable(
+            { page: 1, pageSize: currentPageSize },
+            undefined,
+            tableType,
+            tabId as RequirementType,
+            undefined
+          );
+        } else {
+          setSubTypeOrder(tabId as PurchaseOrderTableTypes);
+          searchTable(
+            { page: 1, pageSize: currentPageSize },
+            undefined,
+            tableType,
+            subType,
+            undefined,
+            tabId as PurchaseOrderTableTypes
+          );
+        }
       }
     }
   }

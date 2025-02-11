@@ -176,7 +176,7 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
         break;
     }
   };
-  console.log(isPremium);
+
   return (
     <header>
       {isLoggedIn ? (

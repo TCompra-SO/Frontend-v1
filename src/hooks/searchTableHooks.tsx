@@ -41,8 +41,9 @@ export default function useSearchTable(
   uid: string,
   tableType: TableTypes,
   entityType: EntityType, // subuser: registros de usuario | otro: registros de usuario + subusuarios
-  subType: RequirementType | PurchaseOrderTableTypes,
-  resetChangesQueue?: () => void
+  subType: RequirementType,
+  resetChangesQueue?: () => void,
+  orderSubType?: PurchaseOrderTableTypes
 ) {
   const [apiParams, setApiParams] = useState<useApiParams<SearchTableRequest>>({
     service: null,
@@ -82,21 +83,27 @@ export default function useSearchTable(
     }: SearchTableTypeParams,
     setLoadingTable?: (val: boolean) => void,
     tableTypeParam?: TableTypes,
-    subTypeParam?: RequirementType | PurchaseOrderTableTypes,
-    uidParam?: string
+    subTypeParam?: RequirementType,
+    uidParam?: string,
+    orderSubTypeParam?: PurchaseOrderTableTypes
   ) {
     resetChangesQueue?.();
     const stUid: string = uidParam ?? uid;
     const stTableType: TableTypes = tableTypeParam ?? tableType;
-    const stSubType: RequirementType | PurchaseOrderTableTypes | undefined =
-      subTypeParam ?? subType;
+    const stSubType = subTypeParam ?? subType;
+    const stOrderType = orderSubTypeParam ?? orderSubType;
     const newKeyWords = getSearchString(keyWords, true);
+    console.log(stSubType, stOrderType);
     if (
       (newKeyWords && newKeyWords.length >= searchSinceLength) ||
       !newKeyWords
     ) {
       setLoadingTable?.(true);
-      const service: HttpService | null = getService(stTableType, stSubType);
+      const service: HttpService | null = getService(
+        stTableType,
+        stSubType,
+        stOrderType
+      );
       // console.log(service, stTableType, stSubType);
       setApiParams({
         service,
@@ -118,7 +125,8 @@ export default function useSearchTable(
 
   function getService(
     stTableType: TableTypes,
-    stSubType: RequirementType | PurchaseOrderTableTypes | undefined
+    stSubType: RequirementType,
+    stOrderType?: PurchaseOrderTableTypes
   ) {
     let service: HttpService | null = null;
     switch (stTableType) {
@@ -132,18 +140,17 @@ export default function useSearchTable(
         break;
       case TableTypes.PURCHASE_ORDER:
       case TableTypes.ALL_PURCHASE_ORDERS:
-        if (stSubType == PurchaseOrderTableTypes.ISSUED)
-          service = getSearchOrdersByClientService(RequirementType.GOOD);
-        // r3v debería ser solo uno
-        else if (stSubType == PurchaseOrderTableTypes.RECEIVED)
-          service = getSearchOrdersByProviderService(RequirementType.GOOD);
+        if (stOrderType == PurchaseOrderTableTypes.ISSUED)
+          service = getSearchOrdersByClientService(stSubType);
+        else if (stOrderType == PurchaseOrderTableTypes.RECEIVED)
+          service = getSearchOrdersByProviderService(stSubType);
         break;
       case TableTypes.SALES_ORDER:
       case TableTypes.ALL_SALES_ORDERS:
-        if (stSubType == PurchaseOrderTableTypes.ISSUED)
-          service = getSearchOrdersByProviderService(RequirementType.SALE);
-        else if (stSubType == PurchaseOrderTableTypes.RECEIVED)
-          service = getSearchOrdersByClientService(RequirementType.SALE);
+        if (stOrderType == PurchaseOrderTableTypes.ISSUED)
+          service = getSearchOrdersByProviderService(stSubType);
+        else if (stOrderType == PurchaseOrderTableTypes.RECEIVED)
+          service = getSearchOrdersByClientService(stSubType);
         break;
     }
     return service;
