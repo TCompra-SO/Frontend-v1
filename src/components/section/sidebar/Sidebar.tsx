@@ -8,6 +8,7 @@ import { MainState } from "../../../models/Redux";
 import { RolesForSection } from "../../../utilities/roles";
 import {
   getLastSegmentFromRoute,
+  getPenultimateSegmentFromRoute,
   getSectionFromRoute,
 } from "../../../utilities/globalFunctions";
 import { EntityType } from "../../../utilities/types";
@@ -76,12 +77,22 @@ export default function Sidebar(props: SidebarProps) {
   useEffect(() => {
     if (!focusExists) {
       const section = getSectionFromRoute(location.pathname);
+      let middleSegment: string | undefined = getPenultimateSegmentFromRoute(
+        location.pathname
+      );
+      if (Object.values(pageRoutes).includes("/" + middleSegment))
+        middleSegment = undefined;
       const segment = getLastSegmentFromRoute(location.pathname);
       if (section in menuToggles) {
-        if (menuToggles[section]?.hasSubsection) toggleMenu(section, true);
+        if (menuToggles[section]?.hasSubsection)
+          toggleMenu(section, true, middleSegment);
         focusMenu(
           `${section}${
-            menuToggles[section]?.hasSubsection ? `/${segment}` : ""
+            menuToggles[section]?.hasSubsection
+              ? middleSegment
+                ? `/${middleSegment}/${segment}`
+                : `/${segment}`
+              : ""
           }`
         );
       }
@@ -92,13 +103,26 @@ export default function Sidebar(props: SidebarProps) {
 
   /** Funciones */
 
-  function toggleMenu(menuId: string, firstRender?: boolean) {
+  function toggleMenu(
+    menuId: string,
+    firstRender?: boolean,
+    middleSegment?: string
+  ) {
     setFocusExists(true);
     setMenuVisibility((prevVisibility) => {
-      return {
-        ...prevVisibility,
-        [menuId]: firstRender ? true : !prevVisibility[menuId],
-      };
+      if (middleSegment)
+        return {
+          ...prevVisibility,
+          [`${menuId}-${middleSegment}`]: firstRender
+            ? true
+            : !prevVisibility[`${menuId}-${middleSegment}`],
+          [menuId]: firstRender ? true : !prevVisibility[menuId],
+        };
+      else
+        return {
+          ...prevVisibility,
+          [menuId]: firstRender ? true : !prevVisibility[menuId],
+        };
     });
   }
 
