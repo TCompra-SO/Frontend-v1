@@ -277,9 +277,14 @@ export function getRouteType(pathname: string) {
   }
 }
 
-export function getPurchaseOrderType(pathname: string) {
-  const lastSegment = getLastSegmentFromRoute(pathname);
-  switch (lastSegment) {
+export function getPurchaseOrderType(
+  pathname: string,
+  noRequirementType?: boolean
+) {
+  const segment = noRequirementType
+    ? getLastSegmentFromRoute(pathname)
+    : getPenultimateSegmentFromRoute(pathname);
+  switch (segment) {
     case pageSubRoutes.issued:
       return PurchaseOrderTableTypes.ISSUED;
     case pageSubRoutes.received:
@@ -287,6 +292,13 @@ export function getPurchaseOrderType(pathname: string) {
     default:
       return PurchaseOrderTableTypes.ISSUED;
   }
+}
+
+export function getReqTypeAndOrderType(pathname: string) {
+  return {
+    requirementType: getRouteType(pathname),
+    orderType: getPurchaseOrderType(pathname),
+  };
 }
 
 export function isHome(pathname: string) {
@@ -304,6 +316,11 @@ export function isChat(pathname: string) {
 export function getLastSegmentFromRoute(pathname: string) {
   const pathSegments = pathname.split("/");
   return pathSegments[pathSegments.length - 1];
+}
+
+export function getPenultimateSegmentFromRoute(pathname: string) {
+  const pathSegments = pathname.split("/");
+  return pathSegments[pathSegments.length - 2];
 }
 
 export function getSectionFromRoute(pathname: string) {

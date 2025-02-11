@@ -16,13 +16,14 @@ let socketAPI: Socket | null = null;
 
 export default function useSocket(
   tableType: TableTypes,
-  subType: RequirementType | PurchaseOrderTableTypes,
+  subType: RequirementType,
   page: number,
   searchTableRequest: SearchTableRequest | undefined,
   updateChangesQueue: (
     payload: SocketResponse,
     canAddRowUpdate: boolean
-  ) => void
+  ) => void,
+  orderType?: PurchaseOrderTableTypes
 ) {
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const uid = useSelector((state: MainState) => state.user.uid);
@@ -77,7 +78,7 @@ export default function useSocket(
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subType]);
+  }, [subType, orderType]);
 
   function getRoomName() {
     let roomName: string = "";
@@ -98,19 +99,28 @@ export default function useSocket(
       tableType == TableTypes.PURCHASE_ORDER ||
       tableType == TableTypes.ALL_PURCHASE_ORDERS
     ) {
-      if (subType == PurchaseOrderTableTypes.ISSUED)
-        roomName = "roomPurchaseOrderClientProduct";
-      else if (subType == PurchaseOrderTableTypes.RECEIVED)
-        roomName = "roomPurchaseOrderProviderProduct";
+      if (subType == RequirementType.GOOD) {
+        if (orderType == PurchaseOrderTableTypes.ISSUED)
+          roomName = "roomPurchaseOrderClientProduct";
+        else if (orderType == PurchaseOrderTableTypes.RECEIVED)
+          roomName = "roomPurchaseOrderProviderProduct";
+      } else if (subType == RequirementType.SERVICE) {
+        if (orderType == PurchaseOrderTableTypes.ISSUED)
+          roomName = "roomPurchaseOrderClientProduct"; // r3v cambiar
+        else if (orderType == PurchaseOrderTableTypes.RECEIVED)
+          roomName = "roomPurchaseOrderProviderProduct";
+      }
     }
     if (
       tableType == TableTypes.SALES_ORDER ||
       tableType == TableTypes.ALL_SALES_ORDERS
     ) {
-      if (subType == PurchaseOrderTableTypes.ISSUED)
-        roomName = "roomPurchaseOrderProviderProduct";
-      else if (subType == PurchaseOrderTableTypes.RECEIVED)
-        roomName = "roomPurchaseOrderClientProduct";
+      if (subType == RequirementType.SALE) {
+        if (orderType == PurchaseOrderTableTypes.ISSUED)
+          roomName = "roomPurchaseOrderProviderProduct";
+        else if (orderType == PurchaseOrderTableTypes.RECEIVED)
+          roomName = "roomPurchaseOrderClientProduct";
+      }
     }
     return roomName;
   }

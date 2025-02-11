@@ -316,9 +316,6 @@ export default function Sidebar(props: SidebarProps) {
                   toggleMenu(
                     `${pageRoutes.myPurchaseOrders}-${pageSubRoutes.issued}`
                   );
-                  redirectTo(
-                    `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issued}`
-                  );
                 }}
               >
                 <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
@@ -378,9 +375,6 @@ export default function Sidebar(props: SidebarProps) {
                 onClick={() => {
                   toggleMenu(
                     `${pageRoutes.myPurchaseOrders}-${pageSubRoutes.received}`
-                  );
-                  redirectTo(
-                    `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.received}`
                   );
                 }}
               >
@@ -770,9 +764,6 @@ export default function Sidebar(props: SidebarProps) {
                     toggleMenu(
                       `${pageRoutes.allPurchaseOrders}-${pageSubRoutes.issued}`
                     );
-                    redirectTo(
-                      `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.issued}`
-                    );
                   }}
                 >
                   <i className="fa-regular fa-dolly text-center i-btn"></i>{" "}
@@ -832,9 +823,6 @@ export default function Sidebar(props: SidebarProps) {
                   onClick={() => {
                     toggleMenu(
                       `${pageRoutes.allPurchaseOrders}-${pageSubRoutes.received}`
-                    );
-                    redirectTo(
-                      `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.received}`
                     );
                   }}
                 >

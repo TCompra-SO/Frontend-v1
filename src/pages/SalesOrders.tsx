@@ -69,7 +69,9 @@ export default function SalesOrders() {
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
   const downloadPdfOrder = useDownloadPdfOrder();
-  const [type, setType] = useState(getPurchaseOrderType(location.pathname));
+  const [type, setType] = useState(
+    getPurchaseOrderType(location.pathname, true)
+  );
   const {
     currentPage,
     currentPageSize,
@@ -122,15 +124,17 @@ export default function SalesOrders() {
       uid,
       TableTypes.SALES_ORDER,
       EntityType.SUBUSER,
-      type,
-      resetChangesQueue
+      RequirementType.SALE,
+      resetChangesQueue,
+      type
     );
   useSocket(
     TableTypes.SALES_ORDER,
-    type,
+    RequirementType.SALE,
     currentPage,
     apiParams.dataToSend,
-    updateChangesQueue
+    updateChangesQueue,
+    type
   );
 
   /** Actualiza el contenido de tabla */
@@ -162,7 +166,7 @@ export default function SalesOrders() {
   /** Obtener subsección */
 
   useEffect(() => {
-    setType(getPurchaseOrderType(location.pathname));
+    setType(getPurchaseOrderType(location.pathname, true));
   }, [location]);
 
   /** Verificar si hay una solicitud pendiente */

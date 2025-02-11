@@ -29,7 +29,6 @@ import { useSelector } from "react-redux";
 import {
   equalServices,
   getFieldNameObjForOrders,
-  isRequirementType,
 } from "../utilities/globalFunctions";
 import SubUserTableModal from "../components/section/users/subUserTables/SubUserTableModal";
 import {
