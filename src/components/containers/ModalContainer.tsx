@@ -89,6 +89,9 @@ export default function ModalContainer(props: ModalContainerProps) {
         case ModalTypes.VIEW_DOCS_RECEIVED_CERT:
           id = props.content.data.data.key;
           break;
+        case ModalTypes.SELECT_OFFER:
+          id = props.content.data.requirement.key;
+          break;
       }
       if (id) {
         setBlockedIds((prev) => [...prev, id]);
@@ -106,6 +109,9 @@ export default function ModalContainer(props: ModalContainerProps) {
           break;
         case ModalTypes.VIEW_DOCS_RECEIVED_CERT:
           currentId = props.content.data.data.key;
+          break;
+        case ModalTypes.SELECT_OFFER:
+          currentId = props.content.data.requirement.key;
           break;
       }
       if (currentId) {
@@ -220,6 +226,12 @@ export default function ModalContainer(props: ModalContainerProps) {
             forPurchaseOrder={props.content.data.forPurchaseOrder}
             filters={props.content.data.filters}
             onClose={props.onClose}
+            setDataModalSelectOffer={
+              props.content.selectOffer?.setDataModalSelectOffer
+            }
+            setIsOpenModalSelectOffer={
+              props.content.selectOffer?.setIsOpenModalSelectOffer
+            }
           />
         );
       }
@@ -234,6 +246,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             onCancelSuccess={props.content.data.onCancelSuccess}
             useCancelRequirementHook={useCancelRequirementHook}
             useCancelOfferHook={useCancelOfferHook}
+            type={props.content.data.type}
           />
         );
       }
@@ -244,6 +257,8 @@ export default function ModalContainer(props: ModalContainerProps) {
             requirement={props.content.data.requirement}
             onSucces={props.content.data.onSuccess}
             onClose={props.onClose}
+            filterNames={props.content.data.filterNames}
+            filters={props.content.data.filters}
             {...commonModalProps}
           />
         );
@@ -319,6 +334,7 @@ export default function ModalContainer(props: ModalContainerProps) {
           <OfferDetailModal
             offer={props.content.data.offer}
             basicRateData={props.content.data.basicRateData}
+            showActions={props.content.data.showActions}
           />
         );
       }

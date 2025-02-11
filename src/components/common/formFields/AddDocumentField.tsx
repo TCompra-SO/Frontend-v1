@@ -1,23 +1,61 @@
 import { Form, Upload, UploadFile } from "antd";
 import { RcFile, UploadChangeParam } from "antd/lib/upload";
-import { useRef, useState } from "react";
+import {
+  forwardRef,
+  ReactNode,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { maxDocSizeMb, maxDocsQuantity } from "../../../utilities/globals";
 import { checkDoc } from "../../../utilities/globalFunctions";
 import useShowNotification from "../../../hooks/utilHooks";
 
-export default function AddDocumentField({
-  forOffer = false,
-}: {
+interface AddDocumentFieldProps {
   forOffer?: boolean;
-}) {
+  onlyUpload?: {
+    child: ReactNode;
+    onChange: (files: UploadFile[]) => void;
+  };
+  multiple?: boolean;
+  customChildToUpload?: {
+    child: ReactNode;
+    handleChange: (fileName: string) => void;
+  };
+}
+
+export interface AddDocumentFieldRef {
+  reset: () => void;
+  fileList: UploadFile[];
+}
+
+export const AddDocumentField = forwardRef<
+  AddDocumentFieldRef,
+  AddDocumentFieldProps
+>(function AddDocumentField(
+  { forOffer = false, onlyUpload, multiple, customChildToUpload },
+  ref
+) {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
   const fileInputRefDoc = useRef<HTMLDivElement>(null);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
+  useEffect(() => {
+    onlyUpload?.onChange(fileList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fileList]);
+
+  useImperativeHandle(ref, () => ({
+    reset: () => {
+      setFileList([]);
+    },
+    fileList,
+  }));
+
   function handleClick() {
-    // Trigger the file input click event
     if (fileInputRefDoc.current) {
       fileInputRefDoc.current.click();
     }
@@ -29,6 +67,11 @@ export default function AddDocumentField({
     // 1. Limit the number of uploaded files
     // Only to show two recent uploaded files, and old ones will be replaced by the new
     // newFileList = newFileList.slice(-maxDocsQuantity);
+
+    if (customChildToUpload && info.fileList.length > 0) {
+      customChildToUpload.handleChange(info.fileList[0].name);
+    } else if (customChildToUpload && info.fileList.length == 0)
+      customChildToUpload.handleChange("");
     setFileList(info.fileList);
   }
 
@@ -48,7 +91,51 @@ export default function AddDocumentField({
     return false;
   }
 
-  return (
+  function renderUploadComponent(customChild?: ReactNode) {
+    return (
+      <Upload
+        multiple={multiple}
+        accept=".pdf"
+        onChange={handleChange}
+        fileList={fileList}
+        maxCount={maxDocsQuantity}
+        listType="picture-card"
+        style={{ display: "none" }}
+        beforeUpload={checkDocBeforeUpload}
+        showUploadList={!onlyUpload}
+      >
+        <div style={{ display: "none" }} ref={fileInputRefDoc} />
+        {customChild
+          ? fileList.length >= maxDocsQuantity
+            ? null
+            : customChild
+          : null}
+      </Upload>
+    );
+  }
+
+  return onlyUpload ? (
+    <>
+      <div
+        className="hide-upload"
+        style={{ marginBottom: "-4px" }}
+        onClick={handleClick}
+      >
+        {onlyUpload.child}
+        {renderUploadComponent()}
+      </div>
+    </>
+  ) : customChildToUpload ? (
+    <div
+      className={
+        customChildToUpload && fileList.length >= maxDocsQuantity
+          ? "hide-upload"
+          : ""
+      }
+    >
+      {renderUploadComponent(customChildToUpload.child)}
+    </div>
+  ) : (
     <>
       <div className="hide-upload" style={forOffer ? { width: "100%" } : {}}>
         <div
@@ -58,21 +145,10 @@ export default function AddDocumentField({
         >
           <i className="fa-regular fa-file-lines"></i> {t("addDocument")}
         </div>
-        <Form.Item name="doc">
-          <Upload
-            multiple={true}
-            accept=".pdf"
-            onChange={handleChange}
-            fileList={fileList}
-            maxCount={1}
-            listType="picture-card"
-            style={{ display: "none" }}
-            beforeUpload={checkDocBeforeUpload}
-          >
-            <div style={{ display: "none" }} ref={fileInputRefDoc} />
-          </Upload>
-        </Form.Item>
+        <Form.Item name="doc">{renderUploadComponent()}</Form.Item>
       </div>
     </>
   );
-}
+});
+
+export default AddDocumentField;

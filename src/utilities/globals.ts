@@ -1,5 +1,6 @@
 import React from "react";
 import { pageRoutes } from "./routes";
+import { Requirement } from "../models/MainInterfaces";
 
 export const dateFormat: string = "DD-MM-YYYY";
 export const dateFormatHomeSearch: string = "YYYY-MM-DD";
@@ -41,9 +42,16 @@ export const tableSearchAfterMseconds: number = 400;
 export const maxLengthStringToSearch: number = 25;
 export const searchSinceLength: number = 3;
 
+export const typeParamNameInRoute: string = "type";
+export const reqIdParamNameInRoute: string = "requirementId";
+
+export const homePageSize: number = pageSizeOptionsSt[0];
+
 // local storage keys
 export const userDataKey: string = "udata";
 export const tokenKey: string = "token";
+export const logoutKey: string = "logout";
+export const loginKey: string = "login";
 
 /* Window size (>=) */
 export const windowSize = {
@@ -125,4 +133,10 @@ export const fieldNameSearchRequestAllOrderClient: Record<string, string> = {
 export const fieldNameSearchRequestAllOrderProvider: Record<string, string> = {
   ...fieldNameSearchRequestOrder,
   [nameColumnKey]: "nameSubUserProvider",
+};
+
+// Para actualizar campos
+export const fieldNameUpdateRequirement: Record<string, keyof Requirement> = {
+  state: "state",
+  number_offers: "numberOffers",
 };

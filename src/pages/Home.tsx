@@ -8,7 +8,6 @@ import {
   TableColumns,
   TableTypes,
 } from "../utilities/types.ts";
-import useSocket from "../socket/useSocket.tsx";
 import { useTranslation } from "react-i18next";
 import Search from "../components/section/home/Search.tsx";
 import Footer from "../components/section/footer/Footer.tsx";
@@ -19,20 +18,24 @@ import { HomeContext } from "../contexts/Homecontext.tsx";
 import HomeTable from "../components/section/home/HomeTable/HomeTable.tsx";
 import { Requirement } from "../models/MainInterfaces.ts";
 import { useNavigate } from "react-router-dom";
-import { pageRoutes } from "../utilities/routes.ts";
 import { MainState } from "../models/Redux.ts";
 import { useSelector } from "react-redux";
+import useHomeSocket from "../socket/useHomeSocket.tsx";
+import { getProductDetailRoute } from "../utilities/globalFunctions.ts";
 
 export default function Home() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  useHomeSocket();
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
   const {
+    updateType,
     page,
     updatePage,
     requirementList,
     loadingRequirementList,
     totalRequirementList,
+    retrieveLastSearchRequeriments,
   } = useContext(HomeContext);
   const [tableContent, setTableContent] = useState<TableTypeHome>({
     type: TableTypes.HOME,
@@ -44,14 +47,15 @@ export default function Home() {
     nameColumnHeader: t("goods"),
     onButtonClick: (action: Action, req: Requirement) => {
       if (action == Action.VIEW_REQUIREMENT)
-        navigate(`${pageRoutes.productDetail}/${req.key}`);
+        navigate(getProductDetailRoute(req.key, req.type));
     },
   });
-  useSocket();
 
   /** Mostrar datos iniciales */
 
   useEffect(() => {
+    console.log(requirementList.length);
+    // if (requirementList.length == 0) retrieveLastSearchRequeriments();
     setTableContent((prevContent) => ({
       ...prevContent,
       page,
@@ -60,6 +64,13 @@ export default function Home() {
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requirementList]);
+
+  /** Reset tabla actual */
+
+  useEffect(() => {
+    return () => updateType(RequirementType.GOOD);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /** Funciones */
 

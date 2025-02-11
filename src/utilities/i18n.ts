@@ -236,8 +236,10 @@ const resources = {
       certifyYourCompany: "Certify your company",
       improveYourCompanysImage: "Improve significantly your company's image.",
       cantOfferToYourOwnRequirement: "You cannot offer to your own requirement",
-      alreadyMadeOffer: "You have already made an offer on this requirement",
+      cantOfferToYourOwnSale: "You cannot offer to your own sale",
+      alreadyMadeOffer: "You have already made an offer",
       requirementNotFound: "The requirement could not be found",
+      saleNotFound: "The sale could not be found",
       errorOccurredLoginAgain: "An error occurred. Log in again",
       offerCreatedSuccessfully: "Offer created successfully",
       offerCreatedSuccessfullyNoDocOrImages:
@@ -334,7 +336,11 @@ const resources = {
       alreadySentCertificationRequest: "A certification request was already sent to this company",
       selectDocsToSend: "Select",
       showUserInfo: "Show user data",
+      sessionExpiredLoginAgain: "Your session has expired. Please log in again to continue",
+      minCharMessage: "Enter at least",
+      maxCharMessage: "Enter up to",
       // Other
+      characters: "characters",
       yes: "Yes",
       no: "No",
       select: "Select",
@@ -761,8 +767,11 @@ const resources = {
       improveYourCompanysImage: "Mejora notablemente la imagen de tu empresa.",
       cantOfferToYourOwnRequirement:
         "No puedes ofertar a tu propio requerimiento",
-      alreadyMadeOffer: "Ya haz realizado una oferta a este requerimiento",
+      cantOfferToYourOwnSale:
+        "No puedes ofertar a tu propia liquidación",
+      alreadyMadeOffer: "Ya haz realizado una oferta",
       requirementNotFound: "No se ha podido encontrar el requerimiento",
+      saleNotFound: "No se ha podido encontrar la liquidación",
       errorOccurredLoginAgain: "Se produjo un error. Inicie sesión nuevamente",
       offerCreatedSuccessfully: "Oferta creada exitosamente",
       offerCreatedSuccessfullyNoDocOrImages:
@@ -864,7 +873,11 @@ const resources = {
       alreadySentCertificationRequest: "Ya fue enviada una solicitud de certificación a esta empresa",
       selectDocsToSend: "Seleccionar",
       showUserInfo: "Mostrar datos de usuario",
+      sessionExpiredLoginAgain: "Su sesión ha expirado. Por favor, inicie sesión nuevamente para continuar",
+      minCharMessage: "Ingrese al menos",
+      maxCharMessage: "Puede ingresar hasta",
       // Other
+      characters: "caracteres",
       yes: "Sí",
       no: "No",
       select: "Seleccione",

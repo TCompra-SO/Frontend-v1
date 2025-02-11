@@ -13,7 +13,7 @@ import SelectCompanyField from "../../CompanyFilter/SelectCompanyField";
 import RangeDateField from "../../../../common/formFields/RangeDateField";
 import {
   dateFormatHomeSearch,
-  pageSizeOptionsSt,
+  homePageSize,
 } from "../../../../../utilities/globals";
 import dayjs from "dayjs";
 import { HomeContext } from "../../../../../contexts/Homecontext";
@@ -24,7 +24,6 @@ export default function HomeFilters() {
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const [form] = Form.useForm();
-  const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [hideFilters, setHideFilters] = useState(true);
   const {
     updateUseFilter,
@@ -33,16 +32,26 @@ export default function HomeFilters() {
     useFilter,
     updatePage,
     page,
+    type,
+    updateType,
   } = useContext(HomeContext);
   const [homeFilter, setHomeFilter] = useState<HomeFilterRequest>({
     page: 1,
-    pageSize: pageSizeOptionsSt[0],
+    pageSize: homePageSize,
   });
+
+  /** Reset al cambiar tipo de tabla */
+
+  useEffect(() => {
+    resetFilters();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type]);
 
   /** Reset al cerrar sesión */
 
   useEffect(() => {
     if (!isLoggedIn) resetFilters();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
 
   /** Paginación */
@@ -51,7 +60,7 @@ export default function HomeFilters() {
     if (useFilter) {
       const newPageFilter = homeFilter;
       newPageFilter.page = page;
-      retrieveRequirements(page, pageSizeOptionsSt[0], newPageFilter);
+      retrieveRequirements(page, homePageSize, newPageFilter);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [homeFilter, page]);
@@ -83,7 +92,7 @@ export default function HomeFilters() {
             : undefined,
         companyId: values.companyId,
         page: 1,
-        pageSize: pageSizeOptionsSt[0],
+        pageSize: homePageSize,
       };
       updatePage(1);
       setHomeFilter(filter);
@@ -95,33 +104,43 @@ export default function HomeFilters() {
     updateUseFilter(false);
   }
 
+  function getTypeButton(reqType: RequirementType) {
+    let icon = "";
+    let label = "";
+    switch (reqType) {
+      case RequirementType.GOOD:
+        icon = "fa-duotone fa-dolly";
+        label = "goods";
+        break;
+      case RequirementType.SERVICE:
+        icon = "fa-duotone fa-hand-holding-magic";
+        label = "services";
+        break;
+      case RequirementType.SALE:
+        icon = "fa-duotone fa-basket-shopping";
+        label = "sales";
+        break;
+    }
+    return (
+      <ButtonContainer
+        common
+        className={`btn btn-pink wd-33 t-flex f-column j-items gap-10 btn-pd ${
+          type == reqType ? "active" : ""
+        }`}
+        onClick={() => updateType(reqType)}
+      >
+        <i className={icon}></i>{" "}
+        <span className="req-btn-info">{t(label)}</span>
+      </ButtonContainer>
+    );
+  }
+
   return (
     <>
       <div className="t-flex mr-sub m-0">
-        <ButtonContainer
-          common
-          className="btn btn-pink wd-33 t-flex f-column j-items gap-10 btn-pd"
-          onClick={() => setType(RequirementType.GOOD)}
-        >
-          <i className="fa-duotone fa-dolly"></i>{" "}
-          <span className="req-btn-info">{t("goods")}</span>
-        </ButtonContainer>
-        <ButtonContainer
-          common
-          className="btn btn-pink wd-33 t-flex f-column j-items gap-10 btn-pd"
-          onClick={() => setType(RequirementType.SERVICE)}
-        >
-          <i className="fa-duotone fa-hand-holding-magic"></i>{" "}
-          <span className="req-btn-info">{t("services")}</span>
-        </ButtonContainer>
-        <ButtonContainer
-          common
-          className="btn btn-pink wd-33 t-flex f-column j-items gap-10 btn-pd"
-          onClick={() => setType(RequirementType.SALE)}
-        >
-          <i className="fa-duotone fa-basket-shopping"></i>{" "}
-          <span className="req-btn-info">{t("sales")}</span>
-        </ButtonContainer>
+        {getTypeButton(RequirementType.GOOD)}
+        {getTypeButton(RequirementType.SERVICE)}
+        {getTypeButton(RequirementType.SALE)}
         {/* <button className="btn btn-pink wd-25 t-flex f-column j-items gap-10 btn-pd"><i className="fa-duotone fa-user-tie"></i> <span className="req-btn-info">RR.HH</span></button> */}
       </div>
       <div className="t-flex gap-10 f-column">

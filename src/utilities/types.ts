@@ -165,6 +165,7 @@ export enum Action {
   SELECT_CERT_TO_SEND = 32,
   SEND_MESSAGE = 33,
   SHOW_USER_INFO = 34,
+  VIEW_SALES_ORDER = 35,
 }
 
 export const ActionLabel: {
@@ -205,6 +206,7 @@ export const ActionLabel: {
   [Action.SELECT_CERT_TO_SEND]: "selectDocsToSend",
   [Action.SEND_MESSAGE]: "send",
   [Action.SHOW_USER_INFO]: "showUserInfo",
+  [Action.VIEW_SALES_ORDER]: "view",
 };
 
 export const ActionByStateRequirement: {
@@ -216,7 +218,7 @@ export const ActionByStateRequirement: {
   [RequirementState.FINISHED]: [Action.SHOW_SUMMARY],
   [RequirementState.PUBLISHED]: [Action.DELETE, Action.CANCEL_REQUIREMENT],
   [RequirementState.SELECTED]: [Action.CANCEL_REQUIREMENT, Action.FINISH],
-  [RequirementState.ELIMINATED]: [],
+  [RequirementState.ELIMINATED]: [Action.VIEW],
 };
 
 export const ActionByStateOffer: { [key in OfferState]: Array<Action> } = {
@@ -234,7 +236,7 @@ export const ActionByStateOffer: { [key in OfferState]: Array<Action> } = {
     Action.OFFER_DETAIL,
     Action.CHAT,
   ],
-  [OfferState.ELIMINATED]: [],
+  [OfferState.ELIMINATED]: [Action.OFFER_DETAIL],
 };
 
 export const ActionByStatePurchaseOrder: {
@@ -486,3 +488,8 @@ export type OnChangePageAndPageSizeTypeParams = {
 export type OnChangePageAndPageSizeType = (
   params: OnChangePageAndPageSizeTypeParams
 ) => void;
+
+export enum SocketChangeType {
+  CREATE = 0,
+  UPDATE = 1,
+}

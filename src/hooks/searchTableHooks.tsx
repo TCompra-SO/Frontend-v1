@@ -11,7 +11,6 @@ import {
   RequirementType,
   TableTypes,
 } from "../utilities/types";
-import { searchRequirementsService } from "../services/requests/requirementService";
 import {
   pageSizeOptionsSt,
   searchSinceLength,
@@ -19,14 +18,13 @@ import {
 } from "../utilities/globals";
 import {
   getParamsFromSorterAndFilter,
+  getSearchOffersService,
+  getSearchOrdersByClientService,
+  getSearchOrdersByProviderService,
+  getSearchRecordsService,
   getSearchString,
 } from "../utilities/globalFunctions";
-import { searchOffersService } from "../services/requests/offerService";
 import { debounce } from "lodash";
-import {
-  searchPurchaseOrdersByClientService,
-  searchPurchaseOrdersByProviderService,
-} from "../services/requests/purchaseOrderService";
 import { FilterValue } from "antd/lib/table/interface";
 
 type SearchTableTypeParams = {
@@ -43,7 +41,8 @@ export default function useSearchTable(
   uid: string,
   tableType: TableTypes,
   entityType: EntityType, // subuser: registros de usuario | otro: registros de usuario + subusuarios
-  subType?: RequirementType | PurchaseOrderTableTypes
+  subType: RequirementType | PurchaseOrderTableTypes,
+  resetChangesQueue?: () => void
 ) {
   const [apiParams, setApiParams] = useState<useApiParams<SearchTableRequest>>({
     service: null,
@@ -86,51 +85,19 @@ export default function useSearchTable(
     subTypeParam?: RequirementType | PurchaseOrderTableTypes,
     uidParam?: string
   ) {
+    resetChangesQueue?.();
     const stUid: string = uidParam ?? uid;
     const stTableType: TableTypes = tableTypeParam ?? tableType;
     const stSubType: RequirementType | PurchaseOrderTableTypes | undefined =
       subTypeParam ?? subType;
-    const newKeyWords = getSearchString(keyWords ?? "");
-    if (newKeyWords.length >= searchSinceLength || !keyWords) {
+    const newKeyWords = getSearchString(keyWords, true);
+    if (
+      (newKeyWords && newKeyWords.length >= searchSinceLength) ||
+      !newKeyWords
+    ) {
       setLoadingTable?.(true);
-      let service: HttpService | null = null;
-      switch (stTableType) {
-        case TableTypes.REQUIREMENT:
-        case TableTypes.ALL_REQUIREMENTS:
-          if (stSubType == RequirementType.GOOD)
-            service = searchRequirementsService();
-          // r3v endpoints para servicios y liquidaciones
-          else if (stSubType == RequirementType.SERVICE)
-            service = searchRequirementsService();
-          else if (stSubType == RequirementType.SALE)
-            service = searchRequirementsService();
-          break;
-        case TableTypes.OFFER:
-        case TableTypes.ALL_OFFERS:
-          if (stSubType == RequirementType.GOOD)
-            service = searchOffersService();
-          else if (stSubType == RequirementType.SERVICE)
-            service = searchOffersService();
-          else if (stSubType == RequirementType.SALE)
-            service = searchOffersService();
-          break;
-        case TableTypes.PURCHASE_ORDER:
-        case TableTypes.ALL_PURCHASE_ORDERS:
-          if (stSubType == PurchaseOrderTableTypes.ISSUED)
-            service = searchPurchaseOrdersByClientService();
-          else if (stSubType == PurchaseOrderTableTypes.RECEIVED)
-            service = searchPurchaseOrdersByProviderService();
-          break;
-        case TableTypes.SALES_ORDER:
-        case TableTypes.ALL_SALES_ORDERS:
-          if (stSubType == PurchaseOrderTableTypes.ISSUED)
-            // r3v cambiar endpoints
-            service = searchPurchaseOrdersByProviderService();
-          else if (stSubType == PurchaseOrderTableTypes.RECEIVED)
-            service = searchPurchaseOrdersByClientService();
-          break;
-      }
-      // console.log("dds", service, tableType, subType);
+      const service: HttpService | null = getService(stTableType, stSubType);
+      // console.log(service, stTableType, stSubType);
       setApiParams({
         service,
         method: "post",
@@ -138,7 +105,7 @@ export default function useSearchTable(
           userId: stUid,
           page,
           pageSize,
-          keyWords: keyWords === undefined ? keyWords : newKeyWords,
+          keyWords: newKeyWords,
           typeUser: entityType,
           fieldName,
           orderType,
@@ -147,6 +114,39 @@ export default function useSearchTable(
         },
       });
     }
+  }
+
+  function getService(
+    stTableType: TableTypes,
+    stSubType: RequirementType | PurchaseOrderTableTypes | undefined
+  ) {
+    let service: HttpService | null = null;
+    switch (stTableType) {
+      case TableTypes.REQUIREMENT:
+      case TableTypes.ALL_REQUIREMENTS:
+        service = getSearchRecordsService(stSubType);
+        break;
+      case TableTypes.OFFER:
+      case TableTypes.ALL_OFFERS:
+        service = getSearchOffersService(stSubType);
+        break;
+      case TableTypes.PURCHASE_ORDER:
+      case TableTypes.ALL_PURCHASE_ORDERS:
+        if (stSubType == PurchaseOrderTableTypes.ISSUED)
+          service = getSearchOrdersByClientService(RequirementType.GOOD);
+        // r3v debería ser solo uno
+        else if (stSubType == PurchaseOrderTableTypes.RECEIVED)
+          service = getSearchOrdersByProviderService(RequirementType.GOOD);
+        break;
+      case TableTypes.SALES_ORDER:
+      case TableTypes.ALL_SALES_ORDERS:
+        if (stSubType == PurchaseOrderTableTypes.ISSUED)
+          service = getSearchOrdersByProviderService(RequirementType.SALE);
+        else if (stSubType == PurchaseOrderTableTypes.RECEIVED)
+          service = getSearchOrdersByClientService(RequirementType.SALE);
+        break;
+    }
+    return service;
   }
 
   return {
@@ -194,7 +194,6 @@ export function useFilterSortPaginationForTable() {
     searchTable: (params: SearchTableTypeParams) => void,
     setLoadingTable?: (val: boolean) => void
   ) {
-    console.log(filters);
     setLoadingTable?.(true);
     setCurrentPageSize(pageSize);
     setCurrentPage(page);

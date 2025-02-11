@@ -1,10 +1,18 @@
 import { useTranslation } from "react-i18next";
 import { Offer } from "../models/MainInterfaces";
-import { Action, EntityType, ModalTypes, TableTypes } from "../utilities/types";
+import {
+  Action,
+  EntityType,
+  ModalTypes,
+  OfferState,
+  RequirementType,
+  TableTypes,
+} from "../utilities/types";
 import ModalContainer from "../components/containers/ModalContainer";
 import { useContext, useEffect, useRef, useState } from "react";
 import {
   ModalContent,
+  SocketDataPackType,
   TableTypeOffer,
   useApiParams,
 } from "../models/Interfaces";
@@ -16,11 +24,11 @@ import {
   mainModalScrollStyle,
 } from "../utilities/globals";
 import {
+  getDeleteOfferService,
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
-import { deleteOfferService } from "../services/requests/offerService";
 import useApi from "../hooks/useApi";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
@@ -31,6 +39,10 @@ import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
+import useSocketQueueHook, {
+  useAddOrUpdateRow,
+} from "../hooks/socketQueueHook";
+import useSocket from "../socket/useSocket";
 
 export default function Offers() {
   const { t } = useTranslation();
@@ -44,9 +56,9 @@ export default function Offers() {
   const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
   const { getBasicRateData, modalDataRate } = useCulminate();
   const [type, setType] = useState(getRouteType(location.pathname));
-  const { searchTable, responseData, error, errorMsg, loading } =
-    useSearchTable(dataUser.uid, TableTypes.OFFER, EntityType.SUBUSER, type);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [offerList, setOfferList] = useState<Offer[]>([]);
+  const [total, setTotal] = useState(0);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
     data: {},
@@ -64,17 +76,65 @@ export default function Offers() {
   } = useFilterSortPaginationForTable();
   const [tableContent, setTableContent] = useState<TableTypeOffer>({
     type: TableTypes.OFFER,
-    data: [],
+    data: offerList,
     subType: type,
     hiddenColumns: [],
     nameColumnHeader: t("offers"),
     onButtonClick: handleOnButtonClick,
-    total: 0,
+    total,
     page: currentPage,
     pageSize: currentPageSize,
     fieldSort,
     filteredInfo,
   });
+  const { addNewRow, updateRow } = useAddOrUpdateRow(
+    TableTypes.OFFER,
+    (data: SocketDataPackType) =>
+      transformToOfferFromGetOffersByEntityOrSubUser(
+        data,
+        type,
+        dataUser,
+        mainDataUser
+      ),
+    offerList,
+    setOfferList,
+    total,
+    setTotal
+  );
+  const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
+    addNewRow,
+    updateRow
+  );
+  const { searchTable, responseData, error, errorMsg, loading, apiParams } =
+    useSearchTable(
+      dataUser.uid,
+      TableTypes.OFFER,
+      EntityType.SUBUSER,
+      type,
+      resetChangesQueue
+    );
+  useSocket(
+    TableTypes.OFFER,
+    type,
+    currentPage,
+    apiParams.dataToSend,
+    updateChangesQueue
+  );
+
+  /** Actualiza el contenido de tabla */
+
+  useEffect(() => {
+    setTableContent((prev) => ({
+      ...prev,
+      data: offerList,
+      total,
+      page: currentPage,
+      pageSize: currentPageSize,
+      fieldSort,
+      filteredInfo,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [offerList]);
 
   /** Verificar si hay una solicitud pendiente */
 
@@ -85,6 +145,7 @@ export default function Offers() {
         detailedOfferModalData.offerType,
         true,
         Action.OFFER_DETAIL,
+        true,
         detailedOfferModalData.offer
       );
     }
@@ -121,15 +182,8 @@ export default function Offers() {
       setData();
     } else if (error) {
       setCurrentPage(1);
-      setTableContent((prev) => ({
-        ...prev,
-        data: [],
-        total: 0,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
-        filteredInfo,
-      }));
+      setTotal(0);
+      setOfferList([]);
       showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -198,16 +252,8 @@ export default function Offers() {
           mainDataUser
         )
       );
-
-      setTableContent((prev) => ({
-        ...prev,
-        data,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
-        filteredInfo,
-        total: responseData.res?.totalDocuments,
-      }));
+      setTotal(responseData.res?.totalDocuments);
+      setOfferList(data);
     } catch (error) {
       console.log(error);
       showNotification("error", t("errorOccurred"));
@@ -218,9 +264,9 @@ export default function Offers() {
     setIsOpenModal(false);
   }
 
-  function deleteOffer(offerId: string) {
+  function deleteOffer(offerId: string, type: RequirementType) {
     setApiParamsDelete({
-      service: deleteOfferService(offerId),
+      service: getDeleteOfferService(type)?.(offerId),
       method: "get",
     });
   }
@@ -233,9 +279,15 @@ export default function Offers() {
     console.log(offer);
     switch (action) {
       case Action.OFFER_DETAIL:
-        getOfferDetail(offer.key, offer.type, true, action, offer);
+        getOfferDetail(
+          offer.key,
+          offer.type,
+          true,
+          action,
+          offer.state != OfferState.ELIMINATED,
+          offer
+        );
         break;
-
       case Action.DELETE: {
         setDataModal({
           type: ModalTypes.CONFIRM,
@@ -243,7 +295,7 @@ export default function Offers() {
             loading: loadingDelete,
             onAnswer: (ok: boolean) => {
               if (!ok) return;
-              deleteOffer(offer.key);
+              deleteOffer(offer.key, offer.type);
             },
             text: t("deleteOfferConfirmation"),
             id: offer.key,
@@ -281,6 +333,7 @@ export default function Offers() {
             fromRequirementTable: false,
             canceledByCreator: true,
             rowId: offer.key,
+            type: offer.type,
           },
           action,
         });

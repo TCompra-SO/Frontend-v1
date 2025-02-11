@@ -61,6 +61,12 @@
   width: 70px !important;
   height: 70px !important;
 }
+/* Reducir tamaño de botón para subir más de Upload */
+.ant-upload-wrapper.ant-upload-picture-card-wrapper
+  .ant-upload.ant-upload-select {
+  width: 70px !important;
+  height: 70px !important;
+}
 /* No mostrar nada cuando Form.Item no tiene contenido */
 .ant-form-item .ant-form-item-control-input {
   min-height: 0;

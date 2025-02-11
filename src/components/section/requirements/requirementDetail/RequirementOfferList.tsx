@@ -11,12 +11,15 @@ import {
 import { requirementDetailContext } from "../../../../contexts/RequirementDetailContext";
 import { allSelect } from "../../../../utilities/globals";
 import { transformToDays } from "../../../../utilities/globalFunctions";
+import { ModalContent } from "../../../../models/Interfaces";
 
 interface RequirementOfferListProps {
   offers: Offer[];
   requirement: Requirement;
   forPurchaseOrder: boolean;
   onClose: () => any;
+  setDataModalSelectOffer?: (val: ModalContent) => void;
+  setIsOpenModalSelectOffer?: (val: boolean) => void;
 }
 
 export default function RequirementOfferList(props: RequirementOfferListProps) {
@@ -139,7 +142,6 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
     }));
     setOffersCopy((prev) => {
       const indexToUpdate = prev.findIndex((offer) => offer.key === offerId);
-      console.log(indexToUpdate);
       if (indexToUpdate !== -1) {
         prev[indexToUpdate] = {
           ...prev[indexToUpdate],
@@ -180,6 +182,8 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
                 }}
                 onClose={props.onClose}
                 requirementId={props.requirement.key}
+                setDataModalSelectOffer={props.setDataModalSelectOffer}
+                setIsOpenModalSelectOffer={props.setIsOpenModalSelectOffer}
               />
               <RequirementOfferListItemBody offer={offer} showUserData={true} />
             </div>

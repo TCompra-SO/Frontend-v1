@@ -31,6 +31,7 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
   const [logoSrc, setLogoSrc] = useState("/src/assets/images/logo-white.svg");
   const typeID = useSelector((state: MainState) => state.user.typeID);
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
+  const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
   const [currentSection, setCurrentSection] = useState(pageRoutes.home);
   const logout = useLogout();
   const [showMenuButtonStyle, setShowMenuButtonStyle] = useState<CSSProperties>(
@@ -175,7 +176,7 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
         break;
     }
   };
-
+  console.log(isPremium);
   return (
     <header>
       {isLoggedIn ? (
@@ -190,7 +191,7 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
           {props.onShowMenu && (
             <>
               <i
-                className="fa-solid fa-bars-progress i-menu"
+                className="fa-solid fa-bars i-menu"
                 style={showMenuButtonStyle}
                 onClick={() => props.onShowMenu?.(true)}
               ></i>
@@ -202,7 +203,7 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
             <img src={logoSrc} className="logo-header" alt="Logo" />
           )}
           <div className="t-flex options-tc">
-            <Premium />
+            {isPremium && <Premium />}
             {width > windowSize.md && (
               <>
                 <Chat />

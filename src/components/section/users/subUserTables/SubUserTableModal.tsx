@@ -19,15 +19,17 @@ import { useContext, useEffect, useState } from "react";
 import { LoadingDataContext } from "../../../../contexts/LoadingDataContext";
 import { ModalContent, useApiParams } from "../../../../models/Interfaces";
 import useApi from "../../../../hooks/useApi";
-import { openPurchaseOrderPdf } from "../../../../utilities/globalFunctions";
-import { getPurchaseOrderPDFService } from "../../../../services/requests/purchaseOrderService";
+import {
+  getGetOrderPDFService,
+  getProductDetailRoute,
+  openPurchaseOrderPdf,
+} from "../../../../utilities/globalFunctions";
 import ModalContainer from "../../../containers/ModalContainer";
 import {
   mainModalScrollStyle,
   noPaginationPageSize,
 } from "../../../../utilities/globals";
 import { useNavigate } from "react-router-dom";
-import { pageRoutes } from "../../../../utilities/routes";
 import ButtonContainer from "../../../containers/ButtonContainer";
 import { useGetOffersByRequirementId } from "../../../../hooks/requirementHooks";
 import useShowNotification, {
@@ -163,7 +165,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
         const po = data as PurchaseOrderItemSubUser;
         if (!loadingPdf)
           setApiParamsPdf({
-            service: getPurchaseOrderPDFService(po.key),
+            service: getGetOrderPDFService(po.type)?.(po.key),
             method: "get",
           });
         break;
@@ -184,9 +186,8 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
         break;
       }
       case Action.VIEW_REQUIREMENT: {
-        navigate(
-          `${pageRoutes.productDetail}/${(data as RequirementItemSubUser).key}`
-        );
+        const dataReq = data as RequirementItemSubUser;
+        navigate(getProductDetailRoute(dataReq.key, dataReq.type));
       }
     }
   }

@@ -15,11 +15,12 @@ import {
   RateStartCountType,
 } from "../../../../utilities/types";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ModalContent } from "../../../../models/Interfaces";
 import ModalContainer from "../../../containers/ModalContainer";
 import FrontImage from "../../../common/utils/FrontImage";
 import RateStarCount from "../../../common/utils/RateStarCount";
+import { requirementDetailContext } from "../../../../contexts/RequirementDetailContext";
 
 interface RequirementOfferListItemProps {
   requirementId: string;
@@ -35,12 +36,15 @@ interface RequirementOfferListItemProps {
         onRateCancel?: (offerId: string, showOption?: boolean) => void;
       }
     | { show: false };
+  setDataModalSelectOffer?: (val: ModalContent) => void;
+  setIsOpenModalSelectOffer?: (val: boolean) => void;
 }
 
 export default function RequirementOfferListItemHeader({
   ...props
 }: RequirementOfferListItemProps) {
   const { t } = useTranslation();
+  const { filters, filterNames } = useContext(requirementDetailContext);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -109,22 +113,25 @@ export default function RequirementOfferListItemHeader({
               canceledByCreator: false,
               onCancelSuccess: props.showStateAndActions.onCancelSuccess,
               rowId: props.showStateAndActions.requirement.key,
+              type: props.offer.type,
             },
             action,
           });
           setIsOpenModal(true);
           break;
         case Action.SELECT_OFFER:
-          setDataModal({
+          props.setDataModalSelectOffer?.({
             type: ModalTypes.SELECT_OFFER,
             data: {
               offer: props.offer,
               requirement: props.showStateAndActions.requirement,
               onSuccess: props.showStateAndActions.onSelectionSuccess,
+              filterNames,
+              filters,
             },
             action,
           });
-          setIsOpenModal(true);
+          props.setIsOpenModalSelectOffer?.(true);
           break;
         case Action.RATE_CANCELED: {
           const data: BasicRateData = {

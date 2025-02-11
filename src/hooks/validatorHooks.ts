@@ -80,6 +80,28 @@ export function useDateOnwardValidator(tlds: string[]) {
   return validateDateOnward;
 }
 
+export function useTrimmedMinMaxValidator() {
+  const { t } = useTranslation();
+
+  function validateTrimmedMinMax(rule: RuleObject, value: string) {
+    if (!value) return Promise.resolve();
+
+    const trimmedValue = value.trim();
+    if (rule.min && trimmedValue.length < rule.min) {
+      return Promise.reject(
+        new Error(`${t("minCharMessage")} ${rule.min} ${t("characters")}`)
+      );
+    }
+    if (rule.max && trimmedValue.length > rule.max) {
+      return Promise.reject(
+        new Error(`${t("maxCharMessage")} ${rule.max} ${t("characters")}`)
+      );
+    }
+    return Promise.resolve();
+  }
+  return validateTrimmedMinMax;
+}
+
 /** Rules */
 
 export function useAddressRules(required: boolean) {
@@ -89,9 +111,8 @@ export function useAddressRules(required: boolean) {
     },
     {
       min: Lengths.address.min,
-    },
-    {
       max: Lengths.address.max,
+      validator: useTrimmedMinMaxValidator(),
     },
     {
       validator: useNoBlankSpacesValidator(),
@@ -107,9 +128,8 @@ export function usePhoneRules(required: boolean) {
     },
     {
       min: Lengths.phone.min,
-    },
-    {
       max: Lengths.phone.max,
+      validator: useTrimmedMinMaxValidator(),
     },
     {
       validator: useNumberValidator(),
@@ -128,9 +148,8 @@ export function useSpecialtyRules(required: boolean) {
     },
     {
       min: Lengths.specialty.min,
-    },
-    {
       max: Lengths.specialty.max,
+      validator: useTrimmedMinMaxValidator(),
     },
     {
       validator: useNoBlankSpacesValidator(),
@@ -146,9 +165,8 @@ export function useDniRules(required: boolean) {
     },
     {
       min: Lengths.dni.min,
-    },
-    {
       max: Lengths.dni.max,
+      validator: useTrimmedMinMaxValidator(),
     },
   ]);
   return { dniRules };
@@ -161,9 +179,8 @@ export function useRucRules(required: boolean) {
     },
     {
       min: Lengths.ruc.min,
-    },
-    {
       max: Lengths.ruc.max,
+      validator: useTrimmedMinMaxValidator(),
     },
   ]);
   return { rucRules };
@@ -181,9 +198,8 @@ export function useEmailRules(required: boolean) {
     },
     {
       min: Lengths.email.min,
-    },
-    {
       max: Lengths.email.max,
+      validator: useTrimmedMinMaxValidator(),
     },
     {
       validator: useEmailDomainValidator(tlds),
@@ -199,9 +215,8 @@ export function usePasswordRules(required: boolean) {
     },
     {
       min: Lengths.password.min,
-    },
-    {
       max: Lengths.password.max,
+      validator: useTrimmedMinMaxValidator(),
     },
   ]);
   return { passwordRules };
@@ -214,9 +229,8 @@ export function useTitleRules(required: boolean) {
     },
     {
       min: Lengths.title.min,
-    },
-    {
       max: Lengths.title.max,
+      validator: useTrimmedMinMaxValidator(),
     },
     {
       validator: useNoBlankSpacesValidator(),
@@ -232,9 +246,8 @@ export function useAboutMeRules(required: boolean) {
     },
     {
       min: Lengths.aboutMe.min,
-    },
-    {
       max: Lengths.aboutMe.max,
+      validator: useTrimmedMinMaxValidator(),
     },
     {
       validator: useNoBlankSpacesValidator(),
@@ -250,9 +263,8 @@ export function useDescriptionCRRules(required: boolean) {
     },
     {
       min: Lengths.descriptionCR.min,
-    },
-    {
       max: Lengths.descriptionCR.max,
+      validator: useTrimmedMinMaxValidator(),
     },
     {
       validator: useNoBlankSpacesValidator(),
@@ -268,9 +280,8 @@ export function useOfferDescriptionRules(required: boolean) {
     },
     {
       min: Lengths.offerDescription.min,
-    },
-    {
       max: Lengths.offerDescription.max,
+      validator: useTrimmedMinMaxValidator(),
     },
     {
       validator: useNoBlankSpacesValidator(),

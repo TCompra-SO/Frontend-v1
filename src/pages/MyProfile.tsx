@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { FullUser, SubUserProfile } from "../models/MainInterfaces";
 import { EntityType, ImageRequestLabels } from "../utilities/types";
-import { useContext, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import { ListsContext } from "../contexts/ListsContext";
 import PhoneField from "../components/common/formFields/PhoneField";
 import LocationField from "../components/common/formFields/LocationField";
@@ -24,7 +24,7 @@ import {
   UpdateProfileSubUserRequest,
   UploadAvatarRequest,
 } from "../models/Requests";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import useApi from "../hooks/useApi";
 import {
@@ -44,20 +44,22 @@ import {
   updateProfileSubUserService,
 } from "../services/requests/subUserService";
 import useShowNotification from "../hooks/utilHooks";
+import { setUserImage } from "../redux/userSlice";
 
 export default function MyProfile() {
   const { t } = useTranslation();
+  const context = useContext(ListsContext);
+  const dispatch = useDispatch();
+  const handleChangeImage = useHandleChangeImage();
   const { showNotification } = useShowNotification();
+  const { categoryData } = context;
   const [user, setUser] = useState<FullUser | SubUserProfile>();
   const [mainUser, setMainUser] = useState<FullUser>();
-  const context = useContext(ListsContext);
-  const { categoryData } = context;
-  const fileInputRef = useRef<InputRef>(null);
   const [form] = Form.useForm();
   const [passwordForm] = Form.useForm();
   const [imageSrc, setImageSrc] = useState(defaultUserImage);
-  const handleChangeImage = useHandleChangeImage();
   const [token] = useState(useSelector((state: MainState) => state.user.token));
+  const fileInputRef = useRef<InputRef>(null);
   const uid = useSelector((state: MainState) => state.user.uid);
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const entityType = useSelector((state: MainState) => state.user.typeEntity);
@@ -70,17 +72,10 @@ export default function MyProfile() {
     token,
   });
   const { loading, responseData, error, errorMsg, fetchData } =
-    useApi<NewPasswordRequest>({
-      service: apiParams.service,
-      method: apiParams.method,
-      dataToSend: apiParams.dataToSend,
-      token: apiParams.token,
-    });
+    useApi<NewPasswordRequest>(apiParams);
 
   useEffect(() => {
-    if (apiParams.service) {
-      fetchData();
-    }
+    if (apiParams.service) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
 
@@ -113,12 +108,7 @@ export default function MyProfile() {
     error: errorImage,
     errorMsg: errorMsgImage,
     fetchData: fetchDataImage,
-  } = useApi<NewPasswordRequest | FormData>({
-    service: apiParamsImage.service,
-    method: apiParamsImage.method,
-    dataToSend: apiParamsImage.dataToSend,
-    token: apiParamsImage.token,
-  });
+  } = useApi<NewPasswordRequest | FormData>(apiParamsImage);
 
   useEffect(() => {
     if (apiParamsImage.service) {
@@ -130,8 +120,10 @@ export default function MyProfile() {
   useEffect(() => {
     if (responseDataImage) {
       showNotification("success", t("imageUpdatedSuccessfully"));
+      dispatch(setUserImage(responseDataImage.url));
     } else if (errorImage) {
       setImageSrc(defaultUserImage);
+      // fileInputRef?.current?.value = "";
       showNotification("error", errorMsgImage);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -179,12 +171,7 @@ export default function MyProfile() {
     error: errorForm,
     errorMsg: errorMsgForm,
     fetchData: fetchDataForm,
-  } = useApi<UpdateProfileRequest | UpdateProfileSubUserRequest>({
-    service: apiParamsForm.service,
-    method: apiParamsForm.method,
-    dataToSend: apiParamsForm.dataToSend,
-    token: apiParamsForm.token,
-  });
+  } = useApi<UpdateProfileRequest | UpdateProfileSubUserRequest>(apiParamsForm);
 
   useEffect(() => {
     if (apiParamsForm.service) fetchDataForm();
@@ -248,6 +235,7 @@ export default function MyProfile() {
       setUser(transformToSubUserProfile(responseData));
     } else {
       const user = transformToFullUser(responseData.data);
+      dispatch(setUserImage(user.image));
       setUser(user);
     }
   }
@@ -263,7 +251,8 @@ export default function MyProfile() {
     showNotification("success", t("passwordHasBeenUpdated"));
   }
 
-  function changeImage(e: React.ChangeEvent<HTMLInputElement>) {
+  function changeImage(e: ChangeEvent<HTMLInputElement>) {
+    form.setFieldValue("image", null);
     const file = handleChangeImage(e);
 
     if (file && user) {
@@ -278,6 +267,7 @@ export default function MyProfile() {
         service: uploadAvatarService(),
         method: "post",
         dataToSend: formData,
+        includeHeader: false,
       });
       setImageSrc(URL.createObjectURL(file));
     }

@@ -3,11 +3,251 @@ import ContentHeader from "../components/common/utils/ContentHeader";
 import ChatList from "../components/section/chat/ChatList/ChatList";
 import ChatBody from "../components/section/chat/ChatBody/ChatBody";
 import { ChatListData, ChatMessage } from "../models/MainInterfaces";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useWindowSize from "../hooks/useWindowSize";
 import { windowSize } from "../utilities/globals";
 
 const chatElements: ChatListData[] = [
+  {
+    userImage: "https://dummyimage.com/250/ffffff/000000",
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "xx",
+  },
+  {
+    userImage: undefined, // No image
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "xrrfe4x",
+  },
+  {
+    userImage: "https://dummyimage.com/250/ffffff/000000",
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    userOnline: true,
+    requirementId: "x4445x",
+  },
+  {
+    userImage: "https://dummyimage.com/250/ffffff/000000",
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "xxewer",
+  },
+  {
+    userImage: undefined, // No image
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "xgfgx",
+  },
+  {
+    userImage: undefined, // No image
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "wexx",
+  },
+  {
+    userImage: "https://dummyimage.com/250/ffffff/000000",
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "xghx",
+  },
+  {
+    userImage: "https://dummyimage.com/250/ffffff/000000",
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "xfdsfx",
+  },
+  {
+    userImage: "https://dummyimage.com/250/ffffff/000000",
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "xx",
+  },
+  {
+    userImage: undefined, // No image
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "xrrfe4x",
+  },
+  {
+    userImage: "https://dummyimage.com/250/ffffff/000000",
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    userOnline: true,
+    requirementId: "x4445x",
+  },
+  {
+    userImage: "https://dummyimage.com/250/ffffff/000000",
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "xxewer",
+  },
+  {
+    userImage: undefined, // No image
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "xgfgx",
+  },
+  {
+    userImage: undefined, // No image
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "wexx",
+  },
+  {
+    userImage: "https://dummyimage.com/250/ffffff/000000",
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "xghx",
+  },
+  {
+    userImage: "https://dummyimage.com/250/ffffff/000000",
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "xfdsfx",
+  },
+  {
+    userImage: "https://dummyimage.com/250/ffffff/000000",
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "xx",
+  },
+  {
+    userImage: undefined, // No image
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "xrrfe4x",
+  },
+  {
+    userImage: "https://dummyimage.com/250/ffffff/000000",
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    userOnline: true,
+    requirementId: "x4445x",
+  },
+  {
+    userImage: "https://dummyimage.com/250/ffffff/000000",
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "xxewer",
+  },
+  {
+    userImage: undefined, // No image
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "xgfgx",
+  },
+  {
+    userImage: undefined, // No image
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "wexx",
+  },
+  {
+    userImage: "https://dummyimage.com/250/ffffff/000000",
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "xghx",
+  },
+  {
+    userImage: "https://dummyimage.com/250/ffffff/000000",
+    userName: "Rio Jimenez Salas del Carpio",
+    userId: "RJ",
+    title: "Nombre del Requerimiento",
+    lastMessage: "Mensaje de prueba para las",
+    lastDate: "2024-11-20T19:33:58.001Z",
+    numUnreadMessages: 10,
+    requirementId: "xfdsfx",
+  },
   {
     userImage: "https://dummyimage.com/250/ffffff/000000",
     userName: "Rio Jimenez Salas del Carpio",
@@ -212,7 +452,8 @@ const chatMessages: ChatMessage[] = [
 export default function Chat() {
   const { t } = useTranslation();
   const { width } = useWindowSize();
-  const [chatList, setChatList] = useState(chatElements);
+  let step = 1;
+  const [chatList, setChatList] = useState(chatElements.slice(0, 10));
   const [chatMsgs, setChatMsgs] = useState(chatMessages);
   const [isChatOpened, setIsChatOpened] = useState(false);
   const [currentChat, setCurrentChat] = useState<ChatListData | null>(null);
@@ -227,6 +468,14 @@ export default function Chat() {
     setIsChatOpened(true);
   }
 
+  function loadMoreChats() {
+    console.log("loadMoreChats");
+    setTimeout(() => {
+      setChatList(chatList.concat(chatList.slice(step * 6, 6 * (step + 1))));
+      step += 1;
+    }, 1000);
+  }
+
   return (
     <>
       <ContentHeader
@@ -236,7 +485,11 @@ export default function Chat() {
       <div className="gap-20 modulo-chat">
         {((width <= windowSize.sm && !isChatOpened) ||
           width > windowSize.sm) && (
-          <ChatList chatList={chatList} onClickOnItem={handleClickOnChatItem} />
+          <ChatList
+            chatList={chatList}
+            onClickOnItem={handleClickOnChatItem}
+            loadMoreChats={loadMoreChats}
+          />
         )}
         {isChatOpened && currentChat ? (
           <ChatBody

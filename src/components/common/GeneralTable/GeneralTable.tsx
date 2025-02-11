@@ -54,9 +54,9 @@ import TypeColumn from "./columns/TypeColumn";
 import ViewColumn from "./columns/ViewColumn";
 import DocumentColumn from "./columns/DocumentColumn";
 import { useNavigate } from "react-router-dom";
-import { pageRoutes } from "../../../utilities/routes";
 import RequirementInfo from "../../section/requirements/requirementDetail/RequirementInfo";
 import { useState } from "react";
+import { getProductDetailRoute } from "../../../utilities/globalFunctions";
 
 interface GeneralTableProps {
   content: TableType;
@@ -182,8 +182,15 @@ export default function GeneralTable(props: GeneralTableProps) {
       showSizeChanger: props.content.type != TableTypes.HOME,
       // onChange: props.onChangePageAndPageSize,
       total: props.total ?? props.content.total,
-      showTotal: (total, range) =>
-        `${range[0]}-${range[1]} ${t("of")} ${total} ${t("items")}`,
+      showTotal: (total, range) => {
+        const actualLastItemIndex = Math.min(
+          range[1],
+          props.content.data.length
+        );
+        return `${range[0]}-${actualLastItemIndex} ${t("of")} ${total} ${t(
+          "items"
+        )}`;
+      },
       current: props.content.page,
     },
   };
@@ -200,7 +207,7 @@ export default function GeneralTable(props: GeneralTableProps) {
               ? (record: Requirement) => {
                   return {
                     onClick: () =>
-                      navigate(`${pageRoutes.productDetail}/${record.key}`),
+                      navigate(getProductDetailRoute(record.key, record.type)),
                   };
                 }
               : undefined
@@ -893,12 +900,12 @@ export default function GeneralTable(props: GeneralTableProps) {
         props.content.fieldSort
       ),
       StateColumn(
-        TableTypes.SENT_CERT,
+        props.content.type,
         visibility[TableColumns.STATE],
         props.content.filteredInfo
       ),
       ViewColumn(
-        TableTypes.SENT_CERT,
+        props.content.type,
         props.content.onButtonClick,
         visibility[TableColumns.VIEW]
       ),
@@ -933,7 +940,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         props.content.filteredInfo
       ),
       ViewColumn(
-        TableTypes.SENT_CERT,
+        props.content.type,
         props.content.onButtonClick,
         visibility[TableColumns.VIEW]
       ),

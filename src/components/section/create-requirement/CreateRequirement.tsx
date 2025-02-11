@@ -24,12 +24,16 @@ import {
 import { CreateRequirementRequest } from "../../../models/Requests";
 import { CommonModalProps, useApiParams } from "../../../models/Interfaces";
 import useApi, { UseApiType } from "../../../hooks/useApi";
-import { isDateEarlierThanTomorrow } from "../../../utilities/globalFunctions";
-import { createRequirementService } from "../../../services/requests/requirementService";
+import {
+  checkWarranty,
+  getCreateRecordService,
+  getUploadDocsRecordService,
+  getUploadImagesRecordService,
+  isDateEarlierThanTomorrow,
+} from "../../../utilities/globalFunctions";
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
-import { createSaleService } from "../../../services/requests/saleService";
 import TitleField from "../../common/formFields/TitleField";
 import DescriptionCRField from "../../common/formFields/DescriptionCRField";
 import CategoryField from "../../common/formFields/CategoryField";
@@ -43,8 +47,6 @@ import WarrantyField from "../../common/formFields/WarrantyField";
 import DurationField from "../../common/formFields/DurationField";
 import ItemConditionField from "../../common/formFields/ItemConditionField";
 import CanOfferField from "../../common/formFields/CanOfferField";
-import { uploadImagesRequirementService } from "../../../services/requests/imageService";
-import { uploadDocsRequirementService } from "../../../services/requests/documentService";
 import ModalContainer from "../../containers/ModalContainer";
 import { useGetRequiredDocsCert } from "../../../hooks/certificateHooks";
 import useShowNotification from "../../../hooks/utilHooks";
@@ -84,22 +86,22 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   const { t } = useTranslation();
   const { createRequirementLoading, updateCreateRequirementLoading } =
     useContext(LoadingDataContext);
+  const { getRequiredDocsCert, requiredDocs, errorRequiredDocs } =
+    useGetRequiredDocsCert();
+  const { showNotification } = useShowNotification();
   const uid = useSelector((state: MainState) => state.user.uid);
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
-  const { showNotification } = useShowNotification();
   const [form] = Form.useForm();
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [showDocListToCetificate, setShowDocListToCetificate] = useState(false);
   const [certificatesRequired, setCertificatesRequired] = useState("");
-  const { getRequiredDocsCert, requiredDocs, errorRequiredDocs } =
-    useGetRequiredDocsCert();
   const [formDataImg, setFormDataImg] = useState<FormData | null>(null);
   const [formDataDoc, setFormDataDoc] = useState<FormData | null>(null);
-
   const formDataImgRef = useRef(formDataImg);
   const formDataDocRef = useRef(formDataDoc);
+  const [warrantyRequired, setWarrantyRequired] = useState(false);
 
   useEffect(() => {
     formDataDocRef.current = formDataDoc;
@@ -131,7 +133,8 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         if (responseData) {
           props.setReqSuccess(ProcessFlag.FIN_SUCCESS);
           uploadImgsAndDocs(
-            responseData.data?.uid,
+            responseData.data?.[0]?.key,
+            type,
             formDataImgRef.current,
             formDataDocRef.current
           );
@@ -258,10 +261,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
 
     console.log(values, data);
     props.setApiParams({
-      service:
-        type == RequirementType.SALE
-          ? createSaleService()
-          : createRequirementService(),
+      service: getCreateRecordService(type),
       method: "post",
       dataToSend: data,
     });
@@ -289,6 +289,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
 
   function uploadImgsAndDocs(
     reqId: string | undefined,
+    type: RequirementType,
     formDataImg: FormData | null,
     formDataDoc: FormData | null
   ) {
@@ -302,7 +303,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         const data: FormData = formDataDoc;
         data.append(ImageRequestLabels.UID, reqId);
         props.setApiParamsDoc({
-          service: uploadDocsRequirementService(),
+          service: getUploadDocsRecordService(type),
           method: "post",
           dataToSend: data,
           includeHeader: false,
@@ -312,7 +313,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         const data: FormData = formDataImg;
         data.append(ImageRequestLabels.UID, reqId);
         props.setApiParamsImg({
-          service: uploadImagesRequirementService(),
+          service: getUploadImagesRecordService(type),
           method: "post",
           dataToSend: data,
           includeHeader: false,
@@ -322,6 +323,20 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       props.setDocSuccess(ProcessFlag.FIN_UNSUCCESS);
       props.setImgSuccess(ProcessFlag.FIN_UNSUCCESS);
     }
+  }
+
+  function checkWarrantyField() {
+    setWarrantyRequired(
+      checkWarranty(
+        form.getFieldValue("duration"),
+        form.getFieldValue("warranty")
+      )
+    );
+  }
+
+  function handleWhoCanOfferField(val: any) {
+    if (Array.isArray(val) && !val.includes(certifiedCompaniesOpt))
+      setShowDocListToCetificate(false);
   }
 
   return (
@@ -420,7 +435,11 @@ export default function CreateRequirement(props: CreateRequirementProps) {
                   <>
                     <div>
                       <LabelForCreateRequirement label={"whoCanMakeOffers"} />
-                      <CanOfferField type={type} onBlur={checkWhoCanOffer} />
+                      <CanOfferField
+                        type={type}
+                        onBlur={checkWhoCanOffer}
+                        handleOptionChange={handleWhoCanOfferField}
+                      />
                     </div>
                     {showDocListToCetificate && (
                       <div>
@@ -475,11 +494,18 @@ export default function CreateRequirement(props: CreateRequirementProps) {
                     <>
                       <Col xs={24} sm={24} md={6} lg={6} xl={6}>
                         <LabelForCreateRequirement label={"warranty"} />
-                        <WarrantyField required={false} />
+                        <WarrantyField
+                          required={warrantyRequired}
+                          onChange={() => checkWarrantyField()}
+                        />
                       </Col>
                       <Col xs={24} sm={24} md={6} lg={6} xl={6}>
                         <LabelForCreateRequirement label={"duration"} />
-                        <DurationField required={false} name="duration" />
+                        <DurationField
+                          required={warrantyRequired}
+                          name="duration"
+                          onChange={() => checkWarrantyField()}
+                        />
                       </Col>
                     </>
                   )}

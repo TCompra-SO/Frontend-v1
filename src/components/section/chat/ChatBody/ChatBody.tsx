@@ -4,8 +4,17 @@ import InputContainer from "../../../containers/InputContainer";
 import dayjs from "dayjs";
 import { dateFormatChatBody, windowSize } from "../../../../utilities/globals";
 import ChatBodyMessage from "./ChatBodyMessage";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import useWindowSize from "../../../../hooks/useWindowSize";
+import AddImagesField, {
+  AddImagesFieldRef,
+} from "../../../common/formFields/AddImagesField";
+import AddDocumentField, {
+  AddDocumentFieldRef,
+} from "../../../common/formFields/AddDocumentField";
+import { Badge, UploadFile } from "antd";
+import { primaryColor } from "../../../../utilities/colors";
+import ChatGallery from "./ChatGallery";
 
 interface ChatBodyProps {
   chatData: ChatListData;
@@ -17,6 +26,16 @@ export default function ChatBody(props: ChatBodyProps) {
   const { t } = useTranslation();
   const { width } = useWindowSize();
   const divRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<AddImagesFieldRef>(null);
+  const docRef = useRef<AddDocumentFieldRef>(null);
+  const [imgList, setImgList] = useState<UploadFile[]>([]);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [message, setMessage] = useState("");
+  const [openGallery, setOpenGallery] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [props.chatData]);
 
   function scrollToBottom() {
     if (divRef.current) {
@@ -24,14 +43,23 @@ export default function ChatBody(props: ChatBodyProps) {
     }
   }
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [props.chatData]);
+  function sendMsg() {
+    if (imgRef.current) imgRef.current.reset();
+    if (docRef.current) docRef.current.reset();
+    if (message.trim()) {
+      console.log(message.trim());
+      setMessage("");
+    }
+  }
 
   return (
     <div
       className="card-white mch-2 t-flex f-column gap-5"
-      style={width <= windowSize.sm ? { display: "flex" } : {}}
+      style={
+        width <= windowSize.sm
+          ? { display: "flex", position: "relative" }
+          : { position: "relative" }
+      }
     >
       <div className="chat-info t-flex gap-10 j-items">
         {props.chatData.userImage ? (
@@ -72,14 +100,50 @@ export default function ChatBody(props: ChatBodyProps) {
         </div>
       </div>
       <div className="t-flex gap-10 j-items chat-buscar">
-        <i className="fa-regular fa-camera mensaje-send"></i>
+        <i
+          className="fa-regular fa-camera mensaje-send"
+          onClick={() => setOpenGallery(true)}
+        ></i>
+        <i
+          className="fa-regular fa-paperclip mensaje-send"
+          onClick={() => setOpenGallery(false)}
+        ></i>
+        {/* <Badge count={imgList.length} size="small" color={primaryColor}>
+          <AddImagesField
+            ref={imgRef}
+            onlyUpload={{
+              child: <i className="fa-regular fa-camera mensaje-send"></i>,
+              onChange: (files) => setImgList(files),
+            }}
+          />
+        </Badge>
+        <Badge count={fileList.length} size="small" color={primaryColor}>
+          <AddDocumentField
+            ref={docRef}
+            onlyUpload={{
+              child: <i className="fa-regular fa-paperclip mensaje-send"></i>,
+              onChange: (files) => setFileList(files),
+            }}
+          />
+        </Badge> */}
         <InputContainer
           type="text"
           className="form-transparent form-filter"
           placeholder={t("message")}
+          onChange={(e) => setMessage(e.currentTarget.value)}
+          value={message}
         />
-        <i className="fa-regular fa-paper-plane-top mensaje-send"></i>
+        <i
+          className="fa-regular fa-paper-plane-top mensaje-send"
+          onClick={sendMsg}
+        ></i>
       </div>
+      {openGallery !== null && (
+        <ChatGallery
+          forImages={openGallery}
+          onClose={() => setOpenGallery(null)}
+        />
+      )}
     </div>
   );
 }

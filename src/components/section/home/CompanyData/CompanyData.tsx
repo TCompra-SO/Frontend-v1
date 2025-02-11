@@ -12,7 +12,7 @@ import { MainState } from "../../../../models/Redux";
 import {
   getFullUser,
   verifyCertificationByUserIdAndCompanyId,
-} from "../../../../services/complete/generalServices";
+} from "../../../../services/general/generalServices";
 import { useTranslation } from "react-i18next";
 import useShowNotification from "../../../../hooks/utilHooks";
 

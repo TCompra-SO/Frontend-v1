@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 interface OfferDetailModalProps {
   offer: Offer;
   basicRateData: BasicRateData;
+  showActions: boolean;
 }
 
 export default function OfferDetailModal(props: OfferDetailModalProps) {
@@ -108,7 +109,7 @@ export default function OfferDetailModal(props: OfferDetailModalProps) {
                 <ImagesAndDocs
                   image={props.offer.image}
                   document={props.offer.document}
-                  showChat
+                  showChat={props.showActions}
                   goToChat={
                     props.offer.subUser
                       ? uid == props.offer.subUser.uid
@@ -117,7 +118,7 @@ export default function OfferDetailModal(props: OfferDetailModalProps) {
                       : props.offer.user.uid == uid
                       ? goToChat
                       : undefined
-                  } // r3v
+                  }
                 />
               </div>
             </div>

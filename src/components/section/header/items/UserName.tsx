@@ -14,7 +14,7 @@ export default function UserName() {
           {userName.length > 0 ? userName[0] : null}
         </div>
       )}
-      <div className="user-opt">{userName}</div>
+      <div className="user-opt text-truncate">{userName}</div>
     </>
   );
 }

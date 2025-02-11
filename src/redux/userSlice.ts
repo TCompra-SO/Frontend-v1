@@ -61,6 +61,15 @@ export const userSlice = createSlice({
     setIsLoggedIn: (state, action) => {
       state.isLoggedIn = action.payload;
     },
+    setUserImage: (
+      state,
+      action: {
+        payload: string | undefined;
+        type: string;
+      }
+    ) => {
+      state.image = action.payload;
+    },
   },
 });
 
@@ -71,5 +80,6 @@ export const {
   setBaseUser,
   setFullUser,
   setIsLoggedIn,
+  setUserImage,
 } = userSlice.actions;
 export default userSlice.reducer;

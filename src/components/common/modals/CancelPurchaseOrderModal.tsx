@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import { Lengths } from "../../../utilities/lengths";
-import { Action, ActionLabel } from "../../../utilities/types";
+import { Action, ActionLabel, RequirementType } from "../../../utilities/types";
 import {
   useCancelOffer,
   useCancelRequirement,
@@ -19,6 +19,7 @@ interface CancelPurchaseOrderModalProps {
   onCancelSuccess?: (offerId: string) => void;
   useCancelRequirementHook: ReturnType<typeof useCancelRequirement>;
   useCancelOfferHook: ReturnType<typeof useCancelOffer>;
+  type: RequirementType;
 }
 
 export default function CancelPurchaseOrderModal(
@@ -58,11 +59,13 @@ export default function CancelPurchaseOrderModal(
       cancelRequirement(
         props.requirementId,
         Action.CANCEL_REQUIREMENT,
+        props.type,
         text.trim()
       );
     else
       cancelOffer(
         props.offerId,
+        props.type,
         props.canceledByCreator,
         Action.CANCEL_OFFER,
         text.trim()

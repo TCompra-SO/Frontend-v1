@@ -32,10 +32,10 @@ export default function CreateRequirementFloatButton() {
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
   const isLoading = useSelector((state: MainState) => state.loading.isLoading);
+  const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isHomePage, setIsHomePage] = useState(true);
   const [isChatPage, setIsChatPage] = useState(false);
-  const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
 
   const [reqSuccess, setReqSuccess] = useState(ProcessFlag.NOT_INI);
   const [docSuccess, setDocSuccess] = useState(ProcessFlag.NOT_INI);
@@ -48,6 +48,7 @@ export default function CreateRequirementFloatButton() {
     return () => {
       updateCreateRequirementLoading(false);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

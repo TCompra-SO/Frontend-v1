@@ -2,15 +2,16 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import SelectContainer from "../../../containers/SelectContainer";
 import { DocType } from "../../../../utilities/types";
-import { Avatar, Spin } from "antd";
+import { Avatar } from "antd";
 import {
   companySearchAfterMseconds,
   defaultUserImage,
   searchSinceLength,
 } from "../../../../utilities/globals";
 import { debounce } from "lodash";
-import { useSearchCompanyByName } from "../../../../hooks/authHooks";
 import { getSearchString } from "../../../../utilities/globalFunctions";
+import SimpleLoading from "../../../../pages/utils/SimpleLoading";
+import { useSearchCompanyByName } from "../../../../hooks/utilHooks";
 
 interface SelectCompanyFieldProps {
   forHomeFilter?: boolean;
@@ -26,7 +27,11 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
 
   const searchCompany = debounce((newValue: string) => {
     const temp = getSearchString(newValue);
-    if (lastSearchValue != temp && temp.length >= searchSinceLength) {
+    if (
+      typeof temp === "string" &&
+      lastSearchValue != temp &&
+      temp.length >= searchSinceLength
+    ) {
       searchCompanyByName(temp);
       setLastSearchValue(temp);
     } else {
@@ -53,7 +58,11 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
       className={`form-control ${
         props.forHomeFilter ? "f-empresa" : "form-filter"
       }`}
-      notFoundContent={loadingCompanyList ? <Spin size="small" /> : null}
+      notFoundContent={
+        loadingCompanyList ? (
+          <SimpleLoading style={{ marginLeft: "-10px" }} size="large" />
+        ) : null
+      }
       onChange={handleChange}
       onSearch={searchCompany}
       onClear={() => clearList()}

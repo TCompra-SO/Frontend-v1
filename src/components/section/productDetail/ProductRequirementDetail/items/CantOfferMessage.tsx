@@ -18,12 +18,12 @@ import { mainModalScrollStyle } from "../../../../../utilities/globals";
 import { MainState } from "../../../../../models/Redux";
 import { useSelector } from "react-redux";
 import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
-import { deleteOfferService } from "../../../../../services/requests/offerService";
 import useApi from "../../../../../hooks/useApi";
 import { ModalsContext } from "../../../../../contexts/ModalsContext";
 import useShowNotification, {
   useShowLoadingMessage,
 } from "../../../../../hooks/utilHooks";
+import { getDeleteOfferService } from "../../../../../utilities/globalFunctions";
 
 interface CantOfferMessageProps {
   offerId: string;
@@ -218,7 +218,9 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
         onAnswer: (ok: boolean) => {
           if (!ok) return;
           setApiParamsDelete({
-            service: deleteOfferService(props.offerId),
+            service: props.requirement
+              ? getDeleteOfferService(props.requirement.type)?.(props.offerId)
+              : null,
             method: "get",
           });
         },

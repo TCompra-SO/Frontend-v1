@@ -89,11 +89,8 @@ export default function Users() {
     method: "get",
   });
 
-  const { loading, responseData, error, errorMsg, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi(apiParams);
 
   useEffect(() => {
     if (responseData) {
@@ -130,11 +127,7 @@ export default function Users() {
     error: errorUser,
     errorMsg: errorMsgUser,
     fetchData: fetchDataUser,
-  } = useApi({
-    service: apiParamsUser.service,
-    method: apiParamsUser.method,
-    token: apiParamsUser.token,
-  });
+  } = useApi(apiParamsUser);
 
   useEffect(() => {
     showLoadingMessage(loadingUser);
@@ -149,7 +142,7 @@ export default function Users() {
   useEffect(() => {
     if (responseDataUser) {
       if (equalServices(apiParamsUser.service, getSubUserService(""))) {
-        setUserDataEdit(transformToSubUserProfile(responseDataUser));
+        setUserDataEdit(transformToSubUserProfile(responseDataUser[0], true));
         handleOpenModal();
       }
     } else if (errorUser) {
@@ -238,6 +231,7 @@ export default function Users() {
       if (responseData.data.length > 0) {
         data = responseData.data.map((e: any) => transformToSubUserBase(e));
       }
+
       setTableContent({
         type: TableTypes.USERS,
         data,

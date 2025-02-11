@@ -1,19 +1,8 @@
-import { HttpService } from "../../models/Interfaces";
-import { ApiMainRoutes, ApiRoutes } from "../../utilities/routes";
-import { UserRoles } from "../../utilities/types";
+import { HttpService } from "../../../models/Interfaces";
+import { ApiMainRoutes, ApiRoutes } from "../../../utilities/routes";
+import { UserRoles } from "../../../utilities/types";
 
-export function getReqIssuedPurchaseOrderByUserService(
-  userId: string
-): HttpService {
-  return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.purchaseOrder
-    }${ApiRoutes.purchaseOrder.getPurchaseOrderByUser}${userId}`,
-    type: "PO-RE-IS-US",
-  };
-}
-
-export function getPurchaseOrderPDFService(id: string): HttpService {
+export function getServicePurchaseOrderPDFService(id: string): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.purchaseOrder
@@ -22,7 +11,7 @@ export function getPurchaseOrderPDFService(id: string): HttpService {
   };
 }
 
-export function getPurchaseOrderByIdService(id: string): HttpService {
+export function getServicePurchaseOrderByIdService(id: string): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.purchaseOrder
@@ -32,7 +21,7 @@ export function getPurchaseOrderByIdService(id: string): HttpService {
 }
 
 // Para cuentas principales (empresa y persona). Incluye órdenes de subusuarios
-export function getPurchaseOrdersByClientEntityService(
+export function getServicePurchaseOrdersByClientEntityService(
   id: string,
   userRole: UserRoles,
   page: number,
@@ -49,7 +38,7 @@ export function getPurchaseOrdersByClientEntityService(
 }
 
 // Para cuentas principales (empresa y persona). Incluye órdenes de subusuarios
-export function getPurchaseOrdersByProviderEntityService(
+export function getServicePurchaseOrdersByProviderEntityService(
   id: string,
   userRole: UserRoles,
   page: number,
@@ -65,7 +54,7 @@ export function getPurchaseOrdersByProviderEntityService(
   };
 }
 
-export function searchPurchaseOrdersByClientService(): HttpService {
+export function searchServicePurchaseOrdersByClientService(): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.purchaseOrder
@@ -74,7 +63,7 @@ export function searchPurchaseOrdersByClientService(): HttpService {
   };
 }
 
-export function searchPurchaseOrdersByProviderService(): HttpService {
+export function searchServicePurchaseOrdersByProviderService(): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.purchaseOrder

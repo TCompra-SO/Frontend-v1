@@ -2,10 +2,14 @@ import { useTranslation } from "react-i18next";
 import InputContainer from "../../../containers/InputContainer";
 import { ChatListData } from "../../../../models/MainInterfaces";
 import ChatListItem from "./ChatListItem";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { Flex, Spin } from "antd";
+import SimpleLoading from "../../../../pages/utils/SimpleLoading";
 
 interface ChatListProps {
   chatList: ChatListData[];
   onClickOnItem: (item: ChatListData) => void;
+  loadMoreChats: () => void;
 }
 
 export default function ChatList(props: ChatListProps) {
@@ -27,14 +31,29 @@ export default function ChatList(props: ChatListProps) {
           <div className="name-file">{t("noChats")}</div>
         </div>
       ) : (
-        <div className="t-flex f-column scroll-y list-chats">
-          {props.chatList.map((item: ChatListData) => (
-            <ChatListItem
-              data={item}
-              key={`${item.userId}-${item.requirementId}`}
-              onClickOnItem={props.onClickOnItem}
-            />
-          ))}
+        <div
+          id="scrollableDivChatList"
+          className="t-flex f-column  scroll-y list-chats"
+        >
+          <InfiniteScroll
+            dataLength={props.chatList.length}
+            next={props.loadMoreChats}
+            hasMore={true}
+            loader={
+              <Flex justify="center">
+                <Spin indicator={<SimpleLoading style={{ width: "60px" }} />} />
+              </Flex>
+            }
+            scrollableTarget="scrollableDivChatList"
+          >
+            {props.chatList.map((item: ChatListData) => (
+              <ChatListItem
+                data={item}
+                key={`${item.userId}-${item.requirementId}`}
+                onClickOnItem={props.onClickOnItem}
+              />
+            ))}
+          </InfiniteScroll>
         </div>
       )}
     </div>

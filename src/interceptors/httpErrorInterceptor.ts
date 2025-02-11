@@ -13,14 +13,28 @@ import {
   sendCertificationRequestService,
   verifyCertificationService,
 } from "../services/requests/certificateService";
-import { uploadDocsRequirementService } from "../services/requests/documentService";
-import { uploadImagesRequirementService } from "../services/requests/imageService";
-import { createOfferService } from "../services/requests/offerService";
+import { createReqOfferService } from "../services/requests/good/requirementOfferService";
 import {
   cancelRequirementService,
-  selectOfferService,
-} from "../services/requests/requirementService";
+  selectRequirementOfferService,
+  uploadDocsRequirementService,
+  uploadImagesRequirementService,
+} from "../services/requests/good/requirementService";
+import { createSaleOfferService } from "../services/requests/sale/saleOfferService";
+import {
+  cancelSaleService,
+  selectSaleOfferService,
+  uploadDocsSaleService,
+  uploadImagesSaleService,
+} from "../services/requests/sale/saleService";
 import { registerScoreService } from "../services/requests/scoreService";
+import { createServiceOfferService } from "../services/requests/service/serviceOfferService";
+import {
+  cancelServiceService,
+  selectServiceOfferService,
+  uploadDocsServiceService,
+  uploadImagesServiceService,
+} from "../services/requests/service/serviceService";
 import {
   changeRoleSubUserService,
   registerSubUserService,
@@ -176,7 +190,8 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
       }
       break;
-    case createOfferService().type:
+    case createReqOfferService().type:
+    case createServiceOfferService().type:
       switch (code) {
         case 403:
           erroMsg = "errorOccurredLoginAgain";
@@ -192,10 +207,30 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
       }
       break;
+    case createSaleOfferService().type:
+      switch (code) {
+        case 403:
+          erroMsg = "errorOccurredLoginAgain";
+          break;
+        case 409:
+          erroMsg = "alreadyMadeOffer";
+          break;
+        case 404:
+          erroMsg = "cantOfferToYourOwnSale";
+          break;
+        case 401:
+          erroMsg = "saleNotFound";
+          break;
+      }
+      break;
     case uploadDocsRequirementService().type:
+    case uploadDocsServiceService().type:
+    case uploadDocsSaleService().type:
       erroMsg = "errorOccurredUploadingDocs";
       break;
     case uploadImagesRequirementService().type:
+    case uploadImagesServiceService().type:
+    case uploadImagesSaleService().type:
       erroMsg = "errorOccurredUploadingImgs";
       break;
     case registerScoreService().type:
@@ -205,7 +240,8 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
       }
       break;
-    case selectOfferService().type:
+    case selectRequirementOfferService().type:
+    case selectServiceOfferService().type:
       switch (code) {
         case 400:
           erroMsg = "requirementDoesNotExist";
@@ -221,10 +257,33 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
       }
       break;
+    case selectSaleOfferService().type:
+      switch (code) {
+        case 400:
+          erroMsg = "saleDoesNotExist";
+          break;
+        case 403:
+          erroMsg = "saleOfferNotFound";
+          break;
+        case 404:
+          erroMsg = "offerWasAlreadySelected";
+          break;
+        case 405:
+          erroMsg = "cantOfferToSale";
+          break;
+      }
+      break;
     case cancelRequirementService().type:
+    case cancelServiceService().type:
       switch (code) {
         case 400:
           erroMsg = "cantCancelRequirementSupplierFinished";
+      }
+      break;
+    case cancelSaleService().type:
+      switch (code) {
+        case 400:
+          erroMsg = "cantCancelSaleClientFinished";
       }
       break;
     case sendCertificationRequestService().type:

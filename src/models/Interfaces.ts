@@ -10,6 +10,7 @@ import {
   PurchaseOrderTableTypes,
   CodeResponseCanOffer,
   Filters,
+  SocketChangeType,
 } from "../utilities/types";
 import {
   OfferItemSubUser,
@@ -29,6 +30,7 @@ import {
 } from "./MainInterfaces";
 import useApi, { UseApiType } from "../hooks/useApi";
 import { FieldSort } from "./Requests";
+import { FilterNames } from "../contexts/RequirementDetailContext";
 
 /******** Modals *******/
 
@@ -47,6 +49,7 @@ export interface ModalCancelPurchaseOrder extends CommonModalType {
     canceledByCreator: boolean;
     onCancelSuccess?: (offerId: string) => void;
     rowId: string;
+    type: RequirementType;
   };
 }
 
@@ -57,6 +60,10 @@ export interface ModalDetailedRequirement extends CommonModalType {
     requirement: Requirement;
     forPurchaseOrder: boolean;
     filters?: OfferFilters;
+  };
+  selectOffer?: {
+    setDataModalSelectOffer: (val: ModalContent) => void;
+    setIsOpenModalSelectOffer: (val: boolean) => void;
   };
 }
 
@@ -101,6 +108,8 @@ export interface ModalSelectOffer extends CommonModalType {
     offer: Offer;
     requirement: Requirement;
     onSuccess: (offerId: string) => void;
+    filters: OfferFilters;
+    filterNames: FilterNames;
   };
 }
 
@@ -135,6 +144,7 @@ export interface ModalOfferDetail extends CommonModalType {
   data: {
     offer: Offer;
     basicRateData: BasicRateData;
+    showActions: boolean;
   };
 }
 
@@ -361,7 +371,7 @@ export interface HttpService {
 }
 
 export interface useApiParams<T = any> {
-  service: HttpService | null;
+  service: HttpService | null | undefined;
   method: "get" | "post" | "put" | "delete";
   dataToSend?: T;
   token?: string;
@@ -448,7 +458,7 @@ export interface RequiredDocsForCert {
   requiredDocuments: string;
 }
 
-export interface NotificationData {
+export interface SystemNotificationData {
   type: "success" | "error" | "info" | "warning";
   description: string | null;
 }
@@ -467,4 +477,35 @@ export interface MainFilters {
   startDate: string;
   endDate: string;
   companyId: string;
+}
+
+export interface SocketDataPack {
+  // code: number;
+  data: Record<string, any>[];
+  // res: Record<string, any>;
+  // success: boolean;
+}
+
+export interface SocketResponse {
+  typeSocket: SocketChangeType;
+  dataPack: SocketDataPack;
+  key: string;
+  userId: string;
+}
+
+export type SocketDataPackType = SocketResponse["dataPack"]["data"][number];
+
+export interface NotificationData {
+  id: string;
+  title: string;
+  body: string;
+  date: string;
+  time: string;
+  senderImage?: string;
+  senderId: string;
+  senderName: string;
+  receiverId: string;
+  action: Action;
+  targetId: string;
+  targetType: RequirementType | PurchaseOrderTableTypes;
 }

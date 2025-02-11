@@ -5,6 +5,7 @@ import TablePageContent, {
 import { useContext, useEffect, useRef, useState } from "react";
 import {
   ModalContent,
+  SocketDataPackType,
   TableTypeAllPurchaseOrders,
   useApiParams,
 } from "../models/Interfaces";
@@ -12,6 +13,7 @@ import { Action, ModalTypes, TableTypes } from "../utilities/types";
 import { PurchaseOrder } from "../models/MainInterfaces";
 import {
   getFieldNameObjForOrders,
+  getGetOrderPDFService,
   getLabelFromPurchaseOrderType,
   getPurchaseOrderType,
   openPurchaseOrderPdf,
@@ -20,7 +22,6 @@ import { useLocation } from "react-router-dom";
 import useApi from "../hooks/useApi";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
-import { getPurchaseOrderPDFService } from "../services/requests/purchaseOrderService";
 import { transformToPurchaseOrder } from "../utilities/transform";
 import ModalContainer from "../components/containers/ModalContainer";
 import {
@@ -33,6 +34,10 @@ import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
+import useSocketQueueHook, {
+  useAddOrUpdateRow,
+} from "../hooks/socketQueueHook";
+import useSocket from "../socket/useSocket";
 
 export default function AllPurchaseOrders() {
   const { t } = useTranslation();
@@ -46,8 +51,6 @@ export default function AllPurchaseOrders() {
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
-  const { searchTable, responseData, error, errorMsg, loading } =
-    useSearchTable(uid, TableTypes.ALL_PURCHASE_ORDERS, entityType, type);
   const {
     currentPage,
     currentPageSize,
@@ -58,6 +61,10 @@ export default function AllPurchaseOrders() {
     handleSearch,
     reset,
   } = useFilterSortPaginationForTable();
+  const [purchaseOrderList, setPurchaseOrderList] = useState<PurchaseOrder[]>(
+    []
+  );
+  const [total, setTotal] = useState(0);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -66,17 +73,62 @@ export default function AllPurchaseOrders() {
   });
   const [tableContent, setTableContent] = useState<TableTypeAllPurchaseOrders>({
     type: TableTypes.ALL_PURCHASE_ORDERS,
-    data: [],
+    data: purchaseOrderList,
     subType: type,
     hiddenColumns: [],
     nameColumnHeader: t("user"),
     onButtonClick: handleOnButtonClick,
-    total: 0,
+    total,
     page: currentPage,
     pageSize: currentPageSize,
     fieldSort,
     filteredInfo,
   });
+  const { addNewRow, updateRow } = useAddOrUpdateRow(
+    TableTypes.ALL_PURCHASE_ORDERS,
+    (data: SocketDataPackType) => transformToPurchaseOrder(data),
+    purchaseOrderList,
+    setPurchaseOrderList,
+    total,
+    setTotal
+  );
+  const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
+    addNewRow,
+    updateRow
+  );
+  const { searchTable, responseData, error, errorMsg, loading, apiParams } =
+    useSearchTable(
+      uid,
+      TableTypes.ALL_PURCHASE_ORDERS,
+      entityType,
+      type,
+      resetChangesQueue
+    );
+  useSocket(
+    TableTypes.ALL_PURCHASE_ORDERS,
+    type,
+    currentPage,
+    apiParams.dataToSend,
+    updateChangesQueue
+  );
+
+  /** Actualiza el contenido de tabla */
+
+  useEffect(() => {
+    setTableContent((prev) => ({
+      ...prev,
+      data: purchaseOrderList,
+      subType: type,
+      total,
+      page: currentPage,
+      pageSize: currentPageSize,
+      fieldSort,
+      filteredInfo,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [purchaseOrderList]);
+
+  /** Reset flag */
 
   useEffect(() => {
     return () => {
@@ -117,16 +169,8 @@ export default function AllPurchaseOrders() {
       setTableData();
     } else if (error) {
       setCurrentPage(1);
-      setTableContent((prev) => ({
-        ...prev,
-        data: [],
-        subType: type,
-        total: 0,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
-        filteredInfo,
-      }));
+      setTotal(0);
+      setPurchaseOrderList([]);
       showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -184,16 +228,8 @@ export default function AllPurchaseOrders() {
       const data = responseData.data.map((po: any) =>
         transformToPurchaseOrder(po)
       );
-      setTableContent((prev) => ({
-        ...prev,
-        data,
-        subType: type,
-        total: responseData.res?.totalDocuments,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
-        filteredInfo,
-      }));
+      setTotal(responseData.res?.totalDocuments);
+      setPurchaseOrderList(data);
     } catch (error) {
       console.log(error);
       showNotification("error", t("errorOccurred"));
@@ -205,7 +241,9 @@ export default function AllPurchaseOrders() {
       case Action.DOWNLOAD_PURCHASE_ORDER:
         if (!loadingPdf)
           setApiParamsPdf({
-            service: getPurchaseOrderPDFService(purchaseOrder.key),
+            service: getGetOrderPDFService(purchaseOrder.type)?.(
+              purchaseOrder.key
+            ),
             method: "get",
           });
         break;

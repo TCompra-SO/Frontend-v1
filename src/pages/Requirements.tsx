@@ -12,6 +12,7 @@ import { Requirement } from "../models/MainInterfaces";
 import { useContext, useEffect, useRef, useState } from "react";
 import {
   ModalContent,
+  SocketDataPackType,
   TableTypeRequirement,
   useApiParams,
 } from "../models/Interfaces";
@@ -25,10 +26,10 @@ import {
   noPaginationPageSize,
 } from "../utilities/globals";
 import useApi from "../hooks/useApi";
-import { deleteRequirementService } from "../services/requests/requirementService";
 import { transformDataToRequirement } from "../utilities/transform";
 import { useLocation } from "react-router-dom";
 import {
+  getDeleteRecordService,
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
@@ -38,7 +39,7 @@ import {
   getBaseUserForUserSubUser,
   getFullUser,
   getOfferById,
-} from "../services/complete/generalServices";
+} from "../services/general/generalServices";
 import {
   useCancelRequirement,
   useCulminate,
@@ -49,6 +50,10 @@ import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
+import useSocketQueueHook, {
+  useAddOrUpdateRow,
+} from "../hooks/socketQueueHook";
+import useSocket from "../socket/useSocket";
 
 export default function Requirements() {
   const { t } = useTranslation();
@@ -64,12 +69,7 @@ export default function Requirements() {
   const { cancelRequirement } = useCancelRequirement();
   const { getBasicRateData, modalDataRate } = useCulminate();
   const [type, setType] = useState(getRouteType(location.pathname));
-  const { searchTable, responseData, error, errorMsg } = useSearchTable(
-    dataUser.uid,
-    TableTypes.REQUIREMENT,
-    EntityType.SUBUSER,
-    type
-  );
+  const [requirementList, setRequirementList] = useState<Requirement[]>([]);
   const {
     currentPage,
     currentPageSize,
@@ -88,9 +88,16 @@ export default function Requirements() {
     data: {},
     action: Action.NONE,
   });
+  const [isOpenModalSelectOffer, setIsOpenModalSelectOffer] = useState(false);
+  const [dataModalSelectOffer, setDataModalSelectOffer] =
+    useState<ModalContent>({
+      type: ModalTypes.NONE,
+      data: {},
+      action: Action.NONE,
+    });
   const [tableContent, setTableContent] = useState<TableTypeRequirement>({
     type: TableTypes.REQUIREMENT,
-    data: [],
+    data: requirementList,
     subType: type,
     hiddenColumns: [TableColumns.CATEGORY],
     nameColumnHeader: t(getLabelFromRequirementType(type)),
@@ -101,6 +108,50 @@ export default function Requirements() {
     fieldSort,
     filteredInfo,
   });
+  const { addNewRow, updateRow } = useAddOrUpdateRow(
+    TableTypes.REQUIREMENT,
+    (data: SocketDataPackType) =>
+      transformDataToRequirement(data, type, dataUser, mainDataUser),
+    requirementList,
+    setRequirementList,
+    total,
+    setTotal
+  );
+  const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
+    addNewRow,
+    updateRow
+  );
+  const { searchTable, responseData, error, errorMsg, apiParams } =
+    useSearchTable(
+      dataUser.uid,
+      TableTypes.REQUIREMENT,
+      EntityType.SUBUSER,
+      type,
+      resetChangesQueue
+    );
+  useSocket(
+    TableTypes.REQUIREMENT,
+    type,
+    currentPage,
+    apiParams.dataToSend,
+    updateChangesQueue
+  );
+
+  /** Actualiza el contenido de tabla */
+
+  useEffect(() => {
+    setTableContent((prev) => ({
+      ...prev,
+      data: requirementList,
+      nameColumnHeader: t(getLabelFromRequirementType(type)),
+      total,
+      page: currentPage,
+      pageSize: currentPageSize,
+      fieldSort,
+      filteredInfo,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requirementList]);
 
   /** Verificar si hay una solicitud pendiente */
 
@@ -124,10 +175,17 @@ export default function Requirements() {
   /** Para mostrar modales */
 
   useEffect(() => {
-    if (modalDataOffersByRequirementId.type !== ModalTypes.NONE) {
-      setDataModal(modalDataOffersByRequirementId);
+    console.log(modalDataOffersByRequirementId);
+    if (
+      modalDataOffersByRequirementId.type === ModalTypes.DETAILED_REQUIREMENT
+    ) {
+      setDataModal({
+        ...modalDataOffersByRequirementId,
+        selectOffer: { setDataModalSelectOffer, setIsOpenModalSelectOffer },
+      });
       setIsOpenModal(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalDataOffersByRequirementId]);
 
   useEffect(() => {
@@ -156,16 +214,7 @@ export default function Requirements() {
     } else if (error) {
       setCurrentPage(1);
       setTotal(0);
-      setTableContent((prev) => ({
-        ...prev,
-        nameColumnHeader: t(getLabelFromRequirementType(type)),
-        data: [],
-        total,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
-        filteredInfo,
-      }));
+      setRequirementList([]);
       setLoadingTable(false);
       showNotification("error", errorMsg);
     }
@@ -229,24 +278,10 @@ export default function Requirements() {
   async function setTableData() {
     try {
       const data: Requirement[] = responseData.data.map((e: any) =>
-        transformDataToRequirement(
-          e,
-          RequirementType.GOOD,
-          dataUser,
-          mainDataUser
-        )
+        transformDataToRequirement(e, type, dataUser, mainDataUser)
       );
       setTotal(responseData.res?.totalDocuments);
-      setTableContent((prev) => ({
-        ...prev,
-        nameColumnHeader: t(getLabelFromRequirementType(type)),
-        data,
-        total,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
-        filteredInfo,
-      }));
+      setRequirementList(data);
     } catch (error) {
       console.log(error);
       showNotification("error", t("errorOccurred"));
@@ -258,6 +293,19 @@ export default function Requirements() {
   async function handleOnButtonClick(action: Action, requirement: Requirement) {
     // console.log(requirement);
     switch (action) {
+      case Action.VIEW: {
+        getOffersByRequirementId(
+          TableTypes.REQUIREMENT,
+          requirement.key,
+          requirement.type,
+          true,
+          1,
+          noPaginationPageSize,
+          action,
+          requirement
+        );
+        break;
+      }
       case Action.SHOW_OFFERS: {
         getOffersByRequirementId(
           TableTypes.REQUIREMENT,
@@ -354,12 +402,13 @@ export default function Requirements() {
               fromRequirementTable: true,
               canceledByCreator: false,
               rowId: requirement.key,
+              type: requirement.type,
             },
             action,
           });
           setIsOpenModal(true);
         } else if (requirement.state == RequirementState.PUBLISHED)
-          cancelRequirement(requirement.key, action);
+          cancelRequirement(requirement.key, action, requirement.type);
         break;
       }
     }
@@ -367,7 +416,7 @@ export default function Requirements() {
 
   function deleteRequirement(requirementId: string) {
     setApiParamsDelete({
-      service: deleteRequirementService(requirementId),
+      service: getDeleteRecordService(type)?.(requirementId),
       method: "get",
     });
   }
@@ -386,11 +435,11 @@ export default function Requirements() {
         style={mainModalScrollStyle}
         loadingConfirm={loadingDelete}
       />
-      {/* <ModalContainer // para seleccionar oferta
-        content={dataModal}
-        isOpen={isOpenModal}
-        onClose={handleOnCloseModal}
-      /> */}
+      <ModalContainer // para seleccionar oferta
+        content={dataModalSelectOffer}
+        isOpen={isOpenModalSelectOffer}
+        onClose={() => setIsOpenModalSelectOffer(false)}
+      />
       <TablePageContent
         title={t("myRequirements")}
         titleIcon={<i className="fa-regular fa-dolly c-default"></i>}

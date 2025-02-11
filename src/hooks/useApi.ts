@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import httpErrorInterceptor from "../interceptors/httpErrorInterceptor";
-import { NotificationData, useApiParams } from "../models/Interfaces";
+import { SystemNotificationData, useApiParams } from "../models/Interfaces";
 import { useTranslation } from "react-i18next";
 import {
   ErrorMsgRequestType,
@@ -18,7 +18,7 @@ export interface UseApiType {
     error: ErrorRequestType,
     errorMsg: ErrorMsgRequestType
   ) => void;
-  notificationData?: NotificationData;
+  SystemNotificationData?: SystemNotificationData;
 }
 
 export default function useApi<T = any>(
@@ -26,7 +26,7 @@ export default function useApi<T = any>(
   { functionToExecute }: UseApiType = {
     saveInQueue: false,
     functionToExecute: () => {},
-    notificationData: {
+    SystemNotificationData: {
       type: "error",
       description: null,
     },

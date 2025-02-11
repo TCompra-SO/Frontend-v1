@@ -7,7 +7,7 @@ import {
 } from "../utilities/globals";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
-import { useContext, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { IdValueObj, useApiParams } from "../models/Interfaces";
 import ButtonContainer from "../components/containers/ButtonContainer";
 import SelectContainer from "../components/containers/SelectContainer";
@@ -145,13 +145,12 @@ export default function Profile(props: ProfileProps) {
     });
   }
 
-  function changeImage(e: React.ChangeEvent<HTMLInputElement>) {
+  function changeImage(e: ChangeEvent<HTMLInputElement>) {
     const file = handleChangeImage(e);
     if (file) setImageSrc(URL.createObjectURL(file));
   }
 
   function handleClick() {
-    // Trigger the file input click event
     if (fileInputRef.current) {
       fileInputRef.current.input!.click();
     }

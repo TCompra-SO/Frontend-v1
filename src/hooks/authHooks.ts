@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import {
+  loginKey,
+  logoutKey,
   navigateToAfterLoggingOut,
   tokenKey,
   userDataKey,
@@ -11,28 +13,57 @@ import {
 } from "../redux/mainUserSlice";
 import {
   setBaseUser,
+  setEmail,
   setFullUser,
   setIsLoggedIn,
+  setUid,
   setUser,
   userInitialState,
 } from "../redux/userSlice";
 
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { MainState } from "../models/Redux";
 import { decryptData } from "../utilities/crypto";
-import { getBaseUserForUserSubUser } from "../services/complete/generalServices";
-import { searchCompanyByNameService } from "../services/requests/authService";
-import useApi from "./useApi";
-import { useApiParams } from "../models/Interfaces";
-import { DisplayUser } from "../models/MainInterfaces";
-import { transformToDisplayUser } from "../utilities/transform";
+import { getBaseUserForUserSubUser } from "../services/general/generalServices";
+import useShowNotification from "./utilHooks";
+import { useTranslation } from "react-i18next";
+
+export function useLogin() {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const loadUserInfo = useLoadUserInfo();
+  const { showNotification } = useShowNotification();
+
+  async function login(responseData: any) {
+    dispatch(setUser(responseData));
+    await loadUserInfo();
+    showNotification("success", t("welcome"));
+    localStorage.setItem(loginKey, Date.now().toString());
+  }
+
+  return login;
+}
+
+export function useRegister() {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const { showNotification } = useShowNotification();
+
+  async function register(responseData: any, email: string) {
+    showNotification("success", t("registerUserSuccess"));
+    dispatch(setUid(responseData.res?.uid));
+    dispatch(setEmail(email));
+  }
+
+  return register;
+}
 
 export function useLogout() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const loadUserInfo = useLoadUserInfo();
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
-  const logoutKey: string = "logout";
 
   function logout() {
     if (isLoggedIn) {
@@ -46,10 +77,13 @@ export function useLogout() {
   }
 
   useEffect(() => {
-    function handleStorageChange(event: StorageEvent) {
+    async function handleStorageChange(event: StorageEvent) {
       if (event.key === logoutKey) {
         dispatch(setIsLoggedIn(false));
         navigate(navigateToAfterLoggingOut);
+      } else if (event.key === loginKey) {
+        await loadUserInfo();
+        localStorage.removeItem(loginKey);
       }
     }
     window.addEventListener("storage", handleStorageChange);
@@ -65,12 +99,26 @@ export function useLogout() {
 
 export function useLoadUserInfo() {
   const dispatch = useDispatch();
+  // const logout = useLogout();
+
+  // function checkToken() {
+  //   try {
+  //     // check if token has expired.refresh token
+  //     // return true;
+  //     throw Error;
+  //   } catch (err) {
+  //     console.log("error in token");
+  //     logout();
+  //     return false;
+  //   }
+  // }
 
   async function loadUserInfo() {
     const userData = localStorage.getItem(userDataKey);
     if (userData) {
       const userInfo = JSON.parse(decryptData(userData));
       // console.log(userInfo);
+      // if (!checkToken()) return;
       if (userInfo) {
         localStorage.setItem(tokenKey, userInfo.token);
         dispatch(
@@ -88,7 +136,6 @@ export function useLoadUserInfo() {
             ],
           })
         );
-
         const { user, subUser } = await getBaseUserForUserSubUser(
           userInfo.uid,
           true
@@ -112,56 +159,4 @@ export function useLoadUserInfo() {
   }
 
   return loadUserInfo;
-}
-
-export function useSearchCompanyByName() {
-  const [companyList, setCompanyList] = useState<DisplayUser[]>([]);
-  const [apiParams, setApiParams] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-  const { loading, responseData, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
-
-  useEffect(() => {
-    if (apiParams.service) fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParams]);
-
-  useEffect(() => {
-    if (responseData) {
-      try {
-        setCompanyList(
-          responseData.data?.map((item: any) => transformToDisplayUser(item))
-        );
-      } catch (err) {
-        console.log(err);
-      } finally {
-        // showLoadingMessage(message, false);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseData]);
-
-  function searchCompanyByName(query: string) {
-    setCompanyList([]);
-    setApiParams({
-      service: searchCompanyByNameService(query),
-      method: "get",
-    });
-  }
-
-  function clearList() {
-    setCompanyList([]);
-  }
-
-  return {
-    searchCompanyByName,
-    clearList,
-    loadingCompanyList: loading,
-    companyList,
-  };
 }

@@ -1,36 +1,39 @@
 import TextAreaContainer from "../../containers/TextAreaContainer";
 import { Col, Flex, Row } from "antd";
 import { Offer, Requirement } from "../../../models/MainInterfaces";
-import { useContext, useEffect, useState } from "react";
-import { requirementDetailContext } from "../../../contexts/RequirementDetailContext";
+import { useEffect, useState } from "react";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import { Lengths } from "../../../utilities/lengths";
 import SelectContainer from "../../containers/SelectContainer";
 import { filterLabels } from "../../../utilities/colors";
 import { SelectOfferRequest } from "../../../models/Requests";
-import { CommonModalProps } from "../../../models/Interfaces";
-import { selectOfferService } from "../../../services/requests/requirementService";
+import { CommonModalProps, OfferFilters } from "../../../models/Interfaces";
 import useShowNotification from "../../../hooks/utilHooks";
 import {
   ErrorMsgRequestType,
   ErrorRequestType,
   ResponseRequestType,
 } from "../../../utilities/types";
+import { FilterNames } from "../../../contexts/RequirementDetailContext";
+import { getSelectOfferService } from "../../../utilities/globalFunctions";
 
 interface RequirementModalOfferSelectedProps extends CommonModalProps {
   offer: Offer;
   requirement: Requirement;
   onClose: () => any;
   onSucces: (offerId: string) => void;
+  filters: OfferFilters;
+  filterNames: FilterNames;
 }
 
-export default function RequirementModalOfferSelected(
-  props: RequirementModalOfferSelectedProps
-) {
+export default function RequirementModalOfferSelected({
+  filters,
+  filterNames,
+  ...props
+}: RequirementModalOfferSelectedProps) {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
-  const { filters, filterNames } = useContext(requirementDetailContext);
   const [text, setText] = useState<string>("");
   const { loading } = props.useApiHook;
 
@@ -70,7 +73,7 @@ export default function RequirementModalOfferSelected(
     if (notes) data.observation = notes;
     console.log(data);
     props.setApiParams({
-      service: selectOfferService(),
+      service: getSelectOfferService(props.requirement.type),
       method: "post",
       dataToSend: data,
     });

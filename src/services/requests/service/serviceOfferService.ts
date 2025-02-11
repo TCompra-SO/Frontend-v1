@@ -1,34 +1,25 @@
-import { HttpService } from "../../models/Interfaces";
-import { ApiMainRoutes, ApiRoutes } from "../../utilities/routes";
+import { HttpService } from "../../../models/Interfaces";
+import { ApiMainRoutes, ApiRoutes } from "../../../utilities/routes";
 
-export function createOfferService(): HttpService {
+export function createServiceOfferService(): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.create
     }`,
-    type: "OF-CRE",
+    type: "OFSE-CRE",
   };
 }
 
-export function getOffersService(): HttpService {
-  return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
-      ApiRoutes.offers.getOffers
-    }`,
-    type: "OF-GET-ALL",
-  };
-}
-
-export function getOfferByIdService(id: string): HttpService {
+export function getServiceOfferByIdService(id: string): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getDetailOffer
     }${id}`,
-    type: "OF-GET-ID",
+    type: "OFSE-GET-ID",
   };
 }
 
-export function getOffersByRequirementIdService(
+export function getServiceOffersByServiceIdService(
   reqId: string,
   page: number,
   pageSize: number
@@ -37,21 +28,21 @@ export function getOffersByRequirementIdService(
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getOffersByRequirement
     }${reqId}/${page}/${pageSize}`,
-    type: "OF-GET-RID",
+    type: "OFSE-GET-RID",
   };
 }
 
-export function getBasicRateDataOfferService(id: string): HttpService {
+export function getBasicRateDataServiceOfferService(id: string): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getBasicRateData
     }${id}`,
-    type: "OF-BA-RA",
+    type: "OFSE-BA-RA",
   };
 }
 
 // Para cuentas principales (empresa y persona). Incluye ofertas de subusuarios
-export function getOffersByEntityService(
+export function getServiceOffersByEntityService(
   id: string,
   page: number,
   pageSize: number
@@ -60,12 +51,12 @@ export function getOffersByEntityService(
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getOffersByEntity
     }${id}/${page}/${pageSize}`,
-    type: "OF-GET-ENT",
+    type: "OFSE-GET-ENT",
   };
 }
 
 // Para subusuarios + cuentas principales. No incluye ofertas de subusuarios
-export function getOffersBySubUserService(
+export function getServiceOffersBySubUserService(
   id: string,
   page: number,
   pageSize: number
@@ -74,29 +65,29 @@ export function getOffersBySubUserService(
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getOffersBySubUser
     }${id}/${page}/${pageSize}`,
-    type: "OF-GET-SUB",
+    type: "OFSE-GET-SUB",
   };
 }
 
-export function deleteOfferService(id: string): HttpService {
+export function deleteServiceOfferService(id: string): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.delete
     }${id}`,
-    type: "OF-DEL",
+    type: "OFSE-DEL",
   };
 }
 
-export function culminateOfferService(): HttpService {
+export function culminateServiceOfferService(): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.culminate
     }`,
-    type: "OF-CUL",
+    type: "OFSE-CUL",
   };
 }
 
-export function getValidationOfferService(
+export function getValidationServiceOfferService(
   userId: string,
   requirementId: string
 ): HttpService {
@@ -104,24 +95,42 @@ export function getValidationOfferService(
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getValidation
     }${userId}/${requirementId}`,
-    type: "OF-VAL",
+    type: "OFSE-VAL",
   };
 }
 
-export function cancelOfferService(): HttpService {
+export function cancelServiceOfferService(): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.cancel
     }`,
-    type: "OF-CAN",
+    type: "OFSE-CAN",
   };
 }
 
-export function searchOffersService(): HttpService {
+export function searchServiceOffersService(): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.searchOffers
     }`,
-    type: "OF-SE-OF",
+    type: "OFSE-SE-OF",
+  };
+}
+
+export function uploadDocsServiceOfferService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.documents}${
+      ApiRoutes.documents.uploadDocumentsOffer
+    }`,
+    type: "OFSE-DO-UP",
+  };
+}
+
+export function uploadImagesServiceOfferService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.images}${
+      ApiRoutes.images.uploadImagesOffer
+    }`,
+    type: "OFSE-IM-UP",
   };
 }

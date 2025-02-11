@@ -1,6 +1,12 @@
 import { BaseUser } from "../../models/MainInterfaces";
 import { UserState } from "../../models/Redux";
-import makeRequest from "../../utilities/globalFunctions";
+import makeRequest, {
+  getGetBasicRateDataRecordOfferService,
+  getGetBasicRateDataRecordService,
+  getGetRecordByIdService,
+  getGetOfferByIdService,
+  getGetOrderByIdService,
+} from "../../utilities/globalFunctions";
 import {
   transformDataToRequirement,
   transformFromGetRequirementByIdToRequirement,
@@ -21,15 +27,6 @@ import {
   getRequiredDocumentsService,
   verifyCertificationService,
 } from "../requests/certificateService";
-import {
-  getBasicRateDataOfferService,
-  getOfferByIdService,
-} from "../requests/offerService";
-import { getPurchaseOrderByIdService } from "../requests/purchaseOrderService";
-import {
-  getBasicRateDataReqService,
-  getRequirementByIdService,
-} from "../requests/requirementService";
 
 export async function getBaseUserForUserSubUser(
   uid: string,
@@ -68,7 +65,7 @@ export async function getOfferById(
   mainUser?: BaseUser | UserState
 ) {
   const { responseData, error, errorMsg } = await makeRequest({
-    service: getOfferByIdService(id),
+    service: getGetOfferByIdService(type)?.(id),
     method: "get",
   });
 
@@ -110,7 +107,7 @@ export async function getOfferById(
 
 export async function getRequirementById(id: string, type: RequirementType) {
   const { responseData, error, errorMsg } = await makeRequest({
-    service: getRequirementByIdService(id),
+    service: getGetRecordByIdService(type)?.(id),
     method: "get",
   });
 
@@ -126,15 +123,15 @@ export async function getRequirementById(id: string, type: RequirementType) {
   };
 }
 
-export async function getPurchaseOrderById(id: string) {
+export async function getPurchaseOrderById(id: string, type: RequirementType) {
   const { responseData, error, errorMsg } = await makeRequest({
-    service: getPurchaseOrderByIdService(id),
+    service: getGetOrderByIdService(type)?.(id),
     method: "get",
   });
 
   return {
     purchaseOrder: responseData
-      ? transformToPurchaseOrder(responseData.data)
+      ? transformToPurchaseOrder(responseData.data[0])
       : null,
     error,
     errorMsg,
@@ -147,14 +144,9 @@ export async function getBasicRateData(
   type: RequirementType
 ) {
   const { responseData, error, errorMsg } = await makeRequest({
-    service:
-      type == RequirementType.GOOD
-        ? useOfferService
-          ? getBasicRateDataOfferService(idToGetData)
-          : getBasicRateDataReqService(idToGetData)
-        : useOfferService
-        ? getBasicRateDataOfferService(idToGetData)
-        : getBasicRateDataReqService(idToGetData),
+    service: useOfferService
+      ? getGetBasicRateDataRecordOfferService(type)?.(idToGetData)
+      : getGetBasicRateDataRecordService(type)?.(idToGetData),
     method: "get",
   });
 

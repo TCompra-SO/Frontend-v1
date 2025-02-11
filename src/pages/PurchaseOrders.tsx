@@ -10,6 +10,7 @@ import {
 import { useTranslation } from "react-i18next";
 import {
   ModalContent,
+  SocketDataPackType,
   TableTypePurchaseOrder,
   useApiParams,
 } from "../models/Interfaces";
@@ -24,7 +25,6 @@ import {
   getFieldNameObjForOrders,
   getLabelFromPurchaseOrderType,
   getPurchaseOrderType,
-  openPurchaseOrderPdf,
 } from "../utilities/globalFunctions";
 import {
   transformToFullUser,
@@ -35,7 +35,6 @@ import {
   noPaginationPageSize,
 } from "../utilities/globals";
 import { useLocation } from "react-router-dom";
-import { getPurchaseOrderPDFService } from "../services/requests/purchaseOrderService";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
@@ -44,10 +43,17 @@ import {
   useCulminate,
   useGetOffersByRequirementId,
 } from "../hooks/requirementHooks";
-import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
+import useShowNotification, {
+  useDownloadPdfOrder,
+  useShowLoadingMessage,
+} from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
+import useSocketQueueHook, {
+  useAddOrUpdateRow,
+} from "../hooks/socketQueueHook";
+import useSocket from "../socket/useSocket";
 
 export default function PurchaseOrders() {
   const { t } = useTranslation();
@@ -61,9 +67,8 @@ export default function PurchaseOrders() {
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
   const { getBasicRateData, modalDataRate } = useCulminate();
+  const downloadPdfOrder = useDownloadPdfOrder();
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
-  const { searchTable, responseData, error, errorMsg, loading } =
-    useSearchTable(uid, TableTypes.PURCHASE_ORDER, EntityType.SUBUSER, type);
   const {
     currentPage,
     currentPageSize,
@@ -76,6 +81,10 @@ export default function PurchaseOrders() {
   } = useFilterSortPaginationForTable();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [action, setAction] = useState<Action>(Action.NONE);
+  const [purchaseOrderList, setPurchaseOrderList] = useState<PurchaseOrder[]>(
+    []
+  );
+  const [total, setTotal] = useState(0);
   const [nameHeader, setNameHeader] = useState(
     type == PurchaseOrderTableTypes.ISSUED ? t("seller") : t("customer")
   );
@@ -86,17 +95,63 @@ export default function PurchaseOrders() {
   });
   const [tableContent, setTableContent] = useState<TableTypePurchaseOrder>({
     type: TableTypes.PURCHASE_ORDER,
-    data: [],
+    data: purchaseOrderList,
     subType: type,
     hiddenColumns: [],
     nameColumnHeader: nameHeader,
     onButtonClick: handleOnButtonClick,
-    total: 0,
+    total,
     page: currentPage,
     pageSize: currentPageSize,
     fieldSort,
     filteredInfo,
   });
+  const { addNewRow, updateRow } = useAddOrUpdateRow(
+    TableTypes.PURCHASE_ORDER,
+    (data: SocketDataPackType) => transformToPurchaseOrder(data),
+    purchaseOrderList,
+    setPurchaseOrderList,
+    total,
+    setTotal
+  );
+  const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
+    addNewRow,
+    updateRow
+  );
+  const { searchTable, responseData, error, errorMsg, loading, apiParams } =
+    useSearchTable(
+      uid,
+      TableTypes.PURCHASE_ORDER,
+      EntityType.SUBUSER,
+      type,
+      resetChangesQueue
+    );
+  useSocket(
+    TableTypes.PURCHASE_ORDER,
+    type,
+    currentPage,
+    apiParams.dataToSend,
+    updateChangesQueue
+  );
+
+  /** Actualiza el contenido de tabla */
+
+  useEffect(() => {
+    setTableContent((prev) => ({
+      ...prev,
+      data: purchaseOrderList,
+      subType: type,
+      total,
+      page: currentPage,
+      pageSize: currentPageSize,
+      fieldSort,
+      filteredInfo,
+      nameColumnHeader: nameHeader,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [purchaseOrderList]);
+
+  /** Reset flag */
 
   useEffect(() => {
     return () => {
@@ -166,17 +221,8 @@ export default function PurchaseOrders() {
       setTableData();
     } else if (error) {
       setCurrentPage(1);
-      setTableContent((prev) => ({
-        ...prev,
-        data: [],
-        subType: type,
-        total: 0,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
-        filteredInfo,
-        nameColumnHeader: nameHeader,
-      }));
+      setTotal(0);
+      setPurchaseOrderList([]);
       showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -220,45 +266,6 @@ export default function PurchaseOrders() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataUser, errorUser]);
 
-  /* Para descargar pdf de orden de compra */
-
-  const [apiParamsPdf, setApiParamsPdf] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingPdf,
-    responseData: responseDataPdf,
-    error: errorPdf,
-    errorMsg: errorMsgPdf,
-    fetchData: fetchDataPdf,
-  } = useApi({
-    service: apiParamsPdf.service,
-    method: apiParamsPdf.method,
-    dataToSend: apiParamsPdf.dataToSend,
-  });
-
-  useEffect(() => {
-    updateMyPurchaseOrdersLoadingPdf(loadingPdf);
-    showLoadingMessage(loadingPdf);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingPdf]);
-
-  useEffect(() => {
-    if (apiParamsPdf.service) fetchDataPdf();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsPdf]);
-
-  useEffect(() => {
-    if (responseDataPdf) {
-      openPurchaseOrderPdf(responseDataPdf);
-    } else if (errorPdf) {
-      showNotification("error", errorMsgPdf);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataPdf, errorPdf]);
-
   /** Funciones */
 
   function clearSearchValue() {
@@ -272,17 +279,8 @@ export default function PurchaseOrders() {
       const data = responseData.data.map((po: any) =>
         transformToPurchaseOrder(po)
       );
-      setTableContent((prev) => ({
-        ...prev,
-        data,
-        subType: type,
-        total: responseData.res?.totalDocuments,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
-        filteredInfo,
-        nameColumnHeader: nameHeader,
-      }));
+      setTotal(responseData.res?.totalDocuments);
+      setPurchaseOrderList(data);
     } catch (error) {
       console.log(error);
       showNotification("error", t("errorOccurred"));
@@ -321,10 +319,7 @@ export default function PurchaseOrders() {
         });
         break;
       case Action.DOWNLOAD_PURCHASE_ORDER:
-        setApiParamsPdf({
-          service: getPurchaseOrderPDFService(purchaseOrder.key),
-          method: "get",
-        });
+        downloadPdfOrder(purchaseOrder.key, purchaseOrder.type);
         break;
       case Action.FINISH:
         if (type == PurchaseOrderTableTypes.ISSUED) {
@@ -376,6 +371,7 @@ export default function PurchaseOrders() {
             fromRequirementTable: false,
             canceledByCreator: type == PurchaseOrderTableTypes.RECEIVED,
             rowId: purchaseOrder.key,
+            type: purchaseOrder.type,
           },
           action,
         });

@@ -1,7 +1,7 @@
-import { HttpService } from "../../models/Interfaces";
-import { ApiMainRoutes, ApiRoutes } from "../../utilities/routes";
+import { HttpService } from "../../../models/Interfaces";
+import { ApiMainRoutes, ApiRoutes } from "../../../utilities/routes";
 
-export function getRequirementsService(
+export function getServicesService(
   page: number,
   pageSize: number
 ): HttpService {
@@ -9,20 +9,20 @@ export function getRequirementsService(
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.getRequirements}${page}/${pageSize}`,
-    type: "RE-GET-ALL",
+    type: "SE-GET-ALL",
   };
 }
 
-export function createRequirementService(): HttpService {
+export function createServiceService(): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.create}`,
-    type: "RE-CRE",
+    type: "SE-CRE",
   };
 }
 
-export function getRequirementByIdService(
+export function getServiceByIdService(
   reqId: string,
   showErrorMessage: boolean = true
 ): HttpService {
@@ -30,48 +30,48 @@ export function getRequirementByIdService(
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.getRequirement}${reqId}`,
-    type: showErrorMessage ? "RE-GET-ID" : "",
+    type: showErrorMessage ? "SE-GET-ID" : "",
   };
 }
 
-export function selectOfferService(): HttpService {
+export function selectServiceOfferService(): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.selectOffer}`,
-    type: "RE-SE-OF",
+    type: "SE-SE-OF",
   };
 }
 
-export function getBasicRateDataReqService(id: string): HttpService {
+export function getBasicRateDataServiceService(id: string): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.getBasicRateData}${id}`,
-    type: "RE-BA-RA",
+    type: "SE-BA-RA",
   };
 }
 
-export function deleteRequirementService(id: string): HttpService {
+export function deleteServiceService(id: string): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.delete}${id}`,
-    type: "RE-DEL",
+    type: "SE-DEL",
   };
 }
 
-export function republishRequirementService(): HttpService {
+export function republishServiceService(): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.republish}`,
-    type: "RE-REP",
+    type: "SE-REP",
   };
 }
 
 // Para cuentas principales (empresa y persona). Incluye requerimientos de subusuarios
-export function getRequirementsByEntityService(
+export function getServicesByEntityService(
   id: string,
   page: number,
   pageSize: number
@@ -82,12 +82,12 @@ export function getRequirementsByEntityService(
     }${
       ApiRoutes.requirements.getRequirementsByEntity
     }${id}/${page}/${pageSize}`,
-    type: "RE-GET-ENT",
+    type: "SE-GET-ENT",
   };
 }
 
 // Para subusuarios + cuentas principales. No incluye requerimientos de subusuarios
-export function getRequirementsBySubUserService(
+export function getServicesBySubUserService(
   id: string,
   page: number,
   pageSize: number
@@ -98,42 +98,60 @@ export function getRequirementsBySubUserService(
     }${
       ApiRoutes.requirements.getRequirementsBySubUser
     }${id}/${page}/${pageSize}`,
-    type: "RE-GET-SUB",
+    type: "SE-GET-SUB",
   };
 }
 
-export function culminateRequirementService(): HttpService {
+export function culminateServiceService(): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.culminate}`,
-    type: "RE-CUL",
+    type: "SE-CUL",
   };
 }
 
-export function cancelRequirementService(): HttpService {
+export function cancelServiceService(): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.cancel}`,
-    type: "RE-CAN",
+    type: "SE-CAN",
   };
 }
 
-export function homeFilterService(): HttpService {
+export function homeServiceFilterService(): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.searchMainFilters}`,
-    type: "RE-HO-FI",
+    type: "SE-HO-FI",
   };
 }
 
-export function searchRequirementsService(): HttpService {
+export function searchServicesService(): HttpService {
   return {
     url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.searchRequirements}`,
-    type: "RE-SE-RE",
+    type: "SE-SE-RE",
+  };
+}
+
+export function uploadDocsServiceService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.documents}${
+      ApiRoutes.documents.uploadDocumentsReq
+    }`,
+    type: "SE-DO-UP",
+  };
+}
+
+export function uploadImagesServiceService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.images}${
+      ApiRoutes.images.uploadImagesReq
+    }`,
+    type: "SE-IM-UP",
   };
 }

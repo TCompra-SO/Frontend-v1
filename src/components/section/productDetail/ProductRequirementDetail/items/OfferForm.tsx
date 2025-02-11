@@ -16,16 +16,12 @@ import BudgetField from "../../../../common/formFields/BudgetField";
 import AddImagesField from "../../../../common/formFields/AddImagesField";
 import AddDocumentField from "../../../../common/formFields/AddDocumentField";
 import { CreateOfferRequest } from "../../../../../models/Requests";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import {
   CanOfferResponse,
   useApiParams,
 } from "../../../../../models/Interfaces";
 import useApi from "../../../../../hooks/useApi";
-import {
-  createOfferService,
-  getValidationOfferService,
-} from "../../../../../services/requests/offerService";
 import {
   Action,
   CanOfferType,
@@ -40,15 +36,19 @@ import {
   RequirementType,
   UserRoles,
 } from "../../../../../utilities/types";
-import { uploadDocsOfferService } from "../../../../../services/requests/documentService";
-import { uploadImagesOfferService } from "../../../../../services/requests/imageService";
 import React from "react";
 import CantOfferMessage from "./CantOfferMessage";
 import { Requirement } from "../../../../../models/MainInterfaces";
-import makeRequest from "../../../../../utilities/globalFunctions";
+import makeRequest, {
+  checkWarranty,
+  getCreateOfferService,
+  getGetValidationOfferService,
+  getUploadDocsOfferService,
+  getUploadImagesOfferService,
+} from "../../../../../utilities/globalFunctions";
 import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
 import ModalContainer from "../../../../containers/ModalContainer";
-import { verifyCertificationByUserIdAndCompanyId } from "../../../../../services/complete/generalServices";
+import { verifyCertificationByUserIdAndCompanyId } from "../../../../../services/general/generalServices";
 import useShowNotification from "../../../../../hooks/utilHooks";
 
 function RowContainer({ children }: { children: ReactNode }) {
@@ -92,6 +92,9 @@ export default function OfferForm(props: OfferFormProps) {
   const [imgSuccess, setImgSuccess] = useState(ProcessFlag.NOT_INI);
   const [offerId, setOfferId] = useState<string>("");
   const [loadingForm, setLoadingForm] = useState(true);
+  const [warrantyRequired, setWarrantyRequired] = useState(false);
+  const formDataImgRef = useRef(formDataImg);
+  const formDataDocRef = useRef(formDataDoc);
 
   useEffect(() => {
     if (cantOfferMotive != CantOfferMotives.INI) setLoadingForm(false);
@@ -101,6 +104,16 @@ export default function OfferForm(props: OfferFormProps) {
     form.setFieldValue("currency", props.requirement?.coin);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.requirement]);
+
+  /** Guardar imágenes y documentos */
+
+  useEffect(() => {
+    formDataDocRef.current = formDataDoc;
+  }, [formDataDoc]);
+
+  useEffect(() => {
+    formDataImgRef.current = formDataImg;
+  }, [formDataImg]);
 
   /** Verificar si el usuario puede ofertar */
 
@@ -153,12 +166,7 @@ export default function OfferForm(props: OfferFormProps) {
     error: errorImg,
     errorMsg: errorMsgImg,
     fetchData: fetchDataImg,
-  } = useApi<FormData>({
-    service: apiParamsImg.service,
-    method: apiParamsImg.method,
-    dataToSend: apiParamsImg.dataToSend,
-    token: apiParamsImg.token,
-  });
+  } = useApi<FormData>(apiParamsImg);
 
   useEffect(() => {
     if (apiParamsImg.service) fetchDataImg();
@@ -188,12 +196,7 @@ export default function OfferForm(props: OfferFormProps) {
     error: errorDoc,
     errorMsg: errorMsgDoc,
     fetchData: fetchDataDoc,
-  } = useApi<FormData>({
-    service: apiParamsDoc.service,
-    method: apiParamsDoc.method,
-    dataToSend: apiParamsDoc.dataToSend,
-    token: apiParamsDoc.token,
-  });
+  } = useApi<FormData>(apiParamsDoc);
 
   useEffect(() => {
     if (apiParamsDoc.service) fetchDataDoc();
@@ -239,44 +242,33 @@ export default function OfferForm(props: OfferFormProps) {
 
     if (!isLoggedIn) {
       setCantOfferMotive(CantOfferMotives.NOT_LOGGED_IN);
-
       return;
-    } else if (
-      props.requirement &&
-      ((!props.requirement.subUser && props.requirement.user.uid == uid) || // requerimiento no fue creado por subusuario
-        (props.requirement.subUser && props.requirement.subUser.uid == uid)) // requerimiento fue creado por subusuario
-    ) {
-      setCantOfferMotive(CantOfferMotives.IS_CREATOR);
-
-      return;
-    } else if (
-      role == UserRoles.LEGAL ||
-      role == UserRoles.NONE ||
-      (role == UserRoles.BUYER &&
-        props.requirement?.type != RequirementType.SALE) ||
-      (role == UserRoles.SELLER &&
-        props.requirement?.type == RequirementType.SALE)
-    ) {
-      setCantOfferMotive(CantOfferMotives.NO_ALLOWED_ROLE);
-
-      return;
-    } else if (
-      props.requirement &&
-      props.requirement.state != RequirementState.PUBLISHED
-    ) {
-      setCantOfferMotive(CantOfferMotives.CHANGED_STATE);
-      return;
-    } else if (
-      props.requirement &&
-      props.requirement.allowedBidder.includes(CanOfferType.PREMIUM) &&
-      !isPremium
-    ) {
-      setCantOfferMotive(CantOfferMotives.ONLY_PREMIUM);
-      return;
-    } else {
-      if (props.requirement) {
+    } else if (props.requirement) {
+      if (
+        (!props.requirement.subUser && props.requirement.user.uid == uid) || // requerimiento no fue creado por subusuario
+        (props.requirement.subUser && props.requirement.subUser.uid == uid) // requerimiento fue creado por subusuario
+      ) {
+        setCantOfferMotive(CantOfferMotives.IS_CREATOR);
+        return;
+      } else if (
+        role == UserRoles.LEGAL ||
+        role == UserRoles.NONE ||
+        (role == UserRoles.BUYER &&
+          props.requirement.type != RequirementType.SALE) ||
+        (role == UserRoles.SELLER &&
+          props.requirement.type == RequirementType.SALE)
+      ) {
+        setCantOfferMotive(CantOfferMotives.NO_ALLOWED_ROLE);
+        return;
+      } else if (props.requirement.state != RequirementState.PUBLISHED) {
+        setCantOfferMotive(CantOfferMotives.CHANGED_STATE);
+        return;
+      } else {
         const { responseData }: any = await makeRequest({
-          service: getValidationOfferService(uid, props.requirement.key),
+          service: getGetValidationOfferService(props.requirement.type)?.(
+            uid,
+            props.requirement.key
+          ),
           method: "get",
         });
 
@@ -310,33 +302,42 @@ export default function OfferForm(props: OfferFormProps) {
             case CodeResponseCanOffer.MAIN_ACCOUNT_IS_CREATOR:
               setCantOfferMotive(CantOfferMotives.MAIN_ACCOUNT_IS_CREATOR);
               return;
-            // case CodeResponseCanOffer.NONE:
-            // setCantOfferMotive(CantOfferMotives.NONE);
-            // return;
           }
         }
-
-        if (
-          props.requirement.allowedBidder.includes(
-            CanOfferType.CERTIFIED_COMPANY
-          )
-        ) {
-          const { certState: certResult, error: errorCert } =
-            await verifyCertificationByUserIdAndCompanyId(
-              mainUid,
-              props.requirement.user.uid
-            );
-          if (errorCert)
-            showNotification("error", t("certificationVerificationError"));
-          setIsCertified(certResult ?? CertificationState.NONE);
-          if (certResult != CertificationState.CERTIFIED) {
-            setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED);
-            return;
-          }
-        }
+        if (!(await verifyAllowedBidders(props.requirement))) return;
       }
     }
     setCantOfferMotive(CantOfferMotives.NONE);
+  }
+
+  async function verifyAllowedBidders(requirement: Requirement) {
+    const verifyAllowedBidder: boolean[] = [];
+    for (const ab of requirement.allowedBidder) {
+      if (ab == CanOfferType.ALL) {
+        setCantOfferMotive(CantOfferMotives.NONE);
+        return true;
+      }
+      if (ab == CanOfferType.PREMIUM) {
+        if (!isPremium) {
+          setCantOfferMotive(CantOfferMotives.ONLY_PREMIUM);
+          verifyAllowedBidder.push(false);
+        } else verifyAllowedBidder.push(true);
+      } else if (ab == CanOfferType.CERTIFIED_COMPANY) {
+        const { certState: certResult, error: errorCert } =
+          await verifyCertificationByUserIdAndCompanyId(
+            mainUid,
+            requirement.user.uid
+          );
+        if (errorCert)
+          showNotification("error", t("certificationVerificationError"));
+        setIsCertified(certResult ?? CertificationState.NONE);
+        if (certResult != CertificationState.CERTIFIED) {
+          setCantOfferMotive(CantOfferMotives.ONLY_CERTIFIED);
+          verifyAllowedBidder.push(false);
+        } else verifyAllowedBidder.push(true);
+      }
+    }
+    return verifyAllowedBidder.includes(true);
   }
 
   function createOffer(values: any) {
@@ -397,7 +398,9 @@ export default function OfferForm(props: OfferFormProps) {
 
   function submit(data: CreateOfferRequest) {
     setApiParams({
-      service: createOfferService(),
+      service: props.requirement
+        ? getCreateOfferService(props.requirement?.type)
+        : null,
       method: "post",
       dataToSend: data,
     });
@@ -414,18 +417,24 @@ export default function OfferForm(props: OfferFormProps) {
         const data: FormData = formDataDoc;
         data.append(ImageRequestLabels.UID, offerIdResponse);
         setApiParamsDoc({
-          service: uploadDocsOfferService(),
+          service: props.requirement
+            ? getUploadDocsOfferService(props.requirement.type)
+            : null,
           method: "post",
           dataToSend: data,
+          includeHeader: false,
         });
       }
       if (formDataImg) {
         const data: FormData = formDataImg;
         data.append(ImageRequestLabels.UID, offerIdResponse);
         setApiParamsImg({
-          service: uploadImagesOfferService(),
+          service: props.requirement
+            ? getUploadImagesOfferService(props.requirement.type)
+            : null,
           method: "post",
           dataToSend: formDataImg,
+          includeHeader: false,
         });
       }
     } else {
@@ -444,6 +453,15 @@ export default function OfferForm(props: OfferFormProps) {
     setCheckedIGV(false);
     setCheckedDelivery(false);
     checkIfUserCanOffer();
+  }
+
+  function checkWarrantyField() {
+    setWarrantyRequired(
+      checkWarranty(
+        form.getFieldValue("duration"),
+        form.getFieldValue("warranty")
+      )
+    );
   }
 
   return (
@@ -509,8 +527,16 @@ export default function OfferForm(props: OfferFormProps) {
                   <CurrencyField onlyItem disabled />
                 </RowContainer>
                 <RowContainer>
-                  <WarrantyField required={false} />
-                  <DurationField required={false} name={"duration"} onlyItem />
+                  <WarrantyField
+                    required={warrantyRequired}
+                    onChange={() => checkWarrantyField()}
+                  />
+                  <DurationField
+                    required={warrantyRequired}
+                    name={"duration"}
+                    onlyItem
+                    onChange={() => checkWarrantyField()}
+                  />
                   <SupportField />
                   <BudgetField required greaterThanZero />
                 </RowContainer>

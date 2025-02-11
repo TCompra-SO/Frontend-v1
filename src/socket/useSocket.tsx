@@ -1,38 +1,126 @@
-import { useContext, useEffect } from "react";
-import { io } from "socket.io-client";
-import { pageSizeOptionsSt } from "../utilities/globals";
-import { HomeContext } from "../contexts/Homecontext";
+import { useEffect, useRef } from "react";
+import { io, Socket } from "socket.io-client";
+import {
+  PurchaseOrderTableTypes,
+  RequirementType,
+  SocketChangeType,
+  TableTypes,
+} from "../utilities/types";
+import { useSelector } from "react-redux";
+import { MainState } from "../models/Redux";
+import { SocketResponse } from "../models/Interfaces";
+import { SearchTableRequest } from "../models/Requests";
+import { hasNoSortNorFilter } from "../utilities/globalFunctions";
 
-export default function useSocket() {
-  const { useFilter, retrieveRequirements, page } = useContext(HomeContext);
-  const socketAPI = io(import.meta.env.VITE_SOCKET_URL);
+let socketAPI: Socket | null = null;
+
+export default function useSocket(
+  tableType: TableTypes,
+  subType: RequirementType | PurchaseOrderTableTypes,
+  page: number,
+  searchTableRequest: SearchTableRequest | undefined,
+  updateChangesQueue: (
+    payload: SocketResponse,
+    canAddRowUpdate: boolean
+  ) => void
+) {
+  const mainUid = useSelector((state: MainState) => state.mainUser.uid);
+  const uid = useSelector((state: MainState) => state.user.uid);
+  const pageRef = useRef(page);
+  const searchTableRequestRef = useRef(searchTableRequest);
 
   useEffect(() => {
-    if (!useFilter) getData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, useFilter]);
-
-  async function getData() {
-    retrieveRequirements(page, pageSizeOptionsSt[0]);
-  }
+    pageRef.current = page;
+  }, [page]);
 
   useEffect(() => {
-    async function fetchData() {
-      socketAPI.on("getRequeriments", async () => {
-        if (!useFilter)
-          if (page == 1) {
-            getData();
-          }
+    searchTableRequestRef.current = searchTableRequest;
+  }, [searchTableRequest]);
+
+  useEffect(() => {
+    if (!socketAPI) {
+      socketAPI = io(import.meta.env.VITE_SOCKET_URL);
+
+      socketAPI.on("connect", () => {
+        console.log("Connected");
+        const roomName = getRoomName();
+        if (roomName) socketAPI?.emit("joinRoom", roomName + mainUid);
+      });
+
+      socketAPI.on("joinedRoom", (message) => {
+        console.log(message);
+      });
+
+      socketAPI.on("updateRoom", (data: SocketResponse) => {
+        console.log("Received", data);
+        const isAllTypeTableVar = isAllTypeTable();
+        const canAddRow = pageRef.current == 1;
+
+        if (
+          // Agregar cambios a cola si la tabla es de  tipo All o si el cambio pertenece a usuario
+          (isAllTypeTableVar || (!isAllTypeTableVar && uid == data.userId)) &&
+          (data.typeSocket == SocketChangeType.UPDATE ||
+            (data.typeSocket == SocketChangeType.CREATE &&
+              canAddRow &&
+              searchTableRequestRef.current &&
+              hasNoSortNorFilter(searchTableRequestRef.current)))
+        )
+          updateChangesQueue(data, canAddRow);
       });
     }
 
-    fetchData();
-
-    // Limpiar el socket al desmontar el componente
     return () => {
-      socketAPI.off("getRequeriments");
+      if (socketAPI) {
+        console.log("Disconnected");
+        socketAPI.disconnect();
+        socketAPI = null;
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  return {};
+  }, [subType]);
+
+  function getRoomName() {
+    let roomName: string = "";
+    if (
+      tableType == TableTypes.REQUIREMENT ||
+      tableType == TableTypes.ALL_REQUIREMENTS
+    ) {
+      if (subType == RequirementType.GOOD) roomName = "roomRequerimentProduct";
+      else if (subType == RequirementType.SERVICE) roomName = "roomRequeriment";
+      else if (subType == RequirementType.SALE) roomName = "roomRequeriment";
+    }
+    if (tableType == TableTypes.OFFER || tableType == TableTypes.ALL_OFFERS) {
+      if (subType == RequirementType.GOOD) roomName = "roomOfferProduct";
+      else if (subType == RequirementType.SERVICE) roomName = "roomRequeriment";
+      else if (subType == RequirementType.SALE) roomName = "roomRequeriment";
+    }
+    if (
+      tableType == TableTypes.PURCHASE_ORDER ||
+      tableType == TableTypes.ALL_PURCHASE_ORDERS
+    ) {
+      if (subType == PurchaseOrderTableTypes.ISSUED)
+        roomName = "roomPurchaseOrderClientProduct";
+      else if (subType == PurchaseOrderTableTypes.RECEIVED)
+        roomName = "roomPurchaseOrderProviderProduct";
+    }
+    if (
+      tableType == TableTypes.SALES_ORDER ||
+      tableType == TableTypes.ALL_SALES_ORDERS
+    ) {
+      if (subType == PurchaseOrderTableTypes.ISSUED)
+        roomName = "roomPurchaseOrderProviderProduct";
+      else if (subType == PurchaseOrderTableTypes.RECEIVED)
+        roomName = "roomPurchaseOrderClientProduct";
+    }
+    return roomName;
+  }
+
+  function isAllTypeTable() {
+    return (
+      tableType == TableTypes.ALL_REQUIREMENTS ||
+      tableType == TableTypes.ALL_OFFERS ||
+      tableType == TableTypes.ALL_PURCHASE_ORDERS ||
+      tableType == TableTypes.ALL_SALES_ORDERS
+    );
+  }
 }

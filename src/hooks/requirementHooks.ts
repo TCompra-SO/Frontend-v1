@@ -1,23 +1,17 @@
 import { useContext, useEffect, useState } from "react";
-import { ModalContent, OfferFilters, useApiParams } from "../models/Interfaces";
+import {
+  HttpService,
+  ModalContent,
+  OfferFilters,
+  useApiParams,
+} from "../models/Interfaces";
 import useApi from "./useApi";
 import {
   CancelOfferRequest,
   CancelRequirementRequest,
   HomeFilterRequest,
 } from "../models/Requests";
-import {
-  cancelRequirementService,
-  getBasicRateDataReqService,
-  getRequirementsService,
-  homeFilterService,
-} from "../services/requests/requirementService";
 import { useTranslation } from "react-i18next";
-import {
-  cancelOfferService,
-  getBasicRateDataOfferService,
-  getOffersByRequirementIdService,
-} from "../services/requests/offerService";
 import {
   Action,
   EntityType,
@@ -32,8 +26,16 @@ import {
   getPurchaseOrderById,
   getRequirementById,
   getRequirementFromData,
-} from "../services/complete/generalServices";
-import makeRequest from "../utilities/globalFunctions";
+} from "../services/general/generalServices";
+import makeRequest, {
+  getCancelRecordService,
+  getCancelOfferService,
+  getGetBasicRateDataRecordOfferService,
+  getGetBasicRateDataRecordService,
+  getGetOffersByRecordIdService,
+  getHomeFilterService,
+  getHomeRecordsService,
+} from "../utilities/globalFunctions";
 import {
   transformToBaseUser,
   transformToBasicRateData,
@@ -111,14 +113,19 @@ export function useCancelRequirement() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataCancel, errorCancel]);
 
-  function cancelRequirement(reqId: string, action: Action, motive?: string) {
+  function cancelRequirement(
+    reqId: string,
+    action: Action,
+    type: RequirementType,
+    motive?: string
+  ) {
     updateIdAndActionQueue(reqId, action);
     const data: CancelRequirementRequest = {
       requerimentID: reqId,
       reason: motive,
     };
     setApiParamsCancel({
-      service: cancelRequirementService(),
+      service: getCancelRecordService(type),
       method: "post",
       dataToSend: data,
     });
@@ -206,6 +213,7 @@ export function useCancelOffer() {
 
   function cancelOffer(
     offerId: string,
+    type: RequirementType,
     canceledByCreator: boolean,
     action: Action,
     motive?: string
@@ -217,7 +225,7 @@ export function useCancelOffer() {
       canceledByCreator,
     };
     setApiParams({
-      service: cancelOfferService(),
+      service: getCancelOfferService(type),
       method: "post",
       dataToSend: data,
     });
@@ -313,7 +321,8 @@ export function useGetOffersByRequirementId() {
             !requirementData.filters
           ) {
             const { purchaseOrder } = await getPurchaseOrderById(
-              requirementData.purchaseOrderId
+              requirementData.purchaseOrderId,
+              requirementData.type
             );
             if (purchaseOrder) filters = purchaseOrder.filters;
           }
@@ -336,60 +345,65 @@ export function useGetOffersByRequirementId() {
             } = {};
             // Obtener lista de ofertas
             const pendingRequests: { [key: string]: Promise<any> } = {};
-            const offerArray: Offer[] = await Promise.all(
+            const offerArray: (Offer | null)[] = await Promise.all(
               responseData.data.map(async (item: any) => {
-                if (
-                  item.user &&
-                  !Object.prototype.hasOwnProperty.call(users, item.user)
-                ) {
-                  if (!pendingRequests[item.user]) {
-                    pendingRequests[item.user] = makeRequest({
-                      service: getBaseDataUserService(item.user),
-                      method: "get",
-                    }).then(({ responseData: responseDataU }: any) => {
-                      const { user, subUser } = transformToBaseUser(
-                        responseDataU.data[0]
-                      );
-
-                      users[item.user] = {
-                        user: subUser ?? user,
-                        mainUser: subUser ? user : undefined,
-                      };
-                      delete pendingRequests[item.user];
-                    });
+                try {
+                  const creator: string = item.subUser ?? item.user;
+                  if (
+                    (item.user &&
+                      !item.subUser &&
+                      !Object.prototype.hasOwnProperty.call(
+                        users,
+                        item.user
+                      )) ||
+                    (item.subUser &&
+                      !Object.prototype.hasOwnProperty.call(
+                        users,
+                        item.subUser
+                      ))
+                  ) {
+                    if (!pendingRequests[creator]) {
+                      pendingRequests[creator] = makeRequest({
+                        service: getBaseDataUserService(creator),
+                        method: "get",
+                      }).then(({ responseData: responseDataU }: any) => {
+                        const { user, subUser } = transformToBaseUser(
+                          responseDataU.data[0]
+                        );
+                        users[creator] = {
+                          user: subUser ?? user,
+                          mainUser: subUser ? user : undefined,
+                        };
+                        delete pendingRequests[creator];
+                      });
+                    }
+                    await pendingRequests[creator];
                   }
-                  await pendingRequests[item.user];
+                  return transformToOffer(
+                    item,
+                    requirementData.type,
+                    users[creator].user,
+                    users[creator].mainUser
+                  );
+                } catch (e) {
+                  return null;
                 }
-                return transformToOffer(
-                  item,
-                  requirementData.type,
-                  users[item.user].user,
-                  users[item.user].mainUser
-                );
               })
             );
-            if (fetchedRequirement)
+            if (fetchedRequirement || requirementData.requirement) {
+              const req: Requirement = (fetchedRequirement ??
+                requirementData.requirement)!;
               setDataModal({
                 type: ModalTypes.DETAILED_REQUIREMENT,
                 data: {
-                  offerList: offerArray,
-                  requirement: fetchedRequirement,
+                  offerList: offerArray.filter((offer) => offer !== null),
+                  requirement: req,
                   forPurchaseOrder: requirementData.forPurchaseOrder,
                   filters: requirementData.filters ?? filters,
                 },
                 action,
               });
-            else if (requirementData.requirement)
-              setDataModal({
-                type: ModalTypes.DETAILED_REQUIREMENT,
-                data: {
-                  offerList: offerArray,
-                  requirement: requirementData.requirement,
-                  forPurchaseOrder: requirementData.forPurchaseOrder,
-                  filters: requirementData.filters ?? filters,
-                },
-                action,
-              });
+            }
           } else showNotification("error", t("errorOccurred"));
         } else if (error) {
           showNotification("error", errorMsg);
@@ -454,7 +468,7 @@ export function useGetOffersByRequirementId() {
       tableType,
     });
     setApiParams({
-      service: getOffersByRequirementIdService(reqId, page, pageSize),
+      service: getGetOffersByRecordIdService(typeReq)?.(reqId, page, pageSize),
       method: "get",
     });
   }
@@ -486,6 +500,7 @@ export function useShowDetailOffer() {
     type: RequirementType,
     useUserData: boolean,
     action: Action,
+    showActions: boolean,
     offerData?: Offer
   ) {
     try {
@@ -510,7 +525,7 @@ export function useShowDetailOffer() {
           const { basicRateData } = await getBasicRateData(
             offer.requirementId,
             false,
-            RequirementType.GOOD //r3v
+            type
           );
           if (basicRateData)
             setDataModal({
@@ -518,6 +533,7 @@ export function useShowDetailOffer() {
               data: {
                 offer,
                 basicRateData,
+                showActions,
               },
               action,
             });
@@ -535,6 +551,7 @@ export function useShowDetailOffer() {
             data: {
               offer: offerData,
               basicRateData,
+              showActions,
             },
             action,
           });
@@ -651,8 +668,8 @@ export function useCulminate() {
     console.log(idToGetData);
     setApiParams({
       service: useOfferService
-        ? getBasicRateDataOfferService(idToGetData)
-        : getBasicRateDataReqService(idToGetData),
+        ? getGetBasicRateDataRecordOfferService(type)?.(idToGetData)
+        : getGetBasicRateDataRecordService(type)?.(idToGetData),
       method: "get",
     });
   }
@@ -666,37 +683,52 @@ export function useGetRequirementList() {
   const [requirements, setRequirements] = useState<Requirement[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [usersCache, setUsersCache] = useState<Map<string, any>>(new Map());
 
   async function getRequirementList(
     page: number,
+    type: RequirementType,
     pageSize?: number,
     params?: HomeFilterRequest
   ) {
+    let success: boolean = false;
     try {
       setLoading(true);
-      const { responseData }: any = await makeRequest({
-        service: params
-          ? homeFilterService()
-          : getRequirementsService(page, pageSize ?? pageSizeOptionsSt[0]),
+      let httpService: HttpService | null = null;
+      if (params) httpService = getHomeFilterService(type);
+      else {
+        const temp = getHomeRecordsService(type);
+        if (temp) httpService = temp(page, pageSize ?? pageSizeOptionsSt[0]);
+      }
+      const { responseData, error } = await makeRequest({
+        service: httpService,
         method: params ? "post" : "get",
         dataToSend: params ?? undefined,
       });
       if (responseData) {
-        const cache = new Map<string, any>(); // Scoped cache for this batch
+        const cache = new Map<string, any>();
+        setUsersCache(cache);
         const data: (Requirement | null)[] = await Promise.all(
           responseData.data.map(async (e: any) =>
             getRequirementFromData(e, undefined, undefined, cache)
           )
         );
+        setUsersCache(cache);
         setRequirements(data.filter((req) => req !== null));
         setTotal(responseData.res?.totalDocuments);
+        success = true;
+      } else if (error) {
+        setTotal(0);
+        setRequirements([]);
       }
     } catch (error) {
       console.log(error);
+      setTotal(0);
       setRequirements([]);
     } finally {
       setLoading(false);
     }
+    return success;
   }
 
   return {
@@ -704,5 +736,6 @@ export function useGetRequirementList() {
     requirements,
     total,
     loading,
+    usersCache,
   };
 }

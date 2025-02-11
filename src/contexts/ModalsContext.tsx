@@ -20,17 +20,24 @@ interface ViewHistoryModalDataType extends DetailedRequirementModalDataType {
   purchaseOrderId: string;
 }
 
+interface DownloadPdfOrderType {
+  orderId: string;
+  type: RequirementType;
+}
+
 interface ModalsContextType {
   detailedRequirementModalData: DetailedRequirementModalDataType;
   detailedOfferModalData: DetailedOfferModalDataType;
   viewHistoryModalData: ViewHistoryModalDataType;
   viewHistorySalesModalData: ViewHistoryModalDataType;
+  downloadPdfOrderData: DownloadPdfOrderType;
   updateDetailedRequirementModalData: (
     val: DetailedRequirementModalDataType
   ) => void;
   updateDetailedOfferModalData: (val: DetailedOfferModalDataType) => void;
   updateViewHistoryModalData: (val: ViewHistoryModalDataType) => void;
   updateViewHistorySalesModalData: (val: ViewHistoryModalDataType) => void;
+  updateDownloadPdfOrderData: (val: DownloadPdfOrderType) => void;
 }
 
 export const ModalsContext = createContext<ModalsContextType>({
@@ -56,10 +63,15 @@ export const ModalsContext = createContext<ModalsContextType>({
     requirementType: RequirementType.GOOD,
     purchaseOrderId: "",
   },
+  downloadPdfOrderData: {
+    orderId: "",
+    type: RequirementType.GOOD,
+  },
   updateDetailedRequirementModalData: () => {},
   updateDetailedOfferModalData: () => {},
   updateViewHistoryModalData: () => {},
   updateViewHistorySalesModalData: () => {},
+  updateDownloadPdfOrderData: () => {},
 });
 
 export function ModalsProvider({ children }: { children: ReactNode }) {
@@ -89,6 +101,11 @@ export function ModalsProvider({ children }: { children: ReactNode }) {
       requirementType: RequirementType.GOOD,
       purchaseOrderId: "",
     });
+  const [downloadPdfOrderData, setDownloadPdfOrderData] =
+    useState<DownloadPdfOrderType>({
+      orderId: "",
+      type: RequirementType.GOOD,
+    });
 
   function updateDetailedRequirementModalData(
     val: DetailedRequirementModalDataType
@@ -108,6 +125,10 @@ export function ModalsProvider({ children }: { children: ReactNode }) {
     setViewHistorySalesModalData(val);
   }
 
+  function updateDownloadPdfOrderData(val: DownloadPdfOrderType) {
+    setDownloadPdfOrderData(val);
+  }
+
   return (
     <ModalsContext.Provider
       value={{
@@ -115,10 +136,12 @@ export function ModalsProvider({ children }: { children: ReactNode }) {
         detailedOfferModalData,
         viewHistoryModalData,
         viewHistorySalesModalData,
+        downloadPdfOrderData,
         updateDetailedRequirementModalData,
         updateDetailedOfferModalData,
         updateViewHistoryModalData,
         updateViewHistorySalesModalData,
+        updateDownloadPdfOrderData,
       }}
     >
       {children}

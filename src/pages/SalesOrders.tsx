@@ -10,6 +10,7 @@ import {
 import { useTranslation } from "react-i18next";
 import {
   ModalContent,
+  SocketDataPackType,
   TableTypeSalesOrder,
   useApiParams,
 } from "../models/Interfaces";
@@ -25,7 +26,6 @@ import {
   getLabelFromPurchaseOrderType,
   getLabelFromRequirementType,
   getPurchaseOrderType,
-  openPurchaseOrderPdf,
 } from "../utilities/globalFunctions";
 import {
   transformToFullUser,
@@ -36,7 +36,6 @@ import {
   noPaginationPageSize,
 } from "../utilities/globals";
 import { useLocation } from "react-router-dom";
-import { getPurchaseOrderPDFService } from "../services/requests/purchaseOrderService";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
@@ -45,10 +44,17 @@ import {
   useGetOffersByRequirementId,
 } from "../hooks/requirementHooks";
 import { ModalsContext } from "../contexts/ModalsContext";
-import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
+import useShowNotification, {
+  useDownloadPdfOrder,
+  useShowLoadingMessage,
+} from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
+import useSocketQueueHook, {
+  useAddOrUpdateRow,
+} from "../hooks/socketQueueHook";
+import useSocket from "../socket/useSocket";
 
 export default function SalesOrders() {
   const { t } = useTranslation();
@@ -62,9 +68,8 @@ export default function SalesOrders() {
   const { showLoadingMessage } = useShowLoadingMessage();
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
+  const downloadPdfOrder = useDownloadPdfOrder();
   const [type, setType] = useState(getPurchaseOrderType(location.pathname));
-  const { searchTable, responseData, error, errorMsg, loading } =
-    useSearchTable(uid, TableTypes.SALES_ORDER, EntityType.SUBUSER, type);
   const {
     currentPage,
     currentPageSize,
@@ -75,6 +80,8 @@ export default function SalesOrders() {
     handleSearch,
     reset,
   } = useFilterSortPaginationForTable();
+  const [salesOrderList, setSalesOrderList] = useState<PurchaseOrder[]>([]);
+  const [total, setTotal] = useState(0);
   const [action, setAction] = useState<Action>(Action.NONE);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [nameHeader, setNameHeader] = useState(
@@ -87,17 +94,63 @@ export default function SalesOrders() {
   });
   const [tableContent, setTableContent] = useState<TableTypeSalesOrder>({
     type: TableTypes.SALES_ORDER,
-    data: [],
+    data: salesOrderList,
     subType: type,
     hiddenColumns: [],
     nameColumnHeader: nameHeader,
     onButtonClick: handleOnButtonClick,
-    total: 0,
+    total,
     page: currentPage,
     pageSize: currentPageSize,
     fieldSort,
     filteredInfo,
   });
+  const { addNewRow, updateRow } = useAddOrUpdateRow(
+    TableTypes.SALES_ORDER,
+    (data: SocketDataPackType) => transformToPurchaseOrder(data),
+    salesOrderList,
+    setSalesOrderList,
+    total,
+    setTotal
+  );
+  const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
+    addNewRow,
+    updateRow
+  );
+  const { searchTable, responseData, error, errorMsg, loading, apiParams } =
+    useSearchTable(
+      uid,
+      TableTypes.SALES_ORDER,
+      EntityType.SUBUSER,
+      type,
+      resetChangesQueue
+    );
+  useSocket(
+    TableTypes.SALES_ORDER,
+    type,
+    currentPage,
+    apiParams.dataToSend,
+    updateChangesQueue
+  );
+
+  /** Actualiza el contenido de tabla */
+
+  useEffect(() => {
+    setTableContent((prev) => ({
+      ...prev,
+      data: salesOrderList,
+      subType: type,
+      total,
+      page: currentPage,
+      pageSize: currentPageSize,
+      fieldSort,
+      filteredInfo,
+      nameColumnHeader: nameHeader,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [salesOrderList]);
+
+  /** Reset flag */
 
   useEffect(() => {
     return () => {
@@ -167,17 +220,8 @@ export default function SalesOrders() {
       setTableData();
     } else if (error) {
       setCurrentPage(1);
-      setTableContent((prev) => ({
-        ...prev,
-        data: [],
-        subType: type,
-        total: 0,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
-        filteredInfo,
-        nameColumnHeader: nameHeader,
-      }));
+      setTotal(0);
+      setSalesOrderList([]);
       showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -221,45 +265,6 @@ export default function SalesOrders() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataUser, errorUser]);
 
-  /* Para descargar pdf de orden de compra */
-
-  const [apiParamsPdf, setApiParamsPdf] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingPdf,
-    responseData: responseDataPdf,
-    error: errorPdf,
-    errorMsg: errorMsgPdf,
-    fetchData: fetchDataPdf,
-  } = useApi({
-    service: apiParamsPdf.service,
-    method: apiParamsPdf.method,
-    dataToSend: apiParamsPdf.dataToSend,
-  });
-
-  useEffect(() => {
-    updateMyPurchaseOrdersLoadingPdf(loadingPdf);
-    showLoadingMessage(loadingPdf);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingPdf]);
-
-  useEffect(() => {
-    if (apiParamsPdf.service) fetchDataPdf();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsPdf]);
-
-  useEffect(() => {
-    if (responseDataPdf) {
-      openPurchaseOrderPdf(responseDataPdf);
-    } else if (errorPdf) {
-      showNotification("error", errorMsgPdf);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataPdf, errorPdf]);
-
   /** Funciones */
 
   function clearSearchValue() {
@@ -273,17 +278,8 @@ export default function SalesOrders() {
       const data = responseData.data.map((po: any) =>
         transformToPurchaseOrder(po)
       );
-      setTableContent((prev) => ({
-        ...prev,
-        data,
-        subType: type,
-        total: responseData.res?.totalDocuments,
-        page: currentPage,
-        pageSize: currentPageSize,
-        fieldSort,
-        filteredInfo,
-        nameColumnHeader: nameHeader,
-      }));
+      setTotal(responseData.res?.totalDocuments);
+      setSalesOrderList(data);
     } catch (error) {
       console.log(error);
       showNotification("error", t("errorOccurred"));
@@ -322,10 +318,7 @@ export default function SalesOrders() {
         });
         break;
       case Action.DOWNLOAD_PURCHASE_ORDER:
-        setApiParamsPdf({
-          service: getPurchaseOrderPDFService(purchaseOrder.key),
-          method: "get",
-        });
+        downloadPdfOrder(purchaseOrder.key, purchaseOrder.type);
         break;
       case Action.FINISH:
         if (type == PurchaseOrderTableTypes.ISSUED) {
@@ -375,6 +368,7 @@ export default function SalesOrders() {
             fromRequirementTable: false,
             canceledByCreator: type == PurchaseOrderTableTypes.ISSUED,
             rowId: purchaseOrder.key,
+            type: purchaseOrder.type,
           },
           action,
         });
