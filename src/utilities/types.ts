@@ -166,6 +166,8 @@ export enum Action {
   SEND_MESSAGE = 33,
   SHOW_USER_INFO = 34,
   VIEW_SALES_ORDER = 35,
+  GOODS = 36,
+  SERVICES = 37,
 }
 
 export const ActionLabel: {
@@ -207,6 +209,8 @@ export const ActionLabel: {
   [Action.SEND_MESSAGE]: "send",
   [Action.SHOW_USER_INFO]: "showUserInfo",
   [Action.VIEW_SALES_ORDER]: "view",
+  [Action.GOODS]: "goods",
+  [Action.SERVICES]: "services",
 };
 
 export const ActionByStateRequirement: {
@@ -281,6 +285,12 @@ export const ActionSubUsers: {
     Action.VIEw_SALES_ORDERS,
     Action.EDIT_USER,
   ],
+};
+
+export const SubActions: {
+  [key: number]: Array<Action>;
+} = {
+  [Action.VIEW_PURCHASE_ORDERS]: [Action.GOODS, Action.SERVICES],
 };
 
 export const ActionCertificateFiles: {

@@ -10,6 +10,7 @@ import {
   ActionLabel,
   ActionSubUsers,
   PurchaseOrderTableTypes,
+  SubActions,
   TableTypes,
 } from "../../../../utilities/types";
 import { useTranslation } from "react-i18next";
@@ -105,6 +106,15 @@ export default function ActionColumn(
                         label: t(ActionLabel[action]),
                         onClick: () => onButtonClick(action, record),
                         disabled: idAndActionQueue[record?.key] ? true : false,
+                        children: Object.prototype.hasOwnProperty.call(
+                          SubActions,
+                          action
+                        )
+                          ? SubActions[action].map((a) => ({
+                              key: a,
+                              label: t(ActionLabel[a]),
+                            }))
+                          : undefined,
                       };
                     })
                 : type == TableTypes.PURCHASE_ORDER
