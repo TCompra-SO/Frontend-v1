@@ -35,7 +35,6 @@ export default function Home() {
     requirementList,
     loadingRequirementList,
     totalRequirementList,
-    retrieveLastSearchRequeriments,
   } = useContext(HomeContext);
   const [tableContent, setTableContent] = useState<TableTypeHome>({
     type: TableTypes.HOME,
@@ -54,8 +53,6 @@ export default function Home() {
   /** Mostrar datos iniciales */
 
   useEffect(() => {
-    console.log(requirementList.length);
-    // if (requirementList.length == 0) retrieveLastSearchRequeriments();
     setTableContent((prevContent) => ({
       ...prevContent,
       page,

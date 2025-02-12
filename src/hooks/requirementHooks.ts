@@ -691,7 +691,9 @@ export function useGetRequirementList() {
     pageSize?: number,
     params?: HomeFilterRequest
   ) {
+    console.log(page);
     let success: boolean = false;
+    let totalPages: number = 0;
     try {
       setLoading(true);
       let httpService: HttpService | null = null;
@@ -716,7 +718,10 @@ export function useGetRequirementList() {
         setUsersCache(cache);
         setRequirements(data.filter((req) => req !== null));
         setTotal(responseData.res?.totalDocuments);
-        success = true;
+        totalPages = responseData.res?.totalPages;
+        if (responseData.res?.currentPage > responseData.res?.totalPages)
+          success = false;
+        else success = true;
       } else if (error) {
         setTotal(0);
         setRequirements([]);
@@ -728,7 +733,7 @@ export function useGetRequirementList() {
     } finally {
       setLoading(false);
     }
-    return success;
+    return { success, totalPages };
   }
 
   return {

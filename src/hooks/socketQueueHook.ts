@@ -6,6 +6,7 @@ import {
 } from "../utilities/types";
 import { SocketResponse } from "../models/Interfaces";
 import { BasicRequirement, Requirement } from "../models/MainInterfaces";
+import { homePageSize } from "../utilities/globals";
 
 export default function useSocketQueueHook(
   createCallback: (data: SocketResponse) => void | Promise<void>,
@@ -70,7 +71,9 @@ export function useAddOrUpdateRow(
   list: any[],
   setList: (list: any[]) => void,
   total: number,
-  setTotal: (total: number) => void
+  setTotal: (total: number) => void,
+  callback?: () => any,
+  useFilter?: boolean | null
 ) {
   async function addNewRow(
     data: SocketResponse,
@@ -93,10 +96,14 @@ export function useAddOrUpdateRow(
       if (updElem) {
         if (tableType == TableTypes.HOME) {
           const requirement: Requirement = updElem as Requirement;
+          console.log(11111111, useFilter);
           if (requirement.state != RequirementState.PUBLISHED) {
-            setList([...list.slice(0, ind), ...list.slice(ind + 1)]);
-            setTotal(total - 1);
-          } else if (canAddRow) insertElementInArray(updElem, ind);
+            if (!useFilter) {
+              setList([...list.slice(0, ind), ...list.slice(ind + 1)]);
+              setTotal(total - 1);
+              reloadPageHome(total - 1);
+            }
+          } else insertElementInArray(updElem, ind);
         } else if (
           tableType == TableTypes.REQUIREMENT ||
           tableType == TableTypes.ALL_REQUIREMENTS
@@ -131,6 +138,10 @@ export function useAddOrUpdateRow(
 
   function insertElementInArray(updElem: any, ind: number) {
     setList([...list.slice(0, ind), updElem, ...list.slice(ind + 1)]);
+  }
+
+  function reloadPageHome(newTotal: number) {
+    if (newTotal == 0 || newTotal == homePageSize) callback?.();
   }
 
   return { updateRow, addNewRow };

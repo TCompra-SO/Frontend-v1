@@ -75,7 +75,9 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     requirementList,
     setRequirementList,
     totalRequirementList,
-    setTotalRequirementList
+    setTotalRequirementList,
+    retrieveLastSearchRequeriments,
+    useFilter
   );
   const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
     addNewRow,
@@ -105,6 +107,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   }, [isLoggedIn]);
 
   useEffect(() => {
+    console.log(useFilter);
     if (useFilter === false) setPage(1);
   }, [useFilter]);
 
@@ -124,17 +127,27 @@ export function HomeProvider({ children }: { children: ReactNode }) {
 
   async function retrieveLastSearchRequeriments() {
     if (lastSearchParams.page) {
-      const success = await retrieveRequirements(
+      const { success, totalPages } = await retrieveRequirements(
         lastSearchParams.page,
         lastSearchParams.pageSize,
         lastSearchParams.params
       );
-      if (!success && page - 1 > 0)
-        await retrieveRequirements(
-          lastSearchParams.page - 1,
-          lastSearchParams.pageSize,
-          lastSearchParams.params
-        );
+      console.log(lastSearchParams.page, success, totalPages);
+      if (!success && totalPages) {
+        console.log(lastSearchParams.page - 1, totalPages);
+        if (lastSearchParams.page - 1 <= totalPages)
+          await retrieveRequirements(
+            lastSearchParams.page - 1,
+            lastSearchParams.pageSize,
+            lastSearchParams.params
+          );
+        else
+          await retrieveRequirements(
+            1,
+            lastSearchParams.pageSize,
+            lastSearchParams.params
+          );
+      }
     }
   }
 
