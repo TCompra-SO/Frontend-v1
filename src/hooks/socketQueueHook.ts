@@ -6,8 +6,6 @@ import {
 } from "../utilities/types";
 import { SocketResponse } from "../models/Interfaces";
 import { BasicRequirement, Requirement } from "../models/MainInterfaces";
-import { homePageSize } from "../utilities/globals";
-
 export default function useSocketQueueHook(
   createCallback: (data: SocketResponse) => void | Promise<void>,
   updateCallback: (
@@ -92,16 +90,16 @@ export function useAddOrUpdateRow(
     const ind = list.findIndex((item) => item.key === data.key);
     if (ind != -1) {
       const updElem = await transformData(data["dataPack"]["data"][0]);
-      console.log("updating", updElem);
+      // console.log("updating", updElem);
       if (updElem) {
         if (tableType == TableTypes.HOME) {
           const requirement: Requirement = updElem as Requirement;
-          console.log(11111111, useFilter);
           if (requirement.state != RequirementState.PUBLISHED) {
             if (!useFilter) {
-              setList([...list.slice(0, ind), ...list.slice(ind + 1)]);
+              const newList = [...list.slice(0, ind), ...list.slice(ind + 1)];
+              setList(newList);
               setTotal(total - 1);
-              reloadPageHome(total - 1);
+              if (newList.length == 0) reloadPageHome();
             }
           } else insertElementInArray(updElem, ind);
         } else if (
@@ -140,8 +138,8 @@ export function useAddOrUpdateRow(
     setList([...list.slice(0, ind), updElem, ...list.slice(ind + 1)]);
   }
 
-  function reloadPageHome(newTotal: number) {
-    if (newTotal == 0 || newTotal == homePageSize) callback?.();
+  function reloadPageHome() {
+    callback?.();
   }
 
   return { updateRow, addNewRow };

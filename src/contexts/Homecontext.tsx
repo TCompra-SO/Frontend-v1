@@ -143,7 +143,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
           );
         else
           await retrieveRequirements(
-            1,
+            totalPages,
             lastSearchParams.pageSize,
             lastSearchParams.params
           );
