@@ -107,7 +107,6 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   }, [isLoggedIn]);
 
   useEffect(() => {
-    console.log(useFilter);
     if (useFilter === false) setPage(1);
   }, [useFilter]);
 

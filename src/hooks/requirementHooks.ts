@@ -691,7 +691,6 @@ export function useGetRequirementList() {
     pageSize?: number,
     params?: HomeFilterRequest
   ) {
-    console.log(page);
     let success: boolean = false;
     let totalPages: number = 0;
     try {

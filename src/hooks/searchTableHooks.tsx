@@ -1,5 +1,9 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { HttpService, useApiParams } from "../models/Interfaces";
+import {
+  HttpService,
+  PaginationDataResponse,
+  useApiParams,
+} from "../models/Interfaces";
 import { FieldFilter, FieldSort, SearchTableRequest } from "../models/Requests";
 import useApi from "./useApi";
 import {
@@ -49,6 +53,7 @@ export default function useSearchTable(
     service: null,
     method: "get",
   });
+
   const {
     responseData,
     error,
@@ -59,9 +64,28 @@ export default function useSearchTable(
   } = useApi<SearchTableRequest>(apiParams);
 
   useEffect(() => {
+    console.log("calling");
     if (apiParams.service) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData?.res) {
+      const pagination: PaginationDataResponse = responseData.res;
+      if (
+        pagination.currentPage > pagination.totalPages &&
+        apiParams.dataToSend
+      ) {
+        const temp = apiParams.dataToSend;
+        temp.page = pagination.totalPages;
+        setApiParams((prev) => ({
+          ...prev,
+          dataToSend: temp,
+        }));
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData]);
 
   function reset() {
     setApiParams({
@@ -105,7 +129,7 @@ export default function useSearchTable(
         stOrderType
       );
       // console.log(service, stTableType, stSubType);
-      setApiParams({
+      const apiData: useApiParams<SearchTableRequest> = {
         service,
         method: "post",
         dataToSend: {
@@ -119,7 +143,8 @@ export default function useSearchTable(
           filterColumn,
           filterData,
         },
-      });
+      };
+      setApiParams(apiData);
     }
   }
 

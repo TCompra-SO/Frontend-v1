@@ -509,3 +509,10 @@ export interface NotificationData {
   targetId: string;
   targetType: RequirementType | PurchaseOrderTableTypes;
 }
+
+export interface PaginationDataResponse {
+  totalDocuments: number;
+  totalPages: number;
+  currentPage: number;
+  pageSize: number;
+}

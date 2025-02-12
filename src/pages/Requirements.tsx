@@ -175,7 +175,6 @@ export default function Requirements() {
   /** Para mostrar modales */
 
   useEffect(() => {
-    console.log(modalDataOffersByRequirementId);
     if (
       modalDataOffersByRequirementId.type === ModalTypes.DETAILED_REQUIREMENT
     ) {
