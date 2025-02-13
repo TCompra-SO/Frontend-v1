@@ -220,6 +220,10 @@ export function useFilterSortPaginationForTable() {
     tableSearchAfterMseconds
   );
 
+  useEffect(() => {
+    console.log(filteredInfo);
+  }, [filteredInfo]);
+
   function handleChangePageAndPageSize(
     { page, pageSize, sorter, filters }: OnChangePageAndPageSizeTypeParams,
     fieldNameObj: Record<string, string>,
@@ -238,6 +242,22 @@ export function useFilterSortPaginationForTable() {
     setFieldSort(fieldSort);
     setFieldFilter(fieldFilter);
     setFilteredInfo(newFilteredInfo);
+    // setFilteredInfo((prev) => {
+    //   if (prev) {
+    //     return { ...prev, _forceUpdate: prev._forceUpdate ? null : [] };
+    //   }
+    //   return prev;
+    // });
+    if (newFilteredInfo && newFilteredInfo.state)
+      setFilteredInfo((prev) => {
+        if (newFilteredInfo.state) {
+          const a = newFilteredInfo.state;
+
+          return { ...newFilteredInfo, state: a.concat([34]) };
+        }
+        return prev;
+      });
+
     searchTable({
       page,
       pageSize,

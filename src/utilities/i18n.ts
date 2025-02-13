@@ -528,7 +528,8 @@ const resources = {
       total: "Total",
       items: "items",
       of: 'of',
-      warrantyDuration: 'Warranty duration'
+      warrantyDuration: 'Warranty duration',
+      termsAndConditions: 'Terms and Conditions'
     },
   },
   es: {
@@ -1068,7 +1069,8 @@ const resources = {
       total: "Total",
       items: "items",
       of: 'de',
-      warrantyDuration: 'Duración de garantía'
+      warrantyDuration: 'Duración de garantía',
+      termsAndConditions: 'Términos y Condiciones'
     },
   },
 };

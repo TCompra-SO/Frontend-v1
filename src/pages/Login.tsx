@@ -36,6 +36,7 @@ import { AxiosError } from "axios";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { useLogin, useRegister } from "../hooks/authHooks";
 import useShowNotification from "../hooks/utilHooks";
+import TermsAndConditionsModal from "../components/common/modals/TermsAndConditionsModal";
 
 const LoginType = {
   LOGIN: "login",
@@ -62,6 +63,7 @@ export default function Login(props: LoginProps) {
   const [checkedTermsConditions, setCheckedTermsConditions] = useState(false);
   const [validDoc, setValidDoc] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isOpenModalTerms, setIsOpenModalTerms] = useState(false);
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
   const [docType, setDocType] = useState(DocType.DNI);
   const [form] = Form.useForm();
@@ -237,6 +239,11 @@ export default function Login(props: LoginProps) {
         onClose={handleCloseModal}
       />
 
+      <TermsAndConditionsModal
+        isOpen={isOpenModalTerms}
+        onClose={() => setIsOpenModalTerms(false)}
+      />
+
       <div className="modal-login">
         <div className="login-box text-center">
           <img
@@ -396,9 +403,12 @@ export default function Login(props: LoginProps) {
                   </>
                 )}
                 {loginType == LoginType.REGISTER && (
-                  <Checkbox onChange={onChangeAgreeToTermsAndConditions}>
+                  <Checkbox
+                    onChange={onChangeAgreeToTermsAndConditions}
+                    style={{}}
+                  >
                     <a
-                      // onClick={() => handleOpenModal(false)}
+                      onClick={() => setIsOpenModalTerms(true)}
                       className="forgot-password text-left"
                       style={{ width: "100%" }}
                     >

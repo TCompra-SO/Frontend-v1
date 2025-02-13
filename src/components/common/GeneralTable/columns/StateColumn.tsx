@@ -56,8 +56,7 @@ export default function StateColumn(
     showSorterTooltip: false,
     width: "113px",
     hidden,
-    filteredValue: filteredInfo?.[stateColumnKey] || null,
-
+    filteredValue: filteredInfo?.[stateColumnKey] ?? null,
     filters:
       type == TableTypes.SENT_CERT || type == TableTypes.RECEIVED_CERT
         ? [

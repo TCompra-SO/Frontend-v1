@@ -163,7 +163,7 @@ export default function GeneralTable(props: GeneralTableProps) {
     style: { width: "100%" },
     bordered: false,
     onChange: (pagination, filters, sorter, extra) => {
-      // console.log(pagination, filters, sorter);
+      console.log(filters);
       if (
         props.onChangePageAndPageSize &&
         pagination.current &&
