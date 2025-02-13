@@ -64,7 +64,6 @@ export default function useSearchTable(
   } = useApi<SearchTableRequest>(apiParams);
 
   useEffect(() => {
-    console.log("calling");
     if (apiParams.service) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
@@ -241,21 +240,16 @@ export function useFilterSortPaginationForTable() {
     );
     setFieldSort(fieldSort);
     setFieldFilter(fieldFilter);
-    setFilteredInfo(newFilteredInfo);
-    // setFilteredInfo((prev) => {
-    //   if (prev) {
-    //     return { ...prev, _forceUpdate: prev._forceUpdate ? null : [] };
-    //   }
-    //   return prev;
-    // });
-    if (newFilteredInfo && newFilteredInfo.state)
-      setFilteredInfo((prev) => {
-        if (newFilteredInfo.state) {
-          const a = newFilteredInfo.state;
-
-          return { ...newFilteredInfo, state: a.concat([34]) };
-        }
-        return prev;
+    // setFilteredInfo(newFilteredInfo);
+    if (newFilteredInfo)
+      setFilteredInfo(() => {
+        Object.keys(newFilteredInfo).forEach((filter) => {
+          if (newFilteredInfo[filter])
+            newFilteredInfo[filter] = newFilteredInfo[filter]?.concat(
+              Math.random()
+            );
+        });
+        return newFilteredInfo;
       });
 
     searchTable({

@@ -29,6 +29,8 @@ import {
   TableTypes,
 } from "../../../../utilities/types";
 import { stateColumnKey } from "../../../../utilities/globals";
+import { StrictColumnFilterItem } from "../../../../models/Interfaces";
+import CustomFilterDropdown from "../../utils/CustomFilterDropdown";
 
 export default function StateColumn(
   type: TableTypes,
@@ -37,6 +39,74 @@ export default function StateColumn(
   extraParam?: any
 ) {
   const { t } = useTranslation();
+  const filters: StrictColumnFilterItem[] | undefined =
+    type == TableTypes.SENT_CERT || type == TableTypes.RECEIVED_CERT
+      ? [
+          {
+            text: t(CertificationStateMeta[CertificationState.CERTIFIED].label),
+            value: CertificationState.CERTIFIED,
+          },
+          {
+            text: t(CertificationStateMeta[CertificationState.PENDING].label),
+            value: CertificationState.PENDING,
+          },
+          {
+            text: t(CertificationStateMeta[CertificationState.REJECTED].label),
+            value: CertificationState.REJECTED,
+          },
+          {
+            text: t(CertificationStateMeta[CertificationState.RESENT].label),
+            value: CertificationState.RESENT,
+          },
+        ]
+      : type == TableTypes.REQUIREMENT ||
+        type == TableTypes.ALL_REQUIREMENTS ||
+        type == TableTypes.REQUIREMENT_SUBUSER
+      ? Object.values(RequirementState)
+          .filter(
+            (state) => RequirementStateMeta[Number(state) as RequirementState]
+          )
+          .map((state) => {
+            return {
+              text: t(
+                RequirementStateMeta[Number(state) as RequirementState]?.label
+              ),
+              value: Number(state) as RequirementState,
+            };
+          })
+      : type == TableTypes.OFFER ||
+        type == TableTypes.ALL_OFFERS ||
+        type == TableTypes.OFFER_SUBUSER
+      ? Object.values(OfferState)
+          .filter((state) => OfferStateMeta[Number(state) as OfferState])
+          .map((state) => {
+            return {
+              text: t(OfferStateMeta[Number(state) as OfferState]?.label),
+              value: Number(state) as OfferState,
+            };
+          })
+      : type == TableTypes.PURCHASE_ORDER ||
+        type == TableTypes.ALL_PURCHASE_ORDERS ||
+        type == TableTypes.SALES_ORDER ||
+        type == TableTypes.ALL_SALES_ORDERS ||
+        type == TableTypes.PURCHASE_ORDER_SUBUSER ||
+        type == TableTypes.SALES_ORDER_SUBUSER
+      ? Object.values(PurchaseOrderState)
+          .filter(
+            (state) =>
+              PurchaseOrderStateMeta[Number(state) as PurchaseOrderState]
+          )
+          .map((state) => {
+            return {
+              text: t(
+                PurchaseOrderStateMeta[Number(state) as PurchaseOrderState]
+                  ?.label
+              ),
+              value: Number(state) as PurchaseOrderState,
+            };
+          })
+      : undefined;
+
   const col: ColumnType<
     | Requirement
     | Offer
@@ -57,81 +127,28 @@ export default function StateColumn(
     width: "113px",
     hidden,
     filteredValue: filteredInfo?.[stateColumnKey] ?? null,
-    filters:
-      type == TableTypes.SENT_CERT || type == TableTypes.RECEIVED_CERT
-        ? [
-            {
-              text: t(
-                CertificationStateMeta[CertificationState.CERTIFIED].label
-              ),
-              value: CertificationState.CERTIFIED,
-            },
-            {
-              text: t(CertificationStateMeta[CertificationState.PENDING].label),
-              value: CertificationState.PENDING,
-            },
-            {
-              text: t(
-                CertificationStateMeta[CertificationState.REJECTED].label
-              ),
-              value: CertificationState.REJECTED,
-            },
-            {
-              text: t(CertificationStateMeta[CertificationState.RESENT].label),
-              value: CertificationState.RESENT,
-            },
-          ]
-        : type == TableTypes.REQUIREMENT ||
-          type == TableTypes.ALL_REQUIREMENTS ||
-          type == TableTypes.REQUIREMENT_SUBUSER
-        ? Object.values(RequirementState)
-            .filter(
-              (state) => RequirementStateMeta[Number(state) as RequirementState]
-            )
-            .map((state) => {
-              return {
-                text: t(
-                  RequirementStateMeta[Number(state) as RequirementState]?.label
-                ),
-                value: Number(state) as RequirementState,
-              };
-            })
-        : type == TableTypes.OFFER ||
-          type == TableTypes.ALL_OFFERS ||
-          type == TableTypes.OFFER_SUBUSER
-        ? Object.values(OfferState)
-            .filter((state) => OfferStateMeta[Number(state) as OfferState])
-            .map((state) => {
-              return {
-                text: t(OfferStateMeta[Number(state) as OfferState]?.label),
-                value: Number(state) as OfferState,
-              };
-            })
-        : type == TableTypes.PURCHASE_ORDER ||
-          type == TableTypes.ALL_PURCHASE_ORDERS ||
-          type == TableTypes.SALES_ORDER ||
-          type == TableTypes.ALL_SALES_ORDERS ||
-          type == TableTypes.PURCHASE_ORDER_SUBUSER ||
-          type == TableTypes.SALES_ORDER_SUBUSER
-        ? Object.values(PurchaseOrderState)
-            .filter(
-              (state) =>
-                PurchaseOrderStateMeta[Number(state) as PurchaseOrderState]
-            )
-            .map((state) => {
-              return {
-                text: t(
-                  PurchaseOrderStateMeta[Number(state) as PurchaseOrderState]
-                    ?.label
-                ),
-                value: Number(state) as PurchaseOrderState,
-              };
-            })
-        : undefined,
+    filters,
+
     onFilter:
       type == TableTypes.SENT_CERT || type == TableTypes.RECEIVED_CERT
         ? (value, record) => record.state == value
         : undefined,
+
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
+      <CustomFilterDropdown
+        setSelectedKeys={setSelectedKeys}
+        selectedKeys={selectedKeys}
+        confirm={confirm}
+        clearFilters={clearFilters}
+        filters={filters}
+        filteredInfo={filteredInfo}
+      />
+    ),
 
     render: (_, record) => {
       let label: string = "";

@@ -31,6 +31,7 @@ import {
 import useApi, { UseApiType } from "../hooks/useApi";
 import { FieldSort } from "./Requests";
 import { FilterNames } from "../contexts/RequirementDetailContext";
+import { ColumnFilterItem } from "antd/lib/table/interface";
 
 /******** Modals *******/
 
@@ -515,4 +516,9 @@ export interface PaginationDataResponse {
   totalPages: number;
   currentPage: number;
   pageSize: number;
+}
+
+export interface StrictColumnFilterItem extends ColumnFilterItem {
+  value: React.Key;
+  children?: StrictColumnFilterItem[];
 }
