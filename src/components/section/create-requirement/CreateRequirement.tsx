@@ -464,8 +464,13 @@ export default function CreateRequirement(props: CreateRequirementProps) {
                     <LocationField onlyItem />
                   </Col>
                   <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-                    <LabelForCreateRequirement label={"budget"} />
-                    <BudgetField required={false} />
+                    <LabelForCreateRequirement
+                      label={type == RequirementType.SALE ? "price" : "budget"}
+                    />
+                    <BudgetField
+                      required={false}
+                      usePriceLabel={type == RequirementType.SALE}
+                    />
                   </Col>
                   <Col xs={24} sm={24} md={6} lg={6} xl={6}>
                     <LabelForCreateRequirement label={"currency"} />
@@ -500,7 +505,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
                         />
                       </Col>
                       <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-                        <LabelForCreateRequirement label={"duration"} />
+                        <LabelForCreateRequirement label={"warrantyDuration"} />
                         <DurationField
                           required={warrantyRequired}
                           name="duration"

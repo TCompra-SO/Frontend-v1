@@ -356,40 +356,46 @@ export default function OfferForm(props: OfferFormProps) {
         deliveryTimeID: values.deliveryTime,
         currencyID: values.currency,
         budget: values.budget,
-        includesIGV: checkedIGV,
-        includesDelivery: checkedDelivery,
         requerimentID: props.requirement.key,
         userID: uid,
       };
 
-      if (values.warranty && values.duration !== undefined) {
-        data.warranty = values.warranty;
-        data.timeMeasurementID = values.duration;
+      if (
+        props.requirement.type == RequirementType.GOOD ||
+        props.requirement.type == RequirementType.SERVICE
+      ) {
+        data.includesIGV = checkedIGV;
+        data.includesDelivery = checkedDelivery;
+        if (values.warranty && values.duration !== undefined) {
+          data.warranty = values.warranty;
+          data.timeMeasurementID = values.duration;
+        }
+        if (values.support) data.support = values.support;
       }
 
-      if (values.support) data.support = values.support;
+      if (props.requirement.type != RequirementType.SALE) {
+        if (values.images && values.images.fileList.length > 0) {
+          const formData = new FormData();
+          values.images.fileList.forEach((file: UploadFile) => {
+            if (file.originFileObj) {
+              formData.append(ImageRequestLabels.IMAGES, file.originFileObj);
+            }
+          });
+          setFormDataImg(formData);
+        }
 
-      if (values.images && values.images.fileList.length > 0) {
-        const formData = new FormData();
-        values.images.fileList.forEach((file: UploadFile) => {
-          if (file.originFileObj) {
-            formData.append(ImageRequestLabels.IMAGES, file.originFileObj);
-          }
-        });
-        setFormDataImg(formData);
-      }
-
-      if (values.doc && values.doc.fileList.length > 0) {
-        const formDataDoc = new FormData();
-        values.doc.fileList.forEach((file: UploadFile) => {
-          if (file.originFileObj) {
-            formDataDoc.append(
-              ImageRequestLabels.DOCUMENTS,
-              file.originFileObj
-            );
-          }
-        });
-        setFormDataDoc(formDataDoc);
+        if (values.doc && values.doc.fileList.length > 0) {
+          const formDataDoc = new FormData();
+          values.doc.fileList.forEach((file: UploadFile) => {
+            if (file.originFileObj) {
+              formDataDoc.append(
+                ImageRequestLabels.DOCUMENTS,
+                file.originFileObj
+              );
+            }
+          });
+          setFormDataDoc(formDataDoc);
+        }
       }
 
       submit(data);
@@ -521,41 +527,70 @@ export default function OfferForm(props: OfferFormProps) {
                 <RowContainer>
                   <OfferDescriptionField />
                 </RowContainer>
-                <RowContainer>
-                  <LocationField onlyItem />
-                  <DeliveryTimeField onlyItem />
-                  <CurrencyField onlyItem disabled />
-                </RowContainer>
-                <RowContainer>
-                  <WarrantyField
-                    required={warrantyRequired}
-                    onChange={() => checkWarrantyField()}
-                  />
-                  <DurationField
-                    required={warrantyRequired}
-                    name={"duration"}
-                    onlyItem
-                    onChange={() => checkWarrantyField()}
-                  />
-                  <SupportField />
-                  <BudgetField required greaterThanZero />
-                </RowContainer>
-                <div className="t-flex gap-15 archivos-up">
-                  <AddImagesField forOffer />
-                  <AddDocumentField forOffer />
-                </div>
+                {props.requirement.type == RequirementType.SALE ? (
+                  <RowContainer>
+                    <LocationField onlyItem />
+                    <DeliveryTimeField onlyItem />
+                    <CurrencyField onlyItem disabled />
+                    <BudgetField required greaterThanZero />
+                  </RowContainer>
+                ) : (
+                  <RowContainer>
+                    <LocationField onlyItem />
+                    <DeliveryTimeField onlyItem />
+                    <CurrencyField onlyItem disabled />
+                  </RowContainer>
+                )}
+                {props.requirement.type != RequirementType.SALE && (
+                  <>
+                    <RowContainer>
+                      <WarrantyField
+                        required={warrantyRequired}
+                        onChange={() => checkWarrantyField()}
+                      />
+                      <DurationField
+                        required={warrantyRequired}
+                        name={"duration"}
+                        onlyItem
+                        onChange={() => checkWarrantyField()}
+                        forWarranty
+                      />
+                      <SupportField />
+                      <BudgetField required greaterThanZero usePriceLabel />
+                    </RowContainer>
+
+                    <div className="t-flex gap-15 archivos-up">
+                      <AddImagesField forOffer />
+                      <AddDocumentField forOffer />
+                    </div>
+                  </>
+                )}
 
                 <div className="t-flex t-wrap gap-15 up-footer">
-                  <div className="t-flex gap-5 uf-1">
-                    <Checkbox onChange={(e) => setCheckedIGV(e.target.checked)}>
-                      <div className="footer-text">{t("priceIncludesIGV")}</div>
-                    </Checkbox>
-                    <Checkbox
-                      onChange={(e) => setCheckedDelivery(e.target.checked)}
-                    >
-                      <div className="footer-text">{t("includeDelivery")}</div>
-                    </Checkbox>
-                  </div>
+                  {props.requirement.type == RequirementType.GOOD ||
+                  props.requirement.type == RequirementType.SERVICE ? (
+                    <div className="t-flex gap-5 uf-1">
+                      <Checkbox
+                        onChange={(e) => setCheckedIGV(e.target.checked)}
+                      >
+                        <div className="footer-text">
+                          {t("priceIncludesIGV")}
+                        </div>
+                      </Checkbox>
+                      <Checkbox
+                        onChange={(e) => setCheckedDelivery(e.target.checked)}
+                      >
+                        <div className="footer-text">
+                          {t("includeDelivery")}
+                        </div>
+                      </Checkbox>
+                    </div>
+                  ) : (
+                    <>
+                      <div></div>
+                      <div></div>
+                    </>
+                  )}
                   <div className="t-flex gap-10 uf-2">
                     <ButtonContainer
                       htmlType="submit"

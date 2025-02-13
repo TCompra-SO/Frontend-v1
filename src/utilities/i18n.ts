@@ -527,7 +527,8 @@ const resources = {
       approvedCertifications: "Approved certifications",
       total: "Total",
       items: "items",
-      of: 'of'
+      of: 'of',
+      warrantyDuration: 'Warranty duration'
     },
   },
   es: {
@@ -1066,7 +1067,8 @@ const resources = {
       approvedCertifications: "Certificaciones aprobadas",
       total: "Total",
       items: "items",
-      of: 'de'
+      of: 'de',
+      warrantyDuration: 'Duración de garantía'
     },
   },
 };

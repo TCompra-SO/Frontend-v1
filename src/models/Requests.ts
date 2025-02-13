@@ -125,8 +125,8 @@ export interface CreateOfferRequest {
   timeMeasurementID?: number;
   support?: number;
   budget: number;
-  includesIGV: boolean;
-  includesDelivery: boolean;
+  includesIGV?: boolean;
+  includesDelivery?: boolean;
   requerimentID: string;
   userID: string;
 }

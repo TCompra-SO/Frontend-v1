@@ -71,7 +71,7 @@ export default function ProductDetail() {
   async function setRequirementData(response: any) {
     const req = await transformFromGetRequirementByIdToRequirement(
       response.data[0],
-      RequirementType.GOOD //r3v
+      RequirementType.SALE //r3v
     );
     if (req) setRequirement(req);
     else navigate(pageRoutes.home);
