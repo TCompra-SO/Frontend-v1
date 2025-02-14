@@ -40,34 +40,40 @@ export default function useSocket(
 
   useEffect(() => {
     if (!socketAPI) {
-      socketAPI = io(import.meta.env.VITE_SOCKET_URL);
+      if (subType == RequirementType.GOOD)
+        socketAPI = io(import.meta.env.VITE_REQUIREMENTS_SOCKET_URL);
+      else if (subType == RequirementType.SERVICE)
+        socketAPI = io(import.meta.env.VITE_SERVICES_SOCKET_URL);
+      else if (subType == RequirementType.SALE)
+        socketAPI = io(import.meta.env.VITE_SALES_SOCKET_URL);
+      if (socketAPI) {
+        socketAPI.on("connect", () => {
+          console.log("Connected");
+          const roomName = getRoomName();
+          if (roomName) socketAPI?.emit("joinRoom", roomName + mainUid);
+        });
 
-      socketAPI.on("connect", () => {
-        console.log("Connected");
-        const roomName = getRoomName();
-        if (roomName) socketAPI?.emit("joinRoom", roomName + mainUid);
-      });
+        socketAPI.on("joinedRoom", (message) => {
+          console.log(message);
+        });
 
-      socketAPI.on("joinedRoom", (message) => {
-        console.log(message);
-      });
+        socketAPI.on("updateRoom", (data: SocketResponse) => {
+          console.log("Received", data);
+          const isAllTypeTableVar = isAllTypeTable();
+          const canAddRow = pageRef.current == 1;
 
-      socketAPI.on("updateRoom", (data: SocketResponse) => {
-        console.log("Received", data);
-        const isAllTypeTableVar = isAllTypeTable();
-        const canAddRow = pageRef.current == 1;
-
-        if (
-          // Agregar cambios a cola si la tabla es de  tipo All o si el cambio pertenece a usuario
-          (isAllTypeTableVar || (!isAllTypeTableVar && uid == data.userId)) &&
-          (data.typeSocket == SocketChangeType.UPDATE ||
-            (data.typeSocket == SocketChangeType.CREATE &&
-              canAddRow &&
-              searchTableRequestRef.current &&
-              hasNoSortNorFilter(searchTableRequestRef.current)))
-        )
-          updateChangesQueue(data, canAddRow);
-      });
+          if (
+            // Agregar cambios a cola si la tabla es de  tipo All o si el cambio pertenece a usuario
+            (isAllTypeTableVar || (!isAllTypeTableVar && uid == data.userId)) &&
+            (data.typeSocket == SocketChangeType.UPDATE ||
+              (data.typeSocket == SocketChangeType.CREATE &&
+                canAddRow &&
+                searchTableRequestRef.current &&
+                hasNoSortNorFilter(searchTableRequestRef.current)))
+          )
+            updateChangesQueue(data, canAddRow);
+        });
+      }
     }
 
     return () => {

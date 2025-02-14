@@ -3,18 +3,18 @@ import { ApiMainRoutes, ApiRoutes } from "../../../utilities/routes";
 
 export function getSalesService(page: number, pageSize: number): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.getRequirements}${page}/${pageSize}`,
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.getRequirements
+    }${page}/${pageSize}`,
     type: "SA-GET-ALL",
   };
 }
 
 export function createSaleService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.create}`,
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.create
+    }`,
     type: "SA-CRE",
   };
 }
@@ -24,45 +24,45 @@ export function getSaleByIdService(
   showErrorMessage: boolean = true
 ): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.getRequirement}${reqId}`,
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.getRequirement
+    }${reqId}`,
     type: showErrorMessage ? "SA-GET-ID" : "",
   };
 }
 
 export function selectSaleOfferService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.selectOffer}`,
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.selectOffer
+    }`,
     type: "SA-SE-OF",
   };
 }
 
 export function getBasicRateDataSaleService(id: string): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.getBasicRateData}${id}`,
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.getBasicRateData
+    }${id}`,
     type: "SA-BA-RA",
   };
 }
 
 export function deleteSaleService(id: string): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.delete}${id}`,
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.delete
+    }${id}`,
     type: "SA-DEL",
   };
 }
 
 export function republishSaleService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.republish}`,
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.republish
+    }`,
     type: "SA-REP",
   };
 }
@@ -74,9 +74,7 @@ export function getSalesByEntityService(
   pageSize: number
 ): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.requirements}${
       ApiRoutes.requirements.getRequirementsByEntity
     }${id}/${page}/${pageSize}`,
     type: "SA-GET-ENT",
@@ -90,9 +88,7 @@ export function getSalesBySubUserService(
   pageSize: number
 ): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.requirements}${
       ApiRoutes.requirements.getRequirementsBySubUser
     }${id}/${page}/${pageSize}`,
     type: "SA-GET-SUB",
@@ -101,43 +97,43 @@ export function getSalesBySubUserService(
 
 export function culminateSaleService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.culminate}`,
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.culminate
+    }`,
     type: "SA-CUL",
   };
 }
 
 export function cancelSaleService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.cancel}`,
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.cancel
+    }`,
     type: "SA-CAN",
   };
 }
 
 export function homeSaleFilterService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.searchMainFilters}`,
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.searchMainFilters
+    }`,
     type: "SA-HO-FI",
   };
 }
 
 export function searchSalesService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.searchRequirements}`,
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.searchRequirements
+    }`,
     type: "SA-SE-RE",
   };
 }
 
 export function uploadDocsSaleService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.documents}${
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.documents}${
       ApiRoutes.documents.uploadDocumentsReq
     }`,
     type: "SA-DO-UP",
@@ -146,7 +142,7 @@ export function uploadDocsSaleService(): HttpService {
 
 export function uploadImagesSaleService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.images}${
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.images}${
       ApiRoutes.images.uploadImagesReq
     }`,
     type: "SA-IM-UP",
