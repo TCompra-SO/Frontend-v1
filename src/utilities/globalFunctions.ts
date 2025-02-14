@@ -99,6 +99,7 @@ import {
 } from "../services/requests/good/requirementOfferService";
 import {
   cancelServiceOfferService,
+  createServiceOfferService,
   culminateServiceOfferService,
   deleteServiceOfferService,
   getBasicRateDataServiceOfferService,
@@ -111,6 +112,7 @@ import {
 } from "../services/requests/service/serviceOfferService";
 import {
   cancelSaleOfferService,
+  createSaleOfferService,
   culminateSaleOfferService,
   deleteSaleOfferService,
   getBasicRateDataSaleOfferService,
@@ -666,8 +668,8 @@ export function getSearchRecordsService(
 
 export function getCreateOfferService(type: RequirementType) {
   if (type == RequirementType.GOOD) return createReqOfferService();
-  if (type == RequirementType.SERVICE) return searchServicesService();
-  if (type == RequirementType.SALE) return searchSalesService();
+  if (type == RequirementType.SERVICE) return createServiceOfferService();
+  if (type == RequirementType.SALE) return createSaleOfferService();
   return null;
 }
 

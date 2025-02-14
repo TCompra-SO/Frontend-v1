@@ -129,11 +129,7 @@ export default function OfferForm(props: OfferFormProps) {
     method: "get",
   });
   const { loading, responseData, error, errorMsg, fetchData } =
-    useApi<CreateOfferRequest>({
-      service: apiParams.service,
-      method: apiParams.method,
-      dataToSend: apiParams.dataToSend,
-    });
+    useApi<CreateOfferRequest>(apiParams);
 
   useEffect(() => {
     if (apiParams.service) fetchData();

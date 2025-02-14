@@ -117,9 +117,9 @@ export default function useSocket(
           roomName = "roomPurchaseOrderProviderProduct";
       } else if (subType == RequirementType.SERVICE) {
         if (orderType == PurchaseOrderTableTypes.ISSUED)
-          roomName = "roomPurchaseOrderClientProduct"; // r3v cambiar
+          roomName = "roomPurchaseOrderClientService"; // r3v cambiar
         else if (orderType == PurchaseOrderTableTypes.RECEIVED)
-          roomName = "roomPurchaseOrderProviderProduct";
+          roomName = "roomPurchaseOrderProviderService";
       }
     }
     if (

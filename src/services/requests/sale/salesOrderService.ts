@@ -4,8 +4,8 @@ import { UserRoles } from "../../../utilities/types";
 
 export function getSalesOrderPDFService(id: string): HttpService {
   return {
-    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.purchaseOrder}${
-      ApiRoutes.purchaseOrder.getPurchaseOrderPDF
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.saleOrder}${
+      ApiRoutes.saleOrder.getSaleOrderPDF
     }${id}`,
     type: "PO-PDF",
   };
@@ -13,8 +13,8 @@ export function getSalesOrderPDFService(id: string): HttpService {
 
 export function getSalesOrderByIdService(id: string): HttpService {
   return {
-    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.purchaseOrder}${
-      ApiRoutes.purchaseOrder.getPurchaseOrderById
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.saleOrder}${
+      ApiRoutes.saleOrder.getSaleOrderById
     }${id}`,
     type: "PO-ID",
   };
@@ -28,8 +28,8 @@ export function getSalesOrdersByClientEntityService(
   pageSize: number
 ): HttpService {
   return {
-    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.purchaseOrder}${
-      ApiRoutes.purchaseOrder.getPurchaseOrdersByClient
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.saleOrder}${
+      ApiRoutes.saleOrder.getSaleOrdersByClient
     }${id}/${userRole}/${page}/${pageSize}`,
     type: "PO-GET-ENT-C",
   };
@@ -43,8 +43,8 @@ export function getSalesOrdersByProviderEntityService(
   pageSize: number
 ): HttpService {
   return {
-    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.purchaseOrder}${
-      ApiRoutes.purchaseOrder.getPurchaseOrdersByProvider
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.saleOrder}${
+      ApiRoutes.saleOrder.getSaleOrdersByProvider
     }${id}/${userRole}/${page}/${pageSize}`,
     type: "PO-GET-ENT-P",
   };
@@ -52,8 +52,8 @@ export function getSalesOrdersByProviderEntityService(
 
 export function searchSalesOrdersByClientService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.purchaseOrder}${
-      ApiRoutes.purchaseOrder.searchPurchaseOrdersByClient
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.saleOrder}${
+      ApiRoutes.saleOrder.searchSaleOrdersByClient
     }`,
     type: "PO-SE-CL",
   };
@@ -61,8 +61,8 @@ export function searchSalesOrdersByClientService(): HttpService {
 
 export function searchSalesOrdersByProviderService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.purchaseOrder}${
-      ApiRoutes.purchaseOrder.searchPurchaseOrdersByProvider
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.saleOrder}${
+      ApiRoutes.saleOrder.searchSaleOrdersByProvider
     }`,
     type: "PO-SE-PR",
   };
