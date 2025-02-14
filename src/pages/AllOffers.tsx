@@ -264,7 +264,9 @@ export default function AllOffers() {
       <TablePageContent
         title={t("offers")}
         titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
-        subtitle={`${t("listOf")}  ${t(getLabelFromRequirementType(type))}`}
+        subtitle={`${t("listOf")} ${t("offers")} - ${t(
+          getLabelFromRequirementType(type)
+        )}`}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
         onSearch={(e) => handleSearch(e, searchTable)}

@@ -72,6 +72,7 @@ export default function useSearchTable(
     if (responseData?.res) {
       const pagination: PaginationDataResponse = responseData.res;
       if (
+        pagination.totalPages > 0 &&
         pagination.currentPage > pagination.totalPages &&
         apiParams.dataToSend
       ) {
@@ -116,7 +117,7 @@ export default function useSearchTable(
     const stSubType = subTypeParam ?? subType;
     const stOrderType = orderSubTypeParam ?? orderSubType;
     const newKeyWords = getSearchString(keyWords, true);
-    console.log(stSubType, stOrderType);
+    // console.log(stSubType, stOrderType);
     if (
       (newKeyWords && newKeyWords.length >= searchSinceLength) ||
       !newKeyWords
@@ -218,10 +219,6 @@ export function useFilterSortPaginationForTable() {
     },
     tableSearchAfterMseconds
   );
-
-  useEffect(() => {
-    console.log(filteredInfo);
-  }, [filteredInfo]);
 
   function handleChangePageAndPageSize(
     { page, pageSize, sorter, filters }: OnChangePageAndPageSizeTypeParams,

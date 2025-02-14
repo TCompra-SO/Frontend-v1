@@ -6,18 +6,18 @@ export function getServicesService(
   pageSize: number
 ): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.getRequirements}${page}/${pageSize}`,
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.getRequirements
+    }${page}/${pageSize}`,
     type: "SE-GET-ALL",
   };
 }
 
 export function createServiceService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.create}`,
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.create
+    }`,
     type: "SE-CRE",
   };
 }
@@ -27,45 +27,45 @@ export function getServiceByIdService(
   showErrorMessage: boolean = true
 ): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.getRequirement}${reqId}`,
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.getRequirement
+    }${reqId}`,
     type: showErrorMessage ? "SE-GET-ID" : "",
   };
 }
 
 export function selectServiceOfferService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.selectOffer}`,
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.selectOffer
+    }`,
     type: "SE-SE-OF",
   };
 }
 
 export function getBasicRateDataServiceService(id: string): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.getBasicRateData}${id}`,
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.getBasicRateData
+    }${id}`,
     type: "SE-BA-RA",
   };
 }
 
 export function deleteServiceService(id: string): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.delete}${id}`,
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.delete
+    }${id}`,
     type: "SE-DEL",
   };
 }
 
 export function republishServiceService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.republish}`,
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.republish
+    }`,
     type: "SE-REP",
   };
 }
@@ -77,9 +77,7 @@ export function getServicesByEntityService(
   pageSize: number
 ): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.requirements}${
       ApiRoutes.requirements.getRequirementsByEntity
     }${id}/${page}/${pageSize}`,
     type: "SE-GET-ENT",
@@ -93,9 +91,7 @@ export function getServicesBySubUserService(
   pageSize: number
 ): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.requirements}${
       ApiRoutes.requirements.getRequirementsBySubUser
     }${id}/${page}/${pageSize}`,
     type: "SE-GET-SUB",
@@ -104,43 +100,43 @@ export function getServicesBySubUserService(
 
 export function culminateServiceService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.culminate}`,
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.culminate
+    }`,
     type: "SE-CUL",
   };
 }
 
 export function cancelServiceService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.cancel}`,
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.cancel
+    }`,
     type: "SE-CAN",
   };
 }
 
 export function homeServiceFilterService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.searchMainFilters}`,
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.searchMainFilters
+    }`,
     type: "SE-HO-FI",
   };
 }
 
 export function searchServicesService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${
-      ApiMainRoutes.requirements
-    }${ApiRoutes.requirements.searchRequirements}`,
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.searchRequirements
+    }`,
     type: "SE-SE-RE",
   };
 }
 
 export function uploadDocsServiceService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.documents}${
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.documents}${
       ApiRoutes.documents.uploadDocumentsReq
     }`,
     type: "SE-DO-UP",
@@ -149,7 +145,7 @@ export function uploadDocsServiceService(): HttpService {
 
 export function uploadImagesServiceService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.images}${
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.images}${
       ApiRoutes.images.uploadImagesReq
     }`,
     type: "SE-IM-UP",

@@ -44,8 +44,9 @@ export default function useSocket(
         socketAPI = io(import.meta.env.VITE_REQUIREMENTS_SOCKET_URL);
       else if (subType == RequirementType.SERVICE)
         socketAPI = io(import.meta.env.VITE_SERVICES_SOCKET_URL);
-      else if (subType == RequirementType.SALE)
+      else if (subType == RequirementType.SALE) {
         socketAPI = io(import.meta.env.VITE_SALES_SOCKET_URL);
+      }
       if (socketAPI) {
         socketAPI.on("connect", () => {
           console.log("Connected");
@@ -93,13 +94,17 @@ export default function useSocket(
       tableType == TableTypes.ALL_REQUIREMENTS
     ) {
       if (subType == RequirementType.GOOD) roomName = "roomRequerimentProduct";
-      else if (subType == RequirementType.SERVICE) roomName = "roomRequeriment";
-      else if (subType == RequirementType.SALE) roomName = "roomRequeriment";
+      else if (subType == RequirementType.SERVICE)
+        roomName = "roomRequerimentService";
+      else if (subType == RequirementType.SALE)
+        roomName = "roomRequerimentLiquidation";
     }
     if (tableType == TableTypes.OFFER || tableType == TableTypes.ALL_OFFERS) {
       if (subType == RequirementType.GOOD) roomName = "roomOfferProduct";
-      else if (subType == RequirementType.SERVICE) roomName = "roomRequeriment";
-      else if (subType == RequirementType.SALE) roomName = "roomRequeriment";
+      else if (subType == RequirementType.SERVICE)
+        roomName = "roomOfferService";
+      else if (subType == RequirementType.SALE)
+        roomName = "roomOfferLiquidation";
     }
     if (
       tableType == TableTypes.PURCHASE_ORDER ||
@@ -123,9 +128,9 @@ export default function useSocket(
     ) {
       if (subType == RequirementType.SALE) {
         if (orderType == PurchaseOrderTableTypes.ISSUED)
-          roomName = "roomPurchaseOrderProviderProduct";
+          roomName = "roomPurchaseOrderProviderLiquidation";
         else if (orderType == PurchaseOrderTableTypes.RECEIVED)
-          roomName = "roomPurchaseOrderClientProduct";
+          roomName = "roomPurchaseOrderClientLiquidation";
       }
     }
     return roomName;
