@@ -8,13 +8,20 @@ import { RequirementType, SocketChangeType } from "../utilities/types";
 let socketAPI: Socket | null = null;
 
 export default function useHomeSocket() {
-  const { useFilter, retrieveRequirements, page, type, updateChangesQueue } =
-    useContext(HomeContext);
+  const {
+    useFilter,
+    retrieveRequirements,
+    page,
+    type,
+    updateChangesQueue,
+    updatePage,
+  } = useContext(HomeContext);
   const useFilterRef = useRef(useFilter);
   const pageRef = useRef(page);
 
   useEffect(() => {
-    if (!useFilter) getData();
+    updatePage(1);
+    if (!useFilter) getData(true);
 
     if (!socketAPI) {
       if (type == RequirementType.GOOD)
@@ -77,8 +84,8 @@ export default function useHomeSocket() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, useFilter]);
 
-  async function getData() {
-    retrieveRequirements(page, homePageSize);
+  async function getData(reset?: boolean) {
+    retrieveRequirements(reset ? 1 : page, homePageSize);
   }
 
   function retrievePageAgain() {}

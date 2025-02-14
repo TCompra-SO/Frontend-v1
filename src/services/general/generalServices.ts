@@ -174,6 +174,7 @@ export async function deleteCertificateById(id: string) {
 
 export async function getRequirementFromData(
   data: any,
+  type: RequirementType,
   user?: BaseUser,
   subUser?: BaseUser,
   cache?: Map<string, Promise<any>> // Cache now stores Promises
@@ -181,7 +182,7 @@ export async function getRequirementFromData(
   if (user && subUser) {
     return transformDataToRequirement(
       data,
-      RequirementType.GOOD,
+      type,
       data.user == data.subUser ? user : subUser,
       user
     );
@@ -217,7 +218,7 @@ export async function getRequirementFromData(
     );
     return transformDataToRequirement(
       data,
-      RequirementType.GOOD,
+      type,
       data.user == data.subUser ? newUser : newSubUser,
       newUser
     );

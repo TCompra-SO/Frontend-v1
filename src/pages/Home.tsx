@@ -45,6 +45,7 @@ export default function Home() {
     hiddenColumns: [TableColumns.CATEGORY],
     nameColumnHeader: t("goods"),
     onButtonClick: (action: Action, req: Requirement) => {
+      console.log(req);
       if (action == Action.VIEW_REQUIREMENT)
         navigate(getProductDetailRoute(req.key, req.type));
     },
@@ -65,7 +66,9 @@ export default function Home() {
   /** Reset tabla actual */
 
   useEffect(() => {
-    return () => updateType(RequirementType.GOOD);
+    return () => {
+      updateType(RequirementType.GOOD);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

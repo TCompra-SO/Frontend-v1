@@ -710,9 +710,9 @@ export function useGetRequirementList() {
         const cache = new Map<string, any>();
         setUsersCache(cache);
         const data: (Requirement | null)[] = await Promise.all(
-          responseData.data.map(async (e: any) =>
-            getRequirementFromData(e, undefined, undefined, cache)
-          )
+          responseData.data.map(async (e: any) => {
+            return getRequirementFromData(e, type, undefined, undefined, cache);
+          })
         );
         setUsersCache(cache);
         setRequirements(data.filter((req) => req !== null));

@@ -71,7 +71,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   const { addNewRow, updateRow } = useAddOrUpdateRow(
     TableTypes.HOME,
     (data: SocketDataPackType) =>
-      getRequirementFromData(data, undefined, undefined, usersCache),
+      getRequirementFromData(data, type, undefined, undefined, usersCache),
     requirementList,
     setRequirementList,
     totalRequirementList,
@@ -155,6 +155,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   }
 
   function updateType(val: RequirementType) {
+    console.log(val);
     setType(val);
   }
 
