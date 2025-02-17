@@ -72,6 +72,7 @@ export default function SalesOrders() {
   const [type, setType] = useState(
     getPurchaseOrderType(location.pathname, true)
   );
+  const typeRef = useRef(type);
   const {
     currentPage,
     currentPageSize,
@@ -137,6 +138,10 @@ export default function SalesOrders() {
     updateChangesQueue,
     type
   );
+
+  useEffect(() => {
+    typeRef.current = type;
+  }, [type]);
 
   /** Actualiza el contenido de tabla */
 
@@ -326,24 +331,22 @@ export default function SalesOrders() {
         downloadPdfOrder(purchaseOrder.key, purchaseOrder.type);
         break;
       case Action.FINISH:
-        if (type == PurchaseOrderTableTypes.ISSUED) {
+        if (typeRef.current == PurchaseOrderTableTypes.ISSUED) {
           // Buscar en oferta de liquidación
           getBasicRateData(
             purchaseOrder.key,
-            purchaseOrder.requirementId, // r3v para liquidación vendedor (creador de liquidación) emite
+            purchaseOrder.requirementId,
             purchaseOrder.offerId,
             true,
             true,
             action,
             purchaseOrder.type
           );
-          break;
-        } else if (type == PurchaseOrderTableTypes.RECEIVED)
-          //
+        } else if (typeRef.current == PurchaseOrderTableTypes.RECEIVED)
           // Buscar en liquidación
           getBasicRateData(
             purchaseOrder.key,
-            purchaseOrder.offerId, // cliente (ofertante) recibe
+            purchaseOrder.offerId,
             purchaseOrder.requirementId,
             false,
             false,
@@ -364,7 +367,7 @@ export default function SalesOrders() {
           purchaseOrder.filters
         );
         break;
-      case Action.CANCEL: //r3v
+      case Action.CANCEL:
         setDataModal({
           type: ModalTypes.CANCEL_PURCHASE_ORDER,
           data: {

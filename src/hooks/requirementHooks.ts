@@ -665,7 +665,6 @@ export function useCulminate() {
       action,
       rowId,
     });
-    console.log(idToGetData);
     setApiParams({
       service: useOfferService
         ? getGetBasicRateDataRecordOfferService(type)?.(idToGetData)

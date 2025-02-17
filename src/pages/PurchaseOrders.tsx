@@ -71,6 +71,7 @@ export default function PurchaseOrders() {
   const [type, setType] = useState<PurchaseOrderTableTypes>(
     getReqTypeAndOrderType(location.pathname).orderType
   );
+  const typeRef = useRef(type);
   const [requirementType, setRequirementType] = useState<RequirementType>(
     getReqTypeAndOrderType(location.pathname).requirementType
   );
@@ -141,6 +142,10 @@ export default function PurchaseOrders() {
     updateChangesQueue,
     type
   );
+
+  useEffect(() => {
+    typeRef.current = type;
+  }, [type]);
 
   /** Actualiza el contenido de tabla */
 
@@ -334,7 +339,7 @@ export default function PurchaseOrders() {
         downloadPdfOrder(purchaseOrder.key, purchaseOrder.type);
         break;
       case Action.FINISH:
-        if (type == PurchaseOrderTableTypes.ISSUED) {
+        if (typeRef.current == PurchaseOrderTableTypes.ISSUED) {
           // Buscar en oferta de requerimiento
           getBasicRateData(
             purchaseOrder.key,
@@ -345,8 +350,7 @@ export default function PurchaseOrders() {
             action,
             purchaseOrder.type
           );
-          break;
-        } else if (type == PurchaseOrderTableTypes.RECEIVED)
+        } else if (typeRef.current == PurchaseOrderTableTypes.RECEIVED)
           // Buscar en requerimiento
           getBasicRateData(
             purchaseOrder.key,
