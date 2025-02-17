@@ -99,7 +99,8 @@ export default function Offers() {
     offerList,
     setOfferList,
     total,
-    setTotal
+    setTotal,
+    currentPageSize
   );
   const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
     addNewRow,

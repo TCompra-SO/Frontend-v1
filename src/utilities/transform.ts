@@ -208,6 +208,7 @@ export function transformToOfferFromGetOffersByEntityOrSubUser(
   mainUser: UserState | BaseUser,
   includeAlwaysSubUser?: boolean
 ) {
+  console.log(data);
   const offer: Offer = data;
   offer.subUser = undefined;
   offer.type = type;

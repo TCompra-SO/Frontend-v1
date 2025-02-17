@@ -113,7 +113,8 @@ export default function SalesOrders() {
     salesOrderList,
     setSalesOrderList,
     total,
-    setTotal
+    setTotal,
+    currentPageSize
   );
   const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
     addNewRow,

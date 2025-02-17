@@ -70,6 +70,7 @@ export function useAddOrUpdateRow(
   setList: (list: any[]) => void,
   total: number,
   setTotal: (total: number) => void,
+  pageSize: number,
   callback?: () => any,
   useFilter?: boolean | null
 ) {
@@ -81,7 +82,9 @@ export function useAddOrUpdateRow(
     const newElem =
       transformedData ?? (await transformData(data["dataPack"]["data"][0]));
     if (newElem) {
-      setList([newElem, ...list.slice(0, list.length - 1)]);
+      if (list.length >= pageSize)
+        setList([newElem, ...list.slice(0, list.length - 1)]);
+      else setList([newElem, ...list]);
       if (increaseTotal) setTotal(total + 1);
     }
   }

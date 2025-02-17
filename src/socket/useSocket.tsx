@@ -117,7 +117,7 @@ export default function useSocket(
           roomName = "roomPurchaseOrderProviderProduct";
       } else if (subType == RequirementType.SERVICE) {
         if (orderType == PurchaseOrderTableTypes.ISSUED)
-          roomName = "roomPurchaseOrderClientService"; // r3v cambiar
+          roomName = "roomPurchaseOrderClientService";
         else if (orderType == PurchaseOrderTableTypes.RECEIVED)
           roomName = "roomPurchaseOrderProviderService";
       }
@@ -128,9 +128,9 @@ export default function useSocket(
     ) {
       if (subType == RequirementType.SALE) {
         if (orderType == PurchaseOrderTableTypes.ISSUED)
-          roomName = "roomPurchaseOrderProviderLiquidation";
+          roomName = "roomSaleOrderProviderLiquidation";
         else if (orderType == PurchaseOrderTableTypes.RECEIVED)
-          roomName = "roomPurchaseOrderClientLiquidation";
+          roomName = "roomSaleOrderClientLiquidation";
       }
     }
     return roomName;

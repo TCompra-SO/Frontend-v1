@@ -83,7 +83,7 @@ export default function AllOffers() {
   const { addNewRow, updateRow } = useAddOrUpdateRow(
     TableTypes.ALL_OFFERS,
     (data: SocketDataPackType) => {
-      console.log(subUsersCache, data.subUser);
+      // console.log(subUsersCache, data.subUser);
       if (data.subUser == dataUser.uid)
         return transformToOfferFromGetOffersByEntityOrSubUser(
           data,
@@ -102,7 +102,8 @@ export default function AllOffers() {
     offerList,
     setOfferList,
     total,
-    setTotal
+    setTotal,
+    currentPageSize
   );
   const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
     addNewRow,

@@ -10,6 +10,7 @@ import useSocketQueueHook, {
   useAddOrUpdateRow,
 } from "../hooks/socketQueueHook";
 import { SocketDataPackType, SocketResponse } from "../models/Interfaces";
+import { homePageSize } from "../utilities/globals";
 
 interface HomeContextType {
   type: RequirementType;
@@ -76,6 +77,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     setRequirementList,
     totalRequirementList,
     setTotalRequirementList,
+    homePageSize,
     retrieveLastSearchRequeriments,
     useFilter
   );

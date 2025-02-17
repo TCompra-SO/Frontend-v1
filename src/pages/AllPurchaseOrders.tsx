@@ -101,7 +101,8 @@ export default function AllPurchaseOrders() {
     purchaseOrderList,
     setPurchaseOrderList,
     total,
-    setTotal
+    setTotal,
+    currentPageSize
   );
   const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
     addNewRow,
