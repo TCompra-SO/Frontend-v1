@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { NotificationData } from "../models/Interfaces";
 import { Action, RequirementType } from "../utilities/types";
+import useShowNotification from "./utilHooks";
 
 const notifications: NotificationData[] = [
   {
@@ -428,6 +429,7 @@ const notifications: NotificationData[] = [
 let notifSocketAPI: Socket | null = null;
 
 export function useTCNotification() {
+  const { showRealTimeNotification } = useShowNotification();
   const [notificationList, setNotificationList] = useState<NotificationData[]>(
     []
   );
@@ -457,11 +459,12 @@ export function useTCNotification() {
         console.log("Connected notificaciones");
       });
 
-      setTimeout(() => {
-        // simulación
-        // const newNotif = notifications[0];
-        // setNotificationList([newNotif, ...notificationList]);
-      }, 5000);
+      // setInterval(() => {
+      //   // simulación
+      //   // const newNotif = notifications[0];
+      //   // setNotificationList([newNotif, ...notificationList]);
+      //   showRealTimeNotification("info", notifications[0]);
+      // }, 3000);
     }
     return () => {
       if (notifSocketAPI) {

@@ -1,8 +1,8 @@
 import { App } from "antd";
-import { useContext, useEffect, useState } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DisplayUser } from "../models/MainInterfaces";
-import { useApiParams } from "../models/Interfaces";
+import { NotificationData, useApiParams } from "../models/Interfaces";
 import { transformToDisplayUser } from "../utilities/transform";
 import { searchCompanyByNameService } from "../services/requests/authService";
 import {
@@ -18,19 +18,34 @@ export default function useShowNotification() {
 
   function showNotification(
     type: "success" | "error" | "info" | "warning",
-    description: string | null
+    description: ReactNode | null
   ) {
     if (api && description)
       api[type]({
         message: description,
         // description: description,
         showProgress: true,
-        pauseOnHover: true,
-        placement: "topRight",
+        pauseOnHover: false,
+        placement: "topLeft",
       });
   }
 
-  return { showNotification };
+  function showRealTimeNotification(
+    type: "success" | "error" | "info" | "warning",
+    content: NotificationData
+  ) {
+    if (api) {
+      api[type]({
+        message: content.title,
+        description: content.body,
+        showProgress: true,
+        pauseOnHover: true,
+        placement: "bottomRight",
+      });
+    }
+  }
+
+  return { showNotification, showRealTimeNotification };
 }
 
 export function useShowLoadingMessage() {
