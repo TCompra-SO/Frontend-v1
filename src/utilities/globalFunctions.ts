@@ -801,3 +801,8 @@ export function getSearchOrdersByProviderService(
 export function getProductDetailRoute(id: string, type: RequirementType) {
   return `${pageRoutes.productDetail}/${type}/${id}`;
 }
+
+// Genera una llave aleatoria
+export function generateRandomKey() {
+  return `${Date.now()}-${Math.random()}`;
+}

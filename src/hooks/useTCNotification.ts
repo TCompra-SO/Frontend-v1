@@ -1,13 +1,18 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { NotificationData } from "../models/Interfaces";
 import { Action, RequirementType } from "../utilities/types";
-import useShowNotification from "./utilHooks";
+import useShowNotification, { useDownloadPdfOrder } from "./utilHooks";
+import { ModalsContext } from "../contexts/ModalsContext";
+import { isRequirementType } from "../utilities/globalFunctions";
+import { pageRoutes } from "../utilities/routes";
+import { useNavigate } from "react-router-dom";
 
 const notifications: NotificationData[] = [
   {
     id: "1",
-    title: "New Comment",
+    title:
+      "New Comment New Comment New Comment New Comment New Comment New Comment",
     body: "You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post.",
     date: "2025-01-09",
     time: "10:30 AM",
@@ -429,11 +434,50 @@ const notifications: NotificationData[] = [
 let notifSocketAPI: Socket | null = null;
 
 export function useTCNotification() {
+  const navigate = useNavigate();
   const { showRealTimeNotification } = useShowNotification();
+  const { updateDetailedRequirementModalData, updateDetailedOfferModalData } =
+    useContext(ModalsContext);
+  const downloadPdfOrder = useDownloadPdfOrder();
   const [notificationList, setNotificationList] = useState<NotificationData[]>(
     []
   );
   const [loading, setLoading] = useState(false);
+
+  /** Conectar con socket */
+  useEffect(() => {
+    if (!notifSocketAPI) {
+      notifSocketAPI = io(import.meta.env.VITE_REQUIREMENTS_SOCKET_URL);
+
+      notifSocketAPI.on("connect", () => {
+        console.log("Connected notificaciones");
+      });
+
+      setTimeout(() => {
+        // simulación
+        // const newNotif = notifications[0];
+        // setNotificationList([newNotif, ...notificationList]);
+        showRealTimeNotification(notifications[0], redirectFromNotification);
+      }, 3000);
+      setTimeout(() => {
+        // simulación
+        // const newNotif = notifications[0];
+        // setNotificationList([newNotif, ...notificationList]);
+        showRealTimeNotification(notifications[1], redirectFromNotification);
+      }, 6000);
+    }
+    return () => {
+      if (notifSocketAPI) {
+        console.log("Disconnected notificaciones");
+        notifSocketAPI.disconnect();
+        notifSocketAPI = null;
+      }
+      setNotificationList([]);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /** Funciones */
 
   function getMoreNotifications() {
     setLoading(true);
@@ -451,42 +495,37 @@ export function useTCNotification() {
     setNotificationList([]);
   }
 
-  useEffect(() => {
-    if (!notifSocketAPI) {
-      notifSocketAPI = io(import.meta.env.VITE_REQUIREMENTS_SOCKET_URL);
-
-      notifSocketAPI.on("connect", () => {
-        console.log("Connected notificaciones");
+  function redirectFromNotification(notification: NotificationData) {
+    console.log(notification);
+    const { result, val } = isRequirementType(notification.targetType);
+    if (notification.action == Action.VIEW_REQUIREMENT && result && val) {
+      updateDetailedRequirementModalData({
+        requirement: undefined,
+        requirementId: notification.targetId,
+        requirementType: val,
       });
-
-      setTimeout(() => {
-        // simulación
-        // const newNotif = notifications[0];
-        // setNotificationList([newNotif, ...notificationList]);
-        showRealTimeNotification(notifications[0]);
-      }, 3000);
-      setTimeout(() => {
-        // simulación
-        // const newNotif = notifications[0];
-        // setNotificationList([newNotif, ...notificationList]);
-        showRealTimeNotification(notifications[1]);
-      }, 6000);
+      navigate(pageRoutes.myRequirements);
+    } else if (notification.action == Action.VIEW_OFFER && result && val) {
+      updateDetailedOfferModalData({
+        offerId: notification.targetId,
+        offerType: val,
+        offer: undefined,
+      });
+      navigate(pageRoutes.myOffers);
+    } else if (
+      notification.action == Action.DOWNLOAD_PURCHASE_ORDER &&
+      result &&
+      val
+    ) {
+      downloadPdfOrder(notification.targetId, val);
     }
-    return () => {
-      if (notifSocketAPI) {
-        console.log("Disconnected notificaciones");
-        notifSocketAPI.disconnect();
-        notifSocketAPI = null;
-      }
-      setNotificationList([]);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }
 
   return {
     notificationList,
     getMoreNotifications,
     resetNotificationList,
     notificationLoading: loading,
+    redirectFromNotification,
   };
 }

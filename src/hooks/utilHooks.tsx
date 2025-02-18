@@ -1,4 +1,4 @@
-import { App, Avatar } from "antd";
+import { App } from "antd";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DisplayUser } from "../models/MainInterfaces";
@@ -6,6 +6,7 @@ import { NotificationData, useApiParams } from "../models/Interfaces";
 import { transformToDisplayUser } from "../utilities/transform";
 import { searchCompanyByNameService } from "../services/requests/authService";
 import {
+  generateRandomKey,
   getGetOrderPDFService,
   openPurchaseOrderPdf,
 } from "../utilities/globalFunctions";
@@ -13,6 +14,7 @@ import useApi from "./useApi";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import { RequirementType } from "../utilities/types";
 import NotificationUserAvatar from "../components/common/utils/NotificationUserAvatar";
+import ParagraphContainer from "../components/containers/ParagraphContainer";
 
 export default function useShowNotification() {
   const { notification: api } = App.useApp();
@@ -31,11 +33,28 @@ export default function useShowNotification() {
       });
   }
 
-  function showRealTimeNotification(content: NotificationData) {
+  function showRealTimeNotification(
+    content: NotificationData,
+    onClickCallback: (notification: NotificationData) => void
+  ) {
     if (api) {
+      const key = generateRandomKey();
       api.open({
-        message: content.title,
-        description: content.body,
+        key,
+        message: (
+          <ParagraphContainer ellipsis={{ rows: 1 }}>
+            {content.title}
+          </ParagraphContainer>
+        ),
+        description: (
+          <ParagraphContainer
+            ellipsis={{
+              rows: 2,
+            }}
+          >
+            {content.body}
+          </ParagraphContainer>
+        ),
         showProgress: true,
         pauseOnHover: true,
         placement: "bottomRight",
@@ -46,6 +65,11 @@ export default function useShowNotification() {
             size={"small"}
           />
         ),
+        onClick: () => {
+          onClickCallback(content);
+          api.destroy(key);
+        },
+        style: { cursor: "pointer" },
       });
     }
   }

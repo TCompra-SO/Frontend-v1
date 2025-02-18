@@ -1,17 +1,9 @@
-import { useContext, useEffect, useState } from "react";
-import { Popover, List, Avatar, Typography, Space, Flex, Spin } from "antd";
+import { useEffect, useState } from "react";
+import { Popover, List, Typography, Space, Flex, Spin } from "antd";
 import { useTranslation } from "react-i18next";
 import ParagraphContainer from "../../containers/ParagraphContainer";
 import InfiniteScroll from "react-infinite-scroll-component";
 import SimpleLoading from "../../../pages/utils/SimpleLoading";
-import { NotificationData } from "../../../models/Interfaces";
-import { primaryColor } from "../../../utilities/colors";
-import { Action } from "../../../utilities/types";
-import { ModalsContext } from "../../../contexts/ModalsContext";
-import { isRequirementType } from "../../../utilities/globalFunctions";
-import { useNavigate } from "react-router-dom";
-import { pageRoutes } from "../../../utilities/routes";
-import { useDownloadPdfOrder } from "../../../hooks/utilHooks";
 import { useTCNotification } from "../../../hooks/useTCNotification";
 import NotificationUserAvatar from "../../common/utils/NotificationUserAvatar";
 
@@ -24,52 +16,20 @@ interface NotificationsProps {
 
 export default function Notifications(props: NotificationsProps) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const {
     notificationList: notifList,
     getMoreNotifications,
     resetNotificationList,
     notificationLoading,
+    redirectFromNotification,
   } = useTCNotification();
   const [visible, setVisible] = useState(false);
-  const { updateDetailedRequirementModalData, updateDetailedOfferModalData } =
-    useContext(ModalsContext);
-  const downloadPdfOrder = useDownloadPdfOrder();
 
   useEffect(() => {
     if (visible) getMoreNotifications();
     else resetNotificationList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
-
-  function redirectFromNotification(notification: NotificationData) {
-    console.log(notification);
-    const { result, val } = isRequirementType(notification.targetType);
-    if (notification.action == Action.VIEW_REQUIREMENT && result && val) {
-      updateDetailedRequirementModalData({
-        requirement: undefined,
-        requirementId: notification.targetId,
-        requirementType: val,
-      });
-      navigate(pageRoutes.myRequirements);
-      setVisible(false);
-    } else if (notification.action == Action.VIEW_OFFER && result && val) {
-      updateDetailedOfferModalData({
-        offerId: notification.targetId,
-        offerType: val,
-        offer: undefined,
-      });
-      navigate(pageRoutes.myOffers);
-      setVisible(false);
-    } else if (
-      notification.action == Action.DOWNLOAD_PURCHASE_ORDER &&
-      result &&
-      val
-    ) {
-      downloadPdfOrder(notification.targetId, val);
-      setVisible(false);
-    }
-  }
 
   const notificationContent = (
     <div
@@ -110,7 +70,10 @@ export default function Notifications(props: NotificationsProps) {
           renderItem={(item) => (
             <List.Item
               key={item.id}
-              onClick={() => redirectFromNotification(item)}
+              onClick={() => {
+                redirectFromNotification(item);
+                setVisible(false);
+              }}
             >
               <List.Item.Meta
                 style={{ cursor: "pointer" }}
@@ -127,7 +90,9 @@ export default function Notifications(props: NotificationsProps) {
                       marginBottom: -4,
                     }}
                   >
-                    {item.title}
+                    <ParagraphContainer ellipsis={{ rows: 1 }}>
+                      {item.title}
+                    </ParagraphContainer>
                   </div>
                 }
                 description={
