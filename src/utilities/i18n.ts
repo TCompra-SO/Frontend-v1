@@ -529,7 +529,10 @@ const resources = {
       items: "items",
       of: 'of',
       warrantyDuration: 'Warranty duration',
-      termsAndConditions: 'Terms and Conditions'
+      termsAndConditions: 'Terms and Conditions',
+      chatMessageImagesDocs: 'Sent',
+      chatMessageImages: 'image(s)',
+      chatMessageDocs: 'document(s)',
     },
   },
   es: {
@@ -1070,7 +1073,10 @@ const resources = {
       items: "items",
       of: 'de',
       warrantyDuration: 'Duración de garantía',
-      termsAndConditions: 'Términos y Condiciones'
+      termsAndConditions: 'Términos y Condiciones',
+      chatMessageImagesDocs: 'Envió',
+      chatMessageImages: 'imagen(es)',
+      chatMessageDocs: 'documento(s)',
     },
   },
 };

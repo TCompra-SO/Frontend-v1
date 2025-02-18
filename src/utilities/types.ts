@@ -503,3 +503,8 @@ export enum SocketChangeType {
   CREATE = 0,
   UPDATE = 1,
 }
+
+export enum RTNotificationType {
+  NOTIFICATION = 0,
+  CHAT = 1,
+}

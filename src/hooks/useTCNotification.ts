@@ -1,7 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { NotificationData } from "../models/Interfaces";
-import { Action, RequirementType } from "../utilities/types";
+import { NotificationData } from "../models/MainInterfaces";
+import {
+  Action,
+  RequirementType,
+  RTNotificationType,
+} from "../utilities/types";
 import useShowNotification, { useDownloadPdfOrder } from "./utilHooks";
 import { ModalsContext } from "../contexts/ModalsContext";
 import { isRequirementType } from "../utilities/globalFunctions";
@@ -447,24 +451,26 @@ export function useTCNotification() {
   /** Conectar con socket */
   useEffect(() => {
     if (!notifSocketAPI) {
-      notifSocketAPI = io(import.meta.env.VITE_REQUIREMENTS_SOCKET_URL);
+      notifSocketAPI = io(import.meta.env.VITE_NOTIF_SOCKET_URL);
 
       notifSocketAPI.on("connect", () => {
         console.log("Connected notificaciones");
       });
 
-      setTimeout(() => {
-        // simulación
-        // const newNotif = notifications[0];
-        // setNotificationList([newNotif, ...notificationList]);
-        showRealTimeNotification(notifications[0], redirectFromNotification);
-      }, 3000);
-      setTimeout(() => {
-        // simulación
-        // const newNotif = notifications[0];
-        // setNotificationList([newNotif, ...notificationList]);
-        showRealTimeNotification(notifications[1], redirectFromNotification);
-      }, 6000);
+      // setTimeout(() => {
+      //   showRealTimeNotification({
+      //     type: RTNotificationType.NOTIFICATION,
+      //     content: notifications[0],
+      //     onClickCallback: redirectFromNotification,
+      //   });
+      // }, 3000);
+      // setTimeout(() => {
+      //   showRealTimeNotification({
+      //     type: RTNotificationType.NOTIFICATION,
+      //     content: notifications[1],
+      //     onClickCallback: redirectFromNotification,
+      //   });
+      // }, 6000);
     }
     return () => {
       if (notifSocketAPI) {

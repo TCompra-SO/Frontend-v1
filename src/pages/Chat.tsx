@@ -6,6 +6,7 @@ import { ChatListData, ChatMessage } from "../models/MainInterfaces";
 import { useState } from "react";
 import useWindowSize from "../hooks/useWindowSize";
 import { windowSize } from "../utilities/globals";
+import { useChat } from "../hooks/useChat";
 
 const chatElements: ChatListData[] = [
   {
@@ -332,7 +333,7 @@ const chatElements: ChatListData[] = [
 
 const chatMessages: ChatMessage[] = [
   {
-    isInputMsg: false,
+    userId: "EOuyocZiTZVT91ZOo0rW",
     message:
       "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
     time: "2024-11-20T15:24:00.000Z",
@@ -340,7 +341,7 @@ const chatMessages: ChatMessage[] = [
     uid: "1",
   },
   {
-    isInputMsg: true,
+    userId: "ru1VLrbCKDR7BPQIGrk2",
     message:
       "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
     time: "2024-11-20T15:25:00.000Z",
@@ -348,41 +349,39 @@ const chatMessages: ChatMessage[] = [
     uid: "2",
   },
   {
-    isInputMsg: true,
+    userId: "ru1VLrbCKDR7BPQIGrk2",
     message: "El costo es de $500 mensuales",
     read: true,
     time: "2024-11-20T15:26:00.000Z",
     uid: "3",
   },
   {
-    isInputMsg: false,
+    userId: "EOuyocZiTZVT91ZOo0rW",
     time: "2024-11-20T15:27:00.000Z",
     read: true,
     images: [
       "https://dummyimage.com/250/ff3fff/000000",
       "https://dummyimage.com/250/ff3ff1/000000",
       "https://dummyimage.com/250/af3ff1/000000",
-      // "https://dummyimage.com/250/ff3f21/000000",
-      // "https://dummyimage.com/250/aa3ff1/000000",
     ],
     uid: "4",
   },
   {
-    isInputMsg: true,
+    userId: "ru1VLrbCKDR7BPQIGrk2",
     time: "2024-11-20T15:28:00.000Z",
     read: true,
     images: ["https://dummyimage.com/250/ff3fff/000000"],
     uid: "5",
   },
   {
-    isInputMsg: true,
+    userId: "ru1VLrbCKDR7BPQIGrk2",
     time: "2024-11-20T15:28:00.000Z",
     read: true,
     images: ["https://dummyimage.com/250/ff3fff/000000"],
     uid: "6",
   },
   {
-    isInputMsg: false,
+    userId: "EOuyocZiTZVT91ZOo0rW",
     time: "2024-11-20T15:29:00.000Z",
     read: false,
     documents: [
@@ -391,7 +390,7 @@ const chatMessages: ChatMessage[] = [
     uid: "7",
   },
   {
-    isInputMsg: true,
+    userId: "ru1VLrbCKDR7BPQIGrk2",
     time: "2024-11-20T15:30:00.000Z",
     read: false,
     documents: [
@@ -400,7 +399,7 @@ const chatMessages: ChatMessage[] = [
     uid: "8",
   },
   {
-    isInputMsg: false,
+    userId: "EOuyocZiTZVT91ZOo0rW",
     message:
       "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
     time: "2024-11-20T15:24:00.000Z",
@@ -408,7 +407,7 @@ const chatMessages: ChatMessage[] = [
     uid: "9",
   },
   {
-    isInputMsg: true,
+    userId: "ru1VLrbCKDR7BPQIGrk2",
     message:
       "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
     time: "2024-11-20T15:25:00.000Z",
@@ -416,7 +415,7 @@ const chatMessages: ChatMessage[] = [
     uid: "10",
   },
   {
-    isInputMsg: false,
+    userId: "EOuyocZiTZVT91ZOo0rW",
     message:
       "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
     time: "2024-11-20T15:24:00.000Z",
@@ -424,7 +423,7 @@ const chatMessages: ChatMessage[] = [
     uid: "11",
   },
   {
-    isInputMsg: true,
+    userId: "ru1VLrbCKDR7BPQIGrk2",
     message:
       "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
     time: "2024-11-20T15:25:00.000Z",
@@ -432,7 +431,7 @@ const chatMessages: ChatMessage[] = [
     uid: "12",
   },
   {
-    isInputMsg: false,
+    userId: "EOuyocZiTZVT91ZOo0rW",
     message:
       "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
     time: "2024-11-20T15:24:00.000Z",
@@ -440,7 +439,7 @@ const chatMessages: ChatMessage[] = [
     uid: "13",
   },
   {
-    isInputMsg: true,
+    userId: "ru1VLrbCKDR7BPQIGrk2",
     message:
       "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
     time: "2024-11-20T15:25:00.000Z",
@@ -457,6 +456,7 @@ export default function Chat() {
   const [chatMsgs, setChatMsgs] = useState(chatMessages);
   const [isChatOpened, setIsChatOpened] = useState(false);
   const [currentChat, setCurrentChat] = useState<ChatListData | null>(null);
+  useChat();
 
   function handleCloseChat() {
     setCurrentChat(null);

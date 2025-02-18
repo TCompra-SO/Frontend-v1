@@ -7,6 +7,8 @@ import {
   ImagePreviewGroupContainerRef,
 } from "../../../containers/ImagePreviewGroupContainer";
 import { useRef } from "react";
+import { useSelector } from "react-redux";
+import { MainState } from "../../../../models/Redux";
 
 interface ChatBodyMessageProps {
   message: ChatMessage;
@@ -16,6 +18,8 @@ interface ChatBodyMessageProps {
 
 export default function ChatBodyMessage(props: ChatBodyMessageProps) {
   const childRef = useRef<ImagePreviewGroupContainerRef>(null);
+  const isInputMsg =
+    useSelector((state: MainState) => state.user.uid) == props.message.userId;
 
   function handleOpenPreview() {
     if (props.message.images && props.message.images.length > 0) {
@@ -28,12 +32,8 @@ export default function ChatBodyMessage(props: ChatBodyMessageProps) {
   return (
     <>
       <ImagePreviewGroupContainer ref={childRef} image={props.message.images} />
-      <div
-        className={`t-flex ${
-          props.message.isInputMsg ? "txt-entrada" : "txt-salida"
-        }`}
-      >
-        {props.message.isInputMsg ? (
+      <div className={`t-flex ${isInputMsg ? "txt-entrada" : "txt-salida"}`}>
+        {isInputMsg ? (
           props.userImage ? (
             <img src={props.userImage} className="useri-chat" />
           ) : (
@@ -52,15 +52,13 @@ export default function ChatBodyMessage(props: ChatBodyMessageProps) {
           className={
             props.message.images
               ? `t-flex gap-5 ${
-                  props.message.isInputMsg
-                    ? "mensaje-entrada-img"
-                    : "mensaje-salida-img"
+                  isInputMsg ? "mensaje-entrada-img" : "mensaje-salida-img"
                 }`
               : props.message.documents
-              ? props.message.isInputMsg
+              ? isInputMsg
                 ? "mensaje-entrada-doc text-right"
                 : "mensaje-salida-doc text-right"
-              : props.message.isInputMsg
+              : isInputMsg
               ? "mensaje-entrada"
               : "mensaje-salida"
           }
@@ -109,10 +107,9 @@ export default function ChatBodyMessage(props: ChatBodyMessageProps) {
             ></i>
           </span>
         </div>
-        {props.message.isInputMsg &&
-          !(props.message.images || props.message.documents) && (
-            <div className="space-img"></div>
-          )}
+        {isInputMsg && !(props.message.images || props.message.documents) && (
+          <div className="space-img"></div>
+        )}
       </div>
     </>
   );

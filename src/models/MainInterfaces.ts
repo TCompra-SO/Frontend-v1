@@ -11,6 +11,7 @@ import {
   CertificationState,
   OrderConfirmation,
   CanOfferType,
+  Action,
 } from "../utilities/types";
 import { OfferFilters } from "./Interfaces";
 
@@ -261,10 +262,30 @@ export interface ChatListData {
 
 export interface ChatMessage {
   uid: string;
-  isInputMsg: boolean;
+  userId: string;
   message?: string;
   time: string;
   read: boolean;
   images?: string[];
   documents?: string[];
+}
+
+export interface ChatSocketData extends ChatMessage {
+  userImage?: string;
+  userName: string;
+}
+
+export interface NotificationData {
+  id: string;
+  title: string;
+  body: string;
+  date: string;
+  time: string;
+  senderImage?: string;
+  senderId: string;
+  senderName: string;
+  receiverId: string;
+  action: Action;
+  targetId: string;
+  targetType: RequirementType | PurchaseOrderTableTypes;
 }
