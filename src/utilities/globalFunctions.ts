@@ -776,7 +776,7 @@ export function getGetOrderByIdService(type: RequirementType) {
   return null;
 }
 
-export function getSearchOrdersByClientService( //r3v debe ser solo un endpoint para bienes y servicios
+export function getSearchOrdersByClientService(
   type: RequirementType | PurchaseOrderTableTypes | undefined
 ) {
   if (type == RequirementType.GOOD)
@@ -787,7 +787,7 @@ export function getSearchOrdersByClientService( //r3v debe ser solo un endpoint 
   return null;
 }
 
-export function getSearchOrdersByProviderService( // debe ser solo un endpoint para bienes y servicios
+export function getSearchOrdersByProviderService(
   type: RequirementType | PurchaseOrderTableTypes | undefined
 ) {
   if (type == RequirementType.GOOD)

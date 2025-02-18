@@ -24,7 +24,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -38,7 +38,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -52,7 +52,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -66,7 +66,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -80,7 +80,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -94,7 +94,7 @@ const notifications: NotificationData[] = [
     body: "You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post.",
     date: "2025-01-09",
     time: "10:30 AM",
-    senderImage: "https://via.placeholder.com/32", // Replace with actual image URLs
+    senderImage: "https://dummyimage.com/300", // Replace with actual image URLs
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -108,7 +108,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -122,7 +122,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -136,7 +136,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -150,7 +150,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -164,7 +164,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -178,7 +178,7 @@ const notifications: NotificationData[] = [
     body: "You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post.",
     date: "2025-01-09",
     time: "10:30 AM",
-    senderImage: "https://via.placeholder.com/32", // Replace with actual image URLs
+    senderImage: "https://dummyimage.com/300", // Replace with actual image URLs
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -192,7 +192,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -206,7 +206,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -220,7 +220,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -234,7 +234,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -248,7 +248,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -262,7 +262,7 @@ const notifications: NotificationData[] = [
     body: "You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post.",
     date: "2025-01-09",
     time: "10:30 AM",
-    senderImage: "https://via.placeholder.com/32", // Replace with actual image URLs
+    senderImage: "https://dummyimage.com/300", // Replace with actual image URLs
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -276,7 +276,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -290,7 +290,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -304,7 +304,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -318,7 +318,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -332,7 +332,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -346,7 +346,7 @@ const notifications: NotificationData[] = [
     body: "You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post.",
     date: "2025-01-09",
     time: "10:30 AM",
-    senderImage: "https://via.placeholder.com/32", // Replace with actual image URLs
+    senderImage: "https://dummyimage.com/300", // Replace with actual image URLs
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -360,7 +360,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -374,7 +374,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -388,7 +388,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -402,7 +402,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -416,7 +416,7 @@ const notifications: NotificationData[] = [
     body: "John Doe started following you.",
     date: "2025-01-08",
     time: "3:15 PM",
-    senderImage: "https://via.placeholder.com/32",
+    senderImage: "https://dummyimage.com/300",
     senderId: "EOuyocZiTZVT91ZOo0rW",
     receiverId: "5AM89Ku44FQ9S7qrmwol",
     senderName: "Soluciones oonline sac",
@@ -459,12 +459,18 @@ export function useTCNotification() {
         console.log("Connected notificaciones");
       });
 
-      // setInterval(() => {
-      //   // simulación
-      //   // const newNotif = notifications[0];
-      //   // setNotificationList([newNotif, ...notificationList]);
-      //   showRealTimeNotification("info", notifications[0]);
-      // }, 3000);
+      setTimeout(() => {
+        // simulación
+        // const newNotif = notifications[0];
+        // setNotificationList([newNotif, ...notificationList]);
+        showRealTimeNotification(notifications[0]);
+      }, 3000);
+      setTimeout(() => {
+        // simulación
+        // const newNotif = notifications[0];
+        // setNotificationList([newNotif, ...notificationList]);
+        showRealTimeNotification(notifications[1]);
+      }, 6000);
     }
     return () => {
       if (notifSocketAPI) {

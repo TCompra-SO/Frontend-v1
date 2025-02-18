@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../../../utilities/routes";
 import { useDownloadPdfOrder } from "../../../hooks/utilHooks";
 import { useTCNotification } from "../../../hooks/useTCNotification";
+import NotificationUserAvatar from "../../common/utils/NotificationUserAvatar";
 
 const { Text } = Typography;
 
@@ -112,13 +113,12 @@ export default function Notifications(props: NotificationsProps) {
               onClick={() => redirectFromNotification(item)}
             >
               <List.Item.Meta
+                style={{ cursor: "pointer" }}
                 avatar={
-                  <Avatar
-                    src={item.senderImage ?? undefined}
-                    style={{ backgroundColor: primaryColor }}
-                  >
-                    {item.senderImage ? null : item.senderName[0]}
-                  </Avatar>
+                  <NotificationUserAvatar
+                    senderImage={item.senderImage}
+                    senderName={item.senderName}
+                  />
                 }
                 title={
                   <div

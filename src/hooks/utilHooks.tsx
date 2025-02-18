@@ -1,4 +1,4 @@
-import { App } from "antd";
+import { App, Avatar } from "antd";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DisplayUser } from "../models/MainInterfaces";
@@ -12,6 +12,7 @@ import {
 import useApi from "./useApi";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import { RequirementType } from "../utilities/types";
+import NotificationUserAvatar from "../components/common/utils/NotificationUserAvatar";
 
 export default function useShowNotification() {
   const { notification: api } = App.useApp();
@@ -30,17 +31,21 @@ export default function useShowNotification() {
       });
   }
 
-  function showRealTimeNotification(
-    type: "success" | "error" | "info" | "warning",
-    content: NotificationData
-  ) {
+  function showRealTimeNotification(content: NotificationData) {
     if (api) {
-      api[type]({
+      api.open({
         message: content.title,
         description: content.body,
         showProgress: true,
         pauseOnHover: true,
         placement: "bottomRight",
+        icon: (
+          <NotificationUserAvatar
+            senderImage={content.senderImage}
+            senderName={content.senderName}
+            size={"small"}
+          />
+        ),
       });
     }
   }
