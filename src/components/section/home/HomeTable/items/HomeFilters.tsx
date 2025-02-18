@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import ButtonContainer from "../../../../containers/ButtonContainer";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { RequirementType } from "../../../../../utilities/types";
 import { getLabelFromRequirementType } from "../../../../../utilities/globalFunctions";
 import LocationField from "../../../../common/formFields/LocationField";
@@ -24,6 +24,7 @@ export default function HomeFilters() {
   const { t } = useTranslation();
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
+  const divRef = useRef<HTMLDivElement>(null);
   const [form] = Form.useForm();
   const [hideFilters, setHideFilters] = useState(true);
   const {
@@ -36,6 +37,7 @@ export default function HomeFilters() {
     type,
     updateType,
     keywordSearch,
+    updateKeywordSearch,
   } = useContext(HomeContext);
   const [homeFilter, setHomeFilter] = useState<HomeFilterRequest>({
     page: 1,
@@ -60,11 +62,19 @@ export default function HomeFilters() {
 
   useEffect(() => {
     if (keywordSearch) {
+      setHideFilters(false);
+      scrollToTable();
       form.resetFields();
       form.setFieldValue(formFieldKeyword, keywordSearch);
       search({ ...form.getFieldsValue(), [formFieldKeyword]: keywordSearch });
     }
   }, [keywordSearch]);
+
+  function scrollToTable() {
+    if (divRef.current) {
+      divRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }
 
   /** Paginación */
 
@@ -114,6 +124,7 @@ export default function HomeFilters() {
   function resetFilters() {
     form.resetFields();
     updateUseFilter(false);
+    updateKeywordSearch("");
   }
 
   function getTypeButton(reqType: RequirementType) {
@@ -156,7 +167,7 @@ export default function HomeFilters() {
         {/* <button className="btn btn-pink wd-25 t-flex f-column j-items gap-10 btn-pd"><i className="fa-duotone fa-user-tie"></i> <span className="req-btn-info">RR.HH</span></button> */}
       </div>
       <div className="t-flex gap-10 f-column">
-        <div className="card-gray back-white">
+        <div className="card-gray back-white" ref={divRef}>
           <div className="list-requ">
             <i className="fa-duotone fa-stream"></i> {t("listOf")}{" "}
             {t(getLabelFromRequirementType(type, true))}

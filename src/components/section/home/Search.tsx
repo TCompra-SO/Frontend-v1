@@ -10,6 +10,16 @@ export default function Search() {
   const { updateKeywordSearch } = useContext(HomeContext);
   const [keyword, setKeyword] = useState("");
 
+  function handleKeyUp(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "Enter") {
+      search();
+    }
+  }
+
+  function search() {
+    updateKeywordSearch(keyword);
+  }
+
   return (
     <>
       <div className="text-center t-flex f-column gap-20 slider-desc">
@@ -27,11 +37,9 @@ export default function Search() {
               exceedFormatter: (txt, { max }) => txt.slice(0, max),
             }}
             onChange={(e) => setKeyword(e.target.value)}
+            onKeyUp={handleKeyUp}
           />
-          <ButtonContainer
-            className="btn btn-default"
-            onClick={() => updateKeywordSearch(keyword)}
-          >
+          <ButtonContainer className="btn btn-default" onClick={search}>
             <i className="fa-regular fa-search"></i>
           </ButtonContainer>
         </div>
