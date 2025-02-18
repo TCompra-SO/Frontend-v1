@@ -35,6 +35,8 @@ interface HomeContextType {
   ) => void;
   resetChangesQueue: () => void;
   retrieveLastSearchRequeriments: () => void;
+  keywordSearch: string;
+  updateKeywordSearch: (val: string) => void;
 }
 
 export const HomeContext = createContext<HomeContextType>({
@@ -52,6 +54,8 @@ export const HomeContext = createContext<HomeContextType>({
   updateType: () => {},
   updateChangesQueue: () => {},
   resetChangesQueue: () => {},
+  keywordSearch: "",
+  updateKeywordSearch: () => {},
 });
 
 export function HomeProvider({ children }: { children: ReactNode }) {
@@ -61,6 +65,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [userId, setUserId] = useState("");
   const [useFilter, setUseFilter] = useState<null | boolean>(null);
+  const [keywordSearch, setKeywordSearch] = useState("");
   const {
     getRequirementList,
     requirements: requirementListOrig,
@@ -161,6 +166,10 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     setType(val);
   }
 
+  function updateKeywordSearch(val: string) {
+    setKeywordSearch(val);
+  }
+
   return (
     <HomeContext.Provider
       value={{
@@ -184,6 +193,9 @@ export function HomeProvider({ children }: { children: ReactNode }) {
 
         updateChangesQueue,
         resetChangesQueue,
+
+        keywordSearch,
+        updateKeywordSearch,
       }}
     >
       {children}

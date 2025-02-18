@@ -13,6 +13,7 @@ import SelectCompanyField from "../../CompanyFilter/SelectCompanyField";
 import RangeDateField from "../../../../common/formFields/RangeDateField";
 import {
   dateFormatHomeSearch,
+  formFieldKeyword,
   homePageSize,
 } from "../../../../../utilities/globals";
 import dayjs from "dayjs";
@@ -34,6 +35,7 @@ export default function HomeFilters() {
     page,
     type,
     updateType,
+    keywordSearch,
   } = useContext(HomeContext);
   const [homeFilter, setHomeFilter] = useState<HomeFilterRequest>({
     page: 1,
@@ -53,6 +55,16 @@ export default function HomeFilters() {
     if (!isLoggedIn) resetFilters();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
+
+  /** Búsqueda con buscador de sólo keywords */
+
+  useEffect(() => {
+    if (keywordSearch) {
+      form.resetFields();
+      form.setFieldValue(formFieldKeyword, keywordSearch);
+      search({ ...form.getFieldsValue(), [formFieldKeyword]: keywordSearch });
+    }
+  }, [keywordSearch]);
 
   /** Paginación */
 
