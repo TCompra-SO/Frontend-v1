@@ -48,6 +48,7 @@ export const reqIdParamNameInRoute: string = "requirementId";
 export const homePageSize: number = pageSizeOptionsSt[0];
 
 export const formFieldKeyword: string = "keywords";
+export const chatDataFieldName: string = "chatData";
 
 // local storage keys
 export const userDataKey: string = "udata";

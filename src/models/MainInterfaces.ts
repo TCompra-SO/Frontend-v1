@@ -249,6 +249,7 @@ export interface BasicRateData {
 }
 
 export interface ChatListData {
+  uid: string;
   userImage?: string;
   userName: string;
   userOnline?: boolean;
@@ -261,6 +262,7 @@ export interface ChatListData {
 }
 
 export interface ChatMessage {
+  chatId: string;
   uid: string;
   userId: string;
   message?: string;
@@ -276,7 +278,7 @@ export interface ChatSocketData extends ChatMessage {
 }
 
 export interface NotificationData {
-  id: string;
+  uid: string;
   title: string;
   body: string;
   date: string;

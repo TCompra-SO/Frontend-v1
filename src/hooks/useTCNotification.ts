@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 const notifications: NotificationData[] = [
   {
-    id: "1",
+    uid: "1",
     title:
       "New Comment New Comment New Comment New Comment New Comment New Comment",
     body: "You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post.",
@@ -28,7 +28,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -42,7 +42,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -56,7 +56,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -70,7 +70,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -84,7 +84,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -98,7 +98,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "1",
+    uid: "1",
     title: "New Comment",
     body: "You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post.",
     date: "2025-01-09",
@@ -112,7 +112,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -126,7 +126,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -140,7 +140,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -154,7 +154,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -168,7 +168,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -182,7 +182,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "1",
+    uid: "1",
     title: "New Comment",
     body: "You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post.",
     date: "2025-01-09",
@@ -196,7 +196,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -210,7 +210,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "d",
+    uid: "d",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -224,7 +224,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -238,7 +238,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -252,7 +252,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -266,7 +266,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "1",
+    uid: "1",
     title: "New Comment",
     body: "You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post.",
     date: "2025-01-09",
@@ -280,7 +280,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -294,7 +294,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -308,7 +308,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -322,7 +322,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -336,7 +336,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -350,7 +350,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "1",
+    uid: "1",
     title: "New Comment",
     body: "You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post.",
     date: "2025-01-09",
@@ -364,7 +364,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -378,7 +378,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -392,7 +392,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -406,7 +406,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",
@@ -420,7 +420,7 @@ const notifications: NotificationData[] = [
     targetType: RequirementType.GOOD,
   },
   {
-    id: "2",
+    uid: "2",
     title: "New Follower",
     body: "John Doe started following you.",
     date: "2025-01-08",

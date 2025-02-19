@@ -69,7 +69,7 @@ export default function Notifications(props: NotificationsProps) {
           dataSource={notifList}
           renderItem={(item) => (
             <List.Item
-              key={item.id}
+              key={item.uid}
               onClick={() => {
                 redirectFromNotification(item);
                 setVisible(false);
