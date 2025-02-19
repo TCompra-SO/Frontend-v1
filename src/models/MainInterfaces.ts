@@ -266,7 +266,7 @@ export interface ChatMessage {
   uid: string;
   userId: string;
   message?: string;
-  time: string;
+  timestamp: string;
   read: boolean;
   images?: string[];
   documents?: string[];

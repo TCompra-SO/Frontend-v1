@@ -99,7 +99,7 @@ export default function ChatBodyMessage(props: ChatBodyMessageProps) {
               props.message.images ? "mensaje-hora-img" : "mensaje-hora"
             }
           >
-            {dayjs(props.message.time).format(hourFormatChatBody)}{" "}
+            {dayjs(props.message.timestamp).format(hourFormatChatBody)}{" "}
             <i
               className={`fa-solid ${
                 props.message.read ? "fa-check-double" : "fa-check"

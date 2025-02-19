@@ -4,7 +4,7 @@ import InputContainer from "../../../containers/InputContainer";
 import dayjs from "dayjs";
 import { dateFormatChatBody, windowSize } from "../../../../utilities/globals";
 import ChatBodyMessage from "./ChatBodyMessage";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import useWindowSize from "../../../../hooks/useWindowSize";
 import AddImagesField, {
   AddImagesFieldRef,
@@ -17,6 +17,7 @@ import { primaryColor } from "../../../../utilities/colors";
 import ChatGallery from "./ChatGallery";
 import InfiniteScroll from "react-infinite-scroll-component";
 import SimpleLoading from "../../../../pages/utils/SimpleLoading";
+import { isSameDay } from "../../../../utilities/globalFunctions";
 
 interface ChatBodyProps {
   chatData: ChatListData;
@@ -38,8 +39,9 @@ export default function ChatBody(props: ChatBodyProps) {
   const [openGallery, setOpenGallery] = useState<boolean | null>(null);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [props.chatData]);
+    console.log("scrlling");
+    if (props.messages.length > 0) scrollToBottom();
+  }, [props.messages]);
 
   function scrollToBottom() {
     if (divRef.current) {
@@ -87,10 +89,11 @@ export default function ChatBody(props: ChatBodyProps) {
         </div>
       </div>
       <div className="t-flex f-column-reverse j-items conversacion">
-        <div className="fecha-comment">
-          {dayjs(props.chatData.lastDate).format(dateFormatChatBody)}
-        </div>
-        {/* r3v fecha de los mensajes visibles*/}
+        {props.hasMore && (
+          <div className="fecha-comment">
+            {dayjs(props.chatData.lastDate).format(dateFormatChatBody)}
+          </div>
+        )}
         <div
           className="t-flex f-column-reverse mensajes-contenedor"
           id="scrollableDivChatBodyList"
@@ -109,16 +112,31 @@ export default function ChatBody(props: ChatBodyProps) {
             scrollableTarget="scrollableDivChatBodyList"
             inverse={true}
           >
-            {props.messages.map((msg) => (
-              <ChatBodyMessage
-                key={msg.uid}
-                message={msg}
-                userImage={props.chatData.userImage}
-                userName={props.chatData.userName}
-              />
-            ))}
+            {props.messages.map((msg, index, array) => {
+              const messageNode = (
+                <ChatBodyMessage
+                  message={msg}
+                  userImage={props.chatData.userImage}
+                  userName={props.chatData.userName}
+                />
+              );
+              const shouldInsertDivider =
+                (index < array.length - 1 &&
+                  !isSameDay(msg.timestamp, array[index + 1].timestamp)) ||
+                index == array.length - 1;
+              return (
+                <Fragment key={msg.uid}>
+                  {messageNode}
+                  {shouldInsertDivider && (
+                    <div className="fecha-comment-inline">
+                      {dayjs(msg.timestamp).format(dateFormatChatBody)}
+                    </div>
+                  )}
+                </Fragment>
+              );
+            })}
           </InfiniteScroll>
-          <div ref={divRef} />
+          {/* <div ref={divRef} /> */}
         </div>
       </div>
       <div className="t-flex gap-10 j-items chat-buscar">

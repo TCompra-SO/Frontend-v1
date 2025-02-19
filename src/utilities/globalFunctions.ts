@@ -806,3 +806,14 @@ export function getProductDetailRoute(id: string, type: RequirementType) {
 export function generateRandomKey() {
   return `${Date.now()}-${Math.random()}`;
 }
+
+// Compara si dos fechas coinciden
+export function isSameDay(timestamp1: string, timestamp2: string) {
+  const date1 = dayjs(timestamp1);
+  const date2 = dayjs(timestamp2);
+  return (
+    date1.year() === date2.year() &&
+    date1.month() === date2.month() &&
+    date1.date() === date2.date()
+  );
+}

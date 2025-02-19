@@ -192,72 +192,8 @@ const chatElements: ChatListData[] = [
 
 const fullChatMessages: ChatMessage[] = [
   {
-    userId: "EOuyocZiTZVT91ZOo0rW",
-    message:
-      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
-    time: "2024-11-20T15:24:00.000Z",
-    read: true,
-    uid: "1",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
     userId: "ru1VLrbCKDR7BPQIGrk2",
-    message:
-      "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
-    time: "2024-11-20T15:25:00.000Z",
-    read: true,
-    uid: "2",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "ru1VLrbCKDR7BPQIGrk2",
-    message: "El costo es de $500 mensuales",
-    read: true,
-    time: "2024-11-20T15:26:00.000Z",
-    uid: "3",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "EOuyocZiTZVT91ZOo0rW",
-    time: "2024-11-20T15:27:00.000Z",
-    read: true,
-    images: [
-      "https://dummyimage.com/250/ff3fff/000000",
-      "https://dummyimage.com/250/ff3ff1/000000",
-      "https://dummyimage.com/250/af3ff1/000000",
-    ],
-    uid: "4",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "ru1VLrbCKDR7BPQIGrk2",
-    time: "2024-11-20T15:28:00.000Z",
-    read: true,
-    images: ["https://dummyimage.com/250/ff3fff/000000"],
-    uid: "5",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "ru1VLrbCKDR7BPQIGrk2",
-    time: "2024-11-20T15:28:00.000Z",
-    read: true,
-    images: ["https://dummyimage.com/250/ff3fff/000000"],
-    uid: "6",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "EOuyocZiTZVT91ZOo0rW",
-    time: "2024-11-20T15:29:00.000Z",
-    read: false,
-    documents: [
-      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-    ],
-    uid: "7",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "ru1VLrbCKDR7BPQIGrk2",
-    time: "2024-11-20T15:30:00.000Z",
+    timestamp: "2024-11-22T15:30:00.000Z",
     read: false,
     documents: [
       "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
@@ -267,56 +203,111 @@ const fullChatMessages: ChatMessage[] = [
   },
   {
     userId: "EOuyocZiTZVT91ZOo0rW",
-    message:
-      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
-    time: "2024-11-20T15:24:00.000Z",
+    timestamp: "2024-11-22T15:29:00.000Z",
+    read: false,
+    documents: [
+      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    ],
+    uid: "7",
+    chatId: "RJ1xrrfe4x",
+  },
+  {
+    userId: "ru1VLrbCKDR7BPQIGrk2",
+    timestamp: "2024-11-22T15:28:00.000Z",
     read: true,
-    uid: "9",
+    images: ["https://dummyimage.com/250/ff3fff/000000"],
+    uid: "6",
+    chatId: "RJ1xrrfe4x",
+  },
+  {
+    userId: "ru1VLrbCKDR7BPQIGrk2",
+    timestamp: "2024-11-20T15:28:00.000Z",
+    read: true,
+    images: ["https://dummyimage.com/250/ff3fff/000000"],
+    uid: "5",
+    chatId: "RJ1xrrfe4x",
+  },
+  {
+    userId: "EOuyocZiTZVT91ZOo0rW",
+    timestamp: "2024-11-20T15:27:00.000Z",
+    read: true,
+    images: [
+      "https://dummyimage.com/250/ff3fff/000000",
+      "https://dummyimage.com/250/ff3ff1/000000",
+      "https://dummyimage.com/250/af3ff1/000000",
+    ],
+    uid: "4",
+    chatId: "RJ1xrrfe4x",
+  },
+  {
+    userId: "ru1VLrbCKDR7BPQIGrk2",
+    message: "El costo es de $500 mensuales",
+    read: true,
+    timestamp: "2024-11-20T15:26:00.000Z",
+    uid: "3",
     chatId: "RJ1xrrfe4x",
   },
   {
     userId: "ru1VLrbCKDR7BPQIGrk2",
     message:
       "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
-    time: "2024-11-20T15:25:00.000Z",
+    timestamp: "2024-11-20T15:25:00.000Z",
+    read: true,
+    uid: "2",
+    chatId: "RJ1xrrfe4x",
+  },
+  {
+    userId: "ru1VLrbCKDR7BPQIGrk2",
+    message:
+      "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
+    timestamp: "2024-11-20T15:25:00.000Z",
     read: true,
     uid: "10",
     chatId: "RJ1xrrfe4x",
   },
   {
-    userId: "EOuyocZiTZVT91ZOo0rW",
-    message:
-      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
-    time: "2024-11-20T15:24:00.000Z",
-    read: true,
-    uid: "11",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
     userId: "ru1VLrbCKDR7BPQIGrk2",
     message:
       "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
-    time: "2024-11-20T15:25:00.000Z",
+    timestamp: "2024-11-20T15:25:00.000Z",
     read: true,
     uid: "12",
     chatId: "RJ1xrrfe4x",
   },
   {
-    userId: "EOuyocZiTZVT91ZOo0rW",
-    message:
-      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
-    time: "2024-11-20T15:24:00.000Z",
-    read: true,
-    uid: "13",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
     userId: "ru1VLrbCKDR7BPQIGrk2",
     message:
       "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
-    time: "2024-11-20T15:25:00.000Z",
+    timestamp: "2024-11-20T15:25:00.000Z",
     read: true,
     uid: "14",
+    chatId: "RJ1xrrfe4x",
+  },
+  {
+    userId: "EOuyocZiTZVT91ZOo0rW",
+    message:
+      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
+    timestamp: "2024-11-20T15:24:00.000Z",
+    read: true,
+    uid: "9",
+    chatId: "RJ1xrrfe4x",
+  },
+  {
+    userId: "EOuyocZiTZVT91ZOo0rW",
+    message:
+      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
+    timestamp: "2024-11-20T15:24:00.000Z",
+    read: true,
+    uid: "11",
+    chatId: "RJ1xrrfe4x",
+  },
+  {
+    userId: "EOuyocZiTZVT91ZOo0rW",
+    message:
+      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
+    timestamp: "2024-11-20T15:24:00.000Z",
+    read: true,
+    uid: "13",
     chatId: "RJ1xrrfe4x",
   },
 ];
@@ -326,7 +317,7 @@ const chatMessages: ChatSocketData[] = [
     userId: "ru1VLrbCKDR7BPQIGrk2",
     message:
       "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
-    time: "2024-11-20T15:25:00.000Z",
+    timestamp: "2024-11-20T15:25:00.000Z",
     read: true,
     uid: "2",
     userName: "Soluciones Online",
@@ -334,7 +325,7 @@ const chatMessages: ChatSocketData[] = [
   },
   {
     userId: "EOuyocZiTZVT91ZOo0rW",
-    time: "2024-11-20T15:27:00.000Z",
+    timestamp: "2024-11-20T15:27:00.000Z",
     read: true,
     images: [
       "https://dummyimage.com/250/ff3fff/000000",
@@ -347,7 +338,7 @@ const chatMessages: ChatSocketData[] = [
   },
   {
     userId: "EOuyocZiTZVT91ZOo0rW",
-    time: "2024-11-20T15:29:00.000Z",
+    timestamp: "2024-11-20T15:29:00.000Z",
     read: false,
     documents: [
       "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
@@ -367,7 +358,6 @@ export function useChat() {
   const [chatMessageList, setChatMessageList] = useState<ChatMessage[]>([]);
   const [hasMoreChatMessageList, setHasMoreChatMessageList] = useState(true);
   const [cont, setCont] = useState(0);
-  const [conta, setConta] = useState(0);
 
   /** Funciones */
 
@@ -376,11 +366,12 @@ export function useChat() {
     setLoadingChatList(true);
     setTimeout(() => {
       if (cont == 2) setHasMoreChatList(false);
-      setChatList(
-        chatList.length > 0
-          ? chatList.concat(chatList)
-          : chatElements.slice(0, 10)
-      );
+      else
+        setChatList(
+          chatList.length > 0
+            ? chatList.concat(chatList)
+            : chatElements.slice(0, 10)
+        );
       setLoadingChatList(false);
       setCont(cont + 1);
     }, 2000);
@@ -389,14 +380,20 @@ export function useChat() {
   function getMoreChatMessages() {
     setLoadingChatMessages(true);
     setTimeout(() => {
-      if (conta == 3) setHasMoreChatMessageList(false);
-      setChatMessageList((prev) =>
-        chatMessageList.length > 0
-          ? fullChatMessages.slice(0, 10).concat(prev)
-          : fullChatMessages.slice(0, 10)
-      );
+      if (chatMessageList.length >= fullChatMessages.length)
+        setHasMoreChatMessageList(false);
+      else
+        setChatMessageList(
+          chatMessageList.length > 0
+            ? chatMessageList.concat(
+                fullChatMessages.slice(
+                  chatMessageList.length,
+                  10 + chatMessageList.length
+                )
+              )
+            : fullChatMessages.slice(0, 10)
+        );
       setLoadingChatMessages(false);
-      setConta(conta + 1);
     }, 1000);
   }
 
