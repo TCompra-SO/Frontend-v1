@@ -363,31 +363,40 @@ export function useChat() {
   const [loadingChatList, setLoadingChatList] = useState(false);
   const [loadingChatMessages, setLoadingChatMessages] = useState(false);
   const [chatList, setChatList] = useState<ChatListData[]>([]);
+  const [hasMoreChatList, setHasMoreChatList] = useState(true);
   const [chatMessageList, setChatMessageList] = useState<ChatMessage[]>([]);
+  const [hasMoreChatMessageList, setHasMoreChatMessageList] = useState(true);
+  const [cont, setCont] = useState(0);
+  const [conta, setConta] = useState(0);
 
   /** Funciones */
 
   function getMoreChats() {
+    console.log("gettin more chats", cont);
     setLoadingChatList(true);
     setTimeout(() => {
+      if (cont == 2) setHasMoreChatList(false);
       setChatList(
         chatList.length > 0
           ? chatList.concat(chatList)
           : chatElements.slice(0, 10)
       );
       setLoadingChatList(false);
+      setCont(cont + 1);
     }, 2000);
   }
 
   function getMoreChatMessages() {
     setLoadingChatMessages(true);
     setTimeout(() => {
-      setChatMessageList(
+      if (conta == 3) setHasMoreChatMessageList(false);
+      setChatMessageList((prev) =>
         chatMessageList.length > 0
-          ? chatMessageList.concat(chatMessageList)
+          ? fullChatMessages.slice(0, 10).concat(prev)
           : fullChatMessages.slice(0, 10)
       );
       setLoadingChatMessages(false);
+      setConta(conta + 1);
     }, 1000);
   }
 
@@ -408,6 +417,8 @@ export function useChat() {
     resetChatMessageList,
     chatMessageList,
     getMoreChatMessages,
+    hasMoreChatList,
+    hasMoreChatMessageList,
   };
 }
 

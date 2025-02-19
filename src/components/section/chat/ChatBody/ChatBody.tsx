@@ -12,14 +12,18 @@ import AddImagesField, {
 import AddDocumentField, {
   AddDocumentFieldRef,
 } from "../../../common/formFields/AddDocumentField";
-import { Badge, UploadFile } from "antd";
+import { Badge, Flex, Spin, UploadFile } from "antd";
 import { primaryColor } from "../../../../utilities/colors";
 import ChatGallery from "./ChatGallery";
+import InfiniteScroll from "react-infinite-scroll-component";
+import SimpleLoading from "../../../../pages/utils/SimpleLoading";
 
 interface ChatBodyProps {
   chatData: ChatListData;
   messages: ChatMessage[];
   onCloseChat: () => void;
+  getMoreChatMessages: () => void;
+  hasMore: boolean;
 }
 
 export default function ChatBody(props: ChatBodyProps) {
@@ -82,20 +86,38 @@ export default function ChatBody(props: ChatBodyProps) {
           <i className="fa-regular fa-circle-xmark"></i>
         </div>
       </div>
-      <div className="t-flex f-column j-items conversacion">
+      <div className="t-flex f-column-reverse j-items conversacion">
         <div className="fecha-comment">
           {dayjs(props.chatData.lastDate).format(dateFormatChatBody)}
         </div>
         {/* r3v fecha de los mensajes visibles*/}
-        <div className="t-flex f-column gap-5 mensajes-contenedor">
-          {props.messages.map((msg) => (
-            <ChatBodyMessage
-              key={msg.uid}
-              message={msg}
-              userImage={props.chatData.userImage}
-              userName={props.chatData.userName}
-            />
-          ))}
+        <div
+          className="t-flex f-column-reverse mensajes-contenedor"
+          id="scrollableDivChatBodyList"
+        >
+          <InfiniteScroll
+            dataLength={props.messages.length}
+            next={props.getMoreChatMessages}
+            style={{ display: "flex", flexDirection: "column-reverse" }}
+            className="gap-5"
+            hasMore={props.hasMore}
+            loader={
+              <Flex justify="center">
+                <Spin indicator={<SimpleLoading style={{ width: "60px" }} />} />
+              </Flex>
+            }
+            scrollableTarget="scrollableDivChatBodyList"
+            inverse={true}
+          >
+            {props.messages.map((msg) => (
+              <ChatBodyMessage
+                key={msg.uid}
+                message={msg}
+                userImage={props.chatData.userImage}
+                userName={props.chatData.userName}
+              />
+            ))}
+          </InfiniteScroll>
           <div ref={divRef} />
         </div>
       </div>

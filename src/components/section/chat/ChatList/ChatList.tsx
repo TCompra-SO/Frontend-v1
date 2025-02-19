@@ -10,6 +10,8 @@ interface ChatListProps {
   chatList: ChatListData[];
   onClickOnItem: (item: ChatListData) => void;
   loadMoreChats: () => void;
+  currentChat: ChatListData | null;
+  hasMore: boolean;
 }
 
 export default function ChatList(props: ChatListProps) {
@@ -38,7 +40,7 @@ export default function ChatList(props: ChatListProps) {
           <InfiniteScroll
             dataLength={props.chatList.length}
             next={props.loadMoreChats}
-            hasMore={true}
+            hasMore={props.hasMore}
             loader={
               <Flex justify="center">
                 <Spin indicator={<SimpleLoading style={{ width: "60px" }} />} />
@@ -51,6 +53,7 @@ export default function ChatList(props: ChatListProps) {
                 data={item}
                 key={`${item.userId}-${item.requirementId}`}
                 onClickOnItem={props.onClickOnItem}
+                active={props.currentChat?.uid == item.uid}
               />
             ))}
           </InfiniteScroll>

@@ -3,7 +3,7 @@ import ContentHeader from "../components/common/utils/ContentHeader";
 import ChatList from "../components/section/chat/ChatList/ChatList";
 import ChatBody from "../components/section/chat/ChatBody/ChatBody";
 import { ChatListData, ChatSocketData } from "../models/MainInterfaces";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useWindowSize from "../hooks/useWindowSize";
 import { chatDataFieldName, windowSize } from "../utilities/globals";
 import { useChat } from "../hooks/useChat";
@@ -13,9 +13,16 @@ export default function Chat() {
   const { t } = useTranslation();
   const location = useLocation();
   const { width } = useWindowSize();
-  const { chatList, getMoreChats, chatMessageList, getMoreChatMessages } =
-    useChat();
-  // const [chatList, setChatList] = useState(chatElements.slice(0, 10));
+  const {
+    chatList,
+    getMoreChats,
+    chatMessageList,
+    getMoreChatMessages,
+    resetChatMessageList,
+    hasMoreChatList,
+    hasMoreChatMessageList,
+  } = useChat();
+  const hasHandledChatNotification = useRef(false);
   const [isChatOpened, setIsChatOpened] = useState(false);
   const [currentChat, setCurrentChat] = useState<ChatListData | null>(null);
 
@@ -31,26 +38,41 @@ export default function Chat() {
   useEffect(() => {
     const chatDataFromNotification: ChatSocketData =
       location.state?.[chatDataFieldName];
-    if (chatDataFromNotification) {
+    hasHandledChatNotification.current = false;
+
+    if (chatDataFromNotification && !hasHandledChatNotification.current) {
       console.log(chatDataFromNotification);
+      const chatToOpen = chatList.find(
+        (chat) => chat.uid === chatDataFromNotification.chatId
+      );
+      if (chatToOpen) {
+        handleClickOnChatItem(chatToOpen);
+        hasHandledChatNotification.current = true;
+      }
     }
-  }, [location]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location, chatList]);
+
+  /** Obtener lista inicial de mensajes de chat */
 
   useEffect(() => {
     if (isChatOpened && currentChat) {
       getMoreChatMessages();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isChatOpened]);
+  }, [isChatOpened, currentChat]);
 
   /** Funciones */
 
   function handleCloseChat() {
     setCurrentChat(null);
     setIsChatOpened(false);
+    resetChatMessageList();
   }
 
   function handleClickOnChatItem(item: ChatListData) {
+    console.log("opening chat...");
+    resetChatMessageList();
     setCurrentChat(item);
     setIsChatOpened(true);
   }
@@ -68,6 +90,8 @@ export default function Chat() {
             chatList={chatList}
             onClickOnItem={handleClickOnChatItem}
             loadMoreChats={getMoreChats}
+            currentChat={currentChat}
+            hasMore={hasMoreChatList}
           />
         )}
         {isChatOpened && currentChat ? (
@@ -75,6 +99,8 @@ export default function Chat() {
             chatData={currentChat}
             onCloseChat={handleCloseChat}
             messages={chatMessageList}
+            getMoreChatMessages={getMoreChatMessages}
+            hasMore={hasMoreChatMessageList}
           />
         ) : (
           <div className="card-white mch-2 t-flex j-conten j-items f-column">
