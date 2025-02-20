@@ -21,6 +21,8 @@ export default function Chat() {
     resetChatMessageList,
     hasMoreChatList,
     hasMoreChatMessageList,
+    loadingChatList,
+    loadingChatMessages,
   } = useChat();
   const hasHandledChatNotification = useRef(false);
   const [isChatOpened, setIsChatOpened] = useState(false);
@@ -92,6 +94,7 @@ export default function Chat() {
             loadMoreChats={getMoreChats}
             currentChat={currentChat}
             hasMore={hasMoreChatList}
+            loading={loadingChatList}
           />
         )}
         {isChatOpened && currentChat ? (
@@ -101,6 +104,7 @@ export default function Chat() {
             messages={chatMessageList}
             getMoreChatMessages={getMoreChatMessages}
             hasMore={hasMoreChatMessageList}
+            loading={loadingChatMessages}
           />
         ) : (
           <div className="card-white mch-2 t-flex j-conten j-items f-column">

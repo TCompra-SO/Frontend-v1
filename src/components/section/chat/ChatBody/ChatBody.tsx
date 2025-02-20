@@ -4,7 +4,7 @@ import InputContainer from "../../../containers/InputContainer";
 import dayjs from "dayjs";
 import { dateFormatChatBody, windowSize } from "../../../../utilities/globals";
 import ChatBodyMessage from "./ChatBodyMessage";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, ReactNode, useEffect, useRef, useState } from "react";
 import useWindowSize from "../../../../hooks/useWindowSize";
 import AddImagesField, {
   AddImagesFieldRef,
@@ -12,12 +12,17 @@ import AddImagesField, {
 import AddDocumentField, {
   AddDocumentFieldRef,
 } from "../../../common/formFields/AddDocumentField";
-import { Badge, Flex, Spin, UploadFile } from "antd";
-import { primaryColor } from "../../../../utilities/colors";
+import { Flex, Spin, UploadFile } from "antd";
 import ChatGallery from "./ChatGallery";
 import InfiniteScroll from "react-infinite-scroll-component";
 import SimpleLoading from "../../../../pages/utils/SimpleLoading";
 import { isSameDay } from "../../../../utilities/globalFunctions";
+
+const loadingSpinner: ReactNode = (
+  <Flex justify="center">
+    <Spin indicator={<SimpleLoading style={{ width: "60px" }} />} />
+  </Flex>
+);
 
 interface ChatBodyProps {
   chatData: ChatListData;
@@ -25,6 +30,7 @@ interface ChatBodyProps {
   onCloseChat: () => void;
   getMoreChatMessages: () => void;
   hasMore: boolean;
+  loading: boolean;
 }
 
 export default function ChatBody(props: ChatBodyProps) {
@@ -37,10 +43,16 @@ export default function ChatBody(props: ChatBodyProps) {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [message, setMessage] = useState("");
   const [openGallery, setOpenGallery] = useState<boolean | null>(null);
+  const prevChatMessagesLength = useRef(0);
 
   useEffect(() => {
-    console.log("scrlling");
-    if (props.messages.length > 0) scrollToBottom();
+    if (props.messages.length > 0) {
+      prevChatMessagesLength.current = props.messages.length;
+      if (prevChatMessagesLength.current == 0) {
+        console.log("jscrolling");
+        scrollToBottom();
+      }
+    } else prevChatMessagesLength.current = 0;
   }, [props.messages]);
 
   function scrollToBottom() {
@@ -89,55 +101,57 @@ export default function ChatBody(props: ChatBodyProps) {
         </div>
       </div>
       <div className="t-flex f-column-reverse j-items conversacion">
-        {props.hasMore && (
-          <div className="fecha-comment">
-            {dayjs(props.chatData.lastDate).format(dateFormatChatBody)}
-          </div>
+        {props.loading && prevChatMessagesLength.current == 0 ? (
+          loadingSpinner
+        ) : (
+          <>
+            {props.hasMore && (
+              <div className="fecha-comment">
+                {dayjs(props.chatData.lastDate).format(dateFormatChatBody)}
+              </div>
+            )}
+            <div
+              className="t-flex f-column-reverse mensajes-contenedor"
+              id="scrollableDivChatBodyList"
+            >
+              <InfiniteScroll
+                dataLength={props.messages.length}
+                next={props.getMoreChatMessages}
+                style={{ display: "flex", flexDirection: "column-reverse" }}
+                className="gap-5"
+                hasMore={props.hasMore}
+                loader={loadingSpinner}
+                scrollableTarget="scrollableDivChatBodyList"
+                inverse={true}
+              >
+                {props.messages.map((msg, index, array) => {
+                  const messageNode = (
+                    <ChatBodyMessage
+                      message={msg}
+                      userImage={props.chatData.userImage}
+                      userName={props.chatData.userName}
+                    />
+                  );
+                  const shouldInsertDivider =
+                    (index < array.length - 1 &&
+                      !isSameDay(msg.timestamp, array[index + 1].timestamp)) ||
+                    index == array.length - 1;
+                  return (
+                    <Fragment key={msg.uid}>
+                      {index == 0 && <div ref={divRef} />}
+                      {messageNode}
+                      {shouldInsertDivider && (
+                        <div className="fecha-comment-inline">
+                          {dayjs(msg.timestamp).format(dateFormatChatBody)}
+                        </div>
+                      )}
+                    </Fragment>
+                  );
+                })}
+              </InfiniteScroll>
+            </div>
+          </>
         )}
-        <div
-          className="t-flex f-column-reverse mensajes-contenedor"
-          id="scrollableDivChatBodyList"
-        >
-          <InfiniteScroll
-            dataLength={props.messages.length}
-            next={props.getMoreChatMessages}
-            style={{ display: "flex", flexDirection: "column-reverse" }}
-            className="gap-5"
-            hasMore={props.hasMore}
-            loader={
-              <Flex justify="center">
-                <Spin indicator={<SimpleLoading style={{ width: "60px" }} />} />
-              </Flex>
-            }
-            scrollableTarget="scrollableDivChatBodyList"
-            inverse={true}
-          >
-            {props.messages.map((msg, index, array) => {
-              const messageNode = (
-                <ChatBodyMessage
-                  message={msg}
-                  userImage={props.chatData.userImage}
-                  userName={props.chatData.userName}
-                />
-              );
-              const shouldInsertDivider =
-                (index < array.length - 1 &&
-                  !isSameDay(msg.timestamp, array[index + 1].timestamp)) ||
-                index == array.length - 1;
-              return (
-                <Fragment key={msg.uid}>
-                  {messageNode}
-                  {shouldInsertDivider && (
-                    <div className="fecha-comment-inline">
-                      {dayjs(msg.timestamp).format(dateFormatChatBody)}
-                    </div>
-                  )}
-                </Fragment>
-              );
-            })}
-          </InfiniteScroll>
-          {/* <div ref={divRef} /> */}
-        </div>
       </div>
       <div className="t-flex gap-10 j-items chat-buscar">
         <i

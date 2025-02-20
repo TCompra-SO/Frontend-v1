@@ -5,6 +5,13 @@ import ChatListItem from "./ChatListItem";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Flex, Spin } from "antd";
 import SimpleLoading from "../../../../pages/utils/SimpleLoading";
+import { ReactNode } from "react";
+
+const loadingSpinner: ReactNode = (
+  <Flex justify="center">
+    <Spin indicator={<SimpleLoading style={{ width: "60px" }} />} />
+  </Flex>
+);
 
 interface ChatListProps {
   chatList: ChatListData[];
@@ -12,6 +19,7 @@ interface ChatListProps {
   loadMoreChats: () => void;
   currentChat: ChatListData | null;
   hasMore: boolean;
+  loading: boolean;
 }
 
 export default function ChatList(props: ChatListProps) {
@@ -28,10 +36,14 @@ export default function ChatList(props: ChatListProps) {
         />
       </div>
       {props.chatList.length == 0 ? (
-        <div className="multimedia-nula t-flex j-conten f-column gap-10 sin-chats">
-          <i className="fa-regular fa-comment-slash fa-2x"></i>
-          <div className="name-file">{t("noChats")}</div>
-        </div>
+        props.loading ? (
+          loadingSpinner
+        ) : (
+          <div className="multimedia-nula t-flex j-conten f-column gap-10 sin-chats">
+            <i className="fa-regular fa-comment-slash fa-2x"></i>
+            <div className="name-file">{t("noChats")}</div>
+          </div>
+        )
       ) : (
         <div
           id="scrollableDivChatList"
@@ -41,11 +53,7 @@ export default function ChatList(props: ChatListProps) {
             dataLength={props.chatList.length}
             next={props.loadMoreChats}
             hasMore={props.hasMore}
-            loader={
-              <Flex justify="center">
-                <Spin indicator={<SimpleLoading style={{ width: "60px" }} />} />
-              </Flex>
-            }
+            loader={loadingSpinner}
             scrollableTarget="scrollableDivChatList"
           >
             {props.chatList.map((item: ChatListData) => (

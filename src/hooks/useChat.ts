@@ -193,6 +193,15 @@ const chatElements: ChatListData[] = [
 const fullChatMessages: ChatMessage[] = [
   {
     userId: "ru1VLrbCKDR7BPQIGrk2",
+    message:
+      "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados. ¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados, ¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados, ¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados ¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados. ¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados, ¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados, ¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
+    timestamp: "2024-11-22T15:31:00.000Z",
+    read: true,
+    uid: "2x",
+    chatId: "RJ1xrrfvve4x",
+  },
+  {
+    userId: "ru1VLrbCKDR7BPQIGrk2",
     timestamp: "2024-11-22T15:30:00.000Z",
     read: false,
     documents: [
@@ -357,23 +366,23 @@ export function useChat() {
   const [hasMoreChatList, setHasMoreChatList] = useState(true);
   const [chatMessageList, setChatMessageList] = useState<ChatMessage[]>([]);
   const [hasMoreChatMessageList, setHasMoreChatMessageList] = useState(true);
-  const [cont, setCont] = useState(0);
 
   /** Funciones */
 
   function getMoreChats() {
-    console.log("gettin more chats", cont);
+    console.log("gettin more chats");
     setLoadingChatList(true);
     setTimeout(() => {
-      if (cont == 2) setHasMoreChatList(false);
+      if (chatList.length >= chatElements.length) setHasMoreChatList(false);
       else
         setChatList(
           chatList.length > 0
-            ? chatList.concat(chatList)
+            ? chatList.concat(
+                chatElements.slice(chatList.length, 10 + chatList.length)
+              )
             : chatElements.slice(0, 10)
         );
       setLoadingChatList(false);
-      setCont(cont + 1);
     }, 2000);
   }
 
@@ -403,6 +412,7 @@ export function useChat() {
 
   function resetChatMessageList() {
     setChatMessageList([]);
+    setHasMoreChatMessageList(true);
   }
 
   return {
@@ -431,27 +441,27 @@ export function useChatSocket() {
         console.log("Connected chat");
       });
 
-      setTimeout(() => {
-        showRealTimeNotification({
-          type: RTNotificationType.CHAT,
-          content: chatMessages[0],
-          onClickCallback: redirectFromNotification,
-        });
-      }, 3000);
-      setTimeout(() => {
-        showRealTimeNotification({
-          type: RTNotificationType.CHAT,
-          content: chatMessages[1],
-          onClickCallback: redirectFromNotification,
-        });
-      }, 6000);
-      setTimeout(() => {
-        showRealTimeNotification({
-          type: RTNotificationType.CHAT,
-          content: chatMessages[2],
-          onClickCallback: redirectFromNotification,
-        });
-      }, 9000);
+      // setTimeout(() => {
+      //   showRealTimeNotification({
+      //     type: RTNotificationType.CHAT,
+      //     content: chatMessages[0],
+      //     onClickCallback: redirectFromNotification,
+      //   });
+      // }, 3000);
+      // setTimeout(() => {
+      //   showRealTimeNotification({
+      //     type: RTNotificationType.CHAT,
+      //     content: chatMessages[1],
+      //     onClickCallback: redirectFromNotification,
+      //   });
+      // }, 6000);
+      // setTimeout(() => {
+      //   showRealTimeNotification({
+      //     type: RTNotificationType.CHAT,
+      //     content: chatMessages[2],
+      //     onClickCallback: redirectFromNotification,
+      //   });
+      // }, 9000);
     }
     return () => {
       if (chatSocketAPI) {
