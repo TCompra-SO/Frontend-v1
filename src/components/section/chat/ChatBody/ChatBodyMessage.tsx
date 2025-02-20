@@ -32,7 +32,10 @@ export default function ChatBodyMessage(props: ChatBodyMessageProps) {
   return (
     <>
       <ImagePreviewGroupContainer ref={childRef} image={props.message.images} />
-      <div className={`t-flex ${isInputMsg ? "txt-entrada" : "txt-salida"}`}>
+      <div
+        className={`t-flex ${isInputMsg ? "txt-entrada" : "txt-salida"}`}
+        data-date={props.message.timestamp}
+      >
         {isInputMsg ? (
           props.userImage ? (
             <img src={props.userImage} className="useri-chat" />

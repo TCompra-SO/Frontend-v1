@@ -319,6 +319,33 @@ const fullChatMessages: ChatMessage[] = [
     uid: "13",
     chatId: "RJ1xrrfe4x",
   },
+  {
+    userId: "EOuyocZiTZVT91ZOo0rW",
+    message:
+      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
+    timestamp: "2024-11-19T15:24:00.000Z",
+    read: true,
+    uid: "9a",
+    chatId: "RJ1xrrfe4x",
+  },
+  {
+    userId: "EOuyocZiTZVT91ZOo0rW",
+    message:
+      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
+    timestamp: "2024-11-19T15:24:00.000Z",
+    read: true,
+    uid: "1a",
+    chatId: "RJ1xrrfe4x",
+  },
+  {
+    userId: "EOuyocZiTZVT91ZOo0rW",
+    message:
+      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
+    timestamp: "2024-11-19T15:24:00.000Z",
+    read: true,
+    uid: "13a",
+    chatId: "RJ1xrrfe4x",
+  },
 ];
 
 const chatMessages: ChatSocketData[] = [

@@ -44,6 +44,51 @@ export default function ChatBody(props: ChatBodyProps) {
   const [message, setMessage] = useState("");
   const [openGallery, setOpenGallery] = useState<boolean | null>(null);
   const prevChatMessagesLength = useRef(0);
+  const [currentDate, setCurrentDate] = useState("");
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  /** Mostrar fecha de mensaje superior en base a date dividers */
+
+  useEffect(() => {
+    const chatContainer = chatContainerRef.current;
+
+    if (!chatContainer) return;
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const date = entry.target.textContent;
+            if (date) {
+              setCurrentDate(date);
+            }
+          }
+        });
+      },
+      {
+        root: chatContainer,
+        threshold: 0.5,
+      }
+    );
+
+    const dateDividers = chatContainer.querySelectorAll(
+      ".fecha-comment-inline"
+    );
+    dateDividers.forEach((divider) => {
+      if (observerRef.current) {
+        observerRef.current.observe(divider);
+      }
+    });
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [props.messages]);
+
+  /** Scroll al mensaje más actual */
 
   useEffect(() => {
     if (props.messages.length > 0) {
@@ -60,6 +105,8 @@ export default function ChatBody(props: ChatBodyProps) {
       divRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }
+
+  /** Funciones */
 
   function sendMsg() {
     if (imgRef.current) imgRef.current.reset();
@@ -105,14 +152,13 @@ export default function ChatBody(props: ChatBodyProps) {
           loadingSpinner
         ) : (
           <>
-            {props.hasMore && (
-              <div className="fecha-comment">
-                {dayjs(props.chatData.lastDate).format(dateFormatChatBody)}
-              </div>
+            {props.hasMore && currentDate && (
+              <div className="fecha-comment">{currentDate}</div>
             )}
             <div
               className="t-flex f-column-reverse mensajes-contenedor"
               id="scrollableDivChatBodyList"
+              ref={chatContainerRef}
             >
               <InfiniteScroll
                 dataLength={props.messages.length}
