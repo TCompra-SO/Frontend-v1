@@ -1,5 +1,9 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { HttpService, useApiParams } from "../models/Interfaces";
+import {
+  HttpService,
+  PaginationDataResponse,
+  useApiParams,
+} from "../models/Interfaces";
 import { FieldFilter, FieldSort, SearchTableRequest } from "../models/Requests";
 import useApi from "./useApi";
 import {
@@ -41,13 +45,15 @@ export default function useSearchTable(
   uid: string,
   tableType: TableTypes,
   entityType: EntityType, // subuser: registros de usuario | otro: registros de usuario + subusuarios
-  subType: RequirementType | PurchaseOrderTableTypes,
-  resetChangesQueue?: () => void
+  subType: RequirementType,
+  resetChangesQueue?: () => void,
+  orderSubType?: PurchaseOrderTableTypes
 ) {
   const [apiParams, setApiParams] = useState<useApiParams<SearchTableRequest>>({
     service: null,
     method: "get",
   });
+
   const {
     responseData,
     error,
@@ -61,6 +67,25 @@ export default function useSearchTable(
     if (apiParams.service) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData?.res) {
+      const pagination: PaginationDataResponse = responseData.res;
+      if (
+        pagination.totalPages > 0 &&
+        pagination.currentPage > pagination.totalPages &&
+        apiParams.dataToSend
+      ) {
+        const temp = apiParams.dataToSend;
+        temp.page = pagination.totalPages;
+        setApiParams((prev) => ({
+          ...prev,
+          dataToSend: temp,
+        }));
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData]);
 
   function reset() {
     setApiParams({
@@ -82,23 +107,29 @@ export default function useSearchTable(
     }: SearchTableTypeParams,
     setLoadingTable?: (val: boolean) => void,
     tableTypeParam?: TableTypes,
-    subTypeParam?: RequirementType | PurchaseOrderTableTypes,
-    uidParam?: string
+    subTypeParam?: RequirementType,
+    uidParam?: string,
+    orderSubTypeParam?: PurchaseOrderTableTypes
   ) {
     resetChangesQueue?.();
     const stUid: string = uidParam ?? uid;
     const stTableType: TableTypes = tableTypeParam ?? tableType;
-    const stSubType: RequirementType | PurchaseOrderTableTypes | undefined =
-      subTypeParam ?? subType;
+    const stSubType = subTypeParam ?? subType;
+    const stOrderType = orderSubTypeParam ?? orderSubType;
     const newKeyWords = getSearchString(keyWords, true);
+    // console.log(stSubType, stOrderType);
     if (
       (newKeyWords && newKeyWords.length >= searchSinceLength) ||
       !newKeyWords
     ) {
       setLoadingTable?.(true);
-      const service: HttpService | null = getService(stTableType, stSubType);
+      const service: HttpService | null = getService(
+        stTableType,
+        stSubType,
+        stOrderType
+      );
       // console.log(service, stTableType, stSubType);
-      setApiParams({
+      const apiData: useApiParams<SearchTableRequest> = {
         service,
         method: "post",
         dataToSend: {
@@ -112,13 +143,15 @@ export default function useSearchTable(
           filterColumn,
           filterData,
         },
-      });
+      };
+      setApiParams(apiData);
     }
   }
 
   function getService(
     stTableType: TableTypes,
-    stSubType: RequirementType | PurchaseOrderTableTypes | undefined
+    stSubType: RequirementType,
+    stOrderType?: PurchaseOrderTableTypes
   ) {
     let service: HttpService | null = null;
     switch (stTableType) {
@@ -132,18 +165,17 @@ export default function useSearchTable(
         break;
       case TableTypes.PURCHASE_ORDER:
       case TableTypes.ALL_PURCHASE_ORDERS:
-        if (stSubType == PurchaseOrderTableTypes.ISSUED)
-          service = getSearchOrdersByClientService(RequirementType.GOOD);
-        // r3v debería ser solo uno
-        else if (stSubType == PurchaseOrderTableTypes.RECEIVED)
-          service = getSearchOrdersByProviderService(RequirementType.GOOD);
+        if (stOrderType == PurchaseOrderTableTypes.ISSUED)
+          service = getSearchOrdersByClientService(stSubType);
+        else if (stOrderType == PurchaseOrderTableTypes.RECEIVED)
+          service = getSearchOrdersByProviderService(stSubType);
         break;
       case TableTypes.SALES_ORDER:
       case TableTypes.ALL_SALES_ORDERS:
-        if (stSubType == PurchaseOrderTableTypes.ISSUED)
-          service = getSearchOrdersByProviderService(RequirementType.SALE);
-        else if (stSubType == PurchaseOrderTableTypes.RECEIVED)
-          service = getSearchOrdersByClientService(RequirementType.SALE);
+        if (stOrderType == PurchaseOrderTableTypes.ISSUED)
+          service = getSearchOrdersByProviderService(stSubType);
+        else if (stOrderType == PurchaseOrderTableTypes.RECEIVED)
+          service = getSearchOrdersByClientService(stSubType);
         break;
     }
     return service;
@@ -205,7 +237,18 @@ export function useFilterSortPaginationForTable() {
     );
     setFieldSort(fieldSort);
     setFieldFilter(fieldFilter);
-    setFilteredInfo(newFilteredInfo);
+    // setFilteredInfo(newFilteredInfo);
+    if (newFilteredInfo)
+      setFilteredInfo(() => {
+        Object.keys(newFilteredInfo).forEach((filter) => {
+          if (newFilteredInfo[filter])
+            newFilteredInfo[filter] = newFilteredInfo[filter]?.concat(
+              Math.random()
+            );
+        });
+        return newFilteredInfo;
+      });
+
     searchTable({
       page,
       pageSize,

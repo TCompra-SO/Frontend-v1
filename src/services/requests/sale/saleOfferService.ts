@@ -3,7 +3,7 @@ import { ApiMainRoutes, ApiRoutes } from "../../../utilities/routes";
 
 export function createSaleOfferService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.create
     }`,
     type: "OFSA-CRE",
@@ -12,7 +12,7 @@ export function createSaleOfferService(): HttpService {
 
 export function getSaleOfferByIdService(id: string): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getDetailOffer
     }${id}`,
     type: "OFSA-GET-ID",
@@ -25,7 +25,7 @@ export function getSaleOffersBySaleIdService(
   pageSize: number
 ): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getOffersByRequirement
     }${reqId}/${page}/${pageSize}`,
     type: "OFSA-GET-RID",
@@ -34,7 +34,7 @@ export function getSaleOffersBySaleIdService(
 
 export function getBasicRateDataSaleOfferService(id: string): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getBasicRateData
     }${id}`,
     type: "OFSA-BA-RA",
@@ -48,7 +48,7 @@ export function getSaleOffersByEntityService(
   pageSize: number
 ): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getOffersByEntity
     }${id}/${page}/${pageSize}`,
     type: "OFSA-GET-ENT",
@@ -62,7 +62,7 @@ export function getSaleOffersBySubUserService(
   pageSize: number
 ): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getOffersBySubUser
     }${id}/${page}/${pageSize}`,
     type: "OFSA-GET-SUB",
@@ -71,7 +71,7 @@ export function getSaleOffersBySubUserService(
 
 export function deleteSaleOfferService(id: string): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.delete
     }${id}`,
     type: "OFSA-DEL",
@@ -80,7 +80,7 @@ export function deleteSaleOfferService(id: string): HttpService {
 
 export function culminateSaleOfferService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.culminate
     }`,
     type: "OFSA-CUL",
@@ -92,7 +92,7 @@ export function getValidationSaleOfferService(
   requirementId: string
 ): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getValidation
     }${userId}/${requirementId}`,
     type: "OFSA-VAL",
@@ -101,7 +101,7 @@ export function getValidationSaleOfferService(
 
 export function cancelSaleOfferService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.cancel
     }`,
     type: "OFSA-CAN",
@@ -110,7 +110,7 @@ export function cancelSaleOfferService(): HttpService {
 
 export function searchSaleOffersService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.searchOffers
     }`,
     type: "OFSA-SE-OF",
@@ -119,7 +119,7 @@ export function searchSaleOffersService(): HttpService {
 
 export function uploadDocsSaleOfferService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.documents}${
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.documents}${
       ApiRoutes.documents.uploadDocumentsOffer
     }`,
     type: "OFSA-DO-UP",
@@ -128,7 +128,7 @@ export function uploadDocsSaleOfferService(): HttpService {
 
 export function uploadImagesSaleOfferService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.images}${
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.images}${
       ApiRoutes.images.uploadImagesOffer
     }`,
     type: "OFSA-IM-UP",

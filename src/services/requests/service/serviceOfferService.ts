@@ -3,7 +3,7 @@ import { ApiMainRoutes, ApiRoutes } from "../../../utilities/routes";
 
 export function createServiceOfferService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.create
     }`,
     type: "OFSE-CRE",
@@ -12,7 +12,7 @@ export function createServiceOfferService(): HttpService {
 
 export function getServiceOfferByIdService(id: string): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getDetailOffer
     }${id}`,
     type: "OFSE-GET-ID",
@@ -25,7 +25,7 @@ export function getServiceOffersByServiceIdService(
   pageSize: number
 ): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getOffersByRequirement
     }${reqId}/${page}/${pageSize}`,
     type: "OFSE-GET-RID",
@@ -34,7 +34,7 @@ export function getServiceOffersByServiceIdService(
 
 export function getBasicRateDataServiceOfferService(id: string): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getBasicRateData
     }${id}`,
     type: "OFSE-BA-RA",
@@ -48,7 +48,7 @@ export function getServiceOffersByEntityService(
   pageSize: number
 ): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getOffersByEntity
     }${id}/${page}/${pageSize}`,
     type: "OFSE-GET-ENT",
@@ -62,7 +62,7 @@ export function getServiceOffersBySubUserService(
   pageSize: number
 ): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getOffersBySubUser
     }${id}/${page}/${pageSize}`,
     type: "OFSE-GET-SUB",
@@ -71,7 +71,7 @@ export function getServiceOffersBySubUserService(
 
 export function deleteServiceOfferService(id: string): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.delete
     }${id}`,
     type: "OFSE-DEL",
@@ -80,7 +80,7 @@ export function deleteServiceOfferService(id: string): HttpService {
 
 export function culminateServiceOfferService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.culminate
     }`,
     type: "OFSE-CUL",
@@ -92,7 +92,7 @@ export function getValidationServiceOfferService(
   requirementId: string
 ): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.getValidation
     }${userId}/${requirementId}`,
     type: "OFSE-VAL",
@@ -101,7 +101,7 @@ export function getValidationServiceOfferService(
 
 export function cancelServiceOfferService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.cancel
     }`,
     type: "OFSE-CAN",
@@ -110,7 +110,7 @@ export function cancelServiceOfferService(): HttpService {
 
 export function searchServiceOffersService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.offers}${
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.offers}${
       ApiRoutes.offers.searchOffers
     }`,
     type: "OFSE-SE-OF",
@@ -119,7 +119,7 @@ export function searchServiceOffersService(): HttpService {
 
 export function uploadDocsServiceOfferService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.documents}${
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.documents}${
       ApiRoutes.documents.uploadDocumentsOffer
     }`,
     type: "OFSE-DO-UP",
@@ -128,7 +128,7 @@ export function uploadDocsServiceOfferService(): HttpService {
 
 export function uploadImagesServiceOfferService(): HttpService {
   return {
-    url: `${import.meta.env.VITE_REQUIREMENTS_URL}${ApiMainRoutes.images}${
+    url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.images}${
       ApiRoutes.images.uploadImagesOffer
     }`,
     type: "OFSE-IM-UP",

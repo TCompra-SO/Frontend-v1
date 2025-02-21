@@ -6,6 +6,7 @@ import { useBudgetRules } from "../../../hooks/validatorHooks";
 interface BudgetFieldProps {
   required: boolean;
   greaterThanZero?: boolean;
+  usePriceLabel?: boolean;
 }
 
 export default function BudgetField(props: BudgetFieldProps) {
@@ -14,7 +15,7 @@ export default function BudgetField(props: BudgetFieldProps) {
 
   return (
     <Form.Item
-      label={t("budget")}
+      label={t(props.usePriceLabel ? "price" : "budget")}
       name="budget"
       labelCol={{ span: 0 }}
       rules={budgetRules}
@@ -25,7 +26,7 @@ export default function BudgetField(props: BudgetFieldProps) {
         step={0.1}
         precision={1}
         className="form-control"
-        placeholder="0"
+        placeholder={t(props.usePriceLabel ? "price" : "budget")}
         onFocus={(event) => event.target.select()}
       />
     </Form.Item>

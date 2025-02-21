@@ -665,7 +665,6 @@ export function useCulminate() {
       action,
       rowId,
     });
-    console.log(idToGetData);
     setApiParams({
       service: useOfferService
         ? getGetBasicRateDataRecordOfferService(type)?.(idToGetData)
@@ -692,6 +691,7 @@ export function useGetRequirementList() {
     params?: HomeFilterRequest
   ) {
     let success: boolean = false;
+    let totalPages: number = 0;
     try {
       setLoading(true);
       let httpService: HttpService | null = null;
@@ -709,14 +709,17 @@ export function useGetRequirementList() {
         const cache = new Map<string, any>();
         setUsersCache(cache);
         const data: (Requirement | null)[] = await Promise.all(
-          responseData.data.map(async (e: any) =>
-            getRequirementFromData(e, undefined, undefined, cache)
-          )
+          responseData.data.map(async (e: any) => {
+            return getRequirementFromData(e, type, undefined, undefined, cache);
+          })
         );
         setUsersCache(cache);
         setRequirements(data.filter((req) => req !== null));
         setTotal(responseData.res?.totalDocuments);
-        success = true;
+        totalPages = responseData.res?.totalPages;
+        if (responseData.res?.currentPage > responseData.res?.totalPages)
+          success = false;
+        else success = true;
       } else if (error) {
         setTotal(0);
         setRequirements([]);
@@ -728,7 +731,7 @@ export function useGetRequirementList() {
     } finally {
       setLoading(false);
     }
-    return success;
+    return { success, totalPages };
   }
 
   return {

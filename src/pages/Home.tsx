@@ -35,7 +35,6 @@ export default function Home() {
     requirementList,
     loadingRequirementList,
     totalRequirementList,
-    retrieveLastSearchRequeriments,
   } = useContext(HomeContext);
   const [tableContent, setTableContent] = useState<TableTypeHome>({
     type: TableTypes.HOME,
@@ -46,6 +45,7 @@ export default function Home() {
     hiddenColumns: [TableColumns.CATEGORY],
     nameColumnHeader: t("goods"),
     onButtonClick: (action: Action, req: Requirement) => {
+      console.log(req);
       if (action == Action.VIEW_REQUIREMENT)
         navigate(getProductDetailRoute(req.key, req.type));
     },
@@ -54,8 +54,6 @@ export default function Home() {
   /** Mostrar datos iniciales */
 
   useEffect(() => {
-    console.log(requirementList.length);
-    // if (requirementList.length == 0) retrieveLastSearchRequeriments();
     setTableContent((prevContent) => ({
       ...prevContent,
       page,
@@ -68,7 +66,9 @@ export default function Home() {
   /** Reset tabla actual */
 
   useEffect(() => {
-    return () => updateType(RequirementType.GOOD);
+    return () => {
+      updateType(RequirementType.GOOD);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

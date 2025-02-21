@@ -24,7 +24,7 @@ import { getUserService } from "../services/requests/authService";
 import {
   getFieldNameObjForOrders,
   getLabelFromPurchaseOrderType,
-  getPurchaseOrderType,
+  getReqTypeAndOrderType,
 } from "../utilities/globalFunctions";
 import {
   transformToFullUser,
@@ -68,7 +68,13 @@ export default function PurchaseOrders() {
     useGetOffersByRequirementId();
   const { getBasicRateData, modalDataRate } = useCulminate();
   const downloadPdfOrder = useDownloadPdfOrder();
-  const [type, setType] = useState(getPurchaseOrderType(location.pathname));
+  const [type, setType] = useState<PurchaseOrderTableTypes>(
+    getReqTypeAndOrderType(location.pathname).orderType
+  );
+  const typeRef = useRef(type);
+  const [requirementType, setRequirementType] = useState<RequirementType>(
+    getReqTypeAndOrderType(location.pathname).requirementType
+  );
   const {
     currentPage,
     currentPageSize,
@@ -112,7 +118,8 @@ export default function PurchaseOrders() {
     purchaseOrderList,
     setPurchaseOrderList,
     total,
-    setTotal
+    setTotal,
+    currentPageSize
   );
   const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
     addNewRow,
@@ -123,16 +130,22 @@ export default function PurchaseOrders() {
       uid,
       TableTypes.PURCHASE_ORDER,
       EntityType.SUBUSER,
-      type,
-      resetChangesQueue
+      requirementType,
+      resetChangesQueue,
+      type
     );
   useSocket(
     TableTypes.PURCHASE_ORDER,
-    type,
+    requirementType,
     currentPage,
     apiParams.dataToSend,
-    updateChangesQueue
+    updateChangesQueue,
+    type
   );
+
+  useEffect(() => {
+    typeRef.current = type;
+  }, [type]);
 
   /** Actualiza el contenido de tabla */
 
@@ -163,7 +176,11 @@ export default function PurchaseOrders() {
   /** Obtener subsección */
 
   useEffect(() => {
-    setType(getPurchaseOrderType(location.pathname));
+    const { requirementType, orderType } = getReqTypeAndOrderType(
+      location.pathname
+    );
+    setType(orderType);
+    setRequirementType(requirementType);
   }, [location]);
 
   /** Verificar si hay una solicitud pendiente */
@@ -214,7 +231,7 @@ export default function PurchaseOrders() {
       pageSize: currentPageSize,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type]);
+  }, [type, requirementType]);
 
   useEffect(() => {
     if (responseData) {
@@ -322,32 +339,28 @@ export default function PurchaseOrders() {
         downloadPdfOrder(purchaseOrder.key, purchaseOrder.type);
         break;
       case Action.FINISH:
-        if (type == PurchaseOrderTableTypes.ISSUED) {
+        if (typeRef.current == PurchaseOrderTableTypes.ISSUED) {
           // Buscar en oferta de requerimiento
-          if (purchaseOrder.type == RequirementType.GOOD)
-            // r3v falta servicios
-            getBasicRateData(
-              purchaseOrder.key,
-              purchaseOrder.requirementId,
-              purchaseOrder.offerId,
-              true,
-              true,
-              action,
-              purchaseOrder.type
-            );
-          break;
-        } else if (type == PurchaseOrderTableTypes.RECEIVED)
-          if (purchaseOrder.type == RequirementType.GOOD)
-            // Buscar en requerimiento
-            getBasicRateData(
-              purchaseOrder.key,
-              purchaseOrder.offerId,
-              purchaseOrder.requirementId,
-              false,
-              false,
-              action,
-              purchaseOrder.type
-            );
+          getBasicRateData(
+            purchaseOrder.key,
+            purchaseOrder.requirementId,
+            purchaseOrder.offerId,
+            true,
+            true,
+            action,
+            purchaseOrder.type
+          );
+        } else if (typeRef.current == PurchaseOrderTableTypes.RECEIVED)
+          // Buscar en requerimiento
+          getBasicRateData(
+            purchaseOrder.key,
+            purchaseOrder.offerId,
+            purchaseOrder.requirementId,
+            false,
+            false,
+            action,
+            purchaseOrder.type
+          );
         break;
       case Action.VIEW_HISTORY:
         getOffersByRequirementId(

@@ -11,6 +11,7 @@ import {
   CodeResponseCanOffer,
   Filters,
   SocketChangeType,
+  RTNotificationType,
 } from "../utilities/types";
 import {
   OfferItemSubUser,
@@ -27,10 +28,13 @@ import {
   CertificationItem,
   BasicRateData,
   SubUserBase,
+  NotificationData,
+  ChatSocketData,
 } from "./MainInterfaces";
 import useApi, { UseApiType } from "../hooks/useApi";
 import { FieldSort } from "./Requests";
 import { FilterNames } from "../contexts/RequirementDetailContext";
+import { ColumnFilterItem } from "antd/lib/table/interface";
 
 /******** Modals *******/
 
@@ -495,17 +499,30 @@ export interface SocketResponse {
 
 export type SocketDataPackType = SocketResponse["dataPack"]["data"][number];
 
-export interface NotificationData {
-  id: string;
-  title: string;
-  body: string;
-  date: string;
-  time: string;
-  senderImage?: string;
-  senderId: string;
-  senderName: string;
-  receiverId: string;
-  action: Action;
-  targetId: string;
-  targetType: RequirementType | PurchaseOrderTableTypes;
+export interface PaginationDataResponse {
+  totalDocuments: number;
+  totalPages: number;
+  currentPage: number;
+  pageSize: number;
 }
+
+export interface StrictColumnFilterItem extends ColumnFilterItem {
+  value: React.Key;
+  children?: StrictColumnFilterItem[];
+}
+
+export interface RealTimeNotificationData {
+  type: RTNotificationType.NOTIFICATION;
+  content: NotificationData;
+  onClickCallback: (notification: NotificationData) => void;
+}
+
+export interface RealTimeChatData {
+  type: RTNotificationType.CHAT;
+  content: ChatSocketData;
+  onClickCallback: (notification: ChatSocketData) => void;
+}
+
+export type ShowRealTimeNotificationParams =
+  | RealTimeNotificationData
+  | RealTimeChatData;

@@ -83,7 +83,7 @@ export default function AllOffers() {
   const { addNewRow, updateRow } = useAddOrUpdateRow(
     TableTypes.ALL_OFFERS,
     (data: SocketDataPackType) => {
-      console.log(subUsersCache, data.subUser);
+      // console.log(subUsersCache, data.subUser);
       if (data.subUser == dataUser.uid)
         return transformToOfferFromGetOffersByEntityOrSubUser(
           data,
@@ -102,7 +102,8 @@ export default function AllOffers() {
     offerList,
     setOfferList,
     total,
-    setTotal
+    setTotal,
+    currentPageSize
   );
   const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
     addNewRow,
@@ -264,7 +265,9 @@ export default function AllOffers() {
       <TablePageContent
         title={t("offers")}
         titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
-        subtitle={`${t("listOf")}  ${t(getLabelFromRequirementType(type))}`}
+        subtitle={`${t("listOf")} ${t("offers")} - ${t(
+          getLabelFromRequirementType(type)
+        )}`}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
         onSearch={(e) => handleSearch(e, searchTable)}

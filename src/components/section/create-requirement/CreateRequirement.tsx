@@ -101,7 +101,12 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   const [formDataDoc, setFormDataDoc] = useState<FormData | null>(null);
   const formDataImgRef = useRef(formDataImg);
   const formDataDocRef = useRef(formDataDoc);
+  const typeRef = useRef(type);
   const [warrantyRequired, setWarrantyRequired] = useState(false);
+
+  useEffect(() => {
+    typeRef.current = type;
+  }, [type]);
 
   useEffect(() => {
     formDataDocRef.current = formDataDoc;
@@ -134,7 +139,6 @@ export default function CreateRequirement(props: CreateRequirementProps) {
           props.setReqSuccess(ProcessFlag.FIN_SUCCESS);
           uploadImgsAndDocs(
             responseData.data?.[0]?.key,
-            type,
             formDataImgRef.current,
             formDataDocRef.current
           );
@@ -289,7 +293,6 @@ export default function CreateRequirement(props: CreateRequirementProps) {
 
   function uploadImgsAndDocs(
     reqId: string | undefined,
-    type: RequirementType,
     formDataImg: FormData | null,
     formDataDoc: FormData | null
   ) {
@@ -303,7 +306,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         const data: FormData = formDataDoc;
         data.append(ImageRequestLabels.UID, reqId);
         props.setApiParamsDoc({
-          service: getUploadDocsRecordService(type),
+          service: getUploadDocsRecordService(typeRef.current),
           method: "post",
           dataToSend: data,
           includeHeader: false,
@@ -313,7 +316,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         const data: FormData = formDataImg;
         data.append(ImageRequestLabels.UID, reqId);
         props.setApiParamsImg({
-          service: getUploadImagesRecordService(type),
+          service: getUploadImagesRecordService(typeRef.current),
           method: "post",
           dataToSend: data,
           includeHeader: false,
@@ -464,8 +467,13 @@ export default function CreateRequirement(props: CreateRequirementProps) {
                     <LocationField onlyItem />
                   </Col>
                   <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-                    <LabelForCreateRequirement label={"budget"} />
-                    <BudgetField required={false} />
+                    <LabelForCreateRequirement
+                      label={type == RequirementType.SALE ? "price" : "budget"}
+                    />
+                    <BudgetField
+                      required={false}
+                      usePriceLabel={type == RequirementType.SALE}
+                    />
                   </Col>
                   <Col xs={24} sm={24} md={6} lg={6} xl={6}>
                     <LabelForCreateRequirement label={"currency"} />
@@ -500,7 +508,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
                         />
                       </Col>
                       <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-                        <LabelForCreateRequirement label={"duration"} />
+                        <LabelForCreateRequirement label={"warrantyDuration"} />
                         <DurationField
                           required={warrantyRequired}
                           name="duration"

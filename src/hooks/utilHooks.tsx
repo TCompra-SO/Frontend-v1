@@ -1,36 +1,107 @@
 import { App } from "antd";
-import { useContext, useEffect, useState } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { DisplayUser } from "../models/MainInterfaces";
-import { useApiParams } from "../models/Interfaces";
+import { DisplayUser, NotificationData } from "../models/MainInterfaces";
+import {
+  ShowRealTimeNotificationParams,
+  useApiParams,
+} from "../models/Interfaces";
 import { transformToDisplayUser } from "../utilities/transform";
 import { searchCompanyByNameService } from "../services/requests/authService";
 import {
+  generateRandomKey,
   getGetOrderPDFService,
   openPurchaseOrderPdf,
 } from "../utilities/globalFunctions";
 import useApi from "./useApi";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
-import { RequirementType } from "../utilities/types";
+import { RequirementType, RTNotificationType } from "../utilities/types";
+import NotificationUserAvatar from "../components/common/utils/NotificationUserAvatar";
+import ParagraphContainer from "../components/containers/ParagraphContainer";
 
 export default function useShowNotification() {
+  const { t } = useTranslation();
   const { notification: api } = App.useApp();
 
   function showNotification(
     type: "success" | "error" | "info" | "warning",
-    description: string | null
+    description: ReactNode | null
   ) {
     if (api && description)
       api[type]({
         message: description,
         // description: description,
         showProgress: true,
-        pauseOnHover: true,
-        placement: "topRight",
+        pauseOnHover: false,
+        placement: "topLeft",
       });
   }
 
-  return { showNotification };
+  function showRealTimeNotification(params: ShowRealTimeNotificationParams) {
+    if (api) {
+      const key = generateRandomKey();
+      let title: string = "";
+      let description: string = "";
+      let senderImage: string | undefined = "";
+      let senderName: string = "";
+      let callback = () => {};
+      if (params.type == RTNotificationType.NOTIFICATION) {
+        title = params.content.title;
+        description = params.content.body;
+        senderImage = params.content.senderImage;
+        senderName = params.content.senderName;
+        callback = () => params.onClickCallback(params.content);
+      } else if (params.type == RTNotificationType.CHAT) {
+        title = params.content.userName;
+        senderImage = params.content.userImage;
+        senderName = params.content.userName;
+        callback = () => params.onClickCallback(params.content);
+        if (params.content.message) description = params.content.message;
+        else if (params.content.images)
+          description = `${t("chatMessageImagesDocs")} ${
+            params.content.images.length
+          } ${t("chatMessageImages")}.`;
+        else if (params.content.documents)
+          description = `${t("chatMessageImagesDocs")} ${
+            params.content.documents.length
+          } ${t("chatMessageDocs")}.`;
+      }
+      api.open({
+        key,
+        message: (
+          <ParagraphContainer ellipsis={{ rows: 1 }}>
+            {title}
+          </ParagraphContainer>
+        ),
+        description: (
+          <ParagraphContainer
+            ellipsis={{
+              rows: 2,
+            }}
+          >
+            {description}
+          </ParagraphContainer>
+        ),
+        showProgress: true,
+        pauseOnHover: true,
+        placement: "bottomRight",
+        icon: (
+          <NotificationUserAvatar
+            senderImage={senderImage}
+            senderName={senderName}
+            size={"small"}
+          />
+        ),
+        onClick: () => {
+          callback();
+          api.destroy(key);
+        },
+        style: { cursor: "pointer" },
+      });
+    }
+  }
+
+  return { showNotification, showRealTimeNotification };
 }
 
 export function useShowLoadingMessage() {

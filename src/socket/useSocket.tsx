@@ -16,13 +16,14 @@ let socketAPI: Socket | null = null;
 
 export default function useSocket(
   tableType: TableTypes,
-  subType: RequirementType | PurchaseOrderTableTypes,
+  subType: RequirementType,
   page: number,
   searchTableRequest: SearchTableRequest | undefined,
   updateChangesQueue: (
     payload: SocketResponse,
     canAddRowUpdate: boolean
-  ) => void
+  ) => void,
+  orderType?: PurchaseOrderTableTypes
 ) {
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const uid = useSelector((state: MainState) => state.user.uid);
@@ -39,34 +40,41 @@ export default function useSocket(
 
   useEffect(() => {
     if (!socketAPI) {
-      socketAPI = io(import.meta.env.VITE_SOCKET_URL);
+      if (subType == RequirementType.GOOD)
+        socketAPI = io(import.meta.env.VITE_REQUIREMENTS_SOCKET_URL);
+      else if (subType == RequirementType.SERVICE)
+        socketAPI = io(import.meta.env.VITE_SERVICES_SOCKET_URL);
+      else if (subType == RequirementType.SALE) {
+        socketAPI = io(import.meta.env.VITE_SALES_SOCKET_URL);
+      }
+      if (socketAPI) {
+        socketAPI.on("connect", () => {
+          console.log("Connected");
+          const roomName = getRoomName();
+          if (roomName) socketAPI?.emit("joinRoom", roomName + mainUid);
+        });
 
-      socketAPI.on("connect", () => {
-        console.log("Connected");
-        const roomName = getRoomName();
-        if (roomName) socketAPI?.emit("joinRoom", roomName + mainUid);
-      });
+        socketAPI.on("joinedRoom", (message) => {
+          console.log(message);
+        });
 
-      socketAPI.on("joinedRoom", (message) => {
-        console.log(message);
-      });
+        socketAPI.on("updateRoom", (data: SocketResponse) => {
+          console.log("Received", data);
+          const isAllTypeTableVar = isAllTypeTable();
+          const canAddRow = pageRef.current == 1;
 
-      socketAPI.on("updateRoom", (data: SocketResponse) => {
-        console.log("Received", data);
-        const isAllTypeTableVar = isAllTypeTable();
-        const canAddRow = pageRef.current == 1;
-
-        if (
-          // Agregar cambios a cola si la tabla es de  tipo All o si el cambio pertenece a usuario
-          (isAllTypeTableVar || (!isAllTypeTableVar && uid == data.userId)) &&
-          (data.typeSocket == SocketChangeType.UPDATE ||
-            (data.typeSocket == SocketChangeType.CREATE &&
-              canAddRow &&
-              searchTableRequestRef.current &&
-              hasNoSortNorFilter(searchTableRequestRef.current)))
-        )
-          updateChangesQueue(data, canAddRow);
-      });
+          if (
+            // Agregar cambios a cola si la tabla es de  tipo All o si el cambio pertenece a usuario
+            (isAllTypeTableVar || (!isAllTypeTableVar && uid == data.userId)) &&
+            (data.typeSocket == SocketChangeType.UPDATE ||
+              (data.typeSocket == SocketChangeType.CREATE &&
+                canAddRow &&
+                searchTableRequestRef.current &&
+                hasNoSortNorFilter(searchTableRequestRef.current)))
+          )
+            updateChangesQueue(data, canAddRow);
+        });
+      }
     }
 
     return () => {
@@ -77,7 +85,7 @@ export default function useSocket(
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subType]);
+  }, [subType, orderType]);
 
   function getRoomName() {
     let roomName: string = "";
@@ -86,31 +94,44 @@ export default function useSocket(
       tableType == TableTypes.ALL_REQUIREMENTS
     ) {
       if (subType == RequirementType.GOOD) roomName = "roomRequerimentProduct";
-      else if (subType == RequirementType.SERVICE) roomName = "roomRequeriment";
-      else if (subType == RequirementType.SALE) roomName = "roomRequeriment";
+      else if (subType == RequirementType.SERVICE)
+        roomName = "roomRequerimentService";
+      else if (subType == RequirementType.SALE)
+        roomName = "roomRequerimentLiquidation";
     }
     if (tableType == TableTypes.OFFER || tableType == TableTypes.ALL_OFFERS) {
       if (subType == RequirementType.GOOD) roomName = "roomOfferProduct";
-      else if (subType == RequirementType.SERVICE) roomName = "roomRequeriment";
-      else if (subType == RequirementType.SALE) roomName = "roomRequeriment";
+      else if (subType == RequirementType.SERVICE)
+        roomName = "roomOfferService";
+      else if (subType == RequirementType.SALE)
+        roomName = "roomOfferLiquidation";
     }
     if (
       tableType == TableTypes.PURCHASE_ORDER ||
       tableType == TableTypes.ALL_PURCHASE_ORDERS
     ) {
-      if (subType == PurchaseOrderTableTypes.ISSUED)
-        roomName = "roomPurchaseOrderClientProduct";
-      else if (subType == PurchaseOrderTableTypes.RECEIVED)
-        roomName = "roomPurchaseOrderProviderProduct";
+      if (subType == RequirementType.GOOD) {
+        if (orderType == PurchaseOrderTableTypes.ISSUED)
+          roomName = "roomPurchaseOrderClientProduct";
+        else if (orderType == PurchaseOrderTableTypes.RECEIVED)
+          roomName = "roomPurchaseOrderProviderProduct";
+      } else if (subType == RequirementType.SERVICE) {
+        if (orderType == PurchaseOrderTableTypes.ISSUED)
+          roomName = "roomPurchaseOrderClientService";
+        else if (orderType == PurchaseOrderTableTypes.RECEIVED)
+          roomName = "roomPurchaseOrderProviderService";
+      }
     }
     if (
       tableType == TableTypes.SALES_ORDER ||
       tableType == TableTypes.ALL_SALES_ORDERS
     ) {
-      if (subType == PurchaseOrderTableTypes.ISSUED)
-        roomName = "roomPurchaseOrderProviderProduct";
-      else if (subType == PurchaseOrderTableTypes.RECEIVED)
-        roomName = "roomPurchaseOrderClientProduct";
+      if (subType == RequirementType.SALE) {
+        if (orderType == PurchaseOrderTableTypes.ISSUED)
+          roomName = "roomSaleOrderProviderLiquidation";
+        else if (orderType == PurchaseOrderTableTypes.RECEIVED)
+          roomName = "roomSaleOrderClientLiquidation";
+      }
     }
     return roomName;
   }

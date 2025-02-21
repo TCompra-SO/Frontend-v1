@@ -1407,6 +1407,9 @@ body {
 .f-column {
   flex-direction: column;
 }
+.f-column-reverse {
+  flex-direction: column-reverse;
+}
 .gap-10 {
   gap: 10px;
 }
@@ -2301,6 +2304,7 @@ body {
   cursor: pointer;
   position: relative;
 }
+.card-chat.active,
 .card-chat:hover {
   background: #f3f7fa;
 }
@@ -2496,7 +2500,19 @@ body {
   font-weight: 500;
   line-height: 1;
   border-radius: 0.6rem;
+  z-index: 10;
+}
+.fecha-comment-inline {
+  color: #fff;
+  background: #92acbf;
+  padding: 7px 9px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  border-radius: 0.6rem;
   z-index: 9;
+  margin-left: auto;
+  margin-right: auto;
 }
 .txt-salida {
   width: 100%;

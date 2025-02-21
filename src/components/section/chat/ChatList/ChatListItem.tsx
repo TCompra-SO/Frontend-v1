@@ -5,23 +5,28 @@ import { Dropdown, MenuProps } from "antd";
 import { ItemType } from "antd/lib/menu/interface";
 import { useTranslation } from "react-i18next";
 
+const archiveKey = "ARC";
+
 interface ChatListItemProps {
   data: ChatListData;
   onClickOnItem: (item: ChatListData) => void;
+  active?: boolean;
 }
 
 export default function ChatListItem(props: ChatListItemProps) {
   const { t } = useTranslation();
-  const dropdownItems: ItemType[] = [{ key: "ARC", label: t("archive") }];
+  const dropdownItems: ItemType[] = [{ key: archiveKey, label: t("archive") }];
 
   const onClick: MenuProps["onClick"] = ({ key, domEvent }) => {
     domEvent.stopPropagation();
-    if (key == "ARC") console.log("archivar");
+    if (key == archiveKey) console.log("archivar");
   };
 
   return (
     <div
-      className="card-chat t-flex gap-10 j-items"
+      className={`card-chat t-flex gap-10 j-items ${
+        props.active ? "active" : ""
+      }`}
       onClick={() => props.onClickOnItem(props.data)}
     >
       {props.data.userImage ? (

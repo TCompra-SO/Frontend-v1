@@ -99,6 +99,7 @@ import {
 } from "../services/requests/good/requirementOfferService";
 import {
   cancelServiceOfferService,
+  createServiceOfferService,
   culminateServiceOfferService,
   deleteServiceOfferService,
   getBasicRateDataServiceOfferService,
@@ -111,6 +112,7 @@ import {
 } from "../services/requests/service/serviceOfferService";
 import {
   cancelSaleOfferService,
+  createSaleOfferService,
   culminateSaleOfferService,
   deleteSaleOfferService,
   getBasicRateDataSaleOfferService,
@@ -277,9 +279,14 @@ export function getRouteType(pathname: string) {
   }
 }
 
-export function getPurchaseOrderType(pathname: string) {
-  const lastSegment = getLastSegmentFromRoute(pathname);
-  switch (lastSegment) {
+export function getPurchaseOrderType(
+  pathname: string,
+  noRequirementType?: boolean
+) {
+  const segment = noRequirementType
+    ? getLastSegmentFromRoute(pathname)
+    : getPenultimateSegmentFromRoute(pathname);
+  switch (segment) {
     case pageSubRoutes.issued:
       return PurchaseOrderTableTypes.ISSUED;
     case pageSubRoutes.received:
@@ -287,6 +294,13 @@ export function getPurchaseOrderType(pathname: string) {
     default:
       return PurchaseOrderTableTypes.ISSUED;
   }
+}
+
+export function getReqTypeAndOrderType(pathname: string) {
+  return {
+    requirementType: getRouteType(pathname),
+    orderType: getPurchaseOrderType(pathname),
+  };
 }
 
 export function isHome(pathname: string) {
@@ -304,6 +318,11 @@ export function isChat(pathname: string) {
 export function getLastSegmentFromRoute(pathname: string) {
   const pathSegments = pathname.split("/");
   return pathSegments[pathSegments.length - 1];
+}
+
+export function getPenultimateSegmentFromRoute(pathname: string) {
+  const pathSegments = pathname.split("/");
+  return pathSegments[pathSegments.length - 2];
 }
 
 export function getSectionFromRoute(pathname: string) {
@@ -649,8 +668,8 @@ export function getSearchRecordsService(
 
 export function getCreateOfferService(type: RequirementType) {
   if (type == RequirementType.GOOD) return createReqOfferService();
-  if (type == RequirementType.SERVICE) return searchServicesService();
-  if (type == RequirementType.SALE) return searchSalesService();
+  if (type == RequirementType.SERVICE) return createServiceOfferService();
+  if (type == RequirementType.SALE) return createSaleOfferService();
   return null;
 }
 
@@ -757,7 +776,7 @@ export function getGetOrderByIdService(type: RequirementType) {
   return null;
 }
 
-export function getSearchOrdersByClientService( //r3v debe ser solo un endpoint para bienes y servicios
+export function getSearchOrdersByClientService(
   type: RequirementType | PurchaseOrderTableTypes | undefined
 ) {
   if (type == RequirementType.GOOD)
@@ -768,7 +787,7 @@ export function getSearchOrdersByClientService( //r3v debe ser solo un endpoint 
   return null;
 }
 
-export function getSearchOrdersByProviderService( // debe ser solo un endpoint para bienes y servicios
+export function getSearchOrdersByProviderService(
   type: RequirementType | PurchaseOrderTableTypes | undefined
 ) {
   if (type == RequirementType.GOOD)
@@ -781,4 +800,20 @@ export function getSearchOrdersByProviderService( // debe ser solo un endpoint p
 
 export function getProductDetailRoute(id: string, type: RequirementType) {
   return `${pageRoutes.productDetail}/${type}/${id}`;
+}
+
+// Genera una llave aleatoria
+export function generateRandomKey() {
+  return `${Date.now()}-${Math.random()}`;
+}
+
+// Compara si dos fechas coinciden
+export function isSameDay(timestamp1: string, timestamp2: string) {
+  const date1 = dayjs(timestamp1);
+  const date2 = dayjs(timestamp2);
+  return (
+    date1.year() === date2.year() &&
+    date1.month() === date2.month() &&
+    date1.date() === date2.date()
+  );
 }

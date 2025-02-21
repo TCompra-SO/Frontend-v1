@@ -6,7 +6,6 @@ import {
 } from "../utilities/types";
 import { SocketResponse } from "../models/Interfaces";
 import { BasicRequirement, Requirement } from "../models/MainInterfaces";
-
 export default function useSocketQueueHook(
   createCallback: (data: SocketResponse) => void | Promise<void>,
   updateCallback: (
@@ -70,7 +69,10 @@ export function useAddOrUpdateRow(
   list: any[],
   setList: (list: any[]) => void,
   total: number,
-  setTotal: (total: number) => void
+  setTotal: (total: number) => void,
+  pageSize: number,
+  callback?: () => any,
+  useFilter?: boolean | null
 ) {
   async function addNewRow(
     data: SocketResponse,
@@ -80,7 +82,9 @@ export function useAddOrUpdateRow(
     const newElem =
       transformedData ?? (await transformData(data["dataPack"]["data"][0]));
     if (newElem) {
-      setList([newElem, ...list.slice(0, list.length - 1)]);
+      if (list.length >= pageSize)
+        setList([newElem, ...list.slice(0, list.length - 1)]);
+      else setList([newElem, ...list]);
       if (increaseTotal) setTotal(total + 1);
     }
   }
@@ -89,14 +93,18 @@ export function useAddOrUpdateRow(
     const ind = list.findIndex((item) => item.key === data.key);
     if (ind != -1) {
       const updElem = await transformData(data["dataPack"]["data"][0]);
-      console.log("updating", updElem);
+      // console.log("updating", updElem);
       if (updElem) {
         if (tableType == TableTypes.HOME) {
           const requirement: Requirement = updElem as Requirement;
           if (requirement.state != RequirementState.PUBLISHED) {
-            setList([...list.slice(0, ind), ...list.slice(ind + 1)]);
-            setTotal(total - 1);
-          } else if (canAddRow) insertElementInArray(updElem, ind);
+            if (!useFilter) {
+              const newList = [...list.slice(0, ind), ...list.slice(ind + 1)];
+              setList(newList);
+              setTotal(total - 1);
+              if (newList.length == 0) reloadPageHome();
+            }
+          } else insertElementInArray(updElem, ind);
         } else if (
           tableType == TableTypes.REQUIREMENT ||
           tableType == TableTypes.ALL_REQUIREMENTS
@@ -131,6 +139,10 @@ export function useAddOrUpdateRow(
 
   function insertElementInArray(updElem: any, ind: number) {
     setList([...list.slice(0, ind), updElem, ...list.slice(ind + 1)]);
+  }
+
+  function reloadPageHome() {
+    callback?.();
   }
 
   return { updateRow, addNewRow };

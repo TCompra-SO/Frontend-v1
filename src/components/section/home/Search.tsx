@@ -1,9 +1,24 @@
 import { useTranslation } from "react-i18next";
 import InputContainer from "../../containers/InputContainer";
 import ButtonContainer from "../../containers/ButtonContainer";
+import { Lengths } from "../../../utilities/lengths";
+import { useContext, useState } from "react";
+import { HomeContext } from "../../../contexts/Homecontext";
 
 export default function Search() {
   const { t } = useTranslation(); // r3v check numbers
+  const { updateKeywordSearch } = useContext(HomeContext);
+  const [keyword, setKeyword] = useState("");
+
+  function handleKeyUp(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "Enter") {
+      search();
+    }
+  }
+
+  function search() {
+    updateKeywordSearch(keyword);
+  }
 
   return (
     <>
@@ -17,8 +32,14 @@ export default function Search() {
             type="text"
             className="form-control form-buscar"
             placeholder={t("search")}
+            count={{
+              max: Lengths.keywords.max,
+              exceedFormatter: (txt, { max }) => txt.slice(0, max),
+            }}
+            onChange={(e) => setKeyword(e.target.value)}
+            onKeyUp={handleKeyUp}
           />
-          <ButtonContainer className="btn btn-default">
+          <ButtonContainer className="btn btn-default" onClick={search}>
             <i className="fa-regular fa-search"></i>
           </ButtonContainer>
         </div>

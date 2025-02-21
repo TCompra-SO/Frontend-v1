@@ -2,478 +2,81 @@ import { useTranslation } from "react-i18next";
 import ContentHeader from "../components/common/utils/ContentHeader";
 import ChatList from "../components/section/chat/ChatList/ChatList";
 import ChatBody from "../components/section/chat/ChatBody/ChatBody";
-import { ChatListData, ChatMessage } from "../models/MainInterfaces";
-import { useState } from "react";
+import { ChatListData, ChatSocketData } from "../models/MainInterfaces";
+import { useEffect, useRef, useState } from "react";
 import useWindowSize from "../hooks/useWindowSize";
-import { windowSize } from "../utilities/globals";
-
-const chatElements: ChatListData[] = [
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xx",
-  },
-  {
-    userImage: undefined, // No image
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xrrfe4x",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    userOnline: true,
-    requirementId: "x4445x",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xxewer",
-  },
-  {
-    userImage: undefined, // No image
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xgfgx",
-  },
-  {
-    userImage: undefined, // No image
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "wexx",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xghx",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xfdsfx",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xx",
-  },
-  {
-    userImage: undefined, // No image
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xrrfe4x",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    userOnline: true,
-    requirementId: "x4445x",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xxewer",
-  },
-  {
-    userImage: undefined, // No image
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xgfgx",
-  },
-  {
-    userImage: undefined, // No image
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "wexx",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xghx",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xfdsfx",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xx",
-  },
-  {
-    userImage: undefined, // No image
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xrrfe4x",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    userOnline: true,
-    requirementId: "x4445x",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xxewer",
-  },
-  {
-    userImage: undefined, // No image
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xgfgx",
-  },
-  {
-    userImage: undefined, // No image
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "wexx",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xghx",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xfdsfx",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xx",
-  },
-  {
-    userImage: undefined, // No image
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xrrfe4x",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    userOnline: true,
-    requirementId: "x4445x",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xxewer",
-  },
-  {
-    userImage: undefined, // No image
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xgfgx",
-  },
-  {
-    userImage: undefined, // No image
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "wexx",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xghx",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xfdsfx",
-  },
-];
-
-const chatMessages: ChatMessage[] = [
-  {
-    isInputMsg: false,
-    message:
-      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
-    time: "2024-11-20T15:24:00.000Z",
-    read: true,
-    uid: "1",
-  },
-  {
-    isInputMsg: true,
-    message:
-      "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
-    time: "2024-11-20T15:25:00.000Z",
-    read: true,
-    uid: "2",
-  },
-  {
-    isInputMsg: true,
-    message: "El costo es de $500 mensuales",
-    read: true,
-    time: "2024-11-20T15:26:00.000Z",
-    uid: "3",
-  },
-  {
-    isInputMsg: false,
-    time: "2024-11-20T15:27:00.000Z",
-    read: true,
-    images: [
-      "https://dummyimage.com/250/ff3fff/000000",
-      "https://dummyimage.com/250/ff3ff1/000000",
-      "https://dummyimage.com/250/af3ff1/000000",
-      // "https://dummyimage.com/250/ff3f21/000000",
-      // "https://dummyimage.com/250/aa3ff1/000000",
-    ],
-    uid: "4",
-  },
-  {
-    isInputMsg: true,
-    time: "2024-11-20T15:28:00.000Z",
-    read: true,
-    images: ["https://dummyimage.com/250/ff3fff/000000"],
-    uid: "5",
-  },
-  {
-    isInputMsg: true,
-    time: "2024-11-20T15:28:00.000Z",
-    read: true,
-    images: ["https://dummyimage.com/250/ff3fff/000000"],
-    uid: "6",
-  },
-  {
-    isInputMsg: false,
-    time: "2024-11-20T15:29:00.000Z",
-    read: false,
-    documents: [
-      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-    ],
-    uid: "7",
-  },
-  {
-    isInputMsg: true,
-    time: "2024-11-20T15:30:00.000Z",
-    read: false,
-    documents: [
-      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-    ],
-    uid: "8",
-  },
-  {
-    isInputMsg: false,
-    message:
-      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
-    time: "2024-11-20T15:24:00.000Z",
-    read: true,
-    uid: "9",
-  },
-  {
-    isInputMsg: true,
-    message:
-      "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
-    time: "2024-11-20T15:25:00.000Z",
-    read: true,
-    uid: "10",
-  },
-  {
-    isInputMsg: false,
-    message:
-      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
-    time: "2024-11-20T15:24:00.000Z",
-    read: true,
-    uid: "11",
-  },
-  {
-    isInputMsg: true,
-    message:
-      "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
-    time: "2024-11-20T15:25:00.000Z",
-    read: true,
-    uid: "12",
-  },
-  {
-    isInputMsg: false,
-    message:
-      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
-    time: "2024-11-20T15:24:00.000Z",
-    read: true,
-    uid: "13",
-  },
-  {
-    isInputMsg: true,
-    message:
-      "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
-    time: "2024-11-20T15:25:00.000Z",
-    read: true,
-    uid: "14",
-  },
-];
+import { chatDataFieldName, windowSize } from "../utilities/globals";
+import { useChat } from "../hooks/useChat";
+import { useLocation } from "react-router-dom";
 
 export default function Chat() {
   const { t } = useTranslation();
+  const location = useLocation();
   const { width } = useWindowSize();
-  let step = 1;
-  const [chatList, setChatList] = useState(chatElements.slice(0, 10));
-  const [chatMsgs, setChatMsgs] = useState(chatMessages);
+  const {
+    chatList,
+    getMoreChats,
+    chatMessageList,
+    getMoreChatMessages,
+    resetChatMessageList,
+    hasMoreChatList,
+    hasMoreChatMessageList,
+    loadingChatList,
+    loadingChatMessages,
+  } = useChat();
+  const hasHandledChatNotification = useRef(false);
   const [isChatOpened, setIsChatOpened] = useState(false);
   const [currentChat, setCurrentChat] = useState<ChatListData | null>(null);
+
+  /** Obtener lista inicial de chats */
+
+  useEffect(() => {
+    getMoreChats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /** Abrir chat desde notificación */
+
+  useEffect(() => {
+    const chatDataFromNotification: ChatSocketData =
+      location.state?.[chatDataFieldName];
+    hasHandledChatNotification.current = false;
+
+    if (chatDataFromNotification && !hasHandledChatNotification.current) {
+      console.log(chatDataFromNotification);
+      const chatToOpen = chatList.find(
+        (chat) => chat.uid === chatDataFromNotification.chatId
+      );
+      if (chatToOpen) {
+        handleClickOnChatItem(chatToOpen);
+        hasHandledChatNotification.current = true;
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location, chatList]);
+
+  /** Obtener lista inicial de mensajes de chat */
+
+  useEffect(() => {
+    if (isChatOpened && currentChat) {
+      getMoreChatMessages();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isChatOpened, currentChat]);
+
+  /** Funciones */
 
   function handleCloseChat() {
     setCurrentChat(null);
     setIsChatOpened(false);
+    resetChatMessageList();
   }
 
   function handleClickOnChatItem(item: ChatListData) {
+    console.log("opening chat...");
+    resetChatMessageList();
     setCurrentChat(item);
     setIsChatOpened(true);
-  }
-
-  function loadMoreChats() {
-    console.log("loadMoreChats");
-    setTimeout(() => {
-      setChatList(chatList.concat(chatList.slice(step * 6, 6 * (step + 1))));
-      step += 1;
-    }, 1000);
   }
 
   return (
@@ -488,14 +91,20 @@ export default function Chat() {
           <ChatList
             chatList={chatList}
             onClickOnItem={handleClickOnChatItem}
-            loadMoreChats={loadMoreChats}
+            loadMoreChats={getMoreChats}
+            currentChat={currentChat}
+            hasMore={hasMoreChatList}
+            loading={loadingChatList}
           />
         )}
         {isChatOpened && currentChat ? (
           <ChatBody
             chatData={currentChat}
             onCloseChat={handleCloseChat}
-            messages={chatMsgs}
+            messages={chatMessageList}
+            getMoreChatMessages={getMoreChatMessages}
+            hasMore={hasMoreChatMessageList}
+            loading={loadingChatMessages}
           />
         ) : (
           <div className="card-white mch-2 t-flex j-conten j-items f-column">

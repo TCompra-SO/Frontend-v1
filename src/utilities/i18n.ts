@@ -527,7 +527,12 @@ const resources = {
       approvedCertifications: "Approved certifications",
       total: "Total",
       items: "items",
-      of: 'of'
+      of: 'of',
+      warrantyDuration: 'Warranty duration',
+      termsAndConditions: 'Terms and Conditions',
+      chatMessageImagesDocs: 'Sent',
+      chatMessageImages: 'image(s)',
+      chatMessageDocs: 'document(s)',
     },
   },
   es: {
@@ -1066,7 +1071,12 @@ const resources = {
       approvedCertifications: "Certificaciones aprobadas",
       total: "Total",
       items: "items",
-      of: 'de'
+      of: 'de',
+      warrantyDuration: 'Duración de garantía',
+      termsAndConditions: 'Términos y Condiciones',
+      chatMessageImagesDocs: 'Envió',
+      chatMessageImages: 'imagen(es)',
+      chatMessageDocs: 'documento(s)',
     },
   },
 };

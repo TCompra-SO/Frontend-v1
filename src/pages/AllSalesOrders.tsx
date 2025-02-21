@@ -57,7 +57,9 @@ export default function AllSalesOrders() {
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
   const { showNotification } = useShowNotification();
-  const [type, setType] = useState(getPurchaseOrderType(location.pathname));
+  const [type, setType] = useState(
+    getPurchaseOrderType(location.pathname, true)
+  );
   const {
     currentPage,
     currentPageSize,
@@ -95,7 +97,8 @@ export default function AllSalesOrders() {
     salesOrderList,
     setSalesOrderList,
     total,
-    setTotal
+    setTotal,
+    currentPageSize
   );
   const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
     addNewRow,
@@ -106,15 +109,17 @@ export default function AllSalesOrders() {
       uid,
       TableTypes.ALL_SALES_ORDERS,
       entityType,
-      type,
-      resetChangesQueue
+      RequirementType.SALE,
+      resetChangesQueue,
+      type
     );
   useSocket(
     TableTypes.ALL_SALES_ORDERS,
-    type,
+    RequirementType.SALE,
     currentPage,
     apiParams.dataToSend,
-    updateChangesQueue
+    updateChangesQueue,
+    type
   );
 
   /** Actualiza el contenido de tabla */
@@ -145,7 +150,7 @@ export default function AllSalesOrders() {
   /** Obtener tipo */
 
   useEffect(() => {
-    setType(getPurchaseOrderType(location.pathname));
+    setType(getPurchaseOrderType(location.pathname, true));
   }, [location]);
 
   /** Para mostrar modales */

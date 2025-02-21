@@ -115,7 +115,8 @@ export default function Requirements() {
     requirementList,
     setRequirementList,
     total,
-    setTotal
+    setTotal,
+    currentPageSize
   );
   const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
     addNewRow,
@@ -175,7 +176,6 @@ export default function Requirements() {
   /** Para mostrar modales */
 
   useEffect(() => {
-    console.log(modalDataOffersByRequirementId);
     if (
       modalDataOffersByRequirementId.type === ModalTypes.DETAILED_REQUIREMENT
     ) {

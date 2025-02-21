@@ -9,13 +9,19 @@ import {
   TableTypeAllPurchaseOrders,
   useApiParams,
 } from "../models/Interfaces";
-import { Action, ModalTypes, TableTypes } from "../utilities/types";
+import {
+  Action,
+  ModalTypes,
+  PurchaseOrderTableTypes,
+  RequirementType,
+  TableTypes,
+} from "../utilities/types";
 import { PurchaseOrder } from "../models/MainInterfaces";
 import {
   getFieldNameObjForOrders,
   getGetOrderPDFService,
   getLabelFromPurchaseOrderType,
-  getPurchaseOrderType,
+  getReqTypeAndOrderType,
   openPurchaseOrderPdf,
 } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
@@ -50,7 +56,12 @@ export default function AllPurchaseOrders() {
     useGetOffersByRequirementId();
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
-  const [type, setType] = useState(getPurchaseOrderType(location.pathname));
+  const [type, setType] = useState<PurchaseOrderTableTypes>(
+    getReqTypeAndOrderType(location.pathname).orderType
+  );
+  const [requirementType, setRequirementType] = useState<RequirementType>(
+    getReqTypeAndOrderType(location.pathname).requirementType
+  );
   const {
     currentPage,
     currentPageSize,
@@ -90,7 +101,8 @@ export default function AllPurchaseOrders() {
     purchaseOrderList,
     setPurchaseOrderList,
     total,
-    setTotal
+    setTotal,
+    currentPageSize
   );
   const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
     addNewRow,
@@ -101,15 +113,17 @@ export default function AllPurchaseOrders() {
       uid,
       TableTypes.ALL_PURCHASE_ORDERS,
       entityType,
-      type,
-      resetChangesQueue
+      requirementType,
+      resetChangesQueue,
+      type
     );
   useSocket(
     TableTypes.ALL_PURCHASE_ORDERS,
-    type,
+    requirementType,
     currentPage,
     apiParams.dataToSend,
-    updateChangesQueue
+    updateChangesQueue,
+    type
   );
 
   /** Actualiza el contenido de tabla */
@@ -140,7 +154,11 @@ export default function AllPurchaseOrders() {
   /** Obtener tipo */
 
   useEffect(() => {
-    setType(getPurchaseOrderType(location.pathname));
+    const { requirementType, orderType } = getReqTypeAndOrderType(
+      location.pathname
+    );
+    setType(orderType);
+    setRequirementType(requirementType);
   }, [location]);
 
   /** Para mostrar modales */
@@ -162,7 +180,7 @@ export default function AllPurchaseOrders() {
       pageSize: currentPageSize,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type]);
+  }, [type, requirementType]);
 
   useEffect(() => {
     if (responseData) {

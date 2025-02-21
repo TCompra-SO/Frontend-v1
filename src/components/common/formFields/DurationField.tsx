@@ -8,6 +8,7 @@ interface DurationFieldProps {
   name: string;
   onlyItem?: boolean;
   onChange?: (val: TimeMeasurement | undefined) => void;
+  forWarranty?: boolean;
 }
 
 export default function DurationField(props: DurationFieldProps) {
@@ -27,7 +28,10 @@ export default function DurationField(props: DurationFieldProps) {
     >
       <SelectContainer
         allowClear
-        placeholder={t(props.onlyItem ? "duration" : "select")}
+        placeholder={
+          t(props.onlyItem ? "duration" : "select") +
+          `${props.forWarranty ? " - " + t("warranty") : ""}`
+        }
         className="form-control"
         style={{ width: "100%" }}
         options={durList}

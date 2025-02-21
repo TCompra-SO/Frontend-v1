@@ -7,7 +7,6 @@ import { pageRoutes } from "../utilities/routes";
 import { setIsLoading } from "../redux/loadingSlice";
 import { Requirement } from "../models/MainInterfaces";
 import { transformFromGetRequirementByIdToRequirement } from "../utilities/transform";
-import { RequirementType } from "../utilities/types";
 import ProductRequirementDetail from "../components/section/productDetail/ProductRequirementDetail/ProductRequirementDetail";
 import ProductDetailHeader from "../components/section/productDetail/ProductDetailHeader";
 import Footer from "../components/section/footer/Footer";
@@ -69,12 +68,15 @@ export default function ProductDetail() {
   }, [responseData, error]);
 
   async function setRequirementData(response: any) {
-    const req = await transformFromGetRequirementByIdToRequirement(
-      response.data[0],
-      RequirementType.GOOD
-    );
-    if (req) setRequirement(req);
-    else navigate(pageRoutes.home);
+    const { result, val } = isRequirementType(Number(type));
+    if (requirementId && result && val) {
+      const req = await transformFromGetRequirementByIdToRequirement(
+        response.data[0],
+        val
+      );
+      if (req) setRequirement(req);
+      else navigate(pageRoutes.home);
+    } else navigate(pageRoutes.home);
   }
 
   return (

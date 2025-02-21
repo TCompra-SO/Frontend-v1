@@ -10,6 +10,7 @@ import useSocketQueueHook, {
   useAddOrUpdateRow,
 } from "../hooks/socketQueueHook";
 import { SocketDataPackType, SocketResponse } from "../models/Interfaces";
+import { homePageSize } from "../utilities/globals";
 
 interface HomeContextType {
   type: RequirementType;
@@ -34,6 +35,8 @@ interface HomeContextType {
   ) => void;
   resetChangesQueue: () => void;
   retrieveLastSearchRequeriments: () => void;
+  keywordSearch: string;
+  updateKeywordSearch: (val: string) => void;
 }
 
 export const HomeContext = createContext<HomeContextType>({
@@ -51,6 +54,8 @@ export const HomeContext = createContext<HomeContextType>({
   updateType: () => {},
   updateChangesQueue: () => {},
   resetChangesQueue: () => {},
+  keywordSearch: "",
+  updateKeywordSearch: () => {},
 });
 
 export function HomeProvider({ children }: { children: ReactNode }) {
@@ -60,6 +65,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [userId, setUserId] = useState("");
   const [useFilter, setUseFilter] = useState<null | boolean>(null);
+  const [keywordSearch, setKeywordSearch] = useState("");
   const {
     getRequirementList,
     requirements: requirementListOrig,
@@ -71,11 +77,14 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   const { addNewRow, updateRow } = useAddOrUpdateRow(
     TableTypes.HOME,
     (data: SocketDataPackType) =>
-      getRequirementFromData(data, undefined, undefined, usersCache),
+      getRequirementFromData(data, type, undefined, undefined, usersCache),
     requirementList,
     setRequirementList,
     totalRequirementList,
-    setTotalRequirementList
+    setTotalRequirementList,
+    homePageSize,
+    retrieveLastSearchRequeriments,
+    useFilter
   );
   const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
     addNewRow,
@@ -124,17 +133,27 @@ export function HomeProvider({ children }: { children: ReactNode }) {
 
   async function retrieveLastSearchRequeriments() {
     if (lastSearchParams.page) {
-      const success = await retrieveRequirements(
+      const { success, totalPages } = await retrieveRequirements(
         lastSearchParams.page,
         lastSearchParams.pageSize,
         lastSearchParams.params
       );
-      if (!success && page - 1 > 0)
-        await retrieveRequirements(
-          lastSearchParams.page - 1,
-          lastSearchParams.pageSize,
-          lastSearchParams.params
-        );
+      console.log(lastSearchParams.page, success, totalPages);
+      if (!success && totalPages) {
+        console.log(lastSearchParams.page - 1, totalPages);
+        if (lastSearchParams.page - 1 <= totalPages)
+          await retrieveRequirements(
+            lastSearchParams.page - 1,
+            lastSearchParams.pageSize,
+            lastSearchParams.params
+          );
+        else
+          await retrieveRequirements(
+            totalPages,
+            lastSearchParams.pageSize,
+            lastSearchParams.params
+          );
+      }
     }
   }
 
@@ -143,7 +162,12 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   }
 
   function updateType(val: RequirementType) {
+    console.log(val);
     setType(val);
+  }
+
+  function updateKeywordSearch(val: string) {
+    setKeywordSearch(val);
   }
 
   return (
@@ -169,6 +193,9 @@ export function HomeProvider({ children }: { children: ReactNode }) {
 
         updateChangesQueue,
         resetChangesQueue,
+
+        keywordSearch,
+        updateKeywordSearch,
       }}
     >
       {children}

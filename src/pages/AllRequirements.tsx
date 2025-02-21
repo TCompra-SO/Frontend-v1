@@ -69,7 +69,8 @@ export default function AllRequirements() {
     requirementList,
     setRequirementList,
     total,
-    setTotal
+    setTotal,
+    currentPageSize
   );
   const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
     addNewRow,
