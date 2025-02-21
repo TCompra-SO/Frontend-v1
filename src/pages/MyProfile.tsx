@@ -232,7 +232,7 @@ export default function MyProfile() {
 
   function setFormData(responseData: any) {
     if (entityType == EntityType.SUBUSER) {
-      setUser(transformToSubUserProfile(responseData));
+      setUser(transformToSubUserProfile(responseData[0]));
     } else {
       const user = transformToFullUser(responseData.data);
       dispatch(setUserImage(user.image));
@@ -241,7 +241,6 @@ export default function MyProfile() {
   }
 
   function handleClick() {
-    // Trigger the file input click event
     if (fileInputRef.current) {
       fileInputRef.current.input!.click();
     }
@@ -451,7 +450,7 @@ export default function MyProfile() {
             </div>
             <div className="oferta-usuario col-documento">
               <div className="text-truncate doc-name dato-cantidad1">
-                {user?.numGoods}
+                {user?.numGoods ?? "-"}
               </div>
               <div className="text-truncate detalles-oferta dato-cantidad2">
                 {t("goods")}
@@ -464,7 +463,7 @@ export default function MyProfile() {
             </div>
             <div className="oferta-usuario col-documento">
               <div className="text-truncate doc-name dato-cantidad1">
-                {user?.numServices}
+                {user?.numServices ?? "-"}
               </div>
               <div className="text-truncate detalles-oferta dato-cantidad2">
                 {t("services")}
@@ -477,7 +476,7 @@ export default function MyProfile() {
             </div>
             <div className="oferta-usuario col-documento">
               <div className="text-truncate doc-name dato-cantidad1">
-                {user?.numSales}
+                {user?.numSales ?? "-"}
               </div>
               <div className="text-truncate detalles-oferta dato-cantidad2">
                 {t("sales")}
@@ -490,7 +489,17 @@ export default function MyProfile() {
             </div>
             <div className="oferta-usuario col-documento">
               <div className="text-truncate doc-name dato-cantidad1">
-                {user?.numOffers}
+                {user
+                  ? Number.isNaN(
+                      user?.numOffersGoods +
+                        user?.numOffersServices +
+                        user?.numOffersSales
+                    )
+                    ? "-"
+                    : user?.numOffersGoods +
+                      user?.numOffersServices +
+                      user?.numOffersSales
+                  : "-"}
               </div>
               <div className="text-truncate detalles-oferta dato-cantidad2">
                 {t("offers")}

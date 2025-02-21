@@ -130,7 +130,6 @@ export default function AddUserModal(props: AddUserModalProps) {
 
   useEffect(() => {
     if (apiParamsNewPass.service) {
-      console.log(apiParamsNewPass);
       fetchDataNewPass();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -318,8 +317,6 @@ export default function AddUserModal(props: AddUserModalProps) {
         method: "post",
         dataToSend: role,
       });
-
-      console.log(profile, password, role);
     }
   }
 

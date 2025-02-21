@@ -16,6 +16,7 @@ import {
   StatisticsData,
   SubUserBase,
   SubUserProfile,
+  UserCounters,
 } from "../models/MainInterfaces";
 import { UserState } from "../models/Redux";
 import { getBaseDataUserService } from "../services/requests/authService";
@@ -119,7 +120,7 @@ export function transformToFullUser(response: any) {
   user.numGoods = response.numProducts;
   user.numSales = response.numLiquidations;
   user.image = response.avatar;
-  return user;
+  return { ...user, ...transformToUserCounters(response) };
 }
 
 export function transformToBaseUser(response: any, fromLogin: boolean = false) {
@@ -321,23 +322,32 @@ export function transformToPurchaseOrderItemSubUser(
   return purcOrder;
 }
 
+export function transformToUserCounters(data: any) {
+  const counters: UserCounters = {
+    numGoods: data.numProducts,
+    numServices: data.numServices,
+    numSales: data.numLiquidations,
+    numOffersGoods: data.numOffersProducts,
+    numOffersServices: data.numOffersServices,
+    numOffersSales: data.numOffersLiquidations,
+    numPurchaseOrdersProvider: data.numPurchaseOrdersProvider,
+    numPurchaseOrdersClient: data.numPurchaseOrdersClient,
+    numSellingOrdersProvider: data.numSellingOrdersProvider,
+    numSellingOrdersClient: data.numSellingOrdersClient,
+  };
+  return counters;
+}
+
 export function transformToSubUserBase(data: any) {
   const subUser: SubUserBase = {
     typeID: data.typeID,
     createdAt: data.createdAt,
-    numGoods: data.numProducts,
-    numServices: data.numServices,
-    numSales: data.numLiquidations,
-    numOffers: data.numOffers,
     uid: data.userID,
     name: data.name,
     document: data.document,
     email: data.email,
     typeEntity: EntityType.SUBUSER,
-    numPurchaseOrdersProvider: data.numPurchaseOrdersProvider,
-    numPurchaseOrdersClient: data.numPurchaseOrdersClient,
-    numSellingOrdersProvider: data.numSellingOrdersProvider,
-    numSellingOrdersClient: data.numSellingOrdersClient,
+    ...transformToUserCounters(data),
   };
   return subUser;
 }
@@ -351,6 +361,7 @@ export function transformToSubUserProfile(data: any, forSubuser?: boolean) {
     phone: data.phone,
   };
   if (forSubuser) subUser.uid = data.uid;
+  console.log(data, subUser);
   return subUser;
 }
 

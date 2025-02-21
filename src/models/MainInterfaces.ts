@@ -154,12 +154,25 @@ export interface BaseUser extends DisplayUser {
   typeEntity: EntityType;
 }
 
+export interface UserCounters {
+  numGoods: number;
+  numServices: number;
+  numSales: number;
+  numOffersGoods: number;
+  numOffersServices: number;
+  numOffersSales: number;
+  numPurchaseOrdersProvider: number;
+  numPurchaseOrdersClient: number;
+  numSellingOrdersProvider: number;
+  numSellingOrdersClient: number;
+}
+
 export interface User extends BaseUser {
   address: string;
   phone: string;
 }
 
-export interface FullUser extends User {
+export interface FullUser extends User, UserCounters {
   categories: number[];
   typeID: UserRoles;
   activeAccount: boolean;
@@ -168,27 +181,11 @@ export interface FullUser extends User {
   planID: number;
   specialty?: string;
   aboutMe?: string;
-  numGoods: number;
-  numServices: number;
-  numSales: number;
-  numOffers: number;
-  numPurchaseOrdersProvider: number;
-  numPurchaseOrdersClient: number;
-  numSellingOrdersProvider: number;
-  numSellingOrdersClient: number;
 }
 
-export interface SubUserBase extends BaseUser {
+export interface SubUserBase extends BaseUser, UserCounters {
   typeID: UserRoles;
   createdAt: string;
-  numGoods: number;
-  numServices: number;
-  numSales: number;
-  numOffers: number;
-  numPurchaseOrdersProvider: number;
-  numPurchaseOrdersClient: number;
-  numSellingOrdersProvider: number;
-  numSellingOrdersClient: number;
 }
 
 export interface SubUserProfile extends SubUserBase {
