@@ -227,12 +227,23 @@ export default function CreateRequirementFloatButton() {
               />
             )}
             {isLoggedIn && (
-              <FloatButton
-                icon={<i className="fa-solid fa-plus" />}
-                type="primary"
-                tooltip={t("createRequirement")}
-                onClick={() => setIsOpenModal(true)}
-              />
+              <>
+                {!isChatPage && (
+                  <FloatButton
+                    icon={<i className="fa-regular fa-comment" />}
+                    type="primary"
+                    tooltip={t("chat")}
+                    onClick={() => navigate(pageRoutes.chat)}
+                  />
+                )}
+
+                <FloatButton
+                  icon={<i className="fa-solid fa-plus" />}
+                  type="primary"
+                  tooltip={t("createRequirement")}
+                  onClick={() => setIsOpenModal(true)}
+                />
+              </>
             )}
           </FloatButton.Group>
 
