@@ -313,6 +313,7 @@ export default function Offers() {
       }
 
       case Action.RATE_CANCELED: {
+        console.log("======>", offer.key);
         getBasicRateData(
           offer.key,
           offer.key,

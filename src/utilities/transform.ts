@@ -361,7 +361,6 @@ export function transformToSubUserProfile(data: any, forSubuser?: boolean) {
     phone: data.phone,
   };
   if (forSubuser) subUser.uid = data.uid;
-  console.log(data, subUser);
   return subUser;
 }
 

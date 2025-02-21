@@ -134,6 +134,7 @@ export default function RequirementOfferListItemHeader({
           props.setIsOpenModalSelectOffer?.(true);
           break;
         case Action.RATE_CANCELED: {
+          console.log("=======>", props.offer.key);
           const data: BasicRateData = {
             uid: props.offer.key,
             title: props.offer.title,

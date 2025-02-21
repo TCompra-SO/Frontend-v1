@@ -29,7 +29,8 @@ import useShowNotification from "../../../hooks/utilHooks";
 interface RatingCanceledModalProps extends CommonModalProps {
   basicRateData: BasicRateData;
   type: RequirementType;
-  isOffer: boolean;
+  isOffer: boolean; // isOffer indica si a quien se califica es creador de una oferta o no
+  requirementOrOfferId: string;
   onSuccess?: (id: string) => void;
   onExecute?: (id: string) => void;
   onError?: (id: string) => void;
@@ -79,6 +80,10 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
       uidEntity: props.basicRateData.userId,
       uidUser: uid,
       score: calculateFinalScore([score]),
+      offerId: props.isOffer
+        ? props.basicRateData.uid
+        : props.requirementOrOfferId,
+      type: props.type,
     };
     props.setApiParams({
       service: registerScoreService(),

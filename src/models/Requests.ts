@@ -5,6 +5,7 @@ import {
   EntityType,
   OrderType,
   RegisterTypeId,
+  RequirementType,
   UserRoles,
 } from "../utilities/types";
 
@@ -137,6 +138,8 @@ export interface RegisterScoreRequest {
   uidUser: string; // calificador
   score: number;
   comments?: string;
+  offerId: string;
+  type: RequirementType;
 }
 
 export interface SelectOfferRequest {
