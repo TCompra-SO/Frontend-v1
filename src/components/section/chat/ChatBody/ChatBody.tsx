@@ -230,14 +230,14 @@ export default function ChatBody(props: ChatBodyProps) {
         )}
       </div>
       <div className="t-flex gap-10 j-items chat-buscar">
-        <i
+        {/* <i
           className="fa-regular fa-camera mensaje-send"
           onClick={() => setOpenGallery(true)}
         ></i>
         <i
           className="fa-regular fa-paperclip mensaje-send"
           onClick={() => setOpenGallery(false)}
-        ></i>
+        ></i> */}
         {/* <Badge count={imgList.length} size="small" color={primaryColor}>
           <AddImagesField
             ref={imgRef}
