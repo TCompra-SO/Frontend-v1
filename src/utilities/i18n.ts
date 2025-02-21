@@ -533,6 +533,8 @@ const resources = {
       chatMessageImagesDocs: 'Sent',
       chatMessageImages: 'image(s)',
       chatMessageDocs: 'document(s)',
+      suspend: 'Suspend',
+      reactivate: 'Reactivate'
     },
   },
   es: {
@@ -1077,6 +1079,8 @@ const resources = {
       chatMessageImagesDocs: 'Envió',
       chatMessageImages: 'imagen(es)',
       chatMessageDocs: 'documento(s)',
+      suspend: 'Suspender',
+      reactivate: 'Reactivar'
     },
   },
 };

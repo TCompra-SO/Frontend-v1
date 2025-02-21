@@ -31,6 +31,17 @@ export default function ActionColumn(
   const { myPurchaseOrdersLoadingPdf, idAndActionQueue } =
     useContext(LoadingDataContext);
 
+  function getActions(ActionByState: { [key: number]: Action[] }) {
+    if (type != TableTypes.PURCHASE_ORDER && type != TableTypes.SALES_ORDER)
+      switch (type) {
+        case TableTypes.PURCHASE_ORDER:
+        case TableTypes.SALES_ORDER:
+          break;
+        default:
+          break;
+      }
+  }
+
   const col: ColumnType<any> = {
     title: t("actionsColumn"),
     key: actionColumnKey,

@@ -186,6 +186,7 @@ export interface FullUser extends User, UserCounters {
 export interface SubUserBase extends BaseUser, UserCounters {
   typeID: UserRoles;
   createdAt: string;
+  activeAccount: boolean;
 }
 
 export interface SubUserProfile extends SubUserBase {

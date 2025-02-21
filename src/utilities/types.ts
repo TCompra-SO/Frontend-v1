@@ -168,6 +168,8 @@ export enum Action {
   VIEW_SALES_ORDER = 35,
   GOODS = 36,
   SERVICES = 37,
+  SUSPEND = 38,
+  REACTIVATE = 39,
 }
 
 export const ActionLabel: {
@@ -211,6 +213,8 @@ export const ActionLabel: {
   [Action.VIEW_SALES_ORDER]: "view",
   [Action.GOODS]: "goods",
   [Action.SERVICES]: "services",
+  [Action.SUSPEND]: "suspend",
+  [Action.REACTIVATE]: "reactivate",
 };
 
 export const ActionByStateRequirement: {
@@ -284,6 +288,8 @@ export const ActionSubUsers: {
     Action.VIEW_PURCHASE_ORDERS,
     Action.VIEw_SALES_ORDERS,
     Action.EDIT_USER,
+    Action.SUSPEND,
+    Action.REACTIVATE,
   ],
 };
 
