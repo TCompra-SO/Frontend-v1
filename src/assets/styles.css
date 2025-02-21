@@ -2500,7 +2500,7 @@ body {
   font-weight: 500;
   line-height: 1;
   border-radius: 0.6rem;
-  z-index: 9;
+  z-index: 10;
 }
 .fecha-comment-inline {
   color: #fff;

@@ -47,21 +47,28 @@ export default function ChatBody(props: ChatBodyProps) {
   const [currentDate, setCurrentDate] = useState("");
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const observerDownRef = useRef<IntersectionObserver | null>(null);
 
   /** Mostrar fecha de mensaje superior en base a date dividers */
 
   useEffect(() => {
     const chatContainer = chatContainerRef.current;
-
     if (!chatContainer) return;
+
+    let prevScrollTop = chatContainer.scrollTop;
 
     observerRef.current = new IntersectionObserver(
       (entries) => {
+        const scrollTop = chatContainer.scrollTop;
+        const isScrollingDown = scrollTop > prevScrollTop;
+        prevScrollTop = scrollTop;
+
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const date = entry.target.textContent;
-            if (date) {
-              setCurrentDate(date);
+            const timestamp = entry.target.getAttribute("data-timestamp");
+            if (timestamp && !isScrollingDown) {
+              const formattedDate = dayjs(timestamp).format(dateFormatChatBody);
+              setCurrentDate(formattedDate);
             }
           }
         });
@@ -72,19 +79,43 @@ export default function ChatBody(props: ChatBodyProps) {
       }
     );
 
+    observerDownRef.current = new IntersectionObserver(
+      (entries) => {
+        const scrollTop = chatContainer.scrollTop;
+        const isScrollingDown = scrollTop > prevScrollTop;
+        entries.forEach((entry) => {
+          const isIntersectingAtTop =
+            entry.boundingClientRect.top <=
+            entry.rootBounds!.top + entry.rootBounds!.height / 2;
+          if (isIntersectingAtTop && isScrollingDown) {
+            const date = entry.target.textContent;
+            if (date) {
+              setCurrentDate(date);
+            }
+          }
+        });
+      },
+      {
+        root: chatContainer,
+        threshold: 0.9,
+      }
+    );
+
+    const messages = chatContainer.querySelectorAll(".chat-body-message");
+    messages.forEach((msg) => observerRef.current?.observe(msg));
+
     const dateDividers = chatContainer.querySelectorAll(
       ".fecha-comment-inline"
     );
     dateDividers.forEach((divider) => {
-      if (observerRef.current) {
-        observerRef.current.observe(divider);
+      if (observerDownRef.current) {
+        observerDownRef.current.observe(divider);
       }
     });
 
     return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
+      observerRef.current?.disconnect();
+      observerDownRef.current?.disconnect();
     };
   }, [props.messages]);
 
@@ -152,9 +183,8 @@ export default function ChatBody(props: ChatBodyProps) {
           loadingSpinner
         ) : (
           <>
-            {props.hasMore && currentDate && (
-              <div className="fecha-comment">{currentDate}</div>
-            )}
+            {currentDate && <div className="fecha-comment">{currentDate}</div>}
+
             <div
               className="t-flex f-column-reverse mensajes-contenedor"
               id="scrollableDivChatBodyList"
