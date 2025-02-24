@@ -1,0 +1,64 @@
+Notificaciones generadas por usuario logueado después de realizar las siguientes acciones:
+
+Hacer oferta:
+- title: Nueva oferta para <reqName>
+- body: Tienes una oferta de <senderName>, ¡revísala ahora!
+
+Certificar/rechazar empresa
+- title: Certificación aceptada
+- body: <senderName> te acaba de certificar.
+- title: Certificación rechazada
+- body: <senderName> acaba de de rechazar tus documentos de certificación.
+
+Cancelar oferta (oferta sólo puede ser cancelada si tiene estado Ganador)
+- Requerimiento 
+	- title: Orden de compra cancelada
+	- body: La orden de compra para <reqName> fue cancelada.
+- Liquidación
+	- title: Orden de venta cancelada
+	- body: La orden de compra para <liqName> fue cancelada.
+
+Culminar oferta
+- Bien
+	- title: Envío <confirmado  | no realizado>
+	- body: <senderName> indicó que < | no> envió su requerimiento.
+- Servicio
+	- title: Servicio <realizado | no realizado>
+	- body: <senderName> indicó que <prestó | no prestó> el servicio.
+- Liquidación
+	- title: Recepción <confirmada | no confirmada>
+	- body: <senderName> <confirmó | negó> la recepción del requerimiento.
+
+Cuando se genera una disputa
+- Para el creador de la oferta
+	- title: Nueva disputa
+	- body: Tienes una disputa con <creatorReqName> por la oferta <offerName>.
+- Para el creador del requerimiento
+	- Requerimiento
+		- title: Nueva disputa
+		- body: Tienes una disputa con <creatorOfferName> por el requerimiento <reqName>.
+	- Liquidación
+		- title: Nueva disputa
+		- body: Tienes una disputa con <creatorOfferName> por la liquidación <reqName>.
+
+Cancelar oferta desde Mis requerimientos
+- Requerimiento
+	- title: Orden de compra cancelada
+	- body: <senderName> canceló tu oferta y orden de compra.
+- Liquidación
+	- title: Orden de venta cancelada
+	- body: <senderName> canceló tu oferta y orden de venta.
+
+Culminar requerimiento
+- Bien
+	- title: Recepción <confirmada | no confirmada>
+	- body: <senderName> <confirmó | negó> la recepción del requerimiento.
+- Servicio
+	- title: Servicio <realizado | no realizado>
+	- body: <senderName> indicó que el servicio <no> fue realizado.
+- Liquidación
+	- title: Envío <confirmado  | no realizado>
+	- body: <senderName> indicó que < | no> envió su requerimiento.
+
+
+eliminar oferta  en ver ofertas
