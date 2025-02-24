@@ -127,7 +127,7 @@ export default function ActionColumn(
         case TableTypes.USERS:
           return ActionByState[key].reduce<ItemType[]>(
             (acc, action: Action) => {
-              const { activeAccount } = record as SubUserBase;
+              const { activeAccount, uid } = record as SubUserBase;
               if (
                 (activeAccount && action == Action.REACTIVATE) ||
                 (!activeAccount && action == Action.SUSPEND)
@@ -137,6 +137,11 @@ export default function ActionColumn(
                 key: action,
                 label: t(ActionLabel[action]),
                 onClick: () => onButtonClick(action, record),
+                disabled:
+                  (action == Action.REACTIVATE || action == Action.SUSPEND) &&
+                  idAndActionQueue[uid]
+                    ? true
+                    : false,
               });
               return acc;
             },

@@ -102,11 +102,9 @@ export function useCancelRequirement() {
       } else if (errorCancel) {
         showNotification("error", errorMsgCancel);
       }
-      if (responseDataCancel || errorCancel)
-        if (apiParamsCancel.dataToSend?.requerimentID)
-          deleteFromIdAndActionQueue(apiParamsCancel.dataToSend.requerimentID);
     } catch (err) {
       showNotification("error", t("errorOccurred"));
+    } finally {
       if (apiParamsCancel.dataToSend?.requerimentID)
         deleteFromIdAndActionQueue(apiParamsCancel.dataToSend.requerimentID);
     }
@@ -200,11 +198,9 @@ export function useCancelOffer() {
       } else if (error) {
         showNotification("error", errorMsg);
       }
-      if (responseData || error)
-        if (apiParams.dataToSend?.offerID)
-          deleteFromIdAndActionQueue(apiParams.dataToSend.offerID);
     } catch (err) {
       showNotification("error", t("errorOccurred"));
+    } finally {
       if (apiParams.dataToSend?.offerID)
         deleteFromIdAndActionQueue(apiParams.dataToSend.offerID);
     }
