@@ -2,13 +2,37 @@ import { useTranslation } from "react-i18next";
 import InputContainer from "../../containers/InputContainer";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { Lengths } from "../../../utilities/lengths";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { HomeContext } from "../../../contexts/Homecontext";
+import { useApiParams } from "../../../models/Interfaces";
+import { getStatisticsService } from "../../../services/requests/reportsService";
+import useApi from "../../../hooks/useApi";
+import { masterUid } from "../../../utilities/globals";
+import { transformToStatistics } from "../../../utilities/transform";
+import { StatisticsData } from "../../../models/MainInterfaces";
 
 export default function Search() {
-  const { t } = useTranslation(); // r3v check numbers
+  const { t } = useTranslation();
   const { updateKeywordSearch } = useContext(HomeContext);
   const [keyword, setKeyword] = useState("");
+  const [data, setData] = useState<StatisticsData>();
+  const [apiParams] = useState<useApiParams>({
+    service: getStatisticsService(masterUid),
+    method: "get",
+  });
+  const { responseData, fetchData } = useApi(apiParams);
+
+  useEffect(() => {
+    if (apiParams.service) {
+      fetchData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) setData(transformToStatistics(responseData.data));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData]);
 
   function handleKeyUp(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
@@ -43,43 +67,44 @@ export default function Search() {
             <i className="fa-regular fa-search"></i>
           </ButtonContainer>
         </div>
-        <div className="text-left t-flex gap-10 ht-s3">
-          <div className="t-flex count-req gap-10">
-            <div className="icon-home">
-              <i className="fa-regular fa-dolly"></i>
-            </div>
-            <div className="oferta-usuario col-documento-2">
-              <div className="text-truncate ti-1">100</div>
-              <div className="text-truncate ti-2">{t("goods")}</div>
-            </div>
-          </div>
-          <div className="t-flex count-req gap-10">
-            <div className="icon-home">
-              <i className="fa-regular fa-hand-holding-magic"></i>
-            </div>
-            <div className="oferta-usuario col-documento-2">
-              <div className="text-truncate ti-1" style={{ color: "#fff" }}>
-                100
+        {data && (
+          <div className="text-left t-flex gap-10 ht-s3">
+            <div className="t-flex count-req gap-10">
+              <div className="icon-home">
+                <i className="fa-regular fa-dolly"></i>
               </div>
-              <div className="text-truncate ti-2" style={{ color: "#fff" }}>
-                {t("services")}
+              <div className="oferta-usuario col-documento-2">
+                <div className="text-truncate ti-1">{data.numProducts}</div>
+                <div className="text-truncate ti-2">{t("goods")}</div>
               </div>
             </div>
-          </div>
-          <div className="t-flex count-req gap-10">
-            <div className="icon-home">
-              <i className="fa-regular fa-basket-shopping"></i>
-            </div>
-            <div className="oferta-usuario col-documento-2">
-              <div className="text-truncate ti-1" style={{ color: "#fff" }}>
-                100
+            <div className="t-flex count-req gap-10">
+              <div className="icon-home">
+                <i className="fa-regular fa-hand-holding-magic"></i>
               </div>
-              <div className="text-truncate ti-2" style={{ color: "#fff" }}>
-                {t("sales")}
+              <div className="oferta-usuario col-documento-2">
+                <div className="text-truncate ti-1" style={{ color: "#fff" }}>
+                  {data.numServices}
+                </div>
+                <div className="text-truncate ti-2" style={{ color: "#fff" }}>
+                  {t("services")}
+                </div>
               </div>
             </div>
-          </div>
-          {/* <div className="t-flex count-req gap-10">
+            <div className="t-flex count-req gap-10">
+              <div className="icon-home">
+                <i className="fa-regular fa-basket-shopping"></i>
+              </div>
+              <div className="oferta-usuario col-documento-2">
+                <div className="text-truncate ti-1" style={{ color: "#fff" }}>
+                  {data.numLiquidations}
+                </div>
+                <div className="text-truncate ti-2" style={{ color: "#fff" }}>
+                  {t("sales")}
+                </div>
+              </div>
+            </div>
+            {/* <div className="t-flex count-req gap-10">
             <div className="icon-home">
               <i className="fa-regular fa-user-tie"></i>
             </div>
@@ -92,7 +117,8 @@ export default function Search() {
               </div>
             </div>
           </div> */}
-        </div>
+          </div>
+        )}
       </div>
       <div className="section-slider t-flex j-conten j-items"></div>
     </>

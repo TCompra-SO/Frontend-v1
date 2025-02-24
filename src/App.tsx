@@ -33,6 +33,7 @@ import {
   reqIdParamNameInRoute,
   typeParamNameInRoute,
 } from "./utilities/globals.ts";
+import useUserSocket from "./socket/useUserSocket.tsx";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
@@ -88,6 +89,7 @@ function MainLayout({ children }: { children: React.ReactNode }) {
 }
 
 function App() {
+  // useUserSocket();
   const dispatch = useDispatch();
   const loadUserInfo = useLoadUserInfo();
   dispatch(setIsLoading(true));

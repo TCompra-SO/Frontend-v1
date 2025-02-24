@@ -20,16 +20,12 @@ export default function Statistics() {
     service: getStatisticsService(mainUid),
     method: "get",
   });
-  const { loading, responseData, error, errorMsg, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-    token: apiParams.token,
-    includeHeader: apiParams.includeHeader,
-  });
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi(apiParams);
 
   useEffect(() => {
     showLoadingMessage(loading);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
   useEffect(() => {
@@ -43,6 +39,7 @@ export default function Statistics() {
     if (responseData) {
       setData(transformToStatistics(responseData.data));
     } else if (error) showNotification("error", errorMsg);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
   return (
