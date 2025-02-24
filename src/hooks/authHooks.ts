@@ -146,17 +146,13 @@ export function useLoadUserInfo() {
         if (subUser) {
           dispatch(setBaseUser(subUser));
         }
-
         dispatch(setIsLoggedIn(user && subUser ? true : false));
         return;
       }
-
       dispatch(setIsLoggedIn(false));
       return;
     }
-
     dispatch(setIsLoggedIn(false));
   }
-
   return loadUserInfo;
 }

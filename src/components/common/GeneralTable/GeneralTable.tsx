@@ -1,7 +1,7 @@
 import { Table, TableProps } from "antd";
 import {
   OnChangePageAndPageSizeType,
-  PurchaseOrderTableTypes,
+  OrderTableTypes,
   TableColumns,
   TableTypes,
 } from "../../../utilities/types";
@@ -455,13 +455,13 @@ export default function GeneralTable(props: GeneralTableProps) {
         ),
         GeneralColumnString(
           t(
-            props.content.subType == PurchaseOrderTableTypes.ISSUED
+            props.content.subType == OrderTableTypes.ISSUED
               ? props.content.type == TableTypes.PURCHASE_ORDER
                 ? "myRequirement"
                 : "mySale"
               : "myOffer"
           ),
-          props.content.subType == PurchaseOrderTableTypes.ISSUED
+          props.content.subType == OrderTableTypes.ISSUED
             ? purcOrderReqTitleColumnKey
             : purcOrderOfferTitleColumnKey,
           true,

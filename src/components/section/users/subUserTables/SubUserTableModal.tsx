@@ -4,7 +4,7 @@ import {
   Filters,
   ModalTypes,
   OnChangePageAndPageSizeType,
-  PurchaseOrderTableTypes,
+  OrderTableTypes,
   RequirementType,
   TableTypes,
 } from "../../../../utilities/types";
@@ -53,16 +53,16 @@ interface SubUserTableModalProps {
     | {
         tableType: TableTypes.PURCHASE_ORDER_SUBUSER;
         tableContent: PurchaseOrderItemSubUser[];
-        subType: PurchaseOrderTableTypes;
+        subType: OrderTableTypes;
         total?: number;
       }
     | {
         tableType: TableTypes.SALES_ORDER_SUBUSER;
         tableContent: PurchaseOrderItemSubUser[];
-        subType: PurchaseOrderTableTypes;
+        subType: OrderTableTypes;
         total?: number;
       };
-  onTabChange: (tabId: RequirementType | PurchaseOrderTableTypes) => void;
+  onTabChange: (tabId: RequirementType | OrderTableTypes) => void;
   loading: boolean | undefined;
   tableType: TableTypes;
   onChangePageAndPageSize?: OnChangePageAndPageSizeType;
@@ -77,9 +77,9 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
   const navigate = useNavigate();
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
-  const [subType, setSubType] = useState<
-    RequirementType | PurchaseOrderTableTypes
-  >(RequirementType.GOOD);
+  const [subType, setSubType] = useState<RequirementType | OrderTableTypes>(
+    RequirementType.GOOD
+  );
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
   const { updateSubUserPurchaseOrdersLoadingPdf } =
@@ -105,7 +105,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
       props.tableType == TableTypes.SALES_ORDER_SUBUSER ||
       props.tableType == TableTypes.PURCHASE_ORDER_SUBUSER
     )
-      setSubType(PurchaseOrderTableTypes.ISSUED);
+      setSubType(OrderTableTypes.ISSUED);
     else setSubType(RequirementType.GOOD);
   }, [props.tableType]);
 
@@ -192,9 +192,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
     }
   }
 
-  function changeSubType(
-    newSubType: RequirementType | PurchaseOrderTableTypes
-  ) {
+  function changeSubType(newSubType: RequirementType | OrderTableTypes) {
     if (subType != newSubType) {
       setSubType(newSubType);
       props.onTabChange(newSubType);
@@ -280,10 +278,10 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
               <ButtonContainer
                 common
                 className={`btn btn-grey wd-50 ${
-                  subType == PurchaseOrderTableTypes.ISSUED ? "active" : ""
+                  subType == OrderTableTypes.ISSUED ? "active" : ""
                 }`}
                 onClick={() => {
-                  changeSubType(PurchaseOrderTableTypes.ISSUED);
+                  changeSubType(OrderTableTypes.ISSUED);
                 }}
               >
                 <i className="fa-regular fa-hand-holding-magic"></i>{" "}
@@ -292,10 +290,10 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
               <ButtonContainer
                 common
                 className={`btn btn-grey wd-50 ${
-                  subType == PurchaseOrderTableTypes.RECEIVED ? "active" : ""
+                  subType == OrderTableTypes.RECEIVED ? "active" : ""
                 }`}
                 onClick={() => {
-                  changeSubType(PurchaseOrderTableTypes.RECEIVED);
+                  changeSubType(OrderTableTypes.RECEIVED);
                 }}
               >
                 <i className="fa-regular fa-basket-shopping"></i>{" "}

@@ -7,7 +7,7 @@ import {
   Action,
   EntityType,
   OnChangePageAndPageSizeTypeParams,
-  PurchaseOrderTableTypes,
+  OrderTableTypes,
   RequirementType,
   TableTypes,
 } from "../utilities/types";
@@ -49,17 +49,19 @@ import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
+import { useChangeSubUserStatus } from "../hooks/subUserHook";
 
 export default function Users() {
   const { t } = useTranslation();
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
+  const { changeSubUserStatus } = useChangeSubUserStatus();
   const token = useSelector((state: MainState) => state.user.token);
   const uid = useSelector((state: MainState) => state.user.uid);
   const [action, setAction] = useState<Action>(Action.ADD_USER);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [subTypeOrder, setSubTypeOrder] = useState<PurchaseOrderTableTypes>(
-    PurchaseOrderTableTypes.ISSUED
+  const [subTypeOrder, setSubTypeOrder] = useState<OrderTableTypes>(
+    OrderTableTypes.ISSUED
   );
   const [subType, setSubType] = useState<RequirementType>(RequirementType.GOOD);
   const [userData, setUserData] = useState<SubUserBase | null>(null);
@@ -288,7 +290,7 @@ export default function Users() {
     try {
       const data: PurchaseOrderItemSubUser[] = responseDataTable.data.map(
         (e: any) =>
-          transformToPurchaseOrderItemSubUser(e, PurchaseOrderTableTypes.ISSUED) // r3v
+          transformToPurchaseOrderItemSubUser(e, OrderTableTypes.ISSUED) // r3v
       );
       setTotalPurc(responseDataTable.res?.totalDocuments);
       setOrderList(data);
@@ -306,7 +308,7 @@ export default function Users() {
     try {
       const data: PurchaseOrderItemSubUser[] = responseDataTable.data.map(
         (e: any) =>
-          transformToPurchaseOrderItemSubUser(e, PurchaseOrderTableTypes.ISSUED) // r3v
+          transformToPurchaseOrderItemSubUser(e, OrderTableTypes.ISSUED) // r3v
       );
       setTotalSales(responseDataTable.res?.totalDocuments);
       setOrderList(data);
@@ -327,7 +329,7 @@ export default function Users() {
 
   function handleCloseModal() {
     setIsOpenModal(false);
-    setSubTypeOrder(PurchaseOrderTableTypes.ISSUED);
+    setSubTypeOrder(OrderTableTypes.ISSUED);
     setSubType(RequirementType.GOOD);
   }
 
@@ -379,7 +381,7 @@ export default function Users() {
           if (subAction == Action.GOODS) setSubType(RequirementType.GOOD);
           if (subAction == Action.SERVICES) setSubType(RequirementType.SERVICE);
           setTableType(TableTypes.PURCHASE_ORDER);
-          setSubTypeOrder(PurchaseOrderTableTypes.ISSUED);
+          setSubTypeOrder(OrderTableTypes.ISSUED);
           reset();
           searchTable(
             { page: 1, pageSize: currentPageSize },
@@ -389,14 +391,14 @@ export default function Users() {
               ? RequirementType.GOOD
               : RequirementType.SERVICE,
             user.uid,
-            PurchaseOrderTableTypes.ISSUED
+            OrderTableTypes.ISSUED
           );
         }
         break;
       case Action.VIEw_SALES_ORDERS:
         setSubType(RequirementType.SALE);
         setTableType(TableTypes.SALES_ORDER);
-        setSubTypeOrder(PurchaseOrderTableTypes.ISSUED);
+        setSubTypeOrder(OrderTableTypes.ISSUED);
         reset();
         searchTable(
           { page: 1, pageSize: currentPageSize },
@@ -404,8 +406,14 @@ export default function Users() {
           TableTypes.SALES_ORDER,
           RequirementType.SALE,
           user.uid,
-          PurchaseOrderTableTypes.ISSUED
+          OrderTableTypes.ISSUED
         );
+        break;
+      case Action.SUSPEND:
+        changeSubUserStatus(user.uid, false);
+        break;
+      case Action.REACTIVATE:
+        changeSubUserStatus(user.uid, true);
         break;
     }
   }
@@ -532,7 +540,7 @@ export default function Users() {
     }
   }
 
-  function handleTabChange(tabId: RequirementType | PurchaseOrderTableTypes) {
+  function handleTabChange(tabId: RequirementType | OrderTableTypes) {
     if (userData) {
       if (
         ((action == Action.VIEW_REQUIREMENTS || action == Action.VIEW_OFFERS) &&
@@ -541,8 +549,8 @@ export default function Users() {
             tabId == RequirementType.SALE)) ||
         ((action == Action.VIEW_PURCHASE_ORDERS ||
           action == Action.VIEw_SALES_ORDERS) &&
-          (tabId == PurchaseOrderTableTypes.ISSUED ||
-            tabId == PurchaseOrderTableTypes.RECEIVED))
+          (tabId == OrderTableTypes.ISSUED ||
+            tabId == OrderTableTypes.RECEIVED))
       ) {
         reset();
         if (
@@ -558,14 +566,14 @@ export default function Users() {
             undefined
           );
         } else {
-          setSubTypeOrder(tabId as PurchaseOrderTableTypes);
+          setSubTypeOrder(tabId as OrderTableTypes);
           searchTable(
             { page: 1, pageSize: currentPageSize },
             undefined,
             tableType,
             subType,
             undefined,
-            tabId as PurchaseOrderTableTypes
+            tabId as OrderTableTypes
           );
         }
       }

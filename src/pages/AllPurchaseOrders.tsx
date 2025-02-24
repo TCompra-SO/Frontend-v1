@@ -12,7 +12,7 @@ import {
 import {
   Action,
   ModalTypes,
-  PurchaseOrderTableTypes,
+  OrderTableTypes,
   RequirementType,
   TableTypes,
 } from "../utilities/types";
@@ -56,7 +56,7 @@ export default function AllPurchaseOrders() {
     useGetOffersByRequirementId();
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
-  const [type, setType] = useState<PurchaseOrderTableTypes>(
+  const [type, setType] = useState<OrderTableTypes>(
     getReqTypeAndOrderType(location.pathname).orderType
   );
   const [requirementType, setRequirementType] = useState<RequirementType>(

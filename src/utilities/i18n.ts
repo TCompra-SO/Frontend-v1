@@ -339,6 +339,8 @@ const resources = {
       sessionExpiredLoginAgain: "Your session has expired. Please log in again to continue",
       minCharMessage: "Enter at least",
       maxCharMessage: "Enter up to",
+      userSuspendedSuccessfully: "User suspended successfully",
+      userReactivatedSuccessfully: "User reactivated successfully",
       // Other
       characters: "characters",
       yes: "Yes",
@@ -883,6 +885,8 @@ const resources = {
       sessionExpiredLoginAgain: "Su sesión ha expirado. Por favor, inicie sesión nuevamente para continuar",
       minCharMessage: "Ingrese al menos",
       maxCharMessage: "Puede ingresar hasta",
+      userSuspendedSuccessfully: "Usuario suspendido exitosamente",
+      userReactivatedSuccessfully: "Usuario reactivado exitosamente",
       // Other
       characters: "caracteres",
       yes: "Sí",

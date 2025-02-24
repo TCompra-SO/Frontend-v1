@@ -24,7 +24,7 @@ import {
   OfferState,
   OrderConfirmation,
   PurchaseOrderState,
-  PurchaseOrderTableTypes,
+  OrderTableTypes,
   RequirementState,
   TableTypes,
 } from "../../../../utilities/types";
@@ -181,10 +181,10 @@ export default function StateColumn(
           const bpo = record as BasicPurchaseOrder;
           let state = bpo.state;
           if (
-            (extraParam == PurchaseOrderTableTypes.ISSUED &&
+            (extraParam == OrderTableTypes.ISSUED &&
               state == PurchaseOrderState.PENDING &&
               bpo.clientConfirmation != OrderConfirmation.NONE) ||
-            (extraParam == PurchaseOrderTableTypes.RECEIVED &&
+            (extraParam == OrderTableTypes.RECEIVED &&
               state == PurchaseOrderState.PENDING &&
               bpo.providerConfirmation != OrderConfirmation.NONE)
           )

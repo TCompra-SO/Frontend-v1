@@ -3,7 +3,7 @@ import {
   Action,
   EntityType,
   ModalTypes,
-  PurchaseOrderTableTypes,
+  OrderTableTypes,
   RequirementType,
   TableTypes,
 } from "../utilities/types";
@@ -88,7 +88,7 @@ export default function SalesOrders() {
   const [action, setAction] = useState<Action>(Action.NONE);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [nameHeader, setNameHeader] = useState(
-    type == PurchaseOrderTableTypes.ISSUED ? t("customer") : t("seller")
+    type == OrderTableTypes.ISSUED ? t("customer") : t("seller")
   );
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -215,9 +215,7 @@ export default function SalesOrders() {
   useEffect(() => {
     clearSearchValue();
     reset();
-    setNameHeader(
-      type == PurchaseOrderTableTypes.ISSUED ? t("customer") : t("seller")
-    );
+    setNameHeader(type == OrderTableTypes.ISSUED ? t("customer") : t("seller"));
     searchTable({
       page: 1,
       pageSize: currentPageSize,
@@ -331,7 +329,7 @@ export default function SalesOrders() {
         downloadPdfOrder(purchaseOrder.key, purchaseOrder.type);
         break;
       case Action.FINISH:
-        if (typeRef.current == PurchaseOrderTableTypes.ISSUED) {
+        if (typeRef.current == OrderTableTypes.ISSUED) {
           // Buscar en oferta de liquidación
           getBasicRateData(
             purchaseOrder.key,
@@ -342,7 +340,7 @@ export default function SalesOrders() {
             action,
             purchaseOrder.type
           );
-        } else if (typeRef.current == PurchaseOrderTableTypes.RECEIVED)
+        } else if (typeRef.current == OrderTableTypes.RECEIVED)
           // Buscar en liquidación
           getBasicRateData(
             purchaseOrder.key,
@@ -374,7 +372,7 @@ export default function SalesOrders() {
             offerId: purchaseOrder.offerId,
             requirementId: purchaseOrder.requirementId,
             fromRequirementTable: false,
-            canceledByCreator: type == PurchaseOrderTableTypes.ISSUED,
+            canceledByCreator: type == OrderTableTypes.ISSUED,
             rowId: purchaseOrder.key,
             type: purchaseOrder.type,
           },

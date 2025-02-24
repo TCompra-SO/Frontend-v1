@@ -601,11 +601,7 @@ export function useCulminate() {
     service: null,
     method: "get",
   });
-  const { responseData, error, errorMsg, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
+  const { responseData, error, errorMsg, fetchData } = useApi(apiParams);
 
   useEffect(() => {
     if (apiParams.service) fetchData();

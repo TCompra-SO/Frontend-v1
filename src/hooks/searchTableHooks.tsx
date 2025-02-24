@@ -11,7 +11,7 @@ import {
   Filters,
   OnChangePageAndPageSizeTypeParams,
   OrderType,
-  PurchaseOrderTableTypes,
+  OrderTableTypes,
   RequirementType,
   TableTypes,
 } from "../utilities/types";
@@ -47,7 +47,7 @@ export default function useSearchTable(
   entityType: EntityType, // subuser: registros de usuario | otro: registros de usuario + subusuarios
   subType: RequirementType,
   resetChangesQueue?: () => void,
-  orderSubType?: PurchaseOrderTableTypes
+  orderSubType?: OrderTableTypes
 ) {
   const [apiParams, setApiParams] = useState<useApiParams<SearchTableRequest>>({
     service: null,
@@ -109,7 +109,7 @@ export default function useSearchTable(
     tableTypeParam?: TableTypes,
     subTypeParam?: RequirementType,
     uidParam?: string,
-    orderSubTypeParam?: PurchaseOrderTableTypes
+    orderSubTypeParam?: OrderTableTypes
   ) {
     resetChangesQueue?.();
     const stUid: string = uidParam ?? uid;
@@ -151,7 +151,7 @@ export default function useSearchTable(
   function getService(
     stTableType: TableTypes,
     stSubType: RequirementType,
-    stOrderType?: PurchaseOrderTableTypes
+    stOrderType?: OrderTableTypes
   ) {
     let service: HttpService | null = null;
     switch (stTableType) {
@@ -165,16 +165,16 @@ export default function useSearchTable(
         break;
       case TableTypes.PURCHASE_ORDER:
       case TableTypes.ALL_PURCHASE_ORDERS:
-        if (stOrderType == PurchaseOrderTableTypes.ISSUED)
+        if (stOrderType == OrderTableTypes.ISSUED)
           service = getSearchOrdersByClientService(stSubType);
-        else if (stOrderType == PurchaseOrderTableTypes.RECEIVED)
+        else if (stOrderType == OrderTableTypes.RECEIVED)
           service = getSearchOrdersByProviderService(stSubType);
         break;
       case TableTypes.SALES_ORDER:
       case TableTypes.ALL_SALES_ORDERS:
-        if (stOrderType == PurchaseOrderTableTypes.ISSUED)
+        if (stOrderType == OrderTableTypes.ISSUED)
           service = getSearchOrdersByProviderService(stSubType);
-        else if (stOrderType == PurchaseOrderTableTypes.RECEIVED)
+        else if (stOrderType == OrderTableTypes.RECEIVED)
           service = getSearchOrdersByClientService(stSubType);
         break;
     }

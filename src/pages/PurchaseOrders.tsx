@@ -3,7 +3,7 @@ import {
   Action,
   EntityType,
   ModalTypes,
-  PurchaseOrderTableTypes,
+  OrderTableTypes,
   RequirementType,
   TableTypes,
 } from "../utilities/types";
@@ -68,7 +68,7 @@ export default function PurchaseOrders() {
     useGetOffersByRequirementId();
   const { getBasicRateData, modalDataRate } = useCulminate();
   const downloadPdfOrder = useDownloadPdfOrder();
-  const [type, setType] = useState<PurchaseOrderTableTypes>(
+  const [type, setType] = useState<OrderTableTypes>(
     getReqTypeAndOrderType(location.pathname).orderType
   );
   const typeRef = useRef(type);
@@ -92,7 +92,7 @@ export default function PurchaseOrders() {
   );
   const [total, setTotal] = useState(0);
   const [nameHeader, setNameHeader] = useState(
-    type == PurchaseOrderTableTypes.ISSUED ? t("seller") : t("customer")
+    type == OrderTableTypes.ISSUED ? t("seller") : t("customer")
   );
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -223,9 +223,7 @@ export default function PurchaseOrders() {
   useEffect(() => {
     clearSearchValue();
     reset();
-    setNameHeader(
-      type == PurchaseOrderTableTypes.ISSUED ? t("seller") : t("customer")
-    );
+    setNameHeader(type == OrderTableTypes.ISSUED ? t("seller") : t("customer"));
     searchTable({
       page: 1,
       pageSize: currentPageSize,
@@ -339,7 +337,7 @@ export default function PurchaseOrders() {
         downloadPdfOrder(purchaseOrder.key, purchaseOrder.type);
         break;
       case Action.FINISH:
-        if (typeRef.current == PurchaseOrderTableTypes.ISSUED) {
+        if (typeRef.current == OrderTableTypes.ISSUED) {
           // Buscar en oferta de requerimiento
           getBasicRateData(
             purchaseOrder.key,
@@ -350,7 +348,7 @@ export default function PurchaseOrders() {
             action,
             purchaseOrder.type
           );
-        } else if (typeRef.current == PurchaseOrderTableTypes.RECEIVED)
+        } else if (typeRef.current == OrderTableTypes.RECEIVED)
           // Buscar en requerimiento
           getBasicRateData(
             purchaseOrder.key,
@@ -382,7 +380,7 @@ export default function PurchaseOrders() {
             offerId: purchaseOrder.offerId,
             requirementId: purchaseOrder.requirementId,
             fromRequirementTable: false,
-            canceledByCreator: type == PurchaseOrderTableTypes.RECEIVED,
+            canceledByCreator: type == OrderTableTypes.RECEIVED,
             rowId: purchaseOrder.key,
             type: purchaseOrder.type,
           },

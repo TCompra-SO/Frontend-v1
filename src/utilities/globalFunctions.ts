@@ -22,7 +22,7 @@ import {
   ErrorMsgRequestType,
   ErrorRequestType,
   OrderType,
-  PurchaseOrderTableTypes,
+  OrderTableTypes,
   RequirementType,
   ResponseRequestType,
   TableTypes,
@@ -233,13 +233,13 @@ export function getLabelFromRequirementType(
 
 // Retorna la llave del nombre del tipo de orden de compra
 export function getLabelFromPurchaseOrderType(
-  type: PurchaseOrderTableTypes,
+  type: OrderTableTypes,
   plural: boolean = false
 ) {
   switch (type) {
-    case PurchaseOrderTableTypes.ISSUED:
+    case OrderTableTypes.ISSUED:
       return plural ? "issuedPl" : "issued";
-    case PurchaseOrderTableTypes.RECEIVED:
+    case OrderTableTypes.RECEIVED:
       return plural ? "receivedPl" : "received";
   }
 }
@@ -288,11 +288,11 @@ export function getPurchaseOrderType(
     : getPenultimateSegmentFromRoute(pathname);
   switch (segment) {
     case pageSubRoutes.issued:
-      return PurchaseOrderTableTypes.ISSUED;
+      return OrderTableTypes.ISSUED;
     case pageSubRoutes.received:
-      return PurchaseOrderTableTypes.RECEIVED;
+      return OrderTableTypes.RECEIVED;
     default:
-      return PurchaseOrderTableTypes.ISSUED;
+      return OrderTableTypes.ISSUED;
   }
 }
 
@@ -530,26 +530,26 @@ export function getFieldNameObjForOrders(
     | TableTypes.SALES_ORDER
     | TableTypes.ALL_PURCHASE_ORDERS
     | TableTypes.ALL_SALES_ORDERS,
-  type: PurchaseOrderTableTypes
+  type: OrderTableTypes
 ) {
   if (
     tableType == TableTypes.ALL_PURCHASE_ORDERS ||
     tableType == TableTypes.ALL_SALES_ORDERS
   )
     if (tableType == TableTypes.ALL_PURCHASE_ORDERS)
-      return type == PurchaseOrderTableTypes.ISSUED
+      return type == OrderTableTypes.ISSUED
         ? fieldNameSearchRequestAllOrderClient
         : fieldNameSearchRequestAllOrderProvider;
     else
-      return type == PurchaseOrderTableTypes.ISSUED
+      return type == OrderTableTypes.ISSUED
         ? fieldNameSearchRequestAllOrderProvider
         : fieldNameSearchRequestAllOrderClient;
   if (tableType == TableTypes.PURCHASE_ORDER)
-    return type == PurchaseOrderTableTypes.ISSUED
+    return type == OrderTableTypes.ISSUED
       ? fieldNameSearchRequestOrderClient
       : fieldNameSearchRequestOrderProvider;
   else
-    return type == PurchaseOrderTableTypes.ISSUED
+    return type == OrderTableTypes.ISSUED
       ? fieldNameSearchRequestOrderProvider
       : fieldNameSearchRequestOrderClient;
 }
@@ -658,7 +658,7 @@ export function getCancelRecordService(type: RequirementType) {
 }
 
 export function getSearchRecordsService(
-  type: RequirementType | PurchaseOrderTableTypes | undefined
+  type: RequirementType | OrderTableTypes | undefined
 ) {
   if (type == RequirementType.GOOD) return searchRequirementsService();
   if (type == RequirementType.SERVICE) return searchServicesService();
@@ -725,7 +725,7 @@ export function getCancelOfferService(type: RequirementType) {
 }
 
 export function getSearchOffersService(
-  type: RequirementType | PurchaseOrderTableTypes | undefined
+  type: RequirementType | OrderTableTypes | undefined
 ) {
   if (type == RequirementType.GOOD) return searchReqOffersService();
   if (type == RequirementType.SERVICE) return searchServiceOffersService();
@@ -777,7 +777,7 @@ export function getGetOrderByIdService(type: RequirementType) {
 }
 
 export function getSearchOrdersByClientService(
-  type: RequirementType | PurchaseOrderTableTypes | undefined
+  type: RequirementType | OrderTableTypes | undefined
 ) {
   if (type == RequirementType.GOOD)
     return searchReqPurchaseOrdersByClientService();
@@ -788,7 +788,7 @@ export function getSearchOrdersByClientService(
 }
 
 export function getSearchOrdersByProviderService(
-  type: RequirementType | PurchaseOrderTableTypes | undefined
+  type: RequirementType | OrderTableTypes | undefined
 ) {
   if (type == RequirementType.GOOD)
     return searchReqPurchaseOrdersByProviderService();

@@ -24,7 +24,7 @@ import makeRequest from "./globalFunctions";
 import {
   EntityType,
   OrderConfirmation,
-  PurchaseOrderTableTypes,
+  OrderTableTypes,
   RequirementType,
   Usage,
 } from "./types";
@@ -300,7 +300,7 @@ export function transformToPurchaseOrder(data: any) {
 
 export function transformToPurchaseOrderItemSubUser(
   data: any,
-  subType: PurchaseOrderTableTypes
+  subType: OrderTableTypes
 ) {
   const purcOrder: PurchaseOrderItemSubUser = {
     requirementTitle: data.requerimentTitle,
@@ -347,7 +347,7 @@ export function transformToSubUserBase(data: any) {
     document: data.document,
     email: data.email,
     typeEntity: EntityType.SUBUSER,
-    activeAccount: true, // r3v
+    activeAccount: false, // r3v
     ...transformToUserCounters(data),
   };
   return subUser;

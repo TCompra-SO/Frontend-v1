@@ -227,3 +227,8 @@ export interface SearchTableRequest extends FieldSort, FieldFilter {
   pageSize: number;
   typeUser: EntityType;
 }
+
+export interface ChangeStatusRequest {
+  uid: string;
+  status: boolean;
+}

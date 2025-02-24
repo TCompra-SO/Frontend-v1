@@ -410,7 +410,7 @@ export enum UserRoles {
   LEGAL = 5,
 }
 
-export enum PurchaseOrderTableTypes {
+export enum OrderTableTypes {
   ISSUED = 0,
   RECEIVED = 1,
 }

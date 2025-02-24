@@ -7,7 +7,7 @@ import {
   TableColumns,
   TableTypes,
   CommonFilter,
-  PurchaseOrderTableTypes,
+  OrderTableTypes,
   CodeResponseCanOffer,
   Filters,
   SocketChangeType,
@@ -268,13 +268,13 @@ export interface TableTypeOffer extends TableHiddenColumns {
 
 export interface TableTypePurchaseOrder extends TableHiddenColumns {
   type: TableTypes.PURCHASE_ORDER;
-  subType: PurchaseOrderTableTypes;
+  subType: OrderTableTypes;
   data: PurchaseOrder[];
 }
 
 export interface TableTypeSalesOrder extends TableHiddenColumns {
   type: TableTypes.SALES_ORDER;
-  subType: PurchaseOrderTableTypes;
+  subType: OrderTableTypes;
   data: PurchaseOrder[];
 }
 
@@ -295,13 +295,13 @@ export interface TableTypeOfferSubUser extends TableHiddenColumns {
 
 export interface TableTypePurchaseOrderSubUser extends TableHiddenColumns {
   type: TableTypes.PURCHASE_ORDER_SUBUSER;
-  subType: PurchaseOrderTableTypes;
+  subType: OrderTableTypes;
   data: PurchaseOrderItemSubUser[];
 }
 
 export interface TableTypeSalesOrderSubUser extends TableHiddenColumns {
   type: TableTypes.SALES_ORDER_SUBUSER;
-  subType: PurchaseOrderTableTypes;
+  subType: OrderTableTypes;
   data: PurchaseOrderItemSubUser[];
 }
 
@@ -317,13 +317,13 @@ export interface TableTypeAllOffers extends TableHiddenColumns {
 
 export interface TableTypeAllPurchaseOrders extends TableHiddenColumns {
   type: TableTypes.ALL_PURCHASE_ORDERS;
-  subType: PurchaseOrderTableTypes;
+  subType: OrderTableTypes;
   data: BasicPurchaseOrder[];
 }
 
 export interface TableTypeAllSalesOrders extends TableHiddenColumns {
   type: TableTypes.ALL_SALES_ORDERS;
-  subType: PurchaseOrderTableTypes;
+  subType: OrderTableTypes;
   data: BasicPurchaseOrder[];
 }
 
