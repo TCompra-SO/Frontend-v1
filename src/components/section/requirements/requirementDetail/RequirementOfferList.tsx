@@ -173,7 +173,7 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
             <div key={`${offer.key}${index}`} className="card-ofertas">
               <RequirementOfferListItemHeader
                 offer={offer}
-                showStateAndActions={{
+                showActions={{
                   show: !props.forPurchaseOrder,
                   requirement: reqCopy,
                   onSelectionSuccess: handleSuccessfulSelection,

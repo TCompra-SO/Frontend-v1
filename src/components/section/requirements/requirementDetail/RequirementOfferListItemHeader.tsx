@@ -27,7 +27,7 @@ interface RequirementOfferListItemProps {
   offer: Offer;
   style?: React.CSSProperties;
   onClose: () => any;
-  showStateAndActions:
+  showActions:
     | {
         show: true;
         requirement: Requirement;
@@ -61,7 +61,7 @@ export default function RequirementOfferListItemHeader({
     },
   ];
 
-  if (props.showStateAndActions.show) {
+  if (props.showActions.show) {
     if (props.offer.state == OfferState.WINNER)
       items.push({
         label: t(ActionLabel[Action.CANCEL_PURCHASE_ORDER]),
@@ -70,7 +70,7 @@ export default function RequirementOfferListItemHeader({
       });
     if (
       props.offer.state == OfferState.ACTIVE &&
-      props.showStateAndActions.requirement.state == RequirementState.PUBLISHED
+      props.showActions.requirement.state == RequirementState.PUBLISHED
     ) {
       items.push({
         label: t(ActionLabel[Action.SELECT_OFFER]),
@@ -95,24 +95,24 @@ export default function RequirementOfferListItemHeader({
   }
 
   function onRateCancelError(id: string) {
-    if (props.showStateAndActions.show) {
-      props.showStateAndActions.onRateCancel?.(id, true);
+    if (props.showActions.show) {
+      props.showActions.onRateCancel?.(id, true);
     }
   }
 
   function onOpenModal(action: Action) {
-    if (props.showStateAndActions.show) {
+    if (props.showActions.show) {
       switch (action) {
         case Action.CANCEL_PURCHASE_ORDER:
           setDataModal({
             type: ModalTypes.CANCEL_PURCHASE_ORDER,
             data: {
               offerId: props.offer.key,
-              requirementId: props.showStateAndActions.requirement.key,
+              requirementId: props.showActions.requirement.key,
               fromRequirementTable: false,
               canceledByCreator: false,
-              onCancelSuccess: props.showStateAndActions.onCancelSuccess,
-              rowId: props.showStateAndActions.requirement.key,
+              onCancelSuccess: props.showActions.onCancelSuccess,
+              rowId: props.showActions.requirement.key,
               type: props.offer.type,
             },
             action,
@@ -124,8 +124,8 @@ export default function RequirementOfferListItemHeader({
             type: ModalTypes.SELECT_OFFER,
             data: {
               offer: props.offer,
-              requirement: props.showStateAndActions.requirement,
-              onSuccess: props.showStateAndActions.onSelectionSuccess,
+              requirement: props.showActions.requirement,
+              onSuccess: props.showActions.onSelectionSuccess,
               filterNames,
               filters,
             },
@@ -150,7 +150,7 @@ export default function RequirementOfferListItemHeader({
               isOffer: true,
               requirementOrOfferId: props.requirementId,
               rowId: props.requirementId,
-              onExecute: props.showStateAndActions.onRateCancel,
+              onExecute: props.showActions.onRateCancel,
               onError: onRateCancelError,
             },
             action,
@@ -234,20 +234,20 @@ export default function RequirementOfferListItemHeader({
             </div>
           </div>
         </div>
-        {props.showStateAndActions.show && (
-          <div className="oferta-acciones">
-            {props.offer.state == OfferState.WINNER && (
-              <div className="badge-green">
-                <i className="fa-regular fa-circle-check"></i>{" "}
-                <span className="req-btn-info">{t("selectedOffer")}</span>
-              </div>
-            )}
-            {props.offer.state == OfferState.CANCELED && (
-              <div className="badge-warning">
-                <i className="fa-regular fa-ban"></i>{" "}
-                <span className="req-btn-info">{t("canceledOffer")}</span>
-              </div>
-            )}
+        <div className="oferta-acciones">
+          {props.offer.state == OfferState.WINNER && (
+            <div className="badge-green">
+              <i className="fa-regular fa-circle-check"></i>{" "}
+              <span className="req-btn-info">{t("selectedOffer")}</span>
+            </div>
+          )}
+          {props.offer.state == OfferState.CANCELED && (
+            <div className="badge-warning">
+              <i className="fa-regular fa-ban"></i>{" "}
+              <span className="req-btn-info">{t("canceledOffer")}</span>
+            </div>
+          )}
+          {props.showActions.show && (
             <Dropdown
               trigger={["click"]}
               menu={{ items }}
@@ -255,8 +255,8 @@ export default function RequirementOfferListItemHeader({
             >
               <i className="fa-solid fa-ellipsis-vertical mas-acciones"></i>
             </Dropdown>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </>
   );

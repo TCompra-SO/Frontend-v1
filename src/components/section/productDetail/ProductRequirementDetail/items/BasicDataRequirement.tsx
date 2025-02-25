@@ -3,7 +3,6 @@ import { Requirement } from "../../../../../models/MainInterfaces";
 import { ListsContext } from "../../../../../contexts/ListsContext";
 import { useContext, useRef } from "react";
 import { defaultCountry } from "../../../../../utilities/globals";
-import { Coins } from "../../../../../utilities/types";
 import {
   ImagePreviewGroupContainer,
   ImagePreviewGroupContainerRef,
@@ -83,7 +82,7 @@ export default function BasicDataRequirement(props: BasicDataRequirementProps) {
               style={{ cursor: "default", whiteSpace: "nowrap" }}
             >
               {props.requirement?.coin &&
-                Coins[currencyData[props.requirement?.coin]?.alias]}{" "}
+                currencyData[props.requirement?.coin]?.alias}{" "}
               {props.requirement?.price}
               <span>/{t("priceColumn")}</span>
             </div>

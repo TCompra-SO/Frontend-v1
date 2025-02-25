@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { ListsContext } from "../../../contexts/ListsContext";
-import { Coins } from "../../../utilities/types";
 
 interface PriceInHeaderProps {
   coin: number;
@@ -15,7 +14,7 @@ export default function PriceInHeader(props: PriceInHeaderProps) {
   return (
     <b className={props.useOfferClass ? "precio-oferta" : "precio-req"}>
       {currencyData && currencyData[props.coin]
-        ? Coins[currencyData[props.coin].alias]
+        ? currencyData[props.coin].alias
         : null}
       {props.price}
     </b>
