@@ -89,15 +89,18 @@ function MainLayout({ children }: { children: React.ReactNode }) {
 }
 
 function App() {
-  // useUserSocket();
+  useUserSocket();
   const dispatch = useDispatch();
   const loadUserInfo = useLoadUserInfo();
-  dispatch(setIsLoading(true));
 
+  /** Cargar datos de usuario si está logueado */
   useEffect(() => {
+    dispatch(setIsLoading(true));
+
     async function getUserData() {
       await loadUserInfo();
       dispatch(setIsLoading(false));
+      console.log(2222);
     }
     getUserData();
     // eslint-disable-next-line react-hooks/exhaustive-deps

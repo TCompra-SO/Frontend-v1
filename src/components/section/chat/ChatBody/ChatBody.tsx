@@ -6,13 +6,9 @@ import { dateFormatChatBody, windowSize } from "../../../../utilities/globals";
 import ChatBodyMessage from "./ChatBodyMessage";
 import { Fragment, ReactNode, useEffect, useRef, useState } from "react";
 import useWindowSize from "../../../../hooks/useWindowSize";
-import AddImagesField, {
-  AddImagesFieldRef,
-} from "../../../common/formFields/AddImagesField";
-import AddDocumentField, {
-  AddDocumentFieldRef,
-} from "../../../common/formFields/AddDocumentField";
-import { Flex, Spin, UploadFile } from "antd";
+import { AddImagesFieldRef } from "../../../common/formFields/AddImagesField";
+import { AddDocumentFieldRef } from "../../../common/formFields/AddDocumentField";
+import { Flex, Spin } from "antd";
 import ChatGallery from "./ChatGallery";
 import InfiniteScroll from "react-infinite-scroll-component";
 import SimpleLoading from "../../../../pages/utils/SimpleLoading";
@@ -39,8 +35,8 @@ export default function ChatBody(props: ChatBodyProps) {
   const divRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<AddImagesFieldRef>(null);
   const docRef = useRef<AddDocumentFieldRef>(null);
-  const [imgList, setImgList] = useState<UploadFile[]>([]);
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  // const [imgList, setImgList] = useState<UploadFile[]>([]);
+  // const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [message, setMessage] = useState("");
   const [openGallery, setOpenGallery] = useState<boolean | null>(null);
   const prevChatMessagesLength = useRef(0);
