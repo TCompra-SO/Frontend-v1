@@ -170,6 +170,7 @@ export enum Action {
   SERVICES = 37,
   SUSPEND = 38,
   REACTIVATE = 39,
+  VIEW_CERTIFICATION = 40,
 }
 
 export const ActionLabel: {
@@ -215,6 +216,7 @@ export const ActionLabel: {
   [Action.SERVICES]: "services",
   [Action.SUSPEND]: "suspend",
   [Action.REACTIVATE]: "reactivate",
+  [Action.VIEW_CERTIFICATION]: "view",
 };
 
 export const ActionByStateRequirement: {
