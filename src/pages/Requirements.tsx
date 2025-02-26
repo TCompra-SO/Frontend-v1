@@ -172,7 +172,7 @@ export default function Requirements() {
       resetDetailedRequirementModalData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [detailedRequirementModalData]);
 
   /** Para mostrar modales */
 

@@ -202,7 +202,7 @@ export default function PurchaseOrders() {
       resetViewHistoryModalData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [viewHistoryModalData]);
 
   /** Para mostrar modales */
 

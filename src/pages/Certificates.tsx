@@ -152,7 +152,7 @@ export default function Certificates() {
       resetViewCertificationData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [viewCertificationData]);
 
   useEffect(() => {
     if (modalDataCertificationData.type !== ModalTypes.NONE) {
@@ -201,30 +201,14 @@ export default function Certificates() {
     if (type == CertificationTableType.SENT) {
       switch (action) {
         case Action.VIEW:
-          setDataModal({
-            type: ModalTypes.VIEW_DOCS_SENT_CERT,
-            data: {
-              docs: certificate.certificates,
-              data: certificate,
-              readonly: true,
-            },
-            action,
-          });
           setIsOpenModal(true);
+          getCertificationData(certificate.key, certificate);
           break;
       }
     } else if (type == CertificationTableType.RECEIVED) {
-      console.log("sent", certificate.key);
       switch (action) {
         case Action.VIEW:
-          setDataModal({
-            type: ModalTypes.VIEW_DOCS_RECEIVED_CERT,
-            data: {
-              docs: certificate.certificates,
-              data: certificate,
-            },
-            action,
-          });
+          getCertificationData(certificate.key, certificate);
           setIsOpenModal(true);
           break;
       }

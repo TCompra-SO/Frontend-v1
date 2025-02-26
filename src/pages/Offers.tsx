@@ -153,7 +153,7 @@ export default function Offers() {
       resetDetailedOfferModalData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [detailedOfferModalData]);
 
   useEffect(() => {
     if (modalDataOfferDetail.type !== ModalTypes.NONE) {

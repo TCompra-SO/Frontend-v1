@@ -194,7 +194,7 @@ export default function SalesOrders() {
       resetViewHistorySalesModalData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [viewHistorySalesModalData]);
 
   /** Para mostrar modales */
 
