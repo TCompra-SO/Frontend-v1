@@ -61,7 +61,8 @@ export default function PurchaseOrders() {
   const uid = useSelector((state: MainState) => state.user.uid);
   const searchValueRef = useRef<TablePageContentRef>(null);
   const { updateMyPurchaseOrdersLoadingPdf } = useContext(LoadingDataContext);
-  const { viewHistoryModalData } = useContext(ModalsContext);
+  const { viewHistoryModalData, resetViewHistoryModalData } =
+    useContext(ModalsContext);
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
@@ -187,17 +188,19 @@ export default function PurchaseOrders() {
 
   useEffect(() => {
     if (viewHistoryModalData.requirementId) {
+      const copy = { ...viewHistoryModalData };
       getOffersByRequirementId(
         TableTypes.PURCHASE_ORDER,
-        viewHistoryModalData.requirementId,
-        viewHistoryModalData.requirementType,
+        copy.requirementId,
+        copy.requirementType,
         true,
         1,
         noPaginationPageSize,
         Action.VIEW_HISTORY,
-        viewHistoryModalData.requirement,
-        viewHistoryModalData.filters
+        copy.requirement,
+        copy.filters
       );
+      resetViewHistoryModalData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -120,6 +120,12 @@ export const SystemNotifications = {
     }.`,
     action: Action.DOWNLOAD_PURCHASE_ORDER,
   }),
+
+  receivedDocsForCertification: (senderName: string): NotData => ({
+    title: `Solicitud de certificación`,
+    body: `${senderName} ha enviado documentos para ser certificado.`,
+    action: Action.VIEW_CERTIFICATION,
+  }),
 };
 
 //eliminar oferta  en ver ofertas

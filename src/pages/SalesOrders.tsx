@@ -62,7 +62,8 @@ export default function SalesOrders() {
   const uid = useSelector((state: MainState) => state.user.uid);
   const searchValueRef = useRef<TablePageContentRef>(null);
   const { updateMyPurchaseOrdersLoadingPdf } = useContext(LoadingDataContext);
-  const { viewHistorySalesModalData } = useContext(ModalsContext);
+  const { viewHistorySalesModalData, resetViewHistorySalesModalData } =
+    useContext(ModalsContext);
   const { showNotification } = useShowNotification();
   const { getBasicRateData, modalDataRate } = useCulminate();
   const { showLoadingMessage } = useShowLoadingMessage();
@@ -179,17 +180,19 @@ export default function SalesOrders() {
 
   useEffect(() => {
     if (viewHistorySalesModalData.requirementId) {
+      const copy = { ...viewHistorySalesModalData };
       getOffersByRequirementId(
         TableTypes.PURCHASE_ORDER,
-        viewHistorySalesModalData.requirementId,
-        viewHistorySalesModalData.requirementType,
+        copy.requirementId,
+        copy.requirementType,
         true,
         1,
         noPaginationPageSize,
         Action.VIEW_HISTORY,
-        viewHistorySalesModalData.requirement,
-        viewHistorySalesModalData.filters
+        copy.requirement,
+        copy.filters
       );
+      resetViewHistorySalesModalData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

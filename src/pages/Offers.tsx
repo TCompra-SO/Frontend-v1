@@ -50,7 +50,8 @@ export default function Offers() {
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const searchValueRef = useRef<TablePageContentRef>(null);
-  const { detailedOfferModalData } = useContext(ModalsContext);
+  const { detailedOfferModalData, resetDetailedOfferModalData } =
+    useContext(ModalsContext);
   const { showNotification } = useShowNotification();
   const { showLoadingMessage } = useShowLoadingMessage();
   const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
@@ -141,14 +142,16 @@ export default function Offers() {
 
   useEffect(() => {
     if (detailedOfferModalData.offerId) {
+      const copy = { ...detailedOfferModalData };
       getOfferDetail(
-        detailedOfferModalData.offerId,
-        detailedOfferModalData.offerType,
+        copy.offerId,
+        copy.offerType,
         true,
         Action.OFFER_DETAIL,
         true,
-        detailedOfferModalData.offer
+        copy.offer
       );
+      resetDetailedOfferModalData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -58,7 +58,8 @@ import useSocket from "../socket/useSocket";
 export default function Requirements() {
   const { t } = useTranslation();
   const location = useLocation();
-  const { detailedRequirementModalData } = useContext(ModalsContext);
+  const { detailedRequirementModalData, resetDetailedRequirementModalData } =
+    useContext(ModalsContext);
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const searchValueRef = useRef<TablePageContentRef>(null);
@@ -158,17 +159,18 @@ export default function Requirements() {
 
   useEffect(() => {
     if (detailedRequirementModalData.requirementId) {
-      console.log(detailedRequirementModalData.requirementId);
+      const copy = { ...detailedRequirementModalData };
       getOffersByRequirementId(
         TableTypes.REQUIREMENT,
-        detailedRequirementModalData.requirementId,
-        detailedRequirementModalData.requirementType,
+        copy.requirementId,
+        copy.requirementType,
         false,
         1,
         noPaginationPageSize,
         Action.SHOW_OFFERS,
-        detailedRequirementModalData.requirement
+        copy.requirement
       );
+      resetDetailedRequirementModalData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
