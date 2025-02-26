@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import {
-  OrderTableTypes,
+  OrderTableType,
   RequirementType,
   SocketChangeType,
   TableTypes,
@@ -23,7 +23,7 @@ export default function useSocket(
     payload: SocketResponse,
     canAddRowUpdate: boolean
   ) => void,
-  orderType?: OrderTableTypes
+  orderType?: OrderTableType
 ) {
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const uid = useSelector((state: MainState) => state.user.uid);
@@ -111,14 +111,14 @@ export default function useSocket(
       tableType == TableTypes.ALL_PURCHASE_ORDERS
     ) {
       if (subType == RequirementType.GOOD) {
-        if (orderType == OrderTableTypes.ISSUED)
+        if (orderType == OrderTableType.ISSUED)
           roomName = "roomPurchaseOrderClientProduct";
-        else if (orderType == OrderTableTypes.RECEIVED)
+        else if (orderType == OrderTableType.RECEIVED)
           roomName = "roomPurchaseOrderProviderProduct";
       } else if (subType == RequirementType.SERVICE) {
-        if (orderType == OrderTableTypes.ISSUED)
+        if (orderType == OrderTableType.ISSUED)
           roomName = "roomPurchaseOrderClientService";
-        else if (orderType == OrderTableTypes.RECEIVED)
+        else if (orderType == OrderTableType.RECEIVED)
           roomName = "roomPurchaseOrderProviderService";
       }
     }
@@ -127,9 +127,9 @@ export default function useSocket(
       tableType == TableTypes.ALL_SALES_ORDERS
     ) {
       if (subType == RequirementType.SALE) {
-        if (orderType == OrderTableTypes.ISSUED)
+        if (orderType == OrderTableType.ISSUED)
           roomName = "roomSaleOrderProviderLiquidation";
-        else if (orderType == OrderTableTypes.RECEIVED)
+        else if (orderType == OrderTableType.RECEIVED)
           roomName = "roomSaleOrderClientLiquidation";
       }
     }

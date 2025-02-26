@@ -9,7 +9,7 @@ import {
   ActionCertificateFiles,
   ActionLabel,
   ActionSubUsers,
-  OrderTableTypes,
+  OrderTableType,
   SubActions,
   TableTypes,
 } from "../../../../utilities/types";
@@ -43,17 +43,17 @@ export default function ActionColumn(
             (acc, action: Action) => {
               if (
                 action == Action.VIEW_HISTORY &&
-                extraParam == OrderTableTypes.RECEIVED
+                extraParam == OrderTableType.RECEIVED
               )
                 return acc;
               if (
                 action == Action.VIEW_CUSTOMER &&
-                extraParam == OrderTableTypes.ISSUED
+                extraParam == OrderTableType.ISSUED
               )
                 return acc;
               if (
                 action == Action.VIEW_SUPPLIER &&
-                extraParam == OrderTableTypes.RECEIVED
+                extraParam == OrderTableType.RECEIVED
               )
                 return acc;
 
@@ -76,17 +76,17 @@ export default function ActionColumn(
             (acc, action: Action) => {
               if (
                 action == Action.VIEW_HISTORY &&
-                extraParam == OrderTableTypes.RECEIVED
+                extraParam == OrderTableType.RECEIVED
               )
                 return acc;
               if (
                 action == Action.VIEW_CUSTOMER &&
-                extraParam == OrderTableTypes.RECEIVED
+                extraParam == OrderTableType.RECEIVED
               )
                 return acc;
               if (
                 action == Action.VIEW_SUPPLIER &&
-                extraParam == OrderTableTypes.ISSUED
+                extraParam == OrderTableType.ISSUED
               )
                 return acc;
 

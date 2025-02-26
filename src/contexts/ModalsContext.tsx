@@ -1,6 +1,10 @@
 import { createContext, ReactNode, useState } from "react";
-import { Offer, Requirement } from "../models/MainInterfaces";
-import { RequirementType } from "../utilities/types";
+import {
+  CertificationItem,
+  Offer,
+  Requirement,
+} from "../models/MainInterfaces";
+import { CertificationTableType, RequirementType } from "../utilities/types";
 import { OfferFilters } from "../models/Interfaces";
 
 interface DetailedRequirementModalDataType {
@@ -25,12 +29,19 @@ interface DownloadPdfOrderType {
   type: RequirementType;
 }
 
+interface ViewCertificationDataType {
+  certificationId: string;
+  certificationTableType: CertificationTableType;
+  certificationItem: CertificationItem | undefined;
+}
+
 interface ModalsContextType {
   detailedRequirementModalData: DetailedRequirementModalDataType;
   detailedOfferModalData: DetailedOfferModalDataType;
   viewHistoryModalData: ViewHistoryModalDataType;
   viewHistorySalesModalData: ViewHistoryModalDataType;
   downloadPdfOrderData: DownloadPdfOrderType;
+  viewCertificationData: ViewCertificationDataType;
   updateDetailedRequirementModalData: (
     val: DetailedRequirementModalDataType
   ) => void;
@@ -38,50 +49,83 @@ interface ModalsContextType {
   updateViewHistoryModalData: (val: ViewHistoryModalDataType) => void;
   updateViewHistorySalesModalData: (val: ViewHistoryModalDataType) => void;
   updateDownloadPdfOrderData: (val: DownloadPdfOrderType) => void;
+  updateViewCertificationData: (val: ViewCertificationDataType) => void;
   resetDetailedRequirementModalData: () => void;
   resetDetailedOfferModalData: () => void;
   resetViewHistoryModalData: () => void;
   resetViewHistorySalesModalData: () => void;
   resetDownloadPdfOrderData: () => void;
+  resetViewCertificationData: () => void;
 }
 
-export const ModalsContext = createContext<ModalsContextType>({
-  detailedRequirementModalData: {
+function getInitialDetailedRequirementModalData(): DetailedRequirementModalDataType {
+  return {
     requirement: undefined,
     requirementId: "",
     requirementType: RequirementType.GOOD,
-  },
-  detailedOfferModalData: {
+  };
+}
+
+function getInitialDetailedOfferModalData(): DetailedOfferModalDataType {
+  return {
     offerId: "",
     offerType: RequirementType.GOOD,
     offer: undefined,
-  },
-  viewHistoryModalData: {
+  };
+}
+
+function getInitialViewHistoryModalData(): ViewHistoryModalDataType {
+  return {
     requirement: undefined,
     requirementId: "",
     requirementType: RequirementType.GOOD,
     purchaseOrderId: "",
-  },
-  viewHistorySalesModalData: {
+  };
+}
+
+function getInitialViewHistorySalesModalData(): ViewHistoryModalDataType {
+  return {
     requirement: undefined,
     requirementId: "",
     requirementType: RequirementType.GOOD,
     purchaseOrderId: "",
-  },
-  downloadPdfOrderData: {
+  };
+}
+
+function getInitialDownloadPdfOrderData(): DownloadPdfOrderType {
+  return {
     orderId: "",
     type: RequirementType.GOOD,
-  },
+  };
+}
+
+function getInitialViewCertificationData(): ViewCertificationDataType {
+  return {
+    certificationId: "",
+    certificationTableType: CertificationTableType.SENT,
+    certificationItem: undefined,
+  };
+}
+
+export const ModalsContext = createContext<ModalsContextType>({
+  detailedRequirementModalData: getInitialDetailedRequirementModalData(),
+  detailedOfferModalData: getInitialDetailedOfferModalData(),
+  viewHistoryModalData: getInitialViewHistoryModalData(),
+  viewHistorySalesModalData: getInitialViewHistorySalesModalData(),
+  downloadPdfOrderData: getInitialDownloadPdfOrderData(),
+  viewCertificationData: getInitialViewCertificationData(),
   updateDetailedRequirementModalData: () => {},
   updateDetailedOfferModalData: () => {},
   updateViewHistoryModalData: () => {},
   updateViewHistorySalesModalData: () => {},
   updateDownloadPdfOrderData: () => {},
+  updateViewCertificationData: () => {},
   resetDetailedRequirementModalData: () => {},
   resetDetailedOfferModalData: () => {},
   resetViewHistoryModalData: () => {},
   resetViewHistorySalesModalData: () => {},
   resetDownloadPdfOrderData: () => {},
+  resetViewCertificationData: () => {},
 });
 
 export function ModalsProvider({ children }: { children: ReactNode }) {
@@ -97,47 +141,9 @@ export function ModalsProvider({ children }: { children: ReactNode }) {
     useState<ViewHistoryModalDataType>(getInitialViewHistorySalesModalData());
   const [downloadPdfOrderData, setDownloadPdfOrderData] =
     useState<DownloadPdfOrderType>(getInitialDownloadPdfOrderData());
-
-  function getInitialDetailedRequirementModalData(): DetailedRequirementModalDataType {
-    return {
-      requirement: undefined,
-      requirementId: "",
-      requirementType: RequirementType.GOOD,
-    };
-  }
-
-  function getInitialDetailedOfferModalData(): DetailedOfferModalDataType {
-    return {
-      offerId: "",
-      offerType: RequirementType.GOOD,
-      offer: undefined,
-    };
-  }
-
-  function getInitialViewHistoryModalData(): ViewHistoryModalDataType {
-    return {
-      requirement: undefined,
-      requirementId: "",
-      requirementType: RequirementType.GOOD,
-      purchaseOrderId: "",
-    };
-  }
-
-  function getInitialViewHistorySalesModalData(): ViewHistoryModalDataType {
-    return {
-      requirement: undefined,
-      requirementId: "",
-      requirementType: RequirementType.GOOD,
-      purchaseOrderId: "",
-    };
-  }
-
-  function getInitialDownloadPdfOrderData(): DownloadPdfOrderType {
-    return {
-      orderId: "",
-      type: RequirementType.GOOD,
-    };
-  }
+  const [viewCertificationData, setViewCertificationData] = useState(
+    getInitialViewCertificationData()
+  );
 
   function updateDetailedRequirementModalData(
     val: DetailedRequirementModalDataType
@@ -161,6 +167,10 @@ export function ModalsProvider({ children }: { children: ReactNode }) {
     setDownloadPdfOrderData(val);
   }
 
+  function updateViewCertificationData(val: ViewCertificationDataType) {
+    setViewCertificationData(val);
+  }
+
   function resetDetailedRequirementModalData() {
     setDetailedRequirementModalData(getInitialDetailedRequirementModalData());
   }
@@ -181,6 +191,10 @@ export function ModalsProvider({ children }: { children: ReactNode }) {
     setDownloadPdfOrderData(getInitialDownloadPdfOrderData());
   }
 
+  function resetViewCertificationData() {
+    setViewCertificationData(getInitialViewCertificationData());
+  }
+
   return (
     <ModalsContext.Provider
       value={{
@@ -189,16 +203,19 @@ export function ModalsProvider({ children }: { children: ReactNode }) {
         viewHistoryModalData,
         viewHistorySalesModalData,
         downloadPdfOrderData,
+        viewCertificationData,
         updateDetailedRequirementModalData,
         updateDetailedOfferModalData,
         updateViewHistoryModalData,
         updateViewHistorySalesModalData,
         updateDownloadPdfOrderData,
+        updateViewCertificationData,
         resetDetailedRequirementModalData,
         resetDetailedOfferModalData,
         resetViewHistoryModalData,
         resetViewHistorySalesModalData,
         resetDownloadPdfOrderData,
+        resetViewCertificationData,
       }}
     >
       {children}

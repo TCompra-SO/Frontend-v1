@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useApiParams } from "../models/Interfaces";
+import { ModalContent, useApiParams } from "../models/Interfaces";
 import useApi from "./useApi";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
@@ -9,9 +9,10 @@ import {
   getRequiredDocumentsService,
   updateRequiredDocumentsService,
 } from "../services/requests/certificateService";
-import { CertificateFile } from "../models/MainInterfaces";
+import { CertificateFile, CertificationItem } from "../models/MainInterfaces";
 import {
   transformToCertificateFile,
+  transformToCertificationItem,
   transformToRequiredDocsCert,
 } from "../utilities/transform";
 import {
@@ -20,6 +21,9 @@ import {
 } from "../services/general/generalServices";
 import { UpdateRequiredDocsRequest } from "../models/Requests";
 import useShowNotification, { useShowLoadingMessage } from "./utilHooks";
+import { getInitialModalData } from "../utilities/globalFunctions";
+import { Action, CertificationTableType, ModalTypes } from "../utilities/types";
+import { currencyService } from "../services/requests/utilService";
 
 export function useGetCertificatesList() {
   const { t } = useTranslation();
@@ -197,11 +201,8 @@ export function useUpdateRequiredDocsCert() {
     service: null,
     method: "get",
   });
-  const { loading, responseData, error, errorMsg, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi(apiParams);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
@@ -237,5 +238,106 @@ export function useUpdateRequiredDocsCert() {
   return {
     updateRequiredDocsCert,
     loadingUpdateRequiredDocs: loading,
+  };
+}
+
+export function useGetCertificationData(
+  certificationTableType: CertificationTableType
+) {
+  const { showLoadingMessage } = useShowLoadingMessage();
+  const { showNotification } = useShowNotification();
+  const { t } = useTranslation();
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi(apiParams);
+
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    showLoadingMessage(loading);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
+
+  useEffect(() => {
+    if (responseData) {
+      const certItem: CertificationItem = {
+        key: "x8JXBNMUgdn4ihTedBL4",
+        companyId: "EOuyocZiTZVT91ZOo0rW",
+        companyName: "UNIVERSIDAD NACIONAL DE SAN AGUSTIN",
+        companyDocument: "20163646499",
+        creationDate: "2025-01-06T18:48:49.551Z",
+        state: 2,
+        certificates: [
+          {
+            key: "o8GVrfohAjsclmwTEX89",
+            name: "MI AUTORIZACION",
+            documentName:
+              "1734533049704-LLUVIA DE IDEAS PARA TCOMPRA Y ALTA GAMA.pdf",
+            url: "https://res.cloudinary.com/dlxlveta2/image/upload/v1736189328/certificates-request/d9mm6krd6hrxxhtihexo.pdf",
+            creationDate: "2025-01-07T20:00:07.030Z",
+          },
+        ],
+        note: "fff",
+      }; // transformToCertificationItem(responseData.data);
+      setDataModal({
+        type:
+          certificationTableType == CertificationTableType.RECEIVED
+            ? ModalTypes.VIEW_DOCS_RECEIVED_CERT
+            : ModalTypes.VIEW_DOCS_SENT_CERT,
+        data: {
+          docs: certItem.certificates,
+          data: certItem,
+          readonly: certificationTableType == CertificationTableType.SENT,
+        },
+        action: Action.VIEW,
+      });
+    } else if (error) {
+      showNotification("error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
+
+  async function getCertificationData(
+    certificationId: string,
+    certificationItem: undefined | CertificationItem
+  ) {
+    try {
+      setDataModal(getInitialModalData());
+      if (!certificationItem) {
+        setApiParams({
+          service: currencyService(),
+          method: "get",
+        });
+      } else {
+        setDataModal({
+          type:
+            certificationTableType == CertificationTableType.RECEIVED
+              ? ModalTypes.VIEW_DOCS_RECEIVED_CERT
+              : ModalTypes.VIEW_DOCS_SENT_CERT,
+          data: {
+            docs: certificationItem.certificates,
+            data: certificationItem,
+            readonly: certificationTableType == CertificationTableType.SENT,
+          },
+          action: Action.VIEW,
+        });
+      }
+    } catch (error) {
+      showNotification("error", t("errorOccurred"));
+    }
+  }
+
+  return {
+    getCertificationData,
+    modalDataCertificationData: dataModal,
   };
 }

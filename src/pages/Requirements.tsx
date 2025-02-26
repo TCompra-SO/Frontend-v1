@@ -30,6 +30,7 @@ import { transformDataToRequirement } from "../utilities/transform";
 import { useLocation } from "react-router-dom";
 import {
   getDeleteRecordService,
+  getInitialModalData,
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
@@ -84,11 +85,9 @@ export default function Requirements() {
   const [loadingTable, setLoadingTable] = useState(true);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [total, setTotal] = useState(0);
-  const [dataModal, setDataModal] = useState<ModalContent>({
-    type: ModalTypes.NONE,
-    data: {},
-    action: Action.NONE,
-  });
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
   const [isOpenModalSelectOffer, setIsOpenModalSelectOffer] = useState(false);
   const [dataModalSelectOffer, setDataModalSelectOffer] =
     useState<ModalContent>({

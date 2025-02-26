@@ -412,8 +412,13 @@ export enum UserRoles {
   LEGAL = 5,
 }
 
-export enum OrderTableTypes {
+export enum OrderTableType {
   ISSUED = 0,
+  RECEIVED = 1,
+}
+
+export enum CertificationTableType {
+  SENT = 0,
   RECEIVED = 1,
 }
 

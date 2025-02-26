@@ -3,6 +3,7 @@ import {
   HttpService,
   IdValueMap,
   IdValueObj,
+  ModalContent,
   useApiParams,
 } from "../models/Interfaces";
 import {
@@ -22,13 +23,16 @@ import {
   ErrorMsgRequestType,
   ErrorRequestType,
   OrderType,
-  OrderTableTypes,
+  OrderTableType,
   RequirementType,
   ResponseRequestType,
   TableTypes,
   TimeMeasurement,
   UserClass,
   UserRoles,
+  CertificationTableType,
+  Action,
+  ModalTypes,
 } from "./types";
 import { pageRoutes, pageSubRoutes } from "./routes";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
@@ -233,13 +237,13 @@ export function getLabelFromRequirementType(
 
 // Retorna la llave del nombre del tipo de orden de compra
 export function getLabelFromPurchaseOrderType(
-  type: OrderTableTypes,
+  type: OrderTableType,
   plural: boolean = false
 ) {
   switch (type) {
-    case OrderTableTypes.ISSUED:
+    case OrderTableType.ISSUED:
       return plural ? "issuedPl" : "issued";
-    case OrderTableTypes.RECEIVED:
+    case OrderTableType.RECEIVED:
       return plural ? "receivedPl" : "received";
   }
 }
@@ -288,11 +292,11 @@ export function getPurchaseOrderType(
     : getPenultimateSegmentFromRoute(pathname);
   switch (segment) {
     case pageSubRoutes.issued:
-      return OrderTableTypes.ISSUED;
+      return OrderTableType.ISSUED;
     case pageSubRoutes.received:
-      return OrderTableTypes.RECEIVED;
+      return OrderTableType.RECEIVED;
     default:
-      return OrderTableTypes.ISSUED;
+      return OrderTableType.ISSUED;
   }
 }
 
@@ -330,6 +334,12 @@ export function getSectionFromRoute(pathname: string) {
   if (pathSegments.length <= 1 || pathSegments[1] === "")
     return pageRoutes.home;
   return "/" + pathSegments[1];
+}
+
+export function getCertificationTableType(segment: string) {
+  if (segment == pageSubRoutes.received) return CertificationTableType.RECEIVED;
+  if (segment == pageSubRoutes.sent) return CertificationTableType.SENT;
+  return CertificationTableType.SENT; // default
 }
 
 // Retorna valor anidado para columna de tabla
@@ -530,26 +540,26 @@ export function getFieldNameObjForOrders(
     | TableTypes.SALES_ORDER
     | TableTypes.ALL_PURCHASE_ORDERS
     | TableTypes.ALL_SALES_ORDERS,
-  type: OrderTableTypes
+  type: OrderTableType
 ) {
   if (
     tableType == TableTypes.ALL_PURCHASE_ORDERS ||
     tableType == TableTypes.ALL_SALES_ORDERS
   )
     if (tableType == TableTypes.ALL_PURCHASE_ORDERS)
-      return type == OrderTableTypes.ISSUED
+      return type == OrderTableType.ISSUED
         ? fieldNameSearchRequestAllOrderClient
         : fieldNameSearchRequestAllOrderProvider;
     else
-      return type == OrderTableTypes.ISSUED
+      return type == OrderTableType.ISSUED
         ? fieldNameSearchRequestAllOrderProvider
         : fieldNameSearchRequestAllOrderClient;
   if (tableType == TableTypes.PURCHASE_ORDER)
-    return type == OrderTableTypes.ISSUED
+    return type == OrderTableType.ISSUED
       ? fieldNameSearchRequestOrderClient
       : fieldNameSearchRequestOrderProvider;
   else
-    return type == OrderTableTypes.ISSUED
+    return type == OrderTableType.ISSUED
       ? fieldNameSearchRequestOrderProvider
       : fieldNameSearchRequestOrderClient;
 }
@@ -574,6 +584,7 @@ export function hasNoSortNorFilter(request: SearchTableRequest): boolean {
   return hasValidOptionalFields;
 }
 
+// Verifica y retorna si n es un RequirementType
 export function isRequirementType(n: any) {
   const temp =
     n == RequirementType.GOOD ||
@@ -582,6 +593,25 @@ export function isRequirementType(n: any) {
   return {
     result: temp,
     val: temp ? (n as RequirementType) : null,
+  };
+}
+
+// Verifica y retorna si n es un OrderTableType
+export function isOrderTableTypes(n: any) {
+  const temp = n == OrderTableType.RECEIVED || n == OrderTableType.ISSUED;
+  return {
+    result: temp,
+    val: temp ? (n as OrderTableType) : null,
+  };
+}
+
+// Verifica y retorna si n es un CertificationTableType
+export function isCertificationTableTypes(n: any) {
+  const temp =
+    n == CertificationTableType.RECEIVED || n == CertificationTableType.SENT;
+  return {
+    result: temp,
+    val: temp ? (n as CertificationTableType) : null,
   };
 }
 
@@ -658,7 +688,7 @@ export function getCancelRecordService(type: RequirementType) {
 }
 
 export function getSearchRecordsService(
-  type: RequirementType | OrderTableTypes | undefined
+  type: RequirementType | OrderTableType | undefined
 ) {
   if (type == RequirementType.GOOD) return searchRequirementsService();
   if (type == RequirementType.SERVICE) return searchServicesService();
@@ -725,7 +755,7 @@ export function getCancelOfferService(type: RequirementType) {
 }
 
 export function getSearchOffersService(
-  type: RequirementType | OrderTableTypes | undefined
+  type: RequirementType | OrderTableType | undefined
 ) {
   if (type == RequirementType.GOOD) return searchReqOffersService();
   if (type == RequirementType.SERVICE) return searchServiceOffersService();
@@ -777,7 +807,7 @@ export function getGetOrderByIdService(type: RequirementType) {
 }
 
 export function getSearchOrdersByClientService(
-  type: RequirementType | OrderTableTypes | undefined
+  type: RequirementType | OrderTableType | undefined
 ) {
   if (type == RequirementType.GOOD)
     return searchReqPurchaseOrdersByClientService();
@@ -788,7 +818,7 @@ export function getSearchOrdersByClientService(
 }
 
 export function getSearchOrdersByProviderService(
-  type: RequirementType | OrderTableTypes | undefined
+  type: RequirementType | OrderTableType | undefined
 ) {
   if (type == RequirementType.GOOD)
     return searchReqPurchaseOrdersByProviderService();
@@ -816,4 +846,53 @@ export function isSameDay(timestamp1: string, timestamp2: string) {
     date1.month() === date2.month() &&
     date1.date() === date2.date()
   );
+}
+
+// Retorna la subruta correspondiente al tipo de requerimiento
+export function getRequirementTypeSubRoute(type: RequirementType) {
+  switch (type) {
+    case RequirementType.GOOD:
+      return pageSubRoutes.goods;
+    case RequirementType.SERVICE:
+      return pageSubRoutes.services;
+    case RequirementType.SALE:
+      return pageSubRoutes.sales;
+    default:
+      return "";
+  }
+}
+
+// Retorna la subruta correspondiente al tipo de tabla de orden
+export function getOrderTableTypeSubRoute(type: OrderTableType) {
+  switch (type) {
+    case OrderTableType.ISSUED:
+      return pageSubRoutes.issued;
+    case OrderTableType.RECEIVED:
+      return pageSubRoutes.received;
+    default:
+      return "";
+  }
+}
+
+// Retorna la subruta correspondiente al tipo de tabla de certificados
+export function getCertificationTableTypeSubRoute(
+  type: CertificationTableType
+) {
+  switch (type) {
+    case CertificationTableType.SENT:
+      return pageSubRoutes.sent;
+    case CertificationTableType.RECEIVED:
+      return pageSubRoutes.received;
+    default:
+      return "";
+  }
+}
+
+export function getInitialModalData() {
+  const initialModalData: ModalContent = {
+    type: ModalTypes.NONE,
+    data: {},
+    action: Action.NONE,
+  };
+  return initialModalData;
 }

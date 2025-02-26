@@ -4,7 +4,7 @@ import {
   Filters,
   ModalTypes,
   OnChangePageAndPageSizeType,
-  OrderTableTypes,
+  OrderTableType,
   RequirementType,
   TableTypes,
 } from "../../../../utilities/types";
@@ -53,16 +53,16 @@ interface SubUserTableModalProps {
     | {
         tableType: TableTypes.PURCHASE_ORDER_SUBUSER;
         tableContent: PurchaseOrderItemSubUser[];
-        subType: OrderTableTypes;
+        subType: OrderTableType;
         total?: number;
       }
     | {
         tableType: TableTypes.SALES_ORDER_SUBUSER;
         tableContent: PurchaseOrderItemSubUser[];
-        subType: OrderTableTypes;
+        subType: OrderTableType;
         total?: number;
       };
-  onTabChange: (tabId: RequirementType | OrderTableTypes) => void;
+  onTabChange: (tabId: RequirementType | OrderTableType) => void;
   loading: boolean | undefined;
   tableType: TableTypes;
   onChangePageAndPageSize?: OnChangePageAndPageSizeType;
@@ -77,7 +77,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
   const navigate = useNavigate();
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
-  const [subType, setSubType] = useState<RequirementType | OrderTableTypes>(
+  const [subType, setSubType] = useState<RequirementType | OrderTableType>(
     RequirementType.GOOD
   );
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
@@ -105,7 +105,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
       props.tableType == TableTypes.SALES_ORDER_SUBUSER ||
       props.tableType == TableTypes.PURCHASE_ORDER_SUBUSER
     )
-      setSubType(OrderTableTypes.ISSUED);
+      setSubType(OrderTableType.ISSUED);
     else setSubType(RequirementType.GOOD);
   }, [props.tableType]);
 
@@ -192,7 +192,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
     }
   }
 
-  function changeSubType(newSubType: RequirementType | OrderTableTypes) {
+  function changeSubType(newSubType: RequirementType | OrderTableType) {
     if (subType != newSubType) {
       setSubType(newSubType);
       props.onTabChange(newSubType);
@@ -278,10 +278,10 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
               <ButtonContainer
                 common
                 className={`btn btn-grey wd-50 ${
-                  subType == OrderTableTypes.ISSUED ? "active" : ""
+                  subType == OrderTableType.ISSUED ? "active" : ""
                 }`}
                 onClick={() => {
-                  changeSubType(OrderTableTypes.ISSUED);
+                  changeSubType(OrderTableType.ISSUED);
                 }}
               >
                 <i className="fa-regular fa-hand-holding-magic"></i>{" "}
@@ -290,10 +290,10 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
               <ButtonContainer
                 common
                 className={`btn btn-grey wd-50 ${
-                  subType == OrderTableTypes.RECEIVED ? "active" : ""
+                  subType == OrderTableType.RECEIVED ? "active" : ""
                 }`}
                 onClick={() => {
-                  changeSubType(OrderTableTypes.RECEIVED);
+                  changeSubType(OrderTableType.RECEIVED);
                 }}
               >
                 <i className="fa-regular fa-basket-shopping"></i>{" "}

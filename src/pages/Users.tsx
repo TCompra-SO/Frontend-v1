@@ -7,7 +7,7 @@ import {
   Action,
   EntityType,
   OnChangePageAndPageSizeTypeParams,
-  OrderTableTypes,
+  OrderTableType,
   RequirementType,
   TableTypes,
 } from "../utilities/types";
@@ -60,8 +60,8 @@ export default function Users() {
   const uid = useSelector((state: MainState) => state.user.uid);
   const [action, setAction] = useState<Action>(Action.ADD_USER);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [subTypeOrder, setSubTypeOrder] = useState<OrderTableTypes>(
-    OrderTableTypes.ISSUED
+  const [subTypeOrder, setSubTypeOrder] = useState<OrderTableType>(
+    OrderTableType.ISSUED
   );
   const [subType, setSubType] = useState<RequirementType>(RequirementType.GOOD);
   const [userData, setUserData] = useState<SubUserBase | null>(null);
@@ -290,7 +290,7 @@ export default function Users() {
     try {
       const data: PurchaseOrderItemSubUser[] = responseDataTable.data.map(
         (e: any) =>
-          transformToPurchaseOrderItemSubUser(e, OrderTableTypes.ISSUED) // r3v
+          transformToPurchaseOrderItemSubUser(e, OrderTableType.ISSUED) // r3v
       );
       setTotalPurc(responseDataTable.res?.totalDocuments);
       setOrderList(data);
@@ -308,7 +308,7 @@ export default function Users() {
     try {
       const data: PurchaseOrderItemSubUser[] = responseDataTable.data.map(
         (e: any) =>
-          transformToPurchaseOrderItemSubUser(e, OrderTableTypes.ISSUED) // r3v
+          transformToPurchaseOrderItemSubUser(e, OrderTableType.ISSUED) // r3v
       );
       setTotalSales(responseDataTable.res?.totalDocuments);
       setOrderList(data);
@@ -329,7 +329,7 @@ export default function Users() {
 
   function handleCloseModal() {
     setIsOpenModal(false);
-    setSubTypeOrder(OrderTableTypes.ISSUED);
+    setSubTypeOrder(OrderTableType.ISSUED);
     setSubType(RequirementType.GOOD);
   }
 
@@ -381,7 +381,7 @@ export default function Users() {
           if (subAction == Action.GOODS) setSubType(RequirementType.GOOD);
           if (subAction == Action.SERVICES) setSubType(RequirementType.SERVICE);
           setTableType(TableTypes.PURCHASE_ORDER);
-          setSubTypeOrder(OrderTableTypes.ISSUED);
+          setSubTypeOrder(OrderTableType.ISSUED);
           reset();
           searchTable(
             { page: 1, pageSize: currentPageSize },
@@ -391,14 +391,14 @@ export default function Users() {
               ? RequirementType.GOOD
               : RequirementType.SERVICE,
             user.uid,
-            OrderTableTypes.ISSUED
+            OrderTableType.ISSUED
           );
         }
         break;
       case Action.VIEw_SALES_ORDERS:
         setSubType(RequirementType.SALE);
         setTableType(TableTypes.SALES_ORDER);
-        setSubTypeOrder(OrderTableTypes.ISSUED);
+        setSubTypeOrder(OrderTableType.ISSUED);
         reset();
         searchTable(
           { page: 1, pageSize: currentPageSize },
@@ -406,7 +406,7 @@ export default function Users() {
           TableTypes.SALES_ORDER,
           RequirementType.SALE,
           user.uid,
-          OrderTableTypes.ISSUED
+          OrderTableType.ISSUED
         );
         break;
       case Action.SUSPEND:
@@ -540,7 +540,7 @@ export default function Users() {
     }
   }
 
-  function handleTabChange(tabId: RequirementType | OrderTableTypes) {
+  function handleTabChange(tabId: RequirementType | OrderTableType) {
     if (userData) {
       if (
         ((action == Action.VIEW_REQUIREMENTS || action == Action.VIEW_OFFERS) &&
@@ -549,8 +549,7 @@ export default function Users() {
             tabId == RequirementType.SALE)) ||
         ((action == Action.VIEW_PURCHASE_ORDERS ||
           action == Action.VIEw_SALES_ORDERS) &&
-          (tabId == OrderTableTypes.ISSUED ||
-            tabId == OrderTableTypes.RECEIVED))
+          (tabId == OrderTableType.ISSUED || tabId == OrderTableType.RECEIVED))
       ) {
         reset();
         if (
@@ -566,14 +565,14 @@ export default function Users() {
             undefined
           );
         } else {
-          setSubTypeOrder(tabId as OrderTableTypes);
+          setSubTypeOrder(tabId as OrderTableType);
           searchTable(
             { page: 1, pageSize: currentPageSize },
             undefined,
             tableType,
             subType,
             undefined,
-            tabId as OrderTableTypes
+            tabId as OrderTableType
           );
         }
       }

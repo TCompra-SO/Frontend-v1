@@ -7,11 +7,12 @@ import {
   Usage,
   UserRoles,
   EntityType,
-  OrderTableTypes,
+  OrderTableType,
   CertificationState,
   OrderConfirmation,
   CanOfferType,
   Action,
+  CertificationTableType,
 } from "../utilities/types";
 import { OfferFilters } from "./Interfaces";
 
@@ -103,7 +104,7 @@ export interface BasicPurchaseOrderItemSubUser extends BaseInterface {
 
 export interface PurchaseOrderItemSubUser
   extends BasicPurchaseOrderItemSubUser {
-  subType: OrderTableTypes;
+  subType: OrderTableType;
   filters: OfferFilters;
 }
 
@@ -287,5 +288,5 @@ export interface NotificationData {
   receiverId: string;
   action: Action;
   targetId: string;
-  targetType: RequirementType | OrderTableTypes;
+  targetType: RequirementType | OrderTableType | CertificationTableType;
 }

@@ -24,7 +24,7 @@ import makeRequest from "./globalFunctions";
 import {
   EntityType,
   OrderConfirmation,
-  OrderTableTypes,
+  OrderTableType,
   RequirementType,
   Usage,
 } from "./types";
@@ -300,7 +300,7 @@ export function transformToPurchaseOrder(data: any) {
 
 export function transformToPurchaseOrderItemSubUser(
   data: any,
-  subType: OrderTableTypes
+  subType: OrderTableType
 ) {
   const purcOrder: PurchaseOrderItemSubUser = {
     requirementTitle: data.requerimentTitle,

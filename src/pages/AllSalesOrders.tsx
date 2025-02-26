@@ -12,7 +12,7 @@ import {
 import {
   Action,
   ModalTypes,
-  OrderTableTypes,
+  OrderTableType,
   RequirementType,
   TableTypes,
 } from "../utilities/types";
@@ -81,7 +81,7 @@ export default function AllSalesOrders() {
   const [tableContent, setTableContent] = useState<TableTypeAllSalesOrders>({
     type: TableTypes.ALL_SALES_ORDERS,
     data: salesOrderList,
-    subType: OrderTableTypes.ISSUED,
+    subType: OrderTableType.ISSUED,
     hiddenColumns: [],
     nameColumnHeader: t("user"),
     onButtonClick: handleOnButtonClick,

@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent, {
   TablePageContentRef,
@@ -12,15 +12,19 @@ import {
 } from "../models/Interfaces";
 import {
   Action,
+  CertificationTableType,
   ModalTypes,
   OnChangePageAndPageSizeTypeParams,
   TableTypes,
 } from "../utilities/types";
 import { useTranslation } from "react-i18next";
 import { CertificationItem } from "../models/MainInterfaces";
-import { getLastSegmentFromRoute } from "../utilities/globalFunctions";
+import {
+  getCertificationTableType,
+  getInitialModalData,
+  getLastSegmentFromRoute,
+} from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
-import { pageSubRoutes } from "../utilities/routes";
 import useApi from "../hooks/useApi";
 import {
   getReceivedRequestsByEntityService,
@@ -30,6 +34,8 @@ import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { transformToCertificationItem } from "../utilities/transform";
 import useShowNotification from "../hooks/utilHooks";
+import { ModalsContext } from "../contexts/ModalsContext";
+import { useGetCertificationData } from "../hooks/certificateHooks";
 
 export default function Certificates() {
   const location = useLocation();
@@ -37,14 +43,18 @@ export default function Certificates() {
   const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
   const searchValueRef = useRef<TablePageContentRef>(null);
   const { showNotification } = useShowNotification();
-  const [type, setType] = useState(getLastSegmentFromRoute(location.pathname));
+  const { viewCertificationData, resetViewCertificationData } =
+    useContext(ModalsContext);
+  const [type, setType] = useState(
+    getCertificationTableType(getLastSegmentFromRoute(location.pathname))
+  );
+  const { getCertificationData, modalDataCertificationData } =
+    useGetCertificationData(type);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [total, setTotal] = useState(0);
-  const [dataModal, setDataModal] = useState<ModalContent>({
-    type: ModalTypes.NONE,
-    data: {},
-    action: Action.NONE,
-  });
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
   const [tableContent, setTableContent] = useState<
     TableTypeCertificatesReceived | TableTypeCertificatesSent
   >({
@@ -101,13 +111,15 @@ export default function Certificates() {
   /** Obtener tipo de tabla */
 
   useEffect(() => {
-    setType(getLastSegmentFromRoute(location.pathname));
+    setType(
+      getCertificationTableType(getLastSegmentFromRoute(location.pathname))
+    );
   }, [location]);
 
   useEffect(() => {
     clearSearchValue();
     switch (type) {
-      case pageSubRoutes.sent:
+      case CertificationTableType.SENT:
         setApiParamsCertif({
           service: getSentRequestsByEntityService(
             mainUserUid,
@@ -117,7 +129,7 @@ export default function Certificates() {
           method: "get",
         });
         break;
-      case pageSubRoutes.received:
+      case CertificationTableType.RECEIVED:
         setApiParamsCertif({
           service: getReceivedRequestsByEntityService(
             mainUserUid,
@@ -130,6 +142,24 @@ export default function Certificates() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
+
+  /** Verificar si hay una solicitud pendiente */
+
+  useEffect(() => {
+    if (viewCertificationData.certificationId) {
+      const copy = { ...viewCertificationData };
+      getCertificationData(copy.certificationId, undefined);
+      resetViewCertificationData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (modalDataCertificationData.type !== ModalTypes.NONE) {
+      setDataModal(modalDataCertificationData);
+      setIsOpenModal(true);
+    }
+  }, [modalDataCertificationData]);
 
   /** Funciones */
 
@@ -144,10 +174,11 @@ export default function Certificates() {
       const data: CertificationItem[] = responseDataCertif.data.map((e: any) =>
         transformToCertificationItem(e)
       );
+      console.log(data);
       setTotal(responseDataCertif.res?.totalDocuments);
       setTableContent({
         type:
-          type == pageSubRoutes.received
+          type == CertificationTableType.RECEIVED
             ? TableTypes.RECEIVED_CERT
             : TableTypes.SENT_CERT,
         data,
@@ -167,7 +198,7 @@ export default function Certificates() {
   }
 
   function handleOnButtonClick(action: Action, certificate: CertificationItem) {
-    if (type == pageSubRoutes.sent) {
+    if (type == CertificationTableType.SENT) {
       switch (action) {
         case Action.VIEW:
           setDataModal({
@@ -182,7 +213,7 @@ export default function Certificates() {
           setIsOpenModal(true);
           break;
       }
-    } else if (type == pageSubRoutes.received) {
+    } else if (type == CertificationTableType.RECEIVED) {
       console.log("sent", certificate.key);
       switch (action) {
         case Action.VIEW:
@@ -207,7 +238,7 @@ export default function Certificates() {
     extra,
   }: OnChangePageAndPageSizeTypeParams) {
     switch (type) {
-      case pageSubRoutes.sent:
+      case CertificationTableType.SENT:
         if (!filters || (filters && filters.state === null)) {
           setApiParamsCertif({
             service: getSentRequestsByEntityService(
@@ -221,7 +252,7 @@ export default function Certificates() {
           setTotal(extra?.currentDataSource.length ?? 0);
         }
         break;
-      case pageSubRoutes.received:
+      case CertificationTableType.RECEIVED:
         if (!filters || (filters && filters.state === null)) {
           setApiParamsCertif({
             service: getReceivedRequestsByEntityService(
@@ -255,7 +286,7 @@ export default function Certificates() {
         title={t("certificates")}
         titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
         subtitle={
-          type == pageSubRoutes.received
+          type == CertificationTableType.RECEIVED
             ? t("certifiesReceived")
             : t("certifiesSent")
         }

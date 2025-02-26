@@ -25,6 +25,7 @@ import {
 } from "../utilities/globals";
 import {
   getDeleteOfferService,
+  getInitialModalData,
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
@@ -60,11 +61,9 @@ export default function Offers() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [offerList, setOfferList] = useState<Offer[]>([]);
   const [total, setTotal] = useState(0);
-  const [dataModal, setDataModal] = useState<ModalContent>({
-    type: ModalTypes.NONE,
-    data: {},
-    action: Action.NONE,
-  });
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
   const {
     currentPage,
     currentPageSize,

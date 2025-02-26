@@ -35,6 +35,7 @@ import makeRequest, {
   getGetOffersByRecordIdService,
   getHomeFilterService,
   getHomeRecordsService,
+  getInitialModalData,
 } from "../utilities/globalFunctions";
 import {
   transformToBaseUser,
@@ -274,11 +275,9 @@ export function useGetOffersByRequirementId() {
     purchaseOrderId: undefined,
     tableType: TableTypes.REQUIREMENT,
   });
-  const [dataModal, setDataModal] = useState<ModalContent>({
-    type: ModalTypes.NONE,
-    data: {},
-    action: Action.NONE,
-  });
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: null,
     method: "get",
@@ -485,11 +484,9 @@ export function useShowDetailOffer() {
   const { t } = useTranslation();
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
-  const [dataModal, setDataModal] = useState<ModalContent>({
-    type: ModalTypes.NONE,
-    data: {},
-    action: Action.NONE,
-  });
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
 
   async function getOfferDetail(
     offerId: string,
@@ -588,11 +585,9 @@ export function useCulminate() {
     idToGetData: "",
     rowId: "",
   });
-  const [dataModal, setDataModal] = useState<ModalContent>({
-    type: ModalTypes.NONE,
-    data: {},
-    action: Action.NONE,
-  });
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: null,
     method: "get",

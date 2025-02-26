@@ -3,7 +3,7 @@ import {
   Action,
   EntityType,
   ModalTypes,
-  OrderTableTypes,
+  OrderTableType,
   RequirementType,
   TableTypes,
 } from "../utilities/types";
@@ -23,6 +23,7 @@ import useApi from "../hooks/useApi";
 import { getUserService } from "../services/requests/authService";
 import {
   getFieldNameObjForOrders,
+  getInitialModalData,
   getLabelFromPurchaseOrderType,
   getReqTypeAndOrderType,
 } from "../utilities/globalFunctions";
@@ -69,7 +70,7 @@ export default function PurchaseOrders() {
     useGetOffersByRequirementId();
   const { getBasicRateData, modalDataRate } = useCulminate();
   const downloadPdfOrder = useDownloadPdfOrder();
-  const [type, setType] = useState<OrderTableTypes>(
+  const [type, setType] = useState<OrderTableType>(
     getReqTypeAndOrderType(location.pathname).orderType
   );
   const typeRef = useRef(type);
@@ -93,13 +94,11 @@ export default function PurchaseOrders() {
   );
   const [total, setTotal] = useState(0);
   const [nameHeader, setNameHeader] = useState(
-    type == OrderTableTypes.ISSUED ? t("seller") : t("customer")
+    type == OrderTableType.ISSUED ? t("seller") : t("customer")
   );
-  const [dataModal, setDataModal] = useState<ModalContent>({
-    type: ModalTypes.NONE,
-    data: {},
-    action: Action.NONE,
-  });
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
   const [tableContent, setTableContent] = useState<TableTypePurchaseOrder>({
     type: TableTypes.PURCHASE_ORDER,
     data: purchaseOrderList,
@@ -226,7 +225,7 @@ export default function PurchaseOrders() {
   useEffect(() => {
     clearSearchValue();
     reset();
-    setNameHeader(type == OrderTableTypes.ISSUED ? t("seller") : t("customer"));
+    setNameHeader(type == OrderTableType.ISSUED ? t("seller") : t("customer"));
     searchTable({
       page: 1,
       pageSize: currentPageSize,
@@ -340,7 +339,7 @@ export default function PurchaseOrders() {
         downloadPdfOrder(purchaseOrder.key, purchaseOrder.type);
         break;
       case Action.FINISH:
-        if (typeRef.current == OrderTableTypes.ISSUED) {
+        if (typeRef.current == OrderTableType.ISSUED) {
           // Buscar en oferta de requerimiento
           getBasicRateData(
             purchaseOrder.key,
@@ -351,7 +350,7 @@ export default function PurchaseOrders() {
             action,
             purchaseOrder.type
           );
-        } else if (typeRef.current == OrderTableTypes.RECEIVED)
+        } else if (typeRef.current == OrderTableType.RECEIVED)
           // Buscar en requerimiento
           getBasicRateData(
             purchaseOrder.key,
@@ -383,7 +382,7 @@ export default function PurchaseOrders() {
             offerId: purchaseOrder.offerId,
             requirementId: purchaseOrder.requirementId,
             fromRequirementTable: false,
-            canceledByCreator: type == OrderTableTypes.RECEIVED,
+            canceledByCreator: type == OrderTableType.RECEIVED,
             rowId: purchaseOrder.key,
             type: purchaseOrder.type,
           },

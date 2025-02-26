@@ -3,7 +3,7 @@ import {
   Action,
   EntityType,
   ModalTypes,
-  OrderTableTypes,
+  OrderTableType,
   RequirementType,
   TableTypes,
 } from "../utilities/types";
@@ -23,6 +23,7 @@ import useApi from "../hooks/useApi";
 import { getUserService } from "../services/requests/authService";
 import {
   getFieldNameObjForOrders,
+  getInitialModalData,
   getLabelFromPurchaseOrderType,
   getLabelFromRequirementType,
   getPurchaseOrderType,
@@ -89,13 +90,11 @@ export default function SalesOrders() {
   const [action, setAction] = useState<Action>(Action.NONE);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [nameHeader, setNameHeader] = useState(
-    type == OrderTableTypes.ISSUED ? t("customer") : t("seller")
+    type == OrderTableType.ISSUED ? t("customer") : t("seller")
   );
-  const [dataModal, setDataModal] = useState<ModalContent>({
-    type: ModalTypes.NONE,
-    data: {},
-    action: Action.NONE,
-  });
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
   const [tableContent, setTableContent] = useState<TableTypeSalesOrder>({
     type: TableTypes.SALES_ORDER,
     data: salesOrderList,
@@ -218,7 +217,7 @@ export default function SalesOrders() {
   useEffect(() => {
     clearSearchValue();
     reset();
-    setNameHeader(type == OrderTableTypes.ISSUED ? t("customer") : t("seller"));
+    setNameHeader(type == OrderTableType.ISSUED ? t("customer") : t("seller"));
     searchTable({
       page: 1,
       pageSize: currentPageSize,
@@ -332,7 +331,7 @@ export default function SalesOrders() {
         downloadPdfOrder(purchaseOrder.key, purchaseOrder.type);
         break;
       case Action.FINISH:
-        if (typeRef.current == OrderTableTypes.ISSUED) {
+        if (typeRef.current == OrderTableType.ISSUED) {
           // Buscar en oferta de liquidación
           getBasicRateData(
             purchaseOrder.key,
@@ -343,7 +342,7 @@ export default function SalesOrders() {
             action,
             purchaseOrder.type
           );
-        } else if (typeRef.current == OrderTableTypes.RECEIVED)
+        } else if (typeRef.current == OrderTableType.RECEIVED)
           // Buscar en liquidación
           getBasicRateData(
             purchaseOrder.key,
@@ -375,7 +374,7 @@ export default function SalesOrders() {
             offerId: purchaseOrder.offerId,
             requirementId: purchaseOrder.requirementId,
             fromRequirementTable: false,
-            canceledByCreator: type == OrderTableTypes.ISSUED,
+            canceledByCreator: type == OrderTableType.ISSUED,
             rowId: purchaseOrder.key,
             type: purchaseOrder.type,
           },
