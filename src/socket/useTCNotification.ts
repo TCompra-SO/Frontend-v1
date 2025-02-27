@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import {
   NotificationData,
+  NotificationDataFromServer,
   NotificationDataNoSender,
   NotificationSenderData,
 } from "../models/MainInterfaces";
@@ -24,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 
-const notifications: NotificationData[] = [
+const notifications: NotificationDataFromServer[] = [
   {
     title:
       "Ver requerimiento Ver requerimiento Ver requerimiento Ver requerimiento",
@@ -36,6 +37,7 @@ const notifications: NotificationData[] = [
     action: Action.VIEW_REQUIREMENT,
     targetId: "IXTsSCZ4weL9Mq82gSoN",
     targetType: RequirementType.GOOD,
+    uid: "1",
   },
   {
     title: "Descargar orden de compra",
@@ -48,6 +50,7 @@ const notifications: NotificationData[] = [
     action: Action.DOWNLOAD_PURCHASE_ORDER,
     targetId: "bm9PdrQ5mGhtdvbGEPg5",
     targetType: RequirementType.GOOD,
+    uid: "1ddf",
   },
   {
     title: "Ver oferta",
@@ -60,6 +63,7 @@ const notifications: NotificationData[] = [
     action: Action.VIEW_OFFER,
     targetId: "4T0umjVzDazp0rlK3wcm",
     targetType: RequirementType.GOOD,
+    uid: "1rf",
   },
   {
     title: "Certificado recibido",
@@ -72,6 +76,7 @@ const notifications: NotificationData[] = [
     action: Action.VIEW_CERTIFICATION,
     targetId: "x8JXBNMUgdn4ihTedBL4",
     targetType: CertificationTableType.RECEIVED,
+    uid: "1fd",
   },
   {
     title: "Certificado enviado",
@@ -84,6 +89,7 @@ const notifications: NotificationData[] = [
     action: Action.VIEW_CERTIFICATION,
     targetId: "IXTsSCZ4weL9Mq82gSoN",
     targetType: CertificationTableType.SENT,
+    uid: "1ff",
   },
   {
     title: "New Follower",
@@ -96,6 +102,7 @@ const notifications: NotificationData[] = [
     action: Action.VIEW_REQUIREMENT,
     targetId: "IXTsSCZ4weL9Mq82gSoN",
     targetType: RequirementType.GOOD,
+    uid: "1d",
   },
   {
     title: "New Comment",
@@ -108,6 +115,7 @@ const notifications: NotificationData[] = [
     action: Action.VIEW_REQUIREMENT,
     targetId: "IXTsSCZ4weL9Mq82gSoN",
     targetType: RequirementType.GOOD,
+    uid: "1a",
   },
 ];
 
@@ -128,9 +136,9 @@ export function useTCNotification() {
     updateViewCertificationData,
   } = useContext(ModalsContext);
   const downloadPdfOrder = useDownloadPdfOrder();
-  const [notificationList, setNotificationList] = useState<NotificationData[]>(
-    []
-  );
+  const [notificationList, setNotificationList] = useState<
+    NotificationDataFromServer[]
+  >([]);
   const [loading, setLoading] = useState(false);
 
   /** Conectar con socket */

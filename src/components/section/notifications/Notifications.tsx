@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import ParagraphContainer from "../../containers/ParagraphContainer";
 import InfiniteScroll from "react-infinite-scroll-component";
 import SimpleLoading from "../../../pages/utils/SimpleLoading";
-import { useTCNotification } from "../../../socket/useTCNotification";
 import NotificationUserAvatar from "../../common/utils/NotificationUserAvatar";
 import dayjs from "dayjs";
 import { dateHourFormatNotification } from "../../../utilities/globals";
