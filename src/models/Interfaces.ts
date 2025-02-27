@@ -30,6 +30,7 @@ import {
   SubUserBase,
   NotificationData,
   ChatSocketData,
+  NotificationDataFromServer,
 } from "./MainInterfaces";
 import useApi, { UseApiType } from "../hooks/useApi";
 import { FieldSort } from "./Requests";
@@ -513,7 +514,7 @@ export interface StrictColumnFilterItem extends ColumnFilterItem {
 
 export interface RealTimeNotificationData {
   type: RTNotificationType.NOTIFICATION;
-  content: NotificationData;
+  content: NotificationDataFromServer;
   onClickCallback: (notification: NotificationData) => void;
 }
 

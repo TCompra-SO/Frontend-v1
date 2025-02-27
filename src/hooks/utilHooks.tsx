@@ -1,7 +1,7 @@
 import { App } from "antd";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { DisplayUser, NotificationData } from "../models/MainInterfaces";
+import { DisplayUser } from "../models/MainInterfaces";
 import {
   ShowRealTimeNotificationParams,
   useApiParams,

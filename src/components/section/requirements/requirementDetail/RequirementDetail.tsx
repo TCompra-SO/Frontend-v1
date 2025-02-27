@@ -4,7 +4,7 @@ import RequirementOfferList from "./RequirementOfferList";
 
 import { Offer, Requirement } from "../../../../models/MainInterfaces";
 import { ModalContent, OfferFilters } from "../../../../models/Interfaces";
-import { RequirementDetailProvider } from "../../../../contexts/RequirementDetailProvider";
+import { RequirementDetailProvider } from "../../../../contexts/RequirementDetailContext";
 
 interface RequirementDetailProps {
   offerList: Offer[];

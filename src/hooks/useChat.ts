@@ -1,16 +1,9 @@
-import { useEffect, useState } from "react";
-import { io, Socket } from "socket.io-client";
+import { useState } from "react";
 import {
   ChatListData,
   ChatMessage,
   ChatSocketData,
 } from "../models/MainInterfaces";
-import { RTNotificationType } from "../utilities/types";
-import useShowNotification from "./utilHooks";
-import { useNavigate } from "react-router-dom";
-import { pageRoutes } from "../utilities/routes";
-import { chatDataFieldName } from "../utilities/globals";
-
 const chatElements: ChatListData[] = [
   {
     userImage: "https://dummyimage.com/250/ffffff/000000",
@@ -384,7 +377,6 @@ const chatMessages: ChatSocketData[] = [
     chatId: "RJ1xrrfe4x",
   },
 ];
-let chatSocketAPI: Socket | null = null;
 
 export function useChat() {
   const [loadingChatList, setLoadingChatList] = useState(false);
@@ -454,53 +446,4 @@ export function useChat() {
     hasMoreChatList,
     hasMoreChatMessageList,
   };
-}
-
-export function useChatSocket() {
-  const navigate = useNavigate();
-  const { showRealTimeNotification } = useShowNotification();
-
-  useEffect(() => {
-    if (!chatSocketAPI) {
-      chatSocketAPI = io(import.meta.env.VITE_CHAT_SOCKET_URL);
-
-      chatSocketAPI.on("connect", () => {
-        console.log("Connected chat");
-      });
-
-      // setTimeout(() => {
-      //   showRealTimeNotification({
-      //     type: RTNotificationType.CHAT,
-      //     content: chatMessages[0],
-      //     onClickCallback: redirectFromNotification,
-      //   });
-      // }, 3000);
-      // setTimeout(() => {
-      //   showRealTimeNotification({
-      //     type: RTNotificationType.CHAT,
-      //     content: chatMessages[1],
-      //     onClickCallback: redirectFromNotification,
-      //   });
-      // }, 6000);
-      // setTimeout(() => {
-      //   showRealTimeNotification({
-      //     type: RTNotificationType.CHAT,
-      //     content: chatMessages[2],
-      //     onClickCallback: redirectFromNotification,
-      //   });
-      // }, 9000);
-    }
-    return () => {
-      if (chatSocketAPI) {
-        console.log("Disconnected chat");
-        chatSocketAPI.disconnect();
-        chatSocketAPI = null;
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  function redirectFromNotification(chatData: ChatSocketData) {
-    navigate(pageRoutes.chat, { state: { [chatDataFieldName]: chatData } });
-  }
 }

@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Popover, List, Typography, Space, Flex, Spin } from "antd";
 import { useTranslation } from "react-i18next";
 import ParagraphContainer from "../../containers/ParagraphContainer";
 import InfiniteScroll from "react-infinite-scroll-component";
 import SimpleLoading from "../../../pages/utils/SimpleLoading";
-import { useTCNotification } from "../../../hooks/useTCNotification";
+import { useTCNotification } from "../../../socket/useTCNotification";
 import NotificationUserAvatar from "../../common/utils/NotificationUserAvatar";
+import dayjs from "dayjs";
+import { dateHourFormatNotification } from "../../../utilities/globals";
+import { MainSocketsContext } from "../../../contexts/MainSocketsContext";
 
 const { Text } = Typography;
 
@@ -16,14 +19,15 @@ interface NotificationsProps {
 
 export default function Notifications(props: NotificationsProps) {
   const { t } = useTranslation();
+  const [visible, setVisible] = useState(false);
+  const sockets = useContext(MainSocketsContext);
   const {
     notificationList: notifList,
     getMoreNotifications,
     resetNotificationList,
     notificationLoading,
     redirectFromNotification,
-  } = useTCNotification();
-  const [visible, setVisible] = useState(false);
+  } = sockets;
 
   useEffect(() => {
     if (visible) getMoreNotifications();
@@ -103,7 +107,7 @@ export default function Notifications(props: NotificationsProps) {
                       ellipsis={{ rows: 2 }}
                     />
                     <Text type="secondary" style={{ fontSize: "0.7rem" }}>
-                      {item.date} {item.time}
+                      {dayjs(item.timestamp).format(dateHourFormatNotification)}
                     </Text>
                   </div>
                 }

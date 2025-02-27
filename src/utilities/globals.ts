@@ -7,6 +7,7 @@ export const dateFormatHomeSearch: string = "YYYY-MM-DD";
 export const dateFormatChatList: string = "DD/MM/YY";
 export const dateFormatChatBody: string = "DD/MM/YYYY";
 export const hourFormatChatBody: string = "h:mm a";
+export const dateHourFormatNotification: string = "DD-MM-YYYY hh:mm A";
 export const TCompra: string = "TCompra";
 export const pageSizeOptionsSt: number[] = [10, 20, 30];
 export const noPaginationPageSize: number = 100;

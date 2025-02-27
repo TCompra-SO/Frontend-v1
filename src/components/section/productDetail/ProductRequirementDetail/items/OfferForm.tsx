@@ -16,7 +16,7 @@ import BudgetField from "../../../../common/formFields/BudgetField";
 import AddImagesField from "../../../../common/formFields/AddImagesField";
 import AddDocumentField from "../../../../common/formFields/AddDocumentField";
 import { CreateOfferRequest } from "../../../../../models/Requests";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useContext, useEffect, useRef, useState } from "react";
 import {
   CanOfferResponse,
   useApiParams,
@@ -34,6 +34,7 @@ import {
   ProcessFlag,
   RequirementState,
   RequirementType,
+  SystemNotificationType,
   UserRoles,
 } from "../../../../../utilities/types";
 import React from "react";
@@ -50,6 +51,9 @@ import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
 import ModalContainer from "../../../../containers/ModalContainer";
 import { verifyCertificationByUserIdAndCompanyId } from "../../../../../services/general/generalServices";
 import useShowNotification from "../../../../../hooks/utilHooks";
+import { MainSocketsContext } from "../../../../../contexts/MainSocketsContext";
+import useSystemNotification from "../../../../../hooks/useSystemNotification";
+import dayjs from "dayjs";
 
 function RowContainer({ children }: { children: ReactNode }) {
   return (
@@ -68,6 +72,9 @@ interface OfferFormProps {
 export default function OfferForm(props: OfferFormProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
+  const { showNotification } = useShowNotification();
+  const { sendNotification } = useContext(MainSocketsContext);
+  const { getSystemNotification } = useSystemNotification();
   const email = useSelector((state: MainState) => state.user.email);
   const uid = useSelector((state: MainState) => state.user.uid);
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
@@ -75,7 +82,6 @@ export default function OfferForm(props: OfferFormProps) {
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const role = useSelector((state: MainState) => state.user.typeID);
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
-  const { showNotification } = useShowNotification();
   const [isCertified, setIsCertified] = useState<CertificationState>(
     CertificationState.NONE
   );
@@ -226,6 +232,20 @@ export default function OfferForm(props: OfferFormProps) {
       }
       form.resetFields();
       form.setFieldValue("currency", props.requirement?.coin);
+      if (props.requirement) {
+        const notificationFn = getSystemNotification(
+          SystemNotificationType.MAKE_OFFER
+        );
+        const notification = notificationFn(props.requirement.title);
+        sendNotification({
+          ...notification,
+          receiverId:
+            props.requirement.subUser?.uid ?? props.requirement.user.uid,
+          targetId: props.requirement.key,
+          targetType: props.requirement.type,
+          timestamp: dayjs().toISOString(),
+        });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reqSuccess, imgSuccess, docSuccess]);

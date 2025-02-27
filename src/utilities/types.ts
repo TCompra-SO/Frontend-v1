@@ -521,3 +521,16 @@ export enum RTNotificationType {
   NOTIFICATION = 0,
   CHAT = 1,
 }
+
+export enum SystemNotificationType {
+  MAKE_OFFER = 0,
+  CERTIFICATE_COMPANY = 1,
+  CANCEL_MY_OFFER = 2,
+  FINISH_OFFER = 3,
+  DISPUTE_OFFER_CREATOR = 4,
+  DISPUTE_REQ_CREATOR = 5,
+  CANCEL_AN_OFFER = 6,
+  FINISH_REQUIREMENT = 7,
+  SELECT_OFFER = 8,
+  RECEIVED_DOCS_FOR_CERT = 9,
+}

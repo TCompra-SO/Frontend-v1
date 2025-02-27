@@ -7,8 +7,30 @@ import { MainState } from "../models/Redux";
 let socketUserAPI: Socket | null = null;
 
 export default function useUserSocket() {
-  const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const logout = useLogout();
+
+  useEffect(() => {
+    return () => {
+      disconnectSocket();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function connectSocket() {
+    if (!socketUserAPI) {
+      socketUserAPI = io(import.meta.env.VITE_SALES_SOCKET_URL);
+    }
+    if (socketUserAPI) {
+      socketUserAPI.on("connect", () => {
+        console.log("Connected user");
+      });
+      // setTimeout(() => {
+      //   console.log("dddddd");
+      //   logout();
+      // }, 5000);
+    }
+  }
+
   function disconnectSocket() {
     if (socketUserAPI) {
       console.log("Socket user disconnected");
@@ -16,24 +38,9 @@ export default function useUserSocket() {
       socketUserAPI = null;
     }
   }
-  useEffect(() => {
-    if (isLoggedIn) {
-      if (!socketUserAPI) {
-        socketUserAPI = io(import.meta.env.VITE_SALES_SOCKET_URL);
-      }
-      if (socketUserAPI) {
-        socketUserAPI.on("connect", () => {
-          console.log("Connected user");
-        });
-        // setTimeout(() => {
-        //   console.log("dddddd");
-        //   logout();
-        // }, 5000);
-      }
-    } else disconnectSocket();
-    return () => {
-      disconnectSocket();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoggedIn]);
+
+  return {
+    connectUserSocket: connectSocket,
+    disconnectUserSocket: disconnectSocket,
+  };
 }

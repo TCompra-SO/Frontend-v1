@@ -276,17 +276,29 @@ export interface ChatSocketData extends ChatMessage {
   userName: string;
 }
 
-export interface NotificationData {
-  uid: string;
-  title: string;
-  body: string;
-  date: string;
-  time: string;
+export interface NotificationSenderData {
   senderImage?: string;
   senderId: string;
   senderName: string;
-  receiverId: string;
+}
+
+export interface BasicNotificationData {
+  title: string;
+  body: string;
   action: Action;
+}
+
+export interface NotificationDataNoSender extends BasicNotificationData {
+  receiverId: string;
   targetId: string;
   targetType: RequirementType | OrderTableType | CertificationTableType;
+  timestamp: string;
+}
+
+export interface NotificationData
+  extends NotificationDataNoSender,
+    NotificationSenderData {}
+
+export interface NotificationDataFromServer extends NotificationData {
+  uid: string;
 }

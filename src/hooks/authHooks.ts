@@ -28,7 +28,6 @@ import { decryptData } from "../utilities/crypto";
 import { getBaseUserForUserSubUser } from "../services/general/generalServices";
 import useShowNotification from "./utilHooks";
 import { useTranslation } from "react-i18next";
-import useUserSocket from "../socket/useUserSocket";
 
 export function useLogin() {
   const { t } = useTranslation();

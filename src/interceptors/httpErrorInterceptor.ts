@@ -238,6 +238,9 @@ export default function httpErrorInterceptor(error: any, type: string): string {
         case 401:
           erroMsg = "cantRateSameEntity";
           break;
+        case 409:
+          erroMsg = "alreadyRatedUser";
+          break;
       }
       break;
     case selectRequirementOfferService().type:

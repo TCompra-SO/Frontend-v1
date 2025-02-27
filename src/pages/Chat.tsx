@@ -6,8 +6,8 @@ import { ChatListData, ChatSocketData } from "../models/MainInterfaces";
 import { useEffect, useRef, useState } from "react";
 import useWindowSize from "../hooks/useWindowSize";
 import { chatDataFieldName, windowSize } from "../utilities/globals";
-import { useChat } from "../hooks/useChat";
 import { useLocation } from "react-router-dom";
+import { useChat } from "../hooks/useChat";
 
 export default function Chat() {
   const { t } = useTranslation();
