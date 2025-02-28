@@ -63,8 +63,10 @@ export default function Users() {
   const { showNotification } = useShowNotification();
   const { changeSubUserStatus } = useChangeSubUserStatus();
   const token = useSelector((state: MainState) => state.user.token);
-  const uid = useSelector((state: MainState) => state.user.uid);
-  const entityType = useSelector((state: MainState) => state.user.typeEntity);
+  const mainUid = useSelector((state: MainState) => state.mainUser.uid);
+  const mainEntityType = useSelector(
+    (state: MainState) => state.mainUser.typeEntity
+  );
   const [subUserList, setSubUserList] = useState<SubUserBase[]>([]);
   const [total, setTotal] = useState(0);
   const [action, setAction] = useState<Action>(Action.ADD_USER);
@@ -129,9 +131,9 @@ export default function Users() {
     loading,
     apiParams,
   } = useSearchTable(
-    uid,
+    mainUid,
     TableTypes.USERS,
-    entityType,
+    mainEntityType,
     undefined,
     resetChangesQueue
   );

@@ -423,7 +423,7 @@ export enum CertificationTableType {
 }
 
 export enum CertificationState {
-  NONE = 5,
+  NONE = 0,
   CERTIFIED = 1,
   REJECTED = 2,
   PENDING = 3,

@@ -1,20 +1,22 @@
-import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent, {
   TablePageContentRef,
 } from "../components/section/table-page/TablePageContent";
-import { mainModalScrollStyle, pageSizeOptionsSt } from "../utilities/globals";
+import {
+  fieldNameSearchRequestCertRequests,
+  mainModalScrollStyle,
+} from "../utilities/globals";
 import {
   ModalContent,
+  SocketDataPackType,
   TableTypeCertificatesReceived,
   TableTypeCertificatesSent,
-  useApiParams,
 } from "../models/Interfaces";
 import {
   Action,
   CertificationTableType,
   ModalTypes,
-  OnChangePageAndPageSizeTypeParams,
   TableTypes,
 } from "../utilities/types";
 import { useTranslation } from "react-i18next";
@@ -25,22 +27,27 @@ import {
   getLastSegmentFromRoute,
 } from "../utilities/globalFunctions";
 import { useLocation } from "react-router-dom";
-import useApi from "../hooks/useApi";
-import {
-  getReceivedRequestsByEntityService,
-  getSentRequestsByEntityService,
-} from "../services/requests/certificateService";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { transformToCertificationItem } from "../utilities/transform";
 import useShowNotification from "../hooks/utilHooks";
 import { ModalsContext } from "../contexts/ModalsContext";
 import { useGetCertificationData } from "../hooks/certificateHooks";
+import useSearchTable, {
+  useFilterSortPaginationForTable,
+} from "../hooks/searchTableHooks";
+import useSocketQueueHook, {
+  useAddOrUpdateRow,
+} from "../hooks/socketQueueHook";
+import useSocket from "../socket/useSocket";
 
 export default function Certificates() {
   const location = useLocation();
   const { t } = useTranslation();
   const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
+  const mainEntityType = useSelector(
+    (state: MainState) => state.mainUser.typeEntity
+  );
   const searchValueRef = useRef<TablePageContentRef>(null);
   const { showNotification } = useShowNotification();
   const { viewCertificationData, resetViewCertificationData } =
@@ -50,63 +57,108 @@ export default function Certificates() {
   );
   const { getCertificationData, modalDataCertificationData } =
     useGetCertificationData(type);
+  const [certificationRequestList, setCertificationRequestList] = useState<
+    CertificationItem[]
+  >([]);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [total, setTotal] = useState(0);
   const [dataModal, setDataModal] = useState<ModalContent>(
     getInitialModalData()
   );
+  const {
+    currentPage,
+    currentPageSize,
+    setCurrentPage,
+    handleChangePageAndPageSize,
+    handleSearch,
+    fieldSort,
+    filteredInfo,
+    reset,
+  } = useFilterSortPaginationForTable();
   const [tableContent, setTableContent] = useState<
     TableTypeCertificatesReceived | TableTypeCertificatesSent
   >({
     type: TableTypes.SENT_CERT | TableTypes.RECEIVED_CERT,
-    data: [],
+    data: certificationRequestList,
     hiddenColumns: [],
     nameColumnHeader: t("name"),
     onButtonClick: handleOnButtonClick,
     total,
+    page: currentPage,
+    pageSize: currentPageSize,
+    fieldSort,
+    filteredInfo,
   });
+  const { addNewRow, updateRow } = useAddOrUpdateRow(
+    type == CertificationTableType.SENT
+      ? TableTypes.SENT_CERT
+      : TableTypes.RECEIVED_CERT,
+    (data: SocketDataPackType) => transformToCertificationItem(data),
+    certificationRequestList,
+    setCertificationRequestList,
+    total,
+    setTotal,
+    currentPageSize
+  );
+  const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
+    addNewRow,
+    updateRow
+  );
+  const { searchTable, responseData, error, errorMsg, loading, apiParams } =
+    useSearchTable(
+      mainUserUid,
+      type == CertificationTableType.SENT
+        ? TableTypes.SENT_CERT
+        : TableTypes.RECEIVED_CERT,
+      mainEntityType,
+      undefined,
+      resetChangesQueue
+    );
+  useSocket(
+    type == CertificationTableType.SENT
+      ? TableTypes.SENT_CERT
+      : TableTypes.RECEIVED_CERT,
+    undefined,
+    currentPage,
+    apiParams.dataToSend,
+    updateChangesQueue
+  );
+
+  /** Actualiza el contenido de tabla */
+
+  useEffect(() => {
+    setTableContent((prev) => ({
+      ...prev,
+      data: certificationRequestList,
+      total,
+      page: currentPage,
+      pageSize: currentPageSize,
+      fieldSort,
+      filteredInfo,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [certificationRequestList]);
 
   /** Obtener lista de solicitudes de certificación */
 
-  const [apiParamsCertif, setApiParamsCertif] = useState<useApiParams>({
-    service: null,
-    method: "get",
-  });
-
-  const {
-    loading: loadingCertif,
-    responseData: responseDataCertif,
-    error: errorCertif,
-    errorMsg: errorMsgCertif,
-    fetchData: fetchDataCertif,
-  } = useApi({
-    service: apiParamsCertif.service,
-    method: apiParamsCertif.method,
-    dataToSend: apiParamsCertif.dataToSend,
-  });
-
   useEffect(() => {
-    if (apiParamsCertif.service) fetchDataCertif();
+    clearSearchValue();
+    reset();
+    searchTable({ page: 1, pageSize: currentPageSize });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsCertif]);
+  }, [type]);
 
   useEffect(() => {
-    if (responseDataCertif) {
+    if (responseData) {
       setTableData();
-    } else if (errorCertif) {
+    } else if (error) {
+      setCurrentPage(1);
       setTotal(0);
-      setTableContent({
-        type: TableTypes.SENT_CERT | TableTypes.RECEIVED_CERT,
-        data: [],
-        hiddenColumns: [],
-        nameColumnHeader: t("name"),
-        onButtonClick: handleOnButtonClick,
-        total,
-      });
-      showNotification("error", errorMsgCertif);
+      setCertificationRequestList([]);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataCertif, errorCertif]);
+  }, [responseData, error]);
 
   /** Obtener tipo de tabla */
 
@@ -115,33 +167,6 @@ export default function Certificates() {
       getCertificationTableType(getLastSegmentFromRoute(location.pathname))
     );
   }, [location]);
-
-  useEffect(() => {
-    clearSearchValue();
-    switch (type) {
-      case CertificationTableType.SENT:
-        setApiParamsCertif({
-          service: getSentRequestsByEntityService(
-            mainUserUid,
-            1,
-            pageSizeOptionsSt[0]
-          ),
-          method: "get",
-        });
-        break;
-      case CertificationTableType.RECEIVED:
-        setApiParamsCertif({
-          service: getReceivedRequestsByEntityService(
-            mainUserUid,
-            1,
-            pageSizeOptionsSt[0]
-          ),
-          method: "get",
-        });
-        break;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type]);
 
   /** Verificar si hay una solicitud pendiente */
 
@@ -171,22 +196,11 @@ export default function Certificates() {
 
   function setTableData() {
     try {
-      const data: CertificationItem[] = responseDataCertif.data.map((e: any) =>
+      const data: CertificationItem[] = responseData.data.map((e: any) =>
         transformToCertificationItem(e)
       );
-      console.log(data);
-      setTotal(responseDataCertif.res?.totalDocuments);
-      setTableContent({
-        type:
-          type == CertificationTableType.RECEIVED
-            ? TableTypes.RECEIVED_CERT
-            : TableTypes.SENT_CERT,
-        data,
-        hiddenColumns: [],
-        nameColumnHeader: t("name"),
-        onButtonClick: handleOnButtonClick,
-        total,
-      });
+      setTotal(responseData.res?.totalDocuments);
+      setCertificationRequestList(data);
     } catch (error) {
       console.log(error);
       showNotification("error", t("errorOccurred"));
@@ -215,48 +229,6 @@ export default function Certificates() {
     }
   }
 
-  function handleChangePageAndPageSize({
-    page,
-    pageSize,
-    filters,
-    extra,
-  }: OnChangePageAndPageSizeTypeParams) {
-    switch (type) {
-      case CertificationTableType.SENT:
-        if (!filters || (filters && filters.state === null)) {
-          setApiParamsCertif({
-            service: getSentRequestsByEntityService(
-              mainUserUid,
-              page,
-              pageSize
-            ),
-            method: "get",
-          });
-        } else if (filters && filters.state) {
-          setTotal(extra?.currentDataSource.length ?? 0);
-        }
-        break;
-      case CertificationTableType.RECEIVED:
-        if (!filters || (filters && filters.state === null)) {
-          setApiParamsCertif({
-            service: getReceivedRequestsByEntityService(
-              mainUserUid,
-              page,
-              pageSize
-            ),
-            method: "get",
-          });
-        } else if (filters && filters.state) {
-          setTotal(extra?.currentDataSource.length ?? 0);
-        }
-        break;
-    }
-  }
-
-  function handleSearch(e: ChangeEvent<HTMLInputElement>) {
-    console.log(e.target.value);
-  }
-
   return (
     <>
       <ModalContainer
@@ -276,10 +248,16 @@ export default function Certificates() {
         }
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
-        loading={loadingCertif}
-        onChangePageAndPageSize={handleChangePageAndPageSize}
+        loading={loading}
+        onChangePageAndPageSize={(params) =>
+          handleChangePageAndPageSize(
+            params,
+            fieldNameSearchRequestCertRequests,
+            searchTable
+          )
+        }
         total={total}
-        onSearch={handleSearch}
+        onSearch={(e) => handleSearch(e, searchTable)}
         ref={searchValueRef}
       />
     </>

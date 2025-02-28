@@ -96,11 +96,14 @@ export const userNameColumnKey: string = "subUserName";
 export const titleColumnKey: string = "title";
 export const certDocDateColumnKey: string = "creationDate";
 export const emailColumnKey: string = "email";
-export const creationDateSubUserColumnKey: string = "createdAt";
+export const subUserCreationDateColumnKey: string = "createdAt";
 export const numGoodsColumnKey: string = "numGoods";
 export const numServicesColumnKey: string = "numServices";
 export const numSalesColumnKey: string = "numSales";
-export const documentNameCertColumnKey: string = "documentName";
+export const documentNameColumnKey: string = "documentName";
+export const companyNameColumnName: string = "companyName";
+export const companyDocumentColumnName: string = "companyDocument";
+export const certRequestCreationDateColumnKey: string = "creationDate";
 
 // Parámetros para sort y filter en tabla. Map de <ColumnKeys, nombre de campo en respuesta de servidor>
 export const fieldNameSearchRequestRequirement: Record<string, string> = {
@@ -124,15 +127,21 @@ export const fieldNameSearchRequestOffer: Record<string, string> = {
   [titleColumnKey]: "name",
   [stateColumnKey]: "stateID",
 };
+export const fieldNameSearchRequestCertRequests: Record<string, string> = {
+  [companyNameColumnName]: "companyName",
+  [companyDocumentColumnName]: "companyDocument",
+  [certRequestCreationDateColumnKey]: "creationDate",
+  [stateColumnKey]: "state",
+};
 export const fieldNameSearchRequestMyDocsCert: Record<string, string> = {
   [nameColumnKey]: "name",
-  [documentNameCertColumnKey]: "documentName",
+  [documentNameColumnKey]: "documentName",
   [certDocDateColumnKey]: "creationDate",
 };
 export const fieldNameSearchRequestSubUser: Record<string, string> = {
   [nameColumnKey]: "name",
   [emailColumnKey]: "email",
-  [creationDateSubUserColumnKey]: "createdAt",
+  [subUserCreationDateColumnKey]: "createdAt",
   [numGoodsColumnKey]: "numProducts",
   [numServicesColumnKey]: "numServices",
   [numSalesColumnKey]: "numLiquidations",

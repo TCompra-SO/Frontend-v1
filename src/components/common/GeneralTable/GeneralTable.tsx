@@ -7,8 +7,8 @@ import {
 } from "../../../utilities/types";
 import {
   certDocDateColumnKey,
-  creationDateSubUserColumnKey,
-  documentNameCertColumnKey,
+  subUserCreationDateColumnKey,
+  documentNameColumnKey,
   emailColumnKey,
   numGoodsColumnKey,
   numSalesColumnKey,
@@ -24,6 +24,9 @@ import {
   requirementColumnKey,
   titleColumnKey,
   userNameColumnKey,
+  companyNameColumnName,
+  companyDocumentColumnName,
+  certRequestCreationDateColumnKey,
 } from "../../../utilities/globals";
 import ImageColumn from "./columns/ImageColumn";
 import NameColumn from "./columns/NameColumn";
@@ -692,7 +695,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       ),
       GeneralDateColumn(
         t("creationDateAbbrev"),
-        creationDateSubUserColumnKey,
+        subUserCreationDateColumnKey,
         visibility[TableColumns.CREATION_DATE],
         props.content.fieldSort
       ),
@@ -876,7 +879,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       ),
       GeneralColumnString(
         t("document"),
-        documentNameCertColumnKey,
+        documentNameColumnKey,
         true,
         130,
         visibility[TableColumns.DOCUMENT],
@@ -901,21 +904,23 @@ export default function GeneralTable(props: GeneralTableProps) {
     columns = [
       GeneralColumnString(
         t("company"),
-        "companyName",
+        companyNameColumnName,
         true,
         130,
-        visibility[TableColumns.NAME]
+        visibility[TableColumns.NAME],
+        props.content.fieldSort
       ),
       GeneralColumnString(
         t("document"),
-        "companyDocument",
+        companyDocumentColumnName,
         false,
         130,
-        visibility[TableColumns.DOCUMENT]
+        visibility[TableColumns.DOCUMENT],
+        props.content.fieldSort
       ),
       GeneralDateColumn(
         t("dateColumn"),
-        "creationDate",
+        certRequestCreationDateColumnKey,
         visibility[TableColumns.CREATION_DATE],
         props.content.fieldSort
       ),

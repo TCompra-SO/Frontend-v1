@@ -65,7 +65,7 @@ export default function CompanyData() {
       error: errorCert,
       errorMsg: errorMsgCert,
     } = await verifyCertificationByUserIdAndCompanyId(mainUid, userId);
-    if (certResult) setCertifState(certResult);
+    if (certResult !== null) setCertifState(certResult);
     else if (errorCert) showNotification("error", errorMsgCert);
   }
 
@@ -78,7 +78,7 @@ export default function CompanyData() {
               <>
                 <BasicCompanyData user={user} />
                 <DetailedCompanyData user={user} />
-                {userId != mainUid && certifState && (
+                {userId != mainUid && certifState !== null && (
                   <CertificationData
                     state={certifState}
                     user={user}

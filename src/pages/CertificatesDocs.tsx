@@ -40,7 +40,7 @@ import useShowNotification from "../hooks/utilHooks";
 export default function CertificatesDocs() {
   const { t } = useTranslation();
   const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
-  const entityType = useSelector(
+  const mainEntityType = useSelector(
     (state: MainState) => state.mainUser.typeEntity
   );
   const { deleteCertificate, loadingDeleteCert } = useDeleteCertificate();
@@ -92,7 +92,7 @@ export default function CertificatesDocs() {
     useSearchTable(
       mainUserUid,
       TableTypes.MY_DOCUMENTS,
-      entityType,
+      mainEntityType,
       undefined,
       resetChangesQueue
     );
