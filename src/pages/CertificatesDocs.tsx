@@ -1,81 +1,144 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
-import TablePageContent from "../components/section/table-page/TablePageContent";
-import { mainModalScrollStyle, pageSizeOptionsSt } from "../utilities/globals";
-import { ModalContent, TableTypeMyDocuments } from "../models/Interfaces";
+import TablePageContent, {
+  TablePageContentRef,
+} from "../components/section/table-page/TablePageContent";
 import {
-  Action,
-  ModalTypes,
-  OnChangePageAndPageSizeTypeParams,
-  TableTypes,
-} from "../utilities/types";
+  fieldNameSearchRequestMyDocsCert,
+  mainModalScrollStyle,
+} from "../utilities/globals";
+import {
+  ModalContent,
+  SocketDataPackType,
+  TableTypeMyDocuments,
+} from "../models/Interfaces";
+import { Action, ModalTypes, TableTypes } from "../utilities/types";
 import { useTranslation } from "react-i18next";
 import { CertificateFile } from "../models/MainInterfaces";
-import { openDocument } from "../utilities/globalFunctions";
+import {
+  getInitialModalData,
+  openDocument,
+} from "../utilities/globalFunctions";
 import ButtonContainer from "../components/containers/ButtonContainer";
 import { Row } from "antd";
 import {
   useDeleteCertificate,
-  useGetCertificatesList,
   useGetRequiredDocsCert,
 } from "../hooks/certificateHooks";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
+import useSearchTable, {
+  useFilterSortPaginationForTable,
+} from "../hooks/searchTableHooks";
+import useSocketQueueHook, {
+  useAddOrUpdateRow,
+} from "../hooks/socketQueueHook";
+import { transformToCertificateFile } from "../utilities/transform";
+import useSocket from "../socket/useSocket";
+import useShowNotification from "../hooks/utilHooks";
 
 export default function CertificatesDocs() {
   const { t } = useTranslation();
   const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
-  const {
-    certificateList,
-    getCertificatesList,
-    loadingCertList,
-    totalCertList,
-  } = useGetCertificatesList();
+  const entityType = useSelector(
+    (state: MainState) => state.mainUser.typeEntity
+  );
   const { deleteCertificate, loadingDeleteCert } = useDeleteCertificate();
   const { getRequiredDocsCert, requiredDocs } = useGetRequiredDocsCert();
+  const { showNotification } = useShowNotification();
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [dataModal, setDataModal] = useState<ModalContent>({
-    type: ModalTypes.NONE,
-    data: {},
-    action: Action.NONE,
-  });
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
+  const [certificateList, setCertificateList] = useState<CertificateFile[]>([]);
+  const [total, setTotal] = useState(0);
+  const searchValueRef = useRef<TablePageContentRef>(null);
+  const {
+    currentPage,
+    currentPageSize,
+    setCurrentPage,
+    handleChangePageAndPageSize,
+    handleSearch,
+    fieldSort,
+    filteredInfo,
+    reset,
+  } = useFilterSortPaginationForTable();
   const [tableContent, setTableContent] = useState<TableTypeMyDocuments>({
     type: TableTypes.MY_DOCUMENTS,
     data: [],
     hiddenColumns: [],
     nameColumnHeader: t("name"),
     onButtonClick: handleOnButtonClick,
-    total: totalCertList,
+    total,
+    page: currentPage,
+    pageSize: currentPageSize,
+    fieldSort,
+    filteredInfo,
   });
+  const { addNewRow, updateRow } = useAddOrUpdateRow(
+    TableTypes.MY_DOCUMENTS,
+    (data: SocketDataPackType) => transformToCertificateFile(data),
+    certificateList,
+    setCertificateList,
+    total,
+    setTotal,
+    currentPageSize
+  );
+  const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
+    addNewRow,
+    updateRow
+  );
+  const { searchTable, responseData, error, errorMsg, loading, apiParams } =
+    useSearchTable(
+      mainUserUid,
+      TableTypes.MY_DOCUMENTS,
+      entityType,
+      undefined,
+      resetChangesQueue
+    );
+  useSocket(
+    TableTypes.MY_DOCUMENTS,
+    undefined,
+    currentPage,
+    apiParams.dataToSend,
+    updateChangesQueue
+  );
 
-  /** Obtener lista de documentos */
+  /** Actualiza el contenido de tabla */
 
   useEffect(() => {
-    getCertificatesList(1, pageSizeOptionsSt[0]);
+    setTableContent((prev) => ({
+      ...prev,
+      data: certificateList,
+      total,
+      page: currentPage,
+      pageSize: currentPageSize,
+      fieldSort,
+      filteredInfo,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [certificateList]);
+
+  /** Cargar datos iniciales */
+
+  useEffect(() => {
+    clearSearchValue();
+    reset();
+    searchTable({ page: 1, pageSize: currentPageSize });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (certificateList) {
-      setTableContent((prev) => {
-        return {
-          ...prev,
-          data: certificateList,
-          total: totalCertList,
-        };
-      });
-    } else {
-      setTableContent({
-        type: TableTypes.MY_DOCUMENTS,
-        data: [],
-        hiddenColumns: [],
-        nameColumnHeader: t("name"),
-        onButtonClick: handleOnButtonClick,
-        total: totalCertList,
-      });
+    if (responseData) {
+      setTableData();
+    } else if (error) {
+      setCurrentPage(1);
+      setTotal(0);
+      setCertificateList([]);
+      showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [certificateList]);
+  }, [responseData, error]);
 
   /** Mostrar lista de documentos requeridos */
 
@@ -93,6 +156,25 @@ export default function CertificatesDocs() {
   }, [requiredDocs]);
 
   /** Funciones */
+
+  function setTableData() {
+    try {
+      const data = responseData.data.map((e: any) =>
+        transformToCertificateFile(e)
+      );
+      setTotal(responseData.res?.totalDocuments);
+      setCertificateList(data);
+    } catch (error) {
+      console.log(error);
+      showNotification("error", t("errorOccurred"));
+    }
+  }
+
+  function clearSearchValue() {
+    if (searchValueRef.current) {
+      searchValueRef.current.resetSearchValue();
+    }
+  }
 
   function handleCloseModal() {
     setIsOpenModal(false);
@@ -142,17 +224,6 @@ export default function CertificatesDocs() {
     setIsOpenModal(true);
   }
 
-  function handleChangePageAndPageSize({
-    page,
-    pageSize,
-  }: OnChangePageAndPageSizeTypeParams) {
-    getCertificatesList(page, pageSize);
-  }
-
-  function handleSearch(e: ChangeEvent<HTMLInputElement>) {
-    console.log(e.target.value);
-  }
-
   return (
     <>
       <ModalContainer
@@ -169,7 +240,7 @@ export default function CertificatesDocs() {
         subtitle={t("myDocuments")}
         subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
         table={tableContent}
-        onSearch={handleSearch}
+        onSearch={(e) => handleSearch(e, searchTable)}
         additionalContentHeader={
           <Row gutter={[10, 10]}>
             <ButtonContainer
@@ -191,8 +262,15 @@ export default function CertificatesDocs() {
             </ButtonContainer>
           </Row>
         }
-        loading={loadingCertList}
-        onChangePageAndPageSize={handleChangePageAndPageSize}
+        loading={loading}
+        onChangePageAndPageSize={(params) =>
+          handleChangePageAndPageSize(
+            params,
+            fieldNameSearchRequestMyDocsCert,
+            searchTable
+          )
+        }
+        ref={searchValueRef}
       />
     </>
   );

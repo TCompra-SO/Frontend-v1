@@ -299,7 +299,7 @@ export default function Users() {
     }
   }
 
-  async function setTableData() {
+  function setTableData() {
     try {
       const data = responseData.data.map((e: any) => transformToSubUserBase(e));
       setTotal(responseData.res?.totalDocuments);

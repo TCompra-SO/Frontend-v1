@@ -100,6 +100,7 @@ export const creationDateSubUserColumnKey: string = "createdAt";
 export const numGoodsColumnKey: string = "numGoods";
 export const numServicesColumnKey: string = "numServices";
 export const numSalesColumnKey: string = "numSales";
+export const documentNameCertColumnKey: string = "documentName";
 
 // Parámetros para sort y filter en tabla. Map de <ColumnKeys, nombre de campo en respuesta de servidor>
 export const fieldNameSearchRequestRequirement: Record<string, string> = {
@@ -122,6 +123,11 @@ export const fieldNameSearchRequestOffer: Record<string, string> = {
   [userNameColumnKey]: "subUserName",
   [titleColumnKey]: "name",
   [stateColumnKey]: "stateID",
+};
+export const fieldNameSearchRequestMyDocsCert: Record<string, string> = {
+  [nameColumnKey]: "name",
+  [documentNameCertColumnKey]: "documentName",
+  [certDocDateColumnKey]: "creationDate",
 };
 export const fieldNameSearchRequestSubUser: Record<string, string> = {
   [nameColumnKey]: "name",

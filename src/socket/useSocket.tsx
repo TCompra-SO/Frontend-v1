@@ -31,6 +31,16 @@ export default function useSocket(
   const searchTableRequestRef = useRef(searchTableRequest);
 
   useEffect(() => {
+    return () => {
+      if (socketAPI) {
+        console.log("Disconnected");
+        socketAPI.disconnect();
+        socketAPI = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     pageRef.current = page;
   }, [page]);
 

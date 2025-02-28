@@ -137,6 +137,27 @@ export default function Offers() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offerList]);
 
+  /** Cargar datos iniciales */
+
+  useEffect(() => {
+    clearSearchValue();
+    reset();
+    searchTable({ page: 1, pageSize: currentPageSize });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type]);
+
+  useEffect(() => {
+    if (responseData) {
+      setData();
+    } else if (error) {
+      setCurrentPage(1);
+      setTotal(0);
+      setOfferList([]);
+      showNotification("error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
+
   /** Verificar si hay una solicitud pendiente */
 
   useEffect(() => {
@@ -170,27 +191,6 @@ export default function Offers() {
       setIsOpenModal(true);
     }
   }, [modalDataRate]);
-
-  /** Cargar datos iniciales */
-
-  useEffect(() => {
-    clearSearchValue();
-    reset();
-    searchTable({ page: 1, pageSize: currentPageSize });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type]);
-
-  useEffect(() => {
-    if (responseData) {
-      setData();
-    } else if (error) {
-      setCurrentPage(1);
-      setTotal(0);
-      setOfferList([]);
-      showNotification("error", errorMsg);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseData, error]);
 
   /* Para eliminar */
 

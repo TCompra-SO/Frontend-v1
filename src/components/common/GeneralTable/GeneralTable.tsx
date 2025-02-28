@@ -8,6 +8,7 @@ import {
 import {
   certDocDateColumnKey,
   creationDateSubUserColumnKey,
+  documentNameCertColumnKey,
   emailColumnKey,
   numGoodsColumnKey,
   numSalesColumnKey,
@@ -875,7 +876,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       ),
       GeneralColumnString(
         t("document"),
-        "documentName",
+        documentNameCertColumnKey,
         true,
         130,
         visibility[TableColumns.DOCUMENT],
