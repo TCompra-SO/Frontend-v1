@@ -23,6 +23,15 @@ export function getCertificatesService(
   };
 }
 
+export function searchCertificatesService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
+      ApiRoutes.certificate.searchCertificates
+    }`,
+    type: "CE-SEA",
+  };
+}
+
 export function sendCertificationRequestService(): HttpService {
   return {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
@@ -54,6 +63,15 @@ export function getSentRequestsByEntityService(
   };
 }
 
+export function searchSentRequestsByEntityService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
+      ApiRoutes.certificate.searchSentRequestByEntity
+    }`,
+    type: "CE-SE-SE",
+  };
+}
+
 export function getReceivedRequestsByEntityService(
   userId: string,
   page: number,
@@ -64,6 +82,15 @@ export function getReceivedRequestsByEntityService(
       ApiRoutes.certificate.getReceivedRequestsByEntity
     }${userId}/${page}/${pageSize}`,
     type: "CE-GE-RE",
+  };
+}
+
+export function searchReceivedRequestsByEntityService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
+      ApiRoutes.certificate.searchReceivedRequestByEntity
+    }`,
+    type: "CE-SE-RE",
   };
 }
 

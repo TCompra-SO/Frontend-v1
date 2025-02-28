@@ -1,29 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import NoContentModalContainer from "../components/containers/NoContentModalContainer";
-import TablePageContent from "../components/section/table-page/TablePageContent";
+import TablePageContent, {
+  TablePageContentRef,
+} from "../components/section/table-page/TablePageContent";
 import AddUserModal from "../components/section/users/addUser/AddUserModal";
 import { useTranslation } from "react-i18next";
 import {
   Action,
   EntityType,
-  OnChangePageAndPageSizeTypeParams,
   OrderTableType,
   RequirementType,
   TableTypes,
 } from "../utilities/types";
-import { TableTypeUsers, useApiParams } from "../models/Interfaces";
+import {
+  SocketDataPackType,
+  TableTypeUsers,
+  useApiParams,
+} from "../models/Interfaces";
 import {
   fieldNameSearchRequestOffer,
   fieldNameSearchRequestRequirement,
+  fieldNameSearchRequestSubUser,
   mainModalScrollStyle,
-  pageSizeOptionsSt,
 } from "../utilities/globals";
 import ButtonContainer from "../components/containers/ButtonContainer";
 import useApi from "../hooks/useApi";
-import {
-  getSubUsersByEntityService,
-  getSubUserService,
-} from "../services/requests/subUserService";
+import { getSubUserService } from "../services/requests/subUserService";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import {
@@ -50,6 +52,10 @@ import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
 import { useChangeSubUserStatus } from "../hooks/subUserHook";
+import useSocketQueueHook, {
+  useAddOrUpdateRow,
+} from "../hooks/socketQueueHook";
+import useSocket from "../socket/useSocket";
 
 export default function Users() {
   const { t } = useTranslation();
@@ -58,6 +64,9 @@ export default function Users() {
   const { changeSubUserStatus } = useChangeSubUserStatus();
   const token = useSelector((state: MainState) => state.user.token);
   const uid = useSelector((state: MainState) => state.user.uid);
+  const entityType = useSelector((state: MainState) => state.user.typeEntity);
+  const [subUserList, setSubUserList] = useState<SubUserBase[]>([]);
+  const [total, setTotal] = useState(0);
   const [action, setAction] = useState<Action>(Action.ADD_USER);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [subTypeOrder, setSubTypeOrder] = useState<OrderTableType>(
@@ -73,56 +82,135 @@ export default function Users() {
   const [reqList, setReqList] = useState<RequirementItemSubUser[]>([]);
   const [offerList, setOfferList] = useState<OfferItemSubUser[]>([]);
   const [orderList, setOrderList] = useState<PurchaseOrderItemSubUser[]>([]);
+  const searchValueRef = useRef<TablePageContentRef>(null);
   const [tableType, setTableType] = useState<TableTypes>(
     TableTypes.REQUIREMENT
   );
+  const {
+    currentPage: currentPageSubUser,
+    currentPageSize: currentPageSizeSubUser,
+    setCurrentPage: setCurrentPageSubUser,
+    fieldSort: fieldSortSubUser,
+    filteredInfo: filteredInfoSubUser,
+    handleChangePageAndPageSize: handleChangePageAndPageSizeSubUser,
+    handleSearch: handleSearchSubUser,
+    reset: resetSubUser,
+  } = useFilterSortPaginationForTable();
   const [tableContent, setTableContent] = useState<TableTypeUsers>({
     type: TableTypes.USERS,
-    data: [],
+    data: subUserList,
     hiddenColumns: [],
     nameColumnHeader: t("user"),
     onButtonClick: handleOnActionClick,
-    total: 0,
+    total,
+    page: currentPageSubUser,
+    pageSize: currentPageSizeSubUser,
+    fieldSort: fieldSortSubUser,
+    filteredInfo: filteredInfoSubUser,
   });
+  const { addNewRow, updateRow } = useAddOrUpdateRow(
+    TableTypes.USERS,
+    (data: SocketDataPackType) => transformToSubUserBase(data),
+    subUserList,
+    setSubUserList,
+    total,
+    setTotal,
+    currentPageSizeSubUser
+  );
+  const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
+    addNewRow,
+    updateRow
+  );
+  const {
+    searchTable: searchSubUserTable,
+    responseData,
+    error,
+    errorMsg,
+    loading,
+    apiParams,
+  } = useSearchTable(
+    uid,
+    TableTypes.USERS,
+    entityType,
+    undefined,
+    resetChangesQueue
+  );
+  useSocket(
+    TableTypes.USERS,
+    undefined,
+    currentPageSubUser,
+    apiParams.dataToSend,
+    updateChangesQueue
+  );
 
-  /** Obtener lista de subusuarios */
+  /** Variables para obtener lista de requerimientos/ofertas/... */
 
-  const [apiParams, setApiParams] = useState<useApiParams>({
-    service: getSubUsersByEntityService(uid, 1, pageSizeOptionsSt[0]),
-    method: "get",
-  });
+  const {
+    searchTable,
+    responseData: responseDataTable,
+    error: errorTable,
+    errorMsg: errorMsgTable,
+    loading: loadingTable,
+  } = useSearchTable(
+    userData?.uid ?? "",
+    tableType,
+    EntityType.SUBUSER,
+    subType,
+    undefined,
+    subTypeOrder
+  );
+  const {
+    currentPage,
+    currentPageSize,
+    setCurrentPage,
+    fieldSort,
+    filteredInfo,
+    handleChangePageAndPageSize,
+    // handleSearch,
+    reset,
+  } = useFilterSortPaginationForTable();
 
-  const { loading, responseData, error, errorMsg, fetchData } =
-    useApi(apiParams);
+  /** Actualiza el contenido de tabla de subsuarios */
+
+  useEffect(() => {
+    setTableContent((prev) => ({
+      ...prev,
+      data: subUserList,
+      total,
+      page: currentPageSubUser,
+      pageSize: currentPageSizeSubUser,
+      fieldSort: fieldSortSubUser,
+      filteredInfo: filteredInfoSubUser,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subUserList]);
+
+  /* Obtener lista de subusuarios inicialmente */
+
+  useEffect(() => {
+    clearSearchValue();
+    resetSubUser();
+    searchSubUserTable({ page: 1, pageSize: currentPageSizeSubUser });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (responseData) {
       setTableData();
     } else if (error) {
-      setTableContent({
-        type: TableTypes.USERS,
-        data: [],
-        hiddenColumns: [],
-        nameColumnHeader: t("user"),
-        onButtonClick: handleOnActionClick,
-        total: 0,
-      });
+      setCurrentPageSubUser(1);
+      setTotal(0);
+      setSubUserList([]);
       showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
-
-  useEffect(() => {
-    if (apiParams.service) fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParams]);
 
   /** Obtener datos de subusuario */
 
   const [apiParamsUser, setApiParamsUser] = useState<useApiParams>({
     service: null,
     method: "get",
-    // token,
   });
   const {
     loading: loadingUser,
@@ -155,32 +243,7 @@ export default function Users() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataUser, errorUser]);
 
-  /** Obtener lista de requerimientos */
-
-  const {
-    searchTable,
-    responseData: responseDataTable,
-    error: errorTable,
-    errorMsg: errorMsgTable,
-    loading: loadingTable,
-  } = useSearchTable(
-    userData?.uid ?? "",
-    tableType,
-    EntityType.SUBUSER,
-    subType,
-    undefined,
-    subTypeOrder
-  );
-  const {
-    currentPage,
-    currentPageSize,
-    setCurrentPage,
-    fieldSort,
-    filteredInfo,
-    handleChangePageAndPageSize,
-    handleSearch,
-    reset,
-  } = useFilterSortPaginationForTable();
+  /** Obtener lista de requerimientos/ofertas/... */
 
   useEffect(() => {
     if (!isOpenModal) showLoadingMessage(loadingTable);
@@ -230,32 +293,27 @@ export default function Users() {
 
   /** Funciones */
 
+  function clearSearchValue() {
+    if (searchValueRef.current) {
+      searchValueRef.current.resetSearchValue();
+    }
+  }
+
   async function setTableData() {
     try {
-      let data: SubUserBase[] = [];
-      if (responseData.data.length > 0) {
-        data = responseData.data.map((e: any) => transformToSubUserBase(e));
-      }
-
-      setTableContent({
-        type: TableTypes.USERS,
-        data,
-        hiddenColumns: [],
-        nameColumnHeader: t("user"),
-        onButtonClick: handleOnActionClick,
-        total: responseData.res?.totalDocuments,
-      });
+      const data = responseData.data.map((e: any) => transformToSubUserBase(e));
+      setTotal(responseData.res?.totalDocuments);
+      setSubUserList(data);
     } catch (error) {
-      showNotification("error", t("errorOccurred"));
       console.log(error);
+      showNotification("error", t("errorOccurred"));
     }
   }
 
   function setModalTableDataReq() {
     try {
       const data: RequirementItemSubUser[] = responseDataTable.data.map(
-        (e: any) =>
-          transformDataToRequirementItemSubUser(e, RequirementType.GOOD) // r3v
+        (e: any) => transformDataToRequirementItemSubUser(e, subType)
       );
       setTotalReq(responseDataTable.res?.totalDocuments);
       setReqList(data);
@@ -271,8 +329,8 @@ export default function Users() {
 
   function setModalTableDataOffer() {
     try {
-      const data: OfferItemSubUser[] = responseDataTable.data.map(
-        (e: any) => transformDataToOfferItemSubUser(e, RequirementType.GOOD) // r3v
+      const data: OfferItemSubUser[] = responseDataTable.data.map((e: any) =>
+        transformDataToOfferItemSubUser(e, subType)
       );
       setTotalOffer(responseDataTable.res?.totalDocuments);
       setOfferList(data);
@@ -289,8 +347,7 @@ export default function Users() {
   function setModalTableDataOrder() {
     try {
       const data: PurchaseOrderItemSubUser[] = responseDataTable.data.map(
-        (e: any) =>
-          transformToPurchaseOrderItemSubUser(e, OrderTableType.ISSUED) // r3v
+        (e: any) => transformToPurchaseOrderItemSubUser(e, subTypeOrder)
       );
       setTotalPurc(responseDataTable.res?.totalDocuments);
       setOrderList(data);
@@ -307,8 +364,7 @@ export default function Users() {
   function setModalTableDataSalesOrder() {
     try {
       const data: PurchaseOrderItemSubUser[] = responseDataTable.data.map(
-        (e: any) =>
-          transformToPurchaseOrderItemSubUser(e, OrderTableType.ISSUED) // r3v
+        (e: any) => transformToPurchaseOrderItemSubUser(e, subTypeOrder)
       );
       setTotalSales(responseDataTable.res?.totalDocuments);
       setOrderList(data);
@@ -579,16 +635,6 @@ export default function Users() {
     }
   }
 
-  function handleChangePageAndPageSizeMainTable({
-    page,
-    pageSize,
-  }: OnChangePageAndPageSizeTypeParams) {
-    setApiParams({
-      service: getSubUsersByEntityService(uid, page, pageSize),
-      method: "get",
-    });
-  }
-
   return (
     <>
       <NoContentModalContainer
@@ -607,7 +653,7 @@ export default function Users() {
         subtitle={`${t("listOf")} ${t("users")}`}
         subtitleIcon={<i className="fa-regular fa-user-group sub-icon"></i>}
         table={tableContent}
-        onSearch={(e) => handleSearch(e, searchTable)}
+        onSearch={(e) => handleSearchSubUser(e, searchSubUserTable)}
         additionalContentHeader={
           <div>
             <ButtonContainer
@@ -620,7 +666,14 @@ export default function Users() {
           </div>
         }
         loading={loading}
-        onChangePageAndPageSize={handleChangePageAndPageSizeMainTable}
+        onChangePageAndPageSize={(params) =>
+          handleChangePageAndPageSizeSubUser(
+            params,
+            fieldNameSearchRequestSubUser,
+            searchSubUserTable
+          )
+        }
+        ref={searchValueRef}
       />
     </>
   );

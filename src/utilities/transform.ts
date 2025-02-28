@@ -347,7 +347,7 @@ export function transformToSubUserBase(data: any) {
     document: data.document,
     email: data.email,
     typeEntity: EntityType.SUBUSER,
-    activeAccount: false, // r3v
+    state: data.active_account,
     ...transformToUserCounters(data),
   };
   return subUser;

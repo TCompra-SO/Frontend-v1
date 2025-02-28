@@ -537,7 +537,9 @@ const resources = {
       chatMessageImages: 'image(s)',
       chatMessageDocs: 'document(s)',
       suspend: 'Suspend',
-      reactivate: 'Reactivate'
+      reactivate: 'Reactivate',
+      activeUser: 'Active',
+      suspendedUser: 'Suspended',
     },
   },
   es: {
@@ -1086,7 +1088,9 @@ const resources = {
       chatMessageImages: 'imagen(es)',
       chatMessageDocs: 'documento(s)',
       suspend: 'Suspender',
-      reactivate: 'Reactivar'
+      reactivate: 'Reactivar',
+      activeUser: 'Activo',
+      suspendedUser: 'Suspendido',
     },
   },
 };

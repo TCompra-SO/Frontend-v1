@@ -206,8 +206,8 @@ export default function RequirementOfferListItemHeader({
                 }
                 count={
                   props.offer.type == RequirementType.SALE
-                    ? props.offer.user.sellerCount
-                    : props.offer.user.customerCount
+                    ? props.offer.user.customerCount
+                    : props.offer.user.sellerCount
                 }
                 type={RateStartCountType.OFFER_LIST}
               />

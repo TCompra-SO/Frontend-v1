@@ -226,6 +226,7 @@ export interface SearchTableRequest extends FieldSort, FieldFilter {
   page: number;
   pageSize: number;
   typeUser: EntityType;
+  entityID?: string; // r3v quitar
 }
 
 export interface ChangeStatusRequest {

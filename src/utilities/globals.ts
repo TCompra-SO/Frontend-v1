@@ -85,7 +85,7 @@ export const stateColumnKey: string = "state";
 export const typeColumnKey: string = "type";
 export const viewColumnKey: string = "view";
 
-// Columnas custom
+// Columnas custom - son los nombres de los campos definidos en las interfaces
 export const reqDateColumnKey: string = "publishDate";
 export const reqExpDateColumnKey: string = "expirationDate";
 export const offerDateColumnKey: string = "publishDate";
@@ -95,8 +95,13 @@ export const purcOrderOfferTitleColumnKey: string = "offerTitle";
 export const userNameColumnKey: string = "subUserName";
 export const titleColumnKey: string = "title";
 export const certDocDateColumnKey: string = "creationDate";
+export const emailColumnKey: string = "email";
+export const creationDateSubUserColumnKey: string = "createdAt";
+export const numGoodsColumnKey: string = "numGoods";
+export const numServicesColumnKey: string = "numServices";
+export const numSalesColumnKey: string = "numSales";
 
-// Parámetros para sort y filter en tabla
+// Parámetros para sort y filter en tabla. Map de <ColumnKeys, nombre de campo en respuesta de servidor>
 export const fieldNameSearchRequestRequirement: Record<string, string> = {
   [nameColumnKey]: "name",
   [reqDateColumnKey]: "publish_date",
@@ -117,6 +122,15 @@ export const fieldNameSearchRequestOffer: Record<string, string> = {
   [userNameColumnKey]: "subUserName",
   [titleColumnKey]: "name",
   [stateColumnKey]: "stateID",
+};
+export const fieldNameSearchRequestSubUser: Record<string, string> = {
+  [nameColumnKey]: "name",
+  [emailColumnKey]: "email",
+  [creationDateSubUserColumnKey]: "createdAt",
+  [numGoodsColumnKey]: "numProducts",
+  [numServicesColumnKey]: "numServices",
+  [numSalesColumnKey]: "numLiquidations",
+  [stateColumnKey]: "active_account",
 };
 export const fieldNameSearchRequestOrder: Record<string, string> = {
   [purcOrderReqTitleColumnKey]: "requerimentTitle",

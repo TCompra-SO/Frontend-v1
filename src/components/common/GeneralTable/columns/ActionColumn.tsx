@@ -127,10 +127,10 @@ export default function ActionColumn(
         case TableTypes.USERS:
           return ActionByState[key].reduce<ItemType[]>(
             (acc, action: Action) => {
-              const { activeAccount, uid } = record as SubUserBase;
+              const { state, uid } = record as SubUserBase;
               if (
-                (activeAccount && action == Action.REACTIVATE) ||
-                (!activeAccount && action == Action.SUSPEND)
+                (state && action == Action.REACTIVATE) ||
+                (!state && action == Action.SUSPEND)
               )
                 return acc;
               acc.push({

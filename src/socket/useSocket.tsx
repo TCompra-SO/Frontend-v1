@@ -16,7 +16,7 @@ let socketAPI: Socket | null = null;
 
 export default function useSocket(
   tableType: TableTypes,
-  subType: RequirementType,
+  subType: RequirementType | undefined,
   page: number,
   searchTableRequest: SearchTableRequest | undefined,
   updateChangesQueue: (

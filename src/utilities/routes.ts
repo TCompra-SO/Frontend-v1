@@ -58,7 +58,7 @@ export const ApiRoutes = {
     changeRole: "changeRole/",
     changeStatus: "changeStatus/",
     getUser: "getUser/",
-    getSubUsersByEntity: "getSubUsersByEntity/",
+    searchSubUser: "searchSubUser",
   },
   requirements: {
     getRequirement: "getRequeriment/",
@@ -129,10 +129,13 @@ export const ApiRoutes = {
   certificate: {
     uploadCertificate: "uploadCertificate",
     getCertificates: "getCertificates/",
+    searchCertificates: "searchCertificates",
     updateCertificationState: "updateCertifyState",
     sendCertificationRequest: "sendCertification",
     getReceivedRequestsByEntity: "getReceivedRequestsByEntity/",
+    searchReceivedRequestByEntity: "searchReceivedRequestByEntity",
     getSentRequestsByEntity: "getSentRequestsByEntity/",
+    searchSentRequestByEntity: "searchSentRequestByEntity",
     deleteCertificate: "deleteCertificate/",
     resendCertificates: "resendCertify",
     verifyCertification: "verifyCertification/",

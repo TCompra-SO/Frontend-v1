@@ -90,11 +90,7 @@ export default function Requirements() {
   );
   const [isOpenModalSelectOffer, setIsOpenModalSelectOffer] = useState(false);
   const [dataModalSelectOffer, setDataModalSelectOffer] =
-    useState<ModalContent>({
-      type: ModalTypes.NONE,
-      data: {},
-      action: Action.NONE,
-    });
+    useState<ModalContent>(getInitialModalData());
   const [tableContent, setTableContent] = useState<TableTypeRequirement>({
     type: TableTypes.REQUIREMENT,
     data: requirementList,

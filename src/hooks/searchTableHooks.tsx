@@ -30,6 +30,12 @@ import {
 } from "../utilities/globalFunctions";
 import { debounce } from "lodash";
 import { FilterValue } from "antd/lib/table/interface";
+import { searchSubUsersService } from "../services/requests/subUserService";
+import {
+  searchCertificatesService,
+  searchReceivedRequestsByEntityService,
+  searchSentRequestsByEntityService,
+} from "../services/requests/certificateService";
 
 type SearchTableTypeParams = {
   page: number;
@@ -44,8 +50,8 @@ type SearchTableTypeParams = {
 export default function useSearchTable(
   uid: string,
   tableType: TableTypes,
-  entityType: EntityType, // subuser: registros de usuario | otro: registros de usuario + subusuarios
-  subType: RequirementType,
+  entityType: EntityType, // EntityType.SUBUSER: registros de usuario logueado | otro: registros de usuario logueado + subusuarios
+  subType?: RequirementType,
   resetChangesQueue?: () => void,
   orderSubType?: OrderTableType
 ) {
@@ -142,6 +148,7 @@ export default function useSearchTable(
           orderType,
           filterColumn,
           filterData,
+          entityID: stUid, // r3v quitar
         },
       };
       setApiParams(apiData);
@@ -150,11 +157,23 @@ export default function useSearchTable(
 
   function getService(
     stTableType: TableTypes,
-    stSubType: RequirementType,
+    stSubType?: RequirementType,
     stOrderType?: OrderTableType
   ) {
     let service: HttpService | null = null;
     switch (stTableType) {
+      case TableTypes.USERS:
+        service = searchSubUsersService();
+        break;
+      case TableTypes.MY_DOCUMENTS:
+        service = searchCertificatesService();
+        break;
+      case TableTypes.SENT_CERT:
+        service = searchSentRequestsByEntityService();
+        break;
+      case TableTypes.RECEIVED_CERT:
+        service = searchReceivedRequestsByEntityService();
+        break;
       case TableTypes.REQUIREMENT:
       case TableTypes.ALL_REQUIREMENTS:
         service = getSearchRecordsService(stSubType);

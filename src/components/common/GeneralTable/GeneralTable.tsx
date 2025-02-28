@@ -7,6 +7,11 @@ import {
 } from "../../../utilities/types";
 import {
   certDocDateColumnKey,
+  creationDateSubUserColumnKey,
+  emailColumnKey,
+  numGoodsColumnKey,
+  numSalesColumnKey,
+  numServicesColumnKey,
   offerDateColumnKey,
   offersColumnKey,
   pageSizeOptionsSt,
@@ -133,6 +138,19 @@ export default function GeneralTable(props: GeneralTableProps) {
         | BasicOffer
         | BasicPurchaseOrder
         | CertificationItem
+      >
+    | ColumnType<
+        | Requirement
+        | Offer
+        | PurchaseOrder
+        | RequirementItemSubUser
+        | OfferItemSubUser
+        | PurchaseOrderItemSubUser
+        | BasicRequirement
+        | BasicOffer
+        | BasicPurchaseOrder
+        | CertificationItem
+        | SubUserBase
       >
   > = [];
 
@@ -665,37 +683,43 @@ export default function GeneralTable(props: GeneralTableProps) {
       ),
       GeneralColumnString(
         t("email"),
-        "email",
+        emailColumnKey,
         true,
         130,
-        visibility[TableColumns.EMAIL]
+        visibility[TableColumns.EMAIL],
+        props.content.fieldSort
       ),
       GeneralDateColumn(
-        t("dateColumn"),
-        "createdAt",
+        t("creationDateAbbrev"),
+        creationDateSubUserColumnKey,
         visibility[TableColumns.CREATION_DATE],
         props.content.fieldSort
       ),
       GeneralColumnNumber(
         t("goods"),
-        "numGoods",
+        numGoodsColumnKey,
         visibility[TableColumns.GOODS],
         85,
         props.content.fieldSort
       ),
       GeneralColumnNumber(
         t("serviceAbbrev"),
-        "numServices",
+        numServicesColumnKey,
         visibility[TableColumns.SERVICES],
         85,
         props.content.fieldSort
       ),
       GeneralColumnNumber(
         t("salesAbbrev"),
-        "numSales",
+        numSalesColumnKey,
         visibility[TableColumns.SALES],
         85,
         props.content.fieldSort
+      ),
+      StateColumn(
+        props.content.type,
+        visibility[TableColumns.STATE],
+        props.content.filteredInfo
       ),
       ActionColumn(
         props.content.type,
