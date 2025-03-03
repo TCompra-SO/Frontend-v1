@@ -179,10 +179,6 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       },
     });
 
-    // return () => {
-    //   formDataImgRef.current = null;
-    //   formDataDocRef.current = null;
-    // };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -209,6 +205,11 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   }, [certificatesRequired]);
 
   useEffect(() => {
+    if (!showDocListToCetificate) setCertificatesRequired("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showDocListToCetificate]);
+
+  useEffect(() => {
     if (errorRequiredDocs) setCertificatesRequired("");
   }, [errorRequiredDocs]);
 
@@ -218,6 +219,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     if (newtype != type) {
       setType(newtype);
       props.setType(newtype);
+      setShowDocListToCetificate(false);
       form.resetFields();
     }
   }
