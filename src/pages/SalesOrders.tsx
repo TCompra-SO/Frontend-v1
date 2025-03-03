@@ -374,7 +374,7 @@ export default function SalesOrders() {
             offerId: purchaseOrder.offerId,
             requirementId: purchaseOrder.requirementId,
             fromRequirementTable: false,
-            canceledByCreator: type == OrderTableType.ISSUED,
+            canceledByCreator: type == OrderTableType.RECEIVED,
             rowId: purchaseOrder.key,
             type: purchaseOrder.type,
             requirementTitle: purchaseOrder.requirementTitle,
@@ -385,8 +385,8 @@ export default function SalesOrders() {
                   : purchaseOrder.subUserProviderId,
               targetId:
                 type == OrderTableType.ISSUED
-                  ? purchaseOrder.requirementId
-                  : purchaseOrder.offerId,
+                  ? purchaseOrder.offerId
+                  : purchaseOrder.requirementId,
               targetType: purchaseOrder.type,
             },
           },

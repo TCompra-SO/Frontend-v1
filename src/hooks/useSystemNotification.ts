@@ -8,6 +8,7 @@ import {
   SystemNotificationType,
 } from "../utilities/types";
 import { BasicNotificationData } from "../models/MainInterfaces";
+import { useEffect, useState } from "react";
 
 type SystemNotificationMap = {
   [SystemNotificationType.MAKE_OFFER]: (
@@ -47,7 +48,21 @@ type SystemNotificationMap = {
 };
 
 export default function useSystemNotification() {
-  const senderName = useSelector((state: MainState) => state.mainUser.name);
+  const mainSenderName = useSelector((state: MainState) => state.mainUser.name);
+  const userSenderName = useSelector((state: MainState) => state.user.name);
+  const [senderName, setSenderName] = useState(
+    `${userSenderName}${
+      userSenderName !== mainSenderName ? ` (${mainSenderName})` : ""
+    }`
+  );
+
+  useEffect(() => {
+    setSenderName(
+      `${userSenderName}${
+        userSenderName !== mainSenderName ? ` (${mainSenderName})` : ""
+      }`
+    );
+  }, [mainSenderName, userSenderName]);
 
   const notifications: SystemNotificationMap = {
     [SystemNotificationType.MAKE_OFFER]: (reqName) => ({
