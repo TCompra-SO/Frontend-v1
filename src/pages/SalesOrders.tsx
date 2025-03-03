@@ -377,6 +377,18 @@ export default function SalesOrders() {
             canceledByCreator: type == OrderTableType.ISSUED,
             rowId: purchaseOrder.key,
             type: purchaseOrder.type,
+            requirementTitle: purchaseOrder.requirementTitle,
+            notificationTargetData: {
+              receiverId:
+                type == OrderTableType.ISSUED
+                  ? purchaseOrder.subUserClientId
+                  : purchaseOrder.subUserProviderId,
+              targetId:
+                type == OrderTableType.ISSUED
+                  ? purchaseOrder.requirementId
+                  : purchaseOrder.offerId,
+              targetType: purchaseOrder.type,
+            },
           },
           action,
         });

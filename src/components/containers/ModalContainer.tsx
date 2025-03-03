@@ -47,11 +47,6 @@ export default function ModalContainer(props: ModalContainerProps) {
   const { updateIdAndActionQueue, deleteFromIdAndActionQueue } =
     useContext(LoadingDataContext);
 
-  /** Para CancelPurchaseOrderModal */
-
-  const useCancelRequirementHook = useCancelRequirement();
-  const useCancelOfferHook = useCancelOffer();
-
   /** Variables para solicitud */
 
   const [additionalApiParams, setAdditionalApiParams] = useState<UseApiType>({
@@ -71,6 +66,11 @@ export default function ModalContainer(props: ModalContainerProps) {
     setAdditionalApiParams: setAdditionalApiParams,
     apiParams,
   });
+
+  /** Para CancelPurchaseOrderModal */
+
+  const useCancelRequirementHook = useCancelRequirement(additionalApiParams);
+  const useCancelOfferHook = useCancelOffer(additionalApiParams);
 
   /** Acciones para solicitud */
 
@@ -247,6 +247,10 @@ export default function ModalContainer(props: ModalContainerProps) {
             useCancelRequirementHook={useCancelRequirementHook}
             useCancelOfferHook={useCancelOfferHook}
             type={props.content.data.type}
+            additionalApiParams={additionalApiParams}
+            setAdditionalApiParams={setAdditionalApiParams}
+            notificationTargetData={props.content.data.notificationTargetData}
+            requirementTitle={props.content.data.requirementTitle}
           />
         );
       }

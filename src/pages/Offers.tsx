@@ -338,6 +338,12 @@ export default function Offers() {
             canceledByCreator: true,
             rowId: offer.key,
             type: offer.type,
+            requirementTitle: offer.requirementTitle,
+            notificationTargetData: {
+              receiverId: "",
+              targetId: offer.requirementId,
+              targetType: offer.type,
+            },
           },
           action,
         });

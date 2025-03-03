@@ -1,14 +1,29 @@
 import TextAreaContainer from "../../containers/TextAreaContainer";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import { Lengths } from "../../../utilities/lengths";
-import { Action, ActionLabel, RequirementType } from "../../../utilities/types";
+import {
+  Action,
+  ActionLabel,
+  RequirementType,
+  ResponseRequestType,
+  SystemNotificationType,
+} from "../../../utilities/types";
 import {
   useCancelOffer,
   useCancelRequirement,
 } from "../../../hooks/requirementHooks";
 import useShowNotification from "../../../hooks/utilHooks";
+import { UseApiType } from "../../../hooks/useApi";
+import useSystemNotification from "../../../hooks/useSystemNotification";
+import { MainSocketsContext } from "../../../contexts/MainSocketsContext";
+import {
+  BasicNotificationData,
+  NotificationTargetData,
+} from "../../../models/MainInterfaces";
+import dayjs from "dayjs";
+import { getBasicRateData } from "../../../services/general/generalServices";
 
 interface CancelPurchaseOrderModalProps {
   onClose: () => any;
@@ -20,17 +35,32 @@ interface CancelPurchaseOrderModalProps {
   useCancelRequirementHook: ReturnType<typeof useCancelRequirement>;
   useCancelOfferHook: ReturnType<typeof useCancelOffer>;
   type: RequirementType;
+  additionalApiParams: UseApiType;
+  setAdditionalApiParams: (additionalParams: UseApiType) => void;
+  notificationTargetData: NotificationTargetData;
+  requirementTitle: string;
 }
 
 export default function CancelPurchaseOrderModal(
   props: CancelPurchaseOrderModalProps
 ) {
   const { t } = useTranslation();
+  const { sendNotification } = useContext(MainSocketsContext);
   const { showNotification } = useShowNotification();
+  const { getSystemNotification } = useSystemNotification();
   const [text, setText] = useState<string>("");
   const { cancelRequirement, loadingCancelRequirement } =
     props.useCancelRequirementHook;
   const { cancelOffer, loadingCancelOffer } = props.useCancelOfferHook;
+
+  /** Generar notificación de sistema */
+
+  useEffect(() => {
+    props.setAdditionalApiParams({
+      functionToExecute: generateNotification,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /** Cerrar modal */
 
@@ -45,6 +75,42 @@ export default function CancelPurchaseOrderModal(
   }, [loadingCancelRequirement]);
 
   /** Funciones */
+
+  async function generateNotification(responseData: ResponseRequestType) {
+    console.log("excutoing...............");
+    if (responseData) {
+      let notification: BasicNotificationData | null = null;
+      if (props.canceledByCreator) {
+        const notificationFn = getSystemNotification(
+          SystemNotificationType.CANCEL_MY_OFFER
+        );
+        notification = notificationFn(props.requirementTitle, props.type);
+      } else {
+        const notificationFn = getSystemNotification(
+          SystemNotificationType.CANCEL_AN_OFFER
+        );
+        notification = notificationFn(props.type);
+      }
+
+      let receiverId: string = props.notificationTargetData.receiverId;
+      if (!receiverId && !props.fromRequirementTable) {
+        const { basicRateData } = await getBasicRateData(
+          props.fromRequirementTable ? props.offerId : props.requirementId,
+          props.fromRequirementTable,
+          props.type
+        );
+        if (basicRateData)
+          receiverId = basicRateData.subUserId ?? basicRateData.userId;
+      }
+      if (receiverId)
+        sendNotification({
+          ...notification,
+          ...props.notificationTargetData,
+          receiverId,
+          timestamp: dayjs().toISOString(),
+        });
+    }
+  }
 
   function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setText(e.target.value.trim());

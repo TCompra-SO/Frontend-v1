@@ -1,6 +1,7 @@
 import { Dropdown, Popover, Tooltip } from "antd";
 import {
   BasicRateData,
+  NotificationTargetData,
   Offer,
   Requirement,
 } from "../../../../models/MainInterfaces";
@@ -34,6 +35,8 @@ interface RequirementOfferListItemProps {
         onSelectionSuccess: (offerId: string) => void;
         onCancelSuccess?: (offerId: string) => void;
         onRateCancel?: (offerId: string, showOption?: boolean) => void;
+        notificationTargetData: NotificationTargetData;
+        requirementTitle: string;
       }
     | { show: false };
   setDataModalSelectOffer?: (val: ModalContent) => void;
@@ -114,6 +117,8 @@ export default function RequirementOfferListItemHeader({
               onCancelSuccess: props.showActions.onCancelSuccess,
               rowId: props.showActions.requirement.key,
               type: props.offer.type,
+              notificationTargetData: props.showActions.notificationTargetData,
+              requirementTitle: props.showActions.requirementTitle,
             },
             action,
           });

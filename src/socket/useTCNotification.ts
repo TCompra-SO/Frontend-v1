@@ -239,14 +239,14 @@ export function useTCNotification() {
   }
 
   function sendNotification(notification: NotificationDataNoSender) {
-    if (notifSocketAPI) {
+    if (notifSocketAPI && notification.receiverId) {
       const senderData: NotificationSenderData = {
         senderId: uid,
         senderName: senderName,
         senderImage: mainSenderImage,
       };
       const notif: NotificationData = { ...senderData, ...notification };
-      console.log(notif);
+      console.log("👉", notif);
       // notifSocketAPI.emit("eventName", notif);
     }
   }

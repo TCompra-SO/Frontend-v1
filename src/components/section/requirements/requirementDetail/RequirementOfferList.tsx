@@ -179,6 +179,12 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
                   onSelectionSuccess: handleSuccessfulSelection,
                   onCancelSuccess: handleCancelSuccess,
                   onRateCancel: handleRateCancel,
+                  notificationTargetData: {
+                    receiverId: offer.subUser?.uid ?? offer.user.uid,
+                    targetId: offer.key,
+                    targetType: offer.type,
+                  },
+                  requirementTitle: props.requirement.title,
                 }}
                 onClose={props.onClose}
                 requirementId={props.requirement.key}

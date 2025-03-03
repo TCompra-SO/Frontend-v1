@@ -31,6 +31,7 @@ import {
   NotificationData,
   ChatSocketData,
   NotificationDataFromServer,
+  NotificationTargetData,
 } from "./MainInterfaces";
 import useApi, { UseApiType } from "../hooks/useApi";
 import { FieldSort } from "./Requests";
@@ -55,6 +56,8 @@ export interface ModalCancelPurchaseOrder extends CommonModalType {
     onCancelSuccess?: (offerId: string) => void;
     rowId: string;
     type: RequirementType;
+    notificationTargetData: NotificationTargetData;
+    requirementTitle: string;
   };
 }
 

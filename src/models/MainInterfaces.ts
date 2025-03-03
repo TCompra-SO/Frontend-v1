@@ -288,10 +288,15 @@ export interface BasicNotificationData {
   action: Action;
 }
 
-export interface NotificationDataNoSender extends BasicNotificationData {
+export interface NotificationTargetData {
   receiverId: string;
   targetId: string;
   targetType: RequirementType | OrderTableType | CertificationTableType;
+}
+
+export interface NotificationDataNoSender
+  extends BasicNotificationData,
+    NotificationTargetData {
   timestamp: string;
 }
 

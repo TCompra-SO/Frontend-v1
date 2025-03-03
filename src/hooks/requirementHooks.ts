@@ -5,7 +5,7 @@ import {
   OfferFilters,
   useApiParams,
 } from "../models/Interfaces";
-import useApi from "./useApi";
+import useApi, { UseApiType } from "./useApi";
 import {
   CancelOfferRequest,
   CancelRequirementRequest,
@@ -51,7 +51,7 @@ import { pageSizeOptionsSt } from "../utilities/globals";
 
 /** useCancelRequirement */
 
-export function useCancelRequirement() {
+export function useCancelRequirement(additionalApiParams?: UseApiType) {
   const { t } = useTranslation();
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
@@ -72,11 +72,7 @@ export function useCancelRequirement() {
     errorMsg: errorMsgCancel,
     fetchData: fetchDataCancel,
     reset: resetUseApi,
-  } = useApi<CancelRequirementRequest>({
-    service: apiParamsCancel.service,
-    method: apiParamsCancel.method,
-    dataToSend: apiParamsCancel.dataToSend,
-  });
+  } = useApi<CancelRequirementRequest>(apiParamsCancel, additionalApiParams);
 
   useEffect(() => {
     return () => {
@@ -149,7 +145,7 @@ export function useCancelRequirement() {
 
 /** useCancelOffer */
 
-export function useCancelOffer() {
+export function useCancelOffer(additionalApiParams?: UseApiType) {
   const { t } = useTranslation();
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
@@ -168,11 +164,7 @@ export function useCancelOffer() {
     errorMsg,
     fetchData,
     reset: resetUseApi,
-  } = useApi<CancelOfferRequest>({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
+  } = useApi<CancelOfferRequest>(apiParams, additionalApiParams);
 
   useEffect(() => {
     return () => {

@@ -400,6 +400,13 @@ export default function Requirements() {
               canceledByCreator: false,
               rowId: requirement.key,
               type: requirement.type,
+              requirementTitle: requirement.title,
+              notificationTargetData: {
+                receiverId:
+                  requirement.offerSubUserId ?? requirement.offerUserId ?? "",
+                targetId: requirement.offerId,
+                targetType: requirement.type,
+              },
             },
             action,
           });
