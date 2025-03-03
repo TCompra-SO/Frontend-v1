@@ -955,7 +955,7 @@ const resources = {
       duration: "Duración",
       months: "Meses",
       days: "Días",
-      documentListCertif: "Lista de documentos a certificar",
+      documentListCertif: "Lista de documentos para certificar",
       addImages: "Agregar imágenes",
       addDocument: "Agregar documento",
       uploadImage: "Subir imagen",
