@@ -342,6 +342,7 @@ const resources = {
       maxCharMessage: "Enter up to",
       userSuspendedSuccessfully: "User suspended successfully",
       userReactivatedSuccessfully: "User reactivated successfully",
+      noDocumentsForCertification: "No documents available. Click 'Add certificates' to add new files.",
       // Other
       characters: "characters",
       yes: "Yes",
@@ -891,6 +892,7 @@ const resources = {
       maxCharMessage: "Puede ingresar hasta",
       userSuspendedSuccessfully: "Usuario suspendido exitosamente",
       userReactivatedSuccessfully: "Usuario reactivado exitosamente",
+      noDocumentsForCertification: "No hay documentos disponibles. Haga click en 'Agregar certificados' para añadir nuevos archivos.",
       // Other
       characters: "caracteres",
       yes: "Sí",

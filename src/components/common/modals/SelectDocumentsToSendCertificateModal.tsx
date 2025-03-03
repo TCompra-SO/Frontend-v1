@@ -233,7 +233,7 @@ export default function SelectDocumentsToSendCertificateModal(
               <SimpleLoading style={{ width: "15vw" }} />
             </Flex>
           )}
-          {!loadingCertList &&
+          {!loadingCertList && docs.length > 0 ? (
             docs.map((obj, index) => (
               <div key={index} className="card-ofertas certificado-bloque">
                 <div className="t-flex oferta-titulo gap-10">
@@ -259,16 +259,27 @@ export default function SelectDocumentsToSendCertificateModal(
                   ></Checkbox>
                 </div>
               </div>
-            ))}
-          <Flex justify="center">
-            <Pagination
-              size="small"
-              total={totalCertList}
-              onChange={onChangePageAndPageSize}
-              // showTotal={(total) => `${total}`}
-              current={currentPage}
-            />
-          </Flex>
+            ))
+          ) : (
+            <div className="card-ofertas certificado-bloque">
+              <div className="t-flex oferta-descripcion">
+                <div className="detalles-oferta">
+                  {t("noDocumentsForCertification")}
+                </div>
+              </div>
+            </div>
+          )}
+          {docs.length > 0 && (
+            <Flex justify="center">
+              <Pagination
+                size="small"
+                total={totalCertList}
+                onChange={onChangePageAndPageSize}
+                // showTotal={(total) => `${total}`}
+                current={currentPage}
+              />
+            </Flex>
+          )}
           <div className="t-flex gap-15 wd-100 alert-btn">
             <ButtonContainer
               className="btn alert-boton btn-green"
