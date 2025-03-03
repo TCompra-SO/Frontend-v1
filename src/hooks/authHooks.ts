@@ -18,6 +18,7 @@ import {
   setIsLoggedIn,
   setUid,
   setUser,
+  setUserName,
   userInitialState,
 } from "../redux/userSlice";
 
@@ -53,6 +54,7 @@ export function useRegister() {
   async function register(responseData: any, email: string) {
     showNotification("success", t("registerUserSuccess"));
     dispatch(setUid(responseData.res?.uid));
+    if (responseData.res?.name) dispatch(setUserName(responseData.res?.name));
     dispatch(setEmail(email));
   }
 

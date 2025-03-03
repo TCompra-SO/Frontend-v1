@@ -32,6 +32,7 @@ import SpecialtyField from "../components/common/formFields/SpecialtyField";
 import AboutMeField from "../components/common/formFields/AboutMeField";
 import { useHandleChangeImage } from "../hooks/useHandleChangeImage";
 import useShowNotification from "../hooks/utilHooks";
+import NameField from "../components/common/formFields/NameField";
 // import LocationField from "../components/common/formFields/LocationField";
 
 interface ProfileProps {
@@ -41,17 +42,18 @@ interface ProfileProps {
 }
 
 export default function Profile(props: ProfileProps) {
-  const context = useContext(ListsContext);
-  const { countryList, countryData, categoryData } = context;
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
-  const [form] = Form.useForm();
+  const handleChangeImage = useHandleChangeImage();
+  const context = useContext(ListsContext);
+  const { countryList, countryData, categoryData } = context;
   const fileInputRef = React.useRef<InputRef>(null);
   const uid = useSelector((state: MainState) => state.user.uid);
+  const userName = useSelector((state: MainState) => state.user.name);
+  const [form] = Form.useForm();
   const [imageSrc, setImageSrc] = useState(defaultUserImage);
   const [profileSuccess, setProfileSuccess] = useState(false);
   const [cities, setCities] = useState<IdValueObj[]>([]);
-  const handleChangeImage = useHandleChangeImage();
   const [apiParams, setApiParams] = useState<useApiParams<ProfileRequest>>({
     service: null,
     method: "get",
@@ -178,7 +180,6 @@ export default function Profile(props: ProfileProps) {
           <Form
             form={form}
             disabled={profileSuccess}
-            // layout="vertical"
             colon={false}
             requiredMark={false}
             onFinish={HandleSubmit}
@@ -186,7 +187,7 @@ export default function Profile(props: ProfileProps) {
             <div
               style={{ display: "flex", flexDirection: "column", gap: "15px" }}
             >
-              <div className="t-flex" style={{ justifyContent: "center" }}>
+              {/* <div className="t-flex" style={{ justifyContent: "center" }}> // Div para añadir una imagen
                 <img
                   src={imageSrc}
                   alt=""
@@ -214,8 +215,7 @@ export default function Profile(props: ProfileProps) {
                     cursor: "pointer",
                   }}
                 ></i>
-              </div>
-
+              </div> */}
               <Form.Item name="image" style={{ display: "none" }}>
                 <Input
                   accept="image/*"
@@ -225,6 +225,7 @@ export default function Profile(props: ProfileProps) {
                   ref={fileInputRef}
                 />
               </Form.Item>
+              {userName && <NameField value={userName} onlyItem edit />}
               <Row gutter={[15, 15]}>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                   <PhoneField onlyItem />
@@ -233,7 +234,6 @@ export default function Profile(props: ProfileProps) {
                   <AddressField onlyItem />
                 </Col>
               </Row>
-
               <Row gutter={[15, 15]}>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                   <Form.Item
@@ -277,7 +277,6 @@ export default function Profile(props: ProfileProps) {
                   </Form.Item>
                 </Col>
               </Row>
-
               {props.docType == DocType.RUC && (
                 <>
                   <Row gutter={[15, 15]}>
@@ -292,14 +291,12 @@ export default function Profile(props: ProfileProps) {
                   <AboutMeField onlyItem />
                 </>
               )}
-
               <label
                 className="text-left"
                 style={{ fontWeight: "500", color: "#6a6a6a" }}
               >
                 {t("categories")}
               </label>
-
               <Row gutter={[15, 15]}>
                 <Col xs={24} sm={24} md={8} lg={8} xl={8}>
                   <Form.Item
@@ -356,7 +353,6 @@ export default function Profile(props: ProfileProps) {
                   </Form.Item>
                 </Col>
               </Row>
-
               <Form.Item style={{}} wrapperCol={{ span: "24" }}>
                 {!profileSuccess && (
                   <ButtonContainer

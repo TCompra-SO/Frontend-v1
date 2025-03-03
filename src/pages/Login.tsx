@@ -6,7 +6,7 @@ import {
   RegisterRequest,
 } from "../models/Requests";
 import { useDispatch } from "react-redux";
-import { setUid, setEmail } from "../redux/userSlice";
+import { setUid, setEmail, setUserName } from "../redux/userSlice";
 import {
   Action,
   DocType,
@@ -119,6 +119,9 @@ export default function Login(props: LoginProps) {
       error.response?.data.entity
     ) {
       dispatch(setUid(error.response?.data.uid));
+      if (error.response?.data.name)
+        dispatch(setUserName(error.response?.data.name));
+      else dispatch(setUserName(""));
       dispatch(setEmail(form.getFieldValue("email")));
       props.onRegisterSuccess(
         error.response?.data.entity == "User" ? DocType.DNI : DocType.RUC

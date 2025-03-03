@@ -52,6 +52,9 @@ export const userSlice = createSlice({
     setUid: (state, action) => {
       state.uid = action.payload;
     },
+    setUserName: (state, action) => {
+      state.name = action.payload;
+    },
     setEmail: (state, action) => {
       state.email = action.payload;
     },
@@ -81,5 +84,6 @@ export const {
   setFullUser,
   setIsLoggedIn,
   setUserImage,
+  setUserName,
 } = userSlice.actions;
 export default userSlice.reducer;
