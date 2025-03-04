@@ -139,7 +139,6 @@ export default function RequirementOfferListItemHeader({
           props.setIsOpenModalSelectOffer?.(true);
           break;
         case Action.RATE_CANCELED: {
-          console.log("=======>", props.offer.key);
           const data: BasicRateData = {
             uid: props.offer.key,
             title: props.offer.title,
@@ -250,6 +249,12 @@ export default function RequirementOfferListItemHeader({
             <div className="badge-warning">
               <i className="fa-regular fa-ban"></i>{" "}
               <span className="req-btn-info">{t("canceledOffer")}</span>
+            </div>
+          )}
+          {props.offer.state == OfferState.DISPUTE && (
+            <div className="badge-dispute">
+              <i className="fa-regular fa-swords"></i>{" "}
+              <span className="req-btn-info">{t("disputeOffer")}</span>
             </div>
           )}
           {props.showActions.show && (

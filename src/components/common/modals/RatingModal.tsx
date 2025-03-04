@@ -6,6 +6,7 @@ import {
   ResponseRequestType,
   ErrorRequestType,
   ErrorMsgRequestType,
+  SystemNotificationType,
 } from "../../../utilities/types";
 import SelectContainer from "../../containers/SelectContainer";
 import RatingContainer from "../../containers/RatingContainer";
@@ -17,24 +18,29 @@ import {
   getUserClass,
 } from "../../../utilities/globalFunctions";
 import ButtonContainer from "../../containers/ButtonContainer";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import FrontImage from "../utils/FrontImage";
 import SubUserName from "../utils/SubUserName";
 import { CommonModalProps } from "../../../models/Interfaces";
 import { CulminateRequest } from "../../../models/Requests";
 import useShowNotification from "../../../hooks/utilHooks";
+import { MainSocketsContext } from "../../../contexts/MainSocketsContext";
+import useSystemNotification from "../../../hooks/useSystemNotification";
+import dayjs from "dayjs";
 
 interface RatingModalProps extends CommonModalProps {
   basicRateData: BasicRateData;
   type: RequirementType;
   isOffer: boolean; // indica si a quien se califica es creador de una oferta o no
   onClose: () => any;
-  requirementOrOfferId: string;
+  requirementOrOfferId: string; // Id de oferta o requerimiento que se está culminando
 }
 
 export default function RatingModal(props: RatingModalProps) {
   const { t } = useTranslation();
+  const { sendNotification } = useContext(MainSocketsContext);
+  const { getSystemNotification } = useSystemNotification();
   const [answer, setAnswer] = useState<YesNo | null>(null);
   const [scores, setScores] = useState([0, 0, 0]);
   const { showNotification } = useShowNotification();
@@ -106,6 +112,20 @@ export default function RatingModal(props: RatingModalProps) {
         if (responseData) {
           showNotification("success", t("scoreSavedSuccessfully"));
           props.onClose();
+          const notificationFn = getSystemNotification(
+            props.isOffer
+              ? SystemNotificationType.FINISH_REQUIREMENT
+              : SystemNotificationType.FINISH_OFFER
+          );
+          const notification = notificationFn(answer == YesNo.YES, props.type);
+          sendNotification({
+            ...notification,
+            receiverId:
+              props.basicRateData.subUserId ?? props.basicRateData.userId,
+            timestamp: dayjs().toISOString(),
+            targetId: props.basicRateData.uid,
+            targetType: props.type,
+          });
         } else if (error) {
           showNotification("error", errorMsg);
         }

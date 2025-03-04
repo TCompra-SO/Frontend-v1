@@ -162,7 +162,6 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   }
 
   function updateType(val: RequirementType) {
-    console.log(val);
     setType(val);
   }
 

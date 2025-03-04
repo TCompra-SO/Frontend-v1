@@ -33,7 +33,6 @@ import {
   reqIdParamNameInRoute,
   typeParamNameInRoute,
 } from "./utilities/globals.ts";
-import useUserSocket from "./socket/useUserSocket.tsx";
 import { MainSocketsProvider } from "./contexts/MainSocketsContext.tsx";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
@@ -101,7 +100,6 @@ function App() {
     async function getUserData() {
       await loadUserInfo();
       dispatch(setIsLoading(false));
-      console.log(2222);
     }
     getUserData();
     // eslint-disable-next-line react-hooks/exhaustive-deps

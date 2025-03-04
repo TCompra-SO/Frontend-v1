@@ -106,9 +106,11 @@ export default function useSystemNotification() {
               confirmation ? "prestó" : "no prestó"
             } el servicio.`
           : `${senderName} ${
-              confirmation ? "confirmó" : "negó"
-            } la recepción del requerimiento.`,
-      action: Action.VIEW_HISTORY,
+              confirmation
+                ? "confirmó la recepción del requerimiento."
+                : "indicó que no recibió el requerimiento"
+            }`,
+      action: Action.VIEW_REQUIREMENT,
     }),
 
     [SystemNotificationType.DISPUTE_OFFER_CREATOR]: (
@@ -152,8 +154,10 @@ export default function useSystemNotification() {
       body:
         type === RequirementType.GOOD
           ? `${senderName} ${
-              confirmation ? "confirmó" : "negó"
-            } la recepción del requerimiento.`
+              confirmation
+                ? "confirmó la recepción del requerimiento."
+                : "indicó que no recibió el requerimiento"
+            } `
           : type === RequirementType.SERVICE
           ? `${senderName} indicó que el servicio ${
               confirmation ? "" : "no"
@@ -161,7 +165,7 @@ export default function useSystemNotification() {
           : `${senderName} indicó que ${
               confirmation ? "" : "no"
             } envió su requerimiento.`,
-      action: Action.VIEW_HISTORY,
+      action: Action.VIEW_OFFER,
     }),
 
     [SystemNotificationType.SELECT_OFFER]: (type) => ({

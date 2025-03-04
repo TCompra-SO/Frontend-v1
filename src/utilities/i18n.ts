@@ -54,7 +54,7 @@ const resources = {
       activeOffer: "Active offer",
       winningOffer: "Winning offer",
       finishedOffer: "Finished offer",
-      disputeOffer: "Offer in dispute",
+      disputeOffer: "Disputed offer",
       canceledOffer: "Canceled offer",
       eliminatedOffer: "Deleted offer",
       delivered: "Delivered",
