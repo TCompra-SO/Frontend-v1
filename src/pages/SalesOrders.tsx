@@ -368,6 +368,11 @@ export default function SalesOrders() {
         );
         break;
       case Action.CANCEL:
+        console.log(
+          type,
+          purchaseOrder.subUserProviderId,
+          purchaseOrder.requirementId
+        );
         setDataModal({
           type: ModalTypes.CANCEL_PURCHASE_ORDER,
           data: {

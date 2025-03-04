@@ -1,22 +1,32 @@
 import TextAreaContainer from "../../containers/TextAreaContainer";
 import { Col, Flex, Row } from "antd";
 import { Offer, Requirement } from "../../../models/MainInterfaces";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import { Lengths } from "../../../utilities/lengths";
 import SelectContainer from "../../containers/SelectContainer";
 import { filterLabels } from "../../../utilities/colors";
 import { SelectOfferRequest } from "../../../models/Requests";
-import { CommonModalProps, OfferFilters } from "../../../models/Interfaces";
+import {
+  CommonModalProps,
+  OfferFilters,
+  SelectOfferResponse,
+} from "../../../models/Interfaces";
 import useShowNotification from "../../../hooks/utilHooks";
 import {
   ErrorMsgRequestType,
   ErrorRequestType,
+  OrderTableType,
+  RequirementType,
   ResponseRequestType,
+  SystemNotificationType,
 } from "../../../utilities/types";
 import { FilterNames } from "../../../contexts/RequirementDetailContext";
 import { getSelectOfferService } from "../../../utilities/globalFunctions";
+import useSystemNotification from "../../../hooks/useSystemNotification";
+import { MainSocketsContext } from "../../../contexts/MainSocketsContext";
+import dayjs from "dayjs";
 
 interface RequirementModalOfferSelectedProps extends CommonModalProps {
   offer: Offer;
@@ -33,7 +43,9 @@ export default function RequirementModalOfferSelected({
   ...props
 }: RequirementModalOfferSelectedProps) {
   const { t } = useTranslation();
+  const { sendNotification } = useContext(MainSocketsContext);
   const { showNotification } = useShowNotification();
+  const { getSystemNotification } = useSystemNotification();
   const [text, setText] = useState<string>("");
   const { loading } = props.useApiHook;
 
@@ -48,6 +60,28 @@ export default function RequirementModalOfferSelected({
           showNotification("success", t("offerSelectedSuccessfully"));
           props.onSucces(props.offer.key);
           props.onClose();
+          if (responseData.res) {
+            const response: SelectOfferResponse = responseData.res;
+            const targetId =
+              props.requirement.type == RequirementType.SALE
+                ? response.saleOrderUID
+                : response.purchaseOrderUID;
+            if (targetId) {
+              const notificationFn = getSystemNotification(
+                SystemNotificationType.SELECT_OFFER
+              );
+              const notification = notificationFn(props.requirement.type);
+              sendNotification({
+                ...notification,
+                receiverId: props.offer.subUser
+                  ? props.offer.subUser.uid
+                  : props.offer.user.uid,
+                timestamp: dayjs().toISOString(),
+                targetId,
+                targetType: OrderTableType.RECEIVED,
+              });
+            }
+          }
         } else if (error) {
           showNotification("error", errorMsg);
         }
@@ -71,7 +105,6 @@ export default function RequirementModalOfferSelected({
       warranty_Filter: filters.warranty,
     };
     if (notes) data.observation = notes;
-    console.log(data);
     props.setApiParams({
       service: getSelectOfferService(props.requirement.type),
       method: "post",

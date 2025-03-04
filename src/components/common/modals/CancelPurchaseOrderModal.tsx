@@ -77,7 +77,6 @@ export default function CancelPurchaseOrderModal(
   /** Funciones */
 
   async function generateNotification(responseData: ResponseRequestType) {
-    console.log("excutoing...............", props.canceledByCreator);
     if (responseData) {
       let notification: BasicNotificationData | null = null;
       if (props.canceledByCreator) {

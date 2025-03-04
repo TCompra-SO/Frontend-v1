@@ -530,3 +530,9 @@ export interface RealTimeChatData {
 export type ShowRealTimeNotificationParams =
   | RealTimeNotificationData
   | RealTimeChatData;
+
+export interface SelectOfferResponse {
+  offerUID: string;
+  purchaseOrderUID?: string;
+  saleOrderUID?: string;
+}

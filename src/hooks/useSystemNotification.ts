@@ -166,9 +166,9 @@ export default function useSystemNotification() {
 
     [SystemNotificationType.SELECT_OFFER]: (type) => ({
       title: `Oferta seleccionada`,
-      body: `${senderName} te ha generado una orden de ${
+      body: `Has recibido una orden de ${
         type === RequirementType.SALE ? "venta" : "compra"
-      }.`,
+      } de ${senderName}.`,
       action: Action.DOWNLOAD_PURCHASE_ORDER,
     }),
 
