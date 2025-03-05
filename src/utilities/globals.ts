@@ -52,6 +52,7 @@ export const formFieldKeyword: string = "keywords";
 export const chatDataFieldName: string = "chatData";
 
 export const masterUid: string = "dlGMHRyyAidgFMDqmLBO";
+export const pageSizeOfferList: number = 5;
 
 // local storage keys
 export const userDataKey: string = "udata";

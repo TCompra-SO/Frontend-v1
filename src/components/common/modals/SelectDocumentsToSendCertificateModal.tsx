@@ -297,6 +297,7 @@ export default function SelectDocumentsToSendCertificateModal(
                 onChange={onChangePageAndPageSize}
                 // showTotal={(total) => `${total}`}
                 current={currentPage}
+                hideOnSinglePage={true}
               />
             </Flex>
           )}

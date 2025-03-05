@@ -9,9 +9,10 @@ import {
   RequirementState,
 } from "../../../../utilities/types";
 import { requirementDetailContext } from "../../../../contexts/RequirementDetailContext";
-import { allSelect } from "../../../../utilities/globals";
+import { allSelect, pageSizeOfferList } from "../../../../utilities/globals";
 import { transformToDays } from "../../../../utilities/globalFunctions";
 import { ModalContent } from "../../../../models/Interfaces";
+import { Flex, Pagination } from "antd";
 
 interface RequirementOfferListProps {
   offers: Offer[];
@@ -27,6 +28,9 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
   const { filters } = useContext(requirementDetailContext);
   const [reqCopy, setReqCopy] = useState<Requirement>(props.requirement);
   const [offersCopy, setOffersCopy] = useState<Offer[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [startIndex, setStartIndex] = useState(0);
+  const [endIndex, setEndIndex] = useState(pageSizeOfferList);
 
   useEffect(() => {
     setOffersCopy([...props.offers]);
@@ -165,36 +169,61 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
     });
   }
 
+  function onChangePage(page: number) {
+    setCurrentPage(page);
+    const stIndex = (page - 1) * pageSizeOfferList;
+    setStartIndex(stIndex);
+    setEndIndex(stIndex + pageSizeOfferList);
+  }
+
   if (offersCopy.length > 0)
     return (
       <div className="t-flex gap-15" style={{ flexDirection: "column" }}>
-        {offersCopy.map((offer: Offer, index: number) => {
-          return (
-            <div key={`${offer.key}${index}`} className="card-ofertas">
-              <RequirementOfferListItemHeader
-                offer={offer}
-                showActions={{
-                  show: !props.forPurchaseOrder,
-                  requirement: reqCopy,
-                  onSelectionSuccess: handleSuccessfulSelection,
-                  onCancelSuccess: handleCancelSuccess,
-                  onRateCancel: handleRateCancel,
-                  notificationTargetData: {
-                    receiverId: offer.subUser?.uid ?? offer.user.uid,
-                    targetId: offer.key,
-                    targetType: offer.type,
-                  },
-                  requirementTitle: props.requirement.title,
-                }}
-                onClose={props.onClose}
-                requirementId={props.requirement.key}
-                setDataModalSelectOffer={props.setDataModalSelectOffer}
-                setIsOpenModalSelectOffer={props.setIsOpenModalSelectOffer}
-              />
-              <RequirementOfferListItemBody offer={offer} showUserData={true} />
-            </div>
-          );
-        })}
+        {offersCopy
+          .slice(startIndex, endIndex)
+          .map((offer: Offer, index: number) => {
+            return (
+              <div key={`${offer.key}${index}`} className="card-ofertas">
+                <RequirementOfferListItemHeader
+                  offer={offer}
+                  showActions={{
+                    show: !props.forPurchaseOrder,
+                    requirement: reqCopy,
+                    onSelectionSuccess: handleSuccessfulSelection,
+                    onCancelSuccess: handleCancelSuccess,
+                    onRateCancel: handleRateCancel,
+                    notificationTargetData: {
+                      receiverId: offer.subUser?.uid ?? offer.user.uid,
+                      targetId: offer.key,
+                      targetType: offer.type,
+                    },
+                    requirementTitle: props.requirement.title,
+                  }}
+                  onClose={props.onClose}
+                  requirementId={props.requirement.key}
+                  setDataModalSelectOffer={props.setDataModalSelectOffer}
+                  setIsOpenModalSelectOffer={props.setIsOpenModalSelectOffer}
+                />
+                <RequirementOfferListItemBody
+                  offer={offer}
+                  showUserData={true}
+                />
+              </div>
+            );
+          })}
+        {offersCopy.length > 0 && (
+          <Flex justify="center">
+            <Pagination
+              size="small"
+              total={offersCopy.length}
+              onChange={onChangePage}
+              // showTotal={(total) => `${total}`}
+              pageSize={pageSizeOfferList}
+              current={currentPage}
+              hideOnSinglePage={true}
+            />
+          </Flex>
+        )}
       </div>
     );
   else
