@@ -148,7 +148,6 @@ export default function useSearchTable(
           orderType,
           filterColumn,
           filterData,
-          entityID: stUid, // r3v quitar
         },
       };
       setApiParams(apiData);

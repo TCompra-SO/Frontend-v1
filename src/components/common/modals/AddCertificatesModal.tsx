@@ -8,6 +8,7 @@ import { checkDoc } from "../../../utilities/globalFunctions";
 import { maxDocSizeMb } from "../../../utilities/globals";
 import { CommonModalProps } from "../../../models/Interfaces";
 import {
+  DocType,
   ErrorMsgRequestType,
   ErrorRequestType,
   ResponseRequestType,
@@ -170,7 +171,7 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
         <div className="t-flex gap-15 datos-empresa">
           <div className="card-ofertas cert-datos dato-empresa">{name}</div>
           <div className="card-ofertas cert-datos dato-empresa">
-            {t("document")}: {doc}
+            {DocType.RUC}: {doc}
           </div>
         </div>
         <div className="t-flex t-wrap up-footer">
