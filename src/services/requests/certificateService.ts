@@ -141,3 +141,12 @@ export function getRequiredDocumentsService(companyId: string): HttpService {
     type: "CE-GET-DOC",
   };
 }
+
+export function getCertificateRequestService(requestId: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
+      ApiRoutes.certificate.getCertificateRequest
+    }${requestId}`,
+    type: "CE-GET-REQ",
+  };
+}

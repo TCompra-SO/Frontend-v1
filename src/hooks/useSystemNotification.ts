@@ -71,9 +71,9 @@ export default function useSystemNotification() {
       action: Action.VIEW_REQUIREMENT,
     }),
 
-    [SystemNotificationType.CERTIFICATE_COMPANY]: (rejected) => ({
-      title: `Certificación ${rejected ? "rechazada" : "aceptada"}`,
-      body: rejected
+    [SystemNotificationType.CERTIFICATE_COMPANY]: (confirmation) => ({
+      title: `Certificación ${!confirmation ? "rechazada" : "aceptada"}`,
+      body: !confirmation
         ? `${senderName} acaba de rechazar tus documentos de certificación.`
         : `${senderName} te acaba de certificar.`,
       action: Action.VIEW_CERTIFICATION,

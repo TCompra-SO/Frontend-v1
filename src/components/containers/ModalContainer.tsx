@@ -382,6 +382,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             certificationId={props.content.data.certificationId}
             onClose={props.onClose}
             onRequestSent={props.content.data.onRequestSent}
+            setLoading={props.content.data.setLoading}
             {...commonModalProps}
           />
         );

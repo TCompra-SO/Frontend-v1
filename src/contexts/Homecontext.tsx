@@ -138,9 +138,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
         lastSearchParams.pageSize,
         lastSearchParams.params
       );
-      console.log(lastSearchParams.page, success, totalPages);
       if (!success && totalPages) {
-        console.log(lastSearchParams.page - 1, totalPages);
         if (lastSearchParams.page - 1 <= totalPages)
           await retrieveRequirements(
             lastSearchParams.page - 1,

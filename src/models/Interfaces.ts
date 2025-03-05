@@ -201,6 +201,7 @@ export interface ModalSelectDocsCert extends CommonModalType {
     data: SelectDocsModalData;
     certificationId?: string;
     onRequestSent?: () => void;
+    setLoading?: (val: boolean) => void;
   };
 }
 

@@ -122,7 +122,8 @@ const notifications: NotificationDataFromServer[] = [
 let notifSocketAPI: Socket | null = null;
 
 export function useTCNotification() {
-  const senderName = useSelector((state: MainState) => state.mainUser.name);
+  const senderName = useSelector((state: MainState) => state.user.name);
+  const mainSenderName = useSelector((state: MainState) => state.mainUser.name);
   const uid = useSelector((state: MainState) => state.user.uid);
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const mainSenderImage = useSelector(
@@ -242,7 +243,10 @@ export function useTCNotification() {
     if (notifSocketAPI && notification.receiverId) {
       const senderData: NotificationSenderData = {
         senderId: uid,
-        senderName: senderName,
+        senderName:
+          senderName != mainSenderName
+            ? `${senderName} (${mainSenderName})`
+            : senderName,
         senderImage: mainSenderImage,
       };
       const notif: NotificationData = { ...senderData, ...notification };

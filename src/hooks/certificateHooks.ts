@@ -5,6 +5,7 @@ import useApi from "./useApi";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import {
+  getCertificateRequestService,
   getCertificatesService,
   getRequiredDocumentsService,
   updateRequiredDocumentsService,
@@ -23,7 +24,6 @@ import { UpdateRequiredDocsRequest } from "../models/Requests";
 import useShowNotification, { useShowLoadingMessage } from "./utilHooks";
 import { getInitialModalData } from "../utilities/globalFunctions";
 import { Action, CertificationTableType, ModalTypes } from "../utilities/types";
-import { currencyService } from "../services/requests/utilService";
 
 export function useGetCertificatesList() {
   const { t } = useTranslation();
@@ -40,12 +40,6 @@ export function useGetCertificatesList() {
     method: apiParams.method,
     dataToSend: apiParams.dataToSend,
   });
-
-  useEffect(() => {
-    return () => {
-      console.log("destroying modaldd");
-    };
-  }, []);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
@@ -150,6 +144,11 @@ export function useGetRequiredDocsCert() {
     method: apiParams.method,
     dataToSend: apiParams.dataToSend,
   });
+
+  useEffect(() => {
+    return () => showLoadingMessage(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
@@ -269,25 +268,28 @@ export function useGetCertificationData(
 
   useEffect(() => {
     if (responseData) {
-      const certItem: CertificationItem = {
-        key: "x8JXBNMUgdn4ihTedBL4",
-        companyId: "EOuyocZiTZVT91ZOo0rW",
-        companyName: "UNIVERSIDAD NACIONAL DE SAN AGUSTIN",
-        companyDocument: "20163646499",
-        creationDate: "2025-01-06T18:48:49.551Z",
-        state: 2,
-        certificates: [
-          {
-            key: "o8GVrfohAjsclmwTEX89",
-            name: "MI AUTORIZACION aaaaaaaaaa",
-            documentName:
-              "1734533049704-LLUVIA DE IDEAS PARA TCOMPRA Y ALTA GAMA.pdf",
-            url: "https://res.cloudinary.com/dlxlveta2/image/upload/v1736189328/certificates-request/d9mm6krd6hrxxhtihexo.pdf",
-            creationDate: "2025-01-07T20:00:07.030Z",
-          },
-        ],
-        note: "fff",
-      }; // transformToCertificationItem(responseData.data);
+      const certItem: CertificationItem = transformToCertificationItem(
+        responseData.data[0]
+      );
+      // {
+      //   key: "x8JXBNMUgdn4ihTedBL4",
+      //   companyId: "EOuyocZiTZVT91ZOo0rW",
+      //   companyName: "UNIVERSIDAD NACIONAL DE SAN AGUSTIN",
+      //   companyDocument: "20163646499",
+      //   creationDate: "2025-01-06T18:48:49.551Z",
+      //   state: 2,
+      //   certificates: [
+      //     {
+      //       key: "o8GVrfohAjsclmwTEX89",
+      //       name: "MI AUTORIZACION aaaaaaaaaa",
+      //       documentName:
+      //         "1734533049704-LLUVIA DE IDEAS PARA TCOMPRA Y ALTA GAMA.pdf",
+      //       url: "https://res.cloudinary.com/dlxlveta2/image/upload/v1736189328/certificates-request/d9mm6krd6hrxxhtihexo.pdf",
+      //       creationDate: "2025-01-07T20:00:07.030Z",
+      //     },
+      //   ],
+      //   note: "fff",
+      // };
       setDataModal({
         type:
           certificationTableType == CertificationTableType.RECEIVED
@@ -314,7 +316,7 @@ export function useGetCertificationData(
       setDataModal(getInitialModalData());
       if (!certificationItem) {
         setApiParams({
-          service: currencyService(),
+          service: getCertificateRequestService(certificationId),
           method: "get",
         });
       } else {

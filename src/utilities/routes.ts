@@ -141,6 +141,7 @@ export const ApiRoutes = {
     verifyCertification: "verifyCertification/",
     updateRequiredDocuments: "updateRequiredDocuments",
     getRequiredDocuments: "getRequiredDocuments/",
+    getCertificateRequest: "getCertificateRequest/",
   },
   reports: {
     statistics: "getCountsByEntity/",

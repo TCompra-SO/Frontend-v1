@@ -2,13 +2,15 @@ import { useTranslation } from "react-i18next";
 import ButtonContainer from "../../containers/ButtonContainer";
 import {
   Action,
+  CertificationTableType,
   ErrorMsgRequestType,
   ErrorRequestType,
   ModalTypes,
   ResponseRequestType,
+  SystemNotificationType,
 } from "../../../utilities/types";
 import { CertificateFile } from "../../../models/MainInterfaces";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import TextAreaContainer from "../../containers/TextAreaContainer";
 import {
   CommonModalProps,
@@ -37,19 +39,25 @@ import {
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
 import useShowNotification from "../../../hooks/utilHooks";
+import useSystemNotification from "../../../hooks/useSystemNotification";
+import { MainSocketsContext } from "../../../contexts/MainSocketsContext";
+import dayjs from "dayjs";
 
 interface SelectDocumentsToSendCertificateModalProps extends CommonModalProps {
   data: SelectDocsModalData;
   onClose: () => any;
   certificationId?: string;
   onRequestSent?: () => void;
+  setLoading?: (val: boolean) => void;
 }
 
 export default function SelectDocumentsToSendCertificateModal(
   props: SelectDocumentsToSendCertificateModalProps
 ) {
   const { t } = useTranslation();
+  const { sendNotification } = useContext(MainSocketsContext);
   const { showNotification } = useShowNotification();
+  const { getSystemNotification } = useSystemNotification();
   const { getRequiredDocsCert, requiredDocs, loadingRequiredDocs } =
     useGetRequiredDocsCert();
   const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
@@ -114,10 +122,22 @@ export default function SelectDocumentsToSendCertificateModal(
         error: ErrorRequestType,
         errorMsg: ErrorMsgRequestType
       ) {
+        props.setLoading?.(false);
         if (responseData) {
           showNotification("success", t("documentsSentSuccessfully"));
           if (props.onRequestSent) props.onRequestSent();
           props.onClose();
+          const notificationFn = getSystemNotification(
+            SystemNotificationType.RECEIVED_DOCS_FOR_CERT
+          );
+          const notification = notificationFn();
+          sendNotification({
+            ...notification,
+            timestamp: dayjs().toISOString(),
+            receiverId: props.data.userId,
+            targetId: props.certificationId ?? responseData.id, // r3v
+            targetType: CertificationTableType.RECEIVED,
+          });
         } else if (error) {
           showNotification("error", errorMsg);
         }
@@ -165,7 +185,7 @@ export default function SelectDocumentsToSendCertificateModal(
       showNotification("error", t("mustSelectAtLeastOneDocument"));
       return;
     }
-
+    props.setLoading?.(true);
     const data: SendCertificationRequest | ResendCertificatesRequest =
       props.certificationId
         ? {

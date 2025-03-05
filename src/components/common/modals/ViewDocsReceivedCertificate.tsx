@@ -9,18 +9,24 @@ import { Lengths } from "../../../utilities/lengths";
 import {
   Action,
   CertificationState,
+  CertificationTableType,
   ErrorMsgRequestType,
   ErrorRequestType,
   ModalTypes,
   ResponseRequestType,
+  SystemNotificationType,
 } from "../../../utilities/types";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { CommonModalProps, ModalContent } from "../../../models/Interfaces";
 import ModalContainer from "../../containers/ModalContainer";
 import { mainModalScrollStyle } from "../../../utilities/globals";
 import { updateCertificationStateService } from "../../../services/requests/certificateService";
 import { UpdateCertificationStateRequest } from "../../../models/Requests";
 import useShowNotification from "../../../hooks/utilHooks";
+import { MainSocketsContext } from "../../../contexts/MainSocketsContext";
+import useSystemNotification from "../../../hooks/useSystemNotification";
+import dayjs from "dayjs";
+import { getInitialModalData } from "../../../utilities/globalFunctions";
 
 interface ViewDocsReceivedCertificateProps extends CommonModalProps {
   data: CertificationItem;
@@ -33,16 +39,22 @@ export default function ViewDocsReceivedCertificate(
   props: ViewDocsReceivedCertificateProps
 ) {
   const { t } = useTranslation();
+  const { sendNotification } = useContext(MainSocketsContext);
+  const { getSystemNotification } = useSystemNotification();
   const { showNotification } = useShowNotification();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [certApproved, setCertApproved] = useState(false);
   const [note, setNote] = useState("");
   const { loading } = props.useApiHook;
-  const [dataModal, setDataModal] = useState<ModalContent>({
-    type: ModalTypes.NONE,
-    data: {},
-    action: Action.NONE,
-  });
+  const certApprovedRef = useRef(certApproved);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
+
+  useEffect(() => {
+    certApprovedRef.current = certApproved;
+  }, [certApproved]);
 
   /** Para certificar o rechazar */
 
@@ -56,9 +68,24 @@ export default function ViewDocsReceivedCertificate(
         if (responseData) {
           showNotification(
             "success",
-            t(certApproved ? "certificationApproved" : "certificationRejected")
+            t(
+              certApprovedRef.current
+                ? "certificationApproved"
+                : "certificationRejected"
+            )
           );
           props.onClose();
+          const notificationFn = getSystemNotification(
+            SystemNotificationType.CERTIFICATE_COMPANY
+          );
+          const notification = notificationFn(certApprovedRef.current);
+          sendNotification({
+            ...notification,
+            timestamp: dayjs().toISOString(),
+            receiverId: props.data.companyId,
+            targetId: props.data.key,
+            targetType: CertificationTableType.SENT,
+          });
         } else if (error) {
           showNotification("error", errorMsg);
         }
@@ -82,11 +109,12 @@ export default function ViewDocsReceivedCertificate(
           userId: props.data.companyId,
           userName: props.data.companyName,
         },
+        onRequestSent: () => props.onClose(),
+        setLoading: setResendLoading,
       },
       action: Action.SELECT_CERT_TO_SEND,
     });
     setIsOpenModal(true);
-    props.onClose();
   }
 
   function submit(approve: boolean) {
@@ -183,7 +211,7 @@ export default function ViewDocsReceivedCertificate(
               <ButtonContainer
                 className="btn alert-boton btn-green-o"
                 onClick={props.readOnly ? () => resend() : () => submit(false)}
-                loading={loading}
+                loading={loading || resendLoading}
               >
                 {t(props.readOnly ? "resend" : "reject")}
               </ButtonContainer>
