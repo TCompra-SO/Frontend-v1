@@ -124,6 +124,7 @@ export default function OfferForm(props: OfferFormProps) {
   /** Verificar si el usuario puede ofertar */
 
   useEffect(() => {
+    if (!isLoggedIn) form.resetFields();
     if (props.requirement) checkIfUserCanOffer();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, props.requirement]);

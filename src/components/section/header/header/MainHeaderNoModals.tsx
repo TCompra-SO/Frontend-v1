@@ -200,9 +200,21 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
           )}
           {(currentSection == pageRoutes.home ||
             currentSection == pageRoutes.productDetail) && (
-            <img src={logoSrc} className="logo-header" alt="Logo" />
+            <img
+              src={logoSrc}
+              className="logo-header"
+              alt="Logo"
+              style={{ flex: "0 0 auto" }}
+            />
           )}
-          <div className="t-flex options-tc">
+          <div
+            className="t-flex options-tc"
+            style={{
+              maxWidth: "100%",
+              minWidth: 0,
+              justifyContent: "flex-end",
+            }}
+          >
             {isPremium && <Premium />}
             {width > windowSize.md && (
               <>

@@ -537,3 +537,22 @@ export interface SelectOfferResponse {
   purchaseOrderUID?: string;
   saleOrderUID?: string;
 }
+
+export interface LoginResponse {
+  accessToken: {
+    accessToken: string;
+    refreshToken: string;
+  };
+  dataUser: {
+    CompanyID?: string;
+    email: string;
+    name: string;
+    planID: number;
+    type: string;
+    typeID: number;
+    uid: string;
+  }[];
+  refreshToken: {
+    success: boolean;
+  };
+}

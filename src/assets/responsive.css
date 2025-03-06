@@ -588,7 +588,7 @@
   }
 
   .user-opt {
-    width: 150px;
+    width: 150px !important;
   }
 }
 

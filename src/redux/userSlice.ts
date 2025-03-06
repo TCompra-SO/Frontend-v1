@@ -4,6 +4,7 @@ import { EntityType, UserRoles } from "../utilities/types";
 import { BaseUser } from "../models/MainInterfaces";
 import { encryptData } from "../utilities/crypto";
 import { userDataKey } from "../utilities/globals";
+import { LoginResponse } from "../models/Interfaces";
 
 export const userInitialState: UserState = {
   token: "",
@@ -22,11 +23,12 @@ export const userSlice = createSlice({
   initialState: userInitialState,
   reducers: {
     setUser: (state, action) => {
-      const { token } = action.payload;
-      if (action.payload.dataUser) {
+      console.log(action.payload);
+      const payload: LoginResponse = action.payload;
+      if (payload.accessToken) state.token = payload.accessToken.accessToken;
+      if (payload.dataUser) {
         const { uid, name, email, type, typeID, planID } =
           action.payload.dataUser[0];
-        state.token = token;
         state.typeEntity = type;
         state.name = name;
         state.email = email;

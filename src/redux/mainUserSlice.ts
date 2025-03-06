@@ -1,10 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { UserState } from "../models/Redux";
+import { MainUserState } from "../models/Redux";
 import { EntityType, UserRoles } from "../utilities/types";
 import { BaseUser } from "../models/MainInterfaces";
 
-export const mainUserInitialState: UserState = {
-  token: "",
+export const mainUserInitialState: MainUserState = {
   uid: "",
   name: "",
   email: "",
@@ -34,7 +33,7 @@ export const mainUserSlice = createSlice({
       state.image = action.payload.image;
       state.isPremium = true; // r3v
     },
-    setFullMainUser: (_, action: { payload: UserState; type: string }) => {
+    setFullMainUser: (_, action: { payload: MainUserState; type: string }) => {
       return { ...action.payload };
     },
   },
