@@ -222,9 +222,9 @@ export const ActionLabel: {
 export const ActionByStateRequirement: {
   [key in RequirementState]: Array<Action>;
 } = {
-  [RequirementState.CANCELED]: [Action.REPUBLISH], // Action.DELETE
+  [RequirementState.CANCELED]: [Action.VIEW], // Action.DELETE Action.REPUBLISH
   [RequirementState.DISPUTE]: [Action.SHOW_SUMMARY],
-  [RequirementState.EXPIRED]: [Action.DELETE, Action.REPUBLISH],
+  [RequirementState.EXPIRED]: [Action.REPUBLISH], // Action.DELETE
   [RequirementState.FINISHED]: [Action.SHOW_SUMMARY],
   [RequirementState.PUBLISHED]: [Action.DELETE, Action.CANCEL_REQUIREMENT],
   [RequirementState.SELECTED]: [Action.CANCEL_REQUIREMENT, Action.FINISH],
