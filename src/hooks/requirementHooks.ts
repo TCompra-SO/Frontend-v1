@@ -19,7 +19,12 @@ import {
   RequirementType,
   TableTypes,
 } from "../utilities/types";
-import { BaseUser, Offer, Requirement } from "../models/MainInterfaces";
+import {
+  BaseUser,
+  NotificationData,
+  Offer,
+  Requirement,
+} from "../models/MainInterfaces";
 import {
   getBasicRateData,
   getOfferById,
@@ -112,12 +117,14 @@ export function useCancelRequirement(additionalApiParams?: UseApiType) {
     reqId: string,
     action: Action,
     type: RequirementType,
-    motive?: string
+    motive?: string,
+    notification?: NotificationData
   ) {
     updateIdAndActionQueue(reqId, action);
     const data: CancelRequirementRequest = {
       requerimentID: reqId,
       reason: motive,
+      notification,
     };
     setApiParamsCancel({
       service: getCancelRecordService(type),
@@ -205,13 +212,15 @@ export function useCancelOffer(additionalApiParams?: UseApiType) {
     type: RequirementType,
     canceledByCreator: boolean,
     action: Action,
-    motive?: string
+    motive?: string,
+    notification?: NotificationData
   ) {
     updateIdAndActionQueue(offerId, action);
     const data: CancelOfferRequest = {
       offerID: offerId,
       reason: motive,
       canceledByCreator,
+      notification,
     };
     setApiParams({
       service: getCancelOfferService(type),

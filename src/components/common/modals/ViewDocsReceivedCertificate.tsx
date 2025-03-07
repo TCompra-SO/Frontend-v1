@@ -39,7 +39,7 @@ export default function ViewDocsReceivedCertificate(
   props: ViewDocsReceivedCertificateProps
 ) {
   const { t } = useTranslation();
-  const { sendNotification } = useContext(MainSocketsContext);
+  const { getNotification } = useContext(MainSocketsContext);
   const { getSystemNotification } = useSystemNotification();
   const { showNotification } = useShowNotification();
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -75,17 +75,6 @@ export default function ViewDocsReceivedCertificate(
             )
           );
           props.onClose();
-          const notificationFn = getSystemNotification(
-            SystemNotificationType.CERTIFICATE_COMPANY
-          );
-          const notification = notificationFn(certApprovedRef.current);
-          sendNotification({
-            ...notification,
-            timestamp: dayjs().toISOString(),
-            receiverId: props.data.companyId,
-            targetId: props.data.key,
-            targetType: CertificationTableType.SENT,
-          });
         } else if (error) {
           showNotification("error", errorMsg);
         }
@@ -123,13 +112,28 @@ export default function ViewDocsReceivedCertificate(
       return;
     }
     setCertApproved(approve);
+
+    const notificationFn = getSystemNotification(
+      SystemNotificationType.CERTIFICATE_COMPANY
+    );
+    const basicNotification = notificationFn(certApprovedRef.current);
+    const notification = getNotification({
+      ...basicNotification,
+      timestamp: dayjs().toISOString(),
+      receiverId: props.data.companyId,
+      targetId: props.data.key,
+      targetType: CertificationTableType.SENT,
+    });
+
     const data: UpdateCertificationStateRequest = {
       certificateID: props.data.key,
       state: approve
         ? CertificationState.CERTIFIED
         : CertificationState.REJECTED,
+      notification,
     };
     if (note) data.note = note;
+
     props.setApiParams({
       service: updateCertificationStateService(),
       method: "post",

@@ -55,7 +55,7 @@ export default function SelectDocumentsToSendCertificateModal(
   props: SelectDocumentsToSendCertificateModalProps
 ) {
   const { t } = useTranslation();
-  const { sendNotification } = useContext(MainSocketsContext);
+  const { getNotification } = useContext(MainSocketsContext);
   const { showNotification } = useShowNotification();
   const { getSystemNotification } = useSystemNotification();
   const { getRequiredDocsCert, requiredDocs, loadingRequiredDocs } =
@@ -127,17 +127,6 @@ export default function SelectDocumentsToSendCertificateModal(
           showNotification("success", t("documentsSentSuccessfully"));
           if (props.onRequestSent) props.onRequestSent();
           props.onClose();
-          const notificationFn = getSystemNotification(
-            SystemNotificationType.RECEIVED_DOCS_FOR_CERT
-          );
-          const notification = notificationFn();
-          sendNotification({
-            ...notification,
-            timestamp: dayjs().toISOString(),
-            receiverId: props.data.userId,
-            targetId: props.certificationId ?? responseData.id, // r3v
-            targetType: CertificationTableType.RECEIVED,
-          });
         } else if (error) {
           showNotification("error", errorMsg);
         }
@@ -186,16 +175,31 @@ export default function SelectDocumentsToSendCertificateModal(
       return;
     }
     props.setLoading?.(true);
+
+    const notificationFn = getSystemNotification(
+      SystemNotificationType.RECEIVED_DOCS_FOR_CERT
+    );
+    const basicNotification = notificationFn();
+    const notification = getNotification({
+      ...basicNotification,
+      timestamp: dayjs().toISOString(),
+      receiverId: props.data.userId,
+      targetId: props.certificationId ?? "", // r3v notif
+      targetType: CertificationTableType.RECEIVED,
+    });
+
     const data: SendCertificationRequest | ResendCertificatesRequest =
       props.certificationId
         ? {
             certificateRequestID: props.certificationId,
             certificateIDs: certificateIds,
+            notification,
           }
         : {
             userID: mainUserUid,
             companyID: props.data.userId,
             certificateIDs: certificateIds,
+            notification,
           };
 
     props.setApiParams({

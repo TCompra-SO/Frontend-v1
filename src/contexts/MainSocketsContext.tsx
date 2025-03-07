@@ -26,7 +26,7 @@ export const MainSocketsContext = createContext<MainSocketsContextType>({
   hasMoreChatMessageList: false,
   loadingChatList: false,
   loadingChatMessages: false,
-  sendNotification: () => {},
+  getNotification: () => {},
   disconnectChatSocket: () => {},
   disconnectNotificationSocket: () => {},
   connectUserSocket: () => {},
@@ -45,6 +45,7 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
     return () => {
       disconnectSockets();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

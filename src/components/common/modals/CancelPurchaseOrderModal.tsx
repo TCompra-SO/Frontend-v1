@@ -7,7 +7,6 @@ import {
   Action,
   ActionLabel,
   RequirementType,
-  ResponseRequestType,
   SystemNotificationType,
 } from "../../../utilities/types";
 import {
@@ -45,22 +44,13 @@ export default function CancelPurchaseOrderModal(
   props: CancelPurchaseOrderModalProps
 ) {
   const { t } = useTranslation();
-  const { sendNotification } = useContext(MainSocketsContext);
+  const { getNotification } = useContext(MainSocketsContext);
   const { showNotification } = useShowNotification();
   const { getSystemNotification } = useSystemNotification();
   const [text, setText] = useState<string>("");
   const { cancelRequirement, loadingCancelRequirement } =
     props.useCancelRequirementHook;
   const { cancelOffer, loadingCancelOffer } = props.useCancelOfferHook;
-
-  /** Generar notificación de sistema */
-
-  useEffect(() => {
-    props.setAdditionalApiParams({
-      functionToExecute: generateNotification,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   /** Cerrar modal */
 
@@ -76,56 +66,59 @@ export default function CancelPurchaseOrderModal(
 
   /** Funciones */
 
-  async function generateNotification(responseData: ResponseRequestType) {
-    if (responseData) {
-      let notification: BasicNotificationData | null = null;
-      if (props.canceledByCreator) {
-        const notificationFn = getSystemNotification(
-          SystemNotificationType.CANCEL_MY_OFFER
-        );
-        notification = notificationFn(props.requirementTitle, props.type);
-      } else {
-        const notificationFn = getSystemNotification(
-          SystemNotificationType.CANCEL_AN_OFFER
-        );
-        notification = notificationFn(props.type);
-      }
-
-      let receiverId: string = props.notificationTargetData.receiverId;
-      if (!receiverId && !props.fromRequirementTable) {
-        const { basicRateData } = await getBasicRateData(
-          props.fromRequirementTable ? props.offerId : props.requirementId,
-          props.fromRequirementTable,
-          props.type
-        );
-        if (basicRateData)
-          receiverId = basicRateData.subUserId ?? basicRateData.userId;
-      }
-      if (receiverId)
-        sendNotification({
-          ...notification,
-          ...props.notificationTargetData,
-          receiverId,
-          timestamp: dayjs().toISOString(),
-        });
+  async function generateNotification() {
+    // r3v notif
+    let notification: BasicNotificationData | null = null;
+    if (props.canceledByCreator) {
+      const notificationFn = getSystemNotification(
+        SystemNotificationType.CANCEL_MY_OFFER
+      );
+      notification = notificationFn(props.requirementTitle, props.type);
+    } else {
+      const notificationFn = getSystemNotification(
+        SystemNotificationType.CANCEL_AN_OFFER
+      );
+      notification = notificationFn(props.type);
     }
+
+    let receiverId: string = props.notificationTargetData.receiverId;
+    if (!receiverId && !props.fromRequirementTable) {
+      const { basicRateData } = await getBasicRateData(
+        props.fromRequirementTable ? props.offerId : props.requirementId,
+        props.fromRequirementTable,
+        props.type
+      );
+      if (basicRateData)
+        receiverId = basicRateData.subUserId ?? basicRateData.userId;
+    }
+    if (receiverId)
+      return getNotification({
+        ...notification,
+        ...props.notificationTargetData,
+        receiverId,
+        timestamp: dayjs().toISOString(),
+      });
   }
 
   function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setText(e.target.value.trim());
   }
 
-  function cancelPurchaseOrder() {
+  async function cancelPurchaseOrder() {
     if (!text) {
       showNotification("error", t("mustIndicateReasonCancellation"));
       return;
     }
+
+    const notification = await generateNotification();
+
     if (props.fromRequirementTable)
       cancelRequirement(
         props.requirementId,
         Action.CANCEL_REQUIREMENT,
         props.type,
-        text.trim()
+        text.trim(),
+        notification
       );
     else
       cancelOffer(
@@ -133,7 +126,8 @@ export default function CancelPurchaseOrderModal(
         props.type,
         props.canceledByCreator,
         Action.CANCEL_OFFER,
-        text.trim()
+        text.trim(),
+        notification
       );
   }
 

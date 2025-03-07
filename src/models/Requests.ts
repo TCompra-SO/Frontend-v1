@@ -8,13 +8,18 @@ import {
   RequirementType,
   UserRoles,
 } from "../utilities/types";
+import { NotificationData } from "./MainInterfaces";
 
-export interface LoginRequest {
+export interface IncludeNotificationRequest {
+  notification?: NotificationData;
+}
+
+export interface LoginRequest extends IncludeNotificationRequest {
   email: string;
   password: string;
 }
 
-export interface RegisterRequest {
+export interface RegisterRequest extends IncludeNotificationRequest {
   email: string;
   password: string;
   typeID: RegisterTypeId;
@@ -22,7 +27,7 @@ export interface RegisterRequest {
   ruc?: string;
 }
 
-export interface UpdateProfileRequest {
+export interface UpdateProfileRequest extends IncludeNotificationRequest {
   uid: string;
   phone: string;
   address: string;
@@ -33,40 +38,42 @@ export interface UpdateProfileRequest {
   specialtyID?: string;
 }
 
-export interface ProfileRequest extends UpdateProfileRequest {
+export interface ProfileRequest
+  extends UpdateProfileRequest,
+    IncludeNotificationRequest {
   categories: number[];
   countryID: string;
   avatar?: string;
   planID: number;
 }
 
-export interface ValidateCodeRequest {
+export interface ValidateCodeRequest extends IncludeNotificationRequest {
   email: string;
   code: string;
   type: "repassword" | "identity_verified";
 }
 
-export interface SendCodeRequest {
+export interface SendCodeRequest extends IncludeNotificationRequest {
   email: string;
   type: "repassword" | "identity_verified";
 }
 
-export interface SendCodeRecoveryRequest {
+export interface SendCodeRecoveryRequest extends IncludeNotificationRequest {
   email: string;
 }
 
-export interface RecoverPasswordRequest {
+export interface RecoverPasswordRequest extends IncludeNotificationRequest {
   email: string;
   password: string;
   code: string;
 }
 
-export interface GetNameReniecRequest {
+export interface GetNameReniecRequest extends IncludeNotificationRequest {
   dni?: string;
   ruc?: string;
 }
 
-export interface RegisterSubUserRequest {
+export interface RegisterSubUserRequest extends IncludeNotificationRequest {
   dni: string;
   phone: string;
   address: string;
@@ -76,24 +83,25 @@ export interface RegisterSubUserRequest {
   uid: string;
 }
 
-export interface UpdateProfileSubUserRequest {
+export interface UpdateProfileSubUserRequest
+  extends IncludeNotificationRequest {
   uid: string;
   phone: string;
   address: string;
   cityID: number;
 }
 
-export interface ChangeRoleSubUserRequest {
+export interface ChangeRoleSubUserRequest extends IncludeNotificationRequest {
   uid: string;
   typeID: UserRoles;
 }
 
-export interface NewPasswordRequest {
+export interface NewPasswordRequest extends IncludeNotificationRequest {
   email: string;
   password: string;
 }
 
-export interface CreateRequirementRequest {
+export interface CreateRequirementRequest extends IncludeNotificationRequest {
   name: string;
   description: string;
   categoryID: number;
@@ -110,12 +118,12 @@ export interface CreateRequirementRequest {
   used?: boolean;
 }
 
-export interface UploadAvatarRequest {
+export interface UploadAvatarRequest extends IncludeNotificationRequest {
   avatar: File;
   uid: string;
 }
 
-export interface CreateOfferRequest {
+export interface CreateOfferRequest extends IncludeNotificationRequest {
   name: string;
   email: string;
   description: string;
@@ -132,17 +140,17 @@ export interface CreateOfferRequest {
   userID: string;
 }
 
-export interface RegisterScoreRequest {
+export interface RegisterScoreRequest extends IncludeNotificationRequest {
   typeScore: "Client" | "Provider";
-  uidEntity: string; // calificado
-  uidUser: string; // calificador
+  uidEntity: string;
+  uidUser: string;
   score: number;
   comments?: string;
   offerId: string;
   type: RequirementType;
 }
 
-export interface SelectOfferRequest {
+export interface SelectOfferRequest extends IncludeNotificationRequest {
   requerimentID: string;
   offerID: string;
   observation?: string;
@@ -152,12 +160,12 @@ export interface SelectOfferRequest {
   warranty_Filter: CommonFilter;
 }
 
-export interface RepublishRequest {
+export interface RepublishRequest extends IncludeNotificationRequest {
   uid: string;
   completion_date: string;
 }
 
-export interface CulminateRequest {
+export interface CulminateRequest extends IncludeNotificationRequest {
   delivered: boolean;
   score: number;
   comments?: string;
@@ -165,40 +173,41 @@ export interface CulminateRequest {
   offerID?: string;
 }
 
-export interface CancelRequirementRequest {
+export interface CancelRequirementRequest extends IncludeNotificationRequest {
   requerimentID: string;
   reason?: string;
 }
 
-export interface CancelOfferRequest {
+export interface CancelOfferRequest extends IncludeNotificationRequest {
   offerID: string;
   reason?: string;
   canceledByCreator: boolean;
 }
 
-export interface SendCertificationRequest {
+export interface SendCertificationRequest extends IncludeNotificationRequest {
   userID: string;
   companyID: string;
   certificateIDs: string[];
 }
 
-export interface UpdateCertificationStateRequest {
+export interface UpdateCertificationStateRequest
+  extends IncludeNotificationRequest {
   certificateID: string;
   state: CertificationState;
   note?: string;
 }
 
-export interface ResendCertificatesRequest {
+export interface ResendCertificatesRequest extends IncludeNotificationRequest {
   certificateRequestID: string;
   certificateIDs: string[];
 }
 
-export interface UpdateRequiredDocsRequest {
+export interface UpdateRequiredDocsRequest extends IncludeNotificationRequest {
   companyID: string;
   requiredDocuments: string;
 }
 
-export interface HomeFilterRequest {
+export interface HomeFilterRequest extends IncludeNotificationRequest {
   keyWords?: string;
   location?: number;
   category?: number;
@@ -220,7 +229,10 @@ export interface FieldFilter {
   filterColumn?: string;
 }
 
-export interface SearchTableRequest extends FieldSort, FieldFilter {
+export interface SearchTableRequest
+  extends FieldSort,
+    FieldFilter,
+    IncludeNotificationRequest {
   keyWords?: string;
   userId: string;
   page: number;
@@ -228,7 +240,7 @@ export interface SearchTableRequest extends FieldSort, FieldFilter {
   typeUser: EntityType;
 }
 
-export interface ChangeStatusRequest {
+export interface ChangeStatusRequest extends IncludeNotificationRequest {
   uid: string;
   status: boolean;
 }

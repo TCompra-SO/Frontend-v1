@@ -8,17 +8,12 @@ import { Lengths } from "../../../utilities/lengths";
 import SelectContainer from "../../containers/SelectContainer";
 import { filterLabels } from "../../../utilities/colors";
 import { SelectOfferRequest } from "../../../models/Requests";
-import {
-  CommonModalProps,
-  OfferFilters,
-  SelectOfferResponse,
-} from "../../../models/Interfaces";
+import { CommonModalProps, OfferFilters } from "../../../models/Interfaces";
 import useShowNotification from "../../../hooks/utilHooks";
 import {
   ErrorMsgRequestType,
   ErrorRequestType,
   OrderTableType,
-  RequirementType,
   ResponseRequestType,
   SystemNotificationType,
 } from "../../../utilities/types";
@@ -43,7 +38,7 @@ export default function RequirementModalOfferSelected({
   ...props
 }: RequirementModalOfferSelectedProps) {
   const { t } = useTranslation();
-  const { sendNotification } = useContext(MainSocketsContext);
+  const { getNotification } = useContext(MainSocketsContext);
   const { showNotification } = useShowNotification();
   const { getSystemNotification } = useSystemNotification();
   const [text, setText] = useState<string>("");
@@ -60,28 +55,6 @@ export default function RequirementModalOfferSelected({
           showNotification("success", t("offerSelectedSuccessfully"));
           props.onSucces(props.offer.key);
           props.onClose();
-          if (responseData.res) {
-            const response: SelectOfferResponse = responseData.res;
-            const targetId =
-              props.requirement.type == RequirementType.SALE
-                ? response.saleOrderUID
-                : response.purchaseOrderUID;
-            if (targetId) {
-              const notificationFn = getSystemNotification(
-                SystemNotificationType.SELECT_OFFER
-              );
-              const notification = notificationFn(props.requirement.type);
-              sendNotification({
-                ...notification,
-                receiverId: props.offer.subUser
-                  ? props.offer.subUser.uid
-                  : props.offer.user.uid,
-                timestamp: dayjs().toISOString(),
-                targetId,
-                targetType: OrderTableType.RECEIVED,
-              });
-            }
-          }
         } else if (error) {
           showNotification("error", errorMsg);
         }
@@ -95,6 +68,26 @@ export default function RequirementModalOfferSelected({
   }
 
   function selectOffer() {
+    // const response: SelectOfferResponse = responseData.res;
+    const targetId = ""; // r3v notif
+    // props.requirement.type == RequirementType.SALE
+    //   ? response.saleOrderUID
+    //   : response.purchaseOrderUID;
+
+    const notificationFn = getSystemNotification(
+      SystemNotificationType.SELECT_OFFER
+    );
+    const notification = notificationFn(props.requirement.type);
+    getNotification({
+      ...notification,
+      receiverId: props.offer.subUser
+        ? props.offer.subUser.uid
+        : props.offer.user.uid,
+      timestamp: dayjs().toISOString(),
+      targetId,
+      targetType: OrderTableType.RECEIVED,
+    });
+
     const notes = text.trim();
     const data: SelectOfferRequest = {
       requerimentID: props.requirement.key,

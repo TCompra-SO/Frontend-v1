@@ -24,6 +24,7 @@ import { pageRoutes } from "../utilities/routes";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
+import { SocketResponse } from "../models/Interfaces";
 
 const notifications: NotificationDataFromServer[] = [
   {
@@ -125,7 +126,7 @@ export function useTCNotification() {
   const senderName = useSelector((state: MainState) => state.user.name);
   const mainSenderName = useSelector((state: MainState) => state.mainUser.name);
   const uid = useSelector((state: MainState) => state.user.uid);
-  const mainUid = useSelector((state: MainState) => state.mainUser.uid);
+  // const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const mainSenderImage = useSelector(
     (state: MainState) => state.mainUser.image
   );
@@ -158,22 +159,22 @@ export function useTCNotification() {
 
       notifSocketAPI.on("connect", () => {
         console.log("Connected notificaciones");
+        notifSocketAPI?.emit("joinRoom", `notification${uid}`);
       });
 
-      // setTimeout(() => {
-      //   showRealTimeNotification({
-      //     type: RTNotificationType.NOTIFICATION,
-      //     content: notifications[0],
-      //     onClickCallback: redirectFromNotification,
-      //   });
-      // }, 3000);
-      // setTimeout(() => {
-      //   showRealTimeNotification({
-      //     type: RTNotificationType.NOTIFICATION,
-      //     content: notifications[1],
-      //     onClickCallback: redirectFromNotification,
-      //   });
-      // }, 6000);
+      notifSocketAPI.on("joinedRoom", (message) => {
+        console.log(message);
+      });
+
+      notifSocketAPI.on("updateRoom", (payload: SocketResponse) => {
+        console.log("notificación recibida:", payload);
+        if (payload.dataPack.data && payload.dataPack.data.length > 0)
+          showRealTimeNotification({
+            type: RTNotificationType.NOTIFICATION,
+            content: payload.dataPack.data[0] as NotificationDataFromServer,
+            onClickCallback: redirectFromNotification,
+          });
+      });
     }
   }
 
@@ -239,7 +240,7 @@ export function useTCNotification() {
     }
   }
 
-  function sendNotification(notification: NotificationDataNoSender) {
+  function getNotification(notification: NotificationDataNoSender) {
     if (notifSocketAPI && notification.receiverId) {
       const senderData: NotificationSenderData = {
         senderId: uid,
@@ -252,6 +253,7 @@ export function useTCNotification() {
       const notif: NotificationData = { ...senderData, ...notification };
       console.log("👉", notif);
       // notifSocketAPI.emit("eventName", notif);
+      return notif;
     }
   }
 
@@ -270,7 +272,7 @@ export function useTCNotification() {
     resetNotificationList,
     notificationLoading: loading,
     redirectFromNotification,
-    sendNotification,
+    getNotification,
     disconnectNotificationSocket: disconnect,
     connectNotificationSocket: connect,
   };

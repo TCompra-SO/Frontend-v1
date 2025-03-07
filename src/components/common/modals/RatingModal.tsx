@@ -39,7 +39,7 @@ interface RatingModalProps extends CommonModalProps {
 
 export default function RatingModal(props: RatingModalProps) {
   const { t } = useTranslation();
-  const { sendNotification } = useContext(MainSocketsContext);
+  const { getNotification } = useContext(MainSocketsContext);
   const { getSystemNotification } = useSystemNotification();
   const [answer, setAnswer] = useState<YesNo | null>(null);
   const [scores, setScores] = useState([0, 0, 0]);
@@ -112,20 +112,6 @@ export default function RatingModal(props: RatingModalProps) {
         if (responseData) {
           showNotification("success", t("scoreSavedSuccessfully"));
           props.onClose();
-          const notificationFn = getSystemNotification(
-            props.isOffer
-              ? SystemNotificationType.FINISH_REQUIREMENT
-              : SystemNotificationType.FINISH_OFFER
-          );
-          const notification = notificationFn(answer == YesNo.YES, props.type);
-          sendNotification({
-            ...notification,
-            receiverId:
-              props.basicRateData.subUserId ?? props.basicRateData.userId,
-            timestamp: dayjs().toISOString(),
-            targetId: props.basicRateData.uid,
-            targetType: props.type,
-          });
         } else if (error) {
           showNotification("error", errorMsg);
         }
@@ -149,12 +135,29 @@ export default function RatingModal(props: RatingModalProps) {
       showNotification("info", t("mustAnswerAllQuestions"));
       return;
     }
+
+    const notificationFn = getSystemNotification(
+      props.isOffer
+        ? SystemNotificationType.FINISH_REQUIREMENT
+        : SystemNotificationType.FINISH_OFFER
+    );
+    const basicNotification = notificationFn(answer == YesNo.YES, props.type);
+    const notification = getNotification({
+      ...basicNotification,
+      receiverId: props.basicRateData.subUserId ?? props.basicRateData.userId,
+      timestamp: dayjs().toISOString(),
+      targetId: props.basicRateData.uid,
+      targetType: props.type,
+    });
+
     const data: CulminateRequest = {
       delivered: answer == YesNo.YES,
       score: calculateFinalScore(scores),
+      notification,
     };
     if (props.isOffer) data.requerimentID = props.requirementOrOfferId;
     else data.offerID = props.requirementOrOfferId;
+
     props.setApiParams({
       service: props.isOffer
         ? getCulminateRecordService(props.type)

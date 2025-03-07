@@ -73,7 +73,7 @@ export default function OfferForm(props: OfferFormProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const { showNotification } = useShowNotification();
-  const { sendNotification } = useContext(MainSocketsContext);
+  const { getNotification } = useContext(MainSocketsContext);
   const { getSystemNotification } = useSystemNotification();
   const email = useSelector((state: MainState) => state.user.email);
   const uid = useSelector((state: MainState) => state.user.uid);
@@ -233,20 +233,6 @@ export default function OfferForm(props: OfferFormProps) {
       }
       form.resetFields();
       form.setFieldValue("currency", props.requirement?.coin);
-      if (props.requirement) {
-        const notificationFn = getSystemNotification(
-          SystemNotificationType.MAKE_OFFER
-        );
-        const notification = notificationFn(props.requirement.title);
-        sendNotification({
-          ...notification,
-          receiverId:
-            props.requirement.subUser?.uid ?? props.requirement.user.uid,
-          targetId: props.requirement.key,
-          targetType: props.requirement.type,
-          timestamp: dayjs().toISOString(),
-        });
-      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reqSuccess, imgSuccess, docSuccess]);
@@ -365,6 +351,19 @@ export default function OfferForm(props: OfferFormProps) {
     setImgSuccess(ProcessFlag.NOT_INI);
     console.log(values);
     if (props.requirement) {
+      const notificationFn = getSystemNotification(
+        SystemNotificationType.MAKE_OFFER
+      );
+      const basicNotification = notificationFn(props.requirement.title);
+      const notification = getNotification({
+        ...basicNotification,
+        receiverId:
+          props.requirement.subUser?.uid ?? props.requirement.user.uid,
+        targetId: props.requirement.key,
+        targetType: props.requirement.type,
+        timestamp: dayjs().toISOString(),
+      });
+
       const data: CreateOfferRequest = {
         name: values.title.trim(),
         email: values.email,
@@ -375,6 +374,7 @@ export default function OfferForm(props: OfferFormProps) {
         budget: values.budget,
         requerimentID: props.requirement.key,
         userID: uid,
+        notification,
       };
 
       if (
