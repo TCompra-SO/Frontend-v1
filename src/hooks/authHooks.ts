@@ -37,7 +37,7 @@ export function useLogin() {
   const { showNotification } = useShowNotification();
 
   async function login(responseData: any) {
-    dispatch(setUser(responseData));
+    dispatch(setUser(responseData.res));
     await loadUserInfo();
     showNotification("success", t("welcome"));
     localStorage.setItem(loginKey, Date.now().toString());

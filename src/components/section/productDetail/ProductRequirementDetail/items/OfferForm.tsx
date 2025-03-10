@@ -349,7 +349,7 @@ export default function OfferForm(props: OfferFormProps) {
     setFormDataImg(null);
     setDocSuccess(ProcessFlag.NOT_INI);
     setImgSuccess(ProcessFlag.NOT_INI);
-    console.log(values);
+
     if (props.requirement) {
       const notificationFn = getSystemNotification(
         SystemNotificationType.MAKE_OFFER

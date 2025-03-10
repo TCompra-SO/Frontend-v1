@@ -539,10 +539,6 @@ export interface SelectOfferResponse {
 }
 
 export interface LoginResponse {
-  accessToken: {
-    accessToken: string;
-    refreshToken: string;
-  };
   dataUser: {
     CompanyID?: string;
     email: string;
@@ -552,7 +548,6 @@ export interface LoginResponse {
     typeID: number;
     uid: string;
   }[];
-  refreshToken: {
-    success: boolean;
-  };
+  refreshToken: string;
+  token: string;
 }

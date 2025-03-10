@@ -77,9 +77,9 @@ export default function RequirementModalOfferSelected({
     const notificationFn = getSystemNotification(
       SystemNotificationType.SELECT_OFFER
     );
-    const notification = notificationFn(props.requirement.type);
-    getNotification({
-      ...notification,
+    const basicNotification = notificationFn(props.requirement.type);
+    const notification = getNotification({
+      ...basicNotification,
       receiverId: props.offer.subUser
         ? props.offer.subUser.uid
         : props.offer.user.uid,
@@ -96,6 +96,7 @@ export default function RequirementModalOfferSelected({
       deliveryTime_Filter: filters.deliveryTime,
       location_Filter: filters.location,
       warranty_Filter: filters.warranty,
+      notification,
     };
     if (notes) data.observation = notes;
     props.setApiParams({
