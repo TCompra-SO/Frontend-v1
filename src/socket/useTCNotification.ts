@@ -25,6 +25,8 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { SocketResponse } from "../models/Interfaces";
+import { getNotifications } from "../services/general/generalServices";
+import { notificationPageSize } from "../utilities/globals";
 
 const notifications: NotificationDataFromServer[] = [
   {
@@ -178,16 +180,24 @@ export function useTCNotification() {
     }
   }
 
-  function getMoreNotifications() {
+  async function getMoreNotifications() {
     setLoading(true);
-    setTimeout(() => {
-      setNotificationList(
-        notificationList.length > 0
-          ? notificationList.concat(notificationList)
-          : notifications.slice(0, 10)
-      );
-      setLoading(false);
-    }, 1000);
+    const notificationData = await getNotifications(
+      uid,
+      1,
+      notificationPageSize
+    );
+    if (notificationData.certState)
+      setNotificationList(notificationData.certState);
+    setLoading(false);
+    // setTimeout(() => {
+    //   setNotificationList(
+    //     notificationList.length > 0
+    //       ? notificationList.concat(notificationList)
+    //       : notifications.slice(0, 10)
+    //   );
+    //   setLoading(false);
+    // }, 1000);
   }
 
   function resetNotificationList() {
@@ -251,8 +261,6 @@ export function useTCNotification() {
         senderImage: mainSenderImage,
       };
       const notif: NotificationData = { ...senderData, ...notification };
-      console.log("👉", notif);
-      // notifSocketAPI.emit("eventName", notif);
       return notif;
     }
   }

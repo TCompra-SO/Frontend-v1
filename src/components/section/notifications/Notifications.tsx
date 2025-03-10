@@ -20,6 +20,7 @@ export default function Notifications(props: NotificationsProps) {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   const sockets = useContext(MainSocketsContext);
+  const [page, setPage] = useState(1);
   const {
     notificationList: notifList,
     getMoreNotifications,

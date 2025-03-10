@@ -13,6 +13,7 @@ export const ApiMainRoutes = {
   saleOrder: "saleOrder/",
   certificate: "certificate/",
   reports: "reports/",
+  notification: "notification/",
 };
 
 export const ApiRoutes = {
@@ -145,6 +146,9 @@ export const ApiRoutes = {
   },
   reports: {
     statistics: "getCountsByEntity/",
+  },
+  notification: {
+    getNotifications: "getNotifications/",
   },
 };
 

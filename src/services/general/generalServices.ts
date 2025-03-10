@@ -1,4 +1,7 @@
-import { BaseUser } from "../../models/MainInterfaces";
+import {
+  BaseUser,
+  NotificationDataFromServer,
+} from "../../models/MainInterfaces";
 import { UserState } from "../../models/Redux";
 import makeRequest, {
   getGetBasicRateDataRecordOfferService,
@@ -27,6 +30,7 @@ import {
   getRequiredDocumentsService,
   verifyCertificationService,
 } from "../requests/certificateService";
+import { getNotificationsService } from "../requests/notificationService";
 
 export async function getBaseUserForUserSubUser(
   uid: string,
@@ -256,6 +260,25 @@ export async function getRequiredDocumentsForCertification(companyId: string) {
 
   return {
     certState: responseData ? transformToRequiredDocsCert(responseData) : null,
+    error,
+    errorMsg,
+  };
+}
+
+export async function getNotifications(
+  userId: string,
+  page: number,
+  pageSize: number
+) {
+  const { responseData, error, errorMsg } = await makeRequest({
+    service: getNotificationsService(userId, page, pageSize),
+    method: "get",
+  });
+
+  return {
+    certState: responseData
+      ? (responseData.data as NotificationDataFromServer[])
+      : null,
     error,
     errorMsg,
   };
