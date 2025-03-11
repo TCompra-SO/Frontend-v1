@@ -6,12 +6,7 @@ import {
   NotificationDataNoSender,
   NotificationSenderData,
 } from "../models/MainInterfaces";
-import {
-  Action,
-  CertificationTableType,
-  RequirementType,
-  RTNotificationType,
-} from "../utilities/types";
+import { Action, RTNotificationType } from "../utilities/types";
 import useShowNotification, { useDownloadPdfOrder } from "../hooks/utilHooks";
 import { ModalsContext } from "../contexts/ModalsContext";
 import {
@@ -27,100 +22,6 @@ import { MainState } from "../models/Redux";
 import { SocketResponse } from "../models/Interfaces";
 import { getNotifications } from "../services/general/generalServices";
 import { notificationPageSize } from "../utilities/globals";
-
-const notifications: NotificationDataFromServer[] = [
-  {
-    title:
-      "Ver requerimiento Ver requerimiento Ver requerimiento Ver requerimiento",
-    body: "You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post.",
-    timestamp: "2025-01-09T10:30:00.000Z",
-    senderId: "EOuyocZiTZVT91ZOo0rW",
-    receiverId: "5AM89Ku44FQ9S7qrmwol",
-    senderName: "Soluciones oonline sac",
-    action: Action.VIEW_REQUIREMENT,
-    targetId: "IXTsSCZ4weL9Mq82gSoN",
-    targetType: RequirementType.GOOD,
-    uid: "1",
-  },
-  {
-    title: "Descargar orden de compra",
-    body: "John Doe started following you.",
-    timestamp: "2026-01-09T20:45:00.000Z",
-    senderImage: "https://dummyimage.com/300",
-    senderId: "EOuyocZiTZVT91ZOo0rW",
-    receiverId: "5AM89Ku44FQ9S7qrmwol",
-    senderName: "Soluciones oonline sac",
-    action: Action.DOWNLOAD_PURCHASE_ORDER,
-    targetId: "bm9PdrQ5mGhtdvbGEPg5",
-    targetType: RequirementType.GOOD,
-    uid: "1ddf",
-  },
-  {
-    title: "Ver oferta",
-    body: "John Doe started following you.",
-    timestamp: "2025-01-08T15:15:00.000Z",
-    senderImage: "https://dummyimage.com/300",
-    senderId: "EOuyocZiTZVT91ZOo0rW",
-    receiverId: "5AM89Ku44FQ9S7qrmwol",
-    senderName: "Soluciones oonline sac",
-    action: Action.VIEW_OFFER,
-    targetId: "4T0umjVzDazp0rlK3wcm",
-    targetType: RequirementType.GOOD,
-    uid: "1rf",
-  },
-  {
-    title: "Certificado recibido",
-    body: "John Doe started following you.",
-    timestamp: "2025-01-08T15:15:00.000Z",
-    senderImage: "https://dummyimage.com/300",
-    senderId: "EOuyocZiTZVT91ZOo0rW",
-    receiverId: "5AM89Ku44FQ9S7qrmwol",
-    senderName: "Soluciones oonline sac",
-    action: Action.VIEW_CERTIFICATION,
-    targetId: "x8JXBNMUgdn4ihTedBL4",
-    targetType: CertificationTableType.RECEIVED,
-    uid: "1fd",
-  },
-  {
-    title: "Certificado enviado",
-    body: "John Doe started following you.",
-    timestamp: "2025-01-08T15:15:00.000Z",
-    senderImage: "https://dummyimage.com/300",
-    senderId: "EOuyocZiTZVT91ZOo0rW",
-    receiverId: "5AM89Ku44FQ9S7qrmwol",
-    senderName: "Soluciones oonline sac",
-    action: Action.VIEW_CERTIFICATION,
-    targetId: "IXTsSCZ4weL9Mq82gSoN",
-    targetType: CertificationTableType.SENT,
-    uid: "1ff",
-  },
-  {
-    title: "New Follower",
-    body: "John Doe started following you.",
-    timestamp: "2025-01-08T15:15:00.000Z",
-    senderImage: "https://dummyimage.com/300",
-    senderId: "EOuyocZiTZVT91ZOo0rW",
-    receiverId: "5AM89Ku44FQ9S7qrmwol",
-    senderName: "Soluciones oonline sac",
-    action: Action.VIEW_REQUIREMENT,
-    targetId: "IXTsSCZ4weL9Mq82gSoN",
-    targetType: RequirementType.GOOD,
-    uid: "1d",
-  },
-  {
-    title: "New Comment",
-    body: "You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post. You have a new comment on your post.",
-    timestamp: "2025-01-09T10:30:00.000Z",
-    senderImage: "https://dummyimage.com/300",
-    senderId: "EOuyocZiTZVT91ZOo0rW",
-    receiverId: "5AM89Ku44FQ9S7qrmwol",
-    senderName: "Soluciones oonline sac",
-    action: Action.VIEW_REQUIREMENT,
-    targetId: "IXTsSCZ4weL9Mq82gSoN",
-    targetType: RequirementType.GOOD,
-    uid: "1a",
-  },
-];
 
 let notifSocketAPI: Socket | null = null;
 
@@ -144,6 +45,7 @@ export function useTCNotification() {
     NotificationDataFromServer[]
   >([]);
   const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
   /** Conectar con socket */
   useEffect(() => {
@@ -180,15 +82,23 @@ export function useTCNotification() {
     }
   }
 
-  async function getMoreNotifications() {
+  async function getMoreNotifications(page: number) {
     setLoading(true);
     const notificationData = await getNotifications(
       uid,
-      1,
+      page,
       notificationPageSize
     );
-    if (notificationData.certState)
-      setNotificationList(notificationData.certState);
+    if (notificationData.notifications) {
+      if (notificationData.notifications.length > 0) {
+        const newList = [
+          ...notificationList,
+          ...notificationData.notifications,
+        ];
+        setNotificationList(newList);
+        if (newList.length < notificationPageSize) setHasMore(false);
+      } else setHasMore(false);
+    } else setHasMore(false);
     setLoading(false);
     // setTimeout(() => {
     //   setNotificationList(
@@ -202,6 +112,8 @@ export function useTCNotification() {
 
   function resetNotificationList() {
     setNotificationList([]);
+    setHasMore(true);
+    setLoading(false);
   }
 
   function redirectFromNotification(notification: NotificationData) {
@@ -283,5 +195,6 @@ export function useTCNotification() {
     getNotification,
     disconnectNotificationSocket: disconnect,
     connectNotificationSocket: connect,
+    hasMore,
   };
 }

@@ -27,11 +27,17 @@ export default function Notifications(props: NotificationsProps) {
     resetNotificationList,
     notificationLoading,
     redirectFromNotification,
+    hasMore,
   } = sockets;
 
   useEffect(() => {
-    if (visible) getMoreNotifications();
-    else resetNotificationList();
+    if (visible) {
+      getMoreNotifications(page);
+      setPage(page + 1);
+    } else {
+      resetNotificationList();
+      setPage(1);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
@@ -46,8 +52,11 @@ export default function Notifications(props: NotificationsProps) {
     >
       <InfiniteScroll
         dataLength={notifList.length}
-        next={getMoreNotifications}
-        hasMore={notifList.length > 0}
+        next={() => {
+          getMoreNotifications(page);
+          setPage(page + 1);
+        }}
+        hasMore={hasMore} //notifList.length > 0}
         loader={
           <Flex justify="center">
             <Spin indicator={<SimpleLoading style={{ width: "60px" }} />} />

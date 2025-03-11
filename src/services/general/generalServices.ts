@@ -276,7 +276,7 @@ export async function getNotifications(
   });
 
   return {
-    certState: responseData
+    notifications: responseData
       ? (responseData.data as NotificationDataFromServer[])
       : null,
     error,
