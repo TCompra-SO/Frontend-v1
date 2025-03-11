@@ -68,14 +68,14 @@ export function useLogout() {
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
 
   function logout() {
-    if (isLoggedIn) {
-      localStorage.removeItem(tokenKey);
-      localStorage.removeItem(userDataKey);
-      dispatch(setFullMainUser(mainUserInitialState));
-      dispatch(setFullUser(userInitialState));
-      localStorage.setItem(logoutKey, Date.now().toString());
-      localStorage.removeItem(logoutKey);
-    }
+    // if (isLoggedIn) {
+    localStorage.removeItem(tokenKey);
+    localStorage.removeItem(userDataKey);
+    dispatch(setFullMainUser(mainUserInitialState));
+    dispatch(setFullUser(userInitialState));
+    localStorage.setItem(logoutKey, Date.now().toString());
+    localStorage.removeItem(logoutKey);
+    // }
   }
 
   useEffect(() => {
@@ -101,7 +101,6 @@ export function useLogout() {
 
 export function useLoadUserInfo() {
   const dispatch = useDispatch();
-
   // const logout = useLogout();
 
   // function checkToken() {
@@ -143,7 +142,10 @@ export function useLoadUserInfo() {
           userInfo.uid,
           true
         );
-        if (user) {
+        if (!user) {
+          dispatch(setIsLoggedIn(false));
+          return;
+        } else {
           dispatch(setMainUser(user));
         }
         if (subUser) {
