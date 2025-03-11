@@ -114,7 +114,7 @@ export default function useSystemNotification() {
     [SystemNotificationType.DISPUTE_OFFER_CREATOR]: (offerName) => ({
       title: `Nueva disputa`,
       body: `Tienes una disputa con ${senderName} por tu oferta ${offerName}`,
-      action: Action.VIEW_HISTORY,
+      action: Action.VIEW_OFFER,
     }),
 
     [SystemNotificationType.DISPUTE_REQ_CREATOR]: (reqName, type) => ({
@@ -122,7 +122,7 @@ export default function useSystemNotification() {
       body: `Tienes una disputa con ${senderName} por tu ${
         type === RequirementType.SALE ? "liquidación" : "requerimiento"
       } ${reqName}`,
-      action: Action.VIEW_HISTORY,
+      action: Action.VIEW_REQUIREMENT,
     }),
 
     [SystemNotificationType.CANCEL_AN_OFFER]: (type) => ({

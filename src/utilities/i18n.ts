@@ -95,6 +95,7 @@ const resources = {
       existingEmail: "This email has already been registered",
       existingDocNumber: "This document number has already been registered",
       completeProfile: "Complete your profile before validating your account",
+      contactMainAccountToChangePassword: "You can't change your password. Contact the main account administrator.",
       generateCodeAgain: "Generate the code again",
       generateCodeAgainInAFewSeconds:
         "Generate the code again in a few seconds",
@@ -102,6 +103,7 @@ const resources = {
       generateCodeFirst: "Generate a validation code first",
       expiredCode: "The code has expired; please generate a new one",
       incorrectCode: "The code entered is incorrect",
+      subUserNoNeedValidationCode: "This user doesn't need a validation code",
       noDNIorRUCprovided: "Neither DNI nor RUC was provided",
       userNoValidated: "Validate your account first",
       userIncompleteProfile: "Create your profile first",
@@ -633,6 +635,7 @@ const resources = {
       existingEmail: "Este email ya ha sido registrado",
       existingDocNumber: "Este número de documento ya ha sido registrado",
       completeProfile: "Complete su perfil antes de validar su cuenta",
+      contactMainAccountToChangePassword: 'No puedes cambiar tu contraseña. Contacta al administrador de la cuenta principal.',
       generateCodeAgain: "Genere el código nuevamente",
       generateCodeAgainInAFewSeconds:
         "Genere el código nuevamente en algunos segundos",
@@ -640,6 +643,7 @@ const resources = {
       generateCodeFirst: "Genere un código de validación primero",
       expiredCode: "El código ha expirado, genere otro nuevamente",
       incorrectCode: "El código ingresado es incorrecto",
+      subUserNoNeedValidationCode: "Este usuario no necesita un código de validación",
       noDNIorRUCprovided: "No se proporcionó DNI o RUC",
       userNoValidated: "Valide su cuenta primero",
       userIncompleteProfile: "Cree su perfil primero",

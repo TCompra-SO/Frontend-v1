@@ -102,6 +102,9 @@ export default function httpErrorInterceptor(error: any, type: string): string {
         case 410:
           erroMsg = "completeProfile";
           break;
+        case 400:
+          erroMsg = "subUserNoNeedValidationCode";
+          break;
       }
       break;
     case sendCodeRecoveryService().type:
@@ -111,6 +114,9 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
         case 409:
           erroMsg = "generateCodeAgainInAFewSeconds";
+          break;
+        case 410:
+          erroMsg = "contactMainAccountToChangePassword";
           break;
       }
       break;
