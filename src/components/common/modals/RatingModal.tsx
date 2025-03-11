@@ -10,7 +10,10 @@ import {
 } from "../../../utilities/types";
 import SelectContainer from "../../containers/SelectContainer";
 import RatingContainer from "../../containers/RatingContainer";
-import { BasicRateData } from "../../../models/MainInterfaces";
+import {
+  BasicNotificationData,
+  BasicRateData,
+} from "../../../models/MainInterfaces";
 import {
   calculateFinalScore,
   getCulminateOfferService,
@@ -136,24 +139,14 @@ export default function RatingModal(props: RatingModalProps) {
       return;
     }
 
-    const notificationFn = getSystemNotification(
-      props.isOffer
-        ? SystemNotificationType.FINISH_REQUIREMENT
-        : SystemNotificationType.FINISH_OFFER
-    );
-    const basicNotification = notificationFn(answer == YesNo.YES, props.type);
-    const notification = getNotification({
-      ...basicNotification,
-      receiverId: props.basicRateData.subUserId ?? props.basicRateData.userId,
-      timestamp: dayjs().toISOString(),
-      targetId: props.basicRateData.uid,
-      targetType: props.type,
-    });
+    const notification = getCurrentNotification(false);
+    const disputeNotification = getCurrentNotification(true);
 
     const data: CulminateRequest = {
       delivered: answer == YesNo.YES,
       score: calculateFinalScore(scores),
       notification,
+      extraNotification: disputeNotification,
     };
     if (props.isOffer) data.requerimentID = props.requirementOrOfferId;
     else data.offerID = props.requirementOrOfferId;
@@ -165,6 +158,41 @@ export default function RatingModal(props: RatingModalProps) {
       method: "post",
       dataToSend: data,
     });
+  }
+
+  function getCurrentNotification(dispute: boolean) {
+    let basicNotification: BasicNotificationData | null = null;
+    if (dispute) {
+      if (props.isOffer) {
+        const notificationFn = getSystemNotification(
+          SystemNotificationType.DISPUTE_OFFER_CREATOR
+        );
+        basicNotification = notificationFn(props.basicRateData.title);
+      } else {
+        const notificationFn = getSystemNotification(
+          SystemNotificationType.DISPUTE_REQ_CREATOR
+        );
+        basicNotification = notificationFn(
+          props.basicRateData.title,
+          props.type
+        );
+      }
+    } else {
+      const notificationFn = getSystemNotification(
+        props.isOffer
+          ? SystemNotificationType.FINISH_REQUIREMENT
+          : SystemNotificationType.FINISH_OFFER
+      );
+      basicNotification = notificationFn(answer == YesNo.YES, props.type);
+    }
+    if (basicNotification)
+      return getNotification({
+        ...basicNotification,
+        receiverId: props.basicRateData.subUserId ?? props.basicRateData.userId,
+        timestamp: dayjs().toISOString(),
+        targetId: props.basicRateData.uid,
+        targetType: props.type,
+      });
   }
 
   return (

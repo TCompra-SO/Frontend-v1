@@ -100,14 +100,6 @@ export function useTCNotification() {
       } else setHasMore(false);
     } else setHasMore(false);
     setLoading(false);
-    // setTimeout(() => {
-    //   setNotificationList(
-    //     notificationList.length > 0
-    //       ? notificationList.concat(notificationList)
-    //       : notifications.slice(0, 10)
-    //   );
-    //   setLoading(false);
-    // }, 1000);
   }
 
   function resetNotificationList() {

@@ -20,6 +20,7 @@ import {
 import { Checkbox, Flex, Pagination } from "antd";
 import ModalContainer from "../../containers/ModalContainer";
 import {
+  certificatesToSendPageSize,
   mainModalScrollStyle,
   pageSizeOptionsSt,
 } from "../../../utilities/globals";
@@ -86,7 +87,7 @@ export default function SelectDocumentsToSendCertificateModal(
   /** Obtener lista de documentos */
 
   useEffect(() => {
-    getCertificatesList(currentPage, pageSizeOptionsSt[0]);
+    getCertificatesList(currentPage, certificatesToSendPageSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

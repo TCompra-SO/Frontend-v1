@@ -26,12 +26,10 @@ type SystemNotificationMap = {
     type: RequirementType
   ) => BasicNotificationData;
   [SystemNotificationType.DISPUTE_OFFER_CREATOR]: (
-    offerName: string,
-    creatorReqName: string
+    offerName: string
   ) => BasicNotificationData;
   [SystemNotificationType.DISPUTE_REQ_CREATOR]: (
     reqName: string,
-    creatorOfferName: string,
     type: RequirementType
   ) => BasicNotificationData;
   [SystemNotificationType.CANCEL_AN_OFFER]: (
@@ -113,22 +111,15 @@ export default function useSystemNotification() {
       action: Action.VIEW_REQUIREMENT,
     }),
 
-    [SystemNotificationType.DISPUTE_OFFER_CREATOR]: (
-      offerName,
-      creatorReqName
-    ) => ({
+    [SystemNotificationType.DISPUTE_OFFER_CREATOR]: (offerName) => ({
       title: `Nueva disputa`,
-      body: `Tienes una disputa con ${creatorReqName} por tu oferta ${offerName}`,
+      body: `Tienes una disputa con ${senderName} por tu oferta ${offerName}`,
       action: Action.VIEW_HISTORY,
     }),
 
-    [SystemNotificationType.DISPUTE_REQ_CREATOR]: (
-      reqName,
-      creatorOfferName,
-      type
-    ) => ({
+    [SystemNotificationType.DISPUTE_REQ_CREATOR]: (reqName, type) => ({
       title: `Nueva disputa`,
-      body: `Tienes una disputa con ${creatorOfferName} por tu ${
+      body: `Tienes una disputa con ${senderName} por tu ${
         type === RequirementType.SALE ? "liquidación" : "requerimiento"
       } ${reqName}`,
       action: Action.VIEW_HISTORY,
