@@ -95,7 +95,8 @@ const resources = {
       existingEmail: "This email has already been registered",
       existingDocNumber: "This document number has already been registered",
       completeProfile: "Complete your profile before validating your account",
-      contactMainAccountToChangePassword: "You can't change your password. Contact the main account administrator.",
+      contactMainAccountToChangePassword:
+        "You can't change your password. Contact the main account administrator.",
       generateCodeAgain: "Generate the code again",
       generateCodeAgainInAFewSeconds:
         "Generate the code again in a few seconds",
@@ -170,7 +171,6 @@ const resources = {
       mySale: "My sale",
       myOffers: "My Offers",
       myOffer: "My Offer",
-      myPurchaseOrders: "My Purchase Orders",
       rrhh: "Human Resources",
       createUsers: "Create users",
       certificates: "Certificates",
@@ -178,9 +178,11 @@ const resources = {
       purchaseOrder: "Purchase order",
       purchaseOrders: "Purchase orders",
       myPurchaseOrders: "My purchase orders",
+      myPurchaseOrdersAbb: "My POs",
       salesOrder: "Sales order",
       salesOrders: "Sales orders",
       mySalesOrders: "My sales orders",
+      mySalesOrdersAbb: "My SOs",
       chatSection: "Business chat",
       // Validation
       noBlankSpaces: "Enter a valid value",
@@ -251,7 +253,7 @@ const resources = {
       errorOccurredUploadingImgs: "An error occurred while uploading images",
       scoreSavedSuccessfully: "Score was saved successfully",
       cantRateSameEntity: "You can´t rate users from the same company",
-      alreadyRatedUser: 'You have already rated this user',
+      alreadyRatedUser: "You have already rated this user",
       offerSelectedSuccessfully: "Offer selected successfully",
       thereAreNoOffers: "There are no offers",
       requirementDoesNotExist: "Requirement does not exist",
@@ -272,8 +274,7 @@ const resources = {
       thisSaleIsNoLongerAvailable: "This sale is no longer available",
       otherEmployeeHasAlreadyMadeAnOffer:
         "Another employee from your company has already made an offer",
-      companyHasAlreadyMadeAnOffer:
-        "Your company has already made an offer",
+      companyHasAlreadyMadeAnOffer: "Your company has already made an offer",
       aSubUserHasAlreadyMadeAnOffer: "An employee has already made an offer",
       onlyPremiumUserCanMakeAnOffer: "Only Premium users can make an offer",
       onlyCertifiedCompaniesCanMakeAnOffer:
@@ -318,13 +319,18 @@ const resources = {
       homeTableSecondHalf: "Best Suit You",
       budgetGreaterThanZero: "Budget must be greater than 0",
       keepsYouConnected: "keeps you connected",
-      chatText: "Chat with your customers and suppliers for better interactivity",
+      chatText:
+        "Chat with your customers and suppliers for better interactivity",
       requirementCanceledSuccessfully: "Requirement canceled successfully",
       saleCanceledSuccessfully: "Sale canceled successfully",
-      cantCancelRequirementSupplierFinished: "Requirement cannot be canceled because the supplier has already completed their part of the process",
-      cantCancelSaleClientFinished: "Sale cannot be canceled because the client has already completed their part of the process",
-      cantCancelOfferClientFinished: "Offer cannot be canceled because the client has already completed their part of the process",
-      cantCancelOfferSupplierFinished: "Offer cannot be canceled because the supplier has already completed their part of the process",
+      cantCancelRequirementSupplierFinished:
+        "Requirement cannot be canceled because the supplier has already completed their part of the process",
+      cantCancelSaleClientFinished:
+        "Sale cannot be canceled because the client has already completed their part of the process",
+      cantCancelOfferClientFinished:
+        "Offer cannot be canceled because the client has already completed their part of the process",
+      cantCancelOfferSupplierFinished:
+        "Offer cannot be canceled because the supplier has already completed their part of the process",
       offerCanceledSuccessfully: "Offer canceled successfully",
       documentsUploadedSuccessfully: "Documents uploaded successfully",
       documentsSentSuccessfully: "Documents sent successfully",
@@ -332,19 +338,25 @@ const resources = {
       deleteDocumentConfirmation: "Are sure about deleting this document?",
       certificationApproved: "Company certified successfully",
       certificationRejected: "Company rejected successfully",
-      mustProvideReasonCertification: "A reason is required to reject this request",
-      noSavedRequiredDocListCertification: "There is no saved list of required documents for certification. This list can be created in the Certificates section.",
+      mustProvideReasonCertification:
+        "A reason is required to reject this request",
+      noSavedRequiredDocListCertification:
+        "There is no saved list of required documents for certification. This list can be created in the Certificates section.",
       dataSavedSuccessfully: "Data saved successfully",
-      certificationVerificationError: "Certification status could not be verified",
-      alreadySentCertificationRequest: "A certification request was already sent to this company",
+      certificationVerificationError:
+        "Certification status could not be verified",
+      alreadySentCertificationRequest:
+        "A certification request was already sent to this company",
       selectDocsToSend: "Select",
       showUserInfo: "Show user data",
-      sessionExpiredLoginAgain: "Your session has expired. Please log in again to continue",
+      sessionExpiredLoginAgain:
+        "Your session has expired. Please log in again to continue",
       minCharMessage: "Enter at least",
       maxCharMessage: "Enter up to",
       userSuspendedSuccessfully: "User suspended successfully",
       userReactivatedSuccessfully: "User reactivated successfully",
-      noDocumentsForCertification: "No documents available. Click 'Add certificates' to add new files.",
+      noDocumentsForCertification:
+        "No documents available. Click 'Add certificates' to add new files.",
       // Other
       characters: "characters",
       yes: "Yes",
@@ -528,21 +540,20 @@ const resources = {
       appName: "TCompra",
       message: "Message",
       resend: "Resend",
-      sendMessage: "Sed message",
       resent: "Resent",
       approvedCertifications: "Approved certifications",
       total: "Total",
       items: "items",
-      of: 'of',
-      warrantyDuration: 'Warranty duration',
-      termsAndConditions: 'Terms and Conditions',
-      chatMessageImagesDocs: 'Sent',
-      chatMessageImages: 'image(s)',
-      chatMessageDocs: 'document(s)',
-      suspend: 'Suspend',
-      reactivate: 'Reactivate',
-      activeUser: 'Active',
-      suspendedUser: 'Suspended',
+      of: "of",
+      warrantyDuration: "Warranty duration",
+      termsAndConditions: "Terms and Conditions",
+      chatMessageImagesDocs: "Sent",
+      chatMessageImages: "image(s)",
+      chatMessageDocs: "document(s)",
+      suspend: "Suspend",
+      reactivate: "Reactivate",
+      activeUser: "Active",
+      suspendedUser: "Suspended",
     },
   },
   es: {
@@ -635,7 +646,8 @@ const resources = {
       existingEmail: "Este email ya ha sido registrado",
       existingDocNumber: "Este número de documento ya ha sido registrado",
       completeProfile: "Complete su perfil antes de validar su cuenta",
-      contactMainAccountToChangePassword: 'No puedes cambiar tu contraseña. Contacta al administrador de la cuenta principal.',
+      contactMainAccountToChangePassword:
+        "No puedes cambiar tu contraseña. Contacta al administrador de la cuenta principal.",
       generateCodeAgain: "Genere el código nuevamente",
       generateCodeAgainInAFewSeconds:
         "Genere el código nuevamente en algunos segundos",
@@ -643,7 +655,8 @@ const resources = {
       generateCodeFirst: "Genere un código de validación primero",
       expiredCode: "El código ha expirado, genere otro nuevamente",
       incorrectCode: "El código ingresado es incorrecto",
-      subUserNoNeedValidationCode: "Este usuario no necesita un código de validación",
+      subUserNoNeedValidationCode:
+        "Este usuario no necesita un código de validación",
       noDNIorRUCprovided: "No se proporcionó DNI o RUC",
       userNoValidated: "Valide su cuenta primero",
       userIncompleteProfile: "Cree su perfil primero",
@@ -712,7 +725,6 @@ const resources = {
       mySale: "Mi liquidación",
       myOffers: "Mis Ofertas",
       myOffer: "Mi Oferta",
-      myPurchaseOrders: "Mis Órdenes de compra",
       rrhh: "RR. HH.",
       createUsers: "Crear usuarios",
       certificates: "Certificados",
@@ -784,8 +796,7 @@ const resources = {
       improveYourCompanysImage: "Mejora notablemente la imagen de tu empresa.",
       cantOfferToYourOwnRequirement:
         "No puedes ofertar a tu propio requerimiento",
-      cantOfferToYourOwnSale:
-        "No puedes ofertar a tu propia liquidación",
+      cantOfferToYourOwnSale: "No puedes ofertar a tu propia liquidación",
       alreadyMadeOffer: "Ya haz realizado una oferta",
       requirementNotFound: "No se ha podido encontrar el requerimiento",
       saleNotFound: "No se ha podido encontrar la liquidación",
@@ -798,7 +809,7 @@ const resources = {
       errorOccurredUploadingImgs: "Se produjo un error al subir las imágenes",
       scoreSavedSuccessfully: "Calificación guardada exitosamente",
       cantRateSameEntity: "No puede calificar a usuarios de la misma empresa",
-      alreadyRatedUser: 'Ya haz calificado a este usuario',
+      alreadyRatedUser: "Ya haz calificado a este usuario",
       offerSelectedSuccessfully: "Oferta seleccionada exitosamente",
       thereAreNoOffers: "No hay ofertas",
       requirementDoesNotExist: "El requerimiento no existe",
@@ -819,7 +830,8 @@ const resources = {
       thisRequirementIsNoLongerAvailable:
         "Este requerimiento ya no está disponible",
       thisSaleIsNoLongerAvailable: "Esta liquidación ya no está disponible",
-      otherEmployeeHasAlreadyMadeAnOffer: "Otro trabajador de la empresa ya hizo una oferta",
+      otherEmployeeHasAlreadyMadeAnOffer:
+        "Otro trabajador de la empresa ya hizo una oferta",
       companyHasAlreadyMadeAnOffer: "Tu empresa ya hizo una oferta",
       aSubUserHasAlreadyMadeAnOffer: "Un trabajador ya hizo una oferta",
       onlyPremiumUserCanMakeAnOffer: "Solo usuarios Premium pueden ofertar",
@@ -851,10 +863,8 @@ const resources = {
         "La liquidación pertenece a otro trabajador de la empresa",
       requirementBelongsToSubUser: "El requerimiento pertenece a un trabajador",
       saleBelongsToSubUser: "La liquidación pertenece a un trabajador",
-      requirementBelongsToCompany:
-        "El requerimiento pertenece tu empresa",
-      saleBelongsToCompany:
-        "La liquidación pertenece a tu empresa",
+      requirementBelongsToCompany: "El requerimiento pertenece tu empresa",
+      saleBelongsToCompany: "La liquidación pertenece a tu empresa",
       homeTitle: "La primera plataforma de Requerimientos y Ofertas del Perú",
       homeSubtitle: "Facilitamos la Compra y Venta de Bienes y Servicios",
       allRightsReserved: "Todos los derechos reservados",
@@ -870,13 +880,18 @@ const resources = {
       homeTableSecondHalf: "Mejor se Adaptan a Ti",
       budgetGreaterThanZero: "Presupuesto debe ser mayor a 0",
       keepsYouConnected: "te mantiene conectado",
-      chatText: "Conversa con tus clientes y proveedores para una mejor interactividad",
+      chatText:
+        "Conversa con tus clientes y proveedores para una mejor interactividad",
       requirementCanceledSuccessfully: "Requerimiento cancelado exitosamente",
       saleCanceledSuccessfully: "Liquidación cancelada exitosamente",
-      cantCancelRequirementSupplierFinished: "No se puede cancelar el requerimiento porque el proveedor ya ha completado su parte del proceso",
-      cantCancelSaleClientFinished: "No se puede cancelar la liquidación porque el cliente ya ha completado su parte del proceso",
-      cantCancelOfferClientFinished: "No se puede cancelar la oferta porque el cliente ya ha completado su parte del proceso",
-      cantCancelOfferSupplierFinished: "No se puede cancelar la oferta porque el proveedor ya ha completado su parte del proceso",
+      cantCancelRequirementSupplierFinished:
+        "No se puede cancelar el requerimiento porque el proveedor ya ha completado su parte del proceso",
+      cantCancelSaleClientFinished:
+        "No se puede cancelar la liquidación porque el cliente ya ha completado su parte del proceso",
+      cantCancelOfferClientFinished:
+        "No se puede cancelar la oferta porque el cliente ya ha completado su parte del proceso",
+      cantCancelOfferSupplierFinished:
+        "No se puede cancelar la oferta porque el proveedor ya ha completado su parte del proceso",
       offerCanceledSuccessfully: "Oferta cancelada exitosamente",
       documentsUploadedSuccessfully: "Documentos subidos exitosamente",
       documentsSentSuccessfully: "Documentos enviados exitosamente",
@@ -884,19 +899,25 @@ const resources = {
       deleteDocumentConfirmation: "¿Está seguro de eliminar el documento?",
       certificationApproved: "Empresa certificada exitosamente",
       certificationRejected: "Empresa rechazada exitosamente",
-      mustProvideReasonCertification: "Debe proporcionar una razón para rechazar esta solicitud",
-      noSavedRequiredDocListCertification: "No hay una lista guardada de los documentos requeridos para la certificación. Esta lista puede ser creada en la sección de Certificados.",
+      mustProvideReasonCertification:
+        "Debe proporcionar una razón para rechazar esta solicitud",
+      noSavedRequiredDocListCertification:
+        "No hay una lista guardada de los documentos requeridos para la certificación. Esta lista puede ser creada en la sección de Certificados.",
       dataSavedSuccessfully: "Datos guardados exitosamente",
-      certificationVerificationError: "No se pudo verificar el estado de la certificación",
-      alreadySentCertificationRequest: "Ya fue enviada una solicitud de certificación a esta empresa",
+      certificationVerificationError:
+        "No se pudo verificar el estado de la certificación",
+      alreadySentCertificationRequest:
+        "Ya fue enviada una solicitud de certificación a esta empresa",
       selectDocsToSend: "Seleccionar",
       showUserInfo: "Mostrar datos de usuario",
-      sessionExpiredLoginAgain: "Su sesión ha expirado. Por favor, inicie sesión nuevamente para continuar",
+      sessionExpiredLoginAgain:
+        "Su sesión ha expirado. Por favor, inicie sesión nuevamente para continuar",
       minCharMessage: "Ingrese al menos",
       maxCharMessage: "Puede ingresar hasta",
       userSuspendedSuccessfully: "Usuario suspendido exitosamente",
       userReactivatedSuccessfully: "Usuario reactivado exitosamente",
-      noDocumentsForCertification: "No hay documentos disponibles. Haga click en 'Agregar certificados' para añadir nuevos archivos.",
+      noDocumentsForCertification:
+        "No hay documentos disponibles. Haga click en 'Agregar certificados' para añadir nuevos archivos.",
       // Other
       characters: "caracteres",
       yes: "Sí",
@@ -1082,21 +1103,20 @@ const resources = {
       appName: "TCompra",
       message: "Mensaje",
       resend: "Reenviar",
-      sendMessage: "Enviar mensaje",
       resent: "Reenviado",
       approvedCertifications: "Certificaciones aprobadas",
       total: "Total",
       items: "items",
-      of: 'de',
-      warrantyDuration: 'Duración de garantía',
-      termsAndConditions: 'Términos y Condiciones',
-      chatMessageImagesDocs: 'Envió',
-      chatMessageImages: 'imagen(es)',
-      chatMessageDocs: 'documento(s)',
-      suspend: 'Suspender',
-      reactivate: 'Reactivar',
-      activeUser: 'Activo',
-      suspendedUser: 'Suspendido',
+      of: "de",
+      warrantyDuration: "Duración de garantía",
+      termsAndConditions: "Términos y Condiciones",
+      chatMessageImagesDocs: "Envió",
+      chatMessageImages: "imagen(es)",
+      chatMessageDocs: "documento(s)",
+      suspend: "Suspender",
+      reactivate: "Reactivar",
+      activeUser: "Activo",
+      suspendedUser: "Suspendido",
     },
   },
 };
