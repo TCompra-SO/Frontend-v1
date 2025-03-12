@@ -171,6 +171,7 @@ export enum Action {
   SUSPEND = 38,
   REACTIVATE = 39,
   VIEW_CERTIFICATION = 40,
+  VIEW_CAT_LAST_REQUIREMENTS = 41,
 }
 
 export const ActionLabel: {
@@ -217,6 +218,7 @@ export const ActionLabel: {
   [Action.SUSPEND]: "suspend",
   [Action.REACTIVATE]: "reactivate",
   [Action.VIEW_CERTIFICATION]: "view",
+  [Action.VIEW_CAT_LAST_REQUIREMENTS]: "view",
 };
 
 export const ActionByStateRequirement: {
@@ -533,4 +535,9 @@ export enum SystemNotificationType {
   FINISH_REQUIREMENT = 7,
   SELECT_OFFER = 8,
   RECEIVED_DOCS_FOR_CERT = 9,
+}
+
+export enum NotificationType {
+  DIRECT = 0,
+  BROADCAST = 1,
 }

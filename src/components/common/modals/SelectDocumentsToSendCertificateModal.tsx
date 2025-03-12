@@ -22,7 +22,6 @@ import ModalContainer from "../../containers/ModalContainer";
 import {
   certificatesToSendPageSize,
   mainModalScrollStyle,
-  pageSizeOptionsSt,
 } from "../../../utilities/globals";
 import SimpleLoading from "../../../pages/utils/SimpleLoading";
 import {
@@ -144,7 +143,7 @@ export default function SelectDocumentsToSendCertificateModal(
 
   function handleOnDocumentAdded() {
     setCurrentPage(1);
-    getCertificatesList(1, pageSizeOptionsSt[0]);
+    getCertificatesList(1, certificatesToSendPageSize);
   }
 
   function onChangePageAndPageSize(page: number, pageSize: number) {
@@ -301,6 +300,7 @@ export default function SelectDocumentsToSendCertificateModal(
                 total={totalCertList}
                 onChange={onChangePageAndPageSize}
                 // showTotal={(total) => `${total}`}
+                pageSize={certificatesToSendPageSize}
                 current={currentPage}
                 hideOnSinglePage={true}
               />

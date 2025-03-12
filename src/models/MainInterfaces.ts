@@ -13,6 +13,7 @@ import {
   CanOfferType,
   Action,
   CertificationTableType,
+  NotificationType,
 } from "../utilities/types";
 import { OfferFilters } from "./Interfaces";
 
@@ -302,7 +303,9 @@ export interface NotificationDataNoSender
 
 export interface NotificationData
   extends NotificationDataNoSender,
-    NotificationSenderData {}
+    NotificationSenderData {
+  type: NotificationType;
+}
 
 export interface NotificationDataFromServer extends NotificationData {
   uid: string;

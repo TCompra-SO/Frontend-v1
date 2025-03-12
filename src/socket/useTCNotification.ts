@@ -6,7 +6,11 @@ import {
   NotificationDataNoSender,
   NotificationSenderData,
 } from "../models/MainInterfaces";
-import { Action, RTNotificationType } from "../utilities/types";
+import {
+  Action,
+  NotificationType,
+  RTNotificationType,
+} from "../utilities/types";
 import useShowNotification, { useDownloadPdfOrder } from "../hooks/utilHooks";
 import { ModalsContext } from "../contexts/ModalsContext";
 import {
@@ -164,7 +168,11 @@ export function useTCNotification() {
             : senderName,
         senderImage: mainSenderImage,
       };
-      const notif: NotificationData = { ...senderData, ...notification };
+      const notif: NotificationData = {
+        ...senderData,
+        ...notification,
+        type: NotificationType.DIRECT,
+      };
       return notif;
     }
   }

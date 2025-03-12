@@ -549,5 +549,5 @@ export interface LoginResponse {
     uid: string;
   }[];
   refreshToken: string;
-  token: string;
+  accessToken: string;
 }

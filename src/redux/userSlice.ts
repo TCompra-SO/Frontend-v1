@@ -25,7 +25,7 @@ export const userSlice = createSlice({
     setUser: (state, action) => {
       console.log(action.payload);
       const payload: LoginResponse = action.payload;
-      if (payload.token) state.token = payload.token;
+      if (payload.accessToken) state.token = payload.accessToken;
       if (payload.dataUser) {
         const { uid, name, email, type, typeID, planID } =
           action.payload.dataUser[0];
