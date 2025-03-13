@@ -537,8 +537,8 @@ export function useShowDetailOffer() {
         const { basicRateData } = await getBasicRateData(
           offerData.requirementId,
           false,
-          RequirementType.GOOD
-        ); // r3v
+          type
+        );
         if (basicRateData)
           setDataModal({
             type: ModalTypes.OFFER_DETAIL,

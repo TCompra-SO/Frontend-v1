@@ -228,7 +228,7 @@ export const ActionByStateRequirement: {
   [RequirementState.DISPUTE]: [Action.SHOW_SUMMARY],
   [RequirementState.EXPIRED]: [Action.REPUBLISH], // Action.DELETE
   [RequirementState.FINISHED]: [Action.SHOW_SUMMARY],
-  [RequirementState.PUBLISHED]: [Action.DELETE, Action.CANCEL_REQUIREMENT],
+  [RequirementState.PUBLISHED]: [Action.CANCEL_REQUIREMENT], // Action.DELETE
   [RequirementState.SELECTED]: [Action.CANCEL_REQUIREMENT, Action.FINISH],
   [RequirementState.ELIMINATED]: [Action.VIEW],
 };

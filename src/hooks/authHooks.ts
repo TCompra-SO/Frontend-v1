@@ -119,7 +119,7 @@ export function useLoadUserInfo() {
     const userData = localStorage.getItem(userDataKey);
     if (userData) {
       const userInfo = JSON.parse(decryptData(userData));
-      // console.log(userInfo);
+      console.log(userInfo);
       // if (!checkToken()) return;
       if (userInfo) {
         localStorage.setItem(tokenKey, userInfo.token);
