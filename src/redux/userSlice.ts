@@ -23,7 +23,6 @@ export const userSlice = createSlice({
   initialState: userInitialState,
   reducers: {
     setUser: (state, action) => {
-      console.log(action.payload);
       const payload: LoginResponse = action.payload;
       if (payload.accessToken) state.token = payload.accessToken;
       if (payload.dataUser) {

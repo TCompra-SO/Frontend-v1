@@ -29,6 +29,7 @@ import { decryptData } from "../utilities/crypto";
 import { getBaseUserForUserSubUser } from "../services/general/generalServices";
 import useShowNotification from "./utilHooks";
 import { useTranslation } from "react-i18next";
+import { LoginResponse } from "../models/Interfaces";
 
 export function useLogin() {
   const { t } = useTranslation();
@@ -37,7 +38,10 @@ export function useLogin() {
   const { showNotification } = useShowNotification();
 
   async function login(responseData: any) {
-    dispatch(setUser(responseData.res));
+    const loginResponse: LoginResponse = responseData.res;
+    dispatch(setUser(loginResponse));
+    if (loginResponse && loginResponse.accessToken)
+      localStorage.setItem(tokenKey, loginResponse.accessToken);
     await loadUserInfo();
     showNotification("success", t("welcome"));
     localStorage.setItem(loginKey, Date.now().toString());
@@ -117,12 +121,13 @@ export function useLoadUserInfo() {
 
   async function loadUserInfo() {
     const userData = localStorage.getItem(userDataKey);
-    if (userData) {
+    const tokenData = localStorage.getItem(tokenKey);
+    if (tokenData && userData) {
       const userInfo = JSON.parse(decryptData(userData));
       console.log(userInfo);
       // if (!checkToken()) return;
       if (userInfo) {
-        localStorage.setItem(tokenKey, userInfo.token);
+        // localStorage.setItem(tokenKey, userInfo.token);
         dispatch(
           setUser({
             token: userInfo.token,

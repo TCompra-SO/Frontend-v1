@@ -28,6 +28,7 @@ import { getNotifications } from "../services/general/generalServices";
 import { notificationPageSize } from "../utilities/globals";
 
 let notifSocketAPI: Socket | null = null;
+let globalNotifSocketAPI: Socket | null = null;
 
 export function useTCNotification() {
   const senderName = useSelector((state: MainState) => state.user.name);
@@ -60,6 +61,31 @@ export function useTCNotification() {
   }, []);
 
   /** Funciones */
+
+  function connectGlobal() {
+    if (!globalNotifSocketAPI) {
+      globalNotifSocketAPI = io(import.meta.env.VITE_NOTIF_SOCKET_URL);
+
+      globalNotifSocketAPI.on("connect", () => {
+        console.log("Connected global notificaciones");
+        globalNotifSocketAPI?.emit("joinRoom", `TCNotifications`);
+      });
+
+      globalNotifSocketAPI.on("joinedRoom", (message) => {
+        console.log(message);
+      });
+
+      globalNotifSocketAPI.on("updateRoom", (payload: SocketResponse) => {
+        console.log("notificación global recibida:", payload);
+        if (payload.dataPack.data && payload.dataPack.data.length > 0)
+          showRealTimeNotification({
+            type: RTNotificationType.NOTIFICATION,
+            content: payload.dataPack.data[0] as NotificationDataFromServer,
+            onClickCallback: redirectFromNotification,
+          });
+      });
+    }
+  }
 
   function connect() {
     if (!notifSocketAPI) {
@@ -177,6 +203,14 @@ export function useTCNotification() {
     }
   }
 
+  function disconnectGlobal() {
+    if (globalNotifSocketAPI) {
+      console.log("Disconnected global notificaciones");
+      globalNotifSocketAPI.disconnect();
+      globalNotifSocketAPI = null;
+    }
+  }
+
   function disconnect() {
     if (notifSocketAPI) {
       console.log("Disconnected notificaciones");
@@ -195,6 +229,8 @@ export function useTCNotification() {
     getNotification,
     disconnectNotificationSocket: disconnect,
     connectNotificationSocket: connect,
+    disconnectGlobalNotificationSocket: disconnectGlobal,
+    connectGlobalNotificationSocket: connectGlobal,
     hasMoreNotificationList: hasMore,
   };
 }

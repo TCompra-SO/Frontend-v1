@@ -33,6 +33,8 @@ export const MainSocketsContext = createContext<MainSocketsContextType>({
   disconnectUserSocket: () => {},
   connectNotificationSocket: () => {},
   connectChatSocket: () => {},
+  connectGlobalNotificationSocket: () => {},
+  disconnectGlobalNotificationSocket: () => {},
   hasMoreNotificationList: false,
 } as MainSocketsContextType);
 
@@ -53,6 +55,7 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
     if (isLoggedIn) {
       userData.connectUserSocket();
       notificationData.connectNotificationSocket();
+      notificationData.connectGlobalNotificationSocket();
       chatData.connectChatSocket();
     } else disconnectSockets();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,6 +65,7 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
     userData.disconnectUserSocket();
     chatData.disconnectChatSocket();
     notificationData.disconnectNotificationSocket();
+    notificationData.disconnectGlobalNotificationSocket();
   }
 
   return (
