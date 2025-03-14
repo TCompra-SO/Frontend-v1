@@ -152,35 +152,36 @@ export default function CreateRequirementFloatButton() {
 
   /** Notificaciones */
   useEffect(() => {
-    if (
-      reqSuccess != ProcessFlag.NOT_INI &&
-      docSuccess != ProcessFlag.NOT_INI &&
-      imgSuccess != ProcessFlag.NOT_INI
-    ) {
+    if (reqSuccess != ProcessFlag.NOT_INI) {
       if (
-        reqSuccess == ProcessFlag.FIN_SUCCESS &&
-        docSuccess == ProcessFlag.FIN_SUCCESS &&
-        imgSuccess == ProcessFlag.FIN_SUCCESS
+        docSuccess != ProcessFlag.NOT_INI &&
+        imgSuccess != ProcessFlag.NOT_INI
       ) {
-        showNotification(
-          "success",
-          t(
-            type == RequirementType.GOOD || type == RequirementType.SERVICE
-              ? "createRequirementSuccess"
-              : "createSaleSuccess"
-          )
-        );
-      } else {
-        showNotification(
-          "warning",
-          t(
-            type == RequirementType.GOOD || type == RequirementType.SERVICE
-              ? "createRequirementSuccessNoDocOrImages"
-              : "createSaleSuccessNoDocOrImages"
-          )
-        );
+        if (
+          reqSuccess == ProcessFlag.FIN_SUCCESS &&
+          docSuccess == ProcessFlag.FIN_SUCCESS &&
+          imgSuccess == ProcessFlag.FIN_SUCCESS
+        ) {
+          showNotification(
+            "success",
+            t(
+              type == RequirementType.GOOD || type == RequirementType.SERVICE
+                ? "createRequirementSuccess"
+                : "createSaleSuccess"
+            )
+          );
+        } else {
+          showNotification(
+            "warning",
+            t(
+              type == RequirementType.GOOD || type == RequirementType.SERVICE
+                ? "createRequirementSuccessNoDocOrImages"
+                : "createSaleSuccessNoDocOrImages"
+            )
+          );
+        }
+        if (!avoidClosingModal) setIsOpenModal(false);
       }
-      if (!avoidClosingModal) setIsOpenModal(false);
       updateCreateRequirementLoading(false);
       reset();
     }
