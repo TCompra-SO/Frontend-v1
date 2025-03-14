@@ -27,7 +27,7 @@ export default function Notifications(props: NotificationsProps) {
     resetNotificationList,
     notificationLoading,
     redirectFromNotification,
-    hasMore,
+    hasMoreNotificationList,
   } = sockets;
 
   useEffect(() => {
@@ -56,7 +56,7 @@ export default function Notifications(props: NotificationsProps) {
           getMoreNotifications(page);
           setPage(page + 1);
         }}
-        hasMore={hasMore} //notifList.length > 0}
+        hasMore={hasMoreNotificationList} //notifList.length > 0}
         loader={
           <Flex justify="center">
             <Spin indicator={<SimpleLoading style={{ width: "60px" }} />} />

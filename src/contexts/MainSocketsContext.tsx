@@ -13,7 +13,7 @@ type MainSocketsContextType = NotificationsType & ChatType & UserType;
 
 export const MainSocketsContext = createContext<MainSocketsContextType>({
   notificationList: [],
-  getMoreNotifications: () => {},
+  getMoreNotifications: async () => {},
   resetNotificationList: () => {},
   notificationLoading: false,
   redirectFromNotification: () => {},
@@ -33,6 +33,7 @@ export const MainSocketsContext = createContext<MainSocketsContextType>({
   disconnectUserSocket: () => {},
   connectNotificationSocket: () => {},
   connectChatSocket: () => {},
+  hasMoreNotificationList: false,
 } as MainSocketsContextType);
 
 export function MainSocketsProvider({ children }: { children: ReactNode }) {

@@ -139,10 +139,10 @@ function App() {
         }}
       >
         <AntdApp>
-          <MainSocketsProvider>
-            <HomeProvider>
-              <ListsProvider>
-                <ModalsProvider>
+          <ModalsProvider>
+            <MainSocketsProvider>
+              <HomeProvider>
+                <ListsProvider>
                   <LoadingDataProvider>
                     <Suspense fallback={<LoadingPage />}>
                       <CreateRequirementFloatButton />
@@ -719,10 +719,10 @@ function App() {
                       </Routes>
                     </Suspense>
                   </LoadingDataProvider>
-                </ModalsProvider>
-              </ListsProvider>
-            </HomeProvider>
-          </MainSocketsProvider>
+                </ListsProvider>
+              </HomeProvider>
+            </MainSocketsProvider>
+          </ModalsProvider>
         </AntdApp>
       </ConfigProvider>
     </>

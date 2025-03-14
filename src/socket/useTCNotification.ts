@@ -195,6 +195,6 @@ export function useTCNotification() {
     getNotification,
     disconnectNotificationSocket: disconnect,
     connectNotificationSocket: connect,
-    hasMore,
+    hasMoreNotificationList: hasMore,
   };
 }
