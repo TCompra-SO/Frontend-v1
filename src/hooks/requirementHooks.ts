@@ -576,6 +576,7 @@ export function useCulminate() {
     isOffer: boolean;
     idToFinish: string;
     idToGetData: string;
+    titleToFinish: string;
     action: Action;
     rowId: string;
   }>({
@@ -583,6 +584,7 @@ export function useCulminate() {
     isOffer: false,
     action: Action.FINISH,
     idToFinish: "",
+    titleToFinish: "",
     idToGetData: "",
     rowId: "",
   });
@@ -615,6 +617,7 @@ export function useCulminate() {
             isOffer: culminateData.isOffer,
             requirementOrOfferId: culminateData.idToFinish,
             rowId: culminateData.rowId,
+            requirementOrOfferTitle: culminateData.titleToFinish,
           },
           action: culminateData.action,
         });
@@ -637,7 +640,8 @@ export function useCulminate() {
     useOfferService: boolean,
     isOffer: boolean,
     action: Action,
-    type: RequirementType
+    type: RequirementType,
+    titleToFinish: string
   ) {
     showLoadingMessage(true);
     setDataModal({
@@ -652,6 +656,7 @@ export function useCulminate() {
       idToGetData,
       action,
       rowId,
+      titleToFinish,
     });
     setApiParams({
       service: useOfferService

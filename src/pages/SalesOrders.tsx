@@ -340,7 +340,8 @@ export default function SalesOrders() {
             true,
             true,
             action,
-            purchaseOrder.type
+            purchaseOrder.type,
+            purchaseOrder.requirementTitle
           );
         } else if (typeRef.current == OrderTableType.RECEIVED)
           // Buscar en liquidación
@@ -351,7 +352,8 @@ export default function SalesOrders() {
             false,
             false,
             action,
-            purchaseOrder.type
+            purchaseOrder.type,
+            purchaseOrder.offerTitle
           );
         break;
       case Action.VIEW_HISTORY:

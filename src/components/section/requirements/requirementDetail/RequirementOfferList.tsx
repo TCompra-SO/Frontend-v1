@@ -201,6 +201,7 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
                   }}
                   onClose={props.onClose}
                   requirementId={props.requirement.key}
+                  requirementTitle={props.requirement.title}
                   setDataModalSelectOffer={props.setDataModalSelectOffer}
                   setIsOpenModalSelectOffer={props.setIsOpenModalSelectOffer}
                 />

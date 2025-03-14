@@ -365,7 +365,8 @@ export default function Requirements() {
             true,
             true,
             action,
-            requirement.type
+            requirement.type,
+            requirement.title
           );
         break;
       }

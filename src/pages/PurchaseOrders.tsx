@@ -348,7 +348,8 @@ export default function PurchaseOrders() {
             true,
             true,
             action,
-            purchaseOrder.type
+            purchaseOrder.type,
+            purchaseOrder.requirementTitle
           );
         } else if (typeRef.current == OrderTableType.RECEIVED)
           // Buscar en requerimiento
@@ -359,7 +360,8 @@ export default function PurchaseOrders() {
             false,
             false,
             action,
-            purchaseOrder.type
+            purchaseOrder.type,
+            purchaseOrder.offerTitle
           );
         break;
       case Action.VIEW_HISTORY:

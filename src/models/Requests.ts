@@ -12,7 +12,7 @@ import { NotificationData } from "./MainInterfaces";
 
 export interface IncludeNotificationRequest {
   notification?: NotificationData;
-  extraNotification?: NotificationData;
+  extraNotifications?: NotificationData[];
 }
 
 export interface LoginRequest extends IncludeNotificationRequest {

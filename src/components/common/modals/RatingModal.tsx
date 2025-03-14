@@ -7,12 +7,14 @@ import {
   ErrorRequestType,
   ErrorMsgRequestType,
   SystemNotificationType,
+  NotificationType,
 } from "../../../utilities/types";
 import SelectContainer from "../../containers/SelectContainer";
 import RatingContainer from "../../containers/RatingContainer";
 import {
   BasicNotificationData,
   BasicRateData,
+  NotificationData,
 } from "../../../models/MainInterfaces";
 import {
   calculateFinalScore,
@@ -31,6 +33,8 @@ import useShowNotification from "../../../hooks/utilHooks";
 import { MainSocketsContext } from "../../../contexts/MainSocketsContext";
 import useSystemNotification from "../../../hooks/useSystemNotification";
 import dayjs from "dayjs";
+import { MainState } from "../../../models/Redux";
+import { useSelector } from "react-redux";
 
 interface RatingModalProps extends CommonModalProps {
   basicRateData: BasicRateData;
@@ -38,12 +42,14 @@ interface RatingModalProps extends CommonModalProps {
   isOffer: boolean; // indica si a quien se califica es creador de una oferta o no
   onClose: () => any;
   requirementOrOfferId: string; // Id de oferta o requerimiento que se está culminando
+  requirementOrOfferTitle: string; // Título de oferta o requerimiento que se está culminando
 }
 
 export default function RatingModal(props: RatingModalProps) {
   const { t } = useTranslation();
   const { getNotification } = useContext(MainSocketsContext);
   const { getSystemNotification } = useSystemNotification();
+  const uid = useSelector((state: MainState) => state.user.uid);
   const [answer, setAnswer] = useState<YesNo | null>(null);
   const [scores, setScores] = useState([0, 0, 0]);
   const { showNotification } = useShowNotification();
@@ -140,13 +146,13 @@ export default function RatingModal(props: RatingModalProps) {
     }
 
     const notification = getCurrentNotification(false);
-    const disputeNotification = getCurrentNotification(true);
+    const disputeNotifications = getCurrentNotification(true);
 
     const data: CulminateRequest = {
       delivered: answer == YesNo.YES,
       score: calculateFinalScore(scores),
-      notification,
-      extraNotification: disputeNotification,
+      notification: notification?.[0],
+      extraNotifications: disputeNotifications,
     };
     if (props.isOffer) data.requerimentID = props.requirementOrOfferId;
     else data.offerID = props.requirementOrOfferId;
@@ -160,39 +166,81 @@ export default function RatingModal(props: RatingModalProps) {
     });
   }
 
-  function getCurrentNotification(dispute: boolean) {
-    let basicNotification: BasicNotificationData | null = null;
+  function getCurrentNotification(
+    dispute: boolean
+  ): NotificationData[] | undefined {
     if (dispute) {
+      let basicNotification: BasicNotificationData | null = null;
+      let secondBasicNotification: BasicNotificationData | null = null;
       if (props.isOffer) {
-        const notificationFn = getSystemNotification(
+        basicNotification = getSystemNotification(
           SystemNotificationType.DISPUTE_OFFER_CREATOR
-        );
-        basicNotification = notificationFn(props.basicRateData.title);
-      } else {
-        const notificationFn = getSystemNotification(
+        )(props.basicRateData.title);
+        secondBasicNotification = getSystemNotification(
           SystemNotificationType.DISPUTE_REQ_CREATOR
-        );
-        basicNotification = notificationFn(
-          props.basicRateData.title,
-          props.type
-        );
+        )(props.requirementOrOfferTitle, props.type);
+      } else {
+        basicNotification = getSystemNotification(
+          SystemNotificationType.DISPUTE_REQ_CREATOR
+        )(props.basicRateData.title, props.type);
+        secondBasicNotification = getSystemNotification(
+          SystemNotificationType.DISPUTE_OFFER_CREATOR
+        )(props.requirementOrOfferTitle);
       }
+      const notif1 = createNotification(
+        basicNotification,
+        props.basicRateData.uid
+      );
+      const notif2 = createSecondNotification(
+        secondBasicNotification,
+        props.requirementOrOfferId
+      );
+      return notif1 && notif2 ? [notif1, notif2] : undefined;
     } else {
-      const notificationFn = getSystemNotification(
+      const basicNotification = getSystemNotification(
         props.isOffer
           ? SystemNotificationType.FINISH_REQUIREMENT
           : SystemNotificationType.FINISH_OFFER
+      )(answer == YesNo.YES, props.type);
+      const notif = createNotification(
+        basicNotification,
+        props.basicRateData.uid
       );
-      basicNotification = notificationFn(answer == YesNo.YES, props.type);
+      return notif ? [notif] : undefined;
     }
-    if (basicNotification)
-      return getNotification({
-        ...basicNotification,
-        receiverId: props.basicRateData.subUserId ?? props.basicRateData.userId,
-        timestamp: dayjs().toISOString(),
-        targetId: props.basicRateData.uid,
-        targetType: props.type,
-      });
+  }
+
+  function createNotification(
+    notification: BasicNotificationData,
+    targetId: string
+  ): NotificationData | undefined {
+    return getNotification({
+      ...notification,
+      receiverId: props.basicRateData.subUserId ?? props.basicRateData.userId,
+      timestamp: dayjs().toISOString(),
+      targetId,
+      targetType: props.type,
+    });
+  }
+
+  function createSecondNotification( // Notificación para usuario logueado
+    notification: BasicNotificationData,
+    targetId: string
+  ): NotificationData | undefined {
+    return {
+      ...notification,
+      timestamp: dayjs().toISOString(),
+      targetType: props.type,
+      targetId,
+      receiverId: uid,
+      type: NotificationType.DIRECT,
+      senderId: props.basicRateData.subUserId ?? props.basicRateData.userId,
+      senderName:
+        props.basicRateData.subUserName !== props.basicRateData.userName
+          ? `${props.basicRateData.subUserName} (${props.basicRateData.userName})`
+          : props.basicRateData.subUserName,
+      senderImage: props.basicRateData.userImage,
+    };
   }
 
   return (

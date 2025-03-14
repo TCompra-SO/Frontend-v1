@@ -303,6 +303,7 @@ export default function ModalContainer(props: ModalContainerProps) {
       case ModalTypes.RATE_USER: {
         return (
           <RatingModal
+            requirementOrOfferTitle={props.content.data.requirementOrOfferTitle}
             onClose={props.onClose}
             basicRateData={props.content.data.basicRateData}
             type={props.content.data.type}

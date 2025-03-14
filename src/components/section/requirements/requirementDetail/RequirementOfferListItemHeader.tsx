@@ -25,6 +25,7 @@ import { requirementDetailContext } from "../../../../contexts/RequirementDetail
 
 interface RequirementOfferListItemProps {
   requirementId: string;
+  requirementTitle: string;
   offer: Offer;
   style?: React.CSSProperties;
   onClose: () => any;
@@ -153,6 +154,7 @@ export default function RequirementOfferListItemHeader({
               type: props.offer.type,
               isOffer: true,
               requirementOrOfferId: props.requirementId,
+              requirementOrOfferTitle: props.requirementTitle,
               rowId: props.requirementId,
               onExecute: props.showActions.onRateCancel,
               onError: onRateCancelError,
