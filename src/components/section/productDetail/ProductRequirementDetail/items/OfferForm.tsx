@@ -103,13 +103,26 @@ export default function OfferForm(props: OfferFormProps) {
   const formDataDocRef = useRef(formDataDoc);
 
   useEffect(() => {
+    console.log("%%%%%%%%%%", email);
+  }, [email]);
+
+  useEffect(() => {
     if (cantOfferMotive != CantOfferMotives.INI) setLoadingForm(false);
   }, [cantOfferMotive]);
 
   useEffect(() => {
-    form.setFieldValue("currency", props.requirement?.coin);
+    if (props.requirement)
+      form.setFieldValue("currency", props.requirement.coin);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.requirement]);
+
+  useEffect(() => {
+    if (!loadingForm) {
+      form.setFieldValue("email", email);
+      form.setFieldValue("currency", props.requirement?.coin);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingForm]);
 
   /** Guardar imágenes y documentos */
 
@@ -539,7 +552,7 @@ export default function OfferForm(props: OfferFormProps) {
               <div className="t-flex gap-15 f-column form-oferta">
                 <RowContainer>
                   <TitleField />
-                  <EmailField onlyItem edit value={email} />
+                  <EmailField onlyItem edit />
                 </RowContainer>
                 <RowContainer>
                   <OfferDescriptionField />
