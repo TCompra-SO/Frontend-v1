@@ -56,7 +56,7 @@ export default function Notifications(props: NotificationsProps) {
           getMoreNotifications(page);
           setPage(page + 1);
         }}
-        hasMore={hasMoreNotificationList} //notifList.length > 0}
+        hasMore={hasMoreNotificationList}
         loader={
           <Flex justify="center">
             <Spin indicator={<SimpleLoading style={{ width: "60px" }} />} />
@@ -65,20 +65,6 @@ export default function Notifications(props: NotificationsProps) {
         scrollableTarget="scrollableDivNotifList"
       >
         <List
-          loading={
-            notifList.length > 0
-              ? undefined
-              : {
-                  indicator: (
-                    <Flex justify="center">
-                      <Spin
-                        indicator={<SimpleLoading style={{ width: "60px" }} />}
-                      />
-                    </Flex>
-                  ),
-                  spinning: notificationLoading,
-                }
-          }
           dataSource={notifList}
           renderItem={(item) => (
             <List.Item
