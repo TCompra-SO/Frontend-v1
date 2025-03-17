@@ -24,7 +24,7 @@ export const userSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       const payload: LoginResponse = action.payload;
-      if (payload.accessToken) state.token = payload.accessToken;
+      // if (payload.accessToken) state.token = payload.accessToken;
       if (payload.dataUser) {
         const { uid, name, email, type, typeID, planID } =
           action.payload.dataUser[0];
@@ -52,6 +52,9 @@ export const userSlice = createSlice({
     },
     setUid: (state, action) => {
       state.uid = action.payload;
+    },
+    setToken: (state, action) => {
+      state.token = action.payload;
     },
     setUserName: (state, action) => {
       state.name = action.payload;
@@ -86,5 +89,6 @@ export const {
   setIsLoggedIn,
   setUserImage,
   setUserName,
+  setToken,
 } = userSlice.actions;
 export default userSlice.reducer;

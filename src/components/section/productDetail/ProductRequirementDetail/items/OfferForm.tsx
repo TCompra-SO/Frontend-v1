@@ -103,10 +103,6 @@ export default function OfferForm(props: OfferFormProps) {
   const formDataDocRef = useRef(formDataDoc);
 
   useEffect(() => {
-    console.log("%%%%%%%%%%", email);
-  }, [email]);
-
-  useEffect(() => {
     if (cantOfferMotive != CantOfferMotives.INI) setLoadingForm(false);
   }, [cantOfferMotive]);
 

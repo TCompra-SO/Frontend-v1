@@ -16,6 +16,7 @@ import {
   setEmail,
   setFullUser,
   setIsLoggedIn,
+  setToken,
   setUid,
   setUser,
   setUserName,
@@ -128,6 +129,7 @@ export function useLoadUserInfo() {
       // if (!checkToken()) return;
       if (userInfo) {
         // localStorage.setItem(tokenKey, userInfo.token);
+        dispatch(setToken(tokenData));
         dispatch(
           setUser({
             token: userInfo.token,
