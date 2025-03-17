@@ -25,7 +25,6 @@ export default function Notifications(props: NotificationsProps) {
     notificationList: notifList,
     getMoreNotifications,
     resetNotificationList,
-    notificationLoading,
     redirectFromNotification,
     hasMoreNotificationList,
   } = sockets;
