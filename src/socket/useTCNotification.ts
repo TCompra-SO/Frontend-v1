@@ -26,6 +26,7 @@ import { MainState } from "../models/Redux";
 import { SocketResponse } from "../models/Interfaces";
 import { getNotifications } from "../services/general/generalServices";
 import { notificationPageSize } from "../utilities/globals";
+import { HomeContext } from "../contexts/Homecontext";
 
 let notifSocketAPI: Socket | null = null;
 let globalNotifSocketAPI: Socket | null = null;
@@ -45,6 +46,7 @@ export function useTCNotification() {
     updateDetailedOfferModalData,
     updateViewCertificationData,
   } = useContext(ModalsContext);
+  const { updateNotificationSearchData } = useContext(HomeContext);
   const downloadPdfOrder = useDownloadPdfOrder();
   const [notificationList, setNotificationList] = useState<
     NotificationDataFromServer[]
@@ -138,37 +140,48 @@ export function useTCNotification() {
     setLoading(false);
   }
 
-  function redirectFromNotification(notification: NotificationData) {
+  function redirectFromNotification(notification: NotificationDataFromServer) {
     console.log(notification);
     const { result, val } = isRequirementType(notification.targetType);
     if (result && val !== null) {
-      if (notification.action == Action.VIEW_REQUIREMENT) {
-        updateDetailedRequirementModalData({
-          requirement: undefined,
-          requirementId: notification.targetId,
-          requirementType: val,
+      if (notification.targetId) {
+        if (notification.action == Action.VIEW_REQUIREMENT) {
+          updateDetailedRequirementModalData({
+            requirement: undefined,
+            requirementId: notification.targetId,
+            requirementType: val,
+          });
+          navigate(
+            `${pageRoutes.myRequirements}/${getRequirementTypeSubRoute(val)}`
+          );
+          return;
+        } else if (notification.action == Action.VIEW_OFFER) {
+          updateDetailedOfferModalData({
+            offerId: notification.targetId,
+            offerType: val,
+            offer: undefined,
+          });
+          navigate(`${pageRoutes.myOffers}/${getRequirementTypeSubRoute(val)}`);
+          return;
+        } else if (notification.action == Action.DOWNLOAD_PURCHASE_ORDER) {
+          downloadPdfOrder(notification.targetId, val);
+          return;
+        }
+      } else if (
+        notification.categoryId &&
+        notification.action == Action.VIEW_CAT_LAST_REQUIREMENTS
+      ) {
+        updateNotificationSearchData({
+          categoryId: notification.categoryId,
+          targetType: val,
         });
-        navigate(
-          `${pageRoutes.myRequirements}/${getRequirementTypeSubRoute(val)}`
-        );
-        return;
-      } else if (notification.action == Action.VIEW_OFFER) {
-        updateDetailedOfferModalData({
-          offerId: notification.targetId,
-          offerType: val,
-          offer: undefined,
-        });
-        navigate(`${pageRoutes.myOffers}/${getRequirementTypeSubRoute(val)}`);
-        return;
-      } else if (notification.action == Action.DOWNLOAD_PURCHASE_ORDER) {
-        downloadPdfOrder(notification.targetId, val);
-        return;
+        navigate(`${pageRoutes.home}`);
       }
     }
     const { result: resultCert, val: valCert } = isCertificationTableTypes(
       notification.targetType
     );
-    if (resultCert && valCert !== null) {
+    if (resultCert && valCert !== null && notification.targetId) {
       if (notification.action == Action.VIEW_CERTIFICATION) {
         updateViewCertificationData({
           certificationId: notification.targetId,

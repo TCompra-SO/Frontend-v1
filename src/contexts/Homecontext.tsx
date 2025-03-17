@@ -9,7 +9,11 @@ import { getRequirementFromData } from "../services/general/generalServices";
 import useSocketQueueHook, {
   useAddOrUpdateRow,
 } from "../hooks/socketQueueHook";
-import { SocketDataPackType, SocketResponse } from "../models/Interfaces";
+import {
+  NotificationSearchData,
+  SocketDataPackType,
+  SocketResponse,
+} from "../models/Interfaces";
 import { homePageSize } from "../utilities/globals";
 
 interface HomeContextType {
@@ -37,6 +41,8 @@ interface HomeContextType {
   retrieveLastSearchRequeriments: () => void;
   keywordSearch: string;
   updateKeywordSearch: (val: string) => void;
+  notificationSearchData: NotificationSearchData;
+  updateNotificationSearchData: (data: NotificationSearchData) => void;
 }
 
 export const HomeContext = createContext<HomeContextType>({
@@ -56,6 +62,8 @@ export const HomeContext = createContext<HomeContextType>({
   resetChangesQueue: () => {},
   keywordSearch: "",
   updateKeywordSearch: () => {},
+  notificationSearchData: { categoryId: 0, targetType: RequirementType.GOOD },
+  updateNotificationSearchData: () => {},
 });
 
 export function HomeProvider({ children }: { children: ReactNode }) {
@@ -65,6 +73,11 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [userId, setUserId] = useState("");
   const [useFilter, setUseFilter] = useState<null | boolean>(null);
+  const [notificationSearchData, setNotificationSearchData] =
+    useState<NotificationSearchData>({
+      categoryId: 0,
+      targetType: RequirementType.GOOD,
+    });
   const [keywordSearch, setKeywordSearch] = useState("");
   const {
     getRequirementList,
@@ -167,6 +180,10 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     setKeywordSearch(val);
   }
 
+  function updateNotificationSearchData(data: NotificationSearchData) {
+    setNotificationSearchData(data);
+  }
+
   return (
     <HomeContext.Provider
       value={{
@@ -193,6 +210,9 @@ export function HomeProvider({ children }: { children: ReactNode }) {
 
         keywordSearch,
         updateKeywordSearch,
+
+        notificationSearchData,
+        updateNotificationSearchData,
       }}
     >
       {children}

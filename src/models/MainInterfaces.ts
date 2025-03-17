@@ -290,8 +290,8 @@ export interface BasicNotificationData {
 }
 
 export interface NotificationTargetData {
-  receiverId: string;
-  targetId: string;
+  receiverId?: string;
+  targetId?: string;
   targetType: RequirementType | OrderTableType | CertificationTableType;
 }
 
@@ -309,4 +309,5 @@ export interface NotificationData
 
 export interface NotificationDataFromServer extends NotificationData {
   uid: string;
+  categoryId?: number;
 }

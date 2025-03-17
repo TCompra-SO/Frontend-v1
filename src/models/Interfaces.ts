@@ -28,7 +28,6 @@ import {
   CertificationItem,
   BasicRateData,
   SubUserBase,
-  NotificationData,
   ChatSocketData,
   NotificationDataFromServer,
   NotificationTargetData,
@@ -521,7 +520,7 @@ export interface StrictColumnFilterItem extends ColumnFilterItem {
 export interface RealTimeNotificationData {
   type: RTNotificationType.NOTIFICATION;
   content: NotificationDataFromServer;
-  onClickCallback: (notification: NotificationData) => void;
+  onClickCallback: (notification: NotificationDataFromServer) => void;
 }
 
 export interface RealTimeChatData {
@@ -552,4 +551,9 @@ export interface LoginResponse {
   }[];
   refreshToken: string;
   accessToken: string;
+}
+
+export interface NotificationSearchData {
+  categoryId: number;
+  targetType: RequirementType;
 }

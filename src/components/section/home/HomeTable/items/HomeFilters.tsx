@@ -27,6 +27,8 @@ export default function HomeFilters() {
   const divRef = useRef<HTMLDivElement>(null);
   const [form] = Form.useForm();
   const [hideFilters, setHideFilters] = useState(true);
+  const [searchFromNotifCompleted, setSearchFromNotifCompleted] =
+    useState<boolean>(true);
   const {
     updateUseFilter,
     retrieveRequirements,
@@ -38,6 +40,7 @@ export default function HomeFilters() {
     updateType,
     keywordSearch,
     updateKeywordSearch,
+    notificationSearchData,
   } = useContext(HomeContext);
   const [homeFilter, setHomeFilter] = useState<HomeFilterRequest>({
     page: 1,
@@ -48,6 +51,11 @@ export default function HomeFilters() {
 
   useEffect(() => {
     resetFilters();
+    if (searchFromNotifCompleted === false) {
+      form.setFieldValue("category", notificationSearchData.categoryId);
+      form.submit();
+      setSearchFromNotifCompleted(true);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
@@ -68,13 +76,26 @@ export default function HomeFilters() {
       form.setFieldValue(formFieldKeyword, keywordSearch);
       search({ ...form.getFieldsValue(), [formFieldKeyword]: keywordSearch });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keywordSearch]);
 
-  function scrollToTable() {
-    if (divRef.current) {
-      divRef.current.scrollIntoView({ behavior: "smooth" });
+  /** Buscar al recibir datos de notificación  */
+
+  useEffect(() => {
+    if (notificationSearchData.categoryId) {
+      setHideFilters(false);
+      scrollToTable();
+      if (type != notificationSearchData.targetType) {
+        setSearchFromNotifCompleted(false);
+        updateType(notificationSearchData.targetType);
+      } else {
+        resetFilters();
+        form.setFieldValue("category", notificationSearchData.categoryId);
+        form.submit();
+      }
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notificationSearchData]);
 
   /** Paginación */
 
@@ -90,6 +111,12 @@ export default function HomeFilters() {
   /**
    * Funciones
    */
+
+  function scrollToTable() {
+    if (divRef.current) {
+      divRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }
 
   function search(values: any) {
     updateUseFilter(true);
