@@ -12,7 +12,12 @@ import {
   SocketDataPackType,
   TableTypeMyDocuments,
 } from "../models/Interfaces";
-import { Action, ModalTypes, TableTypes } from "../utilities/types";
+import {
+  Action,
+  ModalTypes,
+  OnChangePageAndPageSizeTypeParams,
+  TableTypes,
+} from "../utilities/types";
 import { useTranslation } from "react-i18next";
 import { CertificateFile } from "../models/MainInterfaces";
 import {
@@ -53,6 +58,8 @@ export default function CertificatesDocs() {
   const [certificateList, setCertificateList] = useState<CertificateFile[]>([]);
   const [total, setTotal] = useState(0);
   const searchValueRef = useRef<TablePageContentRef>(null);
+  const [lastSearchParams, setLastSearchParams] =
+    useState<OnChangePageAndPageSizeTypeParams>();
   const {
     currentPage,
     currentPageSize,
@@ -75,18 +82,20 @@ export default function CertificatesDocs() {
     fieldSort,
     filteredInfo,
   });
-  const { addNewRow, updateRow } = useAddOrUpdateRow(
+  const { addNewRow, updateRow, deleteRow } = useAddOrUpdateRow(
     TableTypes.MY_DOCUMENTS,
     (data: SocketDataPackType) => transformToCertificateFile(data),
     certificateList,
     setCertificateList,
     total,
     setTotal,
-    currentPageSize
+    currentPageSize,
+    reloadPage
   );
   const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
     addNewRow,
-    updateRow
+    updateRow,
+    deleteRow
   );
   const { searchTable, responseData, error, errorMsg, loading, apiParams } =
     useSearchTable(
@@ -222,6 +231,30 @@ export default function CertificatesDocs() {
       action: Action.DELETE,
     });
     setIsOpenModal(true);
+  }
+
+  async function reloadPage() {
+    // if (lastSearchParams.page) {
+    //   const { success, totalPages } = await retrieveRequirements(
+    //     lastSearchParams.page,
+    //     lastSearchParams.pageSize,
+    //     lastSearchParams.params
+    //   );
+    //   if (!success && totalPages) {
+    //     if (lastSearchParams.page - 1 <= totalPages)
+    //       await retrieveRequirements(
+    //         lastSearchParams.page - 1,
+    //         lastSearchParams.pageSize,
+    //         lastSearchParams.params
+    //       );
+    //     else
+    //       await retrieveRequirements(
+    //         totalPages,
+    //         lastSearchParams.pageSize,
+    //         lastSearchParams.params
+    //       );
+    //   }
+    // }
   }
 
   return (

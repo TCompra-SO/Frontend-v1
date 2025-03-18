@@ -292,7 +292,8 @@ export interface BasicNotificationData {
 export interface NotificationTargetData {
   receiverId?: string;
   targetId?: string;
-  targetType: RequirementType | OrderTableType | CertificationTableType;
+  targetType: RequirementType | CertificationTableType;
+  extraTargetType?: number; // OrderTableType
 }
 
 export interface NotificationDataNoSender

@@ -85,7 +85,8 @@ export default function RequirementModalOfferSelected({
         : props.offer.user.uid,
       timestamp: dayjs().toISOString(),
       targetId,
-      targetType: OrderTableType.RECEIVED,
+      extraTargetType: OrderTableType.RECEIVED,
+      targetType: props.requirement.type,
     });
 
     const notes = text.trim();

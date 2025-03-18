@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import {
+  CertificateRooms,
   OrderTableType,
   RequirementType,
   SocketChangeType,
@@ -13,6 +14,7 @@ import { SearchTableRequest } from "../models/Requests";
 import { hasNoSortNorFilter } from "../utilities/globalFunctions";
 
 let socketAPI: Socket | null = null;
+let extraSocketAPI: Socket | null = null;
 
 export default function useSocket(
   tableType: TableTypes,
@@ -32,11 +34,7 @@ export default function useSocket(
 
   useEffect(() => {
     return () => {
-      if (socketAPI) {
-        console.log("Disconnected");
-        socketAPI.disconnect();
-        socketAPI = null;
-      }
+      disconnectSockets();
     };
   }, []);
 
@@ -50,7 +48,9 @@ export default function useSocket(
 
   useEffect(() => {
     if (!socketAPI) {
-      if (subType == RequirementType.GOOD)
+      if (tableType == TableTypes.MY_DOCUMENTS)
+        socketAPI = io(import.meta.env.VITE_USERS_SOCKET_URL);
+      else if (subType == RequirementType.GOOD)
         socketAPI = io(import.meta.env.VITE_REQUIREMENTS_SOCKET_URL);
       else if (subType == RequirementType.SERVICE)
         socketAPI = io(import.meta.env.VITE_SERVICES_SOCKET_URL);
@@ -76,28 +76,91 @@ export default function useSocket(
           if (
             // Agregar cambios a cola si la tabla es de  tipo All o si el cambio pertenece a usuario
             (isAllTypeTableVar || (!isAllTypeTableVar && uid == data.userId)) &&
-            (data.typeSocket == SocketChangeType.UPDATE ||
+            (data.typeSocket == SocketChangeType.DELETE ||
+              data.typeSocket == SocketChangeType.UPDATE ||
               (data.typeSocket == SocketChangeType.CREATE &&
                 canAddRow &&
                 searchTableRequestRef.current &&
                 hasNoSortNorFilter(searchTableRequestRef.current)))
-          )
-            updateChangesQueue(data, canAddRow);
+          ) {
+            if (tableType == TableTypes.MY_DOCUMENTS) {
+              if (data.typeSocket == SocketChangeType.CREATE)
+                data.dataPack.data.forEach((cert) => {
+                  updateChangesQueue(
+                    { ...data, dataPack: { data: [cert] } },
+                    canAddRow
+                  );
+                });
+              else if (data.typeSocket == SocketChangeType.DELETE)
+                updateChangesQueue(data, canAddRow);
+            } else updateChangesQueue(data, canAddRow);
+          }
         });
       }
     }
 
-    return () => {
-      if (socketAPI) {
-        console.log("Disconnected");
-        socketAPI.disconnect();
-        socketAPI = null;
+    if (tableType == TableTypes.OFFER) {
+      // segundo socket para ofertas
+      if (!extraSocketAPI) {
+        extraSocketAPI = io(import.meta.env.VITE_USERS_SOCKET_URL);
+
+        if (extraSocketAPI) {
+          extraSocketAPI.on("connect", () => {
+            console.log("Connected e");
+            const roomName = getRoomName(true);
+            if (roomName) extraSocketAPI?.emit("joinRoom", roomName + mainUid);
+          });
+
+          extraSocketAPI.on("joinedRoom", (message) => {
+            console.log(message);
+          });
+
+          extraSocketAPI.on("updateRoom", (data: SocketResponse) => {
+            console.log("Received", data);
+            const isAllTypeTableVar = isAllTypeTable();
+            const canAddRow = pageRef.current == 1;
+
+            if (
+              // Agregar cambios a cola si la tabla es de  tipo All o si el cambio pertenece a usuario
+              (isAllTypeTableVar ||
+                (!isAllTypeTableVar && uid == data.userId)) &&
+              (data.typeSocket == SocketChangeType.DELETE ||
+                data.typeSocket == SocketChangeType.UPDATE ||
+                (data.typeSocket == SocketChangeType.CREATE &&
+                  canAddRow &&
+                  searchTableRequestRef.current &&
+                  hasNoSortNorFilter(searchTableRequestRef.current)))
+            ) {
+              updateChangesQueue(data, canAddRow);
+            }
+          });
+        }
       }
+    }
+
+    return () => {
+      disconnectSockets();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subType, orderType]);
 
-  function getRoomName() {
+  /** Funciones */
+
+  function disconnectSockets() {
+    if (socketAPI) {
+      socketAPI.disconnect();
+      socketAPI = null;
+      console.log("Disconnected");
+    }
+    if (extraSocketAPI) {
+      extraSocketAPI.disconnect();
+      extraSocketAPI = null;
+      console.log("Disconnected e");
+    }
+  }
+
+  function getRoomName(forScore?: boolean) {
+    if (forScore) return "roomScore";
     let roomName: string = "";
     if (
       tableType == TableTypes.REQUIREMENT ||
@@ -108,15 +171,16 @@ export default function useSocket(
         roomName = "roomRequerimentService";
       else if (subType == RequirementType.SALE)
         roomName = "roomRequerimentLiquidation";
-    }
-    if (tableType == TableTypes.OFFER || tableType == TableTypes.ALL_OFFERS) {
+    } else if (
+      tableType == TableTypes.OFFER ||
+      tableType == TableTypes.ALL_OFFERS
+    ) {
       if (subType == RequirementType.GOOD) roomName = "roomOfferProduct";
       else if (subType == RequirementType.SERVICE)
         roomName = "roomOfferService";
       else if (subType == RequirementType.SALE)
         roomName = "roomOfferLiquidation";
-    }
-    if (
+    } else if (
       tableType == TableTypes.PURCHASE_ORDER ||
       tableType == TableTypes.ALL_PURCHASE_ORDERS
     ) {
@@ -131,8 +195,7 @@ export default function useSocket(
         else if (orderType == OrderTableType.RECEIVED)
           roomName = "roomPurchaseOrderProviderService";
       }
-    }
-    if (
+    } else if (
       tableType == TableTypes.SALES_ORDER ||
       tableType == TableTypes.ALL_SALES_ORDERS
     ) {
@@ -142,7 +205,8 @@ export default function useSocket(
         else if (orderType == OrderTableType.RECEIVED)
           roomName = "roomSaleOrderClientLiquidation";
       }
-    }
+    } else if (tableType == TableTypes.MY_DOCUMENTS)
+      roomName = CertificateRooms.DOCUMENT;
     return roomName;
   }
 
