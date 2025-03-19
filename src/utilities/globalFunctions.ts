@@ -896,3 +896,7 @@ export function getInitialModalData() {
   };
   return initialModalData;
 }
+
+export function getTokenExpirationTime(expiresIn: number) {
+  return Date.now() + expiresIn * 1000; // miliseconds
+}

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import {
+  expiresInKey,
   loginKey,
   logoutKey,
   navigateToAfterLoggingOut,
@@ -24,16 +25,19 @@ import {
 } from "../redux/userSlice";
 
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { MainState } from "../models/Redux";
 import { decryptData } from "../utilities/crypto";
 import { getBaseUserForUserSubUser } from "../services/general/generalServices";
 import useShowNotification from "./utilHooks";
 import { useTranslation } from "react-i18next";
 import { LoginResponse } from "../models/Interfaces";
+import { MainSocketsContext } from "../contexts/MainSocketsContext";
+import { getTokenExpirationTime } from "../utilities/globalFunctions";
 
 export function useLogin() {
   const { t } = useTranslation();
+  const { setTokenExpiration } = useContext(MainSocketsContext);
   const dispatch = useDispatch();
   const loadUserInfo = useLoadUserInfo();
   const { showNotification } = useShowNotification();
@@ -41,8 +45,16 @@ export function useLogin() {
   async function login(responseData: any) {
     const loginResponse: LoginResponse = responseData.res;
     dispatch(setUser(loginResponse));
-    if (loginResponse && loginResponse.accessToken)
+
+    if (loginResponse && loginResponse.accessToken) {
       localStorage.setItem(tokenKey, loginResponse.accessToken);
+      if (loginResponse.expiresIn) {
+        const tokenExp = getTokenExpirationTime(loginResponse.expiresIn);
+        localStorage.setItem(expiresInKey, tokenExp.toString());
+        setTokenExpiration(tokenExp);
+      }
+    }
+
     await loadUserInfo();
     showNotification("success", t("welcome"));
     localStorage.setItem(loginKey, Date.now().toString());
@@ -67,15 +79,14 @@ export function useRegister() {
 }
 
 export function useLogout() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const loadUserInfo = useLoadUserInfo();
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
 
   function logout() {
     // if (isLoggedIn) {
     localStorage.removeItem(tokenKey);
     localStorage.removeItem(userDataKey);
+    localStorage.removeItem(expiresInKey);
     dispatch(setFullMainUser(mainUserInitialState));
     dispatch(setFullUser(userInitialState));
     localStorage.setItem(logoutKey, Date.now().toString());
@@ -83,30 +94,13 @@ export function useLogout() {
     // }
   }
 
-  useEffect(() => {
-    async function handleStorageChange(event: StorageEvent) {
-      if (event.key === logoutKey) {
-        dispatch(setIsLoggedIn(false));
-        navigate(navigateToAfterLoggingOut);
-      } else if (event.key === loginKey) {
-        await loadUserInfo();
-        localStorage.removeItem(loginKey);
-      }
-    }
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return logout;
 }
 
 export function useLoadUserInfo() {
   const dispatch = useDispatch();
-  // const logout = useLogout();
+  const { setTokenExpiration } = useContext(MainSocketsContext);
+  const logout = useLogout();
 
   // function checkToken() {
   //   try {
@@ -125,7 +119,8 @@ export function useLoadUserInfo() {
     const tokenData = localStorage.getItem(tokenKey);
     if (tokenData && userData) {
       const userInfo = JSON.parse(decryptData(userData));
-      console.log(userInfo);
+      const expiresIn = localStorage.getItem(expiresInKey);
+      if (expiresIn !== null) setTokenExpiration(Number(expiresIn));
       // if (!checkToken()) return;
       if (userInfo) {
         // localStorage.setItem(tokenKey, userInfo.token);
@@ -151,6 +146,7 @@ export function useLoadUserInfo() {
         );
         if (!user) {
           dispatch(setIsLoggedIn(false));
+          logout();
           return;
         } else {
           dispatch(setMainUser(user));
@@ -159,12 +155,16 @@ export function useLoadUserInfo() {
           dispatch(setBaseUser(subUser));
         }
         dispatch(setIsLoggedIn(user && subUser ? true : false));
+        if (!(user && subUser)) logout();
         return;
       }
       dispatch(setIsLoggedIn(false));
+      logout();
       return;
     }
     dispatch(setIsLoggedIn(false));
+    logout();
   }
+
   return loadUserInfo;
 }

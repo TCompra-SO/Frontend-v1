@@ -245,3 +245,7 @@ export interface ChangeStatusRequest extends IncludeNotificationRequest {
   uid: string;
   status: boolean;
 }
+
+export interface RefreshAccessTokenRequest {
+  accessToken: string;
+}

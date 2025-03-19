@@ -34,6 +34,7 @@ export default function useSocket(
     return () => {
       if (socketAPI) {
         console.log("Disconnected");
+        socketAPI.removeAllListeners();
         socketAPI.disconnect();
         socketAPI = null;
       }
@@ -90,6 +91,7 @@ export default function useSocket(
     return () => {
       if (socketAPI) {
         console.log("Disconnected");
+        socketAPI.removeAllListeners();
         socketAPI.disconnect();
         socketAPI = null;
       }

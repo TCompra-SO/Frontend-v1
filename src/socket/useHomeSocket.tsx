@@ -64,6 +64,7 @@ export default function useHomeSocket() {
     return () => {
       if (socketHomeAPI) {
         console.log("Socket disconnected");
+        socketHomeAPI.removeAllListeners();
         socketHomeAPI.disconnect();
         socketHomeAPI = null;
       }

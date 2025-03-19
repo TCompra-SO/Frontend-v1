@@ -61,6 +61,7 @@ export function useChatSocket() {
   function disconnect() {
     if (chatSocketAPI) {
       console.log("Disconnected chat");
+      chatSocketAPI.removeAllListeners();
       chatSocketAPI.disconnect();
       chatSocketAPI = null;
     }

@@ -357,6 +357,7 @@ const resources = {
       userReactivatedSuccessfully: "User reactivated successfully",
       noDocumentsForCertification:
         "No documents available. Click 'Add certificates' to add new files.",
+      noRefreshTokenMsg: "Your session has expired. Please log in again.",
       // Other
       characters: "characters",
       yes: "Yes",
@@ -918,6 +919,7 @@ const resources = {
       userReactivatedSuccessfully: "Usuario reactivado exitosamente",
       noDocumentsForCertification:
         "No hay documentos disponibles. Haga click en 'Agregar certificados' para añadir nuevos archivos.",
+      noRefreshTokenMsg: "Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.",
       // Other
       characters: "caracteres",
       yes: "Sí",

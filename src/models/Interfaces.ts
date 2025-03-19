@@ -551,9 +551,15 @@ export interface LoginResponse {
   }[];
   refreshToken: string;
   accessToken: string;
+  expiresIn: number;
 }
 
 export interface NotificationSearchData {
   categoryId: number;
   targetType: RequirementType;
+}
+
+export interface refreshAccessTokenResponse {
+  accessToken: string;
+  expiresIn: number;
 }

@@ -35,6 +35,7 @@ export const ApiRoutes = {
     getBaseDataUser: "getBaseDataUser/",
     getUser: "getUser/",
     searchCompanyByName: "searchCompany/",
+    refreshAccessToken: "refreshAccessToken",
   },
   util: {
     countries: "countries/",

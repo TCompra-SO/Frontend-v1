@@ -56,11 +56,17 @@ export const chatDataFieldName: string = "chatData";
 export const masterUid: string = "dlGMHRyyAidgFMDqmLBO";
 export const pageSizeOfferList: number = 5;
 
+export const inactivityTime = 30;
+export const remainingTokenTime = 60;
+export const logoutAfterNoTokenRefreshTime = 60;
+
 // local storage keys
 export const userDataKey: string = "udata";
 export const tokenKey: string = "token";
 export const logoutKey: string = "logout";
 export const loginKey: string = "login";
+export const expiresInKey: string = "expIn";
+export const refreshingTokenKey: string = "refTok";
 
 /* Window size (>=) */
 export const windowSize = {

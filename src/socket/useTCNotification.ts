@@ -68,24 +68,26 @@ export function useTCNotification() {
     if (!globalNotifSocketAPI) {
       globalNotifSocketAPI = io(import.meta.env.VITE_NOTIF_SOCKET_URL);
 
-      globalNotifSocketAPI.on("connect", () => {
-        console.log("Connected global notificaciones");
-        globalNotifSocketAPI?.emit("joinRoom", `TCNotifications`);
-      });
+      if (globalNotifSocketAPI) {
+        globalNotifSocketAPI.on("connect", () => {
+          console.log("Connected global notificaciones");
+          globalNotifSocketAPI?.emit("joinRoom", `TCNotifications`);
+        });
 
-      globalNotifSocketAPI.on("joinedRoom", (message) => {
-        console.log(message);
-      });
+        globalNotifSocketAPI.on("joinedRoom", (message) => {
+          console.log(message);
+        });
 
-      globalNotifSocketAPI.on("updateRoom", (payload: SocketResponse) => {
-        console.log("notificación global recibida:", payload);
-        if (payload.dataPack.data && payload.dataPack.data.length > 0)
-          showRealTimeNotification({
-            type: RTNotificationType.NOTIFICATION,
-            content: payload.dataPack.data[0] as NotificationDataFromServer,
-            onClickCallback: redirectFromNotification,
-          });
-      });
+        globalNotifSocketAPI.on("updateRoom", (payload: SocketResponse) => {
+          console.log("notificación global recibida:", payload);
+          if (payload.dataPack.data && payload.dataPack.data.length > 0)
+            showRealTimeNotification({
+              type: RTNotificationType.NOTIFICATION,
+              content: payload.dataPack.data[0] as NotificationDataFromServer,
+              onClickCallback: redirectFromNotification,
+            });
+        });
+      }
     }
   }
 
@@ -93,24 +95,26 @@ export function useTCNotification() {
     if (!notifSocketAPI) {
       notifSocketAPI = io(import.meta.env.VITE_NOTIF_SOCKET_URL);
 
-      notifSocketAPI.on("connect", () => {
-        console.log("Connected notificaciones");
-        notifSocketAPI?.emit("joinRoom", `notification${uid}`);
-      });
+      if (notifSocketAPI) {
+        notifSocketAPI.on("connect", () => {
+          console.log("Connected notificaciones");
+          notifSocketAPI?.emit("joinRoom", `notification${uid}`);
+        });
 
-      notifSocketAPI.on("joinedRoom", (message) => {
-        console.log(message);
-      });
+        notifSocketAPI.on("joinedRoom", (message) => {
+          console.log(message);
+        });
 
-      notifSocketAPI.on("updateRoom", (payload: SocketResponse) => {
-        console.log("notificación recibida:", payload);
-        if (payload.dataPack.data && payload.dataPack.data.length > 0)
-          showRealTimeNotification({
-            type: RTNotificationType.NOTIFICATION,
-            content: payload.dataPack.data[0] as NotificationDataFromServer,
-            onClickCallback: redirectFromNotification,
-          });
-      });
+        notifSocketAPI.on("updateRoom", (payload: SocketResponse) => {
+          console.log("notificación recibida:", payload);
+          if (payload.dataPack.data && payload.dataPack.data.length > 0)
+            showRealTimeNotification({
+              type: RTNotificationType.NOTIFICATION,
+              content: payload.dataPack.data[0] as NotificationDataFromServer,
+              onClickCallback: redirectFromNotification,
+            });
+        });
+      }
     }
   }
 
@@ -219,6 +223,7 @@ export function useTCNotification() {
   function disconnectGlobal() {
     if (globalNotifSocketAPI) {
       console.log("Disconnected global notificaciones");
+      globalNotifSocketAPI.removeAllListeners();
       globalNotifSocketAPI.disconnect();
       globalNotifSocketAPI = null;
     }
@@ -227,6 +232,7 @@ export function useTCNotification() {
   function disconnect() {
     if (notifSocketAPI) {
       console.log("Disconnected notificaciones");
+      notifSocketAPI.removeAllListeners();
       notifSocketAPI.disconnect();
       notifSocketAPI = null;
     }
