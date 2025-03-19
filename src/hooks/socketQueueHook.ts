@@ -11,7 +11,8 @@ export default function useSocketQueueHook(
   updateCallback: (
     data: SocketResponse,
     canAddRow: boolean
-  ) => void | Promise<void>
+  ) => void | Promise<void>,
+  deleteCallback?: (data: SocketResponse) => void
 ) {
   const [changesQueue, setChangesQueue] = useState<
     {
@@ -32,6 +33,8 @@ export default function useSocketQueueHook(
         await createCallback(nextChange.data);
       } else if (nextChange.type == SocketChangeType.UPDATE)
         await updateCallback(nextChange.data, nextChange.canAddRowUpdate);
+      else if (nextChange.type == SocketChangeType.DELETE)
+        deleteCallback?.(nextChange.data);
       setChangesQueue((prevQueue) => prevQueue.slice(1));
     }
 
@@ -93,7 +96,7 @@ export function useAddOrUpdateRow(
     const ind = list.findIndex((item) => item.key === data.key);
     if (ind != -1) {
       const updElem = await transformData(data["dataPack"]["data"][0]);
-      // console.log("updating", updElem);
+
       if (updElem) {
         if (tableType == TableTypes.HOME) {
           const requirement: Requirement = updElem as Requirement;
@@ -102,7 +105,7 @@ export function useAddOrUpdateRow(
               const newList = [...list.slice(0, ind), ...list.slice(ind + 1)];
               setList(newList);
               setTotal(total - 1);
-              if (newList.length == 0) reloadPageHome();
+              if (newList.length == 0) callback?.(); // callback recarga la página de home
             }
           } else insertElementInArray(updElem, ind);
         } else if (
@@ -112,8 +115,7 @@ export function useAddOrUpdateRow(
           const requirement = updElem as BasicRequirement;
           // Verificar si requerimiento ha sido republicado
           if (
-            (list[ind] as BasicRequirement).state !=
-              RequirementState.PUBLISHED &&
+            (list[ind] as BasicRequirement).state == RequirementState.EXPIRED && // || list[ind] as BasicRequirement).state == RequirementState.CANCELED
             requirement.state == RequirementState.PUBLISHED &&
             canAddRow
           )
@@ -137,13 +139,19 @@ export function useAddOrUpdateRow(
     }
   }
 
+  async function deleteRow(data: SocketResponse) {
+    const ind = list.findIndex((item) => item.key === data.key);
+    if (ind != -1) {
+      const newList = [...list.slice(0, ind), ...list.slice(ind + 1)];
+      setList(newList);
+      setTotal(total - 1);
+      if (newList.length == 0) callback?.(); // recargar página
+    }
+  }
+
   function insertElementInArray(updElem: any, ind: number) {
     setList([...list.slice(0, ind), updElem, ...list.slice(ind + 1)]);
   }
 
-  function reloadPageHome() {
-    callback?.();
-  }
-
-  return { updateRow, addNewRow };
+  return { updateRow, addNewRow, deleteRow };
 }

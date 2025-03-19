@@ -517,6 +517,7 @@ export type OnChangePageAndPageSizeType = (
 export enum SocketChangeType {
   CREATE = 0,
   UPDATE = 1,
+  DELETE = 2,
 }
 
 export enum RTNotificationType {
@@ -540,4 +541,10 @@ export enum SystemNotificationType {
 export enum NotificationType {
   DIRECT = 0,
   BROADCAST = 1,
+}
+
+export enum CertificateRooms {
+  DOCUMENT = "docCert",
+  SENT = "sentCert",
+  RECEIVED = "receivedCert",
 }
