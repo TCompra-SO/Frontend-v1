@@ -35,9 +35,7 @@ import { useSelector } from "react-redux";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
-import useSocketQueueHook, {
-  useAddOrUpdateRow,
-} from "../hooks/socketQueueHook";
+import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import { transformToCertificateFile } from "../utilities/transform";
 import useSocket from "../socket/useSocket";
 import useShowNotification from "../hooks/utilHooks";
@@ -85,7 +83,7 @@ export default function CertificatesDocs() {
     fieldSort,
     filteredInfo,
   });
-  const { addNewRow, updateRow, deleteRow } = useAddOrUpdateRow(
+  const { addNewRow, updateRow, deleteRow } = useActionsForRow(
     TableTypes.MY_DOCUMENTS,
     (data: SocketDataPackType) => transformToCertificateFile(data),
     certificateList,

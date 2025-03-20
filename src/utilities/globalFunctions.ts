@@ -1,5 +1,6 @@
 import {
   CountryCities,
+  FieldValueI,
   HttpService,
   IdValueMap,
   IdValueObj,
@@ -899,4 +900,8 @@ export function getInitialModalData() {
 
 export function getTokenExpirationTime(expiresIn: number) {
   return Date.now() + expiresIn * 1000; // miliseconds
+}
+
+export function isFieldValueI(obj: any): obj is FieldValueI {
+  return obj && typeof obj.field === "string" && "value" in obj;
 }

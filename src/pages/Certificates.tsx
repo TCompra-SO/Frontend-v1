@@ -36,9 +36,7 @@ import { useGetCertificationData } from "../hooks/certificateHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
-import useSocketQueueHook, {
-  useAddOrUpdateRow,
-} from "../hooks/socketQueueHook";
+import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
 
 export default function Certificates() {
@@ -89,7 +87,7 @@ export default function Certificates() {
     fieldSort,
     filteredInfo,
   });
-  const { addNewRow, updateRow } = useAddOrUpdateRow(
+  const { addNewRow, updateRow } = useActionsForRow(
     type == CertificationTableType.SENT
       ? TableTypes.SENT_CERT
       : TableTypes.RECEIVED_CERT,

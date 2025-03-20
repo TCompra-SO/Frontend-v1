@@ -52,9 +52,7 @@ import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
 import { useChangeSubUserStatus } from "../hooks/subUserHook";
-import useSocketQueueHook, {
-  useAddOrUpdateRow,
-} from "../hooks/socketQueueHook";
+import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
 
 export default function Users() {
@@ -110,18 +108,21 @@ export default function Users() {
     fieldSort: fieldSortSubUser,
     filteredInfo: filteredInfoSubUser,
   });
-  const { addNewRow, updateRow } = useAddOrUpdateRow(
-    TableTypes.USERS,
-    (data: SocketDataPackType) => transformToSubUserBase(data),
-    subUserList,
-    setSubUserList,
-    total,
-    setTotal,
-    currentPageSizeSubUser
-  );
+  const { addNewRow, updateRow, updateFieldInRow, deleteRow } =
+    useActionsForRow(
+      TableTypes.USERS,
+      (data: SocketDataPackType) => transformToSubUserBase(data),
+      subUserList,
+      setSubUserList,
+      total,
+      setTotal,
+      currentPageSizeSubUser
+    );
   const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
     addNewRow,
-    updateRow
+    updateRow,
+    deleteRow,
+    updateFieldInRow
   );
   const {
     searchTable: searchSubUserTable,

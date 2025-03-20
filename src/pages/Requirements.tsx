@@ -51,9 +51,7 @@ import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
-import useSocketQueueHook, {
-  useAddOrUpdateRow,
-} from "../hooks/socketQueueHook";
+import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
 
 export default function Requirements() {
@@ -104,7 +102,7 @@ export default function Requirements() {
     fieldSort,
     filteredInfo,
   });
-  const { addNewRow, updateRow } = useAddOrUpdateRow(
+  const { addNewRow, updateRow } = useActionsForRow(
     TableTypes.REQUIREMENT,
     (data: SocketDataPackType) =>
       transformDataToRequirement(data, type, dataUser, mainDataUser),

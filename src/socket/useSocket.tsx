@@ -48,7 +48,12 @@ export default function useSocket(
 
   useEffect(() => {
     if (!socketAPI) {
-      if (tableType == TableTypes.MY_DOCUMENTS)
+      if (
+        tableType == TableTypes.MY_DOCUMENTS ||
+        tableType == TableTypes.SENT_CERT ||
+        tableType == TableTypes.RECEIVED_CERT ||
+        tableType == TableTypes.USERS
+      )
         socketAPI = io(import.meta.env.VITE_USERS_SOCKET_URL);
       else if (subType == RequirementType.GOOD)
         socketAPI = io(import.meta.env.VITE_REQUIREMENTS_SOCKET_URL);
@@ -77,6 +82,7 @@ export default function useSocket(
             // Agregar cambios a cola si la tabla es de  tipo All o si el cambio pertenece a usuario
             (isAllTypeTableVar || (!isAllTypeTableVar && uid == data.userId)) &&
             (data.typeSocket == SocketChangeType.DELETE ||
+              data.typeSocket == SocketChangeType.UPDATE_FIELD ||
               data.typeSocket == SocketChangeType.UPDATE ||
               (data.typeSocket == SocketChangeType.CREATE &&
                 canAddRow &&
@@ -84,6 +90,7 @@ export default function useSocket(
                 hasNoSortNorFilter(searchTableRequestRef.current)))
           ) {
             if (tableType == TableTypes.MY_DOCUMENTS) {
+              // caso especial: lista de certificados agregados
               if (data.typeSocket == SocketChangeType.CREATE)
                 data.dataPack.data.forEach((cert) => {
                   updateChangesQueue(
@@ -91,7 +98,10 @@ export default function useSocket(
                     canAddRow
                   );
                 });
-              else if (data.typeSocket == SocketChangeType.DELETE)
+              else if (
+                data.typeSocket == SocketChangeType.DELETE ||
+                data.typeSocket == SocketChangeType.UPDATE_FIELD
+              )
                 updateChangesQueue(data, canAddRow);
             } else updateChangesQueue(data, canAddRow);
           }
@@ -209,6 +219,11 @@ export default function useSocket(
       }
     } else if (tableType == TableTypes.MY_DOCUMENTS)
       roomName = CertificateRooms.DOCUMENT;
+    else if (tableType == TableTypes.SENT_CERT)
+      roomName = CertificateRooms.SENT;
+    else if (tableType == TableTypes.RECEIVED_CERT)
+      roomName = CertificateRooms.RECEIVED;
+    else if (tableType == TableTypes.USERS) roomName = "subUser";
     return roomName;
   }
 

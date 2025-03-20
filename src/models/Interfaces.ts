@@ -503,6 +503,11 @@ export interface SocketResponse {
   userId: string;
 }
 
+export interface FieldValueI {
+  field: string;
+  value: any;
+}
+
 export type SocketDataPackType = SocketResponse["dataPack"]["data"][number];
 
 export interface PaginationDataResponse {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ModalContent, useApiParams } from "../models/Interfaces";
 import useApi from "./useApi";
@@ -246,6 +246,7 @@ export function useGetCertificationData(
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
   const { t } = useTranslation();
+  const latestTypeRef = useRef(certificationTableType);
   const [dataModal, setDataModal] = useState<ModalContent>(
     getInitialModalData()
   );
@@ -255,6 +256,10 @@ export function useGetCertificationData(
   });
   const { loading, responseData, error, errorMsg, fetchData } =
     useApi(apiParams);
+
+  useEffect(() => {
+    latestTypeRef.current = certificationTableType;
+  }, [certificationTableType]);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
@@ -292,13 +297,13 @@ export function useGetCertificationData(
       // };
       setDataModal({
         type:
-          certificationTableType == CertificationTableType.RECEIVED
+          latestTypeRef.current == CertificationTableType.RECEIVED
             ? ModalTypes.VIEW_DOCS_RECEIVED_CERT
             : ModalTypes.VIEW_DOCS_SENT_CERT,
         data: {
           docs: certItem.certificates,
           data: certItem,
-          readonly: certificationTableType == CertificationTableType.SENT,
+          readonly: latestTypeRef.current == CertificationTableType.SENT,
         },
         action: Action.VIEW,
       });
@@ -322,13 +327,13 @@ export function useGetCertificationData(
       } else {
         setDataModal({
           type:
-            certificationTableType == CertificationTableType.RECEIVED
+            latestTypeRef.current == CertificationTableType.RECEIVED
               ? ModalTypes.VIEW_DOCS_RECEIVED_CERT
               : ModalTypes.VIEW_DOCS_SENT_CERT,
           data: {
             docs: certificationItem.certificates,
             data: certificationItem,
-            readonly: certificationTableType == CertificationTableType.SENT,
+            readonly: latestTypeRef.current == CertificationTableType.SENT,
           },
           action: Action.VIEW,
         });

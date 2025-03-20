@@ -6,9 +6,7 @@ import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { RequirementType, TableTypes } from "../utilities/types";
 import { getRequirementFromData } from "../services/general/generalServices";
-import useSocketQueueHook, {
-  useAddOrUpdateRow,
-} from "../hooks/socketQueueHook";
+import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import {
   NotificationSearchData,
   SocketDataPackType,
@@ -87,7 +85,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     usersCache,
   } = useGetRequirementList();
   const [page, setPage] = useState(1);
-  const { addNewRow, updateRow } = useAddOrUpdateRow(
+  const { addNewRow, updateRow } = useActionsForRow(
     TableTypes.HOME,
     (data: SocketDataPackType) =>
       getRequirementFromData(data, type, undefined, undefined, usersCache),

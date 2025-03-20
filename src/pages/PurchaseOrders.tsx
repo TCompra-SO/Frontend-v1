@@ -51,9 +51,7 @@ import useShowNotification, {
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
-import useSocketQueueHook, {
-  useAddOrUpdateRow,
-} from "../hooks/socketQueueHook";
+import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
 
 export default function PurchaseOrders() {
@@ -112,7 +110,7 @@ export default function PurchaseOrders() {
     fieldSort,
     filteredInfo,
   });
-  const { addNewRow, updateRow } = useAddOrUpdateRow(
+  const { addNewRow, updateRow } = useActionsForRow(
     TableTypes.PURCHASE_ORDER,
     (data: SocketDataPackType) => transformToPurchaseOrder(data),
     purchaseOrderList,
