@@ -170,7 +170,7 @@ export function useActionsForRow(
   function updateFieldInRow(data: SocketResponse) {
     try {
       const ind = list.findIndex((item) => item.key ?? item.uid === data.key);
-      console.log("updateFieldInRow", ind);
+
       if (ind != -1) {
         const newObj = list[ind];
         data.dataPack.data.forEach((pair) => {
@@ -179,7 +179,6 @@ export function useActionsForRow(
           }
         });
         insertElementInArray(newObj, ind);
-        console.log("updateFieldInRow");
       }
     } catch (e) {
       console.log(e);
