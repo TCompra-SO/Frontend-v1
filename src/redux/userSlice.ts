@@ -67,6 +67,7 @@ export const userSlice = createSlice({
     },
     setIsLoggedIn: (state, action) => {
       state.isLoggedIn = action.payload;
+      console.log("setting", state.isLoggedIn);
     },
     setUserImage: (
       state,

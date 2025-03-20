@@ -4,6 +4,7 @@ import {
   loginKey,
   logoutKey,
   navigateToAfterLoggingOut,
+  refreshTokenKey,
   tokenKey,
   userDataKey,
 } from "../utilities/globals";
@@ -46,8 +47,13 @@ export function useLogin() {
     const loginResponse: LoginResponse = responseData.res;
     dispatch(setUser(loginResponse));
 
-    if (loginResponse && loginResponse.accessToken) {
+    if (
+      loginResponse &&
+      loginResponse.accessToken &&
+      loginResponse.refreshToken
+    ) {
       localStorage.setItem(tokenKey, loginResponse.accessToken);
+      localStorage.setItem(refreshTokenKey, loginResponse.refreshToken);
       if (loginResponse.expiresIn) {
         const tokenExp = getTokenExpirationTime(loginResponse.expiresIn);
         localStorage.setItem(expiresInKey, tokenExp.toString());
@@ -85,6 +91,7 @@ export function useLogout() {
   function logout() {
     // if (isLoggedIn) {
     localStorage.removeItem(tokenKey);
+    localStorage.removeItem(refreshTokenKey);
     localStorage.removeItem(userDataKey);
     localStorage.removeItem(expiresInKey);
     dispatch(setFullMainUser(mainUserInitialState));

@@ -248,4 +248,5 @@ export interface ChangeStatusRequest extends IncludeNotificationRequest {
 
 export interface RefreshAccessTokenRequest {
   accessToken: string;
+  refreshToken: string;
 }

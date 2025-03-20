@@ -63,6 +63,7 @@ export const logoutAfterNoTokenRefreshTime = 60;
 // local storage keys
 export const userDataKey: string = "udata";
 export const tokenKey: string = "token";
+export const refreshTokenKey: string = "rtoken";
 export const logoutKey: string = "logout";
 export const loginKey: string = "login";
 export const expiresInKey: string = "expIn";

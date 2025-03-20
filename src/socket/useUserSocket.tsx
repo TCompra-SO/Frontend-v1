@@ -8,6 +8,7 @@ import {
   inactivityTime,
   logoutAfterNoTokenRefreshTime,
   refreshingTokenKey,
+  refreshTokenKey,
   remainingTokenTime,
   tokenKey,
 } from "../utilities/globals";
@@ -59,7 +60,7 @@ export default function useUserSocket() {
   }, []);
 
   useEffect(() => {
-    console.log(tokenExpiration, isUserActive);
+    // console.log(tokenExpiration, isUserActive);
 
     let retryInterval: NodeJS.Timeout | null = null;
 
@@ -81,6 +82,9 @@ export default function useUserSocket() {
               retryInterval = null;
               // Si no se pudo refrescar token, cerrar sesión después de un tiempo
               if (success === false) {
+                localStorage.removeItem(tokenKey);
+                localStorage.removeItem(refreshTokenKey);
+                localStorage.removeItem(expiresInKey);
                 showNotification("error", t("noRefreshTokenMsg"));
                 setTimeout(() => {
                   logout();
@@ -153,13 +157,15 @@ export default function useUserSocket() {
       localStorage.setItem(refreshingTokenKey, "true");
 
       const accessToken = localStorage.getItem(tokenKey);
-      if (accessToken) {
+      const refreshToken = localStorage.getItem(refreshTokenKey);
+      if (accessToken && refreshToken) {
         const { responseData, errorMsg } =
           await makeRequest<RefreshAccessTokenRequest>({
             service: refreshAccessTokenService(),
             method: "post",
             dataToSend: {
               accessToken,
+              refreshToken,
             },
           });
 
@@ -179,8 +185,6 @@ export default function useUserSocket() {
       return false;
     } catch (error) {
       console.error("Error al refrescar el token:", error);
-      localStorage.removeItem(tokenKey);
-      localStorage.removeItem(expiresInKey);
       return false;
       // localStorage.removeItem('refreshToken');
     } finally {

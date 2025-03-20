@@ -21,8 +21,12 @@ export default function AuthRoleGuard({
   const typeId = useSelector((state: MainState) => state.user.typeID);
 
   useEffect(() => {
-    if (isLoggedIn !== undefined) setIsWaiting(false);
+    // console.log(isLoggedIn);
+    // if (isLoggedIn !== undefined) setIsWaiting(false);
+    setIsWaiting(isLoggedIn === undefined);
   }, [isLoggedIn]);
+
+  // console.log("wwwwww", isWaiting, isLoggedIn);
 
   if (isWaiting) {
     return null;

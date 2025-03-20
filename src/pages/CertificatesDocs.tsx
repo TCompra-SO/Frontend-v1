@@ -58,8 +58,6 @@ export default function CertificatesDocs() {
   const [certificateList, setCertificateList] = useState<CertificateFile[]>([]);
   const [total, setTotal] = useState(0);
   const searchValueRef = useRef<TablePageContentRef>(null);
-  const [lastSearchParams, setLastSearchParams] =
-    useState<OnChangePageAndPageSizeTypeParams>();
   const {
     currentPage,
     currentPageSize,
@@ -70,6 +68,11 @@ export default function CertificatesDocs() {
     filteredInfo,
     reset,
   } = useFilterSortPaginationForTable();
+  const [lastSearchParams, setLastSearchParams] =
+    useState<OnChangePageAndPageSizeTypeParams>({
+      page: currentPage,
+      pageSize: currentPageSize,
+    });
   const [tableContent, setTableContent] = useState<TableTypeMyDocuments>({
     type: TableTypes.MY_DOCUMENTS,
     data: [],
@@ -144,6 +147,7 @@ export default function CertificatesDocs() {
       setCurrentPage(1);
       setTotal(0);
       setCertificateList([]);
+      setLastSearchParams({ page: 1, pageSize: currentPageSize });
       showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -234,27 +238,29 @@ export default function CertificatesDocs() {
   }
 
   async function reloadPage() {
-    // if (lastSearchParams.page) {
-    //   const { success, totalPages } = await retrieveRequirements(
-    //     lastSearchParams.page,
-    //     lastSearchParams.pageSize,
-    //     lastSearchParams.params
-    //   );
-    //   if (!success && totalPages) {
-    //     if (lastSearchParams.page - 1 <= totalPages)
-    //       await retrieveRequirements(
-    //         lastSearchParams.page - 1,
-    //         lastSearchParams.pageSize,
-    //         lastSearchParams.params
-    //       );
-    //     else
-    //       await retrieveRequirements(
-    //         totalPages,
-    //         lastSearchParams.pageSize,
-    //         lastSearchParams.params
-    //       );
-    //   }
-    // }
+    console.log("reloadPage", lastSearchParams.page);
+    if (lastSearchParams.page) {
+      // const { success, totalPages } =
+      handleChangePageAndPageSize(
+        lastSearchParams,
+        fieldNameSearchRequestMyDocsCert,
+        searchTable
+      );
+      // if (!success && totalPages) {
+      //   if (lastSearchParams.page - 1 <= totalPages)
+      //     await retrieveRequirements(
+      //       lastSearchParams.page - 1,
+      //       lastSearchParams.pageSize,
+      //       lastSearchParams.params
+      //     );
+      //   else
+      //     await retrieveRequirements(
+      //       totalPages,
+      //       lastSearchParams.pageSize,
+      //       lastSearchParams.params
+      //     );
+      // }
+    }
   }
 
   return (
@@ -296,13 +302,14 @@ export default function CertificatesDocs() {
           </Row>
         }
         loading={loading}
-        onChangePageAndPageSize={(params) =>
+        onChangePageAndPageSize={(params) => {
+          setLastSearchParams(params);
           handleChangePageAndPageSize(
             params,
             fieldNameSearchRequestMyDocsCert,
             searchTable
-          )
-        }
+          );
+        }}
         ref={searchValueRef}
       />
     </>
