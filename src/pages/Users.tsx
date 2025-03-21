@@ -238,7 +238,7 @@ export default function Users() {
     try {
       if (responseDataUser) {
         if (equalServices(apiParamsUser.service, getSubUserService(""))) {
-          setUserDataEdit(transformToSubUserProfile(responseDataUser[0], true));
+          setUserDataEdit(transformToSubUserProfile(responseDataUser[0]));
           handleOpenModal();
         }
       } else if (errorUser) {
