@@ -14,7 +14,7 @@ import TenureField from "../components/common/formFields/TenureField";
 import SpecialtyField from "../components/common/formFields/SpecialtyField";
 import AboutMeField from "../components/common/formFields/AboutMeField";
 import ButtonContainer from "../components/containers/ButtonContainer";
-import { defaultUserImage } from "../utilities/globals";
+import { defaultErrorMsg, defaultUserImage } from "../utilities/globals";
 import { useHandleChangeImage } from "../hooks/useHandleChangeImage";
 import PasswordField from "../components/common/formFields/PasswordField";
 import { useApiParams } from "../models/Interfaces";
@@ -149,8 +149,13 @@ export default function MyProfile() {
   }, [apiParamsMainUser]);
 
   useEffect(() => {
-    if (responseDataMainUser) {
-      setMainUser(transformToFullUser(responseDataMainUser.data));
+    try {
+      if (responseDataMainUser) {
+        setMainUser(transformToFullUser(responseDataMainUser.data));
+      }
+    } catch (e) {
+      console.log(e);
+      showNotification("error", t(defaultErrorMsg));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataMainUser]);
@@ -231,12 +236,17 @@ export default function MyProfile() {
   /** Funciones */
 
   function setFormData(responseData: any) {
-    if (entityType == EntityType.SUBUSER) {
-      setUser(transformToSubUserProfile(responseData[0]));
-    } else {
-      const user = transformToFullUser(responseData.data);
-      dispatch(setUserImage(user.image));
-      setUser(user);
+    try {
+      if (entityType == EntityType.SUBUSER) {
+        setUser(transformToSubUserProfile(responseData[0]));
+      } else {
+        const user = transformToFullUser(responseData.data);
+        dispatch(setUserImage(user.image));
+        setUser(user);
+      }
+    } catch (e) {
+      console.log(e);
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 

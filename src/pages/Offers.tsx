@@ -358,7 +358,8 @@ export default function Offers() {
           false,
           false,
           action,
-          offer.type
+          offer.type,
+          offer.title
         );
         break;
       }

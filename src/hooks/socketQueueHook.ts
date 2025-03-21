@@ -145,7 +145,7 @@ export function useActionsForRow(
       ) {
         // caso republicar requerimiento
         const updElem = await transformData(data.dataPack.data[0]);
-        if (updElem.state == RequirementState.PUBLISHED && canAddRow)
+        if (updElem && updElem.state == RequirementState.PUBLISHED && canAddRow)
           addNewRow(data, updElem, tableType == TableTypes.HOME);
       }
     } catch (e) {

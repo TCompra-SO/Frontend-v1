@@ -30,7 +30,11 @@ export default function Search() {
   }, [apiParams]);
 
   useEffect(() => {
-    if (responseData) setData(transformToStatistics(responseData.data));
+    try {
+      if (responseData) setData(transformToStatistics(responseData.data));
+    } catch (e) {
+      console.log(e);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData]);
 

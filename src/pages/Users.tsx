@@ -235,15 +235,19 @@ export default function Users() {
   }, [apiParamsUser]);
 
   useEffect(() => {
-    if (responseDataUser) {
-      if (equalServices(apiParamsUser.service, getSubUserService(""))) {
-        setUserDataEdit(transformToSubUserProfile(responseDataUser[0], true));
-        handleOpenModal();
+    try {
+      if (responseDataUser) {
+        if (equalServices(apiParamsUser.service, getSubUserService(""))) {
+          setUserDataEdit(transformToSubUserProfile(responseDataUser[0], true));
+          handleOpenModal();
+        }
+      } else if (errorUser) {
+        showNotification("error", errorMsgUser);
       }
-    } else if (errorUser) {
-      showNotification("error", errorMsgUser);
+    } catch (e) {
+      console.log(e);
+      showNotification("error", t(defaultErrorMsg));
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataUser, errorUser]);
 

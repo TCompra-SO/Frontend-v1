@@ -308,15 +308,20 @@ export default function PurchaseOrders() {
   }
 
   function showUserInfo() {
-    const user = transformToFullUser(responseDataUser.data);
-    setDataModal({
-      type: ModalTypes.USER_INFO,
-      data: {
-        user,
-      },
-      action: action,
-    });
-    setIsOpenModal(true);
+    try {
+      const user = transformToFullUser(responseDataUser.data);
+      setDataModal({
+        type: ModalTypes.USER_INFO,
+        data: {
+          user,
+        },
+        action: action,
+      });
+      setIsOpenModal(true);
+    } catch (e) {
+      console.log(e);
+      showNotification("error", t(defaultErrorMsg));
+    }
   }
 
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
