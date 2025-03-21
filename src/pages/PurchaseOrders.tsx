@@ -32,6 +32,7 @@ import {
   transformToPurchaseOrder,
 } from "../utilities/transform";
 import {
+  defaultErrorMsg,
   mainModalScrollStyle,
   noPaginationPageSize,
 } from "../utilities/globals";
@@ -298,7 +299,7 @@ export default function PurchaseOrders() {
       setPurchaseOrderList(data);
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 

@@ -60,6 +60,8 @@ export const inactivityTime = 30;
 export const remainingTokenTime = 60;
 export const logoutAfterNoTokenRefreshTime = 60;
 
+export const defaultErrorMsg = "errorOccurred";
+
 // local storage keys
 export const userDataKey: string = "udata";
 export const tokenKey: string = "token";

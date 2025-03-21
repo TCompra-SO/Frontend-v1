@@ -54,6 +54,7 @@ import useShowNotification from "../../../../../hooks/utilHooks";
 import { MainSocketsContext } from "../../../../../contexts/MainSocketsContext";
 import useSystemNotification from "../../../../../hooks/useSystemNotification";
 import dayjs from "dayjs";
+import { defaultErrorMsg } from "../../../../../utilities/globals";
 
 function RowContainer({ children }: { children: ReactNode }) {
   return (
@@ -425,7 +426,7 @@ export default function OfferForm(props: OfferFormProps) {
       }
 
       submit(data);
-    } else showNotification("error", t("errorOccurred"));
+    } else showNotification("error", t(defaultErrorMsg));
   }
 
   function submit(data: CreateOfferRequest) {

@@ -18,6 +18,7 @@ import {
   useApiParams,
 } from "../models/Interfaces";
 import {
+  defaultErrorMsg,
   fieldNameSearchRequestOffer,
   fieldNameSearchRequestRequirement,
   fieldNameSearchRequestSubUser,
@@ -309,7 +310,7 @@ export default function Users() {
       setSubUserList(data);
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 
@@ -326,7 +327,7 @@ export default function Users() {
       setReqList([]);
       setTotalReq(0);
       setCurrentPage(1);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 
@@ -343,7 +344,7 @@ export default function Users() {
       setOfferList([]);
       setTotalOffer(0);
       setCurrentPage(1);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 
@@ -360,7 +361,7 @@ export default function Users() {
       setOrderList([]);
       setTotalPurc(0);
       setCurrentPage(1);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 
@@ -377,7 +378,7 @@ export default function Users() {
       setOrderList([]);
       setTotalSales(0);
       setCurrentPage(1);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 

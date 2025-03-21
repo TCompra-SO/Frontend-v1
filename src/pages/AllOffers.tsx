@@ -23,6 +23,7 @@ import {
 } from "../utilities/transform";
 import { getBaseDataUserService } from "../services/requests/authService";
 import {
+  defaultErrorMsg,
   fieldNameSearchRequestOffer,
   mainModalScrollStyle,
 } from "../utilities/globals";
@@ -229,7 +230,7 @@ export default function AllOffers() {
       setOfferList(data);
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     } finally {
       setLoadingTable(false);
     }

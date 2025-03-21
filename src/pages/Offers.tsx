@@ -20,6 +20,7 @@ import TablePageContent, {
   TablePageContentRef,
 } from "../components/section/table-page/TablePageContent";
 import {
+  defaultErrorMsg,
   fieldNameSearchRequestOffer,
   mainModalScrollStyle,
 } from "../utilities/globals";
@@ -257,7 +258,7 @@ export default function Offers() {
       setOfferList(data);
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 

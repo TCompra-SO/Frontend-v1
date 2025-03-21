@@ -18,7 +18,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { transformDataToBasicRequirement } from "../utilities/transform";
-import { fieldNameSearchRequestRequirement } from "../utilities/globals";
+import {
+  defaultErrorMsg,
+  fieldNameSearchRequestRequirement,
+} from "../utilities/globals";
 import useShowNotification from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
@@ -153,7 +156,7 @@ export default function AllRequirements() {
       setRequirementList(data);
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     } finally {
       setLoadingTable(false);
     }

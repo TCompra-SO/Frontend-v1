@@ -24,6 +24,7 @@ import { UpdateRequiredDocsRequest } from "../models/Requests";
 import useShowNotification, { useShowLoadingMessage } from "./utilHooks";
 import { getInitialModalData } from "../utilities/globalFunctions";
 import { Action, CertificationTableType, ModalTypes } from "../utilities/types";
+import { defaultErrorMsg } from "../utilities/globals";
 
 export function useGetCertificatesList() {
   const { t } = useTranslation();
@@ -55,7 +56,7 @@ export function useGetCertificatesList() {
         );
       } catch (err) {
         console.log(err);
-        showNotification("error", t("errorOccurred"));
+        showNotification("error", t(defaultErrorMsg));
         setTotal(0);
       } finally {
         // showLoadingMessage( false);
@@ -168,7 +169,7 @@ export function useGetRequiredDocsCert() {
         );
       } catch (err) {
         console.log(err);
-        showNotification("error", t("errorOccurred"));
+        showNotification("error", t(defaultErrorMsg));
       }
     } else if (error) {
       showNotification("error", errorMsg);
@@ -272,43 +273,28 @@ export function useGetCertificationData(
   }, [loading]);
 
   useEffect(() => {
-    if (responseData) {
-      const certItem: CertificationItem = transformToCertificationItem(
-        responseData.data[0]
-      );
-      // {
-      //   key: "x8JXBNMUgdn4ihTedBL4",
-      //   companyId: "EOuyocZiTZVT91ZOo0rW",
-      //   companyName: "UNIVERSIDAD NACIONAL DE SAN AGUSTIN",
-      //   companyDocument: "20163646499",
-      //   creationDate: "2025-01-06T18:48:49.551Z",
-      //   state: 2,
-      //   certificates: [
-      //     {
-      //       key: "o8GVrfohAjsclmwTEX89",
-      //       name: "MI AUTORIZACION aaaaaaaaaa",
-      //       documentName:
-      //         "1734533049704-LLUVIA DE IDEAS PARA TCOMPRA Y ALTA GAMA.pdf",
-      //       url: "https://res.cloudinary.com/dlxlveta2/image/upload/v1736189328/certificates-request/d9mm6krd6hrxxhtihexo.pdf",
-      //       creationDate: "2025-01-07T20:00:07.030Z",
-      //     },
-      //   ],
-      //   note: "fff",
-      // };
-      setDataModal({
-        type:
-          latestTypeRef.current == CertificationTableType.RECEIVED
-            ? ModalTypes.VIEW_DOCS_RECEIVED_CERT
-            : ModalTypes.VIEW_DOCS_SENT_CERT,
-        data: {
-          docs: certItem.certificates,
-          data: certItem,
-          readonly: latestTypeRef.current == CertificationTableType.SENT,
-        },
-        action: Action.VIEW,
-      });
-    } else if (error) {
-      showNotification("error", errorMsg);
+    try {
+      if (responseData) {
+        const certItem: CertificationItem = transformToCertificationItem(
+          responseData.data[0]
+        );
+        setDataModal({
+          type:
+            latestTypeRef.current == CertificationTableType.RECEIVED
+              ? ModalTypes.VIEW_DOCS_RECEIVED_CERT
+              : ModalTypes.VIEW_DOCS_SENT_CERT,
+          data: {
+            docs: certItem.certificates,
+            data: certItem,
+            readonly: latestTypeRef.current == CertificationTableType.SENT,
+          },
+          action: Action.VIEW,
+        });
+      } else if (error) {
+        showNotification("error", errorMsg);
+      }
+    } catch (e) {
+      showNotification("error", t(defaultErrorMsg));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
@@ -339,7 +325,7 @@ export function useGetCertificationData(
         });
       }
     } catch (error) {
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 

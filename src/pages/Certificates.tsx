@@ -4,6 +4,7 @@ import TablePageContent, {
   TablePageContentRef,
 } from "../components/section/table-page/TablePageContent";
 import {
+  defaultErrorMsg,
   fieldNameSearchRequestCertRequests,
   mainModalScrollStyle,
 } from "../utilities/globals";
@@ -201,7 +202,7 @@ export default function Certificates() {
       setCertificationRequestList(data);
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 

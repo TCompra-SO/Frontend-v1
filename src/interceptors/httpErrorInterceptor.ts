@@ -41,9 +41,10 @@ import {
   updateProfileSubUserService,
 } from "../services/requests/subUserService";
 import { getNameReniecService } from "../services/requests/utilService";
+import { defaultErrorMsg } from "../utilities/globals";
 
 export default function httpErrorInterceptor(error: any, type: string): string {
-  let erroMsg: string = "errorOccurred";
+  let erroMsg: string = defaultErrorMsg;
   const code = error.response?.status;
 
   switch (type) {

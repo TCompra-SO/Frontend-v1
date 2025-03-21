@@ -52,7 +52,7 @@ import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import useShowNotification, { useShowLoadingMessage } from "./utilHooks";
-import { pageSizeOptionsSt } from "../utilities/globals";
+import { defaultErrorMsg, pageSizeOptionsSt } from "../utilities/globals";
 
 /** useCancelRequirement */
 
@@ -105,7 +105,7 @@ export function useCancelRequirement(additionalApiParams?: UseApiType) {
         showNotification("error", errorMsgCancel);
       }
     } catch (err) {
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     } finally {
       if (apiParamsCancel.dataToSend?.requerimentID)
         deleteFromIdAndActionQueue(apiParamsCancel.dataToSend.requerimentID);
@@ -199,7 +199,7 @@ export function useCancelOffer(additionalApiParams?: UseApiType) {
         showNotification("error", errorMsg);
       }
     } catch (err) {
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     } finally {
       if (apiParams.dataToSend?.offerID)
         deleteFromIdAndActionQueue(apiParams.dataToSend.offerID);
@@ -400,13 +400,13 @@ export function useGetOffersByRequirementId() {
                 action,
               });
             }
-          } else showNotification("error", t("errorOccurred"));
+          } else showNotification("error", t(defaultErrorMsg));
         } else if (error) {
           showNotification("error", errorMsg);
         }
       } catch (error) {
         console.log(error);
-        showNotification("error", t("errorOccurred"));
+        showNotification("error", t(defaultErrorMsg));
       } finally {
         if (requirementData.requirementId && (error || responseData)) {
           showLoadingMessage(false);
@@ -531,8 +531,8 @@ export function useShowDetailOffer() {
               },
               action,
             });
-          else showNotification("error", t("errorOccurred"));
-        } else showNotification("error", t("errorOccurred"));
+          else showNotification("error", t(defaultErrorMsg));
+        } else showNotification("error", t(defaultErrorMsg));
       } else {
         const { basicRateData } = await getBasicRateData(
           offerData.requirementId,
@@ -549,11 +549,11 @@ export function useShowDetailOffer() {
             },
             action,
           });
-        else showNotification("error", t("errorOccurred"));
+        else showNotification("error", t(defaultErrorMsg));
       }
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     } finally {
       showLoadingMessage(false);
     }
@@ -626,7 +626,7 @@ export function useCulminate() {
       }
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     } finally {
       showLoadingMessage(false);
     }

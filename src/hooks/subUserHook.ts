@@ -7,6 +7,7 @@ import { changeStatusSubUserService } from "../services/requests/subUserService"
 import { ChangeStatusRequest } from "../models/Requests";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import { Action } from "../utilities/types";
+import { defaultErrorMsg } from "../utilities/globals";
 
 export function useChangeSubUserStatus() {
   const { t } = useTranslation();
@@ -52,7 +53,7 @@ export function useChangeSubUserStatus() {
       }
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     } finally {
       if (apiParams.dataToSend?.uid)
         deleteFromIdAndActionQueue(apiParams.dataToSend?.uid);

@@ -184,7 +184,7 @@ export default function SelectDocumentsToSendCertificateModal(
       ...basicNotification,
       timestamp: dayjs().toISOString(),
       receiverId: props.data.userId,
-      targetId: props.certificationId ?? "", // r3v notif
+      targetId: props.certificationId ?? "",
       targetType: CertificationTableType.RECEIVED,
     });
 

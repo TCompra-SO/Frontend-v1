@@ -21,6 +21,7 @@ import TablePageContent, {
   TablePageContentRef,
 } from "../components/section/table-page/TablePageContent";
 import {
+  defaultErrorMsg,
   fieldNameSearchRequestRequirement,
   mainModalScrollStyle,
   noPaginationPageSize,
@@ -279,7 +280,7 @@ export default function Requirements() {
       setRequirementList(data);
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     } finally {
       setLoadingTable(false);
     }
@@ -336,10 +337,10 @@ export default function Requirements() {
               });
               setIsOpenModal(true);
             } else {
-              showNotification("error", t("errorOccurred"));
+              showNotification("error", t(defaultErrorMsg));
             }
           } else {
-            showNotification("error", t("errorOccurred"));
+            showNotification("error", t(defaultErrorMsg));
           }
           showLoadingMessage(false);
         }

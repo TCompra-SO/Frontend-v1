@@ -15,6 +15,7 @@ import {
 } from "../../../../services/general/generalServices";
 import { useTranslation } from "react-i18next";
 import useShowNotification from "../../../../hooks/utilHooks";
+import { defaultErrorMsg } from "../../../../utilities/globals";
 
 export default function CompanyData() {
   const { t } = useTranslation();
@@ -52,7 +53,7 @@ export default function CompanyData() {
       else if (error) showNotification("error", errorMsg);
     } catch (err) {
       console.log(err);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     } finally {
       setLoadingUser(false);
     }
