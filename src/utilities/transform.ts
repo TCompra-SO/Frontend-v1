@@ -22,6 +22,19 @@ import { UserState } from "../models/Redux";
 import { getBaseDataUserService } from "../services/requests/authService";
 import makeRequest from "./globalFunctions";
 import {
+  fieldNameSearchRequestSubUser,
+  numGoodsColumnKey,
+  numOffersGoodsColumnKey,
+  numOffersSalesColumnKey,
+  numOffersServicesColumnKey,
+  numPurchaseOrdersClientColumnKey,
+  numPurchaseOrdersProviderColumnKey,
+  numSalesColumnKey,
+  numSellingOrdersClientColumnKey,
+  numSellingOrdersProviderColumnKey,
+  numServicesColumnKey,
+} from "./globals";
+import {
   EntityType,
   OrderConfirmation,
   OrderTableType,
@@ -324,16 +337,23 @@ export function transformToPurchaseOrderItemSubUser(
 
 export function transformToUserCounters(data: any) {
   const counters: UserCounters = {
-    numGoods: data.numProducts,
-    numServices: data.numServices,
-    numSales: data.numLiquidations,
-    numOffersGoods: data.numOffersProducts,
-    numOffersServices: data.numOffersServices,
-    numOffersSales: data.numOffersLiquidations,
-    numPurchaseOrdersProvider: data.numPurchaseOrdersProvider,
-    numPurchaseOrdersClient: data.numPurchaseOrdersClient,
-    numSellingOrdersProvider: data.numSellingOrdersProvider,
-    numSellingOrdersClient: data.numSellingOrdersClient,
+    numGoods: data[fieldNameSearchRequestSubUser[numGoodsColumnKey]],
+    numServices: data[fieldNameSearchRequestSubUser[numServicesColumnKey]],
+    numSales: data[fieldNameSearchRequestSubUser[numSalesColumnKey]],
+    numOffersGoods:
+      data[fieldNameSearchRequestSubUser[numOffersGoodsColumnKey]],
+    numOffersServices:
+      data[fieldNameSearchRequestSubUser[numOffersServicesColumnKey]],
+    numOffersSales:
+      data[fieldNameSearchRequestSubUser[numOffersSalesColumnKey]],
+    numPurchaseOrdersProvider:
+      data[fieldNameSearchRequestSubUser[numPurchaseOrdersProviderColumnKey]],
+    numPurchaseOrdersClient:
+      data[fieldNameSearchRequestSubUser[numPurchaseOrdersClientColumnKey]],
+    numSellingOrdersProvider:
+      data[fieldNameSearchRequestSubUser[numSellingOrdersProviderColumnKey]],
+    numSellingOrdersClient:
+      data[fieldNameSearchRequestSubUser[numSellingOrdersClientColumnKey]],
   };
   return counters;
 }

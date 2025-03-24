@@ -1,6 +1,6 @@
 import React from "react";
 import { pageRoutes } from "./routes";
-import { Requirement } from "../models/MainInterfaces";
+import { Requirement, UserCounters } from "../models/MainInterfaces";
 
 export const dateFormat: string = "DD-MM-YYYY";
 export const dateFormatHomeSearch: string = "YYYY-MM-DD";
@@ -112,6 +112,16 @@ export const subUserCreationDateColumnKey: string = "createdAt";
 export const numGoodsColumnKey: string = "numGoods";
 export const numServicesColumnKey: string = "numServices";
 export const numSalesColumnKey: string = "numSales";
+export const numOffersGoodsColumnKey: string = "numOffersGoods";
+export const numOffersServicesColumnKey: string = "numOffersServices";
+export const numOffersSalesColumnKey: string = "numOffersSales";
+export const numPurchaseOrdersProviderColumnKey: string =
+  "numPurchaseOrdersProvider";
+export const numPurchaseOrdersClientColumnKey: string =
+  "numPurchaseOrdersClient";
+export const numSellingOrdersProviderColumnKey: string =
+  "numSellingOrdersProvider";
+export const numSellingOrdersClientColumnKey: string = "numSellingOrdersClient";
 export const documentNameColumnKey: string = "documentName";
 export const companyNameColumnName: string = "companyName";
 export const companyDocumentColumnName: string = "companyDocument";
@@ -157,8 +167,24 @@ export const fieldNameSearchRequestSubUser: Record<string, string> = {
   [numGoodsColumnKey]: "numProducts",
   [numServicesColumnKey]: "numServices",
   [numSalesColumnKey]: "numLiquidations",
+  [numOffersGoodsColumnKey]: "numOffersProducts",
+  [numOffersServicesColumnKey]: "numOffersServices",
+  [numOffersSalesColumnKey]: "numOffersLiquidations",
+  [numPurchaseOrdersProviderColumnKey]: "numPurchaseOrdersProvider",
+  [numPurchaseOrdersClientColumnKey]: "numPurchaseOrdersClient",
+  [numSellingOrdersProviderColumnKey]: "numSellingOrdersProvider",
+  [numSellingOrdersClientColumnKey]: "numSellingOrdersClient",
   [stateColumnKey]: "active_account",
+  typeID: "typeID",
 };
+
+export const reversedFieldNameSearchRequestSubUser = Object.fromEntries(
+  Object.entries(fieldNameSearchRequestSubUser).map(([key, value]) => [
+    value,
+    key,
+  ])
+);
+
 export const fieldNameSearchRequestOrder: Record<string, string> = {
   [purcOrderReqTitleColumnKey]: "requerimentTitle",
   [purcOrderDateColumnKey]: "createDate",
@@ -186,4 +212,18 @@ export const fieldNameSearchRequestAllOrderProvider: Record<string, string> = {
 export const fieldNameUpdateRequirement: Record<string, keyof Requirement> = {
   state: "state",
   number_offers: "numberOffers",
+};
+
+// Keys de UserCounters
+export const userCounterKeys: Record<keyof UserCounters, true> = {
+  numGoods: true,
+  numServices: true,
+  numSales: true,
+  numOffersGoods: true,
+  numOffersServices: true,
+  numOffersSales: true,
+  numPurchaseOrdersProvider: true,
+  numPurchaseOrdersClient: true,
+  numSellingOrdersProvider: true,
+  numSellingOrdersClient: true,
 };

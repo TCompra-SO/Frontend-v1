@@ -1,6 +1,5 @@
 import {
   CountryCities,
-  FieldValueI,
   HttpService,
   IdValueMap,
   IdValueObj,
@@ -18,6 +17,8 @@ import {
   maxLengthStringToSearch,
   onlyLettersAndNumbers,
   pageSizeOptionsSt,
+  reversedFieldNameSearchRequestSubUser,
+  userCounterKeys,
 } from "./globals";
 import {
   EntityType,
@@ -146,6 +147,7 @@ import {
   searchSalesOrdersByClientService,
   searchSalesOrdersByProviderService,
 } from "../services/requests/sale/salesOrderService";
+import { UserCounters } from "../models/MainInterfaces";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -902,6 +904,15 @@ export function getTokenExpirationTime(expiresIn: number) {
   return Date.now() + expiresIn * 1000; // miliseconds
 }
 
-export function isFieldValueI(obj: any): obj is FieldValueI {
-  return obj && typeof obj.field === "string" && "value" in obj;
+export function isFieldValueI(obj: any): obj is Record<string, any> {
+  return obj !== null && typeof obj === "object" && !Array.isArray(obj);
+}
+
+export function getReversedTransformFieldNameObject(type: TableTypes) {
+  if (type == TableTypes.USERS) return reversedFieldNameSearchRequestSubUser;
+  return null;
+}
+
+export function isUserCounterKey(key: string): key is keyof UserCounters {
+  return key in userCounterKeys;
 }

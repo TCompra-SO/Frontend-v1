@@ -6,7 +6,11 @@ import {
 } from "../utilities/types";
 import { SocketResponse } from "../models/Interfaces";
 import { BasicRequirement, Requirement } from "../models/MainInterfaces";
-import { isFieldValueI } from "../utilities/globalFunctions";
+import {
+  getReversedTransformFieldNameObject,
+  isFieldValueI,
+  isUserCounterKey,
+} from "../utilities/globalFunctions";
 
 export default function useSocketQueueHook(
   createCallback: (data: SocketResponse) => void | Promise<void>,
@@ -175,7 +179,13 @@ export function useActionsForRow(
         const newObj = list[ind];
         data.dataPack.data.forEach((pair) => {
           if (isFieldValueI(pair)) {
-            newObj[pair.field] = pair.value;
+            Object.keys(pair).forEach((key) => {
+              const transformObject =
+                getReversedTransformFieldNameObject(tableType);
+              const newKey = transformObject ? transformObject[key] : key;
+              if (isUserCounterKey(newKey)) newObj[newKey] += pair[key];
+              else newObj[newKey] = pair[key];
+            });
           }
         });
         insertElementInArray(newObj, ind);
