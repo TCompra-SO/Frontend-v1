@@ -60,6 +60,9 @@ export default function httpErrorInterceptor(error: any, type: string): string {
         case 409:
           erroMsg = "userIncompleteProfile";
           break;
+        case 423:
+          erroMsg = "inactiveAccountLogin";
+          break;
       }
       break;
     case profileUserService().type:
