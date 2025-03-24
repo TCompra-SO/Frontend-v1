@@ -124,6 +124,10 @@ export default function useUserSocket() {
         socketUserAPI.on("updateToken", (data) => {
           console.log("Sala token", data);
         });
+
+        socketUserAPI.on("suspend", () => {
+          logout();
+        });
       }
     }
   }
