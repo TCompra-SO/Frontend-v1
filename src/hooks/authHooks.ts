@@ -4,6 +4,7 @@ import {
   loginKey,
   logoutKey,
   navigateToAfterLoggingOut,
+  refreshExpiresInKey,
   refreshTokenKey,
   tokenKey,
   userDataKey,
@@ -39,6 +40,7 @@ import { getTokenExpirationTime } from "../utilities/globalFunctions";
 export function useLogin() {
   const { t } = useTranslation();
   const { setTokenExpiration } = useContext(MainSocketsContext);
+  const { setRefreshTokenExpiration } = useContext(MainSocketsContext);
   const dispatch = useDispatch();
   const loadUserInfo = useLoadUserInfo();
   const { showNotification } = useShowNotification();
@@ -54,10 +56,15 @@ export function useLogin() {
     ) {
       localStorage.setItem(tokenKey, loginResponse.accessToken);
       localStorage.setItem(refreshTokenKey, loginResponse.refreshToken);
-      if (loginResponse.expiresIn) {
-        const tokenExp = getTokenExpirationTime(loginResponse.expiresIn);
+      if (loginResponse.accessExpiresIn) {
+        const tokenExp = getTokenExpirationTime(loginResponse.accessExpiresIn);
         localStorage.setItem(expiresInKey, tokenExp.toString());
         setTokenExpiration(tokenExp);
+      }
+      if (loginResponse.refreshExpiresIn) {
+        const tokenExp = getTokenExpirationTime(loginResponse.refreshExpiresIn);
+        localStorage.setItem(refreshExpiresInKey, tokenExp.toString());
+        setRefreshTokenExpiration(tokenExp);
       }
     }
 
@@ -94,6 +101,7 @@ export function useLogout() {
     localStorage.removeItem(refreshTokenKey);
     localStorage.removeItem(userDataKey);
     localStorage.removeItem(expiresInKey);
+    localStorage.removeItem(refreshExpiresInKey);
     dispatch(setFullMainUser(mainUserInitialState));
     dispatch(setFullUser(userInitialState));
     localStorage.setItem(logoutKey, Date.now().toString());
@@ -107,6 +115,7 @@ export function useLogout() {
 export function useLoadUserInfo() {
   const dispatch = useDispatch();
   const { setTokenExpiration } = useContext(MainSocketsContext);
+  const { setRefreshTokenExpiration } = useContext(MainSocketsContext);
   const logout = useLogout();
 
   // function checkToken() {
@@ -128,6 +137,9 @@ export function useLoadUserInfo() {
       const userInfo = JSON.parse(decryptData(userData));
       const expiresIn = localStorage.getItem(expiresInKey);
       if (expiresIn !== null) setTokenExpiration(Number(expiresIn));
+      const refreshExpiresIn = localStorage.getItem(refreshExpiresInKey);
+      if (refreshExpiresIn !== null)
+        setRefreshTokenExpiration(Number(refreshExpiresIn));
       // if (!checkToken()) return;
       if (userInfo) {
         // localStorage.setItem(tokenKey, userInfo.token);

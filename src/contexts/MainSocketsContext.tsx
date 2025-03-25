@@ -45,6 +45,7 @@ export const MainSocketsContext = createContext<MainSocketsContextType>({
   disconnectGlobalNotificationSocket: () => {},
   hasMoreNotificationList: false,
   setTokenExpiration: () => {},
+  setRefreshTokenExpiration: () => {},
 } as MainSocketsContextType);
 
 export function MainSocketsProvider({ children }: { children: ReactNode }) {

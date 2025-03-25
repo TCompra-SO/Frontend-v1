@@ -7,6 +7,7 @@ import {
   expiresInKey,
   inactivityTime,
   logoutAfterNoTokenRefreshTime,
+  refreshExpiresInKey,
   refreshingTokenKey,
   refreshTokenKey,
   remainingTokenTime,
@@ -32,6 +33,7 @@ export default function useUserSocket() {
   const uid = useSelector((state: MainState) => state.user.uid);
   const [isUserActive, setIsUserActive] = useState(true);
   const [tokenExpiration, setTokenExpiration] = useState(0);
+  const [refreshTokenExpiration, setRefreshTokenExpiration] = useState(0);
   const activityTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -64,7 +66,7 @@ export default function useUserSocket() {
 
     let retryInterval: NodeJS.Timeout | null = null;
 
-    if (tokenExpiration) {
+    if (tokenExpiration != null) {
       const interval = setInterval(async () => {
         const timeLeft = Math.floor((tokenExpiration - Date.now()) / 1000);
         console.log(
@@ -85,6 +87,7 @@ export default function useUserSocket() {
                 localStorage.removeItem(tokenKey);
                 localStorage.removeItem(refreshTokenKey);
                 localStorage.removeItem(expiresInKey);
+                localStorage.removeItem(refreshExpiresInKey);
                 showNotification("error", t("noRefreshTokenMsg"));
                 setTimeout(() => {
                   logout();
@@ -207,5 +210,6 @@ export default function useUserSocket() {
     connectUserSocket: connectSocket,
     disconnectUserSocket: disconnectSocket,
     setTokenExpiration,
+    setRefreshTokenExpiration,
   };
 }

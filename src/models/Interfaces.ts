@@ -556,7 +556,8 @@ export interface LoginResponse {
   }[];
   refreshToken: string;
   accessToken: string;
-  expiresIn: number;
+  accessExpiresIn: number;
+  refreshExpiresIn: number;
 }
 
 export interface NotificationSearchData {

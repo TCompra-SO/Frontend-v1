@@ -69,6 +69,7 @@ export const refreshTokenKey: string = "rtoken";
 export const logoutKey: string = "logout";
 export const loginKey: string = "login";
 export const expiresInKey: string = "expIn";
+export const refreshExpiresInKey: string = "rExpIn";
 export const refreshingTokenKey: string = "refTok";
 
 /* Window size (>=) */
