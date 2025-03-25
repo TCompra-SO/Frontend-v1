@@ -26,7 +26,10 @@ import useShowNotification from "../../../hooks/utilHooks";
 import { MainSocketsContext } from "../../../contexts/MainSocketsContext";
 import useSystemNotification from "../../../hooks/useSystemNotification";
 import dayjs from "dayjs";
-import { getInitialModalData } from "../../../utilities/globalFunctions";
+import {
+  getInitialModalData,
+  openDocument,
+} from "../../../utilities/globalFunctions";
 
 interface ViewDocsReceivedCertificateProps extends CommonModalProps {
   data: CertificationItem;
@@ -51,7 +54,7 @@ export default function ViewDocsReceivedCertificate(
   const [dataModal, setDataModal] = useState<ModalContent>(
     getInitialModalData()
   );
-
+  console.log(props.data);
   useEffect(() => {
     certApprovedRef.current = certApproved;
   }, [certApproved]);
@@ -181,7 +184,12 @@ export default function ViewDocsReceivedCertificate(
             </div>
           )}
           {props.docs.map((obj, index) => (
-            <div key={index} className="card-ofertas certificado-bloque">
+            <div
+              key={index}
+              className="card-ofertas certificado-bloque"
+              onClick={() => openDocument(obj.url)}
+              style={{ cursor: "pointer" }}
+            >
               <div className="t-flex oferta-titulo gap-10">
                 <div className="icon-doc-estado">
                   <i className="fa-regular fa-file-lines"></i>

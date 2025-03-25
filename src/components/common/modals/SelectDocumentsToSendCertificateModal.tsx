@@ -42,6 +42,7 @@ import useShowNotification from "../../../hooks/utilHooks";
 import useSystemNotification from "../../../hooks/useSystemNotification";
 import { MainSocketsContext } from "../../../contexts/MainSocketsContext";
 import dayjs from "dayjs";
+import { openDocument } from "../../../utilities/globalFunctions";
 
 interface SelectDocumentsToSendCertificateModalProps extends CommonModalProps {
   data: SelectDocsModalData;
@@ -259,9 +260,17 @@ export default function SelectDocumentsToSendCertificateModal(
           )}
           {!loadingCertList && docs.length > 0 ? (
             docs.map((obj, index) => (
-              <div key={index} className="card-ofertas certificado-bloque">
+              <div
+                key={index}
+                className="card-ofertas certificado-bloque"
+                style={{ cursor: "pointer" }}
+                onClick={() => setCheckedDoc(!checked[index], index)}
+              >
                 <div className="t-flex oferta-titulo gap-10">
-                  <div className="icon-doc-estado">
+                  <div
+                    className="icon-doc-estado"
+                    onClick={() => openDocument(obj.url)}
+                  >
                     <i className="fa-regular fa-file-lines"></i>
                   </div>
                   <div className="oferta-usuario col-documento">
@@ -278,14 +287,17 @@ export default function SelectDocumentsToSendCertificateModal(
                   </div>
 
                   <Checkbox
-                    onChange={(e) => setCheckedDoc(e.target.checked, index)}
+                    // onClick={(e) => e.stopPropagation()}
+                    onChange={(e) => {
+                      setCheckedDoc(e.target.checked, index);
+                    }}
                     checked={checked[index]}
                   ></Checkbox>
                 </div>
               </div>
             ))
           ) : (
-            <div className="card-ofertas certificado-bloque">
+            <div className="card-ofertas certificado-bloque no-pointer-events">
               <div className="t-flex oferta-descripcion">
                 <div className="detalles-oferta">
                   {t("noDocumentsForCertification")}
