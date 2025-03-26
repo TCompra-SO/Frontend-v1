@@ -154,6 +154,7 @@ export interface BaseUser extends DisplayUser {
   customerCount?: number;
   sellerCount?: number;
   typeEntity: EntityType;
+  categories?: number[];
 }
 
 export interface UserCounters {

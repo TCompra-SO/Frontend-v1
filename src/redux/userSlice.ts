@@ -17,6 +17,7 @@ export const userInitialState: UserState = {
   document: "",
   isPremium: false,
   isLoggedIn: undefined,
+  categories: [],
 };
 
 export const userSlice = createSlice({
@@ -49,6 +50,7 @@ export const userSlice = createSlice({
       state.typeEntity = action.payload.typeEntity;
       state.document = action.payload.document;
       state.image = action.payload.image;
+      state.categories = action.payload.categories ?? [];
       state.isPremium = true; // r3v
     },
     setUid: (state, action) => {

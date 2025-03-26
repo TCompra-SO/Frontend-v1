@@ -12,6 +12,7 @@ export const mainUserInitialState: MainUserState = {
   typeEntity: EntityType.COMPANY,
   document: "",
   isPremium: false,
+  categories: [],
 };
 
 export const mainUserSlice = createSlice({
@@ -31,6 +32,7 @@ export const mainUserSlice = createSlice({
       state.typeEntity = action.payload.typeEntity;
       state.document = action.payload.document;
       state.image = action.payload.image;
+      state.categories = action.payload.categories ?? [];
       state.isPremium = true; // r3v
     },
     setFullMainUser: (_, action: { payload: MainUserState; type: string }) => {

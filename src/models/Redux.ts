@@ -17,6 +17,7 @@ export interface MainUserState {
   isLoggedIn?: boolean;
   image?: string;
   isPremium: boolean;
+  categories: number[];
 }
 
 export interface UserState extends MainUserState {

@@ -35,7 +35,9 @@ export function useTCNotification() {
   const senderName = useSelector((state: MainState) => state.user.name);
   const mainSenderName = useSelector((state: MainState) => state.mainUser.name);
   const uid = useSelector((state: MainState) => state.user.uid);
-  // const mainUid = useSelector((state: MainState) => state.mainUser.uid);
+  const mainCategories = useSelector(
+    (state: MainState) => state.mainUser.categories
+  );
   const mainSenderImage = useSelector(
     (state: MainState) => state.mainUser.image
   );
@@ -80,12 +82,20 @@ export function useTCNotification() {
 
         globalNotifSocketAPI.on("updateRoom", (payload: SocketResponse) => {
           console.log("notificación global recibida:", payload);
-          if (payload.dataPack.data && payload.dataPack.data.length > 0)
-            showRealTimeNotification({
-              type: RTNotificationType.NOTIFICATION,
-              content: payload.dataPack.data[0] as NotificationDataFromServer,
-              onClickCallback: redirectFromNotification,
-            });
+          if (payload.dataPack.data && payload.dataPack.data.length > 0) {
+            const content: NotificationDataFromServer = payload.dataPack
+              .data[0] as NotificationDataFromServer;
+            if (
+              content.type == NotificationType.BROADCAST &&
+              content.categoryId &&
+              mainCategories.includes(content.categoryId)
+            )
+              showRealTimeNotification({
+                type: RTNotificationType.NOTIFICATION,
+                content,
+                onClickCallback: redirectFromNotification,
+              });
+          }
         });
       }
     }
