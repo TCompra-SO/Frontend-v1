@@ -1,9 +1,7 @@
-import { useNavigate } from "react-router-dom";
 import {
   expiresInKey,
   loginKey,
   logoutKey,
-  navigateToAfterLoggingOut,
   refreshExpiresInKey,
   refreshTokenKey,
   tokenKey,
@@ -27,7 +25,7 @@ import {
 } from "../redux/userSlice";
 
 import { useDispatch, useSelector } from "react-redux";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { MainState } from "../models/Redux";
 import { decryptData } from "../utilities/crypto";
 import { getBaseUserForUserSubUser } from "../services/general/generalServices";
@@ -35,7 +33,11 @@ import useShowNotification from "./utilHooks";
 import { useTranslation } from "react-i18next";
 import { LoginResponse } from "../models/Interfaces";
 import { MainSocketsContext } from "../contexts/MainSocketsContext";
-import { getTokenExpirationTime } from "../utilities/globalFunctions";
+import makeRequest, {
+  getTokenExpirationTime,
+} from "../utilities/globalFunctions";
+import { logoutService } from "../services/requests/authService";
+import { LogoutRequest } from "../models/Requests";
 
 export function useLogin() {
   const { t } = useTranslation();
@@ -94,9 +96,21 @@ export function useRegister() {
 export function useLogout() {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
+  const uid = useSelector((state: MainState) => state.user.uid);
 
-  function logout() {
+  async function logout() {
     // if (isLoggedIn) {
+    const refreshToken = localStorage.getItem(refreshTokenKey);
+    if (refreshToken) {
+      await makeRequest<LogoutRequest>({
+        service: logoutService(),
+        method: "post",
+        dataToSend: {
+          userId: uid,
+          refreshToken,
+        },
+      });
+    }
     localStorage.removeItem(tokenKey);
     localStorage.removeItem(refreshTokenKey);
     localStorage.removeItem(userDataKey);

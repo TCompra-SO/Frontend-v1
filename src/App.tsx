@@ -34,6 +34,7 @@ import {
   typeParamNameInRoute,
 } from "./utilities/globals.ts";
 import { MainSocketsProvider } from "./contexts/MainSocketsContext.tsx";
+import { setIsUserLoading } from "./redux/loadingUserSlice.ts";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
@@ -95,11 +96,13 @@ function App() {
 
   /** Cargar datos de usuario si está logueado */
   useEffect(() => {
+    dispatch(setIsUserLoading(true));
     dispatch(setIsLoading(true));
 
     async function getUserData() {
       await loadUserInfo();
       dispatch(setIsLoading(false));
+      dispatch(setIsUserLoading(false));
     }
     getUserData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -139,9 +142,9 @@ function App() {
         }}
       >
         <AntdApp>
-          <ModalsProvider>
-            <HomeProvider>
-              <MainSocketsProvider>
+          <MainSocketsProvider>
+            <ModalsProvider>
+              <HomeProvider>
                 <ListsProvider>
                   <LoadingDataProvider>
                     <Suspense fallback={<LoadingPage />}>
@@ -720,9 +723,9 @@ function App() {
                     </Suspense>
                   </LoadingDataProvider>
                 </ListsProvider>
-              </MainSocketsProvider>
-            </HomeProvider>
-          </ModalsProvider>
+              </HomeProvider>
+            </ModalsProvider>
+          </MainSocketsProvider>
         </AntdApp>
       </ConfigProvider>
     </>

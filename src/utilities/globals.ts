@@ -71,6 +71,7 @@ export const loginKey: string = "login";
 export const expiresInKey: string = "expIn";
 export const refreshExpiresInKey: string = "rExpIn";
 export const refreshingTokenKey: string = "refTok";
+export const refreshingRefreshTokenKey: string = "refRTok";
 
 /* Window size (>=) */
 export const windowSize = {

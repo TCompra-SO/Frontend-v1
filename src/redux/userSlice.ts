@@ -16,6 +16,7 @@ export const userInitialState: UserState = {
   typeEntity: EntityType.PERSON,
   document: "",
   isPremium: false,
+  isLoggedIn: undefined,
 };
 
 export const userSlice = createSlice({

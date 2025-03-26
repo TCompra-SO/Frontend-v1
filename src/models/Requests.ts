@@ -250,3 +250,12 @@ export interface RefreshAccessTokenRequest {
   accessToken: string;
   refreshToken: string;
 }
+
+export interface RefreshRefreshTokenRequest {
+  refreshToken: string;
+}
+
+export interface LogoutRequest {
+  userId: string;
+  refreshToken: string;
+}

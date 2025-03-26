@@ -135,3 +135,21 @@ export function refreshAccessTokenService(): HttpService {
     type: "AU-RE-AC-TO",
   };
 }
+
+export function refreshRefreshTokenService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+      ApiRoutes.auth.refreshRefreshToken
+    }`,
+    type: "AU-RE-RE-TO",
+  };
+}
+
+export function logoutService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+      ApiRoutes.auth.logout
+    }`,
+    type: "AU-LOG-OU",
+  };
+}

@@ -22,6 +22,7 @@ export const ApiRoutes = {
   },
   auth: {
     login: "login/",
+    logout: "logout",
     profileCompany: "profileCompany/",
     profileUser: "profileUser/",
     updateCompany: "updateCompany/",
@@ -36,6 +37,7 @@ export const ApiRoutes = {
     getUser: "getUser/",
     searchCompanyByName: "searchCompany/",
     refreshAccessToken: "refreshAccessToken",
+    refreshRefreshToken: "refreshToken",
   },
   util: {
     countries: "countries/",

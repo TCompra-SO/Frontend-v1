@@ -96,10 +96,9 @@ export function useTCNotification() {
       notifSocketAPI = io(import.meta.env.VITE_NOTIF_SOCKET_URL);
 
       if (notifSocketAPI) {
-        console.log("Socket ID:", notifSocketAPI.id);
         notifSocketAPI.on("connect", () => {
           console.log("Connected notificaciones");
-          console.log("AFTER Socket ID:", notifSocketAPI?.id);
+          // console.log("AFTER Socket ID:", notifSocketAPI?.id);
           notifSocketAPI?.emit("joinRoom", `notification${uid}`);
         });
 

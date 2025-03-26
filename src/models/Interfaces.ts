@@ -565,7 +565,14 @@ export interface NotificationSearchData {
   targetType: RequirementType;
 }
 
-export interface refreshAccessTokenResponse {
+export interface RefreshAccessTokenResponse {
   accessToken: string;
   expiresIn: number;
+}
+
+export interface RefreshRefreshTokenResponse {
+  accessToken: string;
+  accessExpiresIn: number;
+  refreshToken: string;
+  refreshExpiresIn: number;
 }

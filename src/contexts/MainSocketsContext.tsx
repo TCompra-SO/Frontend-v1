@@ -72,6 +72,7 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
     return () => {
       disconnectSockets();
       window.removeEventListener("storage", handleStorageChange);
+      console.log("destroying MainSocketsProvider");
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

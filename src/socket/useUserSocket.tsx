@@ -8,6 +8,7 @@ import {
   inactivityTime,
   logoutAfterNoTokenRefreshTime,
   refreshExpiresInKey,
+  refreshingRefreshTokenKey,
   refreshingTokenKey,
   refreshTokenKey,
   remainingTokenTime,
@@ -16,12 +17,22 @@ import {
 import makeRequest, {
   getTokenExpirationTime,
 } from "../utilities/globalFunctions";
-import { refreshAccessTokenService } from "../services/requests/authService";
-import { RefreshAccessTokenRequest } from "../models/Requests";
+import {
+  refreshAccessTokenService,
+  refreshRefreshTokenService,
+} from "../services/requests/authService";
+import {
+  RefreshAccessTokenRequest,
+  RefreshRefreshTokenRequest,
+} from "../models/Requests";
 import { setToken } from "../redux/userSlice";
 import useShowNotification from "../hooks/utilHooks";
 import { useTranslation } from "react-i18next";
-import { refreshAccessTokenResponse } from "../models/Interfaces";
+import {
+  RefreshAccessTokenResponse,
+  RefreshRefreshTokenResponse,
+  useApiParams,
+} from "../models/Interfaces";
 
 let socketUserAPI: Socket | null = null;
 
@@ -32,14 +43,18 @@ export default function useUserSocket() {
   const { showNotification } = useShowNotification();
   const uid = useSelector((state: MainState) => state.user.uid);
   const [isUserActive, setIsUserActive] = useState(true);
-  const [tokenExpiration, setTokenExpiration] = useState(0);
-  const [refreshTokenExpiration, setRefreshTokenExpiration] = useState(0);
+  const [tokenExpiration, setTokenExpiration] = useState<number | null>(null);
+  const [refreshTokenExpiration, setRefreshTokenExpiration] = useState<
+    number | null
+  >(null);
   const activityTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     function handleTokenUpdatedEvent(event: StorageEvent) {
       if (event.key === refreshingTokenKey) {
         console.log("Token actualizado, sincronizando...");
+      } else if (event.key === refreshingRefreshTokenKey) {
+        console.log("Refresh Token actualizado, sincronizando...");
       }
     }
 
@@ -61,52 +76,17 @@ export default function useUserSocket() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    // console.log(tokenExpiration, isUserActive);
-
-    let retryInterval: NodeJS.Timeout | null = null;
-
-    if (tokenExpiration != null) {
-      const interval = setInterval(async () => {
-        const timeLeft = Math.floor((tokenExpiration - Date.now()) / 1000);
-        console.log(
-          `Tiempo restante para la expiración del token: ${timeLeft} segundos`
-        );
-        // Refrescar token si el usuario está activo y queda menos de cierto tiempo
-        if (timeLeft <= remainingTokenTime && isUserActive) {
-          const attemptsNumber = 3;
-          let count = 0;
-          // Reintentar refrescar el token si hubo un error
-          retryInterval = setInterval(async () => {
-            const success = await refreshToken();
-            if (success === null || success || count + 1 === attemptsNumber) {
-              clearInterval(retryInterval!);
-              retryInterval = null;
-              // Si no se pudo refrescar token, cerrar sesión después de un tiempo
-              if (success === false) {
-                localStorage.removeItem(tokenKey);
-                localStorage.removeItem(refreshTokenKey);
-                localStorage.removeItem(expiresInKey);
-                localStorage.removeItem(refreshExpiresInKey);
-                showNotification("error", t("noRefreshTokenMsg"));
-                setTimeout(() => {
-                  logout();
-                }, logoutAfterNoTokenRefreshTime * 1000);
-              }
-              return;
-            }
-            count += 1;
-          }, 1500);
-        }
-      }, remainingTokenTime * 1000);
-
-      return () => {
-        if (interval) clearInterval(interval);
-        if (retryInterval) clearInterval(retryInterval);
-      };
-    }
+  useEffect(
+    () => handleTokenExpiration(tokenExpiration, true),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tokenExpiration, isUserActive]);
+    [tokenExpiration, isUserActive]
+  );
+
+  useEffect(
+    () => handleTokenExpiration(refreshTokenExpiration, false),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [refreshTokenExpiration, isUserActive]
+  );
 
   /** Funciones */
 
@@ -153,41 +133,133 @@ export default function useUserSocket() {
     }, inactivityTime * 1000);
   }
 
-  async function refreshToken() {
-    console.log("Solicitando nuevo token...");
+  function handleTokenExpiration(
+    expirationTime: number | null,
+    isAccessToken: boolean
+  ) {
+    if (expirationTime == null) return;
+
+    let retryInterval: NodeJS.Timeout | null = null;
+
+    const interval = setInterval(async () => {
+      const timeLeft = Math.floor((expirationTime - Date.now()) / 1000);
+      console.log(
+        `Tiempo restante para la expiración del ${
+          isAccessToken ? "" : "refresh"
+        } token: ${timeLeft} segundos`
+      );
+      // Refrescar token si el usuario está activo y queda menos de cierto tiempo
+      if (timeLeft <= remainingTokenTime && isUserActive) {
+        const attemptsNumber = 3;
+        let count = 0;
+        // Interval para reintentar refrescar el token si hubo un error
+        retryInterval = setInterval(async () => {
+          const success = await refreshToken(true);
+          if (success === null || success || count + 1 === attemptsNumber) {
+            clearInterval(retryInterval!);
+            retryInterval = null;
+            // Si no se pudo refrescar token, cerrar sesión después de un tiempo
+            if (success === false) {
+              localStorage.removeItem(tokenKey);
+              localStorage.removeItem(refreshTokenKey);
+              localStorage.removeItem(expiresInKey);
+              localStorage.removeItem(refreshExpiresInKey);
+              showNotification("error", t("noRefreshTokenMsg"));
+              setTimeout(() => {
+                logout();
+              }, logoutAfterNoTokenRefreshTime * 1000);
+            }
+            return;
+          }
+          count += 1;
+        }, 1500);
+      }
+    }, remainingTokenTime * 1000);
+
+    return () => {
+      clearInterval(interval);
+      if (retryInterval) clearInterval(retryInterval);
+    };
+  }
+
+  async function refreshToken(isAccesToken: boolean) {
+    console.log(`Solicitando nuevo ${isAccesToken ? "" : "refresh"} token...`);
     try {
-      if (localStorage.getItem(refreshingTokenKey) === "true") {
-        console.log("Refrescamiento en proceso.");
+      if (
+        localStorage.getItem(
+          isAccesToken ? refreshingTokenKey : refreshingRefreshTokenKey
+        ) === "true"
+      ) {
+        console.log(
+          `Refrescamiento de ${isAccesToken ? "" : "refresh"} token en proceso.`
+        );
         return null;
       }
 
-      localStorage.setItem(refreshingTokenKey, "true");
+      localStorage.setItem(
+        isAccesToken ? refreshingTokenKey : refreshingRefreshTokenKey,
+        "true"
+      );
 
       const accessToken = localStorage.getItem(tokenKey);
       const refreshToken = localStorage.getItem(refreshTokenKey);
-      if (accessToken && refreshToken) {
-        const { responseData, errorMsg } =
-          await makeRequest<RefreshAccessTokenRequest>({
+      if (
+        (isAccesToken && accessToken && refreshToken) ||
+        (!isAccesToken && refreshToken)
+      ) {
+        let apiParams:
+          | useApiParams<RefreshAccessTokenRequest>
+          | useApiParams<RefreshRefreshTokenRequest>
+          | null = null;
+        if (isAccesToken && accessToken && refreshToken) {
+          const apiParams2: useApiParams<RefreshAccessTokenRequest> = {
             service: refreshAccessTokenService(),
             method: "post",
             dataToSend: {
               accessToken,
               refreshToken,
             },
-          });
-
-        if (responseData) {
-          const respData = responseData.data as refreshAccessTokenResponse;
-          const newToken = respData.accessToken;
-          const newExpiresIn = respData.expiresIn;
-          saveAccessToken(newToken, newExpiresIn);
-          window.dispatchEvent(new Event(refreshingTokenKey));
-
-          socketUserAPI?.emit("authenticate", newToken);
-          console.log("Token actualizado correctamente");
-          return true;
+          };
+          apiParams = apiParams2;
+        } else if (!isAccesToken && refreshToken) {
+          const apiParams2: useApiParams<RefreshRefreshTokenRequest> = {
+            service: refreshRefreshTokenService(),
+            method: "post",
+            dataToSend: {
+              refreshToken,
+            },
+          };
+          apiParams = apiParams2;
         }
-        throw new Error(errorMsg ?? "Refresh token error");
+
+        if (apiParams) {
+          const { responseData, errorMsg } = await makeRequest(apiParams);
+
+          if (responseData) {
+            if (accessToken) {
+              const respData = responseData.data as RefreshAccessTokenResponse;
+              saveToken(respData.accessToken, respData.expiresIn, true);
+              window.dispatchEvent(new Event(refreshingTokenKey));
+              socketUserAPI?.emit("authenticate", respData.accessToken);
+              console.log("Token actualizado correctamente");
+              return true;
+            } else {
+              const respData = responseData.data as RefreshRefreshTokenResponse;
+              saveToken(respData.accessToken, respData.accessExpiresIn, true);
+              saveToken(
+                respData.refreshToken,
+                respData.refreshExpiresIn,
+                false
+              );
+              window.dispatchEvent(new Event(refreshingTokenKey));
+              window.dispatchEvent(new Event(refreshingRefreshTokenKey));
+              socketUserAPI?.emit("authenticate", respData.accessToken);
+              console.log("Refresh token actualizado correctamente");
+              return true;
+            }
+          }
+          throw new Error(errorMsg ?? "Refresh token error");
+        }
       }
       return false;
     } catch (error) {
@@ -199,11 +271,18 @@ export default function useUserSocket() {
     }
   }
 
-  function saveAccessToken(newToken: string, newExpiresIn: number) {
+  function saveToken(
+    newToken: string,
+    newExpiresIn: number,
+    isAccesToken: boolean
+  ) {
     const tokenExp = getTokenExpirationTime(newExpiresIn);
-    localStorage.setItem(expiresInKey, tokenExp.toString());
-    localStorage.setItem(tokenKey, newToken);
-    dispatch(setToken(newToken));
+    localStorage.setItem(
+      isAccesToken ? expiresInKey : refreshExpiresInKey,
+      tokenExp.toString()
+    );
+    localStorage.setItem(isAccesToken ? tokenKey : refreshTokenKey, newToken);
+    if (isAccesToken) dispatch(setToken(newToken));
   }
 
   return {
