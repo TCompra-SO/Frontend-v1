@@ -142,9 +142,9 @@ function App() {
         }}
       >
         <AntdApp>
-          <MainSocketsProvider>
-            <ModalsProvider>
-              <HomeProvider>
+          <HomeProvider>
+            <MainSocketsProvider>
+              <ModalsProvider>
                 <ListsProvider>
                   <LoadingDataProvider>
                     <Suspense fallback={<LoadingPage />}>
@@ -723,9 +723,9 @@ function App() {
                     </Suspense>
                   </LoadingDataProvider>
                 </ListsProvider>
-              </HomeProvider>
-            </ModalsProvider>
-          </MainSocketsProvider>
+              </ModalsProvider>
+            </MainSocketsProvider>
+          </HomeProvider>
         </AntdApp>
       </ConfigProvider>
     </>

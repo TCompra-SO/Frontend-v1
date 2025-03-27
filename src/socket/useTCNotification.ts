@@ -34,6 +34,7 @@ let globalNotifSocketAPI: Socket | null = null;
 export function useTCNotification() {
   const senderName = useSelector((state: MainState) => state.user.name);
   const mainSenderName = useSelector((state: MainState) => state.mainUser.name);
+  const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const uid = useSelector((state: MainState) => state.user.uid);
   const mainCategories = useSelector(
     (state: MainState) => state.mainUser.categories
@@ -132,6 +133,7 @@ export function useTCNotification() {
   async function getMoreNotifications(page: number) {
     setLoading(true);
     const notificationData = await getNotifications(
+      mainUid,
       uid,
       page,
       notificationPageSize

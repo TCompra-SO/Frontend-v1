@@ -41,6 +41,7 @@ interface HomeContextType {
   updateKeywordSearch: (val: string) => void;
   notificationSearchData: NotificationSearchData;
   updateNotificationSearchData: (data: NotificationSearchData) => void;
+  resetNotificationSearchData: () => void;
 }
 
 export const HomeContext = createContext<HomeContextType>({
@@ -62,6 +63,7 @@ export const HomeContext = createContext<HomeContextType>({
   updateKeywordSearch: () => {},
   notificationSearchData: { categoryId: 0, targetType: RequirementType.GOOD },
   updateNotificationSearchData: () => {},
+  resetNotificationSearchData: () => {},
 });
 
 export function HomeProvider({ children }: { children: ReactNode }) {
@@ -128,6 +130,15 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     if (useFilter === false) setPage(1);
   }, [useFilter]);
 
+  /** Funciones */
+
+  function resetNotificationSearchData() {
+    setNotificationSearchData({
+      categoryId: 0,
+      targetType: RequirementType.GOOD,
+    });
+  }
+
   function retrieveRequirements(
     page: number,
     pageSize?: number,
@@ -179,6 +190,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   }
 
   function updateNotificationSearchData(data: NotificationSearchData) {
+    // updateType(data.targetType);
     setNotificationSearchData(data);
   }
 
@@ -211,6 +223,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
 
         notificationSearchData,
         updateNotificationSearchData,
+        resetNotificationSearchData,
       }}
     >
       {children}

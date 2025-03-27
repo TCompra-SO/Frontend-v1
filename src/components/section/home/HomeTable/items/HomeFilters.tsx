@@ -41,6 +41,7 @@ export default function HomeFilters() {
     keywordSearch,
     updateKeywordSearch,
     notificationSearchData,
+    resetNotificationSearchData,
   } = useContext(HomeContext);
   const [homeFilter, setHomeFilter] = useState<HomeFilterRequest>({
     page: 1,
@@ -51,10 +52,15 @@ export default function HomeFilters() {
 
   useEffect(() => {
     resetFilters();
+    console.log("reseted 0", searchFromNotifCompleted);
     if (searchFromNotifCompleted === false) {
       form.setFieldValue("category", notificationSearchData.categoryId);
       form.submit();
+      console.log("reseted 1");
       setSearchFromNotifCompleted(true);
+      console.log("reseted 2");
+      resetNotificationSearchData();
+      console.log("reseted");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
@@ -82,6 +88,7 @@ export default function HomeFilters() {
   /** Buscar al recibir datos de notificación  */
 
   useEffect(() => {
+    console.log(22222222, notificationSearchData);
     if (notificationSearchData.categoryId) {
       setHideFilters(false);
       scrollToTable();
@@ -90,8 +97,11 @@ export default function HomeFilters() {
         updateType(notificationSearchData.targetType);
       } else {
         resetFilters();
+        console.log("ddddd");
         form.setFieldValue("category", notificationSearchData.categoryId);
         form.submit();
+        console.log("))))))");
+        resetNotificationSearchData();
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -103,6 +113,8 @@ export default function HomeFilters() {
     if (useFilter) {
       const newPageFilter = homeFilter;
       newPageFilter.page = page;
+      console.log("third", notificationSearchData.categoryId);
+      // if (!notificationSearchData.categoryId)
       retrieveRequirements(page, homePageSize, newPageFilter);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

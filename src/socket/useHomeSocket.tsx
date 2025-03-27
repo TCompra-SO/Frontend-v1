@@ -15,13 +15,14 @@ export default function useHomeSocket() {
     type,
     updateChangesQueue,
     updatePage,
+    notificationSearchData,
   } = useContext(HomeContext);
   const useFilterRef = useRef(useFilter);
   const pageRef = useRef(page);
 
   useEffect(() => {
     updatePage(1);
-    if (!useFilter) getData(true);
+    if (!useFilter && !notificationSearchData.categoryId) getData(true); //n3t
 
     if (!socketHomeAPI) {
       if (type == RequirementType.GOOD)
@@ -81,7 +82,7 @@ export default function useHomeSocket() {
   }, [page]);
 
   useEffect(() => {
-    if (!useFilter) getData();
+    if (!useFilter && !notificationSearchData.categoryId) getData(); //n3t
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, useFilter]);
 

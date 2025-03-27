@@ -35,6 +35,7 @@ export default function Home() {
     requirementList,
     loadingRequirementList,
     totalRequirementList,
+    notificationSearchData,
   } = useContext(HomeContext);
   const [tableContent, setTableContent] = useState<TableTypeHome>({
     type: TableTypes.HOME,
@@ -67,7 +68,7 @@ export default function Home() {
 
   useEffect(() => {
     return () => {
-      updateType(RequirementType.GOOD);
+      if (!notificationSearchData.categoryId) updateType(RequirementType.GOOD); //n3t
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

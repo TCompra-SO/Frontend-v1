@@ -323,12 +323,13 @@ export async function getRequiredDocumentsForCertification(companyId: string) {
 }
 
 export async function getNotifications(
+  mainUserId: string,
   userId: string,
   page: number,
   pageSize: number
 ) {
   const { responseData, error, errorMsg } = await makeRequest({
-    service: getNotificationsService(userId, page, pageSize),
+    service: getNotificationsService(mainUserId, userId, page, pageSize),
     method: "get",
   });
 
