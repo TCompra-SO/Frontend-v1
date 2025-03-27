@@ -48,6 +48,7 @@ export default function useUserSocket() {
     number | null
   >(null);
   const activityTimeout = useRef<NodeJS.Timeout | null>(null);
+  const logoutTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     function handleTokenUpdatedEvent(event: StorageEvent) {
@@ -72,6 +73,7 @@ export default function useUserSocket() {
       window.removeEventListener("click", resetActivity);
       window.removeEventListener("storage", handleTokenUpdatedEvent);
       if (activityTimeout.current) clearTimeout(activityTimeout.current);
+      if (logoutTimeout.current) clearTimeout(logoutTimeout.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -128,6 +130,7 @@ export default function useUserSocket() {
   function resetActivity() {
     if (activityTimeout.current) clearTimeout(activityTimeout.current);
     setIsUserActive(true);
+    console.log("setting IsUserActive to", true);
     activityTimeout.current = setTimeout(() => {
       setIsUserActive(false);
     }, inactivityTime * 1000);
@@ -137,6 +140,7 @@ export default function useUserSocket() {
     expirationTime: number | null,
     isAccessToken: boolean
   ) {
+    console.log("tokenExpiration, isUserActive", tokenExpiration, isUserActive);
     if (expirationTime == null) return;
 
     let retryInterval: NodeJS.Timeout | null = null;
@@ -149,6 +153,7 @@ export default function useUserSocket() {
         } token: ${timeLeft} segundos`
       );
       // Refrescar token si el usuario está activo y queda menos de cierto tiempo
+      console.log("iuserActive", isUserActive);
       if (timeLeft <= remainingTokenTime && isUserActive) {
         const attemptsNumber = 3;
         let count = 0;
@@ -165,7 +170,8 @@ export default function useUserSocket() {
               localStorage.removeItem(expiresInKey);
               localStorage.removeItem(refreshExpiresInKey);
               showNotification("error", t("noRefreshTokenMsg"));
-              setTimeout(() => {
+              if (logoutTimeout.current) clearTimeout(logoutTimeout.current);
+              logoutTimeout.current = setTimeout(() => {
                 logout();
               }, logoutAfterNoTokenRefreshTime * 1000);
             }
@@ -237,14 +243,14 @@ export default function useUserSocket() {
 
           if (responseData) {
             if (accessToken) {
-              const respData = responseData.data as RefreshAccessTokenResponse;
+              const respData = responseData as RefreshAccessTokenResponse;
               saveToken(respData.accessToken, respData.expiresIn, true);
               window.dispatchEvent(new Event(refreshingTokenKey));
               socketUserAPI?.emit("authenticate", respData.accessToken);
               console.log("Token actualizado correctamente");
               return true;
             } else {
-              const respData = responseData.data as RefreshRefreshTokenResponse;
+              const respData = responseData as RefreshRefreshTokenResponse;
               saveToken(respData.accessToken, respData.accessExpiresIn, true);
               saveToken(
                 respData.refreshToken,

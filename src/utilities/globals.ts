@@ -57,7 +57,7 @@ export const masterUid: string = "dlGMHRyyAidgFMDqmLBO";
 export const pageSizeOfferList: number = 5;
 
 export const inactivityTime = 30;
-export const remainingTokenTime = 60;
+export const remainingTokenTime = 30;
 export const logoutAfterNoTokenRefreshTime = 60;
 
 export const defaultErrorMsg = "errorOccurred";

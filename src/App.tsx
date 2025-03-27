@@ -89,8 +89,7 @@ function MainLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-function App() {
-  // useUserSocket();
+function UserDataLoader() {
   const dispatch = useDispatch();
   const loadUserInfo = useLoadUserInfo();
 
@@ -108,6 +107,10 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  return null;
+}
+
+function App() {
   return (
     <>
       <ConfigProvider
@@ -144,6 +147,7 @@ function App() {
         <AntdApp>
           <HomeProvider>
             <MainSocketsProvider>
+              <UserDataLoader />
               <ModalsProvider>
                 <ListsProvider>
                   <LoadingDataProvider>

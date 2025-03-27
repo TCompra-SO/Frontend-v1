@@ -41,8 +41,8 @@ import { LogoutRequest } from "../models/Requests";
 
 export function useLogin() {
   const { t } = useTranslation();
-  const { setTokenExpiration } = useContext(MainSocketsContext);
-  const { setRefreshTokenExpiration } = useContext(MainSocketsContext);
+  const { setTokenExpiration, setRefreshTokenExpiration } =
+    useContext(MainSocketsContext);
   const dispatch = useDispatch();
   const loadUserInfo = useLoadUserInfo();
   const { showNotification } = useShowNotification();
@@ -150,7 +150,9 @@ export function useLoadUserInfo() {
     if (tokenData && userData) {
       const userInfo = JSON.parse(decryptData(userData));
       const expiresIn = localStorage.getItem(expiresInKey);
-      if (expiresIn !== null) setTokenExpiration(Number(expiresIn));
+      if (expiresIn !== null) {
+        setTokenExpiration(Number(expiresIn));
+      }
       const refreshExpiresIn = localStorage.getItem(refreshExpiresInKey);
       if (refreshExpiresIn !== null)
         setRefreshTokenExpiration(Number(refreshExpiresIn));
