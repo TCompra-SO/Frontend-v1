@@ -1,5 +1,6 @@
 import { HttpService } from "../../models/Interfaces";
 import { ApiMainRoutes, ApiRoutes } from "../../utilities/routes";
+import { CertificationTableType } from "../../utilities/types";
 
 export function uploadCertificateService(): HttpService {
   return {
@@ -142,11 +143,14 @@ export function getRequiredDocumentsService(companyId: string): HttpService {
   };
 }
 
-export function getCertificateRequestService(requestId: string): HttpService {
+export function getCertificateRequestService(
+  requestId: string,
+  type: CertificationTableType
+): HttpService {
   return {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
       ApiRoutes.certificate.getCertificateRequest
-    }${requestId}`,
+    }${type}/${requestId}`,
     type: "CE-GET-REQ",
   };
 }

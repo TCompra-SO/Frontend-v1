@@ -420,8 +420,8 @@ export enum OrderTableType {
 }
 
 export enum CertificationTableType {
-  SENT = 0,
-  RECEIVED = 1,
+  SENT = 1,
+  RECEIVED = 2,
 }
 
 export enum CertificationState {

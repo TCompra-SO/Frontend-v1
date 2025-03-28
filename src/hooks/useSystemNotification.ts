@@ -14,14 +14,21 @@ type SystemNotificationMap = {
   [SystemNotificationType.MAKE_OFFER]: (
     reqName: string
   ) => BasicNotificationData;
-  [SystemNotificationType.CERTIFICATE_COMPANY]: (
-    rejected: boolean
+  [SystemNotificationType.SELECT_OFFER]: (
+    type: RequirementType
   ) => BasicNotificationData;
   [SystemNotificationType.CANCEL_MY_OFFER]: (
     reqName: string,
     type: RequirementType
   ) => BasicNotificationData;
+  [SystemNotificationType.CANCEL_AN_OFFER]: (
+    type: RequirementType
+  ) => BasicNotificationData;
   [SystemNotificationType.FINISH_OFFER]: (
+    confirmation: boolean,
+    type: RequirementType
+  ) => BasicNotificationData;
+  [SystemNotificationType.FINISH_REQUIREMENT]: (
     confirmation: boolean,
     type: RequirementType
   ) => BasicNotificationData;
@@ -32,15 +39,8 @@ type SystemNotificationMap = {
     reqName: string,
     type: RequirementType
   ) => BasicNotificationData;
-  [SystemNotificationType.CANCEL_AN_OFFER]: (
-    type: RequirementType
-  ) => BasicNotificationData;
-  [SystemNotificationType.FINISH_REQUIREMENT]: (
-    confirmation: boolean,
-    type: RequirementType
-  ) => BasicNotificationData;
-  [SystemNotificationType.SELECT_OFFER]: (
-    type: RequirementType
+  [SystemNotificationType.CERTIFICATE_COMPANY]: (
+    rejected: boolean
   ) => BasicNotificationData;
   [SystemNotificationType.RECEIVED_DOCS_FOR_CERT]: () => BasicNotificationData;
 };

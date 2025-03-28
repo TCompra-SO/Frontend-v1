@@ -3,6 +3,8 @@ import {
   loginKey,
   logoutKey,
   refreshExpiresInKey,
+  refreshingRefreshTokenKey,
+  refreshingTokenKey,
   refreshTokenKey,
   tokenKey,
   userDataKey,
@@ -117,8 +119,11 @@ export function useLogout() {
     localStorage.removeItem(refreshTokenKey);
     localStorage.removeItem(userDataKey);
     localStorage.removeItem(expiresInKey);
+    localStorage.removeItem(refreshingTokenKey);
+    localStorage.removeItem(refreshingRefreshTokenKey);
+    localStorage.removeItem(refreshingTokenKey);
+    localStorage.removeItem(refreshingRefreshTokenKey);
     setTokenExpiration(null);
-    localStorage.removeItem(refreshExpiresInKey);
     setRefreshTokenExpiration(null);
     dispatch(setFullMainUser(mainUserInitialState));
     dispatch(setFullUser(userInitialState));

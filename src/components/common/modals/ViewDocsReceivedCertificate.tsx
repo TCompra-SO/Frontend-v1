@@ -54,7 +54,7 @@ export default function ViewDocsReceivedCertificate(
   const [dataModal, setDataModal] = useState<ModalContent>(
     getInitialModalData()
   );
-  console.log(props.data);
+
   useEffect(() => {
     certApprovedRef.current = certApproved;
   }, [certApproved]);
@@ -71,11 +71,7 @@ export default function ViewDocsReceivedCertificate(
         if (responseData) {
           showNotification(
             "success",
-            t(
-              certApprovedRef.current
-                ? "certificationApproved"
-                : "certificationRejected"
-            )
+            t(certApproved ? "certificationApproved" : "certificationRejected")
           );
           props.onClose();
         } else if (error) {
@@ -119,7 +115,8 @@ export default function ViewDocsReceivedCertificate(
     const notificationFn = getSystemNotification(
       SystemNotificationType.CERTIFICATE_COMPANY
     );
-    const basicNotification = notificationFn(certApprovedRef.current);
+
+    const basicNotification = notificationFn(approve);
     const notification = getNotification({
       ...basicNotification,
       timestamp: dayjs().toISOString(),

@@ -110,6 +110,7 @@ export default function SelectDocumentsToSendCertificateModal(
   /** Obtener texto de documentos requeridos */
 
   useEffect(() => {
+    console.log("props.data.userId", props.data.userId);
     getRequiredDocsCert(props.data.userId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.data]);
@@ -245,7 +246,7 @@ export default function SelectDocumentsToSendCertificateModal(
                     className="form-control wd-100"
                     autoSize
                     readOnly
-                    placeholder={`${t("notes")}...`}
+                    placeholder={`${t("unavailableRequiredDocumentsCert")}.`}
                     value={requiredDocs ?? ""}
                   />
                 </div>

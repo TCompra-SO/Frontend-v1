@@ -301,13 +301,14 @@ export function useGetCertificationData(
 
   async function getCertificationData(
     certificationId: string,
+    type: CertificationTableType,
     certificationItem: undefined | CertificationItem
   ) {
     try {
       setDataModal(getInitialModalData());
       if (!certificationItem) {
         setApiParams({
-          service: getCertificateRequestService(certificationId),
+          service: getCertificateRequestService(certificationId, type),
           method: "get",
         });
       } else {

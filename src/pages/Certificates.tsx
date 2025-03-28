@@ -172,7 +172,11 @@ export default function Certificates() {
   useEffect(() => {
     if (viewCertificationData.certificationId) {
       const copy = { ...viewCertificationData };
-      getCertificationData(copy.certificationId, undefined);
+      getCertificationData(
+        copy.certificationId,
+        copy.certificationTableType,
+        undefined
+      );
       resetViewCertificationData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -215,13 +219,13 @@ export default function Certificates() {
       switch (action) {
         case Action.VIEW:
           setIsOpenModal(true);
-          getCertificationData(certificate.key, certificate);
+          getCertificationData(certificate.key, type, certificate);
           break;
       }
     } else if (type == CertificationTableType.RECEIVED) {
       switch (action) {
         case Action.VIEW:
-          getCertificationData(certificate.key, certificate);
+          getCertificationData(certificate.key, type, certificate);
           setIsOpenModal(true);
           break;
       }

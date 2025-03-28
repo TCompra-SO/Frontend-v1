@@ -98,7 +98,7 @@ export default function Notifications(props: NotificationsProps) {
                     <ParagraphContainer
                       style={{ fontSize: "0.8rem" }}
                       children={item.body}
-                      ellipsis={{ rows: 2 }}
+                      ellipsis={{ rows: 3 }}
                     />
                     <Text type="secondary" style={{ fontSize: "0.7rem" }}>
                       {dayjs(item.timestamp).format(dateHourFormatNotification)}

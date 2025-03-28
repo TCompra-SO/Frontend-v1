@@ -75,9 +75,9 @@ export default function useUserSocket() {
 
   function handleTokenUpdatedEvent(event: StorageEvent) {
     if (event.key === refreshingTokenKey) {
-      console.log("Token actualizado, sincronizando...");
+      console.log("Actualizado Token, sincronizando...");
     } else if (event.key === refreshingRefreshTokenKey) {
-      console.log("Refresh Token actualizado, sincronizando...");
+      console.log("Actualizado Refresh Token, sincronizando...");
     }
   }
 
@@ -129,12 +129,12 @@ export default function useUserSocket() {
 
   // Resetear actividad del usuario
   const resetActivity = useCallback(() => {
-    if (activityTimeout.current) clearTimeout(activityTimeout.current);
-    setIsUserActive(true);
-    console.log("setting IsUserActive to", true);
-    activityTimeout.current = setTimeout(() => {
-      setIsUserActive(false);
-    }, inactivityTime * 1000);
+    // if (activityTimeout.current) clearTimeout(activityTimeout.current);
+    // setIsUserActive(true);
+    // console.log("setting IsUserActive to", true);
+    // activityTimeout.current = setTimeout(() => {
+    //   setIsUserActive(false);
+    // }, inactivityTime * 1000);
   }, []);
 
   function handleTokenExpiration(
@@ -155,7 +155,8 @@ export default function useUserSocket() {
       );
       // Refrescar token si el usuario está activo y queda menos de cierto tiempo
       console.log("iuserActive", isUserActive);
-      if (timeLeft <= remainingTokenTime && isUserActive) {
+      if (timeLeft <= remainingTokenTime) {
+        // && isUserActive
         const attemptsNumber = 3;
         let count = 0;
         // Interval para reintentar refrescar el token si hubo un error
@@ -170,7 +171,8 @@ export default function useUserSocket() {
             setTokenExpiration(null);
             setRefreshTokenExpiration(null);
             showNotification("error", t("noRefreshTokenMsg"));
-            if (logoutTimeout.current) clearTimeout(logoutTimeout.current);
+            clearInterval(retryInterval!);
+            retryInterval = null;
             logoutTimeout.current = setTimeout(() => {
               logout();
             }, logoutAfterNoTokenRefreshTime * 1000);

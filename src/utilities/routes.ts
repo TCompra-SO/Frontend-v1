@@ -14,6 +14,7 @@ export const ApiMainRoutes = {
   certificate: "certificate/",
   reports: "reports/",
   notification: "notification/",
+  chat: "chat/",
 };
 
 export const ApiRoutes = {
@@ -152,6 +153,16 @@ export const ApiRoutes = {
   },
   notification: {
     getNotifications: "getNotifications/",
+  },
+  chat: {
+    createChat: "createChat/",
+    getChat: "getChat/",
+    createMessage: "createMessage/",
+    readMessages: "readMessages/",
+    getMessages: "getMessages/",
+    getMessage: "getMessage/",
+    getChatUsersData: "getChatUsersData/",
+    changeStateConnection: "changeStateConnection/",
   },
 };
 

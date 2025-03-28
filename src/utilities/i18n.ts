@@ -359,6 +359,7 @@ const resources = {
         "No documents available. Click 'Add certificates' to add new files.",
       noRefreshTokenMsg: "Your session has expired. Please log in again.",
       inactiveAccountLogin: 'This account is inactive',
+      unavailableRequiredDocumentsCert: 'The required document list is not yet available',
       // Other
       characters: "characters",
       yes: "Yes",
@@ -922,6 +923,7 @@ const resources = {
         "No hay documentos disponibles. Haga click en 'Agregar certificados' para añadir nuevos archivos.",
       noRefreshTokenMsg: "Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.",
       inactiveAccountLogin: 'Esta cuenta está inactiva',
+      unavailableRequiredDocumentsCert: 'La lista de documentos requeridos aún no está disponible',
       // Other
       characters: "caracteres",
       yes: "Sí",
