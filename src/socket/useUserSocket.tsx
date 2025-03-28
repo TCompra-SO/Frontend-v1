@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { useLogout } from "../hooks/authHooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -51,27 +51,8 @@ export default function useUserSocket() {
   const logoutTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    function handleTokenUpdatedEvent(event: StorageEvent) {
-      if (event.key === refreshingTokenKey) {
-        console.log("Token actualizado, sincronizando...");
-      } else if (event.key === refreshingRefreshTokenKey) {
-        console.log("Refresh Token actualizado, sincronizando...");
-      }
-    }
-
-    window.addEventListener("storage", handleTokenUpdatedEvent);
-
-    // Detectar inactividad del usuario
-    window.addEventListener("mousemove", resetActivity);
-    window.addEventListener("keydown", resetActivity);
-    window.addEventListener("click", resetActivity);
-
     return () => {
       disconnectSocket();
-      window.removeEventListener("mousemove", resetActivity);
-      window.removeEventListener("keydown", resetActivity);
-      window.removeEventListener("click", resetActivity);
-      window.removeEventListener("storage", handleTokenUpdatedEvent);
       if (activityTimeout.current) clearTimeout(activityTimeout.current);
       if (logoutTimeout.current) clearTimeout(logoutTimeout.current);
     };
@@ -92,7 +73,22 @@ export default function useUserSocket() {
 
   /** Funciones */
 
+  function handleTokenUpdatedEvent(event: StorageEvent) {
+    if (event.key === refreshingTokenKey) {
+      console.log("Token actualizado, sincronizando...");
+    } else if (event.key === refreshingRefreshTokenKey) {
+      console.log("Refresh Token actualizado, sincronizando...");
+    }
+  }
+
   function connectSocket() {
+    window.addEventListener("storage", handleTokenUpdatedEvent);
+
+    // Detectar inactividad del usuario
+    window.addEventListener("mousemove", resetActivity);
+    window.addEventListener("keydown", resetActivity);
+    window.addEventListener("click", resetActivity);
+
     if (!socketUserAPI) {
       socketUserAPI = io(import.meta.env.VITE_USERS_SOCKET_URL);
 
@@ -118,6 +114,11 @@ export default function useUserSocket() {
   }
 
   function disconnectSocket() {
+    console.log("REMOVING");
+    window.removeEventListener("mousemove", resetActivity);
+    window.removeEventListener("keydown", resetActivity);
+    window.removeEventListener("click", resetActivity);
+    window.removeEventListener("storage", handleTokenUpdatedEvent);
     if (socketUserAPI) {
       console.log("Socket user disconnected");
       socketUserAPI.removeAllListeners();
@@ -127,14 +128,14 @@ export default function useUserSocket() {
   }
 
   // Resetear actividad del usuario
-  function resetActivity() {
+  const resetActivity = useCallback(() => {
     if (activityTimeout.current) clearTimeout(activityTimeout.current);
     setIsUserActive(true);
     console.log("setting IsUserActive to", true);
     activityTimeout.current = setTimeout(() => {
       setIsUserActive(false);
     }, inactivityTime * 1000);
-  }
+  }, []);
 
   function handleTokenExpiration(
     expirationTime: number | null,
@@ -159,22 +160,24 @@ export default function useUserSocket() {
         let count = 0;
         // Interval para reintentar refrescar el token si hubo un error
         retryInterval = setInterval(async () => {
-          const success = await refreshToken(true);
+          const success = await refreshToken(isAccessToken);
+          // Si no se pudo refrescar token, cerrar sesión después de un tiempo
+          if (success === false) {
+            localStorage.removeItem(tokenKey);
+            localStorage.removeItem(refreshTokenKey);
+            localStorage.removeItem(expiresInKey);
+            localStorage.removeItem(refreshExpiresInKey);
+            setTokenExpiration(null);
+            setRefreshTokenExpiration(null);
+            showNotification("error", t("noRefreshTokenMsg"));
+            if (logoutTimeout.current) clearTimeout(logoutTimeout.current);
+            logoutTimeout.current = setTimeout(() => {
+              logout();
+            }, logoutAfterNoTokenRefreshTime * 1000);
+          }
           if (success === null || success || count + 1 === attemptsNumber) {
             clearInterval(retryInterval!);
             retryInterval = null;
-            // Si no se pudo refrescar token, cerrar sesión después de un tiempo
-            if (success === false) {
-              localStorage.removeItem(tokenKey);
-              localStorage.removeItem(refreshTokenKey);
-              localStorage.removeItem(expiresInKey);
-              localStorage.removeItem(refreshExpiresInKey);
-              showNotification("error", t("noRefreshTokenMsg"));
-              if (logoutTimeout.current) clearTimeout(logoutTimeout.current);
-              logoutTimeout.current = setTimeout(() => {
-                logout();
-              }, logoutAfterNoTokenRefreshTime * 1000);
-            }
             return;
           }
           count += 1;
@@ -274,6 +277,7 @@ export default function useUserSocket() {
       // localStorage.removeItem('refreshToken');
     } finally {
       localStorage.removeItem(refreshingTokenKey);
+      localStorage.removeItem(refreshingRefreshTokenKey);
     }
   }
 

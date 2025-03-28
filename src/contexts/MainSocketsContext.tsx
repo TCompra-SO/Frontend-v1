@@ -5,9 +5,11 @@ import { useChatSocket } from "../socket/useChatSocket";
 import { MainState } from "../models/Redux";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  expiresInKey,
   loginKey,
   logoutKey,
   navigateToAfterLoggingOut,
+  refreshExpiresInKey,
 } from "../utilities/globals";
 import { useNavigate } from "react-router-dom";
 import { useLoadUserInfo } from "../hooks/authHooks";
@@ -66,6 +68,19 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
         await loadUserInfo();
         localStorage.removeItem(loginKey);
       }
+      // Eliminar tiempo de expiración de tokens
+      else if (
+        event.key == expiresInKey &&
+        event.oldValue !== null &&
+        event.newValue === null
+      )
+        userData.setTokenExpiration(null);
+      else if (
+        event.key == refreshExpiresInKey &&
+        event.oldValue !== null &&
+        event.newValue === null
+      )
+        userData.setRefreshTokenExpiration(null);
     }
     window.addEventListener("storage", handleStorageChange);
 

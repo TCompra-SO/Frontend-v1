@@ -97,6 +97,8 @@ export function useLogout() {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const uid = useSelector((state: MainState) => state.user.uid);
+  const { setTokenExpiration, setRefreshTokenExpiration } =
+    useContext(MainSocketsContext);
 
   async function logout() {
     // if (isLoggedIn) {
@@ -115,7 +117,9 @@ export function useLogout() {
     localStorage.removeItem(refreshTokenKey);
     localStorage.removeItem(userDataKey);
     localStorage.removeItem(expiresInKey);
+    setTokenExpiration(null);
     localStorage.removeItem(refreshExpiresInKey);
+    setRefreshTokenExpiration(null);
     dispatch(setFullMainUser(mainUserInitialState));
     dispatch(setFullUser(userInitialState));
     localStorage.setItem(logoutKey, Date.now().toString());

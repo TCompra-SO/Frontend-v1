@@ -58,7 +58,7 @@ export const pageSizeOfferList: number = 5;
 
 export const inactivityTime = 30;
 export const remainingTokenTime = 30;
-export const logoutAfterNoTokenRefreshTime = 60;
+export const logoutAfterNoTokenRefreshTime = 10;
 
 export const defaultErrorMsg = "errorOccurred";
 
