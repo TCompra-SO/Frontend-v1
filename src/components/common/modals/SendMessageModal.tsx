@@ -65,6 +65,7 @@ export default function SendMessageModal(props: SendMessageModalProps) {
       title: props.title,
       requirementId: props.requirementId,
       userImage: props.receiverImage,
+      type: props.type,
     };
     navigate(pageRoutes.chat, {
       state: { [basicChatDataFieldName]: data },

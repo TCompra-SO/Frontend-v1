@@ -240,7 +240,7 @@ export interface PlanData {
 }
 
 export interface BasicRateData {
-  uid: string;
+  // uid: string;
   title: string;
   userId: string;
   userName: string;
@@ -256,6 +256,7 @@ export interface BasicChatListData {
   userOnline?: boolean;
   title: string;
   requirementId: string;
+  type: RequirementType;
 }
 
 export interface ChatListData extends BasicChatListData {

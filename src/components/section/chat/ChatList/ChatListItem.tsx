@@ -57,7 +57,7 @@ export default function ChatListItem(props: ChatListItemProps) {
         <div className="chat-fecha">
           {dayjs(props.data.lastDate).format(dateFormatChatList)}
         </div>
-        {props.data.numUnreadMessages && (
+        {props.data.numUnreadMessages && props.data.numUnreadMessages > 0 && (
           <div className="chat-notf-2">{props.data.numUnreadMessages}</div>
         )}
       </div>

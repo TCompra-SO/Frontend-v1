@@ -19,7 +19,7 @@ export function getChatService(): HttpService {
   };
 }
 
-export function createMessageService(): HttpService {
+export function createChatMessageService(): HttpService {
   return {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.chat}${
       ApiRoutes.chat.createMessage
@@ -28,7 +28,7 @@ export function createMessageService(): HttpService {
   };
 }
 
-export function setMessagesAsReadService(): HttpService {
+export function setChatMessagesAsReadService(): HttpService {
   return {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.chat}${
       ApiRoutes.chat.readMessages
@@ -37,7 +37,7 @@ export function setMessagesAsReadService(): HttpService {
   };
 }
 
-export function getMessagesService(): HttpService {
+export function getChatMessagesService(): HttpService {
   return {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.chat}${
       ApiRoutes.chat.getMessages
@@ -46,7 +46,7 @@ export function getMessagesService(): HttpService {
   };
 }
 
-export function getMessageService(): HttpService {
+export function getChatMessageService(): HttpService {
   return {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.chat}${
       ApiRoutes.chat.getMessage
@@ -55,7 +55,7 @@ export function getMessageService(): HttpService {
   };
 }
 
-export function getChatUsersDataService(): HttpService {
+export function getChatListService(): HttpService {
   return {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.chat}${
       ApiRoutes.chat.getChatUsersData

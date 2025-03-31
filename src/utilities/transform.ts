@@ -5,6 +5,8 @@ import {
   BasicRequirement,
   CertificateFile,
   CertificationItem,
+  ChatListData,
+  ChatMessage,
   DisplayUser,
   FullUser,
   Offer,
@@ -425,5 +427,16 @@ export function transformToDisplayUser(data: any) {
 
 export function transformToStatistics(data: any) {
   const obj: StatisticsData = data;
+  return obj;
+}
+
+export function transformToChatListData(data: any) {
+  const obj: ChatListData = data;
+  obj.requirementId = data.requerimentId;
+  return obj;
+}
+
+export function transformToChatMessage(data: any) {
+  const obj: ChatMessage = data;
   return obj;
 }

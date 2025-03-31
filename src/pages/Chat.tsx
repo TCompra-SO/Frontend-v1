@@ -81,7 +81,7 @@ export default function Chat() {
 
   useEffect(() => {
     if (isChatOpened && currentChat) {
-      getMoreChatMessages();
+      getMoreChatMessages(currentChat.uid);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChatOpened, currentChat]);

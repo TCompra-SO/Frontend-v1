@@ -19,7 +19,7 @@ interface ChatListProps {
   loadMoreChats: () => void;
   currentChat: ChatListData | null;
   hasMore: boolean;
-  loading: boolean;
+  loading: boolean | undefined;
 }
 
 export default function ChatList(props: ChatListProps) {

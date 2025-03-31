@@ -63,6 +63,9 @@ export const logoutAfterNoTokenRefreshTime = 10;
 
 export const defaultErrorMsg = "errorOccurred";
 
+export const chatListPageSize: number = 10;
+export const chatMessagesPageSize: number = 10;
+
 // local storage keys
 export const userDataKey: string = "udata";
 export const tokenKey: string = "token";

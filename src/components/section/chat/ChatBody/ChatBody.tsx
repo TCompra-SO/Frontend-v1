@@ -16,6 +16,9 @@ import ChatGallery from "./ChatGallery";
 import InfiniteScroll from "react-infinite-scroll-component";
 import SimpleLoading from "../../../../pages/utils/SimpleLoading";
 import { isSameDay } from "../../../../utilities/globalFunctions";
+import { useCreateChatAndSendMessage } from "../../../../hooks/chatHooks";
+import { useSelector } from "react-redux";
+import { MainState } from "../../../../models/Redux";
 
 const loadingSpinner: ReactNode = (
   <Flex justify="center">
@@ -27,14 +30,16 @@ interface ChatBodyProps {
   chatData: BasicChatListData;
   messages: ChatMessage[];
   onCloseChat: () => void;
-  getMoreChatMessages: () => void;
+  getMoreChatMessages: (chatId: string) => void;
   hasMore: boolean;
-  loading: boolean;
+  loading: boolean | undefined;
 }
 
 export default function ChatBody(props: ChatBodyProps) {
   const { t } = useTranslation();
   const { width } = useWindowSize();
+  const { createChatAndSendMessage } = useCreateChatAndSendMessage(false);
+  const uid = useSelector((state: MainState) => state.user.uid);
   const divRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<AddImagesFieldRef>(null);
   const docRef = useRef<AddDocumentFieldRef>(null);
@@ -141,8 +146,19 @@ export default function ChatBody(props: ChatBodyProps) {
   function sendMsg() {
     if (imgRef.current) imgRef.current.reset();
     if (docRef.current) docRef.current.reset();
-    if (message.trim()) {
-      console.log(message.trim());
+    const msg = message.trim();
+    if (msg) {
+      if (!props.chatData.uid)
+        // Crear chat primero
+        createChatAndSendMessage(
+          {
+            userId: uid,
+            requerimentId: props.chatData.requirementId,
+            title: props.chatData.title,
+            type: props.chatData.type,
+          },
+          msg
+        );
       setMessage("");
     }
   }
@@ -195,7 +211,10 @@ export default function ChatBody(props: ChatBodyProps) {
             >
               <InfiniteScroll
                 dataLength={props.messages.length}
-                next={props.getMoreChatMessages}
+                next={() => {
+                  if (props.chatData.uid)
+                    props.getMoreChatMessages(props.chatData.uid);
+                }}
                 style={{ display: "flex", flexDirection: "column-reverse" }}
                 className="gap-5"
                 hasMore={props.hasMore}

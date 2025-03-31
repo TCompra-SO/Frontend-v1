@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChatListData, ChatMessage } from "../models/MainInterfaces";
+import { RequirementType } from "../utilities/types";
+import { useGetChatList, useGetChatMessages } from "./chatHooks";
+import { chatListPageSize, chatMessagesPageSize } from "../utilities/globals";
 const chatElements: ChatListData[] = [
   {
     userImage: "https://dummyimage.com/250/ffffff/000000",
@@ -11,6 +14,7 @@ const chatElements: ChatListData[] = [
     numUnreadMessages: 10,
     requirementId: "xx",
     uid: "RJxx",
+    type: RequirementType.GOOD,
   },
   {
     userImage: undefined,
@@ -22,6 +26,7 @@ const chatElements: ChatListData[] = [
     numUnreadMessages: 10,
     requirementId: "xrrfe4x",
     uid: "RJ1xrrfe4x",
+    type: RequirementType.GOOD,
   },
   {
     userImage: "https://dummyimage.com/250/ffffff/000000",
@@ -33,6 +38,7 @@ const chatElements: ChatListData[] = [
     userOnline: true,
     requirementId: "x4445x",
     uid: "RJ2x4445x",
+    type: RequirementType.GOOD,
   },
   {
     userImage: "https://dummyimage.com/250/ffffff/000000",
@@ -44,6 +50,7 @@ const chatElements: ChatListData[] = [
     numUnreadMessages: 10,
     requirementId: "xxewer",
     uid: "RJ3xxewer",
+    type: RequirementType.GOOD,
   },
   {
     userImage: undefined,
@@ -55,6 +62,7 @@ const chatElements: ChatListData[] = [
     numUnreadMessages: 10,
     requirementId: "xgfgx",
     uid: "RJ4xgfgx",
+    type: RequirementType.GOOD,
   },
   {
     userImage: undefined,
@@ -66,6 +74,7 @@ const chatElements: ChatListData[] = [
     numUnreadMessages: 10,
     requirementId: "wexx",
     uid: "RJ5wexx",
+    type: RequirementType.GOOD,
   },
   {
     userImage: "https://dummyimage.com/250/ffffff/000000",
@@ -77,6 +86,7 @@ const chatElements: ChatListData[] = [
     numUnreadMessages: 10,
     requirementId: "xghx",
     uid: "RJ6xghx",
+    type: RequirementType.GOOD,
   },
   {
     userImage: "https://dummyimage.com/250/ffffff/000000",
@@ -88,6 +98,7 @@ const chatElements: ChatListData[] = [
     numUnreadMessages: 10,
     requirementId: "xfdsfx",
     uid: "RJ7xfdsfx",
+    type: RequirementType.GOOD,
   },
   {
     userImage: "https://dummyimage.com/250/ffffff/000000",
@@ -99,6 +110,7 @@ const chatElements: ChatListData[] = [
     numUnreadMessages: 10,
     requirementId: "xx",
     uid: "RJ8xx",
+    type: RequirementType.GOOD,
   },
   {
     userImage: undefined,
@@ -110,6 +122,7 @@ const chatElements: ChatListData[] = [
     numUnreadMessages: 10,
     requirementId: "xrrfe4x",
     uid: "RJ9xrrfe4x",
+    type: RequirementType.GOOD,
   },
   {
     userImage: "https://dummyimage.com/250/ffffff/000000",
@@ -121,6 +134,7 @@ const chatElements: ChatListData[] = [
     userOnline: true,
     requirementId: "x4445x",
     uid: "RJ10x4445x",
+    type: RequirementType.GOOD,
   },
   {
     userImage: "https://dummyimage.com/250/ffffff/000000",
@@ -132,6 +146,7 @@ const chatElements: ChatListData[] = [
     numUnreadMessages: 10,
     requirementId: "xxewer",
     uid: "RJ11xxewer",
+    type: RequirementType.GOOD,
   },
   {
     userImage: undefined,
@@ -143,6 +158,7 @@ const chatElements: ChatListData[] = [
     numUnreadMessages: 10,
     requirementId: "xgfgx",
     uid: "RJ12xgfgx",
+    type: RequirementType.GOOD,
   },
   {
     userImage: undefined,
@@ -154,6 +170,7 @@ const chatElements: ChatListData[] = [
     numUnreadMessages: 10,
     requirementId: "wexx",
     uid: "RJ13wexx",
+    type: RequirementType.GOOD,
   },
   {
     userImage: "https://dummyimage.com/250/ffffff/000000",
@@ -165,6 +182,7 @@ const chatElements: ChatListData[] = [
     numUnreadMessages: 10,
     requirementId: "xghx",
     uid: "RJ14xghx",
+    type: RequirementType.GOOD,
   },
   {
     userImage: "https://dummyimage.com/250/ffffff/000000",
@@ -176,6 +194,7 @@ const chatElements: ChatListData[] = [
     numUnreadMessages: 10,
     requirementId: "xfdsfx",
     uid: "RJ15xfdsfx",
+    type: RequirementType.GOOD,
   },
 ];
 
@@ -338,57 +357,89 @@ const fullChatMessages: ChatMessage[] = [
 ];
 
 export function useChat() {
-  const [loadingChatList, setLoadingChatList] = useState(false);
+  const {
+    getChatList,
+    loadingGetChatList,
+    chatList: currentPageChatList,
+  } = useGetChatList();
+  const { getChatMessages, loadingGetChatMessages, chatMessages } =
+    useGetChatMessages();
   const [loadingChatMessages, setLoadingChatMessages] = useState(false);
   const [chatList, setChatList] = useState<ChatListData[]>([]);
   const [hasMoreChatList, setHasMoreChatList] = useState(true);
   const [chatMessageList, setChatMessageList] = useState<ChatMessage[]>([]);
   const [hasMoreChatMessageList, setHasMoreChatMessageList] = useState(true);
+  const [page, setPage] = useState(0);
+  const [messagePageAndChatId, setMessagePageAndChatId] = useState({
+    page: 0,
+    chatId: "",
+  });
+
+  /** Obtener más chats */
+
+  useEffect(() => {
+    if (page) getChatList(page);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
+
+  useEffect(() => {
+    if (currentPageChatList.length < chatListPageSize)
+      setHasMoreChatList(false);
+    setChatList(chatList.concat(currentPageChatList));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPageChatList]);
+
+  /** Obtener más mensajes de chat */
+
+  useEffect(() => {
+    if (messagePageAndChatId.chatId && messagePageAndChatId.page)
+      getChatMessages(messagePageAndChatId.chatId, messagePageAndChatId.page);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messagePageAndChatId]);
+
+  useEffect(() => {
+    if (chatMessages.length < chatMessagesPageSize)
+      setHasMoreChatMessageList(false);
+    setChatMessageList(chatMessageList.concat(chatMessages));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatMessages]);
 
   /** Funciones */
 
   function getMoreChats() {
     console.log("gettin more chats");
-    setLoadingChatList(true);
-    setTimeout(() => {
-      if (chatList.length >= chatElements.length) setHasMoreChatList(false);
-      else
-        setChatList(
-          chatList.length > 0
-            ? chatList.concat(
-                chatElements.slice(chatList.length, 10 + chatList.length)
-              )
-            : chatElements.slice(0, 10)
-        );
-      setLoadingChatList(false);
-    }, 2000);
+    setPage(page + 1);
   }
 
-  function getMoreChatMessages() {
-    setLoadingChatMessages(true);
-    setTimeout(() => {
-      if (chatMessageList.length >= fullChatMessages.length)
-        setHasMoreChatMessageList(false);
-      else
-        setChatMessageList(
-          chatMessageList.length > 0
-            ? chatMessageList.concat(
-                fullChatMessages.slice(
-                  chatMessageList.length,
-                  10 + chatMessageList.length
-                )
-              )
-            : fullChatMessages.slice(0, 10)
-        );
-      setLoadingChatMessages(false);
-    }, 1000);
+  function getMoreChatMessages(chatId: string) {
+    setMessagePageAndChatId({ page: messagePageAndChatId.page + 1, chatId });
+    // setLoadingChatMessages(true);
+    // setTimeout(() => {
+    //   if (chatMessageList.length >= fullChatMessages.length)
+    //     setHasMoreChatMessageList(false);
+    //   else
+    //     setChatMessageList(
+    //       chatMessageList.length > 0
+    //         ? chatMessageList.concat(
+    //             fullChatMessages.slice(
+    //               chatMessageList.length,
+    //               10 + chatMessageList.length
+    //             )
+    //           )
+    //         : fullChatMessages.slice(0, 10)
+    //     );
+    //   setLoadingChatMessages(false);
+    // }, 1000);
   }
 
   function resetChatList() {
+    setPage(0);
     setChatList([]);
+    setHasMoreChatList(true);
   }
 
   function resetChatMessageList() {
+    setMessagePageAndChatId({ page: 0, chatId: "" });
     setChatMessageList([]);
     setHasMoreChatMessageList(true);
   }
@@ -396,9 +447,9 @@ export function useChat() {
   return {
     resetChatList,
     chatList,
-    loadingChatList,
+    loadingChatList: loadingGetChatList,
     getMoreChats,
-    loadingChatMessages,
+    loadingChatMessages: loadingGetChatMessages,
     resetChatMessageList,
     chatMessageList,
     getMoreChatMessages,

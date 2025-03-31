@@ -37,8 +37,8 @@ import {
   verifyCertificationService,
 } from "../requests/certificateService";
 import {
+  createChatMessageService,
   createChatService,
-  createMessageService,
 } from "../requests/chatService";
 import { getNotificationsService } from "../requests/notificationService";
 
@@ -365,7 +365,7 @@ export async function createChat(request: CreateChatRequest) {
 export async function createChatMessage(request: CreateMessageRequest) {
   const { responseData, error, errorMsg } =
     await makeRequest<CreateMessageRequest>({
-      service: createMessageService(),
+      service: createChatMessageService(),
       method: "post",
       dataToSend: request,
     });

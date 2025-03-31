@@ -272,3 +272,15 @@ export interface CreateMessageRequest {
   userId: string;
   message: string;
 }
+
+export interface GetChatListRequest {
+  userId: string;
+  page: number;
+  pageSize: number;
+}
+
+export interface GetChatMessagesRequest {
+  chatId: string;
+  page: number;
+  pageSize: number;
+}
