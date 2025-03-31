@@ -36,11 +36,8 @@ export function useGetCertificatesList() {
     service: null,
     method: "get",
   });
-  const { loading, responseData, error, errorMsg, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi(apiParams);
 
   useEffect(() => {
     if (apiParams.service) fetchData();

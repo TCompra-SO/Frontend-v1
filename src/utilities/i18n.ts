@@ -360,6 +360,7 @@ const resources = {
       noRefreshTokenMsg: "Your session has expired. Please log in again.",
       inactiveAccountLogin: 'This account is inactive',
       unavailableRequiredDocumentsCert: 'The required document list is not yet available',
+      messageSentSuccessfully: 'Message sent successfully',
       // Other
       characters: "characters",
       yes: "Yes",
@@ -924,6 +925,7 @@ const resources = {
       noRefreshTokenMsg: "Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.",
       inactiveAccountLogin: 'Esta cuenta está inactiva',
       unavailableRequiredDocumentsCert: 'La lista de documentos requeridos aún no está disponible',
+      messageSentSuccessfully: 'Mensaje enviado exitosamente',
       // Other
       characters: "caracteres",
       yes: "Sí",

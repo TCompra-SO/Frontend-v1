@@ -259,3 +259,16 @@ export interface LogoutRequest {
   userId: string;
   refreshToken: string;
 }
+
+export interface CreateChatRequest {
+  userId: string;
+  requerimentId: string;
+  title: string;
+  type: RequirementType;
+}
+
+export interface CreateMessageRequest {
+  chatId: string;
+  userId: string;
+  message: string;
+}

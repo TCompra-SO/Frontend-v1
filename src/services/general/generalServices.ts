@@ -3,6 +3,7 @@ import {
   NotificationDataFromServer,
 } from "../../models/MainInterfaces";
 import { UserState } from "../../models/Redux";
+import { CreateChatRequest, CreateMessageRequest } from "../../models/Requests";
 import makeRequest, {
   getGetBasicRateDataRecordOfferService,
   getGetBasicRateDataRecordService,
@@ -35,6 +36,10 @@ import {
   getRequiredDocumentsService,
   verifyCertificationService,
 } from "../requests/certificateService";
+import {
+  createChatService,
+  createMessageService,
+} from "../requests/chatService";
 import { getNotificationsService } from "../requests/notificationService";
 
 export async function getBaseUserForUserSubUser(
@@ -337,6 +342,36 @@ export async function getNotifications(
     notifications: responseData
       ? (responseData.data as NotificationDataFromServer[])
       : null,
+    error,
+    errorMsg,
+  };
+}
+
+export async function createChat(request: CreateChatRequest) {
+  const { responseData, error, errorMsg } =
+    await makeRequest<CreateChatRequest>({
+      service: createChatService(),
+      method: "post",
+      dataToSend: request,
+    });
+
+  return {
+    chatData: responseData,
+    error,
+    errorMsg,
+  };
+}
+
+export async function createChatMessage(request: CreateMessageRequest) {
+  const { responseData, error, errorMsg } =
+    await makeRequest<CreateMessageRequest>({
+      service: createMessageService(),
+      method: "post",
+      dataToSend: request,
+    });
+
+  return {
+    messageData: responseData,
     error,
     errorMsg,
   };

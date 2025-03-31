@@ -216,6 +216,8 @@ export interface ModalSendMessage extends CommonModalType {
   data: {
     requirementId: string;
     userId: string;
+    title: string;
+    type: RequirementType;
   };
 }
 

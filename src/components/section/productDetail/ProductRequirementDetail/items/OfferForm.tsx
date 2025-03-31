@@ -508,6 +508,8 @@ export default function OfferForm(props: OfferFormProps) {
               requirementId: props.requirement.key,
               userId:
                 props.requirement.subUser?.uid ?? props.requirement?.user.uid,
+              title: props.requirement.title,
+              type: props.requirement.type,
             },
             action: Action.SEND_MESSAGE,
           }}
