@@ -52,6 +52,7 @@ export const certificatesToSendPageSize: number = 5;
 
 export const formFieldKeyword: string = "keywords";
 export const chatDataFieldName: string = "chatData";
+export const basicChatDataFieldName: string = "basicChatData";
 
 export const masterUid: string = "dlGMHRyyAidgFMDqmLBO";
 export const pageSizeOfferList: number = 5;

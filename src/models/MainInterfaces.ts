@@ -249,14 +249,18 @@ export interface BasicRateData {
   subUserName?: string;
 }
 
-export interface ChatListData {
-  uid: string;
+export interface BasicChatListData {
+  uid?: string;
   userImage?: string;
   userName: string;
   userOnline?: boolean;
-  userId: string;
   title: string;
   requirementId: string;
+}
+
+export interface ChatListData extends BasicChatListData {
+  uid: string;
+  userId: string;
   lastMessage: string;
   lastDate: string;
   numUnreadMessages?: number;

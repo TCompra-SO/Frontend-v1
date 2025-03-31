@@ -8,6 +8,10 @@ import { RequirementType } from "../../../utilities/types";
 import { useCreateChatAndSendMessage } from "../../../hooks/chatHooks";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
+import { useNavigate } from "react-router-dom";
+import { pageRoutes } from "../../../utilities/routes";
+import { BasicChatListData } from "../../../models/MainInterfaces";
+import { basicChatDataFieldName } from "../../../utilities/globals";
 
 interface SendMessageModalProps extends CommonModalProps {
   onClose: () => any;
@@ -15,9 +19,12 @@ interface SendMessageModalProps extends CommonModalProps {
   userId: string;
   title: string;
   type: RequirementType;
+  receiverImage?: string;
+  receiverName: string;
 }
 
 export default function SendMessageModal(props: SendMessageModalProps) {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { createChatAndSendMessage, loadingCreateChatAndSendMessage } =
     useCreateChatAndSendMessage(true);
@@ -52,8 +59,16 @@ export default function SendMessageModal(props: SendMessageModalProps) {
   }
 
   function goToChat() {
-    console.log(props.requirementId, props.userId);
     props.onClose();
+    const data: BasicChatListData = {
+      userName: props.receiverName,
+      title: props.title,
+      requirementId: props.requirementId,
+      userImage: props.receiverImage,
+    };
+    navigate(pageRoutes.chat, {
+      state: { [basicChatDataFieldName]: data },
+    });
   }
 
   return (

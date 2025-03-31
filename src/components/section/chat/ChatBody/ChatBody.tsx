@@ -1,5 +1,8 @@
 import { useTranslation } from "react-i18next";
-import { ChatListData, ChatMessage } from "../../../../models/MainInterfaces";
+import {
+  BasicChatListData,
+  ChatMessage,
+} from "../../../../models/MainInterfaces";
 import InputContainer from "../../../containers/InputContainer";
 import dayjs from "dayjs";
 import { dateFormatChatBody, windowSize } from "../../../../utilities/globals";
@@ -21,7 +24,7 @@ const loadingSpinner: ReactNode = (
 );
 
 interface ChatBodyProps {
-  chatData: ChatListData;
+  chatData: BasicChatListData;
   messages: ChatMessage[];
   onCloseChat: () => void;
   getMoreChatMessages: () => void;
@@ -179,7 +182,11 @@ export default function ChatBody(props: ChatBodyProps) {
           loadingSpinner
         ) : (
           <>
-            {currentDate && <div className="fecha-comment">{currentDate}</div>}
+            {currentDate && (
+              <div className="fecha-comment" style={{ marginRight: "6px" }}>
+                {currentDate}
+              </div>
+            )}
 
             <div
               className="t-flex f-column-reverse mensajes-contenedor"

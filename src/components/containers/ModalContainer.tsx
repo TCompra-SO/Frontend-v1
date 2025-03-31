@@ -396,6 +396,8 @@ export default function ModalContainer(props: ModalContainerProps) {
             userId={props.content.data.userId}
             title={props.content.data.title}
             type={props.content.data.type}
+            receiverName={props.content.data.receiverName}
+            receiverImage={props.content.data.receiverImage}
             {...commonModalProps}
           />
         );

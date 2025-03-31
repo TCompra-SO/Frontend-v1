@@ -2,16 +2,25 @@ import { useTranslation } from "react-i18next";
 import ContentHeader from "../components/common/utils/ContentHeader";
 import ChatList from "../components/section/chat/ChatList/ChatList";
 import ChatBody from "../components/section/chat/ChatBody/ChatBody";
-import { ChatListData, ChatSocketData } from "../models/MainInterfaces";
+import {
+  BasicChatListData,
+  ChatListData,
+  ChatSocketData,
+} from "../models/MainInterfaces";
 import { useEffect, useRef, useState } from "react";
 import useWindowSize from "../hooks/useWindowSize";
-import { chatDataFieldName, windowSize } from "../utilities/globals";
-import { useLocation } from "react-router-dom";
+import {
+  basicChatDataFieldName,
+  chatDataFieldName,
+  windowSize,
+} from "../utilities/globals";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useChat } from "../hooks/useChat";
 
 export default function Chat() {
   const { t } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
   const { width } = useWindowSize();
   const {
     chatList,
@@ -27,6 +36,9 @@ export default function Chat() {
   const hasHandledChatNotification = useRef(false);
   const [isChatOpened, setIsChatOpened] = useState(false);
   const [currentChat, setCurrentChat] = useState<ChatListData | null>(null);
+  const [basicChatDataFromRouting] = useState<BasicChatListData | undefined>(
+    location.state?.[basicChatDataFieldName]
+  );
 
   /** Obtener lista inicial de chats */
 
@@ -34,6 +46,16 @@ export default function Chat() {
     getMoreChats();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  /** Abrir chat desde redireccionamiento */
+
+  useEffect(() => {
+    if (basicChatDataFromRouting) {
+      setIsChatOpened(true);
+      navigate(".", { replace: true, state: null });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [basicChatDataFromRouting]);
 
   /** Abrir chat desde notificación */
 
@@ -104,6 +126,15 @@ export default function Chat() {
             messages={chatMessageList}
             getMoreChatMessages={getMoreChatMessages}
             hasMore={hasMoreChatMessageList}
+            loading={loadingChatMessages}
+          />
+        ) : isChatOpened && !currentChat && basicChatDataFromRouting ? (
+          <ChatBody
+            chatData={basicChatDataFromRouting}
+            onCloseChat={handleCloseChat}
+            messages={chatMessageList}
+            getMoreChatMessages={getMoreChatMessages}
+            hasMore={false}
             loading={loadingChatMessages}
           />
         ) : (
