@@ -37,17 +37,20 @@ export const MainSocketsContext = createContext<MainSocketsContextType>({
   loadingChatList: false,
   loadingChatMessages: false,
   getNotification: () => {},
+  connectChatSocket: () => {},
   disconnectChatSocket: () => {},
+  connectSingleChatSocket: () => {},
+  disconnectSingleChatSocket: () => {},
   disconnectNotificationSocket: () => {},
   connectUserSocket: () => {},
   disconnectUserSocket: () => {},
   connectNotificationSocket: () => {},
-  connectChatSocket: () => {},
   connectGlobalNotificationSocket: () => {},
   disconnectGlobalNotificationSocket: () => {},
   hasMoreNotificationList: false,
   setTokenExpiration: () => {},
   setRefreshTokenExpiration: () => {},
+  lastChatMessageReceived: null,
 } as MainSocketsContextType);
 
 export function MainSocketsProvider({ children }: { children: ReactNode }) {

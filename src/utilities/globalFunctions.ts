@@ -916,3 +916,12 @@ export function getReversedTransformFieldNameObject(type: TableTypes) {
 export function isUserCounterKey(key: string): key is keyof UserCounters {
   return key in userCounterKeys;
 }
+
+// Retorna 2da lista sin objectos con uids repetidos en la 1ra
+export function filterByMissingUIds<T extends { uid: string }>(
+  array1: T[],
+  array2: T[]
+): T[] {
+  const idsInArray1 = new Set(array1.map((item) => item.uid));
+  return array2.filter((item) => !idsInArray1.has(item.uid));
+}

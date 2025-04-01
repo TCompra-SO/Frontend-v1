@@ -7,7 +7,7 @@ import {
   ChatListData,
   ChatSocketData,
 } from "../models/MainInterfaces";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import useWindowSize from "../hooks/useWindowSize";
 import {
   basicChatDataFieldName,
@@ -16,6 +16,7 @@ import {
 } from "../utilities/globals";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useChat } from "../hooks/useChat";
+import { MainSocketsContext } from "../contexts/MainSocketsContext";
 
 export default function Chat() {
   const { t } = useTranslation();
@@ -32,7 +33,13 @@ export default function Chat() {
     hasMoreChatMessageList,
     loadingChatList,
     loadingChatMessages,
+    addMessageToChatMessageList,
   } = useChat();
+  const {
+    connectSingleChatSocket,
+    disconnectSingleChatSocket,
+    lastChatMessageReceived,
+  } = useContext(MainSocketsContext);
   const hasHandledChatNotification = useRef(false);
   const [isChatOpened, setIsChatOpened] = useState(false);
   const [currentChat, setCurrentChat] = useState<ChatListData | null>(null);
@@ -44,6 +51,9 @@ export default function Chat() {
 
   useEffect(() => {
     getMoreChats();
+    return () => {
+      disconnectSingleChatSocket();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -86,9 +96,17 @@ export default function Chat() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChatOpened, currentChat]);
 
+  /** Agregar mensaje recibido de socket a lista de mensajes */
+
+  useEffect(() => {
+    if (lastChatMessageReceived)
+      addMessageToChatMessageList(lastChatMessageReceived);
+  }, [lastChatMessageReceived]);
+
   /** Funciones */
 
   function handleCloseChat() {
+    disconnectSingleChatSocket();
     setCurrentChat(null);
     setIsChatOpened(false);
     resetChatMessageList();
@@ -96,9 +114,12 @@ export default function Chat() {
 
   function handleClickOnChatItem(item: ChatListData) {
     console.log("opening chat...");
+    disconnectSingleChatSocket();
     resetChatMessageList();
     setCurrentChat(item);
     setIsChatOpened(true);
+    // if (item.uid) connectSingleChatSocket(item.uid)
+    connectSingleChatSocket("uJV4f5jpYz6s8y4vx0Dr");
   }
 
   return (

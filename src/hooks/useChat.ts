@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChatListData, ChatMessage } from "../models/MainInterfaces";
+import { filterByMissingUIds } from "../utilities/globalFunctions";
 const chatElements: ChatListData[] = [
   {
     userImage: "https://dummyimage.com/250/ffffff/000000",
@@ -344,6 +345,7 @@ export function useChat() {
   const [hasMoreChatList, setHasMoreChatList] = useState(true);
   const [chatMessageList, setChatMessageList] = useState<ChatMessage[]>([]);
   const [hasMoreChatMessageList, setHasMoreChatMessageList] = useState(true);
+  const [prevChatMessageListLength, setPrevChatMessageListLength] = useState(0);
 
   /** Funciones */
 
@@ -369,7 +371,8 @@ export function useChat() {
     setTimeout(() => {
       if (chatMessageList.length >= fullChatMessages.length)
         setHasMoreChatMessageList(false);
-      else
+      else {
+        // const newArray = filterByMissingUIds(chatMessageList, chatMessageList) añadir no repetidos a lista<
         setChatMessageList(
           chatMessageList.length > 0
             ? chatMessageList.concat(
@@ -380,6 +383,18 @@ export function useChat() {
               )
             : fullChatMessages.slice(0, 10)
         );
+        setPrevChatMessageListLength(
+          (chatMessageList.length > 0
+            ? chatMessageList.concat(
+                fullChatMessages.slice(
+                  chatMessageList.length,
+                  10 + chatMessageList.length
+                )
+              )
+            : fullChatMessages.slice(0, 10)
+          ).length
+        );
+      }
       setLoadingChatMessages(false);
     }, 1000);
   }
@@ -390,7 +405,16 @@ export function useChat() {
 
   function resetChatMessageList() {
     setChatMessageList([]);
+    setPrevChatMessageListLength(0);
     setHasMoreChatMessageList(true);
+  }
+
+  function addMessageToChatMessageList(message: ChatMessage) {
+    // if (chatMessageList.length +1 == PrevChatMessageListLength +  pagesize) {
+    // setPage(page+1);
+    // setPrevChatMessageListLength(PrevChatMessageListLength +  pagesize)
+    //}
+    setChatMessageList([message, ...chatMessageList]);
   }
 
   return {
@@ -404,5 +428,6 @@ export function useChat() {
     getMoreChatMessages,
     hasMoreChatList,
     hasMoreChatMessageList,
+    addMessageToChatMessageList,
   };
 }
