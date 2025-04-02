@@ -3,7 +3,11 @@ import {
   NotificationDataFromServer,
 } from "../../models/MainInterfaces";
 import { UserState } from "../../models/Redux";
-import { CreateChatRequest, CreateMessageRequest } from "../../models/Requests";
+import {
+  CreateChatRequest,
+  CreateMessageRequest,
+  MarkChatMessagesAsReadRequest,
+} from "../../models/Requests";
 import makeRequest, {
   getGetBasicRateDataRecordOfferService,
   getGetBasicRateDataRecordService,
@@ -39,6 +43,7 @@ import {
 import {
   createChatMessageService,
   createChatService,
+  MarkChatMessagesAsReadService,
 } from "../requests/chatService";
 import { getNotificationsService } from "../requests/notificationService";
 
@@ -372,6 +377,23 @@ export async function createChatMessage(request: CreateMessageRequest) {
 
   return {
     messageData: responseData,
+    error,
+    errorMsg,
+  };
+}
+
+export async function markChatMessageAsRead(
+  request: MarkChatMessagesAsReadRequest
+) {
+  const { responseData, error, errorMsg } =
+    await makeRequest<MarkChatMessagesAsReadRequest>({
+      service: MarkChatMessagesAsReadService(),
+      method: "post",
+      dataToSend: request,
+    });
+
+  return {
+    responseData: responseData,
     error,
     errorMsg,
   };

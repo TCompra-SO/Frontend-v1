@@ -17,11 +17,15 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { useChat } from "../hooks/useChat";
 import { MainSocketsContext } from "../contexts/MainSocketsContext";
+import { useCreateChatAndSendMessage } from "../hooks/chatHooks";
+import { MainState } from "../models/Redux";
+import { useSelector } from "react-redux";
 
 export default function Chat() {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
+  const uid = useSelector((state: MainState) => state.user.uid);
   const { width } = useWindowSize();
   const {
     chatList,
@@ -34,13 +38,17 @@ export default function Chat() {
     loadingChatList,
     loadingChatMessages,
     addMessageToChatMessageList,
+    markMsgAsRead,
   } = useChat();
+  const { markAsRead } = useCreateChatAndSendMessage(false);
   const {
     connectSingleChatSocket,
     disconnectSingleChatSocket,
     lastChatMessageReceived,
+    chatMessageRead,
   } = useContext(MainSocketsContext);
   const hasHandledChatNotification = useRef(false);
+  const [markedAsRead, setMarkedAsRead] = useState(false);
   const [isChatOpened, setIsChatOpened] = useState(false);
   const [currentChat, setCurrentChat] = useState<ChatListData | null>(null);
   const [basicChatDataFromRouting] = useState<BasicChatListData | undefined>(
@@ -101,7 +109,36 @@ export default function Chat() {
   useEffect(() => {
     if (lastChatMessageReceived)
       addMessageToChatMessageList(lastChatMessageReceived);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastChatMessageReceived]);
+
+  /** Al abrir chat, marcar como leído */
+
+  useEffect(() => {
+    if (
+      !markedAsRead &&
+      chatMessageList.length &&
+      !chatMessageList[0].read &&
+      chatMessageList[0].userId !== uid
+    ) {
+      markAsRead({
+        messagesIds: [chatMessageList[0].uid],
+        chatId: chatMessageList[0].chatId,
+      });
+      setMarkedAsRead(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatMessageList]);
+
+  /** Marcar mensaje como leído */
+
+  useEffect(() => {
+    if (chatMessageRead.messageId) {
+      console.log("????????????", chatMessageRead);
+      markMsgAsRead(chatMessageRead.messageId, chatMessageRead.read);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatMessageRead]);
 
   /** Funciones */
 
@@ -110,16 +147,16 @@ export default function Chat() {
     setCurrentChat(null);
     setIsChatOpened(false);
     resetChatMessageList();
+    setMarkedAsRead(false);
   }
 
   function handleClickOnChatItem(item: ChatListData) {
-    console.log("opening chat...");
     disconnectSingleChatSocket();
+    setMarkedAsRead(false);
     resetChatMessageList();
     setCurrentChat(item);
     setIsChatOpened(true);
-    // if (item.uid) connectSingleChatSocket(item.uid)
-    connectSingleChatSocket("uJV4f5jpYz6s8y4vx0Dr");
+    if (item.uid) connectSingleChatSocket(item.uid);
   }
 
   return (

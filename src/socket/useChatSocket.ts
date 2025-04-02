@@ -6,7 +6,7 @@ import useShowNotification from "../hooks/utilHooks";
 import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../utilities/routes";
 import { chatDataFieldName } from "../utilities/globals";
-import { ChatSocketResponse } from "../models/Interfaces";
+import { ChatMessageRead, ChatSocketResponse } from "../models/Interfaces";
 
 const chatMessages: ChatSocketData[] = [
   {
@@ -51,6 +51,10 @@ let singleChatSocketAPI: Socket | null = null;
 export function useChatSocket() {
   const navigate = useNavigate();
   const { showRealTimeNotification } = useShowNotification();
+  const [chatMessageRead, setChatMessageRead] = useState<ChatMessageRead>({
+    messageId: "",
+    read: false,
+  });
   const [lastChatMessageReceived, setLastChatMessageReceived] =
     useState<ChatMessage | null>(null);
 
@@ -113,7 +117,10 @@ export function useChatSocket() {
       singleChatSocketAPI.on("updateChat", (payload: ChatSocketResponse) => {
         console.log("single chat recibido:", payload);
         if (payload.type == ChatMessageType.NEW_MESSAGE)
-          setLastChatMessageReceived(payload.messageData);
+          setLastChatMessageReceived(payload.messageData as ChatMessage);
+        else if (payload.type == ChatMessageType.READ) {
+          setChatMessageRead(payload.messageData as ChatMessageRead);
+        }
       });
     }
   }
@@ -146,5 +153,6 @@ export function useChatSocket() {
     connectSingleChatSocket,
     disconnectSingleChatSocket,
     lastChatMessageReceived,
+    chatMessageRead,
   };
 }

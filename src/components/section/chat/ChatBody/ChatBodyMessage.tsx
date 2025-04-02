@@ -18,8 +18,8 @@ interface ChatBodyMessageProps {
 
 export default function ChatBodyMessage(props: ChatBodyMessageProps) {
   const childRef = useRef<ImagePreviewGroupContainerRef>(null);
-  const isInputMsg =
-    useSelector((state: MainState) => state.user.uid) == props.message.userId;
+  const uid = useSelector((state: MainState) => state.user.uid);
+  const isInputMsg = uid != props.message.userId;
   const [emptyImages, setEmptyImages] = useState(true);
   const [emptyDocs, setEmptyDocs] = useState(true);
 

@@ -60,11 +60,11 @@ export function useChat() {
   /** Funciones */
 
   function getMoreChats() {
-    console.log("gettin more chats");
     setPage({ page: page.page + 1, retrieve: true });
   }
 
   function getMoreChatMessages(chatId: string) {
+    console.log("gettin more chat msgs");
     setMessagePageAndChatId({ page: messagePageAndChatId.page + 1, chatId });
   }
 
@@ -94,6 +94,14 @@ export function useChat() {
     setChatMessageList([message, ...chatMessageList]);
   }
 
+  function markMsgAsRead(messageId: string, read: boolean) {
+    setChatMessageList((prevList) =>
+      prevList.map((item) =>
+        item.uid === messageId ? { ...item, read } : item
+      )
+    );
+  }
+
   return {
     resetChatList,
     chatList,
@@ -106,5 +114,6 @@ export function useChat() {
     hasMoreChatList,
     hasMoreChatMessageList,
     addMessageToChatMessageList,
+    markMsgAsRead,
   };
 }

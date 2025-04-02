@@ -583,7 +583,12 @@ export interface RefreshRefreshTokenResponse {
   refreshExpiresIn: number;
 }
 
+export interface ChatMessageRead {
+  messageId: string;
+  read: boolean;
+}
+
 export interface ChatSocketResponse {
-  messageData: ChatMessage;
+  messageData: ChatMessage | ChatMessageRead;
   type: ChatMessageType;
 }

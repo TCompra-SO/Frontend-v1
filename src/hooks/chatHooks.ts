@@ -4,10 +4,12 @@ import {
   CreateMessageRequest,
   GetChatListRequest,
   GetChatMessagesRequest,
+  MarkChatMessagesAsReadRequest,
 } from "../models/Requests";
 import {
   createChat,
   createChatMessage,
+  markChatMessageAsRead,
 } from "../services/general/generalServices";
 import {
   chatListPageSize,
@@ -36,6 +38,10 @@ export function useCreateChatAndSendMessage(
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
   const [loading, setLoading] = useState(false);
+
+  async function markAsRead(request: MarkChatMessagesAsReadRequest) {
+    return await markChatMessageAsRead(request);
+  }
 
   async function sendMessage(request: CreateMessageRequest) {
     return await createChatMessage(request);
@@ -82,6 +88,7 @@ export function useCreateChatAndSendMessage(
     createChatAndSendMessage,
     loadingCreateChatAndSendMessage: loading,
     sendMessage,
+    markAsRead,
   };
 }
 
