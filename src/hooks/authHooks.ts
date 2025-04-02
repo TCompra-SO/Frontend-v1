@@ -40,6 +40,7 @@ import makeRequest, {
 } from "../utilities/globalFunctions";
 import { logoutService } from "../services/requests/authService";
 import { LogoutRequest } from "../models/Requests";
+import { setIsLoading } from "../redux/loadingSlice";
 
 export function useLogin() {
   const { t } = useTranslation();
@@ -104,6 +105,7 @@ export function useLogout() {
 
   async function logout() {
     // if (isLoggedIn) {
+    dispatch(setIsLoading(true));
     const refreshToken = localStorage.getItem(refreshTokenKey);
     if (refreshToken) {
       await makeRequest<LogoutRequest>({
@@ -119,8 +121,7 @@ export function useLogout() {
     localStorage.removeItem(refreshTokenKey);
     localStorage.removeItem(userDataKey);
     localStorage.removeItem(expiresInKey);
-    localStorage.removeItem(refreshingTokenKey);
-    localStorage.removeItem(refreshingRefreshTokenKey);
+    localStorage.removeItem(refreshExpiresInKey);
     localStorage.removeItem(refreshingTokenKey);
     localStorage.removeItem(refreshingRefreshTokenKey);
     setTokenExpiration(null);
@@ -129,6 +130,7 @@ export function useLogout() {
     dispatch(setFullUser(userInitialState));
     localStorage.setItem(logoutKey, Date.now().toString());
     localStorage.removeItem(logoutKey);
+    dispatch(setIsLoading(false));
     // }
   }
 
@@ -156,15 +158,19 @@ export function useLoadUserInfo() {
   async function loadUserInfo() {
     const userData = localStorage.getItem(userDataKey);
     const tokenData = localStorage.getItem(tokenKey);
-    if (tokenData && userData) {
+    const refreshTokenData = localStorage.getItem(refreshTokenKey);
+    const expiresIn = localStorage.getItem(expiresInKey);
+    const refreshExpiresIn = localStorage.getItem(refreshExpiresInKey);
+    if (
+      tokenData &&
+      refreshTokenData &&
+      userData &&
+      expiresIn !== null &&
+      refreshExpiresIn !== null
+    ) {
       const userInfo = JSON.parse(decryptData(userData));
-      const expiresIn = localStorage.getItem(expiresInKey);
-      if (expiresIn !== null) {
-        setTokenExpiration(Number(expiresIn));
-      }
-      const refreshExpiresIn = localStorage.getItem(refreshExpiresInKey);
-      if (refreshExpiresIn !== null)
-        setRefreshTokenExpiration(Number(refreshExpiresIn));
+      setTokenExpiration(Number(expiresIn));
+      setRefreshTokenExpiration(Number(refreshExpiresIn));
       // if (!checkToken()) return;
       if (userInfo) {
         // localStorage.setItem(tokenKey, userInfo.token);

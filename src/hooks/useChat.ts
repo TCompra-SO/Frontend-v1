@@ -3,6 +3,7 @@ import { ChatListData, ChatMessage } from "../models/MainInterfaces";
 import { RequirementType } from "../utilities/types";
 import { useGetChatList, useGetChatMessages } from "./chatHooks";
 import { chatListPageSize, chatMessagesPageSize } from "../utilities/globals";
+import { filterByMissingUIds } from "../utilities/globalFunctions";
 const chatElements: ChatListData[] = [
   {
     userImage: "https://dummyimage.com/250/ffffff/000000",
@@ -369,6 +370,7 @@ export function useChat() {
   const [hasMoreChatList, setHasMoreChatList] = useState(true);
   const [chatMessageList, setChatMessageList] = useState<ChatMessage[]>([]);
   const [hasMoreChatMessageList, setHasMoreChatMessageList] = useState(true);
+  const [prevChatMessageListLength, setPrevChatMessageListLength] = useState(0);
   const [page, setPage] = useState(0);
   const [messagePageAndChatId, setMessagePageAndChatId] = useState({
     page: 0,
@@ -409,27 +411,53 @@ export function useChat() {
   function getMoreChats() {
     console.log("gettin more chats");
     setPage(page + 1);
+    // setLoadingChatList(true);
+    setTimeout(() => {
+      if (chatList.length >= chatElements.length) setHasMoreChatList(false);
+      else
+        setChatList(
+          chatList.length > 0
+            ? chatList.concat(
+                chatElements.slice(chatList.length, 10 + chatList.length)
+              )
+            : chatElements.slice(0, 10)
+        );
+      // setLoadingChatList(false);
+    }, 2000);
   }
 
   function getMoreChatMessages(chatId: string) {
     setMessagePageAndChatId({ page: messagePageAndChatId.page + 1, chatId });
-    // setLoadingChatMessages(true);
-    // setTimeout(() => {
-    //   if (chatMessageList.length >= fullChatMessages.length)
-    //     setHasMoreChatMessageList(false);
-    //   else
-    //     setChatMessageList(
-    //       chatMessageList.length > 0
-    //         ? chatMessageList.concat(
-    //             fullChatMessages.slice(
-    //               chatMessageList.length,
-    //               10 + chatMessageList.length
-    //             )
-    //           )
-    //         : fullChatMessages.slice(0, 10)
-    //     );
-    //   setLoadingChatMessages(false);
-    // }, 1000);
+    setLoadingChatMessages(true);
+    setTimeout(() => {
+      if (chatMessageList.length >= fullChatMessages.length)
+        setHasMoreChatMessageList(false);
+      else {
+        // const newArray = filterByMissingUIds(chatMessageList, chatMessageList) añadir no repetidos a lista<
+        setChatMessageList(
+          chatMessageList.length > 0
+            ? chatMessageList.concat(
+                fullChatMessages.slice(
+                  chatMessageList.length,
+                  10 + chatMessageList.length
+                )
+              )
+            : fullChatMessages.slice(0, 10)
+        );
+        setPrevChatMessageListLength(
+          (chatMessageList.length > 0
+            ? chatMessageList.concat(
+                fullChatMessages.slice(
+                  chatMessageList.length,
+                  10 + chatMessageList.length
+                )
+              )
+            : fullChatMessages.slice(0, 10)
+          ).length
+        );
+      }
+      setLoadingChatMessages(false);
+    }, 1000);
   }
 
   function resetChatList() {
@@ -441,7 +469,16 @@ export function useChat() {
   function resetChatMessageList() {
     setMessagePageAndChatId({ page: 0, chatId: "" });
     setChatMessageList([]);
+    setPrevChatMessageListLength(0);
     setHasMoreChatMessageList(true);
+  }
+
+  function addMessageToChatMessageList(message: ChatMessage) {
+    // if (chatMessageList.length +1 == PrevChatMessageListLength +  pagesize) {
+    // setPage(page+1);
+    // setPrevChatMessageListLength(PrevChatMessageListLength +  pagesize)
+    //}
+    setChatMessageList([message, ...chatMessageList]);
   }
 
   return {
@@ -455,5 +492,6 @@ export function useChat() {
     getMoreChatMessages,
     hasMoreChatList,
     hasMoreChatMessageList,
+    addMessageToChatMessageList,
   };
 }

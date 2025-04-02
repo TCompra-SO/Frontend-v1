@@ -12,6 +12,7 @@ import {
   Filters,
   SocketChangeType,
   RTNotificationType,
+  ChatMessageType,
 } from "../utilities/types";
 import {
   OfferItemSubUser,
@@ -31,6 +32,7 @@ import {
   ChatSocketData,
   NotificationDataFromServer,
   NotificationTargetData,
+  ChatMessage,
 } from "./MainInterfaces";
 import useApi, { UseApiType } from "../hooks/useApi";
 import { FieldSort } from "./Requests";
@@ -579,4 +581,9 @@ export interface RefreshRefreshTokenResponse {
   accessExpiresIn: number;
   refreshToken: string;
   refreshExpiresIn: number;
+}
+
+export interface ChatSocketResponse {
+  messageData: ChatMessage;
+  type: ChatMessageType;
 }

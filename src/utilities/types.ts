@@ -549,3 +549,8 @@ export enum CertificateRooms {
   SENT = "sentCert",
   RECEIVED = "receivedCert",
 }
+
+export enum ChatMessageType {
+  NEW_MESSAGE = 0,
+  READ = 1,
+}
