@@ -62,13 +62,13 @@ export default function useUserSocket() {
   useEffect(
     () => handleTokenExpiration(tokenExpiration, true),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [tokenExpiration, isUserActive]
+    [tokenExpiration]
   );
 
   useEffect(
     () => handleTokenExpiration(refreshTokenExpiration, false),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [refreshTokenExpiration, isUserActive]
+    [refreshTokenExpiration]
   );
 
   /** Funciones */
@@ -141,7 +141,11 @@ export default function useUserSocket() {
     expirationTime: number | null,
     isAccessToken: boolean
   ) {
-    console.log("tokenExpiration, isUserActive", tokenExpiration, isUserActive);
+    console.log(
+      `${isAccessToken ? "" : "Refresh"}tokenExpiration, isUserActive`,
+      tokenExpiration,
+      isUserActive
+    );
     if (expirationTime == null) return;
 
     let retryInterval: NodeJS.Timeout | null = null;
@@ -153,8 +157,7 @@ export default function useUserSocket() {
           isAccessToken ? "" : "refresh"
         } token: ${timeLeft} segundos`
       );
-      // Refrescar token si el usuario está activo y queda menos de cierto tiempo
-      console.log("iuserActive", isUserActive);
+      // Refrescar token si queda menos de cierto tiempo
       if (timeLeft <= remainingTokenTime) {
         // && isUserActive
         const attemptsNumber = 3;
@@ -183,7 +186,7 @@ export default function useUserSocket() {
             return;
           }
           count += 1;
-        }, 1500);
+        }, 2000);
       }
     }, remainingTokenTime * 1000);
 
@@ -245,14 +248,13 @@ export default function useUserSocket() {
 
         if (apiParams) {
           const { responseData, errorMsg } = await makeRequest(apiParams);
-
           if (responseData) {
-            if (accessToken) {
+            if (isAccesToken) {
               const respData = responseData as RefreshAccessTokenResponse;
               saveToken(respData.accessToken, respData.expiresIn, true);
               window.dispatchEvent(new Event(refreshingTokenKey));
               socketUserAPI?.emit("authenticate", respData.accessToken);
-              console.log("Token actualizado correctamente");
+              console.log(`Token actualizado correctamente`);
               return true;
             } else {
               const respData = responseData as RefreshRefreshTokenResponse;
@@ -294,7 +296,10 @@ export default function useUserSocket() {
       tokenExp.toString()
     );
     localStorage.setItem(isAccesToken ? tokenKey : refreshTokenKey, newToken);
-    if (isAccesToken) dispatch(setToken(newToken));
+    if (isAccesToken) {
+      dispatch(setToken(newToken));
+      setTokenExpiration(tokenExp);
+    } else setRefreshTokenExpiration(tokenExp);
   }
 
   return {
