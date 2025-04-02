@@ -38,7 +38,8 @@ interface ChatBodyProps {
 export default function ChatBody(props: ChatBodyProps) {
   const { t } = useTranslation();
   const { width } = useWindowSize();
-  const { createChatAndSendMessage } = useCreateChatAndSendMessage(false);
+  const { createChatAndSendMessage, sendMessage } =
+    useCreateChatAndSendMessage(false);
   const uid = useSelector((state: MainState) => state.user.uid);
   const divRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<AddImagesFieldRef>(null);
@@ -159,6 +160,12 @@ export default function ChatBody(props: ChatBodyProps) {
           },
           msg
         );
+      else
+        sendMessage({
+          chatId: props.chatData.uid,
+          userId: uid,
+          message: msg,
+        });
       setMessage("");
     }
   }
@@ -208,6 +215,7 @@ export default function ChatBody(props: ChatBodyProps) {
               className="t-flex f-column-reverse mensajes-contenedor"
               id="scrollableDivChatBodyList"
               ref={chatContainerRef}
+              style={{ width: "100%" }}
             >
               <InfiniteScroll
                 dataLength={props.messages.length}
@@ -284,6 +292,7 @@ export default function ChatBody(props: ChatBodyProps) {
           placeholder={t("message")}
           onChange={(e) => setMessage(e.currentTarget.value)}
           value={message}
+          onPressEnter={sendMsg}
         />
         <i
           className="fa-regular fa-paper-plane-top mensaje-send"

@@ -917,11 +917,26 @@ export function isUserCounterKey(key: string): key is keyof UserCounters {
   return key in userCounterKeys;
 }
 
-// Retorna 2da lista sin objectos con uids repetidos en la 1ra
+// Retorna 2da lista sin objectos con uids repetidos que aparecen en la 1ra
 export function filterByMissingUIds<T extends { uid: string }>(
   array1: T[],
   array2: T[]
 ): T[] {
   const idsInArray1 = new Set(array1.map((item) => item.uid));
   return array2.filter((item) => !idsInArray1.has(item.uid));
+}
+
+// Retorna lista con elementos con uids únicas
+export function filterUniqueOrFirstRepeated<T extends { uid: string }>(
+  arr: T[]
+): T[] {
+  const seen = new Map<string, T>();
+
+  return arr.filter((obj) => {
+    if (!seen.has(obj.uid)) {
+      seen.set(obj.uid, obj);
+      return true;
+    }
+    return false;
+  });
 }

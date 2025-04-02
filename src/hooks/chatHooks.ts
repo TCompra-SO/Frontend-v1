@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import {
   CreateChatRequest,
+  CreateMessageRequest,
   GetChatListRequest,
   GetChatMessagesRequest,
 } from "../models/Requests";
@@ -36,6 +37,10 @@ export function useCreateChatAndSendMessage(
   const { showNotification } = useShowNotification();
   const [loading, setLoading] = useState(false);
 
+  async function sendMessage(request: CreateMessageRequest) {
+    return await createChatMessage(request);
+  }
+
   async function createChatAndSendMessage(
     request: CreateChatRequest,
     message: string
@@ -51,7 +56,7 @@ export function useCreateChatAndSendMessage(
           messageData,
           error: msgError,
           errorMsg: msgErrorMsg,
-        } = await createChatMessage({
+        } = await sendMessage({
           chatId: chatData
             ? chatData.chat.uid
             : error?.response?.data.error.uid,
@@ -73,7 +78,11 @@ export function useCreateChatAndSendMessage(
     }
   }
 
-  return { createChatAndSendMessage, loadingCreateChatAndSendMessage: loading };
+  return {
+    createChatAndSendMessage,
+    loadingCreateChatAndSendMessage: loading,
+    sendMessage,
+  };
 }
 
 export function useGetChatList() {
