@@ -75,35 +75,40 @@ export default function useSocket(
 
         socketAPI.on("updateRoom", (data: SocketResponse) => {
           console.log("Received", data);
-          const isAllTypeTableVar = isAllTypeTable();
-          const canAddRow = pageRef.current == 1;
+          try {
+            const isAllTypeTableVar = isAllTypeTable();
+            const canAddRow = pageRef.current == 1;
 
-          if (
-            // Agregar cambios a cola si la tabla es de  tipo All o si el cambio pertenece a usuario
-            (isAllTypeTableVar || (!isAllTypeTableVar && uid == data.userId)) &&
-            (data.typeSocket == SocketChangeType.DELETE ||
-              data.typeSocket == SocketChangeType.UPDATE_FIELD ||
-              data.typeSocket == SocketChangeType.UPDATE ||
-              (data.typeSocket == SocketChangeType.CREATE &&
-                canAddRow &&
-                searchTableRequestRef.current &&
-                hasNoSortNorFilter(searchTableRequestRef.current)))
-          ) {
-            if (tableType == TableTypes.MY_DOCUMENTS) {
-              // caso especial: lista de certificados agregados
-              if (data.typeSocket == SocketChangeType.CREATE)
-                data.dataPack.data.forEach((cert) => {
-                  updateChangesQueue(
-                    { ...data, dataPack: { data: [cert] } },
-                    canAddRow
-                  );
-                });
-              else if (
-                data.typeSocket == SocketChangeType.DELETE ||
-                data.typeSocket == SocketChangeType.UPDATE_FIELD
-              )
-                updateChangesQueue(data, canAddRow);
-            } else updateChangesQueue(data, canAddRow);
+            if (
+              // Agregar cambios a cola si la tabla es de  tipo All o si el cambio pertenece a usuario
+              (isAllTypeTableVar ||
+                (!isAllTypeTableVar && uid == data.userId)) &&
+              (data.typeSocket == SocketChangeType.DELETE ||
+                data.typeSocket == SocketChangeType.UPDATE_FIELD ||
+                data.typeSocket == SocketChangeType.UPDATE ||
+                (data.typeSocket == SocketChangeType.CREATE &&
+                  canAddRow &&
+                  searchTableRequestRef.current &&
+                  hasNoSortNorFilter(searchTableRequestRef.current)))
+            ) {
+              if (tableType == TableTypes.MY_DOCUMENTS) {
+                // caso especial: lista de certificados agregados
+                if (data.typeSocket == SocketChangeType.CREATE)
+                  data.dataPack.data.forEach((cert) => {
+                    updateChangesQueue(
+                      { ...data, dataPack: { data: [cert] } },
+                      canAddRow
+                    );
+                  });
+                else if (
+                  data.typeSocket == SocketChangeType.DELETE ||
+                  data.typeSocket == SocketChangeType.UPDATE_FIELD
+                )
+                  updateChangesQueue(data, canAddRow);
+              } else updateChangesQueue(data, canAddRow);
+            }
+          } catch (e) {
+            console.log(e);
           }
         });
       }
@@ -127,21 +132,25 @@ export default function useSocket(
 
           extraSocketAPI.on("updateRoom", (data: SocketResponse) => {
             console.log("Received", data);
-            const isAllTypeTableVar = isAllTypeTable();
-            const canAddRow = pageRef.current == 1;
+            try {
+              const isAllTypeTableVar = isAllTypeTable();
+              const canAddRow = pageRef.current == 1;
 
-            if (
-              // Agregar cambios a cola si la tabla es de  tipo All o si el cambio pertenece a usuario
-              (isAllTypeTableVar ||
-                (!isAllTypeTableVar && uid == data.userId)) &&
-              (data.typeSocket == SocketChangeType.DELETE ||
-                data.typeSocket == SocketChangeType.UPDATE ||
-                (data.typeSocket == SocketChangeType.CREATE &&
-                  canAddRow &&
-                  searchTableRequestRef.current &&
-                  hasNoSortNorFilter(searchTableRequestRef.current)))
-            ) {
-              updateChangesQueue(data, canAddRow);
+              if (
+                // Agregar cambios a cola si la tabla es de  tipo All o si el cambio pertenece a usuario
+                (isAllTypeTableVar ||
+                  (!isAllTypeTableVar && uid == data.userId)) &&
+                (data.typeSocket == SocketChangeType.DELETE ||
+                  data.typeSocket == SocketChangeType.UPDATE ||
+                  (data.typeSocket == SocketChangeType.CREATE &&
+                    canAddRow &&
+                    searchTableRequestRef.current &&
+                    hasNoSortNorFilter(searchTableRequestRef.current)))
+              ) {
+                updateChangesQueue(data, canAddRow);
+              }
+            } catch (e) {
+              console.log(e);
             }
           });
         }

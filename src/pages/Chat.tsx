@@ -156,8 +156,8 @@ export default function Chat() {
   /** Marcar mensaje como leído */
 
   useEffect(() => {
+    console.log("????????????", chatMessageRead);
     if (chatMessageRead.messageId) {
-      console.log("????????????", chatMessageRead);
       markMsgAsRead(chatMessageRead.messageId, chatMessageRead.read);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

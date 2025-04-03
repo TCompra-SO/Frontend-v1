@@ -83,19 +83,23 @@ export function useTCNotification() {
 
         globalNotifSocketAPI.on("updateRoom", (payload: SocketResponse) => {
           console.log("notificación global recibida:", payload);
-          if (payload.dataPack.data && payload.dataPack.data.length > 0) {
-            const content: NotificationDataFromServer = payload.dataPack
-              .data[0] as NotificationDataFromServer;
-            if (
-              content.type == NotificationType.BROADCAST &&
-              content.categoryId &&
-              mainCategories.includes(content.categoryId)
-            )
-              showRealTimeNotification({
-                type: RTNotificationType.NOTIFICATION,
-                content,
-                onClickCallback: redirectFromNotification,
-              });
+          try {
+            if (payload.dataPack.data && payload.dataPack.data.length > 0) {
+              const content: NotificationDataFromServer = payload.dataPack
+                .data[0] as NotificationDataFromServer;
+              if (
+                content.type == NotificationType.BROADCAST &&
+                content.categoryId &&
+                mainCategories.includes(content.categoryId)
+              )
+                showRealTimeNotification({
+                  type: RTNotificationType.NOTIFICATION,
+                  content,
+                  onClickCallback: redirectFromNotification,
+                });
+            }
+          } catch (e) {
+            console.log(e);
           }
         });
       }
@@ -119,12 +123,16 @@ export function useTCNotification() {
 
         notifSocketAPI.on("updateRoom", (payload: SocketResponse) => {
           console.log("notificación recibida:", payload);
-          if (payload.dataPack.data && payload.dataPack.data.length > 0)
-            showRealTimeNotification({
-              type: RTNotificationType.NOTIFICATION,
-              content: payload.dataPack.data[0] as NotificationDataFromServer,
-              onClickCallback: redirectFromNotification,
-            });
+          try {
+            if (payload.dataPack.data && payload.dataPack.data.length > 0)
+              showRealTimeNotification({
+                type: RTNotificationType.NOTIFICATION,
+                content: payload.dataPack.data[0] as NotificationDataFromServer,
+                onClickCallback: redirectFromNotification,
+              });
+          } catch (e) {
+            console.log(e);
+          }
         });
       }
     }

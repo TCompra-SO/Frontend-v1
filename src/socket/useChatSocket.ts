@@ -8,43 +8,6 @@ import { pageRoutes } from "../utilities/routes";
 import { chatDataFieldName } from "../utilities/globals";
 import { ChatMessageRead, ChatSocketResponse } from "../models/Interfaces";
 
-const chatMessages: ChatSocketData[] = [
-  {
-    userId: "ru1VLrbCKDR7BPQIGrk2",
-    message:
-      "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
-    timestamp: "2024-11-20T15:25:00.000Z",
-    read: true,
-    uid: "2",
-    userName: "Soluciones Online",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "EOuyocZiTZVT91ZOo0rW",
-    timestamp: "2024-11-20T15:27:00.000Z",
-    read: true,
-    images: [
-      "https://dummyimage.com/250/ff3fff/000000",
-      "https://dummyimage.com/250/ff3ff1/000000",
-      "https://dummyimage.com/250/af3ff1/000000",
-    ],
-    uid: "4",
-    userName: "Soluciones Online",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "EOuyocZiTZVT91ZOo0rW",
-    timestamp: "2024-11-20T15:29:00.000Z",
-    read: false,
-    documents: [
-      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-    ],
-    uid: "7",
-    userName: "Soluciones Online",
-    chatId: "RJ1xrrfe4x",
-  },
-];
-
 let chatSocketAPI: Socket | null = null;
 let singleChatSocketAPI: Socket | null = null;
 
@@ -115,11 +78,19 @@ export function useChatSocket() {
       });
 
       singleChatSocketAPI.on("updateChat", (payload: ChatSocketResponse) => {
-        console.log("single chat recibido:", payload);
-        if (payload.type == ChatMessageType.NEW_MESSAGE)
-          setLastChatMessageReceived(payload.messageData as ChatMessage);
-        else if (payload.type == ChatMessageType.READ) {
-          setChatMessageRead(payload.messageData as ChatMessageRead);
+        try {
+          console.log("single chat recibido:", payload);
+          if (payload.type == ChatMessageType.NEW_MESSAGE)
+            setLastChatMessageReceived(payload.messageData);
+          else if (
+            payload.type == ChatMessageType.READ &&
+            Array.isArray(payload.messageData) &&
+            payload.messageData.length
+          ) {
+            setChatMessageRead(payload.messageData[0]);
+          }
+        } catch (e) {
+          console.log(e);
         }
       });
     }

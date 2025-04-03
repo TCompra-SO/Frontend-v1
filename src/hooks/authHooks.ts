@@ -59,6 +59,7 @@ export function useLogin() {
       loginResponse.accessToken &&
       loginResponse.refreshToken
     ) {
+      dispatch(setIsLoading(true));
       localStorage.setItem(tokenKey, loginResponse.accessToken);
       localStorage.setItem(refreshTokenKey, loginResponse.refreshToken);
       if (loginResponse.accessExpiresIn) {
@@ -71,11 +72,12 @@ export function useLogin() {
         localStorage.setItem(refreshExpiresInKey, tokenExp.toString());
         setRefreshTokenExpiration(tokenExp);
       }
-    }
 
-    await loadUserInfo();
-    showNotification("success", t("welcome"));
-    localStorage.setItem(loginKey, Date.now().toString());
+      await loadUserInfo();
+      showNotification("success", t("welcome"));
+      localStorage.setItem(loginKey, Date.now().toString());
+      dispatch(setIsLoading(false));
+    }
   }
 
   return login;

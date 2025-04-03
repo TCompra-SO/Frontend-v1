@@ -51,13 +51,17 @@ export default function useHomeSocket() {
 
         socketHomeAPI.on("updateRoom", (payload: SocketResponse) => {
           console.log("Nuevos datos recibido:", payload);
-          const canAddRow: boolean =
-            pageRef.current == 1 && !useFilterRef.current;
-          if (
-            payload.typeSocket == SocketChangeType.UPDATE ||
-            (payload.typeSocket == SocketChangeType.CREATE && canAddRow)
-          )
-            updateChangesQueue(payload, canAddRow);
+          try {
+            const canAddRow: boolean =
+              pageRef.current == 1 && !useFilterRef.current;
+            if (
+              payload.typeSocket == SocketChangeType.UPDATE ||
+              (payload.typeSocket == SocketChangeType.CREATE && canAddRow)
+            )
+              updateChangesQueue(payload, canAddRow);
+          } catch (e) {
+            console.log(e);
+          }
         });
       }
     }

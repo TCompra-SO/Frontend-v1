@@ -107,6 +107,7 @@ export function useChat() {
   }
 
   function markMsgAsRead(messageId: string, read: boolean) {
+    console.log("markMsgAsRead", messageId);
     setChatMessageList((prevList) =>
       prevList.map((item) =>
         item.uid === messageId ? { ...item, read } : item

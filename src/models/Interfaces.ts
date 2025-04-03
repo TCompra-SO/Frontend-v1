@@ -588,7 +588,21 @@ export interface ChatMessageRead {
   read: boolean;
 }
 
-export interface ChatSocketResponse {
-  messageData: ChatMessage | ChatMessageRead;
-  type: ChatMessageType;
+// export interface ChatSocketResponse {
+//   messageData: ChatMessage | ChatMessageRead[];
+//   type: ChatMessageType;
+// }
+
+export interface MessageChatSocketResponse {
+  messageData: ChatMessage;
+  type: ChatMessageType.NEW_MESSAGE;
 }
+
+export interface ReadChatSocketResponse {
+  messageData: ChatMessageRead[];
+  type: ChatMessageType.READ;
+}
+
+export type ChatSocketResponse =
+  | MessageChatSocketResponse
+  | ReadChatSocketResponse;

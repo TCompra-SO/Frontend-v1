@@ -166,11 +166,6 @@ export function useGetChatMessages() {
             transformToChatMessage(chatMessage)
           )
         );
-        console.log(
-          responseData.data.map((chatMessage: any) =>
-            transformToChatMessage(chatMessage)
-          )
-        );
       } catch (err) {
         showNotification("error", t(defaultErrorMsg));
       }
