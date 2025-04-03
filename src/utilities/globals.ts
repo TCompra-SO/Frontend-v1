@@ -57,9 +57,12 @@ export const basicChatDataFieldName: string = "basicChatData";
 export const masterUid: string = "dlGMHRyyAidgFMDqmLBO";
 export const pageSizeOfferList: number = 5;
 
+// En segundos
 export const inactivityTime = 30;
 export const remainingTokenTime = 60;
 export const logoutAfterNoTokenRefreshTime = 10;
+export const intervalToRetryRefreshingToken = 2;
+export const attemptsToRetryRefreshingToken = 3;
 
 export const defaultErrorMsg = "errorOccurred";
 

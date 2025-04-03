@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { useLogout } from "../hooks/authHooks";
 import { useDispatch, useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import {
+  attemptsToRetryRefreshingToken,
   expiresInKey,
-  inactivityTime,
+  intervalToRetryRefreshingToken,
   logoutAfterNoTokenRefreshTime,
   refreshExpiresInKey,
   refreshingRefreshTokenKey,
@@ -42,7 +43,6 @@ export default function useUserSocket() {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
   const uid = useSelector((state: MainState) => state.user.uid);
-  const [isUserActive, setIsUserActive] = useState(true);
   const [tokenExpiration, setTokenExpiration] = useState<number | null>(null);
   const [refreshTokenExpiration, setRefreshTokenExpiration] = useState<
     number | null
@@ -84,11 +84,6 @@ export default function useUserSocket() {
   function connectSocket() {
     window.addEventListener("storage", handleTokenUpdatedEvent);
 
-    // Detectar inactividad del usuario
-    window.addEventListener("mousemove", resetActivity);
-    window.addEventListener("keydown", resetActivity);
-    window.addEventListener("click", resetActivity);
-
     if (!socketUserAPI) {
       socketUserAPI = io(import.meta.env.VITE_USERS_SOCKET_URL);
 
@@ -114,10 +109,6 @@ export default function useUserSocket() {
   }
 
   function disconnectSocket() {
-    console.log("REMOVING");
-    window.removeEventListener("mousemove", resetActivity);
-    window.removeEventListener("keydown", resetActivity);
-    window.removeEventListener("click", resetActivity);
     window.removeEventListener("storage", handleTokenUpdatedEvent);
     if (socketUserAPI) {
       console.log("Socket user disconnected");
@@ -127,24 +118,13 @@ export default function useUserSocket() {
     }
   }
 
-  // Resetear actividad del usuario
-  const resetActivity = useCallback(() => {
-    // if (activityTimeout.current) clearTimeout(activityTimeout.current);
-    // setIsUserActive(true);
-    // console.log("setting IsUserActive to", true);
-    // activityTimeout.current = setTimeout(() => {
-    //   setIsUserActive(false);
-    // }, inactivityTime * 1000);
-  }, []);
-
   function handleTokenExpiration(
     expirationTime: number | null,
     isAccessToken: boolean
   ) {
     console.log(
-      `${isAccessToken ? "" : "Refresh"}tokenExpiration, isUserActive`,
-      tokenExpiration,
-      isUserActive
+      `${isAccessToken ? "" : "Refresh"}tokenExpiration`,
+      tokenExpiration
     );
     if (expirationTime == null) return;
 
@@ -158,15 +138,22 @@ export default function useUserSocket() {
         } token: ${timeLeft} segundos`
       );
       // Refrescar token si queda menos de cierto tiempo
-      if (timeLeft <= remainingTokenTime) {
-        // && isUserActive
-        const attemptsNumber = 3;
+      if (
+        timeLeft -
+          (attemptsToRetryRefreshingToken + 1) *
+            intervalToRetryRefreshingToken <=
+        remainingTokenTime -
+          (attemptsToRetryRefreshingToken + 1) * intervalToRetryRefreshingToken
+      ) {
         let count = 0;
         // Interval para reintentar refrescar el token si hubo un error
         retryInterval = setInterval(async () => {
           const success = await refreshToken(isAccessToken);
           // Si no se pudo refrescar token, cerrar sesión después de un tiempo
-          if (success === false) {
+          if (
+            success === false &&
+            count + 1 === attemptsToRetryRefreshingToken
+          ) {
             localStorage.removeItem(tokenKey);
             localStorage.removeItem(refreshTokenKey);
             localStorage.removeItem(expiresInKey);
@@ -180,13 +167,17 @@ export default function useUserSocket() {
               logout();
             }, logoutAfterNoTokenRefreshTime * 1000);
           }
-          if (success === null || success || count + 1 === attemptsNumber) {
+          if (
+            success === null ||
+            success ||
+            count + 1 === attemptsToRetryRefreshingToken
+          ) {
             clearInterval(retryInterval!);
             retryInterval = null;
             return;
           }
           count += 1;
-        }, 2000);
+        }, intervalToRetryRefreshingToken * 1000);
       }
     }, remainingTokenTime * 1000);
 
