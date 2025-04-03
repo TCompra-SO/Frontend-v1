@@ -60,7 +60,16 @@ export function getChatListService(): HttpService {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.chat}${
       ApiRoutes.chat.getChatUsersData
     }`,
-    type: "CH-GE-US",
+    type: "CH-GE-CL",
+  };
+}
+
+export function getArchivedChatListService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.chat}${
+      ApiRoutes.chat.getChatUsersData
+    }`,
+    type: "CH-GE-ACL",
   };
 }
 

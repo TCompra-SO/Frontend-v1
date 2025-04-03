@@ -3,7 +3,7 @@ import InputContainer from "../../../containers/InputContainer";
 import { ChatListData } from "../../../../models/MainInterfaces";
 import ChatListItem from "./ChatListItem";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Flex, Spin } from "antd";
+import { Flex, Spin, Tag } from "antd";
 import SimpleLoading from "../../../../pages/utils/SimpleLoading";
 import { ReactNode } from "react";
 
@@ -16,10 +16,12 @@ const loadingSpinner: ReactNode = (
 interface ChatListProps {
   chatList: ChatListData[];
   onClickOnItem: (item: ChatListData) => void;
-  loadMoreChats: () => void;
+  loadMoreChats: (archived: boolean) => void;
   currentChat: ChatListData | null;
   hasMore: boolean;
   loading: boolean | undefined;
+  showArchivedChats: boolean;
+  setShowArchivedChats: (val: boolean) => void;
 }
 
 export default function ChatList(props: ChatListProps) {
@@ -34,6 +36,28 @@ export default function ChatList(props: ChatListProps) {
           className="form-transparent form-filter"
           placeholder={t("search")}
         />
+      </div>
+      <div className="t-flex gap-5 j-items chat-tab">
+        <Tag.CheckableTag
+          checked={false}
+          style={{
+            color: "#92acbf",
+            cursor: props.loading ? "not-allowed" : "pointer",
+          }}
+          onChange={() => {
+            if (!props.loading)
+              props.setShowArchivedChats(!props.showArchivedChats);
+          }}
+        >
+          <i
+            className={
+              props.showArchivedChats
+                ? "fa-solid fa-globe"
+                : "fa-solid fa-box-archive"
+            }
+          ></i>{" "}
+          {t(props.showArchivedChats ? "all" : "archivedPl")}
+        </Tag.CheckableTag>
       </div>
       {props.chatList.length == 0 ? (
         props.loading ? (
@@ -51,7 +75,7 @@ export default function ChatList(props: ChatListProps) {
         >
           <InfiniteScroll
             dataLength={props.chatList.length}
-            next={props.loadMoreChats}
+            next={() => props.loadMoreChats(props.showArchivedChats)}
             hasMore={props.hasMore}
             loader={loadingSpinner}
             scrollableTarget="scrollableDivChatList"

@@ -558,6 +558,7 @@ const resources = {
       reactivate: "Reactivate",
       activeUser: "Active",
       suspendedUser: "Suspended",
+      archivedPl: "Archived",
     },
   },
   es: {
@@ -1125,6 +1126,7 @@ const resources = {
       reactivate: "Reactivar",
       activeUser: "Activo",
       suspendedUser: "Suspendido",
+      archivedPl: "Archivados",
     },
   },
 };

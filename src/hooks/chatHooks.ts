@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { useApiParams } from "../models/Interfaces";
 import useApi from "./useApi";
 import {
+  getArchivedChatListService,
   getChatListService,
   getChatMessagesService,
 } from "../services/requests/chatService";
@@ -124,9 +125,9 @@ export function useGetChatList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
-  function getChatList(page: number) {
+  function getChatList(page: number, archived: boolean) {
     setApiParams({
-      service: getChatListService(),
+      service: archived ? getArchivedChatListService() : getChatListService(),
       method: "post",
       dataToSend: {
         userId: uid,

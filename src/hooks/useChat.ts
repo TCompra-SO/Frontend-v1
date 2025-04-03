@@ -17,7 +17,12 @@ export function useChat() {
   const [chatMessageList, setChatMessageList] = useState<ChatMessage[]>([]);
   const [hasMoreChatMessageList, setHasMoreChatMessageList] = useState(true);
   const [prevChatMessageListLength, setPrevChatMessageListLength] = useState(0);
-  const [page, setPage] = useState({ page: 0, retrieve: false });
+  const [isChatListReset, setIsChatListReset] = useState(false);
+  const [pageData, setPageData] = useState({
+    page: 0,
+    retrieve: false,
+    archived: false,
+  });
   const [messagePageAndChatId, setMessagePageAndChatId] = useState({
     page: 0,
     chatId: "",
@@ -26,9 +31,10 @@ export function useChat() {
   /** Obtener más chats */
 
   useEffect(() => {
-    if (page.page && page.retrieve) getChatList(page.page);
+    if (pageData.page && pageData.retrieve)
+      getChatList(pageData.page, pageData.archived);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  }, [pageData]);
 
   useEffect(() => {
     if (currentPageChatList.length < chatListPageSize)
@@ -59,8 +65,8 @@ export function useChat() {
 
   /** Funciones */
 
-  function getMoreChats() {
-    setPage({ page: page.page + 1, retrieve: true });
+  function getMoreChats(archived: boolean) {
+    setPageData({ page: pageData.page + 1, retrieve: true, archived });
   }
 
   function getMoreChatMessages(chatId: string) {
@@ -69,9 +75,11 @@ export function useChat() {
   }
 
   function resetChatList() {
-    setPage({ page: 0, retrieve: false });
+    setPageData({ page: 0, retrieve: false, archived: pageData.archived });
     setChatList([]);
     setHasMoreChatList(true);
+    resetChatMessageList();
+    setIsChatListReset(true);
   }
 
   function resetChatMessageList() {
@@ -86,7 +94,11 @@ export function useChat() {
       chatMessageList.length + 1 ==
       prevChatMessageListLength + chatMessagesPageSize
     ) {
-      setPage({ page: page.page + 1, retrieve: false });
+      setPageData({
+        page: pageData.page + 1,
+        retrieve: false,
+        archived: pageData.archived,
+      });
       setPrevChatMessageListLength(
         prevChatMessageListLength + chatMessagesPageSize
       );
@@ -115,5 +127,7 @@ export function useChat() {
     hasMoreChatMessageList,
     addMessageToChatMessageList,
     markMsgAsRead,
+    isChatListReset,
+    setIsChatListReset,
   };
 }

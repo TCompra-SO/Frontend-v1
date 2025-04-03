@@ -205,3 +205,11 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
 .no-pointer-events {
   pointer-events: none;
 }
+
+.chat-tab .ant-tag-checkable:not(.ant-tag-checkable-checked):hover {
+  background-color: #f3f7fa;
+}
+
+.chat-tab .ant-tag {
+  border-radius: 10px;
+}

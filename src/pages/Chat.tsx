@@ -33,12 +33,15 @@ export default function Chat() {
     chatMessageList,
     getMoreChatMessages,
     resetChatMessageList,
+    resetChatList,
     hasMoreChatList,
     hasMoreChatMessageList,
     loadingChatList,
     loadingChatMessages,
     addMessageToChatMessageList,
     markMsgAsRead,
+    isChatListReset,
+    setIsChatListReset,
   } = useChat();
   const { markAsRead } = useCreateChatAndSendMessage(false);
   const {
@@ -51,19 +54,38 @@ export default function Chat() {
   const [markedAsRead, setMarkedAsRead] = useState(false);
   const [isChatOpened, setIsChatOpened] = useState(false);
   const [currentChat, setCurrentChat] = useState<ChatListData | null>(null);
+  const [showArchivedChats, setShowArchivedChats] = useState(true);
   const [basicChatDataFromRouting] = useState<BasicChatListData | undefined>(
     location.state?.[basicChatDataFieldName]
   );
 
   /** Obtener lista inicial de chats */
 
+  // useEffect(() => {
+  //   getMoreChats(true);
+  //   return () => {
+  //     disconnectSingleChatSocket();
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+
   useEffect(() => {
-    getMoreChats();
+    handleCloseChat();
+    resetChatList();
     return () => {
       disconnectSingleChatSocket();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [showArchivedChats]);
+
+  /**  */
+
+  useEffect(() => {
+    if (isChatListReset) {
+      getMoreChats(showArchivedChats);
+      setIsChatListReset(false);
+    }
+  }, [isChatListReset]);
 
   /** Abrir chat desde redireccionamiento */
 
@@ -84,6 +106,7 @@ export default function Chat() {
 
     if (chatDataFromNotification && !hasHandledChatNotification.current) {
       console.log(chatDataFromNotification);
+      navigate(".", { replace: true, state: null });
       const chatToOpen = chatList.find(
         (chat) => chat.uid === chatDataFromNotification.chatId
       );
@@ -175,6 +198,8 @@ export default function Chat() {
             currentChat={currentChat}
             hasMore={hasMoreChatList}
             loading={loadingChatList}
+            showArchivedChats={showArchivedChats}
+            setShowArchivedChats={setShowArchivedChats}
           />
         )}
         {isChatOpened && currentChat ? (
