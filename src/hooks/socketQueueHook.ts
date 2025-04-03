@@ -116,31 +116,34 @@ export function useActionsForRow(
             const requirement: Requirement = updElem as Requirement;
             if (requirement.state != RequirementState.PUBLISHED) {
               if (!useFilter) {
-                const newList = [...list.slice(0, ind), ...list.slice(ind + 1)];
+                const prevLen = list.length;
+                const newList = list.filter(
+                  (item) => item.key ?? item.uid !== data.key
+                );
                 setList(newList);
-                setTotal(total - 1);
+                setTotal(total - (prevLen - newList.length));
                 if (newList.length == 0) callback?.(); // callback recarga la página de home
               }
-            } else insertElementInArray(updElem, ind);
+            } else insertElementInArray(updElem);
           } else if (
             tableType == TableTypes.REQUIREMENT ||
             tableType == TableTypes.ALL_REQUIREMENTS
           ) {
             const requirement = updElem as BasicRequirement;
             // Verificar si requerimiento ha sido republicado
+            const item = list.find((item) => item.key ?? item.uid === data.key);
             if (
-              (list[ind] as BasicRequirement).state ==
-                RequirementState.EXPIRED && // || list[ind] as BasicRequirement).state == RequirementState.CANCELED
+              item &&
+              (item as BasicRequirement).state == RequirementState.EXPIRED && // || list[ind] as BasicRequirement).state == RequirementState.CANCELED
               requirement.state == RequirementState.PUBLISHED &&
               canAddRow
             )
               setList([
                 requirement,
-                ...list.slice(0, ind),
-                ...list.slice(ind + 1),
+                ...list.filter((item) => item.key ?? item.uid !== data.key),
               ]);
-            else insertElementInArray(updElem, ind);
-          } else insertElementInArray(updElem, ind);
+            else insertElementInArray(updElem);
+          } else insertElementInArray(updElem);
         }
       } else if (
         tableType == TableTypes.HOME ||
@@ -159,13 +162,11 @@ export function useActionsForRow(
 
   function deleteRow(data: SocketResponse) {
     try {
-      const ind = list.findIndex((item) => item.key ?? item.uid === data.key);
-      if (ind != -1) {
-        const newList = [...list.slice(0, ind), ...list.slice(ind + 1)];
-        setList(newList);
-        setTotal(total - 1);
-        if (newList.length == 0) callback?.(); // recargar página
-      }
+      const prevLen = list.length;
+      const newList = list.filter((item) => item.key ?? item.uid !== data.key);
+      setList(newList);
+      setTotal(total - (prevLen - newList.length));
+      if (newList.length == 0) callback?.(); // recargar página
     } catch (e) {
       console.log(e);
     }
@@ -173,10 +174,9 @@ export function useActionsForRow(
 
   function updateFieldInRow(data: SocketResponse) {
     try {
-      const ind = list.findIndex((item) => item.key ?? item.uid === data.key);
+      const newObj = list.find((item) => item.key ?? item.uid === data.key);
 
-      if (ind != -1) {
-        const newObj = list[ind];
+      if (newObj) {
         data.dataPack.data.forEach((pair) => {
           if (isFieldValueI(pair)) {
             Object.keys(pair).forEach((key) => {
@@ -188,15 +188,19 @@ export function useActionsForRow(
             });
           }
         });
-        insertElementInArray(newObj, ind);
+        insertElementInArray(newObj);
       }
     } catch (e) {
       console.log(e);
     }
   }
 
-  function insertElementInArray(updElem: any, ind: number) {
-    setList([...list.slice(0, ind), updElem, ...list.slice(ind + 1)]);
+  function insertElementInArray(updElem: any) {
+    setList(
+      list.map((item) =>
+        (item.key ?? item.uid) === (updElem.key ?? updElem.uid) ? updElem : item
+      )
+    );
   }
 
   return { updateRow, addNewRow, deleteRow, updateFieldInRow };
