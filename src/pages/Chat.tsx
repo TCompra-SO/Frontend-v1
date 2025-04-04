@@ -44,6 +44,7 @@ export default function Chat() {
     setIsChatListResetToChangeTabs,
     handleSearch,
     usingSearch,
+    setFirstChatMessageToRead,
   } = useChat();
   const { markAsRead } = useChatFunctions(false);
   const {
@@ -133,7 +134,7 @@ export default function Chat() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastChatMessageReceived]);
 
-  /** Al abrir chat, marcar como leído */
+  /** Al abrir chat, marcar como leído si hay un mensaje no leído que no es del usuario */
 
   useEffect(() => {
     if (
@@ -145,8 +146,10 @@ export default function Chat() {
       markAsRead({
         messagesIds: [chatMessageList[0].uid],
         chatId: chatMessageList[0].chatId,
+        userId: uid,
       });
       setMarkedAsRead(true);
+      setFirstChatMessageToRead(chatMessageList[0].uid);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatMessageList]);
@@ -155,8 +158,8 @@ export default function Chat() {
 
   useEffect(() => {
     console.log("????????????", chatMessageRead);
-    if (chatMessageRead.messageId) {
-      markMsgAsRead(chatMessageRead.messageId, chatMessageRead.read);
+    if (chatMessageRead.endMessageId) {
+      markMsgAsRead(chatMessageRead.endMessageId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatMessageRead]);

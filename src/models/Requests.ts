@@ -288,6 +288,7 @@ export interface GetChatMessagesRequest {
 export interface MarkChatMessagesAsReadRequest {
   messagesIds: string[];
   chatId: string;
+  userId: string;
 }
 
 export interface SearchChatRequest {

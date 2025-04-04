@@ -15,8 +15,7 @@ export function useChatSocket() {
   const navigate = useNavigate();
   const { showRealTimeNotification } = useShowNotification();
   const [chatMessageRead, setChatMessageRead] = useState<ChatMessageRead>({
-    messageId: "",
-    read: false,
+    endMessageId: "",
   });
   const [lastChatMessageReceived, setLastChatMessageReceived] =
     useState<ChatMessage | null>(null);
@@ -84,10 +83,9 @@ export function useChatSocket() {
             setLastChatMessageReceived(payload.messageData);
           else if (
             payload.type == ChatMessageType.READ &&
-            Array.isArray(payload.messageData) &&
-            payload.messageData.length
+            payload.res?.endMessageId
           ) {
-            setChatMessageRead(payload.messageData[0]);
+            setChatMessageRead(payload.res);
           }
         } catch (e) {
           console.log(e);
@@ -101,6 +99,7 @@ export function useChatSocket() {
   }
 
   function disconnectChatSocket() {
+    cleanDataInChatSocket();
     if (chatSocketAPI) {
       console.log("Disconnected chat");
       chatSocketAPI.removeAllListeners();
@@ -110,12 +109,18 @@ export function useChatSocket() {
   }
 
   function disconnectSingleChatSocket() {
+    cleanDataInChatSocket();
     if (singleChatSocketAPI) {
       console.log("Disconnected single chat");
       singleChatSocketAPI.removeAllListeners();
       singleChatSocketAPI.disconnect();
       singleChatSocketAPI = null;
     }
+  }
+
+  function cleanDataInChatSocket() {
+    setChatMessageRead({ endMessageId: "" });
+    setLastChatMessageReceived(null);
   }
 
   return {

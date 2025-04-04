@@ -24,6 +24,7 @@ export function useChat() {
   const [chatMessageList, setChatMessageList] = useState<ChatMessage[]>([]);
   const [hasMoreChatMessageList, setHasMoreChatMessageList] = useState(true);
   const [prevChatMessageListLength, setPrevChatMessageListLength] = useState(0);
+  const [firstChatMessageToRead, setFirstChatMessageToRead] = useState("");
   const [isChatListResetToChangeTabs, setIsChatListResetToChangeTabs] =
     useState(false);
   const [pageData, setPageData] = useState({
@@ -122,11 +123,11 @@ export function useChat() {
     setChatMessageList([message, ...chatMessageList]);
   }
 
-  function markMsgAsRead(messageId: string, read: boolean) {
+  function markMsgAsRead(messageId: string) {
     console.log("markMsgAsRead", messageId);
     setChatMessageList((prevList) =>
       prevList.map((item) =>
-        item.uid === messageId ? { ...item, read } : item
+        item.uid === messageId ? { ...item, read: true } : item
       )
     );
   }
@@ -161,5 +162,6 @@ export function useChat() {
     handleSearch,
     usingSearch,
     chatListPageData: pageData,
+    setFirstChatMessageToRead,
   };
 }

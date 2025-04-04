@@ -584,14 +584,8 @@ export interface RefreshRefreshTokenResponse {
 }
 
 export interface ChatMessageRead {
-  messageId: string;
-  read: boolean;
+  endMessageId: string;
 }
-
-// export interface ChatSocketResponse {
-//   messageData: ChatMessage | ChatMessageRead[];
-//   type: ChatMessageType;
-// }
 
 export interface MessageChatSocketResponse {
   messageData: ChatMessage;
@@ -599,7 +593,7 @@ export interface MessageChatSocketResponse {
 }
 
 export interface ReadChatSocketResponse {
-  messageData: ChatMessageRead[];
+  res: ChatMessageRead;
   type: ChatMessageType.READ;
 }
 
