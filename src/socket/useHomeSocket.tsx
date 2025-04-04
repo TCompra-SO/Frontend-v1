@@ -22,7 +22,9 @@ export default function useHomeSocket() {
 
   useEffect(() => {
     updatePage(1);
-    if (!useFilter && !notificationSearchData.categoryId) getData(true); //n3t
+    if (!useFilter && !notificationSearchData.categoryId) {
+      getData(true);
+    }
 
     if (!socketHomeAPI) {
       if (type == RequirementType.GOOD)
@@ -86,7 +88,9 @@ export default function useHomeSocket() {
   }, [page]);
 
   useEffect(() => {
-    if (!useFilter && !notificationSearchData.categoryId) getData(); //n3t
+    if (!useFilter && !notificationSearchData.categoryId) {
+      getData();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, useFilter]);
 

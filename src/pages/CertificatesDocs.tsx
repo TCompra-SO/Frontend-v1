@@ -237,28 +237,12 @@ export default function CertificatesDocs() {
   }
 
   async function reloadPage() {
-    console.log("reloadPage", lastSearchParams.page);
     if (lastSearchParams.page) {
-      // const { success, totalPages } =
       handleChangePageAndPageSize(
         lastSearchParams,
         fieldNameSearchRequestMyDocsCert,
         searchTable
       );
-      // if (!success && totalPages) {
-      //   if (lastSearchParams.page - 1 <= totalPages)
-      //     await retrieveRequirements(
-      //       lastSearchParams.page - 1,
-      //       lastSearchParams.pageSize,
-      //       lastSearchParams.params
-      //     );
-      //   else
-      //     await retrieveRequirements(
-      //       totalPages,
-      //       lastSearchParams.pageSize,
-      //       lastSearchParams.params
-      //     );
-      // }
     }
   }
 

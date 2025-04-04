@@ -32,6 +32,7 @@ export default function Home() {
     updateType,
     page,
     updatePage,
+    updateUseFilter,
     requirementList,
     loadingRequirementList,
     totalRequirementList,
@@ -68,7 +69,9 @@ export default function Home() {
 
   useEffect(() => {
     return () => {
-      if (!notificationSearchData.categoryId) updateType(RequirementType.GOOD); //n3t
+      if (!notificationSearchData.categoryId) updateType(RequirementType.GOOD);
+      updatePage(1);
+      updateUseFilter(false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

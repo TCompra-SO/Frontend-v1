@@ -51,16 +51,11 @@ export default function HomeFilters() {
   /** Reset al cambiar tipo de tabla */
 
   useEffect(() => {
-    resetFilters();
-    console.log("reseted 0", searchFromNotifCompleted);
+    resetFilters(searchFromNotifCompleted === false);
     if (searchFromNotifCompleted === false) {
       form.setFieldValue("category", notificationSearchData.categoryId);
       form.submit();
-      console.log("reseted 1");
-      setSearchFromNotifCompleted(true);
-      console.log("reseted 2");
       resetNotificationSearchData();
-      console.log("reseted");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
@@ -88,20 +83,17 @@ export default function HomeFilters() {
   /** Buscar al recibir datos de notificación  */
 
   useEffect(() => {
-    console.log(22222222, notificationSearchData);
     if (notificationSearchData.categoryId) {
       setHideFilters(false);
       scrollToTable();
+      setSearchFromNotifCompleted(false);
       if (type != notificationSearchData.targetType) {
-        setSearchFromNotifCompleted(false);
         updateType(notificationSearchData.targetType);
       } else {
-        resetFilters();
-        console.log("ddddd");
+        resetFilters(true);
         form.setFieldValue("category", notificationSearchData.categoryId);
-        form.submit();
-        console.log("))))))");
         resetNotificationSearchData();
+        form.submit();
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -113,12 +105,13 @@ export default function HomeFilters() {
     if (useFilter) {
       const newPageFilter = homeFilter;
       newPageFilter.page = page;
-      console.log("third", notificationSearchData.categoryId);
-      // if (!notificationSearchData.categoryId)
-      retrieveRequirements(page, homePageSize, newPageFilter);
+      if (searchFromNotifCompleted) {
+        // setSearchFromNotifCompleted(true)
+        retrieveRequirements(page, homePageSize, newPageFilter);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [homeFilter, page]);
+  }, [homeFilter, page, searchFromNotifCompleted]);
 
   /**
    * Funciones
@@ -158,12 +151,14 @@ export default function HomeFilters() {
       updatePage(1);
       setHomeFilter(filter);
     }
+    setSearchFromNotifCompleted(true);
   }
 
-  function resetFilters() {
+  function resetFilters(keepUsingFilterMode?: boolean) {
+    console.log("resetFilters called with", keepUsingFilterMode);
     form.resetFields();
-    updateUseFilter(false);
     updateKeywordSearch("");
+    if (!keepUsingFilterMode) updateUseFilter(false);
   }
 
   function getTypeButton(reqType: RequirementType) {
@@ -260,7 +255,7 @@ export default function HomeFilters() {
                 icon={
                   <i className="fa-solid fa-magnifying-glass-arrows-rotate"></i>
                 }
-                onClick={resetFilters}
+                onClick={() => resetFilters()}
               >
                 {t("resetFilters")}
               </ButtonContainer>
