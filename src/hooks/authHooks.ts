@@ -44,8 +44,6 @@ import { setIsLoading } from "../redux/loadingSlice";
 
 export function useLogin() {
   const { t } = useTranslation();
-  const { setTokenExpiration, setRefreshTokenExpiration } =
-    useContext(MainSocketsContext);
   const dispatch = useDispatch();
   const loadUserInfo = useLoadUserInfo();
   const { showNotification } = useShowNotification();
@@ -65,12 +63,10 @@ export function useLogin() {
       if (loginResponse.accessExpiresIn) {
         const tokenExp = getTokenExpirationTime(loginResponse.accessExpiresIn);
         localStorage.setItem(expiresInKey, tokenExp.toString());
-        setTokenExpiration(tokenExp);
       }
       if (loginResponse.refreshExpiresIn) {
         const tokenExp = getTokenExpirationTime(loginResponse.refreshExpiresIn);
         localStorage.setItem(refreshExpiresInKey, tokenExp.toString());
-        setRefreshTokenExpiration(tokenExp);
       }
 
       await loadUserInfo();
@@ -100,7 +96,7 @@ export function useRegister() {
 
 export function useLogout() {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
+  // const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const uid = useSelector((state: MainState) => state.user.uid);
   const { setTokenExpiration, setRefreshTokenExpiration } =
     useContext(MainSocketsContext);

@@ -155,7 +155,6 @@ export default function HomeFilters() {
   }
 
   function resetFilters(keepUsingFilterMode?: boolean) {
-    console.log("resetFilters called with", keepUsingFilterMode);
     form.resetFields();
     updateKeywordSearch("");
     if (!keepUsingFilterMode) updateUseFilter(false);

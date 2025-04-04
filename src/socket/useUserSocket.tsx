@@ -122,10 +122,6 @@ export default function useUserSocket() {
     expirationTime: number | null,
     isAccessToken: boolean
   ) {
-    console.log(
-      `${isAccessToken ? "" : "Refresh"}tokenExpiration`,
-      tokenExpiration
-    );
     if (expirationTime == null) return;
 
     let retryInterval: NodeJS.Timeout | null = null;
@@ -201,10 +197,10 @@ export default function useUserSocket() {
         return null;
       }
 
-      localStorage.setItem(
-        isAccesToken ? refreshingTokenKey : refreshingRefreshTokenKey,
-        "true"
-      );
+      localStorage.setItem(refreshingTokenKey, "true");
+
+      if (!isAccesToken)
+        localStorage.setItem(refreshingRefreshTokenKey, "true");
 
       const accessToken = localStorage.getItem(tokenKey);
       const refreshToken = localStorage.getItem(refreshTokenKey);
@@ -272,7 +268,7 @@ export default function useUserSocket() {
       // localStorage.removeItem('refreshToken');
     } finally {
       localStorage.removeItem(refreshingTokenKey);
-      localStorage.removeItem(refreshingRefreshTokenKey);
+      if (!isAccesToken) localStorage.removeItem(refreshingRefreshTokenKey);
     }
   }
 
