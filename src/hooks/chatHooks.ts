@@ -5,6 +5,7 @@ import {
   GetChatListRequest,
   GetChatMessagesRequest,
   MarkChatMessagesAsReadRequest,
+  SearchChatRequest,
 } from "../models/Requests";
 import {
   createChat,
@@ -24,6 +25,7 @@ import {
   getArchivedChatListService,
   getChatListService,
   getChatMessagesService,
+  searchChatService,
 } from "../services/requests/chatService";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
@@ -33,9 +35,7 @@ import {
   transformToChatMessage,
 } from "../utilities/transform";
 
-export function useCreateChatAndSendMessage(
-  showNotificationAfterMsgSent: boolean
-) {
+export function useChatFunctions(showNotificationAfterMsgSent: boolean) {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
   const [loading, setLoading] = useState(false);
@@ -117,6 +117,7 @@ export function useGetChatList() {
           responseData.data.map((chat: any) => transformToChatListData(chat))
         );
       } catch (err) {
+        console.log(err);
         showNotification("error", t(defaultErrorMsg));
       }
     } else if (error) {
@@ -167,6 +168,7 @@ export function useGetChatMessages() {
           )
         );
       } catch (err) {
+        console.log(err);
         showNotification("error", t(defaultErrorMsg));
       }
     } else if (error) {
@@ -188,4 +190,46 @@ export function useGetChatMessages() {
   }
 
   return { getChatMessages, loadingGetChatMessages: loading, chatMessages };
+}
+
+export function useChatSearch() {
+  const uid = useSelector((state: MainState) => state.user.uid);
+  const [foundChatList, setFoundChatList] = useState<ChatListData[]>([]);
+  const [apiParams, setApiParams] = useState<useApiParams<SearchChatRequest>>({
+    service: null,
+    method: "get",
+  });
+  const { loading, responseData, fetchData } =
+    useApi<SearchChatRequest>(apiParams);
+
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    if (responseData) {
+      try {
+        setFoundChatList(
+          responseData.data.map((chat: any) => transformToChatListData(chat))
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData]);
+
+  function searchChat(keyWords: string) {
+    setApiParams({
+      service: searchChatService(),
+      method: "post",
+      dataToSend: {
+        userId: uid,
+        keyWords,
+      },
+    });
+  }
+
+  return { searchChat, loadingSearchChat: loading, foundChatList };
 }

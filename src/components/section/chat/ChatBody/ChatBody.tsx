@@ -16,7 +16,7 @@ import ChatGallery from "./ChatGallery";
 import InfiniteScroll from "react-infinite-scroll-component";
 import SimpleLoading from "../../../../pages/utils/SimpleLoading";
 import { isSameDay } from "../../../../utilities/globalFunctions";
-import { useCreateChatAndSendMessage } from "../../../../hooks/chatHooks";
+import { useChatFunctions } from "../../../../hooks/chatHooks";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../../models/Redux";
 
@@ -38,8 +38,7 @@ interface ChatBodyProps {
 export default function ChatBody(props: ChatBodyProps) {
   const { t } = useTranslation();
   const { width } = useWindowSize();
-  const { createChatAndSendMessage, sendMessage } =
-    useCreateChatAndSendMessage(false);
+  const { createChatAndSendMessage, sendMessage } = useChatFunctions(false);
   const uid = useSelector((state: MainState) => state.user.uid);
   const divRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<AddImagesFieldRef>(null);

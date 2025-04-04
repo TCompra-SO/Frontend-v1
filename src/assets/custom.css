@@ -213,3 +213,8 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
 .chat-tab .ant-tag {
   border-radius: 10px;
 }
+
+.ant-input-outlined:hover {
+  background-color: initial;
+  border-color: initial;
+}

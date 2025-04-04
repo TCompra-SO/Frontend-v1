@@ -38,7 +38,7 @@ export const defaultRequirementImage: string =
 
 export const onlyLettersAndNumbers: RegExp = /[^a-zA-Z0-9áéíóúÁÉÍÓÚ]/g;
 
-export const companySearchAfterMseconds: number = 400;
+export const inputSearchAfterMseconds: number = 400;
 export const tableSearchAfterMseconds: number = 400;
 export const maxLengthStringToSearch: number = 25;
 export const searchSinceLength: number = 3;

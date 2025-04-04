@@ -289,3 +289,8 @@ export interface MarkChatMessagesAsReadRequest {
   messagesIds: string[];
   chatId: string;
 }
+
+export interface SearchChatRequest {
+  userId: string;
+  keyWords: string;
+}

@@ -81,3 +81,12 @@ export function changeStateConnectionService(): HttpService {
     type: "CH-CH-CO",
   };
 }
+
+export function searchChatService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.chat}${
+      ApiRoutes.chat.searchChat
+    }`,
+    type: "CH-SE-CH",
+  };
+}

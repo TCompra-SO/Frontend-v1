@@ -4,7 +4,7 @@ import SelectContainer from "../../../containers/SelectContainer";
 import { DocType } from "../../../../utilities/types";
 import { Avatar } from "antd";
 import {
-  companySearchAfterMseconds,
+  inputSearchAfterMseconds,
   defaultUserImage,
   searchSinceLength,
 } from "../../../../utilities/globals";
@@ -23,21 +23,15 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
   const { loadingCompanyList, searchCompanyByName, clearList, companyList } =
     useSearchCompanyByName();
   const [value, setValue] = useState<string>();
-  const [lastSearchValue, setLastSearchValue] = useState("");
 
   const searchCompany = debounce((newValue: string) => {
     const temp = getSearchString(newValue);
-    if (
-      typeof temp === "string" &&
-      lastSearchValue != temp &&
-      temp.length >= searchSinceLength
-    ) {
+    if (typeof temp === "string" && temp.length >= searchSinceLength) {
       searchCompanyByName(temp);
-      setLastSearchValue(temp);
     } else {
       clearList();
     }
-  }, companySearchAfterMseconds);
+  }, inputSearchAfterMseconds);
 
   function onCompanySelected(companyId: string) {
     props.onCompanySelected(companyId);

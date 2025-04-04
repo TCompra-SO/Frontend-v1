@@ -17,7 +17,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { useChat } from "../hooks/useChat";
 import { MainSocketsContext } from "../contexts/MainSocketsContext";
-import { useCreateChatAndSendMessage } from "../hooks/chatHooks";
+import { useChatFunctions } from "../hooks/chatHooks";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 
@@ -40,10 +40,12 @@ export default function Chat() {
     loadingChatMessages,
     addMessageToChatMessageList,
     markMsgAsRead,
-    isChatListReset,
-    setIsChatListReset,
+    isChatListResetToChangeTabs,
+    setIsChatListResetToChangeTabs,
+    handleSearch,
+    usingSearch,
   } = useChat();
-  const { markAsRead } = useCreateChatAndSendMessage(false);
+  const { markAsRead } = useChatFunctions(false);
   const {
     connectSingleChatSocket,
     disconnectSingleChatSocket,
@@ -54,38 +56,34 @@ export default function Chat() {
   const [markedAsRead, setMarkedAsRead] = useState(false);
   const [isChatOpened, setIsChatOpened] = useState(false);
   const [currentChat, setCurrentChat] = useState<ChatListData | null>(null);
-  const [showArchivedChats, setShowArchivedChats] = useState(true);
+  const [showArchivedChats, setShowArchivedChats] = useState(false);
   const [basicChatDataFromRouting] = useState<BasicChatListData | undefined>(
     location.state?.[basicChatDataFieldName]
   );
 
   /** Obtener lista inicial de chats */
 
-  // useEffect(() => {
-  //   getMoreChats(true);
-  //   return () => {
-  //     disconnectSingleChatSocket();
-  //   };
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
   useEffect(() => {
-    handleCloseChat();
-    resetChatList();
+    if (!usingSearch) {
+      console.log("calling", showArchivedChats);
+      handleCloseChat();
+      resetChatList(true);
+    }
     return () => {
       disconnectSingleChatSocket();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showArchivedChats]);
 
-  /**  */
+  /** Obtener lista de chats después de resetear lista (al cambiar tabs o al inicio) */
 
   useEffect(() => {
-    if (isChatListReset) {
+    if (isChatListResetToChangeTabs) {
       getMoreChats(showArchivedChats);
-      setIsChatListReset(false);
+      setIsChatListResetToChangeTabs(false);
     }
-  }, [isChatListReset]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isChatListResetToChangeTabs]);
 
   /** Abrir chat desde redireccionamiento */
 
@@ -163,6 +161,12 @@ export default function Chat() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatMessageRead]);
 
+  /** Cambiar según si se usa búsqueda o no */
+
+  useEffect(() => {
+    if (usingSearch) setShowArchivedChats(false);
+  }, [usingSearch]);
+
   /** Funciones */
 
   function handleCloseChat() {
@@ -200,6 +204,8 @@ export default function Chat() {
             loading={loadingChatList}
             showArchivedChats={showArchivedChats}
             setShowArchivedChats={setShowArchivedChats}
+            handleSearch={handleSearch}
+            usingSearch={usingSearch}
           />
         )}
         {isChatOpened && currentChat ? (

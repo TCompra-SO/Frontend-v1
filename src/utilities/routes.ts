@@ -163,6 +163,7 @@ export const ApiRoutes = {
     getMessage: "getMessage/",
     getChatUsersData: "getChatUsersData/",
     changeStateConnection: "changeStateConnection/",
+    searchChat: "searchChat/",
   },
 };
 

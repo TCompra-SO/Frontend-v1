@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import { ChatListData, ChatMessage } from "../models/MainInterfaces";
-import { useGetChatList, useGetChatMessages } from "./chatHooks";
-import { chatListPageSize, chatMessagesPageSize } from "../utilities/globals";
+import { useChatSearch, useGetChatList, useGetChatMessages } from "./chatHooks";
+import {
+  chatListPageSize,
+  chatMessagesPageSize,
+  inputSearchAfterMseconds,
+} from "../utilities/globals";
 import { filterUniqueOrFirstRepeated } from "../utilities/globalFunctions";
+import { debounce } from "lodash";
 
 export function useChat() {
   const {
@@ -12,12 +17,15 @@ export function useChat() {
   } = useGetChatList();
   const { getChatMessages, loadingGetChatMessages, chatMessages } =
     useGetChatMessages();
+  const { loadingSearchChat, searchChat, foundChatList } = useChatSearch();
+  const [usingSearch, setUsingSearch] = useState(false);
   const [chatList, setChatList] = useState<ChatListData[]>([]);
   const [hasMoreChatList, setHasMoreChatList] = useState(true);
   const [chatMessageList, setChatMessageList] = useState<ChatMessage[]>([]);
   const [hasMoreChatMessageList, setHasMoreChatMessageList] = useState(true);
   const [prevChatMessageListLength, setPrevChatMessageListLength] = useState(0);
-  const [isChatListReset, setIsChatListReset] = useState(false);
+  const [isChatListResetToChangeTabs, setIsChatListResetToChangeTabs] =
+    useState(false);
   const [pageData, setPageData] = useState({
     page: 0,
     retrieve: false,
@@ -63,6 +71,14 @@ export function useChat() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatMessages]);
 
+  /** Reemplazar lista de chats por chats encontrados */
+
+  useEffect(() => {
+    resetChatList();
+    setChatList(foundChatList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [foundChatList]);
+
   /** Funciones */
 
   function getMoreChats(archived: boolean) {
@@ -74,12 +90,12 @@ export function useChat() {
     setMessagePageAndChatId({ page: messagePageAndChatId.page + 1, chatId });
   }
 
-  function resetChatList() {
-    setPageData({ page: 0, retrieve: false, archived: pageData.archived });
+  function resetChatList(changeTabs?: boolean) {
+    setPageData({ page: 0, retrieve: false, archived: false });
     setChatList([]);
     setHasMoreChatList(true);
     resetChatMessageList();
-    setIsChatListReset(true);
+    if (changeTabs) setIsChatListResetToChangeTabs(true);
   }
 
   function resetChatMessageList() {
@@ -115,10 +131,22 @@ export function useChat() {
     );
   }
 
+  const handleSearch = debounce((val: string) => {
+    console.log(val);
+    if (val) {
+      setUsingSearch(true);
+      searchChat(val);
+    } else {
+      setUsingSearch(false);
+      resetChatList();
+      getMoreChats(false);
+    }
+  }, inputSearchAfterMseconds);
+
   return {
     resetChatList,
     chatList,
-    loadingChatList: loadingGetChatList,
+    loadingChatList: loadingGetChatList || loadingSearchChat,
     getMoreChats,
     loadingChatMessages: loadingGetChatMessages,
     resetChatMessageList,
@@ -128,7 +156,10 @@ export function useChat() {
     hasMoreChatMessageList,
     addMessageToChatMessageList,
     markMsgAsRead,
-    isChatListReset,
-    setIsChatListReset,
+    isChatListResetToChangeTabs,
+    setIsChatListResetToChangeTabs,
+    handleSearch,
+    usingSearch,
+    chatListPageData: pageData,
   };
 }

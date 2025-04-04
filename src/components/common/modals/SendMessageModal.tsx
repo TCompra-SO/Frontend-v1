@@ -5,7 +5,7 @@ import TextAreaContainer from "../../containers/TextAreaContainer";
 import { useEffect, useRef, useState } from "react";
 import { CommonModalProps } from "../../../models/Interfaces";
 import { RequirementType } from "../../../utilities/types";
-import { useCreateChatAndSendMessage } from "../../../hooks/chatHooks";
+import { useChatFunctions } from "../../../hooks/chatHooks";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
 import { useNavigate } from "react-router-dom";
@@ -27,7 +27,7 @@ export default function SendMessageModal(props: SendMessageModalProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { createChatAndSendMessage, loadingCreateChatAndSendMessage } =
-    useCreateChatAndSendMessage(true);
+    useChatFunctions(true);
   const uid = useSelector((state: MainState) => state.user.uid);
   const [msg, setMsg] = useState("");
   const prevLoadingRef = useRef<boolean | null>(null);

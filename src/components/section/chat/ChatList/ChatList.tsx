@@ -5,7 +5,10 @@ import ChatListItem from "./ChatListItem";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Flex, Spin, Tag } from "antd";
 import SimpleLoading from "../../../../pages/utils/SimpleLoading";
-import { ReactNode } from "react";
+import { ChangeEvent, ReactNode, useState } from "react";
+import { SearchOutlined } from "@ant-design/icons";
+import { maxLengthStringToSearch } from "../../../../utilities/globals";
+import { DebouncedFunc } from "lodash";
 
 const loadingSpinner: ReactNode = (
   <Flex justify="center">
@@ -22,43 +25,57 @@ interface ChatListProps {
   loading: boolean | undefined;
   showArchivedChats: boolean;
   setShowArchivedChats: (val: boolean) => void;
+  handleSearch: DebouncedFunc<(val: string) => void>;
+  usingSearch: boolean;
 }
 
 export default function ChatList(props: ChatListProps) {
   const { t } = useTranslation();
+  const [searchValue, setSearchValue] = useState("");
+
+  function onChangeSearchValue(e: ChangeEvent<HTMLInputElement>) {
+    setSearchValue(e.target.value);
+    props.handleSearch(e.target.value);
+  }
 
   return (
     <div className="card-white t-flex f-column gap-10 mch-1">
       <div className="t-flex gap-5 j-items chat-buscar">
         <InputContainer
-          prefix={<i className="fa-solid fa-magnifying-glass"></i>}
-          type="text"
+          placeholder={`${t("search")}...`}
+          prefix={<SearchOutlined />}
           className="form-transparent form-filter"
-          placeholder={t("search")}
+          onChange={onChangeSearchValue}
+          maxLength={maxLengthStringToSearch}
+          allowClear
+          value={searchValue}
         />
       </div>
-      <div className="t-flex gap-5 j-items chat-tab">
-        <Tag.CheckableTag
-          checked={false}
-          style={{
-            color: "#92acbf",
-            cursor: props.loading ? "not-allowed" : "pointer",
-          }}
-          onChange={() => {
-            if (!props.loading)
-              props.setShowArchivedChats(!props.showArchivedChats);
-          }}
-        >
-          <i
-            className={
-              props.showArchivedChats
-                ? "fa-solid fa-globe"
-                : "fa-solid fa-box-archive"
-            }
-          ></i>{" "}
-          {t(props.showArchivedChats ? "all" : "archivedPl")}
-        </Tag.CheckableTag>
-      </div>
+      {!props.usingSearch && (
+        <div className="t-flex gap-5 j-items chat-tab">
+          <Tag.CheckableTag
+            checked={false}
+            style={{
+              color: "#92acbf",
+              cursor: props.loading ? "not-allowed" : "pointer",
+            }}
+            onChange={() => {
+              console.log(props.loading);
+              if (!props.loading)
+                props.setShowArchivedChats(!props.showArchivedChats);
+            }}
+          >
+            <i
+              className={
+                props.showArchivedChats
+                  ? "fa-solid fa-globe"
+                  : "fa-solid fa-box-archive"
+              }
+            ></i>{" "}
+            {t(props.showArchivedChats ? "all" : "archivedPl")}
+          </Tag.CheckableTag>
+        </div>
+      )}
       {props.chatList.length == 0 ? (
         props.loading ? (
           loadingSpinner
@@ -68,6 +85,8 @@ export default function ChatList(props: ChatListProps) {
             <div className="name-file">{t("noChats")}</div>
           </div>
         )
+      ) : props.loading ? (
+        loadingSpinner
       ) : (
         <div
           id="scrollableDivChatList"
