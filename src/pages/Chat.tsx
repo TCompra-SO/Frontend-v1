@@ -45,6 +45,8 @@ export default function Chat() {
     handleSearch,
     usingSearch,
     setFirstChatMessageToRead,
+    markMsgAsError,
+    updateMsg,
   } = useChat();
   const { markAsRead } = useChatFunctions(false);
   const {
@@ -219,15 +221,21 @@ export default function Chat() {
             getMoreChatMessages={getMoreChatMessages}
             hasMore={hasMoreChatMessageList}
             loading={loadingChatMessages}
+            addMessageToChatMessageList={addMessageToChatMessageList}
+            markMsgAsError={markMsgAsError}
+            updateMsg={updateMsg}
           />
         ) : isChatOpened && !currentChat && basicChatDataFromRouting ? (
           <ChatBody
+            addMessageToChatMessageList={addMessageToChatMessageList}
             chatData={basicChatDataFromRouting}
             onCloseChat={handleCloseChat}
             messages={chatMessageList}
             getMoreChatMessages={getMoreChatMessages}
             hasMore={false}
             loading={loadingChatMessages}
+            markMsgAsError={markMsgAsError}
+            updateMsg={updateMsg}
           />
         ) : (
           <div className="card-white mch-2 t-flex j-conten j-items f-column">

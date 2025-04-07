@@ -177,14 +177,14 @@ export function useGetChatMessages() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
-  function getChatMessages(chatId: string, page: number) {
+  function getChatMessages(chatId: string, messageId: string) {
     setApiParams({
       service: getChatMessagesService(),
       method: "post",
       dataToSend: {
         chatId,
-        page,
         pageSize: chatMessagesPageSize,
+        messageId,
       },
     });
   }

@@ -26,7 +26,6 @@ export function useChat() {
   const [hasMoreChatList, setHasMoreChatList] = useState(true);
   const [chatMessageList, setChatMessageList] = useState<ChatMessage[]>([]);
   const [hasMoreChatMessageList, setHasMoreChatMessageList] = useState(true);
-  const [prevChatMessageListLength, setPrevChatMessageListLength] = useState(0);
   const [firstChatMessageToRead, setFirstChatMessageToRead] = useState("");
   const [isChatListResetToChangeTabs, setIsChatListResetToChangeTabs] =
     useState(false);
@@ -36,8 +35,8 @@ export function useChat() {
     archived: false,
   });
   const [messagePageAndChatId, setMessagePageAndChatId] = useState({
-    page: 0,
     chatId: "",
+    messageId: "",
   });
 
   /** Obtener más chats */
@@ -58,8 +57,13 @@ export function useChat() {
   /** Obtener más mensajes de chat */
 
   useEffect(() => {
-    if (messagePageAndChatId.chatId && messagePageAndChatId.page)
-      getChatMessages(messagePageAndChatId.chatId, messagePageAndChatId.page);
+    if (messagePageAndChatId.chatId)
+      getChatMessages(
+        messagePageAndChatId.chatId,
+        chatMessageList.length
+          ? chatMessageList[chatMessageList.length - 1].uid
+          : ""
+      );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messagePageAndChatId]);
 
@@ -71,7 +75,6 @@ export function useChat() {
       ...chatMessages,
     ]);
     setChatMessageList(newList);
-    setPrevChatMessageListLength(newList.length);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatMessages]);
 
@@ -91,7 +94,12 @@ export function useChat() {
 
   function getMoreChatMessages(chatId: string) {
     console.log("gettin more chat msgs");
-    setMessagePageAndChatId({ page: messagePageAndChatId.page + 1, chatId });
+    setMessagePageAndChatId({
+      chatId,
+      messageId: chatMessageList.length
+        ? chatMessageList[chatMessageList.length - 1].uid
+        : "",
+    });
   }
 
   function resetChatList(changeTabs?: boolean) {
@@ -103,27 +111,34 @@ export function useChat() {
   }
 
   function resetChatMessageList() {
-    setMessagePageAndChatId({ page: 0, chatId: "" });
+    setMessagePageAndChatId({ chatId: "", messageId: "" });
     setChatMessageList([]);
-    setPrevChatMessageListLength(0);
     setHasMoreChatMessageList(true);
   }
 
   function addMessageToChatMessageList(message: ChatMessage) {
-    if (
-      chatMessageList.length + 1 ==
-      prevChatMessageListLength + chatMessagesPageSize
-    ) {
-      setPageData({
-        page: pageData.page + 1,
-        retrieve: false,
-        archived: pageData.archived,
-      });
-      setPrevChatMessageListLength(
-        prevChatMessageListLength + chatMessagesPageSize
-      );
-    }
     setChatMessageList([message, ...chatMessageList]);
+  }
+
+  function updateMsg(message: ChatMessage) {
+    setChatMessageList((prevList) => {
+      const ind = prevList.findIndex((msg) => msg.uid == message.uid);
+      if (ind == -1) return prevList;
+      const newList = [...prevList];
+      newList[ind] = { ...message };
+      return newList;
+    });
+  }
+
+  function markMsgAsError(messageId: string) {
+    if (messageId)
+      setChatMessageList((prevList) => {
+        const ind = prevList.findIndex((msg) => msg.uid == messageId);
+        if (ind == -1) return prevList;
+        const newList = [...prevList];
+        newList[ind] = { ...newList[ind], error: true };
+        return newList;
+      });
   }
 
   function markMsgAsRead(messageId: string) {
@@ -181,5 +196,7 @@ export function useChat() {
     usingSearch,
     chatListPageData: pageData,
     setFirstChatMessageToRead,
+    updateMsg,
+    markMsgAsError,
   };
 }

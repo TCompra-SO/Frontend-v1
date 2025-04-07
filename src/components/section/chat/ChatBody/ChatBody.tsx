@@ -15,10 +15,14 @@ import { Flex, Spin } from "antd";
 import ChatGallery from "./ChatGallery";
 import InfiniteScroll from "react-infinite-scroll-component";
 import SimpleLoading from "../../../../pages/utils/SimpleLoading";
-import { isSameDay } from "../../../../utilities/globalFunctions";
+import {
+  generateShortId,
+  isSameDay,
+} from "../../../../utilities/globalFunctions";
 import { useChatFunctions } from "../../../../hooks/chatHooks";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../../models/Redux";
+import { transformToChatMessage } from "../../../../utilities/transform";
 
 const loadingSpinner: ReactNode = (
   <Flex justify="center">
@@ -33,6 +37,9 @@ interface ChatBodyProps {
   getMoreChatMessages: (chatId: string) => void;
   hasMore: boolean;
   loading: boolean | undefined;
+  addMessageToChatMessageList: (message: ChatMessage) => void;
+  updateMsg: (message: ChatMessage) => void;
+  markMsgAsError: (messageId: string) => void;
 }
 
 export default function ChatBody(props: ChatBodyProps) {
@@ -143,12 +150,23 @@ export default function ChatBody(props: ChatBodyProps) {
 
   /** Funciones */
 
-  function sendMsg() {
+  async function sendMsg() {
     if (imgRef.current) imgRef.current.reset();
     if (docRef.current) docRef.current.reset();
     const msg = message.trim();
     if (msg) {
-      if (!props.chatData.uid)
+      setMessage("");
+      const msgUid = generateShortId();
+      const chatMsg: ChatMessage = {
+        chatId: props.chatData.uid ?? "",
+        uid: msgUid, // temporal
+        userId: uid,
+        timestamp: dayjs(new Date()).toISOString(),
+        read: false,
+        message: msg,
+      };
+      props.addMessageToChatMessageList(chatMsg);
+      if (!props.chatData.uid) {
         // Crear chat primero
         createChatAndSendMessage(
           {
@@ -159,13 +177,19 @@ export default function ChatBody(props: ChatBodyProps) {
           },
           msg
         );
-      else
-        sendMessage({
+      } else {
+        const { messageData, error } = await sendMessage({
           chatId: props.chatData.uid,
           userId: uid,
           message: msg,
         });
-      setMessage("");
+        if (messageData) {
+          const createdMsg = transformToChatMessage(messageData.data);
+          props.updateMsg(createdMsg);
+        } else if (error) {
+          props.markMsgAsError(msgUid);
+        }
+      }
     }
   }
 

@@ -281,8 +281,8 @@ export interface GetChatListRequest {
 
 export interface GetChatMessagesRequest {
   chatId: string;
-  page: number;
   pageSize: number;
+  messageId: string;
 }
 
 export interface MarkChatMessagesAsReadRequest {

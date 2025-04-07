@@ -277,6 +277,7 @@ export interface ChatMessage {
   read: boolean;
   images?: string[];
   documents?: string[];
+  error?: boolean;
 }
 
 export interface ChatSocketData extends ChatMessage {

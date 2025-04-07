@@ -113,8 +113,12 @@ export default function ChatBodyMessage(props: ChatBodyMessageProps) {
           <span className={!emptyImages ? "mensaje-hora-img" : "mensaje-hora"}>
             {dayjs(props.message.timestamp).format(hourFormatChatBody)}{" "}
             <i
-              className={`fa-solid ${
-                props.message.read ? "fa-check-double" : "fa-check"
+              className={`${
+                props.message.error
+                  ? "fa-regular fa-circle-exclamation"
+                  : props.message.read
+                  ? "fa-solid fa-check-double"
+                  : "fa-solid fa-check"
               }`}
             ></i>
           </span>

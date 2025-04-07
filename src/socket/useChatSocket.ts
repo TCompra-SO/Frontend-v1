@@ -7,12 +7,15 @@ import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../utilities/routes";
 import { chatDataFieldName } from "../utilities/globals";
 import { ChatMessageRead, ChatSocketResponse } from "../models/Interfaces";
+import { MainState } from "../models/Redux";
+import { useSelector } from "react-redux";
 
 let chatSocketAPI: Socket | null = null;
 let singleChatSocketAPI: Socket | null = null;
 
 export function useChatSocket() {
   const navigate = useNavigate();
+  const uid = useSelector((state: MainState) => state.user.uid);
   const { showRealTimeNotification } = useShowNotification();
   const [chatMessageRead, setChatMessageRead] = useState<ChatMessageRead>({
     endMessageId: "",
@@ -36,7 +39,19 @@ export function useChatSocket() {
 
       chatSocketAPI.on("connect", () => {
         console.log("Connected chat");
-        chatSocketAPI?.emit("joinRoom", `TCNotifications`);
+        chatSocketAPI?.emit("joinRoom", `roomGeneralChat${uid}`);
+      });
+
+      chatSocketAPI.on("joinedRoom", (message) => {
+        console.log(message);
+      });
+
+      chatSocketAPI.on("updateGeneralChat", (payload: ChatSocketResponse) => {
+        try {
+          console.log("updateGeneralChat:", payload);
+        } catch (e) {
+          console.log(e);
+        }
       });
 
       // setTimeout(() => {
@@ -79,7 +94,10 @@ export function useChatSocket() {
       singleChatSocketAPI.on("updateChat", (payload: ChatSocketResponse) => {
         try {
           console.log("single chat recibido:", payload);
-          if (payload.type == ChatMessageType.NEW_MESSAGE)
+          if (
+            payload.type == ChatMessageType.NEW_MESSAGE &&
+            payload.messageData.userId != uid
+          )
             setLastChatMessageReceived(payload.messageData);
           else if (
             payload.type == ChatMessageType.READ &&
