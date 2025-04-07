@@ -13,6 +13,7 @@ import ImagesAndDocs from "../../common/utils/ImagesAndDocs";
 import { CardByStateOffer } from "../../../utilities/colors";
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
+import { RequirementType } from "../../../utilities/types";
 
 interface OfferDetailModalProps {
   offer: Offer;
@@ -139,7 +140,15 @@ export default function OfferDetailModal(props: OfferDetailModalProps) {
                   : "fa-person-dolly-empty"
               }`}
             ></i>{" "}
-            {t(props.offer.delivered ? "delivered" : "notDelivered")}
+            {t(
+              props.offer.type == RequirementType.SALE
+                ? props.offer.delivered
+                  ? "receivedMasc"
+                  : "notReceivedMasc"
+                : props.offer.delivered
+                ? "delivered"
+                : "notDelivered"
+            )}
           </div>
         </div>
       </div>
