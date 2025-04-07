@@ -8,6 +8,8 @@ import {
 } from "../utilities/globals";
 import { filterUniqueOrFirstRepeated } from "../utilities/globalFunctions";
 import { debounce } from "lodash";
+import { useSelector } from "react-redux";
+import { MainState } from "../models/Redux";
 
 export function useChat() {
   const {
@@ -17,6 +19,7 @@ export function useChat() {
   } = useGetChatList();
   const { getChatMessages, loadingGetChatMessages, chatMessages } =
     useGetChatMessages();
+  const uid = useSelector((state: MainState) => state.user.uid);
   const { loadingSearchChat, searchChat, foundChatList } = useChatSearch();
   const [usingSearch, setUsingSearch] = useState(false);
   const [chatList, setChatList] = useState<ChatListData[]>([]);
@@ -125,11 +128,26 @@ export function useChat() {
 
   function markMsgAsRead(messageId: string) {
     console.log("markMsgAsRead", messageId);
-    setChatMessageList((prevList) =>
-      prevList.map((item) =>
-        item.uid === messageId ? { ...item, read: true } : item
-      )
-    );
+    setChatMessageList((prevList) => {
+      const obj = prevList.find((item) => item.uid == messageId);
+      if (obj) {
+        const ownerIsCurrentUser = obj.userId == uid;
+        // prevList.map((item) =>
+        // item.uid === messageId ? { ...item, read: true } : item
+        // );
+        const updatedList = [...prevList];
+        for (let i = 0; i < updatedList.length; i++) {
+          if (
+            (ownerIsCurrentUser && updatedList[i].userId == uid) ||
+            (!ownerIsCurrentUser && updatedList[i].userId != uid)
+          )
+            if (!updatedList[i].read) updatedList[i].read = true;
+            else break;
+        }
+        return updatedList;
+      }
+      return prevList;
+    });
   }
 
   const handleSearch = debounce((val: string) => {
