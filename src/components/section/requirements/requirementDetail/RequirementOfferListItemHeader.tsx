@@ -259,6 +259,12 @@ export default function RequirementOfferListItemHeader({
               <span className="req-btn-info">{t("disputeOffer")}</span>
             </div>
           )}
+          {props.offer.state == OfferState.FINISHED && (
+            <div className="badge-finish">
+              <i className="fa-regular fa-clipboard-list-check"></i>{" "}
+              <span className="req-btn-info">{t("finishedOffer")}</span>
+            </div>
+          )}
           {props.showActions.show && (
             <Dropdown
               trigger={["click"]}

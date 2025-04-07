@@ -943,6 +943,16 @@ body {
   border-radius: 0.9rem;
   line-height: 1;
 }
+.badge-finish {
+  background: #007aff;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  padding: 12px 14px;
+  border-radius: 0.9rem;
+  line-height: 1;
+}
 .mas-acciones {
   font-size: 22px;
   height: 40px;

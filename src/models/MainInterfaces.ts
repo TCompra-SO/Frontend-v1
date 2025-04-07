@@ -240,7 +240,7 @@ export interface PlanData {
 }
 
 export interface BasicRateData {
-  // uid: string;
+  uid: string;
   title: string;
   userId: string;
   userName: string;
