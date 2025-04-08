@@ -62,6 +62,10 @@ export default function RatingCanceledModal(props: RatingCanceledModalProps) {
         }
       },
     });
+
+    return () => {
+      props.setAdditionalApiParams({ functionToExecute: () => {} });
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

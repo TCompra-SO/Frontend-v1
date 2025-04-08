@@ -33,7 +33,9 @@ export default function ChatListItem(props: ChatListItemProps) {
         <img src={props.data.userImage} className="img-chat" />
       ) : (
         <div className="inicial-chat">
-          {props.data.userName.length > 0 ? props.data.userName[0] : null}
+          {props.data.userName && props.data.userName.length > 0
+            ? props.data.userName[0]
+            : null}
         </div>
       )}
       {props.data.userOnline && <div className="chat-online"></div>}

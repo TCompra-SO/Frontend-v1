@@ -79,7 +79,7 @@ export function useActionsForRow(
     data: SocketResponse["dataPack"]["data"][number]
   ) => any | Promise<any>,
   list: any[],
-  setList: (list: any[]) => void,
+  setList: React.Dispatch<React.SetStateAction<any[]>>,
   total: number,
   setTotal: (total: number) => void,
   pageSize: number,
@@ -196,11 +196,15 @@ export function useActionsForRow(
   }
 
   function insertElementInArray(updElem: any) {
-    setList(
-      list.map((item) =>
-        (item.key ?? item.uid) === (updElem.key ?? updElem.uid) ? updElem : item
-      )
-    );
+    setList((prevList: any[]) => {
+      const index = prevList.findIndex(
+        (item: any) => (item.key ?? item.uid) === (updElem.key ?? updElem.uid)
+      );
+      if (index === -1) return prevList;
+      const newList = [...prevList];
+      newList[index] = updElem;
+      return newList;
+    });
   }
 
   return { updateRow, addNewRow, deleteRow, updateFieldInRow };

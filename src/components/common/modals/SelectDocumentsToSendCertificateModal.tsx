@@ -134,6 +134,10 @@ export default function SelectDocumentsToSendCertificateModal(
         }
       },
     });
+
+    return () => {
+      props.setAdditionalApiParams({ functionToExecute: () => {} });
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

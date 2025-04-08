@@ -47,6 +47,7 @@ export default function Chat() {
     setFirstChatMessageToRead,
     markMsgAsError,
     updateMsg,
+    setNewMessageAndChatData,
   } = useChat();
   const { markAsRead } = useChatFunctions(false);
   const {
@@ -54,6 +55,7 @@ export default function Chat() {
     disconnectSingleChatSocket,
     lastChatMessageReceived,
     chatMessageRead,
+    newMessageAndChatData,
   } = useContext(MainSocketsContext);
   const hasHandledChatNotification = useRef(false);
   const [markedAsRead, setMarkedAsRead] = useState(false);
@@ -171,6 +173,12 @@ export default function Chat() {
   useEffect(() => {
     if (usingSearch) setShowArchivedChats(false);
   }, [usingSearch]);
+
+  /** Guardar datos de nuevo mensaje desde señal de socket */
+
+  useEffect(() => {
+    setNewMessageAndChatData(newMessageAndChatData);
+  }, [newMessageAndChatData]);
 
   /** Funciones */
 

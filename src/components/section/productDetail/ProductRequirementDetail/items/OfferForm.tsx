@@ -156,7 +156,6 @@ export default function OfferForm(props: OfferFormProps) {
   useEffect(() => {
     if (responseData) {
       setReqSuccess(ProcessFlag.FIN_SUCCESS);
-      console.log(responseData);
       setOfferId(responseData.data?.uid);
       uploadImgsAndDocs(responseData.data?.uid);
     } else if (error) {

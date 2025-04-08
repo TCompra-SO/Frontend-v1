@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { ChatMessage, ChatSocketData } from "../models/MainInterfaces";
+import {
+  ChatListData,
+  ChatMessage,
+  ChatSocketData,
+} from "../models/MainInterfaces";
 import { ChatMessageType, RTNotificationType } from "../utilities/types";
 import useShowNotification from "../hooks/utilHooks";
 import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../utilities/routes";
 import { chatDataFieldName } from "../utilities/globals";
-import { ChatMessageRead, ChatSocketResponse } from "../models/Interfaces";
+import {
+  ChatMessageRead,
+  GeneralChatSocketResponse,
+  SingleChatSocketResponse,
+} from "../models/Interfaces";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 
@@ -17,6 +25,10 @@ export function useChatSocket() {
   const navigate = useNavigate();
   const uid = useSelector((state: MainState) => state.user.uid);
   const { showRealTimeNotification } = useShowNotification();
+  const [newMessageAndChatData, setNewMessageAndChatData] = useState<{
+    chatMessage: ChatMessage;
+    chatListData: ChatListData;
+  } | null>(null);
   const [chatMessageRead, setChatMessageRead] = useState<ChatMessageRead>({
     endMessageId: "",
   });
@@ -46,13 +58,22 @@ export function useChatSocket() {
         console.log(message);
       });
 
-      chatSocketAPI.on("updateGeneralChat", (payload: ChatSocketResponse) => {
-        try {
-          console.log("updateGeneralChat:", payload);
-        } catch (e) {
-          console.log(e);
+      chatSocketAPI.on(
+        "updateGeneralChat",
+        (payload: GeneralChatSocketResponse) => {
+          try {
+            console.log("updateGeneralChat:", payload);
+            if (payload.type == ChatMessageType.NEW_MESSAGE) {
+              setNewMessageAndChatData({
+                chatListData: payload.chatData.data,
+                chatMessage: payload.messageData,
+              });
+            }
+          } catch (e) {
+            console.log(e);
+          }
         }
-      });
+      );
 
       // setTimeout(() => {
       //   showRealTimeNotification({
@@ -91,24 +112,27 @@ export function useChatSocket() {
         console.log(message);
       });
 
-      singleChatSocketAPI.on("updateChat", (payload: ChatSocketResponse) => {
-        try {
-          console.log("single chat recibido:", payload);
-          if (
-            payload.type == ChatMessageType.NEW_MESSAGE &&
-            payload.messageData.userId != uid
-          )
-            setLastChatMessageReceived(payload.messageData);
-          else if (
-            payload.type == ChatMessageType.READ &&
-            payload.res?.endMessageId
-          ) {
-            setChatMessageRead(payload.res);
+      singleChatSocketAPI.on(
+        "updateChat",
+        (payload: SingleChatSocketResponse) => {
+          try {
+            console.log("single chat recibido:", payload);
+            if (
+              payload.type == ChatMessageType.NEW_MESSAGE &&
+              payload.messageData.userId != uid
+            )
+              setLastChatMessageReceived(payload.messageData);
+            else if (
+              payload.type == ChatMessageType.READ &&
+              payload.res?.endMessageId
+            ) {
+              setChatMessageRead(payload.res);
+            }
+          } catch (e) {
+            console.log(e);
           }
-        } catch (e) {
-          console.log(e);
         }
-      });
+      );
     }
   }
 
@@ -148,5 +172,6 @@ export function useChatSocket() {
     disconnectSingleChatSocket,
     lastChatMessageReceived,
     chatMessageRead,
+    newMessageAndChatData,
   };
 }

@@ -168,6 +168,7 @@ export default function useUserSocket() {
             success ||
             count + 1 === attemptsToRetryRefreshingToken
           ) {
+            console.log("clear interval");
             clearInterval(retryInterval!);
             retryInterval = null;
             return;

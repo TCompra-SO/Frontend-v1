@@ -126,6 +126,10 @@ export default function RatingModal(props: RatingModalProps) {
         }
       },
     });
+
+    return () => {
+      props.setAdditionalApiParams({ functionToExecute: () => {} });
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

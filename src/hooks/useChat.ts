@@ -27,6 +27,10 @@ export function useChat() {
   const [chatMessageList, setChatMessageList] = useState<ChatMessage[]>([]);
   const [hasMoreChatMessageList, setHasMoreChatMessageList] = useState(true);
   const [firstChatMessageToRead, setFirstChatMessageToRead] = useState("");
+  const [newMessageAndChatData, setNewMessageAndChatData] = useState<{
+    chatMessage: ChatMessage;
+    chatListData: ChatListData;
+  } | null>(null);
   const [isChatListResetToChangeTabs, setIsChatListResetToChangeTabs] =
     useState(false);
   const [pageData, setPageData] = useState({
@@ -85,6 +89,23 @@ export function useChat() {
     setChatList(foundChatList);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [foundChatList]);
+
+  /** Actualizar datos de lista de chats según señalde chat */
+
+  useEffect(() => {
+    if (newMessageAndChatData) {
+      setChatList((prevList) => {
+        const index = prevList.findIndex(
+          (item) => item.uid === newMessageAndChatData.chatListData.uid
+        );
+        if (index === -1)
+          return [newMessageAndChatData.chatListData, ...prevList];
+        const newList = [...prevList];
+        newList[index] = newMessageAndChatData.chatListData;
+        return newList;
+      });
+    }
+  }, [newMessageAndChatData]);
 
   /** Funciones */
 
@@ -198,5 +219,6 @@ export function useChat() {
     setFirstChatMessageToRead,
     updateMsg,
     markMsgAsError,
+    setNewMessageAndChatData,
   };
 }

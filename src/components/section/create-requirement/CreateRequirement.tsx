@@ -179,6 +179,11 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       },
     });
 
+    return () => {
+      props.setAdditionalApiParams({ functionToExecute: () => {} });
+      props.setAdditionalApiParamsImg({ functionToExecute: () => {} });
+      props.setAdditionalApiParamsDoc({ functionToExecute: () => {} });
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -33,6 +33,7 @@ import {
   NotificationDataFromServer,
   NotificationTargetData,
   ChatMessage,
+  ChatListData,
 } from "./MainInterfaces";
 import useApi, { UseApiType } from "../hooks/useApi";
 import { FieldSort } from "./Requests";
@@ -587,16 +588,25 @@ export interface ChatMessageRead {
   endMessageId: string;
 }
 
-export interface MessageChatSocketResponse {
+export interface NewMessageSingleChatSocketResponse {
   messageData: ChatMessage;
   type: ChatMessageType.NEW_MESSAGE;
 }
 
-export interface ReadChatSocketResponse {
+export interface MessageReadSingleChatSocketResponse {
   res: ChatMessageRead;
   type: ChatMessageType.READ;
 }
 
-export type ChatSocketResponse =
-  | MessageChatSocketResponse
-  | ReadChatSocketResponse;
+export type SingleChatSocketResponse =
+  | NewMessageSingleChatSocketResponse
+  | MessageReadSingleChatSocketResponse;
+
+export interface NewMessageGeneralChatSocketResponse {
+  chatData: { data: ChatListData };
+  messageData: ChatMessage;
+  numUnreadMessages: number;
+  type: ChatMessageType.NEW_MESSAGE;
+}
+
+export type GeneralChatSocketResponse = NewMessageGeneralChatSocketResponse;

@@ -81,7 +81,7 @@ export default function CancelPurchaseOrderModal(
       notification = notificationFn(props.type);
     }
 
-    let receiverId: string = props.notificationTargetData.receiverId;
+    let receiverId = props.notificationTargetData.receiverId;
     if (!receiverId && !props.fromRequirementTable) {
       const { basicRateData } = await getBasicRateData(
         props.fromRequirementTable ? props.offerId : props.requirementId,

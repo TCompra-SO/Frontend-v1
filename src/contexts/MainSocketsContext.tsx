@@ -52,6 +52,7 @@ export const MainSocketsContext = createContext<MainSocketsContextType>({
   setRefreshTokenExpiration: () => {},
   lastChatMessageReceived: null,
   chatMessageRead: { endMessageId: "" },
+  newMessageAndChatData: null,
 } as MainSocketsContextType);
 
 export function MainSocketsProvider({ children }: { children: ReactNode }) {
