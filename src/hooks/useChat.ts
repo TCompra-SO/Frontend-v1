@@ -34,7 +34,7 @@ export function useChat() {
   const [isChatListResetToChangeTabs, setIsChatListResetToChangeTabs] =
     useState(false);
   const [pageData, setPageData] = useState({
-    page: 0,
+    chatId: "",
     retrieve: false,
     archived: false,
   });
@@ -46,8 +46,7 @@ export function useChat() {
   /** Obtener más chats */
 
   useEffect(() => {
-    if (pageData.page && pageData.retrieve)
-      getChatList(pageData.page, pageData.archived);
+    if (pageData.retrieve) getChatList(pageData.chatId, pageData.archived);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageData]);
 
@@ -109,8 +108,13 @@ export function useChat() {
 
   /** Funciones */
 
-  function getMoreChats(archived: boolean) {
-    setPageData({ page: pageData.page + 1, retrieve: true, archived });
+  function getMoreChats(archived: boolean, chatId?: string) {
+    setPageData({
+      chatId:
+        chatId ?? chatList.length ? chatList[chatList.length - 1].uid : "",
+      retrieve: true,
+      archived,
+    });
   }
 
   function getMoreChatMessages(chatId: string) {
@@ -124,7 +128,7 @@ export function useChat() {
   }
 
   function resetChatList(changeTabs?: boolean) {
-    setPageData({ page: 0, retrieve: false, archived: false });
+    setPageData({ chatId: "", retrieve: false, archived: false });
     setChatList([]);
     setHasMoreChatList(true);
     resetChatMessageList();
@@ -194,7 +198,7 @@ export function useChat() {
     } else {
       setUsingSearch(false);
       resetChatList();
-      getMoreChats(false);
+      getMoreChats(false, "");
     }
   }, inputSearchAfterMseconds);
 

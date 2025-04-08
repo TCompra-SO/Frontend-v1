@@ -126,13 +126,13 @@ export function useGetChatList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
-  function getChatList(page: number, archived: boolean) {
+  function getChatList(chatId: string, archived: boolean) {
     setApiParams({
       service: archived ? getArchivedChatListService() : getChatListService(),
       method: "post",
       dataToSend: {
         userId: uid,
-        page,
+        chatId,
         pageSize: chatListPageSize,
       },
     });

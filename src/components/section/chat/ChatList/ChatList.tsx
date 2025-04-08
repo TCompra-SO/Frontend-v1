@@ -19,7 +19,7 @@ const loadingSpinner: ReactNode = (
 interface ChatListProps {
   chatList: ChatListData[];
   onClickOnItem: (item: ChatListData) => void;
-  loadMoreChats: (archived: boolean) => void;
+  loadMoreChats: (archived: boolean, chatId?: string) => void;
   currentChat: ChatListData | null;
   hasMore: boolean;
   loading: boolean | undefined;

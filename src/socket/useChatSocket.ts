@@ -17,6 +17,7 @@ import {
 } from "../models/Interfaces";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
+import { transformToChatListData } from "../utilities/transform";
 
 let chatSocketAPI: Socket | null = null;
 let singleChatSocketAPI: Socket | null = null;
@@ -65,7 +66,7 @@ export function useChatSocket() {
             console.log("updateGeneralChat:", payload);
             if (payload.type == ChatMessageType.NEW_MESSAGE) {
               setNewMessageAndChatData({
-                chatListData: payload.chatData.data,
+                chatListData: transformToChatListData(payload.chatData.data),
                 chatMessage: payload.messageData,
               });
             }

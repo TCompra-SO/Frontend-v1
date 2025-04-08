@@ -207,7 +207,7 @@ export default function ChatBody(props: ChatBodyProps) {
           <img src={props.chatData.userImage} className="img-chat-2" />
         ) : (
           <div className="inicial-chat">
-            {props.chatData.userName.length > 0
+            {props.chatData.userName && props.chatData.userName.length > 0
               ? props.chatData.userName[0]
               : null}
           </div>

@@ -275,7 +275,7 @@ export interface CreateMessageRequest {
 
 export interface GetChatListRequest {
   userId: string;
-  page: number;
+  chatId: string;
   pageSize: number;
 }
 
