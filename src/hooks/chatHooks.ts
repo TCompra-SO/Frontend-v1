@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import {
+  ArchiveChatRequest,
   CreateChatRequest,
   CreateMessageRequest,
   GetChatListRequest,
@@ -8,6 +9,7 @@ import {
   SearchChatRequest,
 } from "../models/Requests";
 import {
+  archiveChatReq,
   createChat,
   createChatMessage,
   markChatMessageAsRead,
@@ -39,6 +41,16 @@ export function useChatFunctions(showNotificationAfterMsgSent: boolean) {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
   const [loading, setLoading] = useState(false);
+
+  async function archiveChat(request: ArchiveChatRequest) {
+    const { responseData, errorMsg } = await archiveChatReq(request);
+    if (responseData) return true;
+    else if (errorMsg) {
+      showNotification("error", t(errorMsg));
+      return false;
+    }
+    return false;
+  }
 
   async function markAsRead(request: MarkChatMessagesAsReadRequest) {
     return await markChatMessageAsRead(request);
@@ -90,6 +102,7 @@ export function useChatFunctions(showNotificationAfterMsgSent: boolean) {
     loadingCreateChatAndSendMessage: loading,
     sendMessage,
     markAsRead,
+    archiveChat,
   };
 }
 

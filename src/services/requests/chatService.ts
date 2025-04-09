@@ -90,3 +90,12 @@ export function searchChatService(): HttpService {
     type: "CH-SE-CH",
   };
 }
+
+export function archiveChatService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.chat}${
+      ApiRoutes.chat.archiveChat
+    }`,
+    type: "CH-AR-CH",
+  };
+}

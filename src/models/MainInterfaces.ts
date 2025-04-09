@@ -257,7 +257,7 @@ export interface BasicChatListData {
   title: string;
   requirementId: string;
   type: RequirementType;
-  archive: [{ userId: string; state: boolean }];
+  archive?: [{ userId: string; state: boolean }];
 }
 
 export interface ChatListData extends BasicChatListData {

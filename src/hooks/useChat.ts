@@ -89,7 +89,7 @@ export function useChat() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [foundChatList]);
 
-  /** Actualizar datos de lista de chats según señalde chat */
+  /** Actualizar datos de lista de chats según señal de chat */
 
   useEffect(() => {
     if (newMessageAndChatData) {
@@ -190,6 +190,12 @@ export function useChat() {
     });
   }
 
+  function removeChatFromList(chatId: string) {
+    setChatList((prevList) => {
+      return prevList.filter((chat) => chat.uid !== chatId);
+    });
+  }
+
   const handleSearch = debounce((val: string) => {
     console.log(val);
     if (val) {
@@ -224,5 +230,6 @@ export function useChat() {
     updateMsg,
     markMsgAsError,
     setNewMessageAndChatData,
+    removeChatFromList,
   };
 }

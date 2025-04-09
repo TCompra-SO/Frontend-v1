@@ -295,3 +295,8 @@ export interface SearchChatRequest {
   userId: string;
   keyWords: string;
 }
+
+export interface ArchiveChatRequest {
+  chatId: string;
+  archive: boolean;
+}

@@ -48,6 +48,7 @@ export default function Chat() {
     markMsgAsError,
     updateMsg,
     setNewMessageAndChatData,
+    removeChatFromList,
   } = useChat();
   const { markAsRead } = useChatFunctions(false);
   const {
@@ -178,6 +179,7 @@ export default function Chat() {
 
   useEffect(() => {
     setNewMessageAndChatData(newMessageAndChatData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newMessageAndChatData]);
 
   /** Funciones */
@@ -219,6 +221,7 @@ export default function Chat() {
             setShowArchivedChats={setShowArchivedChats}
             handleSearch={handleSearch}
             usingSearch={usingSearch}
+            removeChatFromList={removeChatFromList}
           />
         )}
         {isChatOpened && currentChat ? (

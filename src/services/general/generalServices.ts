@@ -4,6 +4,7 @@ import {
 } from "../../models/MainInterfaces";
 import { UserState } from "../../models/Redux";
 import {
+  ArchiveChatRequest,
   CreateChatRequest,
   CreateMessageRequest,
   MarkChatMessagesAsReadRequest,
@@ -41,6 +42,7 @@ import {
   verifyCertificationService,
 } from "../requests/certificateService";
 import {
+  archiveChatService,
   createChatMessageService,
   createChatService,
   MarkChatMessagesAsReadService,
@@ -388,6 +390,21 @@ export async function markChatMessageAsRead(
   const { responseData, error, errorMsg } =
     await makeRequest<MarkChatMessagesAsReadRequest>({
       service: MarkChatMessagesAsReadService(),
+      method: "post",
+      dataToSend: request,
+    });
+
+  return {
+    responseData: responseData,
+    error,
+    errorMsg,
+  };
+}
+
+export async function archiveChatReq(request: ArchiveChatRequest) {
+  const { responseData, error, errorMsg } =
+    await makeRequest<ArchiveChatRequest>({
+      service: archiveChatService(),
       method: "post",
       dataToSend: request,
     });

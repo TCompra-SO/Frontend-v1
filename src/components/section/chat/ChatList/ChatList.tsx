@@ -27,6 +27,7 @@ interface ChatListProps {
   setShowArchivedChats: (val: boolean) => void;
   handleSearch: DebouncedFunc<(val: string) => void>;
   usingSearch: boolean;
+  removeChatFromList: (chatId: string) => void;
 }
 
 export default function ChatList(props: ChatListProps) {
@@ -105,6 +106,7 @@ export default function ChatList(props: ChatListProps) {
                 key={`${item.userId}-${item.requirementId}`}
                 onClickOnItem={props.onClickOnItem}
                 active={props.currentChat?.uid == item.uid}
+                removeChatFromList={props.removeChatFromList}
               />
             ))}
           </InfiniteScroll>

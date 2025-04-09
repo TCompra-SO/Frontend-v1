@@ -165,6 +165,7 @@ export const ApiRoutes = {
     changeStateConnection: "changeStateConnection/",
     searchChat: "searchChat/",
     getArchivedChats: "getArchivedChats/",
+    archiveChat: "archiveChat/",
   },
 };
 
