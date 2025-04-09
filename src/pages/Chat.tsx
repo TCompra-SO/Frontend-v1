@@ -94,9 +94,16 @@ export default function Chat() {
   /** Abrir chat desde redireccionamiento */
 
   useEffect(() => {
-    if (basicChatDataFromRouting) {
-      setIsChatOpened(true);
+    if (basicChatDataFromRouting && basicChatDataFromRouting.uid) {
+      // setIsChatOpened(true); // en caso de no existir chat
       navigate(".", { replace: true, state: null });
+
+      const chatToOpen = chatList.find(
+        (chat) => chat.uid === basicChatDataFromRouting.uid
+      );
+      if (chatToOpen) {
+        handleClickOnChatItem(chatToOpen);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [basicChatDataFromRouting]);
@@ -106,15 +113,19 @@ export default function Chat() {
   useEffect(() => {
     const chatDataFromNotification: SocketChatMessage =
       location.state?.[chatDataFieldName];
-    console.log("chatDataFromNotification", chatDataFromNotification);
+    console.log(
+      "chatDataFromNotification",
+      chatDataFromNotification,
+      chatList.length
+    ); // mucho tiempo despues la lista se llena pero ya no cumlpe el if, chatdat... es undefined
     hasHandledChatNotification.current = false;
 
     if (chatDataFromNotification && !hasHandledChatNotification.current) {
-      console.log(chatDataFromNotification);
       navigate(".", { replace: true, state: null });
       const chatToOpen = chatList.find(
         (chat) => chat.uid === chatDataFromNotification.chatId
       );
+      console.log("FOUNDDDDDDDDD", chatToOpen, chatList.length);
       if (chatToOpen) {
         handleClickOnChatItem(chatToOpen);
         hasHandledChatNotification.current = true;
@@ -126,6 +137,7 @@ export default function Chat() {
   /** Obtener lista inicial de mensajes de chat */
 
   useEffect(() => {
+    console.log("isChatOpened && currentChat", isChatOpened, currentChat);
     if (isChatOpened && currentChat) {
       getMoreChatMessages(currentChat.uid);
     }
@@ -163,7 +175,6 @@ export default function Chat() {
   /** Marcar mensaje como leído */
 
   useEffect(() => {
-    console.log("????????????", chatMessageRead);
     if (chatMessageRead.endMessageId) {
       markMsgAsRead(chatMessageRead.endMessageId);
     }
@@ -187,6 +198,7 @@ export default function Chat() {
 
   function handleCloseChat() {
     disconnectSingleChatSocket();
+    console.log("sETTING AS N ULL");
     setCurrentChat(null);
     setIsChatOpened(false);
     resetChatMessageList();
@@ -197,6 +209,7 @@ export default function Chat() {
     disconnectSingleChatSocket();
     setMarkedAsRead(false);
     resetChatMessageList();
+    console.log("sETTING AS", item);
     setCurrentChat(item);
     setIsChatOpened(true);
     if (item.uid) connectSingleChatSocket(item.uid);

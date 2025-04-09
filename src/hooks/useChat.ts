@@ -89,7 +89,7 @@ export function useChat() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [foundChatList]);
 
-  /** Actualizar datos de lista de chats según señal de chat */
+  /** Actualizar datos de lista de chats según señal de socket */
 
   useEffect(() => {
     if (newMessageAndChatData) {
