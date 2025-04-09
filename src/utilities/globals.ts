@@ -66,7 +66,7 @@ export const attemptsToRetryRefreshingToken = 3;
 
 export const defaultErrorMsg = "errorOccurred";
 
-export const chatListPageSize: number = 6;
+export const chatListPageSize: number = 10;
 export const chatMessagesPageSize: number = 20;
 
 // local storage keys

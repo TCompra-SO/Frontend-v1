@@ -67,7 +67,7 @@ export function getChatListService(): HttpService {
 export function getArchivedChatListService(): HttpService {
   return {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.chat}${
-      ApiRoutes.chat.getChatUsersData
+      ApiRoutes.chat.getArchivedChats
     }`,
     type: "CH-GE-ACL",
   };
