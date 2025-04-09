@@ -29,7 +29,7 @@ import {
   CertificationItem,
   BasicRateData,
   SubUserBase,
-  ChatSocketData,
+  SocketChatMessage,
   NotificationDataFromServer,
   NotificationTargetData,
   ChatMessage,
@@ -537,8 +537,8 @@ export interface RealTimeNotificationData {
 
 export interface RealTimeChatData {
   type: RTNotificationType.CHAT;
-  content: ChatSocketData;
-  onClickCallback: (notification: ChatSocketData) => void;
+  content: SocketChatMessage;
+  onClickCallback: (notification: SocketChatMessage) => void;
 }
 
 export type ShowRealTimeNotificationParams =
@@ -609,4 +609,11 @@ export interface NewMessageGeneralChatSocketResponse {
   type: ChatMessageType.NEW_MESSAGE;
 }
 
-export type GeneralChatSocketResponse = NewMessageGeneralChatSocketResponse;
+export interface MessageReadGeneralChatSocketResponse {
+  numUnreadMessages: number;
+  type: ChatMessageType.READ;
+}
+
+export type GeneralChatSocketResponse =
+  | NewMessageGeneralChatSocketResponse
+  | MessageReadGeneralChatSocketResponse;

@@ -5,7 +5,7 @@ import ChatBody from "../components/section/chat/ChatBody/ChatBody";
 import {
   BasicChatListData,
   ChatListData,
-  ChatSocketData,
+  SocketChatMessage,
 } from "../models/MainInterfaces";
 import { useContext, useEffect, useRef, useState } from "react";
 import useWindowSize from "../hooks/useWindowSize";
@@ -104,8 +104,9 @@ export default function Chat() {
   /** Abrir chat desde notificación */
 
   useEffect(() => {
-    const chatDataFromNotification: ChatSocketData =
+    const chatDataFromNotification: SocketChatMessage =
       location.state?.[chatDataFieldName];
+    console.log("chatDataFromNotification", chatDataFromNotification);
     hasHandledChatNotification.current = false;
 
     if (chatDataFromNotification && !hasHandledChatNotification.current) {

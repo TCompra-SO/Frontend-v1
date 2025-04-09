@@ -280,7 +280,7 @@ export interface ChatMessage {
   error?: boolean;
 }
 
-export interface ChatSocketData extends ChatMessage {
+export interface SocketChatMessage extends ChatMessage {
   userImage?: string;
   userName: string;
 }

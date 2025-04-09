@@ -3,7 +3,7 @@ import { io, Socket } from "socket.io-client";
 import {
   ChatListData,
   ChatMessage,
-  ChatSocketData,
+  SocketChatMessage,
 } from "../models/MainInterfaces";
 import { ChatMessageType, RTNotificationType } from "../utilities/types";
 import useShowNotification from "../hooks/utilHooks";
@@ -18,6 +18,7 @@ import {
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { transformToChatListData } from "../utilities/transform";
+import { getSectionFromRoute } from "../utilities/globalFunctions";
 
 let chatSocketAPI: Socket | null = null;
 let singleChatSocketAPI: Socket | null = null;
@@ -26,6 +27,8 @@ export function useChatSocket() {
   const navigate = useNavigate();
   const uid = useSelector((state: MainState) => state.user.uid);
   const { showRealTimeNotification } = useShowNotification();
+  const [currentSection, setCurrentSection] = useState("");
+  const [globalNumUnreadMessages, setGlobalNumUnreadMessages] = useState(0);
   const [newMessageAndChatData, setNewMessageAndChatData] = useState<{
     chatMessage: ChatMessage;
     chatListData: ChatListData;
@@ -36,6 +39,8 @@ export function useChatSocket() {
   const [lastChatMessageReceived, setLastChatMessageReceived] =
     useState<ChatMessage | null>(null);
 
+  /** Desconectar sockets al destruir */
+
   useEffect(() => {
     return () => {
       disconnectChatSocket();
@@ -43,6 +48,14 @@ export function useChatSocket() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  /** Obtener sección actual */
+
+  useEffect(() => {
+    const section = getSectionFromRoute(location.pathname);
+    setCurrentSection(section);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
 
   /** Funciones */
 
@@ -65,38 +78,30 @@ export function useChatSocket() {
           try {
             console.log("updateGeneralChat:", payload);
             if (payload.type == ChatMessageType.NEW_MESSAGE) {
-              setNewMessageAndChatData({
-                chatListData: transformToChatListData(payload.chatData.data),
-                chatMessage: payload.messageData,
-              });
+              if (currentSection === pageRoutes.chat)
+                setNewMessageAndChatData({
+                  chatListData: transformToChatListData(payload.chatData.data),
+                  chatMessage: payload.messageData,
+                });
+              else
+                showRealTimeNotification({
+                  type: RTNotificationType.CHAT,
+                  content: {
+                    userName: payload.chatData.data.userName,
+                    userImage: payload.chatData.data.userImage,
+                    ...payload.messageData,
+                  },
+                  onClickCallback: redirectFromNotification,
+                });
+            } else if (payload.type == ChatMessageType.READ) {
+              if (payload.numUnreadMessages > 0)
+                setGlobalNumUnreadMessages(payload.numUnreadMessages);
             }
           } catch (e) {
             console.log(e);
           }
         }
       );
-
-      // setTimeout(() => {
-      //   showRealTimeNotification({
-      //     type: RTNotificationType.CHAT,
-      //     content: chatMessages[0],
-      //     onClickCallback: redirectFromNotification,
-      //   });
-      // }, 3000);
-      // setTimeout(() => {
-      //   showRealTimeNotification({
-      //     type: RTNotificationType.CHAT,
-      //     content: chatMessages[1],
-      //     onClickCallback: redirectFromNotification,
-      //   });
-      // }, 6000);
-      // setTimeout(() => {
-      //   showRealTimeNotification({
-      //     type: RTNotificationType.CHAT,
-      //     content: chatMessages[2],
-      //     onClickCallback: redirectFromNotification,
-      //   });
-      // }, 9000);
     }
   }
 
@@ -121,9 +126,9 @@ export function useChatSocket() {
             if (
               payload.type == ChatMessageType.NEW_MESSAGE &&
               payload.messageData.userId != uid
-            )
+            ) {
               setLastChatMessageReceived(payload.messageData);
-            else if (
+            } else if (
               payload.type == ChatMessageType.READ &&
               payload.res?.endMessageId
             ) {
@@ -137,7 +142,7 @@ export function useChatSocket() {
     }
   }
 
-  function redirectFromNotification(chatData: ChatSocketData) {
+  function redirectFromNotification(chatData: SocketChatMessage) {
     navigate(pageRoutes.chat, { state: { [chatDataFieldName]: chatData } });
   }
 
@@ -174,5 +179,6 @@ export function useChatSocket() {
     lastChatMessageReceived,
     chatMessageRead,
     newMessageAndChatData,
+    globalNumUnreadMessages,
   };
 }

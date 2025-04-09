@@ -16,7 +16,7 @@ export default function NotificationUserAvatar(
       style={props.senderImage ? {} : { backgroundColor: primaryColor }}
       size={props.size}
     >
-      {props.senderImage ? null : props.senderName[0]}
+      {props.senderImage ? null : props.senderName ? props.senderName[0] : null}
     </Avatar>
   );
 }

@@ -1,4 +1,10 @@
-import { CSSProperties, ReactNode, useEffect, useState } from "react";
+import {
+  CSSProperties,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -12,6 +18,7 @@ import {
   getSectionFromRoute,
 } from "../../../utilities/globalFunctions";
 import { EntityType } from "../../../utilities/types";
+import { MainSocketsContext } from "../../../contexts/MainSocketsContext";
 
 const menuToggles: {
   [key in (typeof pageRoutes)[keyof typeof pageRoutes]]: {
@@ -62,6 +69,7 @@ export default function Sidebar(props: SidebarProps) {
   const navigate = useNavigate();
   const typeID = useSelector((state: MainState) => state.user.typeID);
   const entityType = useSelector((state: MainState) => state.user.typeEntity);
+  const { globalNumUnreadMessages } = useContext(MainSocketsContext);
   const [menuStyle] = useState<CSSProperties>({ display: "block" });
   const [focusExists, setFocusExists] = useState(false);
   const [pathname, setPathname] = useState("");
@@ -149,7 +157,8 @@ export default function Sidebar(props: SidebarProps) {
     route: string,
     icon: ReactNode,
     text: string,
-    icon2?: ReactNode
+    icon2?: ReactNode,
+    numberToShow?: number
   ) {
     return (
       <ButtonContainer
@@ -159,7 +168,10 @@ export default function Sidebar(props: SidebarProps) {
           forDropdown ? toggleMenu(route) : redirectTo(route);
         }}
       >
-        {icon} {text} {icon2}
+        {icon} {text} {icon2}{" "}
+        {numberToShow && numberToShow > 0 ? (
+          <div className="chat-notf">{numberToShow}</div>
+        ) : null}
       </ButtonContainer>
     );
   }
@@ -382,7 +394,9 @@ export default function Sidebar(props: SidebarProps) {
             false,
             `${pageRoutes.chat}`,
             <i className="fa-regular fa-comment text-center i-btn"></i>,
-            t("chatSection")
+            t("chatSection"),
+            undefined,
+            globalNumUnreadMessages
           )}
         {RolesForSection.users[typeID] &&
           entityType != EntityType.PERSON &&
