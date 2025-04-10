@@ -81,6 +81,7 @@ export function useChatSocket() {
               payload.chatData.length
             ) {
               if (currentSectionRef.current === pageRoutes.chat) {
+                console.log(">>>>>");
                 setNewMessageAndChatData({
                   chatListData: transformToChatListData(payload.chatData[0]),
                   chatMessage: payload.messageData,

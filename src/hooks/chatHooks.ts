@@ -110,12 +110,13 @@ export function useGetChatList() {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
   const uid = useSelector((state: MainState) => state.user.uid);
+  // const [loading, setLoading] = useState<boolean>();
   const [chatList, setChatList] = useState<ChatListData[]>([]);
   const [apiParams, setApiParams] = useState<useApiParams<GetChatListRequest>>({
     service: null,
     method: "get",
   });
-  const { loading, responseData, error, errorMsg, fetchData } =
+  const { responseData, error, errorMsg, fetchData, loading } =
     useApi<GetChatListRequest>(apiParams);
 
   useEffect(() => {
@@ -136,10 +137,13 @@ export function useGetChatList() {
     } else if (error) {
       showNotification("error", errorMsg);
     }
+    // setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
   function getChatList(chatId: string, archived: boolean) {
+    // reset();
+    // setLoading(true);
     setApiParams({
       service: archived ? getArchivedChatListService() : getChatListService(),
       method: "post",
@@ -149,6 +153,10 @@ export function useGetChatList() {
         pageSize: chatListPageSize,
       },
     });
+  }
+
+  function reset() {
+    // setLoading(undefined);
   }
 
   return { getChatList, loadingGetChatList: loading, chatList };

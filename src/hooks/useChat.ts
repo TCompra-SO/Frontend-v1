@@ -23,6 +23,7 @@ export function useChat() {
   const { loadingSearchChat, searchChat, foundChatList } = useChatSearch();
   const [usingSearch, setUsingSearch] = useState(false);
   const [chatList, setChatList] = useState<ChatListData[]>([]);
+  const [chatListIsSet, setChatListIsSet] = useState<boolean>();
   const [hasMoreChatList, setHasMoreChatList] = useState(true);
   const [chatMessageList, setChatMessageList] = useState<ChatMessage[]>([]);
   const [hasMoreChatMessageList, setHasMoreChatMessageList] = useState(true);
@@ -54,6 +55,7 @@ export function useChat() {
     if (currentPageChatList.length < chatListPageSize)
       setHasMoreChatList(false);
     setChatList(chatList.concat(currentPageChatList));
+    if (chatListIsSet === false) setChatListIsSet(true); // solo actualizar si antes se hizo una solicitud para obtener más chtats
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPageChatList]);
 
@@ -106,6 +108,12 @@ export function useChat() {
     }
   }, [newMessageAndChatData]);
 
+  /** Si se hizo una solicitud para obtener más chats, cambiar flag a false */
+
+  useEffect(() => {
+    if (loadingGetChatList) setChatListIsSet(false);
+  }, [loadingGetChatList]);
+
   /** Funciones */
 
   function getMoreChats(archived: boolean, chatId?: string) {
@@ -118,7 +126,6 @@ export function useChat() {
   }
 
   function getMoreChatMessages(chatId: string) {
-    console.log("gettin more chat msgs");
     setMessagePageAndChatId({
       chatId,
       messageId: chatMessageList.length
@@ -167,7 +174,6 @@ export function useChat() {
   }
 
   function markMsgAsRead(messageId: string) {
-    console.log("markMsgAsRead", messageId);
     setChatMessageList((prevList) => {
       const obj = prevList.find((item) => item.uid == messageId);
       if (obj) {
@@ -197,7 +203,6 @@ export function useChat() {
   }
 
   const handleSearch = debounce((val: string) => {
-    console.log(val);
     if (val) {
       setUsingSearch(true);
       searchChat(val);
@@ -232,5 +237,6 @@ export function useChat() {
     markMsgAsError,
     setNewMessageAndChatData,
     removeChatFromList,
+    chatListIsSet,
   };
 }

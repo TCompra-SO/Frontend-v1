@@ -50,6 +50,7 @@ export default function Chat() {
     updateMsg,
     setNewMessageAndChatData,
     removeChatFromList,
+    chatListIsSet,
   } = useChat();
   const { markAsRead } = useChatFunctions(false);
   const {
@@ -72,7 +73,6 @@ export default function Chat() {
 
   useEffect(() => {
     if (!usingSearch) {
-      console.log("calling", showArchivedChats);
       handleCloseChat();
       resetChatList(true);
     }
@@ -118,12 +118,12 @@ export default function Chat() {
       "chatDataFromNotification",
       chatDataFromNotification,
       chatList.length,
-      loadingChatList
+      chatListIsSet
     ); // mucho tiempo despues la lista se llena pero ya no cumlpe el if, chatdat... es undefined
     // hasHandledChatNotification.current = false;
 
     if (
-      loadingChatList === false &&
+      chatListIsSet === true &&
       chatDataFromNotification &&
       !hasHandledChatNotification.current
     ) {
@@ -138,11 +138,7 @@ export default function Chat() {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chatList, loadingChatList]);
-
-  useEffect(() => {
-    console.log("aaaaaaaaaaaa", loadingChatList);
-  }, [loadingChatList]);
+  }, [chatListIsSet]);
 
   /** Obtener lista inicial de mensajes de chat */
 
