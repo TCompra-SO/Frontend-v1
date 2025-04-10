@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import {
   ChatListData,
@@ -7,7 +7,7 @@ import {
 } from "../models/MainInterfaces";
 import { ChatMessageType, RTNotificationType } from "../utilities/types";
 import useShowNotification from "../hooks/utilHooks";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { pageRoutes } from "../utilities/routes";
 import { chatDataFieldName } from "../utilities/globals";
 import {
@@ -25,9 +25,11 @@ let singleChatSocketAPI: Socket | null = null;
 
 export function useChatSocket() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const currentSection = getSectionFromRoute(location.pathname);
+  const currentSectionRef = useRef(currentSection);
   const uid = useSelector((state: MainState) => state.user.uid);
   const { showRealTimeNotification } = useShowNotification();
-  const [currentSection, setCurrentSection] = useState("");
   const [globalNumUnreadMessages, setGlobalNumUnreadMessages] = useState(0);
   const [newMessageAndChatData, setNewMessageAndChatData] = useState<{
     chatMessage: ChatMessage;
@@ -49,13 +51,11 @@ export function useChatSocket() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /** Obtener sección actual */
+  /** Actualizar sección actual */
 
   useEffect(() => {
-    const section = getSectionFromRoute(location.pathname);
-    setCurrentSection(section);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location]);
+    currentSectionRef.current = currentSection;
+  }, [currentSection]);
 
   /** Funciones */
 
@@ -76,23 +76,26 @@ export function useChatSocket() {
         "updateGeneralChat",
         (payload: GeneralChatSocketResponse) => {
           try {
-            console.log("updateGeneralChat:", payload);
-            if (payload.type == ChatMessageType.NEW_MESSAGE) {
-              if (currentSection === pageRoutes.chat)
+            if (
+              payload.type == ChatMessageType.NEW_MESSAGE &&
+              payload.chatData.length
+            ) {
+              if (currentSectionRef.current === pageRoutes.chat) {
                 setNewMessageAndChatData({
-                  chatListData: transformToChatListData(payload.chatData.data),
+                  chatListData: transformToChatListData(payload.chatData[0]),
                   chatMessage: payload.messageData,
                 });
-              else
+              } else {
                 showRealTimeNotification({
                   type: RTNotificationType.CHAT,
                   content: {
-                    userName: payload.chatData.data.userName,
-                    userImage: payload.chatData.data.userImage,
+                    userName: payload.chatData[0].userName,
+                    userImage: payload.chatData[0].userImage,
                     ...payload.messageData,
                   },
                   onClickCallback: redirectFromNotification,
                 });
+              }
             } else if (payload.type == ChatMessageType.READ) {
               if (payload.numUnreadMessages > 0)
                 setGlobalNumUnreadMessages(payload.numUnreadMessages);

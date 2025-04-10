@@ -14,7 +14,7 @@ import { MainState } from "../../../../models/Redux";
 import { getSectionFromRoute } from "../../../../utilities/globalFunctions";
 import { pageRoutes } from "../../../../utilities/routes";
 import ButtonContainer from "../../../containers/ButtonContainer";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { UserRoles } from "../../../../utilities/types";
 import ControlPanel from "../items/ControlPanel";
 import Notifications from "../../notifications/Notifications";
@@ -27,6 +27,7 @@ interface MainHeaderNoModalsProps {
 export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const { width } = useWindowSize();
   const [logoSrc, setLogoSrc] = useState("/src/assets/images/logo-white.svg");
   const typeID = useSelector((state: MainState) => state.user.typeID);

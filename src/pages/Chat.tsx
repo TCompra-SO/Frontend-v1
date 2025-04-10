@@ -37,6 +37,7 @@ export default function Chat() {
     hasMoreChatList,
     hasMoreChatMessageList,
     loadingChatList,
+    loadingSearchChat,
     loadingChatMessages,
     addMessageToChatMessageList,
     markMsgAsRead,
@@ -116,11 +117,16 @@ export default function Chat() {
     console.log(
       "chatDataFromNotification",
       chatDataFromNotification,
-      chatList.length
+      chatList.length,
+      loadingChatList
     ); // mucho tiempo despues la lista se llena pero ya no cumlpe el if, chatdat... es undefined
-    hasHandledChatNotification.current = false;
+    // hasHandledChatNotification.current = false;
 
-    if (chatDataFromNotification && !hasHandledChatNotification.current) {
+    if (
+      loadingChatList === false &&
+      chatDataFromNotification &&
+      !hasHandledChatNotification.current
+    ) {
       navigate(".", { replace: true, state: null });
       const chatToOpen = chatList.find(
         (chat) => chat.uid === chatDataFromNotification.chatId
@@ -132,7 +138,11 @@ export default function Chat() {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location, chatList]);
+  }, [chatList, loadingChatList]);
+
+  useEffect(() => {
+    console.log("aaaaaaaaaaaa", loadingChatList);
+  }, [loadingChatList]);
 
   /** Obtener lista inicial de mensajes de chat */
 
@@ -230,7 +240,7 @@ export default function Chat() {
             loadMoreChats={getMoreChats}
             currentChat={currentChat}
             hasMore={hasMoreChatList}
-            loading={loadingChatList}
+            loading={loadingChatList || loadingSearchChat}
             showArchivedChats={showArchivedChats}
             setShowArchivedChats={setShowArchivedChats}
             handleSearch={handleSearch}

@@ -603,7 +603,7 @@ export type SingleChatSocketResponse =
   | MessageReadSingleChatSocketResponse;
 
 export interface NewMessageGeneralChatSocketResponse {
-  chatData: { data: ChatListData };
+  chatData: ChatListData[];
   messageData: ChatMessage;
   numUnreadMessages: number;
   type: ChatMessageType.NEW_MESSAGE;

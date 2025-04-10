@@ -211,7 +211,8 @@ export function useChat() {
   return {
     resetChatList,
     chatList,
-    loadingChatList: loadingGetChatList || loadingSearchChat,
+    loadingChatList: loadingGetChatList,
+    loadingSearchChat,
     getMoreChats,
     loadingChatMessages: loadingGetChatMessages,
     resetChatMessageList,
