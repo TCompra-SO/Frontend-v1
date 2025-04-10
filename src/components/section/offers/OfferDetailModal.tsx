@@ -14,6 +14,7 @@ import { CardByStateOffer } from "../../../utilities/colors";
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
 import { RequirementType } from "../../../utilities/types";
+import { useRedirectToChat } from "../../../hooks/utilHooks";
 
 interface OfferDetailModalProps {
   offer: Offer;
@@ -24,6 +25,7 @@ interface OfferDetailModalProps {
 export default function OfferDetailModal(props: OfferDetailModalProps) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
+  const { redirectToChat } = useRedirectToChat();
   const { countryData, deliveryTimeData } = context;
   const [cities, setCities] = useState<IdValueMap>({});
   const uid = useSelector((state: MainState) => state.user.uid);
@@ -42,13 +44,14 @@ export default function OfferDetailModal(props: OfferDetailModalProps) {
   }, [countryData]);
 
   function goToChat() {
-    console.log(
-      "go to chat",
-      props.offer.subUser && uid == props.offer.subUser.uid,
-      props.offer.user.uid == uid,
-      (props.offer.subUser && uid == props.offer.subUser.uid) ||
-        props.offer.user.uid == uid
-    );
+    redirectToChat({
+      userName: props.basicRateData.subUserName ?? props.basicRateData.userName,
+      userImage: props.basicRateData.userImage,
+      title: props.offer.requirementTitle,
+      requirementId: props.offer.requirementId,
+      type: props.offer.type,
+      userId: props.basicRateData.subUserId ?? props.basicRateData.userId,
+    });
   }
 
   return (

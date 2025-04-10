@@ -1,7 +1,7 @@
 import { App } from "antd";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { DisplayUser } from "../models/MainInterfaces";
+import { BasicChatListData, DisplayUser } from "../models/MainInterfaces";
 import {
   ShowRealTimeNotificationParams,
   useApiParams,
@@ -18,6 +18,9 @@ import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import { RequirementType, RTNotificationType } from "../utilities/types";
 import NotificationUserAvatar from "../components/common/utils/NotificationUserAvatar";
 import ParagraphContainer from "../components/containers/ParagraphContainer";
+import { useNavigate } from "react-router-dom";
+import { pageRoutes } from "../utilities/routes";
+import { basicChatDataFieldName } from "../utilities/globals";
 
 export default function useShowNotification() {
   const { t } = useTranslation();
@@ -225,4 +228,16 @@ export function useDownloadPdfOrder() {
   }
 
   return downloadPdfOrder;
+}
+
+export function useRedirectToChat() {
+  const navigate = useNavigate();
+
+  function redirectToChat(data: BasicChatListData) {
+    navigate(pageRoutes.chat, {
+      state: { [basicChatDataFieldName]: data },
+    });
+  }
+
+  return { redirectToChat };
 }

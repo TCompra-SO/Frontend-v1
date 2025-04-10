@@ -92,24 +92,7 @@ export default function Chat() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChatListResetToChangeTabs]);
 
-  /** Abrir chat desde redireccionamiento */
-
-  useEffect(() => {
-    if (basicChatDataFromRouting && basicChatDataFromRouting.uid) {
-      // setIsChatOpened(true); // en caso de no existir chat
-      navigate(".", { replace: true, state: null });
-
-      const chatToOpen = chatList.find(
-        (chat) => chat.uid === basicChatDataFromRouting.uid
-      );
-      if (chatToOpen) {
-        handleClickOnChatItem(chatToOpen);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [basicChatDataFromRouting]);
-
-  /** Abrir chat desde notificación */
+  /** Abrir chat desde notificación o desde redireccionamiento */
 
   useEffect(() => {
     const chatDataFromNotification: SocketChatMessage =
@@ -135,6 +118,26 @@ export default function Chat() {
       if (chatToOpen) {
         handleClickOnChatItem(chatToOpen);
         hasHandledChatNotification.current = true;
+      }
+    }
+
+    if (!chatDataFromNotification) {
+      console.log("basicChatDataFromRouting", basicChatDataFromRouting);
+      if (chatListIsSet === true && basicChatDataFromRouting) {
+        // setIsChatOpened(true); // en caso de no existir chat
+        navigate(".", { replace: true, state: null });
+
+        const chatToOpen = basicChatDataFromRouting.uid
+          ? chatList.find((chat) => chat.uid === basicChatDataFromRouting.uid)
+          : chatList.find(
+              (chat) =>
+                chat.userId === basicChatDataFromRouting.userId &&
+                chat.requirementId === basicChatDataFromRouting.requirementId
+            );
+        console.log("==============", chatToOpen);
+        if (chatToOpen) {
+          handleClickOnChatItem(chatToOpen);
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

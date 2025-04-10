@@ -253,6 +253,7 @@ export interface BasicChatListData {
   uid?: string;
   userImage?: string;
   userName: string;
+  userId: string;
   userOnline?: boolean;
   title: string;
   requirementId: string;
@@ -262,7 +263,6 @@ export interface BasicChatListData {
 
 export interface ChatListData extends BasicChatListData {
   uid: string;
-  userId: string;
   lastMessage: string;
   lastDate: string;
   numUnreadMessages?: number;

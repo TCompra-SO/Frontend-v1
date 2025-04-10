@@ -515,6 +515,9 @@ export default function OfferForm(props: OfferFormProps) {
               receiverImage: props.requirement.subUser
                 ? props.requirement.subUser.image
                 : props.requirement.user.image,
+              receiverId: props.requirement.subUser
+                ? props.requirement.subUser.uid
+                : props.requirement.user.uid,
             },
             action: Action.SEND_MESSAGE,
           }}

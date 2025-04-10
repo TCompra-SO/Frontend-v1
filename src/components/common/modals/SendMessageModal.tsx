@@ -8,10 +8,8 @@ import { RequirementType } from "../../../utilities/types";
 import { useChatFunctions } from "../../../hooks/chatHooks";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
-import { useNavigate } from "react-router-dom";
-import { pageRoutes } from "../../../utilities/routes";
 import { BasicChatListData } from "../../../models/MainInterfaces";
-import { basicChatDataFieldName } from "../../../utilities/globals";
+import { useRedirectToChat } from "../../../hooks/utilHooks";
 
 interface SendMessageModalProps extends CommonModalProps {
   onClose: () => any;
@@ -21,13 +19,14 @@ interface SendMessageModalProps extends CommonModalProps {
   type: RequirementType;
   receiverImage?: string;
   receiverName: string;
+  receiverId: string;
 }
 
 export default function SendMessageModal(props: SendMessageModalProps) {
-  const navigate = useNavigate();
   const { t } = useTranslation();
   const { createChatAndSendMessage, loadingCreateChatAndSendMessage } =
     useChatFunctions(true);
+  const { redirectToChat } = useRedirectToChat();
   const uid = useSelector((state: MainState) => state.user.uid);
   const [msg, setMsg] = useState("");
   const prevLoadingRef = useRef<boolean | null>(null);
@@ -66,10 +65,9 @@ export default function SendMessageModal(props: SendMessageModalProps) {
       requirementId: props.requirementId,
       userImage: props.receiverImage,
       type: props.type,
+      userId: props.receiverId,
     };
-    navigate(pageRoutes.chat, {
-      state: { [basicChatDataFieldName]: data },
-    });
+    redirectToChat(data);
   }
 
   return (

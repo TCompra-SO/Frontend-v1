@@ -433,6 +433,7 @@ export function transformToStatistics(data: any) {
 export function transformToChatListData(data: any) {
   const obj: ChatListData = data;
   obj.requirementId = data.requerimentId;
+  obj.userId = data.chatPartnerId;
   return obj;
 }
 
