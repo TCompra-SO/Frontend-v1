@@ -77,7 +77,6 @@ export default function ChatList(props: ChatListProps) {
               cursor: props.loading ? "not-allowed" : "pointer",
             }}
             onChange={() => {
-              console.log(props.loading);
               if (!props.loading)
                 props.setShowArchivedChats(!props.showArchivedChats);
             }}
@@ -102,8 +101,6 @@ export default function ChatList(props: ChatListProps) {
             <div className="name-file">{t("noChats")}</div>
           </div>
         )
-      ) : props.loading ? (
-        loadingSpinner
       ) : (
         <div
           id="scrollableDivChatList"
