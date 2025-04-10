@@ -37,12 +37,16 @@ import { MainState } from "../models/Redux";
 import { transformToOfferFromGetOffersByEntityOrSubUser } from "../utilities/transform";
 import { ModalsContext } from "../contexts/ModalsContext";
 import { useCulminate, useShowDetailOffer } from "../hooks/requirementHooks";
-import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
+import useShowNotification, {
+  useRedirectToChat,
+  useShowLoadingMessage,
+} from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
 import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
+import { getBasicRateDataS } from "../services/general/generalServices";
 
 export default function Offers() {
   const { t } = useTranslation();
@@ -50,6 +54,7 @@ export default function Offers() {
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const searchValueRef = useRef<TablePageContentRef>(null);
+  const { redirectToChat } = useRedirectToChat();
   const { detailedOfferModalData, resetDetailedOfferModalData } =
     useContext(ModalsContext);
   const { showNotification } = useShowNotification();
@@ -273,8 +278,21 @@ export default function Offers() {
     });
   }
 
-  function goToChat(offer: Offer) {
-    console.log("goToChat", offer.key, offer.requirementId);
+  async function goToChat(offer: Offer) {
+    const { basicRateData, errorMsg } = await getBasicRateDataS(
+      offer.requirementId,
+      false,
+      offer.type
+    );
+    if (basicRateData) {
+      redirectToChat({
+        userName: basicRateData.subUserName ?? basicRateData.userName,
+        userId: basicRateData.subUserId ?? basicRateData.userId,
+        title: basicRateData.title,
+        requirementId: offer.requirementId,
+        type: offer.type,
+      });
+    } else if (errorMsg) showNotification("error", t(errorMsg));
   }
 
   function handleOnButtonClick(action: Action, offer: Offer) {
@@ -309,7 +327,7 @@ export default function Offers() {
       }
 
       case Action.CHAT: {
-        goToChat(offer); //r3v
+        goToChat(offer);
         break;
       }
 

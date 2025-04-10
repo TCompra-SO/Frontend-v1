@@ -393,7 +393,6 @@ export default function ModalContainer(props: ModalContainerProps) {
           <SendMessageModal
             onClose={props.onClose}
             requirementId={props.content.data.requirementId}
-            userId={props.content.data.userId}
             title={props.content.data.title}
             type={props.content.data.type}
             receiverName={props.content.data.receiverName}

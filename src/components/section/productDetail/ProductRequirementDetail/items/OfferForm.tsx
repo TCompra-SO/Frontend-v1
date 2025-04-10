@@ -505,16 +505,12 @@ export default function OfferForm(props: OfferFormProps) {
             type: ModalTypes.SEND_MESSAGE,
             data: {
               requirementId: props.requirement.key,
-              userId:
-                props.requirement.subUser?.uid ?? props.requirement?.user.uid,
               title: props.requirement.title,
               type: props.requirement.type,
               receiverName: props.requirement.subUser
                 ? props.requirement.subUser.name
                 : props.requirement.user.name,
-              receiverImage: props.requirement.subUser
-                ? props.requirement.subUser.image
-                : props.requirement.user.image,
+              receiverImage: props.requirement.user.image,
               receiverId: props.requirement.subUser
                 ? props.requirement.subUser.uid
                 : props.requirement.user.uid,

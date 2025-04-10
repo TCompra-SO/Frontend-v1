@@ -14,7 +14,6 @@ import { useRedirectToChat } from "../../../hooks/utilHooks";
 interface SendMessageModalProps extends CommonModalProps {
   onClose: () => any;
   requirementId: string;
-  userId: string;
   title: string;
   type: RequirementType;
   receiverImage?: string;

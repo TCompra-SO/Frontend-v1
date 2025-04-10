@@ -183,7 +183,7 @@ export async function getPurchaseOrderById(id: string, type: RequirementType) {
   }
 }
 
-export async function getBasicRateData(
+export async function getBasicRateDataS(
   idToGetData: string,
   useOfferService: boolean,
   type: RequirementType

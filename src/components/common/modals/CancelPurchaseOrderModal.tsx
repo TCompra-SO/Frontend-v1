@@ -22,7 +22,7 @@ import {
   NotificationTargetData,
 } from "../../../models/MainInterfaces";
 import dayjs from "dayjs";
-import { getBasicRateData } from "../../../services/general/generalServices";
+import { getBasicRateDataS } from "../../../services/general/generalServices";
 
 interface CancelPurchaseOrderModalProps {
   onClose: () => any;
@@ -83,7 +83,7 @@ export default function CancelPurchaseOrderModal(
 
     let receiverId = props.notificationTargetData.receiverId;
     if (!receiverId && !props.fromRequirementTable) {
-      const { basicRateData } = await getBasicRateData(
+      const { basicRateData } = await getBasicRateDataS(
         props.fromRequirementTable ? props.offerId : props.requirementId,
         props.fromRequirementTable,
         props.type

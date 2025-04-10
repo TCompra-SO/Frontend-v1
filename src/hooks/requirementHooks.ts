@@ -26,7 +26,7 @@ import {
   Requirement,
 } from "../models/MainInterfaces";
 import {
-  getBasicRateData,
+  getBasicRateDataS,
   getOfferById,
   getPurchaseOrderById,
   getRequirementById,
@@ -516,7 +516,7 @@ export function useShowDetailOffer() {
             : undefined
         );
         if (offer) {
-          const { basicRateData } = await getBasicRateData(
+          const { basicRateData } = await getBasicRateDataS(
             offer.requirementId,
             false,
             type
@@ -534,7 +534,7 @@ export function useShowDetailOffer() {
           else showNotification("error", t(defaultErrorMsg));
         } else showNotification("error", t(defaultErrorMsg));
       } else {
-        const { basicRateData } = await getBasicRateData(
+        const { basicRateData } = await getBasicRateDataS(
           offerData.requirementId,
           false,
           type
