@@ -65,6 +65,16 @@ export default function ChatBody(props: ChatBodyProps) {
   useEffect(() => {
     const chatContainer = chatContainerRef.current;
     if (!chatContainer) return;
+    // Cargar más elementos en infinite scroller si no hay scroll
+    if (
+      props.messages.length &&
+      props.hasMore &&
+      props.chatData.uid &&
+      chatContainerRef.current &&
+      chatContainerRef.current.scrollHeight <=
+        chatContainerRef.current.clientHeight
+    )
+      props.getMoreChatMessages(props.chatData.uid);
 
     let prevScrollTop = chatContainer.scrollTop;
 

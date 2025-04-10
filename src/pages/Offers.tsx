@@ -279,6 +279,7 @@ export default function Offers() {
   }
 
   async function goToChat(offer: Offer) {
+    showLoadingMessage(true);
     const { basicRateData, errorMsg } = await getBasicRateDataS(
       offer.requirementId,
       false,
@@ -293,6 +294,7 @@ export default function Offers() {
         type: offer.type,
       });
     } else if (errorMsg) showNotification("error", t(errorMsg));
+    showLoadingMessage(false);
   }
 
   function handleOnButtonClick(action: Action, offer: Offer) {

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Popover, List, Typography, Space, Flex, Spin } from "antd";
 import { useTranslation } from "react-i18next";
 import ParagraphContainer from "../../containers/ParagraphContainer";
@@ -20,6 +20,7 @@ export default function Notifications(props: NotificationsProps) {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   const sockets = useContext(MainSocketsContext);
+  const notifContainerRef = useRef<HTMLDivElement | null>(null);
   const [page, setPage] = useState(1);
   const {
     notificationList: notifList,
@@ -28,6 +29,8 @@ export default function Notifications(props: NotificationsProps) {
     redirectFromNotification,
     hasMoreNotificationList,
   } = sockets;
+
+  /** Obtener más notificaciones */
 
   useEffect(() => {
     if (visible) {
@@ -40,6 +43,21 @@ export default function Notifications(props: NotificationsProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
+  /** Cargar más elementos en infinite scroller si no hay scroll */
+
+  useEffect(() => {
+    if (
+      notifList.length &&
+      hasMoreNotificationList &&
+      notifContainerRef.current &&
+      notifContainerRef.current.scrollHeight <=
+        notifContainerRef.current.clientHeight
+    ) {
+      getMoreNotifications(page);
+      setPage(page + 1);
+    }
+  }, [notifList]);
+
   const notificationContent = (
     <div
       id="scrollableDivNotifList"
@@ -48,6 +66,7 @@ export default function Notifications(props: NotificationsProps) {
         maxHeight: 400,
         overflowY: "auto",
       }}
+      ref={notifContainerRef}
     >
       <InfiniteScroll
         dataLength={notifList.length}

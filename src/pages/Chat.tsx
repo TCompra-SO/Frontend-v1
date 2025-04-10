@@ -97,13 +97,6 @@ export default function Chat() {
   useEffect(() => {
     const chatDataFromNotification: SocketChatMessage =
       location.state?.[chatDataFieldName];
-    console.log(
-      "chatDataFromNotification",
-      chatDataFromNotification,
-      chatList.length,
-      chatListIsSet
-    ); // mucho tiempo despues la lista se llena pero ya no cumlpe el if, chatdat... es undefined
-    // hasHandledChatNotification.current = false;
 
     if (
       chatListIsSet === true &&
@@ -114,7 +107,6 @@ export default function Chat() {
       const chatToOpen = chatList.find(
         (chat) => chat.uid === chatDataFromNotification.chatId
       );
-      console.log("FOUNDDDDDDDDD", chatToOpen, chatList.length);
       if (chatToOpen) {
         handleClickOnChatItem(chatToOpen);
         hasHandledChatNotification.current = true;
@@ -122,7 +114,6 @@ export default function Chat() {
     }
 
     if (!chatDataFromNotification) {
-      console.log("basicChatDataFromRouting", basicChatDataFromRouting);
       if (chatListIsSet === true && basicChatDataFromRouting) {
         // setIsChatOpened(true); // en caso de no existir chat
         navigate(".", { replace: true, state: null });
@@ -134,7 +125,6 @@ export default function Chat() {
                 chat.userId === basicChatDataFromRouting.userId &&
                 chat.requirementId === basicChatDataFromRouting.requirementId
             );
-        console.log("==============", chatToOpen);
         if (chatToOpen) {
           handleClickOnChatItem(chatToOpen);
         }
@@ -146,7 +136,6 @@ export default function Chat() {
   /** Obtener lista inicial de mensajes de chat */
 
   useEffect(() => {
-    console.log("isChatOpened && currentChat", isChatOpened, currentChat);
     if (isChatOpened && currentChat) {
       getMoreChatMessages(currentChat.uid);
     }

@@ -5,7 +5,7 @@ import ChatListItem from "./ChatListItem";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Flex, Spin, Tag } from "antd";
 import SimpleLoading from "../../../../pages/utils/SimpleLoading";
-import { ChangeEvent, ReactNode, useState } from "react";
+import { ChangeEvent, ReactNode, useEffect, useRef, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import { maxLengthStringToSearch } from "../../../../utilities/globals";
 import { DebouncedFunc } from "lodash";
@@ -33,6 +33,22 @@ interface ChatListProps {
 export default function ChatList(props: ChatListProps) {
   const { t } = useTranslation();
   const [searchValue, setSearchValue] = useState("");
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
+
+  /** Cargar más elementos en infinite scroller si no hay scroll */
+
+  useEffect(() => {
+    if (
+      props.chatList.length &&
+      props.hasMore &&
+      chatContainerRef.current &&
+      chatContainerRef.current.scrollHeight <=
+        chatContainerRef.current.clientHeight
+    )
+      props.loadMoreChats(props.showArchivedChats);
+  }, [props.chatList]);
+
+  /** Funciones */
 
   function onChangeSearchValue(e: ChangeEvent<HTMLInputElement>) {
     setSearchValue(e.target.value);
@@ -92,6 +108,7 @@ export default function ChatList(props: ChatListProps) {
         <div
           id="scrollableDivChatList"
           className="t-flex f-column  scroll-y list-chats"
+          ref={chatContainerRef}
         >
           <InfiniteScroll
             dataLength={props.chatList.length}
