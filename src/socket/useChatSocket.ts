@@ -184,5 +184,6 @@ export function useChatSocket() {
     chatMessageRead,
     newMessageAndChatData,
     globalNumUnreadMessages,
+    setGlobalNumUnreadMessages,
   };
 }

@@ -9,6 +9,7 @@ import {
   ChatMessage,
   DisplayUser,
   FullUser,
+  NotificationDataFromServer,
   Offer,
   OfferItemSubUser,
   PurchaseOrder,
@@ -439,5 +440,10 @@ export function transformToChatListData(data: any) {
 
 export function transformToChatMessage(data: any) {
   const obj: ChatMessage = data;
+  return obj;
+}
+
+export function transformToNotificationDataFromServer(data: any) {
+  const obj: NotificationDataFromServer = data;
   return obj;
 }

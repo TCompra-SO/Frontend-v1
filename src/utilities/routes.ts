@@ -166,6 +166,7 @@ export const ApiRoutes = {
     searchChat: "searchChat/",
     getArchivedChats: "getArchivedChats/",
     archiveChat: "archiveChat/",
+    getCountMessageUnRead: "getCountMessageUnRead/",
   },
 };
 

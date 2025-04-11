@@ -99,3 +99,12 @@ export function archiveChatService(): HttpService {
     type: "CH-AR-CH",
   };
 }
+
+export function getCountMessageUnReadService(userId: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.chat}${
+      ApiRoutes.chat.getCountMessageUnRead
+    }${userId}`,
+    type: "CH-CO-UN",
+  };
+}

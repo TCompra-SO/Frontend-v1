@@ -1,7 +1,4 @@
-import {
-  BaseUser,
-  NotificationDataFromServer,
-} from "../../models/MainInterfaces";
+import { BaseUser } from "../../models/MainInterfaces";
 import { UserState } from "../../models/Redux";
 import {
   ArchiveChatRequest,
@@ -23,6 +20,7 @@ import {
   transformToBaseUser,
   transformToBasicRateData,
   transformToFullUser,
+  transformToNotificationDataFromServer,
   transformToOffer,
   transformToPurchaseOrder,
   transformToRequiredDocsCert,
@@ -45,6 +43,7 @@ import {
   archiveChatService,
   createChatMessageService,
   createChatService,
+  getCountMessageUnReadService,
   MarkChatMessagesAsReadService,
 } from "../requests/chatService";
 import { getNotificationsService } from "../requests/notificationService";
@@ -340,18 +339,27 @@ export async function getNotifications(
   page: number,
   pageSize: number
 ) {
-  const { responseData, error, errorMsg } = await makeRequest({
-    service: getNotificationsService(mainUserId, userId, page, pageSize),
-    method: "get",
-  });
+  try {
+    const { responseData, error, errorMsg } = await makeRequest({
+      service: getNotificationsService(mainUserId, userId, page, pageSize),
+      method: "get",
+    });
 
-  return {
-    notifications: responseData
-      ? (responseData.data as NotificationDataFromServer[])
-      : null,
-    error,
-    errorMsg,
-  };
+    return {
+      notifications:
+        responseData && Array.isArray(responseData.data)
+          ? responseData.data.map((obj: any) =>
+              transformToNotificationDataFromServer(obj)
+            )
+          : null,
+      error,
+      errorMsg,
+    };
+  } catch (e) {
+    console.log(e);
+    const errorMsg: ErrorMsgRequestType = defaultErrorMsg;
+    return { error: e, errorMsg, notifications: null };
+  }
 }
 
 export async function createChat(request: CreateChatRequest) {
@@ -411,6 +419,25 @@ export async function archiveChatReq(request: ArchiveChatRequest) {
 
   return {
     responseData: responseData,
+    error,
+    errorMsg,
+  };
+}
+
+export async function getCountMessageUnReadS(userId: string) {
+  const { responseData, error, errorMsg } = await makeRequest({
+    service: getCountMessageUnReadService(userId),
+    method: "get",
+  });
+
+  return {
+    totalUnread:
+      Array.isArray(responseData.data) &&
+      responseData.data.length &&
+      typeof responseData.data[0].totalUnread === "number" &&
+      responseData.data[0].totalUnread > 0
+        ? (responseData.data[0].totalUnread as number)
+        : null,
     error,
     errorMsg,
   };

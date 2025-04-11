@@ -14,6 +14,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useLoadUserInfo } from "../hooks/authHooks";
 import { setIsLoggedIn } from "../redux/userSlice";
+import { getCountMessageUnReadS } from "../services/general/generalServices";
 
 type UserType = ReturnType<typeof useUserSocket>;
 type NotificationsType = ReturnType<typeof useTCNotification>;
@@ -54,6 +55,7 @@ export const MainSocketsContext = createContext<MainSocketsContextType>({
   chatMessageRead: { endMessageId: "" },
   newMessageAndChatData: null,
   globalNumUnreadMessages: 0,
+  setGlobalNumUnreadMessages: () => {},
 } as MainSocketsContextType);
 
 export function MainSocketsProvider({ children }: { children: ReactNode }) {
@@ -61,6 +63,7 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
   const dispatch = useDispatch();
   const loadUserInfo = useLoadUserInfo();
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
+  const uid = useSelector((state: MainState) => state.user.uid);
   const userData = useUserSocket();
   const notificationData = useTCNotification();
   const chatData = useChatSocket();
@@ -104,6 +107,7 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
       notificationData.connectNotificationSocket();
       notificationData.connectGlobalNotificationSocket();
       chatData.connectChatSocket();
+      getUnreadChatMessages();
     } else disconnectSockets();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
@@ -113,6 +117,11 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
     chatData.disconnectChatSocket();
     notificationData.disconnectNotificationSocket();
     notificationData.disconnectGlobalNotificationSocket();
+  }
+
+  async function getUnreadChatMessages() {
+    const { totalUnread } = await getCountMessageUnReadS(uid);
+    if (totalUnread) chatData.setGlobalNumUnreadMessages(totalUnread);
   }
 
   return (
