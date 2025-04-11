@@ -7,7 +7,14 @@ import InputContainer from "../../../containers/InputContainer";
 import dayjs from "dayjs";
 import { dateFormatChatBody, windowSize } from "../../../../utilities/globals";
 import ChatBodyMessage from "./ChatBodyMessage";
-import { Fragment, ReactNode, useEffect, useRef, useState } from "react";
+import {
+  Fragment,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import useWindowSize from "../../../../hooks/useWindowSize";
 import { AddImagesFieldRef } from "../../../common/formFields/AddImagesField";
 import { AddDocumentFieldRef } from "../../../common/formFields/AddDocumentField";
@@ -56,16 +63,41 @@ export default function ChatBody(props: ChatBodyProps) {
   const [openGallery, setOpenGallery] = useState<boolean | null>(null);
   const prevChatMessagesLength = useRef(0);
   const [currentDate, setCurrentDate] = useState("");
-  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const observerDownRef = useRef<IntersectionObserver | null>(null);
+  const lastMessageRef = useRef<HTMLDivElement | null>(null);
+  const [showDivider, setShowDivider] = useState(false);
+  const [locked, setLocked] = useState(false);
 
-  /** Mostrar fecha de mensaje superior en base a date dividers */
+  /** Para mostrar o no date divider on top */
+
+  const checkVisibilityOfLastMessage = useCallback(() => {
+    if (!chatContainerRef.current || !lastMessageRef.current) return;
+
+    const chatRect = chatContainerRef.current.getBoundingClientRect();
+    const lastRect = lastMessageRef.current.getBoundingClientRect();
+
+    const fullyVisible =
+      lastRect.top >= chatRect.top && lastRect.bottom <= chatRect.bottom;
+
+    setShowDivider(!fullyVisible);
+    if (!fullyVisible) {
+      setLocked(true); // Once it's out of view, lock the check
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locked]);
+
+  useEffect(() => {
+    if (props.chatData.uid) setLocked(false);
+  }, [props.chatData]);
+
+  /** Cargar más elementos en infinite scroller si no hay scroll y
+   * Mostrar fecha de mensaje superior en base a date dividers */
 
   useEffect(() => {
     const chatContainer = chatContainerRef.current;
     if (!chatContainer) return;
-    // Cargar más elementos en infinite scroller si no hay scroll
     if (
       props.messages.length &&
       props.hasMore &&
@@ -76,6 +108,39 @@ export default function ChatBody(props: ChatBodyProps) {
     )
       props.getMoreChatMessages(props.chatData.uid);
 
+    insertDatedividers();
+    checkVisibilityOfLastMessage();
+
+    return () => {
+      observerRef.current?.disconnect();
+      observerDownRef.current?.disconnect();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.messages]);
+
+  /** Scroll al mensaje más actual */
+
+  useEffect(() => {
+    if (props.messages.length > 0) {
+      prevChatMessagesLength.current = props.messages.length;
+      if (prevChatMessagesLength.current == 0) {
+        console.log("jscrolling");
+        scrollToBottom();
+      }
+    } else prevChatMessagesLength.current = 0;
+  }, [props.messages]);
+
+  function scrollToBottom() {
+    if (divRef.current) {
+      divRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
+  /** Funciones */
+
+  function insertDatedividers() {
+    const chatContainer = chatContainerRef.current;
+    if (!chatContainer) return;
     let prevScrollTop = chatContainer.scrollTop;
 
     observerRef.current = new IntersectionObserver(
@@ -133,32 +198,7 @@ export default function ChatBody(props: ChatBodyProps) {
         observerDownRef.current.observe(divider);
       }
     });
-
-    return () => {
-      observerRef.current?.disconnect();
-      observerDownRef.current?.disconnect();
-    };
-  }, [props.messages]);
-
-  /** Scroll al mensaje más actual */
-
-  useEffect(() => {
-    if (props.messages.length > 0) {
-      prevChatMessagesLength.current = props.messages.length;
-      if (prevChatMessagesLength.current == 0) {
-        console.log("jscrolling");
-        scrollToBottom();
-      }
-    } else prevChatMessagesLength.current = 0;
-  }, [props.messages]);
-
-  function scrollToBottom() {
-    if (divRef.current) {
-      divRef.current.scrollIntoView({ behavior: "smooth" });
-    }
   }
-
-  /** Funciones */
 
   async function sendMsg() {
     if (imgRef.current) imgRef.current.reset();
@@ -169,7 +209,7 @@ export default function ChatBody(props: ChatBodyProps) {
       const msgUid = generateShortId();
       const chatMsg: ChatMessage = {
         chatId: props.chatData.uid ?? "",
-        uid: msgUid, // temporal
+        uid: msgUid, // id temporal
         userId: uid,
         timestamp: dayjs(new Date()).toISOString(),
         read: false,
@@ -238,7 +278,7 @@ export default function ChatBody(props: ChatBodyProps) {
           loadingSpinner
         ) : (
           <>
-            {currentDate && (
+            {showDivider && currentDate && (
               <div className="fecha-comment" style={{ marginRight: "6px" }}>
                 {currentDate}
               </div>
@@ -264,6 +304,7 @@ export default function ChatBody(props: ChatBodyProps) {
                 inverse={true}
               >
                 {props.messages.map((msg, index, array) => {
+                  const isLast = index === array.length - 1;
                   const messageNode = (
                     <ChatBodyMessage
                       message={msg}
@@ -278,7 +319,11 @@ export default function ChatBody(props: ChatBodyProps) {
                   return (
                     <Fragment key={msg.uid}>
                       {index == 0 && <div ref={divRef} />}
-                      {messageNode}
+                      {isLast ? (
+                        <div ref={lastMessageRef}>{messageNode}</div>
+                      ) : (
+                        messageNode
+                      )}
                       {shouldInsertDivider && (
                         <div className="fecha-comment-inline">
                           {dayjs(msg.timestamp).format(dateFormatChatBody)}

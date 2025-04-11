@@ -46,6 +46,7 @@ export default function ChatList(props: ChatListProps) {
         chatContainerRef.current.clientHeight
     )
       props.loadMoreChats(props.showArchivedChats);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.chatList]);
 
   /** Funciones */
