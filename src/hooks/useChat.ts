@@ -28,6 +28,7 @@ export function useChat() {
   const [chatMessageList, setChatMessageList] = useState<ChatMessage[]>([]);
   const [hasMoreChatMessageList, setHasMoreChatMessageList] = useState(true);
   const [firstChatMessageToRead, setFirstChatMessageToRead] = useState("");
+  // const [first, setfirst] = useState(second)
   const [newMessageAndChatData, setNewMessageAndChatData] = useState<{
     chatMessage: ChatMessage;
     chatListData: ChatListData;

@@ -182,7 +182,7 @@ export function useChatSocket() {
     disconnectSingleChatSocket,
     lastChatMessageReceived,
     chatMessageRead,
-    newMessageAndChatData,
+    newMessageAndChatDataFromSocket: newMessageAndChatData,
     globalNumUnreadMessages,
     setGlobalNumUnreadMessages,
   };

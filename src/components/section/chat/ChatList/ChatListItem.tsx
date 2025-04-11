@@ -6,6 +6,8 @@ import { ItemType } from "antd/lib/menu/interface";
 import { useTranslation } from "react-i18next";
 import { useChatFunctions } from "../../../../hooks/chatHooks";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { MainState } from "../../../../models/Redux";
 
 const archiveKey = "ARC";
 
@@ -20,6 +22,7 @@ export default function ChatListItem(props: ChatListItemProps) {
   const { t } = useTranslation();
   const { archiveChat } = useChatFunctions(false);
   const [loading, setLoading] = useState(false);
+  const uid = useSelector((state: MainState) => state.user.uid);
   const dropdownItems: ItemType[] = [
     {
       key: archiveKey,
@@ -35,6 +38,7 @@ export default function ChatListItem(props: ChatListItemProps) {
         const success = await archiveChat({
           chatId: props.data.uid,
           archive: props.data?.archive?.[0]?.state ? false : true,
+          userId: uid,
         });
         if (success) props.removeChatFromList(props.data.uid);
       }

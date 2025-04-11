@@ -299,4 +299,5 @@ export interface SearchChatRequest {
 export interface ArchiveChatRequest {
   chatId: string;
   archive: boolean;
+  userId: string;
 }

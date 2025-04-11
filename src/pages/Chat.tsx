@@ -58,16 +58,17 @@ export default function Chat() {
     disconnectSingleChatSocket,
     lastChatMessageReceived,
     chatMessageRead,
-    newMessageAndChatData,
+    newMessageAndChatDataFromSocket,
   } = useContext(MainSocketsContext);
   const hasHandledChatNotification = useRef(false);
+  const chatThatHasBeenCreated = useRef("");
   const [markedAsRead, setMarkedAsRead] = useState(false);
   const [isChatOpened, setIsChatOpened] = useState(false);
   const [currentChat, setCurrentChat] = useState<ChatListData | null>(null);
   const [showArchivedChats, setShowArchivedChats] = useState(false);
-  const [basicChatDataFromRouting] = useState<BasicChatListData | undefined>(
-    location.state?.[basicChatDataFieldName]
-  );
+  const [basicChatDataFromRouting, setBasicChatDataFromRouting] = useState<
+    BasicChatListData | undefined
+  >(location.state?.[basicChatDataFieldName]);
 
   /** Obtener lista inicial de chats */
 
@@ -115,7 +116,6 @@ export default function Chat() {
 
     if (!chatDataFromNotification) {
       if (chatListIsSet === true && basicChatDataFromRouting) {
-        // setIsChatOpened(true); // en caso de no existir chat
         navigate(".", { replace: true, state: null });
 
         const chatToOpen = basicChatDataFromRouting.uid
@@ -127,6 +127,9 @@ export default function Chat() {
             );
         if (chatToOpen) {
           handleClickOnChatItem(chatToOpen);
+        } else {
+          chatThatHasBeenCreated.current = "";
+          setIsChatOpened(true);
         }
       }
     }
@@ -188,29 +191,62 @@ export default function Chat() {
   /** Guardar datos de nuevo mensaje desde señal de socket */
 
   useEffect(() => {
-    setNewMessageAndChatData(newMessageAndChatData);
+    setNewMessageAndChatData(newMessageAndChatDataFromSocket);
+    if (
+      !chatThatHasBeenCreated.current &&
+      newMessageAndChatDataFromSocket &&
+      basicChatDataFromRouting
+    ) {
+      if (
+        newMessageAndChatDataFromSocket.chatListData.requirementId ==
+          basicChatDataFromRouting.requirementId &&
+        newMessageAndChatDataFromSocket.chatListData.userId ==
+          basicChatDataFromRouting.userId
+      )
+        chatThatHasBeenCreated.current =
+          newMessageAndChatDataFromSocket.chatListData.uid;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newMessageAndChatData]);
+  }, [newMessageAndChatDataFromSocket]);
+
+  /** Conectar al chat que acaba de ser creado al enviar 1er mensaje en chat que no existía */
+
+  useEffect(() => {
+    if (chatList.length && chatThatHasBeenCreated.current) {
+      const chatToOpen = chatList.find(
+        (chat) => chat.uid == chatThatHasBeenCreated.current
+      );
+      if (chatToOpen) {
+        handleClickOnChatItem(chatToOpen, true);
+        chatThatHasBeenCreated.current = "";
+        setBasicChatDataFromRouting(undefined);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatList]);
 
   /** Funciones */
 
   function handleCloseChat() {
     disconnectSingleChatSocket();
-    console.log("sETTING AS N ULL");
     setCurrentChat(null);
     setIsChatOpened(false);
     resetChatMessageList();
     setMarkedAsRead(false);
   }
 
-  function handleClickOnChatItem(item: ChatListData) {
-    disconnectSingleChatSocket();
-    setMarkedAsRead(false);
-    resetChatMessageList();
-    console.log("sETTING AS", item);
-    setCurrentChat(item);
-    setIsChatOpened(true);
-    if (item.uid) connectSingleChatSocket(item.uid);
+  function handleClickOnChatItem(item: ChatListData, noReset?: boolean) {
+    if (currentChat?.uid != item.uid) {
+      if (!noReset) {
+        disconnectSingleChatSocket();
+        setMarkedAsRead(false);
+        resetChatMessageList();
+      }
+      console.log("sETTING AS", item);
+      setCurrentChat(item);
+      setIsChatOpened(true);
+      if (item.uid) connectSingleChatSocket(item.uid);
+    }
   }
 
   return (
