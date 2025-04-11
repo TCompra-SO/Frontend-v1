@@ -107,7 +107,7 @@ export function useActionsForRow(
 
   async function updateRow(data: SocketResponse, canAddRow: boolean) {
     try {
-      const ind = list.findIndex((item) => item.key ?? item.uid === data.key);
+      const ind = list.findIndex((item) => (item.key ?? item.uid) === data.key);
       if (ind != -1) {
         const updElem = await transformData(data.dataPack.data[0]);
 
@@ -118,7 +118,7 @@ export function useActionsForRow(
               if (!useFilter) {
                 const prevLen = list.length;
                 const newList = list.filter(
-                  (item) => item.key ?? item.uid !== data.key
+                  (item) => (item.key ?? item.uid) !== data.key
                 );
                 setList(newList);
                 setTotal(total - (prevLen - newList.length));
@@ -131,7 +131,9 @@ export function useActionsForRow(
           ) {
             const requirement = updElem as BasicRequirement;
             // Verificar si requerimiento ha sido republicado
-            const item = list.find((item) => item.key ?? item.uid === data.key);
+            const item = list.find(
+              (item) => (item.key ?? item.uid) === data.key
+            );
             if (
               item &&
               (item as BasicRequirement).state == RequirementState.EXPIRED && // || list[ind] as BasicRequirement).state == RequirementState.CANCELED
@@ -140,7 +142,7 @@ export function useActionsForRow(
             )
               setList([
                 requirement,
-                ...list.filter((item) => item.key ?? item.uid !== data.key),
+                ...list.filter((item) => (item.key ?? item.uid) !== data.key),
               ]);
             else insertElementInArray(updElem);
           } else insertElementInArray(updElem);
@@ -163,7 +165,9 @@ export function useActionsForRow(
   function deleteRow(data: SocketResponse) {
     try {
       const prevLen = list.length;
-      const newList = list.filter((item) => item.key ?? item.uid !== data.key);
+      const newList = list.filter(
+        (item) => (item.key ?? item.uid) !== data.key
+      );
       setList(newList);
       setTotal(total - (prevLen - newList.length));
       if (newList.length == 0) callback?.(); // recargar página
@@ -174,7 +178,7 @@ export function useActionsForRow(
 
   function updateFieldInRow(data: SocketResponse) {
     try {
-      const newObj = list.find((item) => item.key ?? item.uid === data.key);
+      const newObj = list.find((item) => (item.key ?? item.uid) === data.key);
 
       if (newObj) {
         data.dataPack.data.forEach((pair) => {
