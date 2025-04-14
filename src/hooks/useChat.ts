@@ -6,10 +6,10 @@ import {
   chatMessagesPageSize,
   inputSearchAfterMseconds,
 } from "../utilities/globals";
-import { filterUniqueOrFirstRepeated } from "../utilities/globalFunctions";
 import { debounce } from "lodash";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
+import { filterUniqueOrFirstRepeated } from "../utilities/globalFunctions";
 
 export function useChat() {
   const {
@@ -28,7 +28,6 @@ export function useChat() {
   const [chatMessageList, setChatMessageList] = useState<ChatMessage[]>([]);
   const [hasMoreChatMessageList, setHasMoreChatMessageList] = useState(true);
   const [firstChatMessageToRead, setFirstChatMessageToRead] = useState("");
-  // const [first, setfirst] = useState(second)
   const [newMessageAndChatData, setNewMessageAndChatData] = useState<{
     chatMessage: ChatMessage;
     chatListData: ChatListData;
@@ -81,6 +80,7 @@ export function useChat() {
       ...chatMessages,
     ]);
     setChatMessageList(newList);
+    // setChatMessageList((prevList) => [...prevList, ...chatMessages]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatMessages]);
 

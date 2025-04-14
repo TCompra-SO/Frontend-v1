@@ -157,7 +157,7 @@ export default function Chat() {
 
   useEffect(() => {
     if (
-      !markedAsRead &&
+      //!markedAsRead &&
       chatMessageList.length &&
       !chatMessageList[0].read &&
       chatMessageList[0].userId !== uid
@@ -217,7 +217,8 @@ export default function Chat() {
         (chat) => chat.uid == chatThatHasBeenCreated.current
       );
       if (chatToOpen) {
-        handleClickOnChatItem(chatToOpen, true);
+        // r3v verificar primero si existe el chat aunque no fue encontrado en la lista
+        handleClickOnChatItem(chatToOpen);
         chatThatHasBeenCreated.current = "";
         setBasicChatDataFromRouting(undefined);
       }
@@ -242,7 +243,6 @@ export default function Chat() {
         setMarkedAsRead(false);
         resetChatMessageList();
       }
-      console.log("sETTING AS", item);
       setCurrentChat(item);
       setIsChatOpened(true);
       if (item.uid) connectSingleChatSocket(item.uid);

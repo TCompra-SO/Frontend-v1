@@ -80,10 +80,14 @@ export function useChatSocket() {
               payload.type == ChatMessageType.NEW_MESSAGE &&
               payload.chatData.length
             ) {
+              console.log("updateGeneralChat =======>", payload);
+              if (payload.numUnreadMessages > 0)
+                setGlobalNumUnreadMessages(payload.numUnreadMessages);
               if (currentSectionRef.current === pageRoutes.chat) {
-                console.log(">>>>>");
+                const cld = transformToChatListData(payload.chatData[0], uid);
+                console.log(">>>>>", payload.chatData[0].userId, cld);
                 setNewMessageAndChatData({
-                  chatListData: transformToChatListData(payload.chatData[0]),
+                  chatListData: cld,
                   chatMessage: payload.messageData,
                 });
               } else {

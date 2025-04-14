@@ -292,6 +292,7 @@ export default function Offers() {
         title: basicRateData.title,
         requirementId: offer.requirementId,
         type: offer.type,
+        userImage: basicRateData.userImage,
       });
     } else if (errorMsg) showNotification("error", t(errorMsg));
     showLoadingMessage(false);

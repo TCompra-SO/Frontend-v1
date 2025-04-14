@@ -56,6 +56,7 @@ export const MainSocketsContext = createContext<MainSocketsContextType>({
   newMessageAndChatData: null,
   globalNumUnreadMessages: 0,
   setGlobalNumUnreadMessages: () => {},
+  newMessageAndChatDataFromSocket: null,
 } as MainSocketsContextType);
 
 export function MainSocketsProvider({ children }: { children: ReactNode }) {
@@ -69,28 +70,6 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
   const chatData = useChatSocket();
 
   useEffect(() => {
-    async function handleStorageChange(event: StorageEvent) {
-      if (event.key === logoutKey) {
-        dispatch(setIsLoggedIn(false));
-        navigate(navigateToAfterLoggingOut);
-      } else if (event.key === loginKey) {
-        await loadUserInfo();
-        localStorage.removeItem(loginKey);
-      }
-      // Eliminar tiempo de expiración de tokens
-      else if (
-        event.key == expiresInKey &&
-        event.oldValue !== null &&
-        event.newValue === null
-      )
-        userData.setTokenExpiration(null);
-      else if (
-        event.key == refreshExpiresInKey &&
-        event.oldValue !== null &&
-        event.newValue === null
-      )
-        userData.setRefreshTokenExpiration(null);
-    }
     window.addEventListener("storage", handleStorageChange);
 
     return () => {
@@ -108,9 +87,36 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
       notificationData.connectGlobalNotificationSocket();
       chatData.connectChatSocket();
       getUnreadChatMessages();
-    } else disconnectSockets();
+    } else if (isLoggedIn === false) {
+      disconnectSockets();
+      window.removeEventListener("storage", handleStorageChange);
+      console.log("disconnecting sockets!!!!!!!!!!", isLoggedIn);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
+
+  async function handleStorageChange(event: StorageEvent) {
+    if (event.key === logoutKey) {
+      dispatch(setIsLoggedIn(false));
+      navigate(navigateToAfterLoggingOut);
+    } else if (event.key === loginKey) {
+      await loadUserInfo();
+      localStorage.removeItem(loginKey);
+    }
+    // Eliminar tiempo de expiración de tokens
+    else if (
+      event.key == expiresInKey &&
+      event.oldValue !== null &&
+      event.newValue === null
+    )
+      userData.setTokenExpiration(null);
+    else if (
+      event.key == refreshExpiresInKey &&
+      event.oldValue !== null &&
+      event.newValue === null
+    )
+      userData.setRefreshTokenExpiration(null);
+  }
 
   function disconnectSockets() {
     userData.disconnectUserSocket();

@@ -116,9 +116,11 @@ export default function ChatBodyMessage(props: ChatBodyMessageProps) {
               className={`${
                 props.message.error
                   ? "fa-regular fa-circle-exclamation"
-                  : props.message.read
-                  ? "fa-solid fa-check-double"
-                  : "fa-solid fa-check"
+                  : !isInputMsg
+                  ? props.message.read
+                    ? "fa-solid fa-check-double"
+                    : "fa-solid fa-check"
+                  : null
               }`}
             ></i>
           </span>

@@ -431,10 +431,16 @@ export function transformToStatistics(data: any) {
   return obj;
 }
 
-export function transformToChatListData(data: any) {
+export function transformToChatListData(data: any, uid: string) {
   const obj: ChatListData = data;
   obj.requirementId = data.requerimentId;
-  obj.userId = data.chatPartnerId;
+  if (uid == data.userId) {
+    obj.userId = data.chatPartnerId;
+    obj.numUnreadMessages = data.unReadUser;
+  } else {
+    obj.userId = data.userId;
+    obj.numUnreadMessages = data.unReadPartner;
+  }
   return obj;
 }
 

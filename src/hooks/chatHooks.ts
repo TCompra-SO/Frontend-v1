@@ -128,7 +128,9 @@ export function useGetChatList() {
     if (responseData) {
       try {
         setChatList(
-          responseData.data.map((chat: any) => transformToChatListData(chat))
+          responseData.data.map((chat: any) =>
+            transformToChatListData(chat, uid)
+          )
         );
       } catch (err) {
         console.log(err);
@@ -232,7 +234,9 @@ export function useChatSearch() {
     if (responseData) {
       try {
         setFoundChatList(
-          responseData.data.map((chat: any) => transformToChatListData(chat))
+          responseData.data.map((chat: any) =>
+            transformToChatListData(chat, uid)
+          )
         );
       } catch (err) {
         console.log(err);

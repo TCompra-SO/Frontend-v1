@@ -9,7 +9,6 @@ import {
 import {
   Action,
   NotificationType,
-  RequirementType,
   RTNotificationType,
 } from "../utilities/types";
 import useShowNotification, { useDownloadPdfOrder } from "../hooks/utilHooks";
@@ -199,7 +198,7 @@ export function useTCNotification() {
       ) {
         updateNotificationSearchData({
           categoryId: notification.categoryId,
-          targetType: RequirementType.SERVICE, // r3v val
+          targetType: val, // r3v val
         });
         navigate(`${pageRoutes.home}`);
       }

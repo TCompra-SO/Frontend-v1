@@ -47,26 +47,30 @@ export default function useUserSocket() {
   const [refreshTokenExpiration, setRefreshTokenExpiration] = useState<
     number | null
   >(null);
-  const activityTimeout = useRef<NodeJS.Timeout | null>(null);
   const logoutTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     return () => {
       disconnectSocket();
-      if (activityTimeout.current) clearTimeout(activityTimeout.current);
       if (logoutTimeout.current) clearTimeout(logoutTimeout.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(
-    () => handleTokenExpiration(tokenExpiration, true),
+    () => {
+      const cleanup = handleTokenExpiration(tokenExpiration, true);
+      return cleanup;
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [tokenExpiration]
   );
 
   useEffect(
-    () => handleTokenExpiration(refreshTokenExpiration, false),
+    () => {
+      const cleanup = handleTokenExpiration(refreshTokenExpiration, false);
+      return cleanup;
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [refreshTokenExpiration]
   );
