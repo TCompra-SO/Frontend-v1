@@ -202,7 +202,7 @@ export function useDownloadPdfOrder() {
 
   useEffect(() => {
     updateMyPurchaseOrdersLoadingPdf(loadingPdf);
-    showLoadingMessage(loadingPdf);
+    showLoadingMessage(loadingPdf, "generatingPDF");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingPdf]);
 

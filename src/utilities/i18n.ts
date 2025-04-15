@@ -361,6 +361,7 @@ const resources = {
       inactiveAccountLogin: 'This account is inactive',
       unavailableRequiredDocumentsCert: 'The required document list is not yet available',
       messageSentSuccessfully: 'Message sent successfully',
+      generatingPDF: 'Generating PDF...',
       // Other
       characters: "characters",
       yes: "Yes",
@@ -930,6 +931,7 @@ const resources = {
       inactiveAccountLogin: 'Esta cuenta está inactiva',
       unavailableRequiredDocumentsCert: 'La lista de documentos requeridos aún no está disponible',
       messageSentSuccessfully: 'Mensaje enviado exitosamente',
+      generatingPDF: 'Generando PDF...',
       // Other
       characters: "caracteres",
       yes: "Sí",

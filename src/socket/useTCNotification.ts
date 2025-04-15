@@ -9,12 +9,15 @@ import {
 import {
   Action,
   NotificationType,
+  OrderTableType,
+  RequirementType,
   RTNotificationType,
 } from "../utilities/types";
 import useShowNotification, { useDownloadPdfOrder } from "../hooks/utilHooks";
 import { ModalsContext } from "../contexts/ModalsContext";
 import {
   getCertificationTableTypeSubRoute,
+  getOrderTableTypeSubRoute,
   getRequirementTypeSubRoute,
   isCertificationTableTypes,
   isRequirementType,
@@ -48,9 +51,10 @@ export function useTCNotification() {
     updateDetailedRequirementModalData,
     updateDetailedOfferModalData,
     updateViewCertificationData,
+    updateViewHistoryModalData,
+    updateViewHistorySalesModalData,
   } = useContext(ModalsContext);
   const { updateNotificationSearchData } = useContext(HomeContext);
-  const downloadPdfOrder = useDownloadPdfOrder();
   const [notificationList, setNotificationList] = useState<
     NotificationDataFromServer[]
   >([]);
@@ -189,7 +193,40 @@ export function useTCNotification() {
           navigate(`${pageRoutes.myOffers}/${getRequirementTypeSubRoute(val)}`);
           return;
         } else if (notification.action == Action.DOWNLOAD_PURCHASE_ORDER) {
-          downloadPdfOrder(notification.targetId, val);
+          if (val == RequirementType.SALE) {
+            if (
+              notification.extraTargetType == OrderTableType.ISSUED ||
+              notification.extraTargetType == OrderTableType.RECEIVED
+            ) {
+              updateViewHistorySalesModalData({
+                purchaseOrderId: notification.targetId,
+                requirement: undefined,
+                requirementId: "",
+                requirementType: val,
+              });
+              navigate(
+                `${pageRoutes.mySalesOrders}/${getOrderTableTypeSubRoute(
+                  notification.extraTargetType
+                )}`
+              );
+            }
+          } else if (
+            notification.extraTargetType == OrderTableType.ISSUED ||
+            notification.extraTargetType == OrderTableType.RECEIVED
+          ) {
+            updateViewHistoryModalData({
+              purchaseOrderId: notification.targetId,
+              requirement: undefined,
+              requirementId: "",
+              requirementType: val,
+            });
+            navigate(
+              `${pageRoutes.myPurchaseOrders}/${getOrderTableTypeSubRoute(
+                notification.extraTargetType
+              )}/${getRequirementTypeSubRoute(val)}`
+            );
+          }
+
           return;
         }
       } else if (
@@ -198,7 +235,7 @@ export function useTCNotification() {
       ) {
         updateNotificationSearchData({
           categoryId: notification.categoryId,
-          targetType: val, // r3v val
+          targetType: val,
         });
         navigate(`${pageRoutes.home}`);
       }

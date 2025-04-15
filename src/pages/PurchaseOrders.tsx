@@ -54,6 +54,7 @@ import useSearchTable, {
 } from "../hooks/searchTableHooks";
 import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
+import { getPurchaseOrderById } from "../services/general/generalServices";
 
 export default function PurchaseOrders() {
   const { t } = useTranslation();
@@ -185,21 +186,41 @@ export default function PurchaseOrders() {
   /** Verificar si hay una solicitud pendiente */
 
   useEffect(() => {
-    if (viewHistoryModalData.requirementId) {
-      const copy = { ...viewHistoryModalData };
-      getOffersByRequirementId(
-        TableTypes.PURCHASE_ORDER,
-        copy.requirementId,
-        copy.requirementType,
-        true,
-        1,
-        noPaginationPageSize,
-        Action.VIEW_HISTORY,
-        copy.requirement,
-        copy.filters
-      );
-      resetViewHistoryModalData();
+    async function checkData() {
+      if (viewHistoryModalData.purchaseOrderId) {
+        downloadPdfOrder(
+          viewHistoryModalData.purchaseOrderId,
+          viewHistoryModalData.requirementType
+        );
+        const copy = { ...viewHistoryModalData };
+        let requirementId = copy.requirementId;
+        if (!requirementId) {
+          const { purchaseOrder } = await getPurchaseOrderById(
+            copy.purchaseOrderId,
+            copy.requirementType
+          );
+          if (purchaseOrder) requirementId = purchaseOrder.requirementId;
+          else {
+            resetViewHistoryModalData();
+            return;
+          }
+        }
+        getOffersByRequirementId(
+          TableTypes.PURCHASE_ORDER,
+          requirementId,
+          copy.requirementType,
+          true,
+          1,
+          noPaginationPageSize,
+          Action.VIEW_HISTORY,
+          copy.requirement,
+          copy.filters
+        );
+        resetViewHistoryModalData();
+      }
     }
+
+    checkData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewHistoryModalData]);
 

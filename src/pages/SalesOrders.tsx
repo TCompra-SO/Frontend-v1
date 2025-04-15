@@ -55,6 +55,7 @@ import useSearchTable, {
 } from "../hooks/searchTableHooks";
 import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
+import { getPurchaseOrderById } from "../services/general/generalServices";
 
 export default function SalesOrders() {
   const { t } = useTranslation();
@@ -177,21 +178,40 @@ export default function SalesOrders() {
   /** Verificar si hay una solicitud pendiente */
 
   useEffect(() => {
-    if (viewHistorySalesModalData.requirementId) {
-      const copy = { ...viewHistorySalesModalData };
-      getOffersByRequirementId(
-        TableTypes.PURCHASE_ORDER,
-        copy.requirementId,
-        copy.requirementType,
-        true,
-        1,
-        noPaginationPageSize,
-        Action.VIEW_HISTORY,
-        copy.requirement,
-        copy.filters
-      );
-      resetViewHistorySalesModalData();
+    async function checkData() {
+      if (viewHistorySalesModalData.purchaseOrderId) {
+        downloadPdfOrder(
+          viewHistorySalesModalData.purchaseOrderId,
+          viewHistorySalesModalData.requirementType
+        );
+        const copy = { ...viewHistorySalesModalData };
+        let requirementId = copy.requirementId;
+        if (!requirementId) {
+          const { purchaseOrder } = await getPurchaseOrderById(
+            copy.purchaseOrderId,
+            copy.requirementType
+          );
+          if (purchaseOrder) requirementId = purchaseOrder.requirementId;
+          else {
+            resetViewHistorySalesModalData();
+            return;
+          }
+        }
+        getOffersByRequirementId(
+          TableTypes.PURCHASE_ORDER,
+          requirementId,
+          copy.requirementType,
+          true,
+          1,
+          noPaginationPageSize,
+          Action.VIEW_HISTORY,
+          copy.requirement,
+          copy.filters
+        );
+        resetViewHistorySalesModalData();
+      }
     }
+    checkData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewHistorySalesModalData]);
 
