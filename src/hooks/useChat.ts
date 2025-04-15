@@ -195,19 +195,29 @@ export function useChat() {
   function markMsgAsRead(messageId: string) {
     setChatMessageList((prevList) => {
       const obj = prevList.find((item) => item.uid == messageId);
+
       if (obj) {
         const ownerIsCurrentUser = obj.userId == uid;
         // prevList.map((item) =>
         // item.uid === messageId ? { ...item, read: true } : item
         // );
         const updatedList = [...prevList];
-        for (let i = 0; i < updatedList.length; i++) {
-          if (
-            (ownerIsCurrentUser && updatedList[i].userId == uid) ||
-            (!ownerIsCurrentUser && updatedList[i].userId != uid)
-          )
-            if (!updatedList[i].read) updatedList[i].read = true;
-            else break;
+        if (ownerIsCurrentUser) {
+          for (let i = 0; i < updatedList.length; i++) {
+            if (updatedList[i].userId == uid) {
+              if (!updatedList[i].read) updatedList[i].read = true;
+              else break;
+            }
+            if (updatedList[i].uid == messageId) break;
+          }
+        } else {
+          for (let i = 0; i < updatedList.length; i++) {
+            if (updatedList[i].userId != uid) {
+              if (!updatedList[i].read) updatedList[i].read = true;
+              else break;
+            }
+            if (updatedList[i].uid == messageId) break;
+          }
         }
         return updatedList;
       }

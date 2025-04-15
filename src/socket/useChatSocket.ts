@@ -88,7 +88,7 @@ export function useChatSocket() {
                 setGlobalNumUnreadMessages(payload.numUnreadMessages);
               if (currentSectionRef.current === pageRoutes.chat) {
                 const cld = transformToChatListData(payload.chatData[0], uid);
-                console.log(">>>>>", payload.chatData[0].userId, cld);
+
                 setNewMessageAndChatData({
                   chatListData: cld,
                   chatMessage: payload.messageData,
@@ -161,7 +161,7 @@ export function useChatSocket() {
   }
 
   function disconnectChatSocket() {
-    cleanDataInChatSocket();
+    cleanDataInChatSocket(true);
     if (chatSocketAPI) {
       console.log("Disconnected chat");
       chatSocketAPI.removeAllListeners();
@@ -171,7 +171,7 @@ export function useChatSocket() {
   }
 
   function disconnectSingleChatSocket() {
-    cleanDataInChatSocket();
+    cleanDataInChatSocket(false);
     if (singleChatSocketAPI) {
       console.log("Disconnected single chat");
       singleChatSocketAPI.removeAllListeners();
@@ -180,12 +180,14 @@ export function useChatSocket() {
     }
   }
 
-  function cleanDataInChatSocket() {
-    setGlobalNumUnreadMessages(0);
+  function cleanDataInChatSocket(general: boolean) {
+    if (general) {
+      setGlobalNumUnreadMessages(0);
+      setCurrentChatUnreadMessages({ unreadMessages: 0 });
+    }
     setChatMessageRead({ endMessageId: "" });
     setLastChatMessageReceived(null);
     setNewMessageAndChatData(null);
-    setCurrentChatUnreadMessages({ unreadMessages: 0 });
   }
 
   return {
