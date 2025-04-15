@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChatListData, ChatMessage } from "../models/MainInterfaces";
 import { useChatSearch, useGetChatList, useGetChatMessages } from "./chatHooks";
 import {
@@ -43,6 +43,14 @@ export function useChat() {
     chatId: "",
     messageId: "",
   });
+
+  /** Cleanup */
+
+  useEffect(() => {
+    return () => {
+      handleSearch.cancel();
+    };
+  }, []);
 
   /** Obtener más chats */
 
@@ -163,6 +171,16 @@ export function useChat() {
     });
   }
 
+  function updateChatUnreadMessages(uid: string, unreadMsgs: number) {
+    setChatList((prevList) => {
+      const ind = prevList.findIndex((chat) => chat.uid == uid);
+      if (ind == -1) return prevList;
+      const newList = [...prevList];
+      newList[ind] = { ...newList[ind], numUnreadMessages: unreadMsgs };
+      return newList;
+    });
+  }
+
   function markMsgAsError(messageId: string) {
     if (messageId)
       setChatMessageList((prevList) => {
@@ -203,16 +221,20 @@ export function useChat() {
     });
   }
 
-  const handleSearch = debounce((val: string) => {
-    if (val) {
-      setUsingSearch(true);
-      searchChat(val);
-    } else {
-      setUsingSearch(false);
-      resetChatList();
-      getMoreChats(false, "");
-    }
-  }, inputSearchAfterMseconds);
+  const handleSearch = useMemo(
+    () =>
+      debounce((val: string) => {
+        if (val) {
+          setUsingSearch(true);
+          searchChat(val);
+        } else {
+          setUsingSearch(false);
+          resetChatList();
+          getMoreChats(false, "");
+        }
+      }, inputSearchAfterMseconds),
+    []
+  );
 
   return {
     resetChatList,
@@ -239,5 +261,6 @@ export function useChat() {
     setNewMessageAndChatData,
     removeChatFromList,
     chatListIsSet,
+    updateChatUnreadMessages,
   };
 }

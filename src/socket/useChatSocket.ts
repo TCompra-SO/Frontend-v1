@@ -31,6 +31,9 @@ export function useChatSocket() {
   const uid = useSelector((state: MainState) => state.user.uid);
   const { showRealTimeNotification } = useShowNotification();
   const [globalNumUnreadMessages, setGlobalNumUnreadMessages] = useState(0);
+  const [currentChatUnreadMessages, setCurrentChatUnreadMessages] = useState({
+    unreadMessages: 0,
+  });
   const [newMessageAndChatData, setNewMessageAndChatData] = useState<{
     chatMessage: ChatMessage;
     chatListData: ChatListData;
@@ -76,11 +79,11 @@ export function useChatSocket() {
         "updateGeneralChat",
         (payload: GeneralChatSocketResponse) => {
           try {
+            console.log("updateGeneralChat =======>", payload);
             if (
               payload.type == ChatMessageType.NEW_MESSAGE &&
               payload.chatData.length
             ) {
-              console.log("updateGeneralChat =======>", payload);
               if (payload.numUnreadMessages > 0)
                 setGlobalNumUnreadMessages(payload.numUnreadMessages);
               if (currentSectionRef.current === pageRoutes.chat) {
@@ -141,6 +144,9 @@ export function useChatSocket() {
               payload.res?.endMessageId
             ) {
               setChatMessageRead(payload.res);
+              setCurrentChatUnreadMessages({
+                unreadMessages: payload.numUnreadMessages,
+              });
             }
           } catch (e) {
             console.log(e);
@@ -175,8 +181,11 @@ export function useChatSocket() {
   }
 
   function cleanDataInChatSocket() {
+    setGlobalNumUnreadMessages(0);
     setChatMessageRead({ endMessageId: "" });
     setLastChatMessageReceived(null);
+    setNewMessageAndChatData(null);
+    setCurrentChatUnreadMessages({ unreadMessages: 0 });
   }
 
   return {
@@ -189,5 +198,6 @@ export function useChatSocket() {
     newMessageAndChatDataFromSocket: newMessageAndChatData,
     globalNumUnreadMessages,
     setGlobalNumUnreadMessages,
+    currentChatUnreadMessages,
   };
 }

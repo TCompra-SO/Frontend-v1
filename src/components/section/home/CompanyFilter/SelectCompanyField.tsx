@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import SelectContainer from "../../../containers/SelectContainer";
 import { DocType } from "../../../../utilities/types";
 import { Avatar } from "antd";
@@ -24,14 +24,24 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
     useSearchCompanyByName();
   const [value, setValue] = useState<string>();
 
-  const searchCompany = debounce((newValue: string) => {
-    const temp = getSearchString(newValue);
-    if (typeof temp === "string" && temp.length >= searchSinceLength) {
-      searchCompanyByName(temp);
-    } else {
-      clearList();
-    }
-  }, inputSearchAfterMseconds);
+  useEffect(() => {
+    return () => {
+      searchCompany.cancel();
+    };
+  }, []);
+
+  const searchCompany = useMemo(
+    () =>
+      debounce((newValue: string) => {
+        const temp = getSearchString(newValue);
+        if (typeof temp === "string" && temp.length >= searchSinceLength) {
+          searchCompanyByName(temp);
+        } else {
+          clearList();
+        }
+      }, inputSearchAfterMseconds),
+    []
+  );
 
   function onCompanySelected(companyId: string) {
     props.onCompanySelected(companyId);

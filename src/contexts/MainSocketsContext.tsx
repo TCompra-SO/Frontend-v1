@@ -57,6 +57,7 @@ export const MainSocketsContext = createContext<MainSocketsContextType>({
   globalNumUnreadMessages: 0,
   setGlobalNumUnreadMessages: () => {},
   newMessageAndChatDataFromSocket: null,
+  currentChatUnreadMessages: { unreadMessages: 0 },
 } as MainSocketsContextType);
 
 export function MainSocketsProvider({ children }: { children: ReactNode }) {

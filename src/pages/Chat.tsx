@@ -51,6 +51,7 @@ export default function Chat() {
     setNewMessageAndChatData,
     removeChatFromList,
     chatListIsSet,
+    updateChatUnreadMessages,
   } = useChat();
   const { markAsRead } = useChatFunctions(false);
   const {
@@ -59,6 +60,7 @@ export default function Chat() {
     lastChatMessageReceived,
     chatMessageRead,
     newMessageAndChatDataFromSocket,
+    currentChatUnreadMessages,
   } = useContext(MainSocketsContext);
   const hasHandledChatNotification = useRef(false);
   const chatThatHasBeenCreated = useRef("");
@@ -225,6 +227,16 @@ export default function Chat() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatList]);
+
+  /** Actualizar cantidad de mensajes no leídos en chat actual */
+
+  useEffect(() => {
+    if (currentChat)
+      updateChatUnreadMessages(
+        currentChat.uid,
+        currentChatUnreadMessages.unreadMessages
+      );
+  }, [currentChatUnreadMessages]);
 
   /** Funciones */
 

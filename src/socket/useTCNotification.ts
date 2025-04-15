@@ -13,7 +13,7 @@ import {
   RequirementType,
   RTNotificationType,
 } from "../utilities/types";
-import useShowNotification, { useDownloadPdfOrder } from "../hooks/utilHooks";
+import useShowNotification from "../hooks/utilHooks";
 import { ModalsContext } from "../contexts/ModalsContext";
 import {
   getCertificationTableTypeSubRoute,

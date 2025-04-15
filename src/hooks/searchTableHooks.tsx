@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import {
   HttpService,
   PaginationDataResponse,
@@ -218,24 +218,34 @@ export function useFilterSortPaginationForTable() {
   const [currentPageSize, setCurrentPageSize] = useState(pageSizeOptionsSt[0]);
   const [filteredInfo, setFilteredInfo] = useState<Filters | undefined>({});
 
-  const handleSearch = debounce(
-    (
-      e: ChangeEvent<HTMLInputElement>,
-      searchTable: (params: SearchTableTypeParams) => void
-    ) => {
-      setSearchValue(e.target.value);
-      setCurrentPage(1);
-      searchTable({
-        page: 1,
-        pageSize: currentPageSize,
-        keyWords: e.target.value,
-        fieldName: fieldSort?.fieldName,
-        orderType: fieldSort?.orderType,
-        filterColumn: fieldFilter?.filterColumn,
-        filterData: fieldFilter?.filterData,
-      });
-    },
-    tableSearchAfterMseconds
+  useEffect(() => {
+    return () => {
+      handleSearch.cancel();
+    };
+  }, []);
+
+  const handleSearch = useMemo(
+    () =>
+      debounce(
+        (
+          e: ChangeEvent<HTMLInputElement>,
+          searchTable: (params: SearchTableTypeParams) => void
+        ) => {
+          setSearchValue(e.target.value);
+          setCurrentPage(1);
+          searchTable({
+            page: 1,
+            pageSize: currentPageSize,
+            keyWords: e.target.value,
+            fieldName: fieldSort?.fieldName,
+            orderType: fieldSort?.orderType,
+            filterColumn: fieldFilter?.filterColumn,
+            filterData: fieldFilter?.filterData,
+          });
+        },
+        tableSearchAfterMseconds
+      ),
+    []
   );
 
   function handleChangePageAndPageSize(
