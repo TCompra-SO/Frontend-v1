@@ -190,7 +190,9 @@ export default function Chat() {
     if (usingSearch) setShowArchivedChats(false);
   }, [usingSearch]);
 
-  /** Guardar datos de nuevo mensaje desde señal de socket */
+  /** Guardar datos de nuevo mensaje desde señal de socket
+   * Si hay datos obtenidos de la url, guardar uid del chat que acaba de ser creado
+   */
 
   useEffect(() => {
     setNewMessageAndChatData(newMessageAndChatDataFromSocket);

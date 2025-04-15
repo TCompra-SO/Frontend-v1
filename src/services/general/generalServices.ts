@@ -19,6 +19,7 @@ import {
   transformFromGetRequirementByIdToRequirement,
   transformToBaseUser,
   transformToBasicRateData,
+  transformToChatMessage,
   transformToFullUser,
   transformToNotificationDataFromServer,
   transformToOffer,
@@ -378,18 +379,27 @@ export async function createChat(request: CreateChatRequest) {
 }
 
 export async function createChatMessage(request: CreateMessageRequest) {
-  const { responseData, error, errorMsg } =
-    await makeRequest<CreateMessageRequest>({
-      service: createChatMessageService(),
-      method: "post",
-      dataToSend: request,
-    });
+  try {
+    const { responseData, error, errorMsg } =
+      await makeRequest<CreateMessageRequest>({
+        service: createChatMessageService(),
+        method: "post",
+        dataToSend: request,
+      });
 
-  return {
-    messageData: responseData,
-    error,
-    errorMsg,
-  };
+    return {
+      messageData:
+        responseData && responseData.data
+          ? transformToChatMessage(responseData.data)
+          : null,
+      error,
+      errorMsg,
+    };
+  } catch (e) {
+    console.log(e);
+    const errorMsg: ErrorMsgRequestType = defaultErrorMsg;
+    return { error: e, errorMsg, messageData: null };
+  }
 }
 
 export async function markChatMessageAsRead(

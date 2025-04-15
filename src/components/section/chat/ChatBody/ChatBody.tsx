@@ -45,7 +45,7 @@ interface ChatBodyProps {
   hasMore: boolean;
   loading: boolean | undefined;
   addMessageToChatMessageList: (message: ChatMessage) => void;
-  updateMsg: (message: ChatMessage) => void;
+  updateMsg: (uid: string, message: ChatMessage) => void;
   markMsgAsError: (messageId: string) => void;
 }
 
@@ -234,8 +234,8 @@ export default function ChatBody(props: ChatBodyProps) {
           message: msg,
         });
         if (messageData) {
-          const createdMsg = transformToChatMessage(messageData.data);
-          props.updateMsg(createdMsg);
+          const createdMsg = transformToChatMessage(messageData);
+          props.updateMsg(msgUid, createdMsg);
         } else if (error) {
           props.markMsgAsError(msgUid);
         }

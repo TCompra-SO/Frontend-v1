@@ -161,11 +161,12 @@ export function useChat() {
     setChatMessageList([message, ...chatMessageList]);
   }
 
-  function updateMsg(message: ChatMessage) {
+  function updateMsg(uid: string, message: ChatMessage) {
     setChatMessageList((prevList) => {
-      const ind = prevList.findIndex((msg) => msg.uid == message.uid);
+      const ind = prevList.findIndex((msg) => msg.uid == uid);
       if (ind == -1) return prevList;
       const newList = [...prevList];
+
       newList[ind] = { ...message };
       return newList;
     });
@@ -195,7 +196,6 @@ export function useChat() {
   function markMsgAsRead(messageId: string) {
     setChatMessageList((prevList) => {
       const obj = prevList.find((item) => item.uid == messageId);
-
       if (obj) {
         const ownerIsCurrentUser = obj.userId == uid;
         // prevList.map((item) =>

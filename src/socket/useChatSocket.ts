@@ -88,7 +88,6 @@ export function useChatSocket() {
                 setGlobalNumUnreadMessages(payload.numUnreadMessages);
               if (currentSectionRef.current === pageRoutes.chat) {
                 const cld = transformToChatListData(payload.chatData[0], uid);
-
                 setNewMessageAndChatData({
                   chatListData: cld,
                   chatMessage: payload.messageData,
