@@ -50,6 +50,7 @@ export default function ChatBodyMessage(props: ChatBodyMessageProps) {
           isInputMsg ? "txt-entrada" : "txt-salida"
         }`}
         data-timestamp={props.message.timestamp}
+        data-message-id={props.message.uid}
       >
         {isInputMsg ? (
           props.userImage ? (

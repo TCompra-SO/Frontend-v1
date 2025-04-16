@@ -6,6 +6,7 @@ import {
 import InputContainer from "../../../containers/InputContainer";
 import dayjs from "dayjs";
 import {
+  checkToMarkMsgAsReadWhileScrolling,
   dateFormatChatBody,
   randomShortKeyLength,
   windowSize,
@@ -34,6 +35,7 @@ import { useChatFunctions } from "../../../../hooks/chatHooks";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../../models/Redux";
 import { transformToChatMessage } from "../../../../utilities/transform";
+import { debounce } from "lodash";
 
 const loadingSpinner: ReactNode = (
   <Flex justify="center">
@@ -172,9 +174,23 @@ export default function ChatBody(props: ChatBodyProps) {
     )
       scrollToBottom();
 
+    // Marcar mensajes como leídos al scrollear
+    const handleScroll = () => {
+      checkLastVisibleMessage();
+    };
+
+    const debounceScroll = debounce(
+      handleScroll,
+      checkToMarkMsgAsReadWhileScrolling
+    );
+
+    chatContainer.addEventListener("scroll", debounceScroll);
+
     return () => {
       observerRef.current?.disconnect();
       observerDownRef.current?.disconnect();
+      chatContainer.removeEventListener("scroll", debounceScroll);
+      debounceScroll.cancel();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.messages]);
@@ -298,6 +314,34 @@ export default function ChatBody(props: ChatBodyProps) {
           props.updateMsg(msgUid, createdMsg);
         } else if (error) {
           props.markMsgAsError(msgUid);
+        }
+      }
+    }
+  }
+
+  function checkLastVisibleMessage() {
+    const container = chatContainerRef.current;
+    if (!container || !props.chatData.uid) return;
+    const rect = container.getBoundingClientRect();
+
+    const el = document.elementFromPoint(rect.left + 10, rect.bottom - 5);
+
+    if (el) {
+      const messageEl = el.closest("[data-message-id]");
+      if (messageEl) {
+        const messageId = messageEl.getAttribute("data-message-id");
+        if (messageId) {
+          const ind = props.messages.findIndex((msg) => msg.uid == messageId);
+          if (
+            ind != -1 &&
+            !props.messages[ind].read &&
+            props.messages[ind].userId !== uid
+          )
+            markAsRead({
+              messagesIds: [messageId],
+              chatId: props.chatData.uid,
+              userId: uid,
+            });
         }
       }
     }
