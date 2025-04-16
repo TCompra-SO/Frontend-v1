@@ -17,6 +17,7 @@ import {
   maxLengthStringToSearch,
   onlyLettersAndNumbers,
   pageSizeOptionsSt,
+  randomShortKeyLength,
   reversedFieldNameSearchRequestSubUser,
   userCounterKeys,
 } from "./globals";
@@ -447,8 +448,13 @@ export function openPurchaseOrderPdf(responseData: any) {
 
 // Genera un identificador unico
 export function generateShortId(): string {
-  const timestamp = Date.now().toString(36).slice(-4);
-  const random = Math.random().toString(36).substring(2, 6);
+  const timestamp = Date.now()
+    .toString(36)
+    .slice(-Math.round(randomShortKeyLength / 2));
+  const random = Math.random()
+    .toString(36)
+    .substring(2, 2 + Math.round(randomShortKeyLength / 2));
+  console.log(`${timestamp}${random}`);
   return `${timestamp}${random}`;
 }
 

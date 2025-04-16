@@ -57,6 +57,9 @@ export const basicChatDataFieldName: string = "basicChatData";
 export const masterUid: string = "dlGMHRyyAidgFMDqmLBO";
 export const pageSizeOfferList: number = 5;
 
+// Debe ser menor que la longitud de uids
+export const randomShortKeyLength: number = 8;
+
 // En segundos
 export const inactivityTime = 30;
 export const remainingTokenTime = 60;

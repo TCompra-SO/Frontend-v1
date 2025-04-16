@@ -198,9 +198,6 @@ export function useChat() {
       const obj = prevList.find((item) => item.uid == messageId);
       if (obj) {
         const ownerIsCurrentUser = obj.userId == uid;
-        // prevList.map((item) =>
-        // item.uid === messageId ? { ...item, read: true } : item
-        // );
         const updatedList = [...prevList];
         if (ownerIsCurrentUser) {
           for (let i = 0; i < updatedList.length; i++) {

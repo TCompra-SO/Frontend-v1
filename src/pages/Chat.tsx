@@ -17,15 +17,11 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { useChat } from "../hooks/useChat";
 import { MainSocketsContext } from "../contexts/MainSocketsContext";
-import { useChatFunctions } from "../hooks/chatHooks";
-import { MainState } from "../models/Redux";
-import { useSelector } from "react-redux";
 
 export default function Chat() {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
-  const uid = useSelector((state: MainState) => state.user.uid);
   const { width } = useWindowSize();
   const {
     chatList,
@@ -45,7 +41,6 @@ export default function Chat() {
     setIsChatListResetToChangeTabs,
     handleSearch,
     usingSearch,
-    setFirstChatMessageToRead,
     markMsgAsError,
     updateMsg,
     setNewMessageAndChatData,
@@ -53,7 +48,6 @@ export default function Chat() {
     chatListIsSet,
     updateChatUnreadMessages,
   } = useChat();
-  const { markAsRead } = useChatFunctions(false);
   const {
     connectSingleChatSocket,
     disconnectSingleChatSocket,
@@ -64,7 +58,6 @@ export default function Chat() {
   } = useContext(MainSocketsContext);
   const hasHandledChatNotification = useRef(false);
   const chatThatHasBeenCreated = useRef("");
-  const [markedAsRead, setMarkedAsRead] = useState(false);
   const [isChatOpened, setIsChatOpened] = useState(false);
   const [currentChat, setCurrentChat] = useState<ChatListData | null>(null);
   const [showArchivedChats, setShowArchivedChats] = useState(false);
@@ -155,26 +148,6 @@ export default function Chat() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastChatMessageReceived]);
 
-  /** Al abrir chat, marcar como leído si hay un mensaje no leído que no es del usuario */
-
-  useEffect(() => {
-    if (
-      //!markedAsRead &&
-      chatMessageList.length &&
-      !chatMessageList[0].read &&
-      chatMessageList[0].userId !== uid
-    ) {
-      markAsRead({
-        messagesIds: [chatMessageList[0].uid],
-        chatId: chatMessageList[0].chatId,
-        userId: uid,
-      });
-      setMarkedAsRead(true);
-      setFirstChatMessageToRead(chatMessageList[0].uid);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chatMessageList]);
-
   /** Marcar mensaje como leído */
 
   useEffect(() => {
@@ -247,14 +220,12 @@ export default function Chat() {
     setCurrentChat(null);
     setIsChatOpened(false);
     resetChatMessageList();
-    setMarkedAsRead(false);
   }
 
   function handleClickOnChatItem(item: ChatListData, noReset?: boolean) {
     if (currentChat?.uid != item.uid) {
       if (!noReset) {
         disconnectSingleChatSocket();
-        setMarkedAsRead(false);
         resetChatMessageList();
       }
       setCurrentChat(item);
