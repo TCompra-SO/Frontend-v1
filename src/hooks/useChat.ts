@@ -27,7 +27,6 @@ export function useChat() {
   const [hasMoreChatList, setHasMoreChatList] = useState(true);
   const [chatMessageList, setChatMessageList] = useState<ChatMessage[]>([]);
   const [hasMoreChatMessageList, setHasMoreChatMessageList] = useState(true);
-  const [firstChatMessageToRead, setFirstChatMessageToRead] = useState("");
   const [newMessageAndChatData, setNewMessageAndChatData] = useState<{
     chatMessage: ChatMessage;
     chatListData: ChatListData;
@@ -109,9 +108,16 @@ export function useChat() {
           (item) => item.uid === newMessageAndChatData.chatListData.uid
         );
         if (index === -1)
+          // chat no encontrado, poner en 1er lugar
           return [newMessageAndChatData.chatListData, ...prevList];
+        // Chat encontrado, actualizar
         const newList = [...prevList];
         newList[index] = newMessageAndChatData.chatListData;
+        if (newList[index].lastDate !== prevList[index].lastDate) {
+          // asumiendo que la fecha fue actualizada
+          const [item] = newList.splice(index, 1);
+          newList.unshift(item);
+        }
         return newList;
       });
     }
@@ -262,7 +268,6 @@ export function useChat() {
     handleSearch,
     usingSearch,
     chatListPageData: pageData,
-    setFirstChatMessageToRead,
     updateMsg,
     markMsgAsError,
     setNewMessageAndChatData,
