@@ -28,12 +28,15 @@ export default function Notifications(props: NotificationsProps) {
     resetNotificationList,
     redirectFromNotification,
     hasMoreNotificationList,
+    newNotificationsExist,
+    setNewNotificationsExist,
   } = sockets;
 
   /** Obtener más notificaciones */
 
   useEffect(() => {
     if (visible) {
+      setNewNotificationsExist(false);
       getMoreNotifications(page);
       setPage(page + 1);
     } else {
@@ -56,6 +59,7 @@ export default function Notifications(props: NotificationsProps) {
       getMoreNotifications(page);
       setPage(page + 1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notifList]);
 
   const notificationContent = (
@@ -160,7 +164,9 @@ export default function Notifications(props: NotificationsProps) {
               props.forDropdown ? "i-main " : "i-opt"
             }`}
           ></i>
-          {!props.forDropdown && <b className="i-notf"></b>}
+          {!props.forDropdown && newNotificationsExist && (
+            <b className="i-notf"></b>
+          )}
         </div>
       )}
       {/* <Badge count={notifications.length} offset={[-5, 5]}> */}

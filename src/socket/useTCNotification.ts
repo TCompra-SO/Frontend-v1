@@ -60,6 +60,7 @@ export function useTCNotification() {
   >([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [newNotificationsExist, setNewNotificationsExist] = useState(false);
 
   /** Conectar con socket */
   useEffect(() => {
@@ -95,12 +96,14 @@ export function useTCNotification() {
                 content.type == NotificationType.BROADCAST &&
                 content.categoryId &&
                 mainCategories.includes(content.categoryId)
-              )
+              ) {
+                setNewNotificationsExist(true);
                 showRealTimeNotification({
                   type: RTNotificationType.NOTIFICATION,
                   content,
                   onClickCallback: redirectFromNotification,
                 });
+              }
             }
           } catch (e) {
             console.log(e);
@@ -117,7 +120,6 @@ export function useTCNotification() {
       if (notifSocketAPI) {
         notifSocketAPI.on("connect", () => {
           console.log("Connected notificaciones");
-          // console.log("AFTER Socket ID:", notifSocketAPI?.id);
           notifSocketAPI?.emit("joinRoom", `notification${uid}`);
         });
 
@@ -128,12 +130,14 @@ export function useTCNotification() {
         notifSocketAPI.on("updateRoom", (payload: SocketResponse) => {
           console.log("notificación recibida:", payload);
           try {
-            if (payload.dataPack.data && payload.dataPack.data.length > 0)
+            if (payload.dataPack.data && payload.dataPack.data.length > 0) {
+              setNewNotificationsExist(true);
               showRealTimeNotification({
                 type: RTNotificationType.NOTIFICATION,
                 content: payload.dataPack.data[0] as NotificationDataFromServer,
                 onClickCallback: redirectFromNotification,
               });
+            }
           } catch (e) {
             console.log(e);
           }
@@ -309,5 +313,7 @@ export function useTCNotification() {
     disconnectGlobalNotificationSocket: disconnectGlobal,
     connectGlobalNotificationSocket: connectGlobal,
     hasMoreNotificationList: hasMore,
+    newNotificationsExist,
+    setNewNotificationsExist,
   };
 }
