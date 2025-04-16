@@ -170,7 +170,9 @@ export default function Sidebar(props: SidebarProps) {
       >
         {icon} {text} {icon2}{" "}
         {numberToShow && numberToShow > 0 ? (
-          <div className="chat-notf">{numberToShow}</div>
+          <div className="chat-notf">
+            {numberToShow > 100 ? "99+" : numberToShow}
+          </div>
         ) : null}
       </ButtonContainer>
     );

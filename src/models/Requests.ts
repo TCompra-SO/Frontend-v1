@@ -301,3 +301,8 @@ export interface ArchiveChatRequest {
   archive: boolean;
   userId: string;
 }
+
+export interface GetChatStateRequest {
+  userId: string;
+  requerimentId: string;
+}

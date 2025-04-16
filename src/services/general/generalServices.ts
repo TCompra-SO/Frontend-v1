@@ -4,6 +4,7 @@ import {
   ArchiveChatRequest,
   CreateChatRequest,
   CreateMessageRequest,
+  GetChatStateRequest,
   MarkChatMessagesAsReadRequest,
 } from "../../models/Requests";
 import makeRequest, {
@@ -19,6 +20,7 @@ import {
   transformFromGetRequirementByIdToRequirement,
   transformToBaseUser,
   transformToBasicRateData,
+  transformToChatListData,
   transformToChatMessage,
   transformToFullUser,
   transformToNotificationDataFromServer,
@@ -44,6 +46,7 @@ import {
   archiveChatService,
   createChatMessageService,
   createChatService,
+  getChatStateService,
   getCountMessageUnReadService,
   MarkChatMessagesAsReadService,
 } from "../requests/chatService";
@@ -451,4 +454,30 @@ export async function getCountMessageUnReadS(userId: string) {
     error,
     errorMsg,
   };
+}
+
+export async function getChatState(request: GetChatStateRequest, uid: string) {
+  try {
+    const { responseData, error, errorMsg } =
+      await makeRequest<GetChatStateRequest>({
+        service: getChatStateService(),
+        method: "post",
+        dataToSend: request,
+      });
+
+    return {
+      chat:
+        error && error.status == 404
+          ? null
+          : Array.isArray(responseData.data) && responseData.data.length
+          ? transformToChatListData(responseData.data[0], uid)
+          : null,
+      errorMsg,
+      error,
+    };
+  } catch (e) {
+    console.log(e);
+    const errorMsg: ErrorMsgRequestType = defaultErrorMsg;
+    return { error: e, errorMsg, chat: null };
+  }
 }

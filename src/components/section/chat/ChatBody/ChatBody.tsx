@@ -117,10 +117,10 @@ export default function ChatBody(props: ChatBodyProps) {
         markAsRead({
           messagesIds: [messageId],
           chatId,
-          userId: uid,
+          userId: props.chatData.userId,
         });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -340,7 +340,7 @@ export default function ChatBody(props: ChatBodyProps) {
             markAsRead({
               messagesIds: [messageId],
               chatId: props.chatData.uid,
-              userId: uid,
+              userId: props.chatData.userId,
             });
         }
       }

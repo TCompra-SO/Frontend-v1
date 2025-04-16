@@ -17,6 +17,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { useChat } from "../hooks/useChat";
 import { MainSocketsContext } from "../contexts/MainSocketsContext";
+import { useChatFunctions } from "../hooks/chatHooks";
 
 export default function Chat() {
   const { t } = useTranslation();
@@ -56,6 +57,7 @@ export default function Chat() {
     newMessageAndChatDataFromSocket,
     currentChatUnreadMessages,
   } = useContext(MainSocketsContext);
+  const { verifyIfChatExists } = useChatFunctions(false);
   const hasHandledChatNotification = useRef(false);
   const chatThatHasBeenCreated = useRef("");
   const [isChatOpened, setIsChatOpened] = useState(false);
@@ -91,43 +93,7 @@ export default function Chat() {
   /** Abrir chat desde notificación o desde redireccionamiento */
 
   useEffect(() => {
-    const chatDataFromNotification: SocketChatMessage =
-      location.state?.[chatDataFieldName];
-
-    if (
-      chatListIsSet === true &&
-      chatDataFromNotification &&
-      !hasHandledChatNotification.current
-    ) {
-      navigate(".", { replace: true, state: null });
-      const chatToOpen = chatList.find(
-        (chat) => chat.uid === chatDataFromNotification.chatId
-      );
-      if (chatToOpen) {
-        handleClickOnChatItem(chatToOpen);
-        hasHandledChatNotification.current = true;
-      }
-    }
-
-    if (!chatDataFromNotification) {
-      if (chatListIsSet === true && basicChatDataFromRouting) {
-        navigate(".", { replace: true, state: null });
-
-        const chatToOpen = basicChatDataFromRouting.uid
-          ? chatList.find((chat) => chat.uid === basicChatDataFromRouting.uid)
-          : chatList.find(
-              (chat) =>
-                chat.userId === basicChatDataFromRouting.userId &&
-                chat.requirementId === basicChatDataFromRouting.requirementId
-            );
-        if (chatToOpen) {
-          handleClickOnChatItem(chatToOpen);
-        } else {
-          chatThatHasBeenCreated.current = "";
-          setIsChatOpened(true);
-        }
-      }
-    }
+    openChatFromNotificationOrRerouting();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatListIsSet]);
 
@@ -211,6 +177,7 @@ export default function Chat() {
         currentChat.uid,
         currentChatUnreadMessages.unreadMessages
       );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentChatUnreadMessages]);
 
   /** Funciones */
@@ -231,6 +198,64 @@ export default function Chat() {
       setCurrentChat(item);
       setIsChatOpened(true);
       if (item.uid) connectSingleChatSocket(item.uid);
+    }
+  }
+
+  async function openChatFromNotificationOrRerouting() {
+    const chatDataFromNotification: SocketChatMessage =
+      location.state?.[chatDataFieldName];
+
+    if (
+      chatListIsSet === true &&
+      chatDataFromNotification &&
+      !hasHandledChatNotification.current
+    ) {
+      navigate(".", { replace: true, state: null });
+      const chatToOpen = chatList.find(
+        (chat) => chat.uid === chatDataFromNotification.chatId
+      );
+      if (chatToOpen) {
+        handleClickOnChatItem(chatToOpen);
+        hasHandledChatNotification.current = true;
+      }
+    }
+
+    if (!chatDataFromNotification) {
+      if (chatListIsSet === true && basicChatDataFromRouting) {
+        navigate(".", { replace: true, state: null });
+
+        const chatToOpen = basicChatDataFromRouting.uid
+          ? chatList.find((chat) => chat.uid === basicChatDataFromRouting.uid)
+          : chatList.find(
+              (chat) =>
+                chat.userId === basicChatDataFromRouting.userId &&
+                chat.requirementId === basicChatDataFromRouting.requirementId
+            );
+        if (chatToOpen) {
+          handleClickOnChatItem(chatToOpen);
+        } else {
+          const { chat } = await verifyIfChatExists({
+            userId: basicChatDataFromRouting.userId,
+            requerimentId: basicChatDataFromRouting.requirementId,
+          });
+          // chat existe
+          if (chat) {
+            if (chat.archive?.[0]?.state) {
+              // chat archivado
+              if (showArchivedChats) handleClickOnChatItem(chat);
+              else setShowArchivedChats(true);
+            } else {
+              // chat no archivado
+              console.log("no archivado", showArchivedChats);
+              if (!showArchivedChats) handleClickOnChatItem(chat);
+              else setShowArchivedChats(false);
+            }
+          } else {
+            chatThatHasBeenCreated.current = "";
+            setIsChatOpened(true);
+          }
+        }
+      }
     }
   }
 

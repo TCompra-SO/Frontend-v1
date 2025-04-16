@@ -127,7 +127,7 @@ export default function useUserSocket() {
     isAccessToken: boolean
   ) {
     if (expirationTime == null) return;
-
+    console.log("calling handleTokenExpiration");
     let retryInterval: NodeJS.Timeout | null = null;
 
     const interval = setInterval(async () => {

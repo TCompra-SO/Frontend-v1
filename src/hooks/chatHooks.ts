@@ -5,6 +5,7 @@ import {
   CreateMessageRequest,
   GetChatListRequest,
   GetChatMessagesRequest,
+  GetChatStateRequest,
   MarkChatMessagesAsReadRequest,
   SearchChatRequest,
 } from "../models/Requests";
@@ -12,6 +13,7 @@ import {
   archiveChatReq,
   createChat,
   createChatMessage,
+  getChatState,
   markChatMessageAsRead,
 } from "../services/general/generalServices";
 import {
@@ -40,6 +42,7 @@ import {
 export function useChatFunctions(showNotificationAfterMsgSent: boolean) {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
+  const uid = useSelector((state: MainState) => state.user.uid);
   const [loading, setLoading] = useState(false);
 
   async function archiveChat(request: ArchiveChatRequest) {
@@ -58,6 +61,10 @@ export function useChatFunctions(showNotificationAfterMsgSent: boolean) {
 
   async function sendMessage(request: CreateMessageRequest) {
     return await createChatMessage(request);
+  }
+
+  async function verifyIfChatExists(request: GetChatStateRequest) {
+    return await getChatState(request, uid);
   }
 
   async function createChatAndSendMessage(
@@ -103,6 +110,7 @@ export function useChatFunctions(showNotificationAfterMsgSent: boolean) {
     sendMessage,
     markAsRead,
     archiveChat,
+    verifyIfChatExists,
   };
 }
 
@@ -155,10 +163,6 @@ export function useGetChatList() {
         pageSize: chatListPageSize,
       },
     });
-  }
-
-  function reset() {
-    // setLoading(undefined);
   }
 
   return { getChatList, loadingGetChatList: loading, chatList };

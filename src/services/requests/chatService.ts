@@ -108,3 +108,12 @@ export function getCountMessageUnReadService(userId: string): HttpService {
     type: "CH-CO-UN",
   };
 }
+
+export function getChatStateService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.chat}${
+      ApiRoutes.chat.getChatState
+    }`,
+    type: "CH-GE-ST",
+  };
+}
