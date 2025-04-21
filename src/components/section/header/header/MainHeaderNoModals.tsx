@@ -17,7 +17,7 @@ import ButtonContainer from "../../../containers/ButtonContainer";
 import { useLocation, useNavigate } from "react-router-dom";
 import { UserRoles } from "../../../../utilities/types";
 import ControlPanel from "../items/ControlPanel";
-import Notifications from "../../notifications/Notifications";
+import Notifications from "../items/Notifications";
 
 interface MainHeaderNoModalsProps {
   onShowMenu?: (show: boolean) => void;

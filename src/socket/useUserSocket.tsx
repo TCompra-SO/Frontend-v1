@@ -4,9 +4,7 @@ import { useLogout } from "../hooks/authHooks";
 import { useDispatch, useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import {
-  attemptsToRetryRefreshingToken,
   expiresInKey,
-  intervalToRetryRefreshingToken,
   logoutAfterNoTokenRefreshTime,
   refreshExpiresInKey,
   refreshingRefreshTokenKey,

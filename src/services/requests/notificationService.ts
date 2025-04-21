@@ -14,3 +14,21 @@ export function getNotificationsService(
     type: "NO-GET",
   };
 }
+
+export function readNotificationService(notificationId: string): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.notification}${
+      ApiRoutes.notification.readNotification
+    }${notificationId}`,
+    type: "NO-REA",
+  };
+}
+
+export function getUnreadNotificationsCounterService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.notification}${
+      ApiRoutes.notification.getUnreadNotificationsCounter
+    }`,
+    type: "NO-UN-CO",
+  };
+}

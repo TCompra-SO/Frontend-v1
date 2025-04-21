@@ -27,9 +27,13 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { SocketResponse } from "../models/Interfaces";
-import { getNotifications } from "../services/general/generalServices";
+import {
+  getNotifications,
+  readNotification,
+} from "../services/general/generalServices";
 import { notificationPageSize } from "../utilities/globals";
 import { HomeContext } from "../contexts/Homecontext";
+import { transformToNotificationDataFromServer } from "../utilities/transform";
 
 let notifSocketAPI: Socket | null = null;
 let globalNotifSocketAPI: Socket | null = null;
@@ -61,11 +65,14 @@ export function useTCNotification() {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [newNotificationsExist, setNewNotificationsExist] = useState(false);
+  const [globalNumUnreadNotifications, setGlobalNumUnreadNotifications] =
+    useState(0);
 
-  /** Conectar con socket */
+  /** Desconectar socket */
   useEffect(() => {
     return () => {
       disconnect();
+      disconnectGlobal();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -89,9 +96,13 @@ export function useTCNotification() {
         globalNotifSocketAPI.on("updateRoom", (payload: SocketResponse) => {
           console.log("notificación global recibida:", payload);
           try {
-            if (payload.dataPack.data && payload.dataPack.data.length > 0) {
-              const content: NotificationDataFromServer = payload.dataPack
-                .data[0] as NotificationDataFromServer;
+            if (
+              payload.dataPack.data &&
+              Array.isArray(payload.dataPack.data) &&
+              payload.dataPack.data.length > 0
+            ) {
+              const content: NotificationDataFromServer =
+                transformToNotificationDataFromServer(payload.dataPack.data[0]);
               if (
                 content.type == NotificationType.BROADCAST &&
                 content.categoryId &&
@@ -130,11 +141,17 @@ export function useTCNotification() {
         notifSocketAPI.on("updateRoom", (payload: SocketResponse) => {
           console.log("notificación recibida:", payload);
           try {
-            if (payload.dataPack.data && payload.dataPack.data.length > 0) {
+            if (
+              payload.dataPack.data &&
+              Array.isArray(payload.dataPack.data) &&
+              payload.dataPack.data.length > 0
+            ) {
               setNewNotificationsExist(true);
               showRealTimeNotification({
                 type: RTNotificationType.NOTIFICATION,
-                content: payload.dataPack.data[0] as NotificationDataFromServer,
+                content: transformToNotificationDataFromServer(
+                  payload.dataPack.data[0]
+                ),
                 onClickCallback: redirectFromNotification,
               });
             }
@@ -173,8 +190,13 @@ export function useTCNotification() {
     setLoading(false);
   }
 
-  function redirectFromNotification(notification: NotificationDataFromServer) {
+  function redirectFromNotification(
+    notification: NotificationDataFromServer,
+    markAsRead?: boolean
+  ) {
     console.log(notification);
+    if (markAsRead && notification.uid) readNotification(notification.uid);
+
     const { result, val } = isRequirementType(notification.targetType);
     if (result && val !== null) {
       if (notification.targetId) {
@@ -299,6 +321,10 @@ export function useTCNotification() {
       notifSocketAPI = null;
     }
     setNotificationList([]);
+    setLoading(false);
+    setHasMore(true);
+    setNewNotificationsExist(false);
+    setGlobalNumUnreadNotifications(0);
   }
 
   return {
@@ -315,5 +341,7 @@ export function useTCNotification() {
     hasMoreNotificationList: hasMore,
     newNotificationsExist,
     setNewNotificationsExist,
+    globalNumUnreadNotifications,
+    setGlobalNumUnreadNotifications,
   };
 }

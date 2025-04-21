@@ -153,6 +153,8 @@ export const ApiRoutes = {
   },
   notification: {
     getNotifications: "getNotifications/",
+    readNotification: "readNotification/",
+    getUnreadNotificationsCounter: "getUnreadNotificationsCounter/",
   },
   chat: {
     createChat: "createChat/",

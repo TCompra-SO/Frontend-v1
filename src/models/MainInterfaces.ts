@@ -319,4 +319,5 @@ export interface NotificationData
 export interface NotificationDataFromServer extends NotificationData {
   uid: string;
   categoryId?: number;
+  read?: boolean;
 }

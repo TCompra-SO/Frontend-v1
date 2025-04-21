@@ -218,3 +218,15 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
   background-color: initial;
   border-color: initial;
 }
+
+/* Para poner background en notificaciones */
+
+.notification-popover .ant-popover-inner {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.notification-popover .ant-popover-title {
+  padding: 12px 12px 0 12px;
+}

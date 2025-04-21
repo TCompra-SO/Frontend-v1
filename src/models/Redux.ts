@@ -22,6 +22,7 @@ export interface MainUserState {
 
 export interface UserState extends MainUserState {
   token: string;
+  lastSession: string;
 }
 
 export interface LoadingState {

@@ -18,6 +18,7 @@ export const userInitialState: UserState = {
   isPremium: false,
   isLoggedIn: undefined,
   categories: [],
+  lastSession: "",
 };
 
 export const userSlice = createSlice({
@@ -28,7 +29,7 @@ export const userSlice = createSlice({
       const payload: LoginResponse = action.payload;
       // if (payload.accessToken) state.token = payload.accessToken;
       if (payload.dataUser) {
-        const { uid, name, email, type, typeID, planID } =
+        const { uid, name, email, type, typeID, planID, lastSession } =
           action.payload.dataUser[0];
         state.typeEntity = type;
         state.name = name;
@@ -36,6 +37,7 @@ export const userSlice = createSlice({
         state.typeID = typeID;
         state.planID = planID;
         state.uid = uid;
+        state.lastSession = lastSession;
 
         localStorage.setItem(userDataKey, encryptData(JSON.stringify(state)));
         console.log(state.uid);

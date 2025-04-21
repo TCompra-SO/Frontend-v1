@@ -560,6 +560,7 @@ export interface LoginResponse {
     type: string;
     typeID: number;
     uid: string;
+    lastSession: string;
   }[];
   refreshToken: string;
   accessToken: string;

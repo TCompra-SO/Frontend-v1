@@ -14,7 +14,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useLoadUserInfo } from "../hooks/authHooks";
 import { setIsLoggedIn } from "../redux/userSlice";
-import { getCountMessageUnReadS } from "../services/general/generalServices";
+import {
+  getCountMessageUnReadS,
+  getUnreadNotificationsCounterS,
+} from "../services/general/generalServices";
 
 type UserType = ReturnType<typeof useUserSocket>;
 type NotificationsType = ReturnType<typeof useTCNotification>;
@@ -60,6 +63,8 @@ export const MainSocketsContext = createContext<MainSocketsContextType>({
   currentChatUnreadMessages: { unreadMessages: 0 },
   newNotificationsExist: false,
   setNewNotificationsExist: () => {},
+  globalNumUnreadNotifications: 0,
+  setGlobalNumUnreadNotifications: () => {},
 } as MainSocketsContextType);
 
 export function MainSocketsProvider({ children }: { children: ReactNode }) {
@@ -68,6 +73,8 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
   const loadUserInfo = useLoadUserInfo();
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const uid = useSelector((state: MainState) => state.user.uid);
+  const mainUid = useSelector((state: MainState) => state.mainUser.uid);
+  const lastSession = useSelector((state: MainState) => state.user.lastSession);
   const userData = useUserSocket();
   const notificationData = useTCNotification();
   const chatData = useChatSocket();
@@ -89,7 +96,8 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
       notificationData.connectNotificationSocket();
       notificationData.connectGlobalNotificationSocket();
       chatData.connectChatSocket();
-      getUnreadChatMessages();
+      getUnreadChatMessagesCounter();
+      getUnreadNotificationsCounter();
     } else if (isLoggedIn === false) {
       disconnectSockets();
       window.removeEventListener("storage", handleStorageChange);
@@ -128,9 +136,19 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
     notificationData.disconnectGlobalNotificationSocket();
   }
 
-  async function getUnreadChatMessages() {
+  async function getUnreadChatMessagesCounter() {
     const { totalUnread } = await getCountMessageUnReadS(uid);
     if (totalUnread) chatData.setGlobalNumUnreadMessages(totalUnread);
+  }
+
+  async function getUnreadNotificationsCounter() {
+    const { totalUnread } = await getUnreadNotificationsCounterS({
+      entityId: mainUid,
+      receiverId: uid,
+      lastSession,
+    });
+    if (totalUnread)
+      notificationData.setGlobalNumUnreadNotifications(totalUnread);
   }
 
   return (

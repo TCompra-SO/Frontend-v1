@@ -306,3 +306,9 @@ export interface GetChatStateRequest {
   userId: string;
   requerimentId: string;
 }
+
+export interface GetUnreadNotificationsCounterRequest {
+  entityId: string;
+  receiverId: string;
+  lastSession: string;
+}

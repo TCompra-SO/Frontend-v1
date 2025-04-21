@@ -5,6 +5,7 @@ import {
   CreateChatRequest,
   CreateMessageRequest,
   GetChatStateRequest,
+  GetUnreadNotificationsCounterRequest,
   MarkChatMessagesAsReadRequest,
 } from "../../models/Requests";
 import makeRequest, {
@@ -50,7 +51,11 @@ import {
   getCountMessageUnReadService,
   MarkChatMessagesAsReadService,
 } from "../requests/chatService";
-import { getNotificationsService } from "../requests/notificationService";
+import {
+  getNotificationsService,
+  getUnreadNotificationsCounterService,
+  readNotificationService,
+} from "../requests/notificationService";
 
 export async function getBaseUserForUserSubUser(
   uid: string,
@@ -480,4 +485,39 @@ export async function getChatState(request: GetChatStateRequest, uid: string) {
     const errorMsg: ErrorMsgRequestType = defaultErrorMsg;
     return { error: e, errorMsg, chat: null };
   }
+}
+
+export async function getUnreadNotificationsCounterS(
+  request: GetUnreadNotificationsCounterRequest
+) {
+  const { responseData, error, errorMsg } =
+    await makeRequest<GetUnreadNotificationsCounterRequest>({
+      service: getUnreadNotificationsCounterService(),
+      method: "post",
+      dataToSend: request,
+    });
+
+  return {
+    totalUnread:
+      responseData.data &&
+      typeof responseData.data === "number" &&
+      responseData.data > 0
+        ? (responseData.data as number)
+        : null,
+    error,
+    errorMsg,
+  };
+}
+
+export async function readNotification(notificationId: string) {
+  const { responseData, error, errorMsg } = await makeRequest({
+    service: readNotificationService(notificationId),
+    method: "get",
+  });
+
+  return {
+    responseData,
+    error,
+    errorMsg,
+  };
 }
