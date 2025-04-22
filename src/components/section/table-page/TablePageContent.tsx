@@ -13,7 +13,6 @@ import { useTranslation } from "react-i18next";
 import { TableType } from "../../../models/Interfaces";
 import GeneralTable from "../../common/GeneralTable/GeneralTable";
 import { OnChangePageAndPageSizeType } from "../../../utilities/types";
-import { maxLengthStringToSearch } from "../../../utilities/globals";
 
 export interface TablePageContentRef {
   resetSearchValue: () => void;
@@ -81,7 +80,6 @@ const TablePageContent = forwardRef<TablePageContentRef, TablePageContentProps>(
                   prefix={<SearchOutlined />}
                   className="form-control"
                   onChange={onChangeSearchValue}
-                  maxLength={maxLengthStringToSearch}
                   allowClear
                   value={searchValue}
                 />

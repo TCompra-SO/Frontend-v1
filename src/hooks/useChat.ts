@@ -17,8 +17,11 @@ export function useChat() {
     loadingGetChatList,
     chatList: currentPageChatList,
   } = useGetChatList();
-  const { getChatMessages, loadingGetChatMessages, chatMessages } =
-    useGetChatMessages();
+  const {
+    getChatMessages,
+    loadingGetChatMessages,
+    chatMessages: currentChatMessages,
+  } = useGetChatMessages();
   const uid = useSelector((state: MainState) => state.user.uid);
   const { loadingSearchChat, searchChat, foundChatList } = useChatSearch();
   const [usingSearch, setUsingSearch] = useState(false);
@@ -82,16 +85,19 @@ export function useChat() {
   }, [dataToGetMoreMsgs]);
 
   useEffect(() => {
-    if (chatMessages.length < chatMessagesPageSize)
+    if (currentChatMessages.length < chatMessagesPageSize)
       setHasMoreChatMessageList(false);
     const newList = isNewChat.current
-      ? chatMessages
-      : filterUniqueOrFirstRepeated([...chatMessageList, ...chatMessages]);
+      ? currentChatMessages
+      : filterUniqueOrFirstRepeated([
+          ...chatMessageList,
+          ...currentChatMessages,
+        ]);
     setChatMessageList(newList);
-    // setChatMessageList((prevList) => [...prevList, ...chatMessages]);
+    // setChatMessageList((prevList) => [...prevList, ...currentChatMessages]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chatMessages]);
+  }, [currentChatMessages]);
 
   /** Reemplazar lista de chats por chats encontrados */
 

@@ -7,8 +7,8 @@ import { Flex, Spin, Tag } from "antd";
 import SimpleLoading from "../../../../pages/utils/SimpleLoading";
 import { ChangeEvent, ReactNode, useEffect, useRef, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { maxLengthStringToSearch } from "../../../../utilities/globals";
 import { DebouncedFunc } from "lodash";
+import { getSearchString } from "../../../../utilities/globalFunctions";
 
 const loadingSpinner: ReactNode = (
   <Flex justify="center">
@@ -28,6 +28,7 @@ interface ChatListProps {
   handleSearch: DebouncedFunc<(val: string) => void>;
   usingSearch: boolean;
   removeChatFromList: (chatId: string) => void;
+  closeChat: () => void;
 }
 
 export default function ChatList(props: ChatListProps) {
@@ -39,6 +40,7 @@ export default function ChatList(props: ChatListProps) {
 
   useEffect(() => {
     if (
+      !props.usingSearch &&
       props.chatList.length &&
       props.hasMore &&
       chatContainerRef.current &&
@@ -52,8 +54,15 @@ export default function ChatList(props: ChatListProps) {
   /** Funciones */
 
   function onChangeSearchValue(e: ChangeEvent<HTMLInputElement>) {
+    const temp = getSearchString(e.target.value);
+    const prev = getSearchString(searchValue);
+    if (typeof temp === "string") {
+      if ((temp.length == 0 && prev !== temp) || temp.length) {
+        props.closeChat();
+        props.handleSearch(temp);
+      }
+    }
     setSearchValue(e.target.value);
-    props.handleSearch(e.target.value);
   }
 
   return (
@@ -64,7 +73,6 @@ export default function ChatList(props: ChatListProps) {
           prefix={<SearchOutlined />}
           className="form-transparent form-filter"
           onChange={onChangeSearchValue}
-          maxLength={maxLengthStringToSearch}
           allowClear
           value={searchValue}
         />
@@ -111,7 +119,7 @@ export default function ChatList(props: ChatListProps) {
           <InfiniteScroll
             dataLength={props.chatList.length}
             next={() => props.loadMoreChats(props.showArchivedChats)}
-            hasMore={props.hasMore}
+            hasMore={!props.usingSearch && props.hasMore}
             loader={loadingSpinner}
             scrollableTarget="scrollableDivChatList"
           >
