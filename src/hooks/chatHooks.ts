@@ -216,7 +216,11 @@ export function useGetChatMessages() {
     });
   }
 
-  return { getChatMessages, loadingGetChatMessages: loading, chatMessages };
+  return {
+    getChatMessages,
+    loadingGetChatMessages: loading,
+    chatMessages,
+  };
 }
 
 export function useChatSearch() {

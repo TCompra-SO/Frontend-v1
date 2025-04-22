@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ChatListData, ChatMessage } from "../models/MainInterfaces";
 import { useChatSearch, useGetChatList, useGetChatMessages } from "./chatHooks";
 import {
@@ -38,10 +38,12 @@ export function useChat() {
     retrieve: false,
     archived: false,
   });
-  const [messagePageAndChatId, setMessagePageAndChatId] = useState({
+  const [dataToGetMoreMsgs, setDataToGetMoreMsgs] = useState({
     chatId: "",
     messageId: "",
   });
+  const prevChatId = useRef("");
+  const isNewChat = useRef(true);
 
   /** Cleanup */
 
@@ -62,32 +64,32 @@ export function useChat() {
     if (currentPageChatList.length < chatListPageSize)
       setHasMoreChatList(false);
     setChatList(chatList.concat(currentPageChatList));
-    if (chatListIsSet === false) setChatListIsSet(true); // solo actualizar si antes se hizo una solicitud para obtener más chtats
+    if (chatListIsSet === false) setChatListIsSet(true); // solo actualizar si antes se hizo una solicitud para obtener más chats
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPageChatList]);
 
   /** Obtener más mensajes de chat */
 
   useEffect(() => {
-    if (messagePageAndChatId.chatId)
+    if (dataToGetMoreMsgs.chatId)
       getChatMessages(
-        messagePageAndChatId.chatId,
+        dataToGetMoreMsgs.chatId,
         chatMessageList.length
           ? chatMessageList[chatMessageList.length - 1].uid
           : ""
       );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [messagePageAndChatId]);
+  }, [dataToGetMoreMsgs]);
 
   useEffect(() => {
     if (chatMessages.length < chatMessagesPageSize)
       setHasMoreChatMessageList(false);
-    const newList = filterUniqueOrFirstRepeated([
-      ...chatMessageList,
-      ...chatMessages,
-    ]);
+    const newList = isNewChat.current
+      ? chatMessages
+      : filterUniqueOrFirstRepeated([...chatMessageList, ...chatMessages]);
     setChatMessageList(newList);
     // setChatMessageList((prevList) => [...prevList, ...chatMessages]);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatMessages]);
 
@@ -141,7 +143,9 @@ export function useChat() {
   }
 
   function getMoreChatMessages(chatId: string) {
-    setMessagePageAndChatId({
+    isNewChat.current = prevChatId.current != chatId;
+    prevChatId.current = chatId;
+    setDataToGetMoreMsgs({
       chatId,
       messageId: chatMessageList.length
         ? chatMessageList[chatMessageList.length - 1].uid
@@ -155,10 +159,12 @@ export function useChat() {
     setHasMoreChatList(true);
     resetChatMessageList();
     if (changeTabs) setIsChatListResetToChangeTabs(true);
+    prevChatId.current = "";
+    isNewChat.current = true;
   }
 
   function resetChatMessageList() {
-    setMessagePageAndChatId({ chatId: "", messageId: "" });
+    setDataToGetMoreMsgs({ chatId: "", messageId: "" });
     setChatMessageList([]);
     setHasMoreChatMessageList(true);
   }
@@ -172,7 +178,6 @@ export function useChat() {
       const ind = prevList.findIndex((msg) => msg.uid == uid);
       if (ind == -1) return prevList;
       const newList = [...prevList];
-
       newList[ind] = { ...message };
       return newList;
     });

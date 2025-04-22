@@ -303,7 +303,8 @@ export interface ArchiveChatRequest {
 }
 
 export interface GetChatStateRequest {
-  userId: string;
+  userId1: string;
+  userId2: string;
   requerimentId: string;
 }
 

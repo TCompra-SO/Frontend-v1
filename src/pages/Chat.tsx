@@ -18,6 +18,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useChat } from "../hooks/useChat";
 import { MainSocketsContext } from "../contexts/MainSocketsContext";
 import { useChatFunctions } from "../hooks/chatHooks";
+import { MainState } from "../models/Redux";
+import { useSelector } from "react-redux";
 
 export default function Chat() {
   const { t } = useTranslation();
@@ -57,6 +59,7 @@ export default function Chat() {
     newMessageAndChatDataFromSocket,
     currentChatUnreadMessages,
   } = useContext(MainSocketsContext);
+  const uid: string = useSelector((state: MainState) => state.user.uid);
   const { verifyIfChatExists } = useChatFunctions(false);
   const hasHandledChatNotification = useRef(false);
   const chatThatHasBeenCreated = useRef("");
@@ -66,6 +69,7 @@ export default function Chat() {
   const [basicChatDataFromRouting, setBasicChatDataFromRouting] = useState<
     BasicChatListData | undefined
   >(location.state?.[basicChatDataFieldName]);
+  const [readyToOpenChat, setReadyToOpenChat] = useState(false);
 
   /** Obtener lista inicial de chats */
 
@@ -102,8 +106,10 @@ export default function Chat() {
   useEffect(() => {
     if (isChatOpened && currentChat) {
       getMoreChatMessages(currentChat.uid);
+      setReadyToOpenChat(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [readyToOpenChat]);
   }, [isChatOpened, currentChat]);
 
   /** Agregar mensaje recibido de socket a lista de mensajes */
@@ -187,6 +193,7 @@ export default function Chat() {
     setCurrentChat(null);
     setIsChatOpened(false);
     resetChatMessageList();
+    setReadyToOpenChat(false);
   }
 
   function handleClickOnChatItem(item: ChatListData, noReset?: boolean) {
@@ -198,6 +205,7 @@ export default function Chat() {
       setCurrentChat(item);
       setIsChatOpened(true);
       if (item.uid) connectSingleChatSocket(item.uid);
+      setReadyToOpenChat(true);
     }
   }
 
@@ -235,7 +243,8 @@ export default function Chat() {
           handleClickOnChatItem(chatToOpen);
         } else {
           const { chat } = await verifyIfChatExists({
-            userId: basicChatDataFromRouting.userId,
+            userId1: uid,
+            userId2: basicChatDataFromRouting.userId,
             requerimentId: basicChatDataFromRouting.requirementId,
           });
           // chat existe
