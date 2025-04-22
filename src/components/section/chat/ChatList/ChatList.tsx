@@ -22,7 +22,8 @@ interface ChatListProps {
   loadMoreChats: (archived: boolean, chatId?: string) => void;
   currentChat: ChatListData | null;
   hasMore: boolean;
-  loading: boolean | undefined;
+  loadingList: boolean | undefined;
+  loadingSearch: boolean | undefined;
   showArchivedChats: boolean;
   setShowArchivedChats: (val: boolean) => void;
   handleSearch: DebouncedFunc<(val: string) => void>;
@@ -83,10 +84,13 @@ export default function ChatList(props: ChatListProps) {
             checked={false}
             style={{
               color: "#92acbf",
-              cursor: props.loading ? "not-allowed" : "pointer",
+              cursor:
+                props.loadingList || props.loadingSearch
+                  ? "not-allowed"
+                  : "pointer",
             }}
             onChange={() => {
-              if (!props.loading)
+              if (!(props.loadingList || props.loadingSearch))
                 props.setShowArchivedChats(!props.showArchivedChats);
             }}
           >
@@ -101,8 +105,8 @@ export default function ChatList(props: ChatListProps) {
           </Tag.CheckableTag>
         </div>
       )}
-      {props.chatList.length == 0 ? (
-        props.loading ? (
+      {props.chatList.length == 0 || props.loadingSearch ? (
+        props.loadingList || props.loadingSearch ? (
           loadingSpinner
         ) : (
           <div className="multimedia-nula t-flex j-conten f-column gap-10 sin-chats">

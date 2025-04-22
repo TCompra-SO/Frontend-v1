@@ -283,7 +283,8 @@ export default function Chat() {
             loadMoreChats={getMoreChats}
             currentChat={currentChat}
             hasMore={hasMoreChatList}
-            loading={loadingChatList || loadingSearchChat}
+            loadingList={loadingChatList}
+            loadingSearch={loadingSearchChat}
             showArchivedChats={showArchivedChats}
             setShowArchivedChats={setShowArchivedChats}
             handleSearch={handleSearch}
