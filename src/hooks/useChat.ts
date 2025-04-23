@@ -52,8 +52,10 @@ export function useChat() {
 
   useEffect(() => {
     return () => {
+      setChatList([]);
       handleSearch.cancel();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /** Obtener más chats */
