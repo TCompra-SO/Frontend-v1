@@ -93,15 +93,21 @@ export function useChatSocket() {
                   chatMessage: payload.messageData,
                 });
               } else {
-                showRealTimeNotification({
-                  type: RTNotificationType.CHAT,
-                  content: {
-                    userName: payload.chatData[0].userName,
-                    userImage: payload.chatData[0].userImage,
-                    ...payload.messageData,
-                  },
-                  onClickCallback: redirectFromNotification,
-                });
+                const cld = transformToChatListData(payload.chatData[0], uid);
+                if (
+                  !cld.archive ||
+                  !cld.archive?.length ||
+                  (cld.archive?.[0].userId == uid && !cld.archive?.[0].state)
+                )
+                  showRealTimeNotification({
+                    type: RTNotificationType.CHAT,
+                    content: {
+                      userName: cld.userName,
+                      userImage: cld.userImage,
+                      ...payload.messageData,
+                    },
+                    onClickCallback: redirectFromNotification,
+                  });
               }
             } else if (payload.type == ChatMessageType.READ) {
               if (payload.numUnreadMessages > 0)
