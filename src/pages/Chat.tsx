@@ -65,13 +65,16 @@ export default function Chat() {
   const hasHandledReroutingChat = useRef(false);
   const chatThatHasBeenCreated = useRef("");
   const [isChatOpened, setIsChatOpened] = useState(false);
-  const [openingChatFromExternalSource, setopeningChatFromExternalSource] =
+  const [openingChatFromExternalSource, setOpeningChatFromExternalSource] =
     useState(true);
   const [currentChat, setCurrentChat] = useState<ChatListData | null>(null);
   const [showArchivedChats, setShowArchivedChats] = useState(false);
   const [basicChatDataFromRouting, setBasicChatDataFromRouting] = useState<
     BasicChatListData | undefined
   >(location.state?.[basicChatDataFieldName]);
+  const [chatDataFromNotification, setChatDataFromNotification] = useState<
+    SocketChatMessage | undefined
+  >(location.state?.[chatDataFieldName]);
 
   /** Obtener lista inicial de chats */
 
@@ -209,9 +212,6 @@ export default function Chat() {
   }
 
   async function openChatFromNotificationOrRerouting() {
-    const chatDataFromNotification: SocketChatMessage =
-      location.state?.[chatDataFieldName];
-
     if (
       chatListIsSet === true &&
       chatDataFromNotification &&
@@ -224,7 +224,14 @@ export default function Chat() {
       if (chatToOpen) {
         handleClickOnChatItem(chatToOpen);
         hasHandledChatNotification.current = true;
-        setopeningChatFromExternalSource(false);
+        setOpeningChatFromExternalSource(false);
+        setChatDataFromNotification(undefined);
+      } else {
+        await openChatIfNotFound(
+          chatDataFromNotification.userId,
+          chatDataFromNotification.requirementId,
+          true
+        );
       }
     }
 
@@ -247,44 +254,65 @@ export default function Chat() {
         if (chatToOpen) {
           handleClickOnChatItem(chatToOpen);
           hasHandledReroutingChat.current = true;
-          setopeningChatFromExternalSource(false);
+          setOpeningChatFromExternalSource(false);
         } else {
-          // chat no encontrado
-          const { chat } = await verifyIfChatExists({
-            userId1: uid,
-            userId2: basicChatDataFromRouting.userId,
-            requerimentId: basicChatDataFromRouting.requirementId,
-          });
-          // chat existe
-          if (chat) {
-            // chat archivado
-            if (chat.archive?.[0]?.state) {
-              if (showArchivedChats) {
-                handleClickOnChatItem(chat);
-                hasHandledReroutingChat.current = true;
-                setopeningChatFromExternalSource(false);
-              } else setShowArchivedChats(true);
-            } else {
-              // chat no archivado
-              console.log("no archivado", showArchivedChats);
-              if (!showArchivedChats) {
-                handleClickOnChatItem(chat);
-                hasHandledReroutingChat.current = true;
-                setopeningChatFromExternalSource(false);
-              } else setShowArchivedChats(false);
-            }
-          } else {
-            // chat no existe
-            chatThatHasBeenCreated.current = "";
-            setIsChatOpened(true);
-            hasHandledReroutingChat.current = true;
-            setopeningChatFromExternalSource(false);
-          }
+          await openChatIfNotFound(
+            basicChatDataFromRouting.userId,
+            basicChatDataFromRouting.requirementId,
+            false
+          );
         }
       }
     }
     if (!chatDataFromNotification && !basicChatDataFromRouting)
-      setopeningChatFromExternalSource(false);
+      setOpeningChatFromExternalSource(false);
+  }
+
+  async function openChatIfNotFound(
+    receiverId: string,
+    requirementId: string,
+    fromNotification: boolean
+  ) {
+    // chat no encontrado
+    const { chat } = await verifyIfChatExists({
+      userId1: uid,
+      userId2: receiverId,
+      requerimentId: requirementId,
+    });
+    // chat existe
+    if (chat) {
+      // chat archivado
+      if (chat.archive?.[0]?.state) {
+        if (showArchivedChats) {
+          handleClickOnChatItem(chat);
+          if (fromNotification) {
+            hasHandledChatNotification.current = true;
+            setChatDataFromNotification(undefined);
+          } else hasHandledReroutingChat.current = true;
+          setOpeningChatFromExternalSource(false);
+        } else setShowArchivedChats(true);
+      } else {
+        // chat no archivado
+        if (!showArchivedChats) {
+          handleClickOnChatItem(chat);
+          if (fromNotification) {
+            hasHandledChatNotification.current = true;
+            setChatDataFromNotification(undefined);
+          } else hasHandledReroutingChat.current = true;
+          setOpeningChatFromExternalSource(false);
+        } else setShowArchivedChats(false);
+      }
+    } else {
+      // chat no existe
+      setIsChatOpened(true);
+      // Caso improbable. En teoría, chat desde una notificación siempre debería existir
+      if (fromNotification) hasHandledChatNotification.current = true;
+      else {
+        hasHandledReroutingChat.current = true;
+        chatThatHasBeenCreated.current = "";
+      }
+      setOpeningChatFromExternalSource(false);
+    }
   }
 
   function closeChatIfOpened() {

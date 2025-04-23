@@ -102,6 +102,7 @@ export function useChatSocket() {
                   showRealTimeNotification({
                     type: RTNotificationType.CHAT,
                     content: {
+                      requirementId: cld.requirementId,
                       userName: cld.userName,
                       userImage: cld.userImage,
                       ...payload.messageData,

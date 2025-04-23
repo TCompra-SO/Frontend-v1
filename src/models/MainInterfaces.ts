@@ -283,6 +283,7 @@ export interface ChatMessage {
 export interface SocketChatMessage extends ChatMessage {
   userImage?: string;
   userName: string;
+  requirementId: string;
 }
 
 export interface NotificationSenderData {
