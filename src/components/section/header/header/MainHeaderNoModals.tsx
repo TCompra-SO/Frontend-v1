@@ -205,7 +205,18 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
               src={logoSrc}
               className="logo-header"
               alt="Logo"
-              style={{ flex: "0 0 auto" }}
+              style={{
+                flex: "0 0 auto",
+                cursor:
+                  currentSection == pageRoutes.productDetail
+                    ? "pointer"
+                    : "inherit",
+              }}
+              onClick={
+                currentSection == pageRoutes.productDetail
+                  ? () => navigate(pageRoutes.home)
+                  : undefined
+              }
             />
           )}
           <div
@@ -243,7 +254,22 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
       ) : (
         <header>
           <div className="t-flex header-tc header-menu">
-            <img src={logoSrc} alt="Logo" style={{ height: "48px" }} />
+            <img
+              src={logoSrc}
+              alt="Logo"
+              style={{
+                height: "48px",
+                cursor:
+                  currentSection == pageRoutes.productDetail
+                    ? "pointer"
+                    : "inherit",
+              }}
+              onClick={
+                currentSection == pageRoutes.productDetail
+                  ? () => navigate(pageRoutes.home)
+                  : undefined
+              }
+            />
             <div className="t-flex options-tc">
               <ButtonContainer
                 className="btn btn-default"

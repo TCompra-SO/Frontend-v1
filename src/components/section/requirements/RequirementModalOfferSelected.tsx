@@ -72,11 +72,7 @@ export default function RequirementModalOfferSelected({
   }
 
   function selectOffer() {
-    // const response: SelectOfferResponse = responseData.res;
-    const targetId = ""; // r3v notif
-    // props.requirement.type == RequirementType.SALE
-    //   ? response.saleOrderUID
-    //   : response.purchaseOrderUID;
+    const targetId = "";
 
     const notificationFn = getSystemNotification(
       SystemNotificationType.SELECT_OFFER

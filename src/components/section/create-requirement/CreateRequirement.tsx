@@ -230,10 +230,12 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   }
 
   function checkWhoCanOffer() {
-    const val: number[] = form.getFieldValue("canOffer");
-    const show: boolean = val.includes(certifiedCompaniesOpt);
-    if (!showDocListToCetificate && show) getRequiredDocsCert(mainUid);
-    setShowDocListToCetificate(show);
+    const val: number[] | undefined = form.getFieldValue("canOffer");
+    if (val) {
+      const show: boolean = val.includes(certifiedCompaniesOpt);
+      if (!showDocListToCetificate && show) getRequiredDocsCert(mainUid);
+      setShowDocListToCetificate(show);
+    }
   }
 
   function createRequirement(values: any) {

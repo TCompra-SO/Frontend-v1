@@ -169,7 +169,6 @@ export default function Chat() {
         (chat) => chat.uid == chatThatHasBeenCreated.current
       );
       if (chatToOpen) {
-        // r3v verificar primero si existe el chat aunque no fue encontrado en la lista
         handleClickOnChatItem(chatToOpen);
         chatThatHasBeenCreated.current = "";
         setBasicChatDataFromRouting(undefined);

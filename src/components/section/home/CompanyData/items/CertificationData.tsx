@@ -27,7 +27,6 @@ export default function CertificationData(props: CertificationDataProps) {
   });
 
   function openGetCertifiedModal() {
-    //r3v
     setDataModal({
       type: ModalTypes.SELECT_DOCS_CERT,
       data: {

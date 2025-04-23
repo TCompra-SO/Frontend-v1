@@ -67,7 +67,6 @@ export default function CancelPurchaseOrderModal(
   /** Funciones */
 
   async function generateNotification() {
-    // r3v notif
     let notification: BasicNotificationData | null = null;
     if (props.canceledByCreator) {
       const notificationFn = getSystemNotification(
