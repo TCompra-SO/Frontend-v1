@@ -65,6 +65,8 @@ export default function Chat() {
   const hasHandledReroutingChat = useRef(false);
   const chatThatHasBeenCreated = useRef("");
   const [isChatOpened, setIsChatOpened] = useState(false);
+  const [openingChatFromExternalSource, setopeningChatFromExternalSource] =
+    useState(true);
   const [currentChat, setCurrentChat] = useState<ChatListData | null>(null);
   const [showArchivedChats, setShowArchivedChats] = useState(false);
   const [basicChatDataFromRouting, setBasicChatDataFromRouting] = useState<
@@ -222,6 +224,7 @@ export default function Chat() {
       if (chatToOpen) {
         handleClickOnChatItem(chatToOpen);
         hasHandledChatNotification.current = true;
+        setopeningChatFromExternalSource(false);
       }
     }
 
@@ -244,8 +247,9 @@ export default function Chat() {
         if (chatToOpen) {
           handleClickOnChatItem(chatToOpen);
           hasHandledReroutingChat.current = true;
-          // chat no encontrado
+          setopeningChatFromExternalSource(false);
         } else {
+          // chat no encontrado
           const { chat } = await verifyIfChatExists({
             userId1: uid,
             userId2: basicChatDataFromRouting.userId,
@@ -258,6 +262,7 @@ export default function Chat() {
               if (showArchivedChats) {
                 handleClickOnChatItem(chat);
                 hasHandledReroutingChat.current = true;
+                setopeningChatFromExternalSource(false);
               } else setShowArchivedChats(true);
             } else {
               // chat no archivado
@@ -265,6 +270,7 @@ export default function Chat() {
               if (!showArchivedChats) {
                 handleClickOnChatItem(chat);
                 hasHandledReroutingChat.current = true;
+                setopeningChatFromExternalSource(false);
               } else setShowArchivedChats(false);
             }
           } else {
@@ -272,10 +278,13 @@ export default function Chat() {
             chatThatHasBeenCreated.current = "";
             setIsChatOpened(true);
             hasHandledReroutingChat.current = true;
+            setopeningChatFromExternalSource(false);
           }
         }
       }
     }
+    if (!chatDataFromNotification && !basicChatDataFromRouting)
+      setopeningChatFromExternalSource(false);
   }
 
   function closeChatIfOpened() {
@@ -305,6 +314,7 @@ export default function Chat() {
             usingSearch={usingSearch}
             removeChatFromList={removeChatFromList}
             closeChat={closeChatIfOpened}
+            loadingAll={openingChatFromExternalSource}
           />
         )}
         {isChatOpened && currentChat ? (
