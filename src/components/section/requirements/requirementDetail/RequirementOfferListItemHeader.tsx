@@ -22,6 +22,7 @@ import ModalContainer from "../../../containers/ModalContainer";
 import FrontImage from "../../../common/utils/FrontImage";
 import RateStarCount from "../../../common/utils/RateStarCount";
 import { requirementDetailContext } from "../../../../contexts/RequirementDetailContext";
+import { useRedirectToChat } from "../../../../hooks/utilHooks";
 
 interface RequirementOfferListItemProps {
   requirementId: string;
@@ -49,6 +50,7 @@ export default function RequirementOfferListItemHeader({
 }: RequirementOfferListItemProps) {
   const { t } = useTranslation();
   const { filters, filterNames } = useContext(requirementDetailContext);
+  const { redirectToChat } = useRedirectToChat();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -60,7 +62,14 @@ export default function RequirementOfferListItemHeader({
       key: Action.CHAT,
       label: t("chat"),
       onClick: () => {
-        console.log("go to chat");
+        redirectToChat({
+          userName: props.offer.subUser?.name ?? props.offer.user.name,
+          userId: props.offer.subUser?.uid ?? props.offer.user.uid,
+          title: props.requirementTitle,
+          requirementId: props.requirementId,
+          type: props.offer.type,
+          userImage: props.offer.subUser?.image ?? props.offer.user.image,
+        });
       },
     },
   ];

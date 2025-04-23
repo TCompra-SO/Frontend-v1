@@ -62,6 +62,7 @@ export default function Chat() {
   const uid: string = useSelector((state: MainState) => state.user.uid);
   const { verifyIfChatExists } = useChatFunctions(false);
   const hasHandledChatNotification = useRef(false);
+  const hasHandledReroutingChat = useRef(false);
   const chatThatHasBeenCreated = useRef("");
   const [isChatOpened, setIsChatOpened] = useState(false);
   const [currentChat, setCurrentChat] = useState<ChatListData | null>(null);
@@ -225,7 +226,11 @@ export default function Chat() {
     }
 
     if (!chatDataFromNotification) {
-      if (chatListIsSet === true && basicChatDataFromRouting) {
+      if (
+        chatListIsSet === true &&
+        basicChatDataFromRouting &&
+        !hasHandledReroutingChat.current
+      ) {
         navigate(".", { replace: true, state: null });
 
         const chatToOpen = basicChatDataFromRouting.uid
@@ -235,8 +240,11 @@ export default function Chat() {
                 chat.userId === basicChatDataFromRouting.userId &&
                 chat.requirementId === basicChatDataFromRouting.requirementId
             );
+        // chat encontrado en lista cargada
         if (chatToOpen) {
           handleClickOnChatItem(chatToOpen);
+          hasHandledReroutingChat.current = true;
+          // chat no encontrado
         } else {
           const { chat } = await verifyIfChatExists({
             userId1: uid,
@@ -245,19 +253,25 @@ export default function Chat() {
           });
           // chat existe
           if (chat) {
+            // chat archivado
             if (chat.archive?.[0]?.state) {
-              // chat archivado
-              if (showArchivedChats) handleClickOnChatItem(chat);
-              else setShowArchivedChats(true);
+              if (showArchivedChats) {
+                handleClickOnChatItem(chat);
+                hasHandledReroutingChat.current = true;
+              } else setShowArchivedChats(true);
             } else {
               // chat no archivado
               console.log("no archivado", showArchivedChats);
-              if (!showArchivedChats) handleClickOnChatItem(chat);
-              else setShowArchivedChats(false);
+              if (!showArchivedChats) {
+                handleClickOnChatItem(chat);
+                hasHandledReroutingChat.current = true;
+              } else setShowArchivedChats(false);
             }
           } else {
+            // chat no existe
             chatThatHasBeenCreated.current = "";
             setIsChatOpened(true);
+            hasHandledReroutingChat.current = true;
           }
         }
       }
