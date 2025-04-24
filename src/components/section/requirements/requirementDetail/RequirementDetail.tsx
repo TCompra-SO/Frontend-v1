@@ -11,12 +11,14 @@ interface RequirementDetailProps {
   requirement: Requirement;
   forPurchaseOrder: boolean;
   filters?: OfferFilters;
+  orderId?: string;
   onClose: () => any;
   setDataModalSelectOffer?: (val: ModalContent) => void;
   setIsOpenModalSelectOffer?: (val: boolean) => void;
 }
 
 export default function RequirementDetail(props: RequirementDetailProps) {
+  console.log(111111111, props.orderId);
   return (
     <RequirementDetailProvider>
       <div className="modal-card">
@@ -37,6 +39,7 @@ export default function RequirementDetail(props: RequirementDetailProps) {
             onClose={props.onClose}
             setDataModalSelectOffer={props.setDataModalSelectOffer}
             setIsOpenModalSelectOffer={props.setIsOpenModalSelectOffer}
+            orderId={props.orderId}
           />
         </div>
       </div>

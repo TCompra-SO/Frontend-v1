@@ -22,7 +22,10 @@ import ModalContainer from "../../../containers/ModalContainer";
 import FrontImage from "../../../common/utils/FrontImage";
 import RateStarCount from "../../../common/utils/RateStarCount";
 import { requirementDetailContext } from "../../../../contexts/RequirementDetailContext";
-import { useRedirectToChat } from "../../../../hooks/utilHooks";
+import {
+  useDownloadPdfOrder,
+  useRedirectToChat,
+} from "../../../../hooks/utilHooks";
 
 interface RequirementOfferListItemProps {
   requirementId: string;
@@ -32,7 +35,7 @@ interface RequirementOfferListItemProps {
   onClose: () => any;
   showActions:
     | {
-        show: true;
+        forPurchaseOrder: false;
         requirement: Requirement;
         onSelectionSuccess: (offerId: string) => void;
         onCancelSuccess?: (offerId: string) => void;
@@ -40,7 +43,7 @@ interface RequirementOfferListItemProps {
         notificationTargetData: NotificationTargetData;
         requirementTitle: string;
       }
-    | { show: false };
+    | { forPurchaseOrder: true; orderId?: string };
   setDataModalSelectOffer?: (val: ModalContent) => void;
   setIsOpenModalSelectOffer?: (val: boolean) => void;
 }
@@ -51,6 +54,7 @@ export default function RequirementOfferListItemHeader({
   const { t } = useTranslation();
   const { filters, filterNames } = useContext(requirementDetailContext);
   const { redirectToChat } = useRedirectToChat();
+  const downloadPdfOrder = useDownloadPdfOrder();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>({
     type: ModalTypes.NONE,
@@ -74,7 +78,7 @@ export default function RequirementOfferListItemHeader({
     },
   ];
 
-  if (props.showActions.show) {
+  if (!props.showActions.forPurchaseOrder) {
     if (props.offer.state == OfferState.WINNER)
       items.push({
         label: t(ActionLabel[Action.CANCEL_PURCHASE_ORDER]),
@@ -101,6 +105,15 @@ export default function RequirementOfferListItemHeader({
         key: Action.RATE_CANCELED,
         onClick: () => onOpenModal(Action.RATE_CANCELED),
       });
+  } else if (props.showActions.orderId) {
+    const oi = props.showActions.orderId;
+    items.push({
+      label: t(ActionLabel[Action.DOWNLOAD_PURCHASE_ORDER]),
+      key: Action.DOWNLOAD_PURCHASE_ORDER,
+      onClick: () => {
+        downloadPdfOrder(oi, props.offer.type);
+      },
+    });
   }
 
   function handleOnCloseModal() {
@@ -108,13 +121,13 @@ export default function RequirementOfferListItemHeader({
   }
 
   function onRateCancelError(id: string) {
-    if (props.showActions.show) {
+    if (!props.showActions.forPurchaseOrder) {
       props.showActions.onRateCancel?.(id, true);
     }
   }
 
   function onOpenModal(action: Action) {
-    if (props.showActions.show) {
+    if (!props.showActions.forPurchaseOrder) {
       switch (action) {
         case Action.CANCEL_PURCHASE_ORDER:
           setDataModal({
@@ -274,15 +287,15 @@ export default function RequirementOfferListItemHeader({
               <span className="req-btn-info">{t("finishedOffer")}</span>
             </div>
           )}
-          {props.showActions.show && (
-            <Dropdown
-              trigger={["click"]}
-              menu={{ items }}
-              placement="bottomRight"
-            >
-              <i className="fa-solid fa-ellipsis-vertical mas-acciones"></i>
-            </Dropdown>
-          )}
+          {/* {!props.showActions.forPurchaseOrder && ( */}
+          <Dropdown
+            trigger={["click"]}
+            menu={{ items }}
+            placement="bottomRight"
+          >
+            <i className="fa-solid fa-ellipsis-vertical mas-acciones"></i>
+          </Dropdown>
+          {/* )} */}
         </div>
       </div>
     </>

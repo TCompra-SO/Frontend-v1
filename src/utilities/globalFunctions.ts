@@ -440,8 +440,8 @@ export function openPurchaseOrderPdf(responseData: any) {
   if (pdfSrc) {
     window.open(
       pdfSrc,
-      "_blank",
-      "width=800,height=1000,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes"
+      "_blank"
+      // "width=800,height=1000,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes"
     );
   }
 }

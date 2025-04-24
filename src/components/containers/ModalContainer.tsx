@@ -232,6 +232,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             setIsOpenModalSelectOffer={
               props.content.selectOffer?.setIsOpenModalSelectOffer
             }
+            orderId={props.content.data.orderId}
           />
         );
       }

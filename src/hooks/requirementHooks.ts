@@ -308,7 +308,6 @@ export function useGetOffersByRequirementId() {
     async function process() {
       try {
         if (responseData && requirementData.requirementId) {
-          console.log(responseData);
           // Obtener filtros para órdenes en caso de que no existan
           let filters: OfferFilters | undefined = undefined;
           if (
@@ -396,6 +395,7 @@ export function useGetOffersByRequirementId() {
                   requirement: req,
                   forPurchaseOrder: requirementData.forPurchaseOrder,
                   filters: requirementData.filters ?? filters,
+                  orderId: requirementData.purchaseOrderId,
                 },
                 action,
               });

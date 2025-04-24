@@ -214,7 +214,8 @@ export default function PurchaseOrders() {
           noPaginationPageSize,
           Action.VIEW_HISTORY,
           copy.requirement,
-          copy.filters
+          copy.filters,
+          copy.purchaseOrderId
         );
         resetViewHistoryModalData();
       }
@@ -399,7 +400,8 @@ export default function PurchaseOrders() {
           noPaginationPageSize,
           action,
           undefined,
-          purchaseOrder.filters
+          purchaseOrder.filters,
+          purchaseOrder.key
         );
         break;
       case Action.CANCEL:

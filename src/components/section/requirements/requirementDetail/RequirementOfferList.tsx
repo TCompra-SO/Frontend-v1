@@ -21,6 +21,7 @@ interface RequirementOfferListProps {
   onClose: () => any;
   setDataModalSelectOffer?: (val: ModalContent) => void;
   setIsOpenModalSelectOffer?: (val: boolean) => void;
+  orderId?: string;
 }
 
 export default function RequirementOfferList(props: RequirementOfferListProps) {
@@ -187,7 +188,7 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
                 <RequirementOfferListItemHeader
                   offer={offer}
                   showActions={{
-                    show: !props.forPurchaseOrder,
+                    forPurchaseOrder: props.forPurchaseOrder,
                     requirement: reqCopy,
                     onSelectionSuccess: handleSuccessfulSelection,
                     onCancelSuccess: handleCancelSuccess,
@@ -198,6 +199,7 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
                       targetType: offer.type,
                     },
                     requirementTitle: props.requirement.title,
+                    orderId: props.orderId,
                   }}
                   onClose={props.onClose}
                   requirementId={props.requirement.key}

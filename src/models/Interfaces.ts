@@ -70,6 +70,7 @@ export interface ModalDetailedRequirement extends CommonModalType {
     requirement: Requirement;
     forPurchaseOrder: boolean;
     filters?: OfferFilters;
+    orderId?: string;
   };
   selectOffer?: {
     setDataModalSelectOffer: (val: ModalContent) => void;
