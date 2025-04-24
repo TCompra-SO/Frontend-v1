@@ -102,34 +102,35 @@ export function useLogout() {
     useContext(MainSocketsContext);
 
   async function logout() {
-    if (isLoggedIn) {
-      dispatch(setIsLoading(true));
-      const refreshToken = localStorage.getItem(refreshTokenKey);
-      if (refreshToken) {
-        await makeRequest<LogoutRequest>({
-          service: logoutService(),
-          method: "post",
-          dataToSend: {
-            userId: uid,
-            refreshToken,
-          },
-        });
-      }
-      localStorage.removeItem(tokenKey);
-      localStorage.removeItem(refreshTokenKey);
-      localStorage.removeItem(userDataKey);
-      localStorage.removeItem(expiresInKey);
-      localStorage.removeItem(refreshExpiresInKey);
-      localStorage.removeItem(refreshingTokenKey);
-      localStorage.removeItem(refreshingRefreshTokenKey);
-      setTokenExpiration(null);
-      setRefreshTokenExpiration(null);
-      dispatch(setFullMainUser(mainUserInitialState));
-      dispatch(setFullUser(userInitialState));
-      localStorage.setItem(logoutKey, Date.now().toString());
-      localStorage.removeItem(logoutKey);
-      dispatch(setIsLoading(false));
+    // if (isLoggedIn) {
+    console.log("calling logout");
+    dispatch(setIsLoading(true));
+    const refreshToken = localStorage.getItem(refreshTokenKey);
+    if (refreshToken) {
+      await makeRequest<LogoutRequest>({
+        service: logoutService(),
+        method: "post",
+        dataToSend: {
+          userId: uid,
+          refreshToken,
+        },
+      });
     }
+    localStorage.removeItem(tokenKey);
+    localStorage.removeItem(refreshTokenKey);
+    localStorage.removeItem(userDataKey);
+    localStorage.removeItem(expiresInKey);
+    localStorage.removeItem(refreshExpiresInKey);
+    localStorage.removeItem(refreshingTokenKey);
+    localStorage.removeItem(refreshingRefreshTokenKey);
+    setTokenExpiration(null);
+    setRefreshTokenExpiration(null);
+    dispatch(setFullMainUser(mainUserInitialState));
+    dispatch(setFullUser(userInitialState));
+    localStorage.setItem(logoutKey, Date.now().toString());
+    localStorage.removeItem(logoutKey);
+    dispatch(setIsLoading(false));
+    // }
   }
 
   return logout;
