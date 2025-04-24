@@ -173,7 +173,8 @@ export default function Offers() {
         true,
         Action.OFFER_DETAIL,
         true,
-        copy.offer
+        copy.offer,
+        copy.orderId
       );
       resetDetailedOfferModalData();
     }

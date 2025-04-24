@@ -342,6 +342,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             offer={props.content.data.offer}
             basicRateData={props.content.data.basicRateData}
             showActions={props.content.data.showActions}
+            orderData={props.content.data.orderData}
           />
         );
       }

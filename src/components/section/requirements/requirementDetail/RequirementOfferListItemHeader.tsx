@@ -287,7 +287,6 @@ export default function RequirementOfferListItemHeader({
               <span className="req-btn-info">{t("finishedOffer")}</span>
             </div>
           )}
-          {/* {!props.showActions.forPurchaseOrder && ( */}
           <Dropdown
             trigger={["click"]}
             menu={{ items }}
@@ -295,7 +294,6 @@ export default function RequirementOfferListItemHeader({
           >
             <i className="fa-solid fa-ellipsis-vertical mas-acciones"></i>
           </Dropdown>
-          {/* )} */}
         </div>
       </div>
     </>

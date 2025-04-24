@@ -590,6 +590,14 @@
   .user-opt {
     width: 150px !important;
   }
+
+  .multimedia-oferta {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    margin-top: 8px;
+  }
 }
 
 /* Estilos para pantallas medianas (tablets) */

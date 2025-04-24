@@ -495,7 +495,8 @@ export function useShowDetailOffer() {
     useUserData: boolean,
     action: Action,
     showActions: boolean,
-    offerData?: Offer
+    offerData?: Offer,
+    orderId?: string
   ) {
     try {
       showLoadingMessage(true);
@@ -528,6 +529,12 @@ export function useShowDetailOffer() {
                 offer,
                 basicRateData,
                 showActions,
+                orderData: orderId
+                  ? {
+                      id: orderId,
+                      type,
+                    }
+                  : undefined,
               },
               action,
             });
@@ -546,6 +553,12 @@ export function useShowDetailOffer() {
               offer: offerData,
               basicRateData,
               showActions,
+              orderData: orderId
+                ? {
+                    id: orderId,
+                    type,
+                  }
+                : undefined,
             },
             action,
           });

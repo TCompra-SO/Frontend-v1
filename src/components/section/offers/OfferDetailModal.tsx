@@ -5,7 +5,11 @@ import RequirementInfoNoTags from "../requirements/requirementDetail/Requirement
 import { useContext, useEffect, useState } from "react";
 import { IdValueMap, IdValueObj } from "../../../models/Interfaces";
 import { ListsContext } from "../../../contexts/ListsContext";
-import { dateFormat, defaultCountry } from "../../../utilities/globals";
+import {
+  dateFormat,
+  defaultCountry,
+  windowSize,
+} from "../../../utilities/globals";
 import dayjs from "dayjs";
 import PriceInHeader from "../../common/utils/PriceInHeader";
 import OfferDetailRequirementData from "./OfferDetailRequirementData";
@@ -15,17 +19,20 @@ import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
 import { RequirementType } from "../../../utilities/types";
 import { useRedirectToChat } from "../../../hooks/utilHooks";
+import useWindowSize from "../../../hooks/useWindowSize";
 
 interface OfferDetailModalProps {
   offer: Offer;
   basicRateData: BasicRateData;
   showActions: boolean;
+  orderData?: { id: string; type: RequirementType };
 }
 
 export default function OfferDetailModal(props: OfferDetailModalProps) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { redirectToChat } = useRedirectToChat();
+  const windowWidth = useWindowSize().width;
   const { countryData, deliveryTimeData } = context;
   const [cities, setCities] = useState<IdValueMap>({});
   const uid = useSelector((state: MainState) => state.user.uid);
@@ -102,7 +109,10 @@ export default function OfferDetailModal(props: OfferDetailModalProps) {
         </div>
         <div className="t-flex gap-15" style={{ flexDirection: "column" }}>
           <div className="card-ofertas">
-            <div className="t-flex" style={{ alignItems: "center" }}>
+            <div
+              className={windowWidth >= windowSize.sm ? "t-flex" : ""}
+              style={{ alignItems: "center" }}
+            >
               <OfferDetailRequirementData
                 requirementTitle={props.offer.requirementTitle}
                 type={props.offer.type}
@@ -123,6 +133,7 @@ export default function OfferDetailModal(props: OfferDetailModalProps) {
                       ? goToChat
                       : undefined
                   }
+                  orderData={props.orderData}
                 />
               </div>
             </div>

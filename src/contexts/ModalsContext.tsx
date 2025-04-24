@@ -17,6 +17,7 @@ interface DetailedOfferModalDataType {
   offerId: string;
   offerType: RequirementType;
   offer: Offer | undefined;
+  orderId?: string;
 }
 
 interface ViewHistoryModalDataType extends DetailedRequirementModalDataType {
@@ -71,6 +72,7 @@ function getInitialDetailedOfferModalData(): DetailedOfferModalDataType {
     offerId: "",
     offerType: RequirementType.GOOD,
     offer: undefined,
+    orderId: undefined,
   };
 }
 

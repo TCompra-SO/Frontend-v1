@@ -1202,6 +1202,24 @@ body {
   background: #00a236;
 }
 
+.multi-download {
+  background: #283bb6;
+  color: #fff;
+  font-size: 20px;
+  height: 44px;
+  width: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+.multi-download:hover {
+  background: #0119b4;
+}
+
 /* Modal Altertas */
 .alert-base {
   flex-direction: column;

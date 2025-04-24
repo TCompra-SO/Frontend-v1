@@ -215,6 +215,7 @@ export function useTCNotification() {
             offerId: notification.targetId,
             offerType: val,
             offer: undefined,
+            orderId: notification.extraTargetId,
           });
           navigate(`${pageRoutes.myOffers}/${getRequirementTypeSubRoute(val)}`);
           return;

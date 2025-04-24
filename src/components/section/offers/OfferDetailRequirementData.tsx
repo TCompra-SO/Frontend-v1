@@ -42,8 +42,8 @@ export default function OfferDetailRequirementData(
         </div>
         <div className="t-flex oferta-descripcion">
           <div className="text-truncate detalles-oferta">
-            {userClass == UserClass.CUSTOMER ? t("customer") : t("seller")}:{" "}
             <Tooltip title={props.basicRateData.userName} placement="topLeft">
+              {userClass == UserClass.CUSTOMER ? t("customer") : t("seller")}:{" "}
               {props.basicRateData.userName}{" "}
             </Tooltip>
           </div>
