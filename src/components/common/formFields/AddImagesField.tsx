@@ -165,7 +165,7 @@ export const AddImagesField = forwardRef<
       <div className="hide-upload" style={forOffer ? { width: "100%" } : {}}>
         <div
           className={forOffer ? "multimedia-files" : "multimedia-subir"}
-          style={forOffer ? {} : { marginBottom: "15px" }}
+          style={{ marginBottom: "15px" }}
           onClick={handleClick}
         >
           <i className="fa-regular fa-images"></i> {t("addImages")}
