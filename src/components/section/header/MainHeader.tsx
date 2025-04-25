@@ -1,7 +1,8 @@
-import { lazy, useState } from "react";
+import { lazy, useEffect, useState } from "react";
 import MainHeaderNoModals from "./header/MainHeaderNoModals.tsx";
 import NoContentModalContainer from "../../containers/NoContentModalContainer.tsx";
 import ValidateCode from "../profile/ValidateCode.tsx";
+import { loginKey } from "../../../utilities/globals.ts";
 
 const Login = lazy(() => import("./../../../pages/Login.tsx"));
 const Profile = lazy(() => import("./../../../pages/Profile.tsx"));
@@ -16,6 +17,28 @@ export default function MainHeader(props: MainHeaderProps) {
   const [showLogin, setShowLogin] = useState(true);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [docType, setDocType] = useState("");
+
+  /** Cerrar modal al iniciar sesión */
+
+  useEffect(() => {
+    window.addEventListener("storage", handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /** Funciones */
+
+  function handleStorageChange(event: StorageEvent) {
+    if (
+      event.key === loginKey &&
+      event.newValue &&
+      event.oldValue !== event.newValue
+    ) {
+      handleCloseLoginModal();
+    }
+  }
 
   function handleOpenLoginModal() {
     setIsOpenLoginModal(true);

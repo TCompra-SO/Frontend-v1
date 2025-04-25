@@ -107,10 +107,18 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
   }, [isLoggedIn]);
 
   async function handleStorageChange(event: StorageEvent) {
-    if (event.key === logoutKey) {
+    if (
+      event.key === logoutKey &&
+      event.newValue &&
+      event.oldValue !== event.newValue
+    ) {
       dispatch(setIsLoggedIn(false));
       navigate(navigateToAfterLoggingOut);
-    } else if (event.key === loginKey) {
+    } else if (
+      event.key === loginKey &&
+      event.newValue &&
+      event.oldValue !== event.newValue
+    ) {
       await loadUserInfo();
       localStorage.removeItem(loginKey);
     }

@@ -237,6 +237,7 @@ export interface PlanData {
   services: number;
   sales: number;
   offers: number;
+  premium: boolean;
 }
 
 export interface BasicRateData {
