@@ -70,7 +70,7 @@ export default function Sidebar(props: SidebarProps) {
   const typeID = useSelector((state: MainState) => state.user.typeID);
   const entityType = useSelector((state: MainState) => state.user.typeEntity);
   const { globalNumUnreadMessages } = useContext(MainSocketsContext);
-  const [menuStyle] = useState<CSSProperties>({ display: "block" });
+  const [menuStyle] = useState<CSSProperties>({ display: "inherit" });
   const [focusExists, setFocusExists] = useState(false);
   const [pathname, setPathname] = useState("");
   const buttonClass: string = "btn btn-transparent wd-100 text-left";
@@ -674,8 +674,8 @@ export default function Sidebar(props: SidebarProps) {
           className="btn btn-white wd-100"
         />
       </div> */}
-      <div className="menu-tc-3 t-flex">
-        <ButtonContainer
+      {/* <div className="menu-tc-3 t-flex"> */}
+      {/* <ButtonContainer
           children={
             <>
               <i className="fa-solid fa-circle-question text-center i-btn"></i>{" "}
@@ -684,8 +684,8 @@ export default function Sidebar(props: SidebarProps) {
           }
           common
           className={"btn btn-white wd-100"}
-        />
-        {/* <ButtonContainer
+        /> */}
+      {/* <ButtonContainer
           children={
             <>
               <i className="fa-regular fa-gear text-center i-btn"></i>{" "}
@@ -695,7 +695,7 @@ export default function Sidebar(props: SidebarProps) {
           common
           className={buttonClass}
         /> */}
-      </div>
+      {/* </div> */}
     </div>
   );
 }
