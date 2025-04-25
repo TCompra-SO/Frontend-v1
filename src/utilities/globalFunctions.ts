@@ -149,6 +149,7 @@ import {
   searchSalesOrdersByProviderService,
 } from "../services/requests/sale/salesOrderService";
 import { UserCounters } from "../models/MainInterfaces";
+import { bannedWords } from "./bannedWords";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -945,4 +946,46 @@ export function filterUniqueOrFirstRepeated<T extends { uid: string }>(
     }
     return false;
   });
+}
+
+// Normalizar texto en español
+export function normalizeSpanish(text: string) {
+  return text
+    .normalize("NFD") // Descomponer caracteres acentuados
+    .replace(/[\u0300-\u036f]/g, "") // Remover acentos
+    .replace(/ñ/g, "n")
+    .replace(/Ñ/g, "N")
+    .toLowerCase();
+}
+
+// Eliminar letras repetidas
+export function collapseRepeatsLoose(text: string) {
+  return text.replace(/(\w)\1+/g, "$1");
+}
+
+// Eliminar letras repetidas excepto r y l
+export function collapseRepeatsSpecial(text: string) {
+  return text.replace(/(\w)\1+/g, (_, p1) => {
+    if (p1 === "r" || p1 === "l") {
+      return p1.repeat(2);
+    }
+    return p1;
+  });
+}
+
+// Censurar palabras prohibidas
+export function censorText(input: string) {
+  const words = input.split(/\b/);
+  return words
+    .map((word) => {
+      const normalized = normalizeSpanish(collapseRepeatsLoose(word));
+      const specialNormalized = normalizeSpanish(collapseRepeatsSpecial(word));
+      const match = bannedWords.find(
+        (bw) => normalized == bw || specialNormalized == bw
+      );
+      console.log(word);
+      if (match) return "*".repeat(word.length);
+      return word;
+    })
+    .join("");
 }

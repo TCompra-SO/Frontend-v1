@@ -25,6 +25,7 @@ import { CreateRequirementRequest } from "../../../models/Requests";
 import { CommonModalProps, useApiParams } from "../../../models/Interfaces";
 import useApi, { UseApiType } from "../../../hooks/useApi";
 import {
+  censorText,
   checkWarranty,
   getCreateRecordService,
   getUploadDocsRecordService,
@@ -249,8 +250,8 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     props.setImgSuccess(ProcessFlag.NOT_INI);
 
     const data: CreateRequirementRequest = {
-      name: values.title.trim(),
-      description: values.description.trim(),
+      name: censorText(values.title.trim()),
+      description: censorText(values.description.trim()),
       categoryID: values.category,
       cityID: values.location,
       budget: values.budget ?? 0,

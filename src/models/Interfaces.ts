@@ -558,11 +558,12 @@ export interface LoginResponse {
     CompanyID?: string;
     email: string;
     name: string;
-    planID: number;
+    planID: string;
     type: string;
     typeID: number;
     uid: string;
     lastSession: string;
+    premium: boolean;
   }[];
   refreshToken: string;
   accessToken: string;

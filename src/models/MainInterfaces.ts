@@ -155,6 +155,8 @@ export interface BaseUser extends DisplayUser {
   sellerCount?: number;
   typeEntity: EntityType;
   categories?: number[];
+  planID: string;
+  premium: boolean;
 }
 
 export interface UserCounters {
@@ -181,7 +183,7 @@ export interface FullUser extends User, UserCounters {
   activeAccount: boolean;
   cityID: number;
   countryID: number;
-  planID: number;
+  planID: string;
   specialty?: string;
   aboutMe?: string;
 }
@@ -233,10 +235,14 @@ export interface StatisticsData {
 }
 
 export interface PlanData {
+  uid: string;
   goods: number;
   services: number;
   sales: number;
-  offers: number;
+  offersGoods: number;
+  offersServices: number;
+  offersSales: number;
+  subUsers: number;
   premium: boolean;
 }
 
