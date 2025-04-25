@@ -96,7 +96,7 @@ export default function Notifications(props: NotificationsProps) {
             <List.Item
               key={item.uid}
               onClick={() => {
-                redirectFromNotification(item, true);
+                redirectFromNotification(item);
                 setVisible(false);
               }}
               style={{

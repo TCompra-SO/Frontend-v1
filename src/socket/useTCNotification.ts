@@ -190,12 +190,14 @@ export function useTCNotification() {
     setLoading(false);
   }
 
-  function redirectFromNotification(
-    notification: NotificationDataFromServer,
-    markAsRead?: boolean
-  ) {
+  function redirectFromNotification(notification: NotificationDataFromServer) {
     console.log(notification);
-    if (markAsRead && notification.uid) readNotification(notification.uid);
+    if (
+      !notification.read &&
+      notification.uid &&
+      notification.type == NotificationType.DIRECT
+    )
+      readNotification(notification.uid);
 
     const { result, val } = isRequirementType(notification.targetType);
     if (result && val !== null) {
