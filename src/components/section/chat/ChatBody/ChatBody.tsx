@@ -425,23 +425,21 @@ export default function ChatBody(props: ChatBodyProps) {
                         )) ||
                       index == array.length - 1;
                     return (
-                      <>
-                        <Fragment key={msg.uid}>
-                          {index == 0 && <div ref={divRef} />}
-                          {isLast ? (
-                            <div ref={lastMessageRef}>{messageNode}</div>
-                          ) : index == 0 ? (
-                            <div ref={firstMessageRef}>{messageNode}</div>
-                          ) : (
-                            messageNode
-                          )}
-                          {shouldInsertDivider && (
-                            <div className="fecha-comment-inline">
-                              {dayjs(msg.timestamp).format(dateFormatChatBody)}
-                            </div>
-                          )}
-                        </Fragment>
-                      </>
+                      <Fragment key={msg.uid}>
+                        {index == 0 && <div ref={divRef} />}
+                        {isLast ? (
+                          <div ref={lastMessageRef}>{messageNode}</div>
+                        ) : index == 0 ? (
+                          <div ref={firstMessageRef}>{messageNode}</div>
+                        ) : (
+                          messageNode
+                        )}
+                        {shouldInsertDivider && (
+                          <div className="fecha-comment-inline">
+                            {dayjs(msg.timestamp).format(dateFormatChatBody)}
+                          </div>
+                        )}
+                      </Fragment>
                     );
                   })}
                 </>
