@@ -49,7 +49,7 @@ import {
   createChatService,
   getChatStateService,
   getCountMessageUnReadService,
-  MarkChatMessagesAsReadService,
+  markChatMessagesAsReadService,
 } from "../requests/chatService";
 import {
   getNotificationsService,
@@ -415,7 +415,7 @@ export async function markChatMessageAsRead(
 ) {
   const { responseData, error, errorMsg } =
     await makeRequest<MarkChatMessagesAsReadRequest>({
-      service: MarkChatMessagesAsReadService(),
+      service: markChatMessagesAsReadService(),
       method: "post",
       dataToSend: request,
     });

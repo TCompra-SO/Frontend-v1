@@ -454,7 +454,6 @@ export function generateShortId(): string {
   const random = Math.random()
     .toString(36)
     .substring(2, 2 + Math.round(randomShortKeyLength / 2));
-  console.log(`${timestamp}${random}`);
   return `${timestamp}${random}`;
 }
 

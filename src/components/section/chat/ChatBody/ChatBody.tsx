@@ -292,11 +292,12 @@ export default function ChatBody(props: ChatBodyProps) {
         timestamp: dayjs(new Date()).toISOString(),
         read: false,
         message: msg,
+        waiting: true,
       };
       props.addMessageToChatMessageList(chatMsg);
       if (!props.chatData.uid) {
         // Crear chat primero
-        createChatAndSendMessage(
+        const chatResult = await createChatAndSendMessage(
           {
             userId: uid,
             requerimentId: props.chatData.requirementId,
@@ -305,6 +306,9 @@ export default function ChatBody(props: ChatBodyProps) {
           },
           msg
         );
+        if (chatResult?.error) {
+          props.markMsgAsError(msgUid);
+        }
       } else {
         const { messageData, error } = await sendMessage({
           chatId: props.chatData.uid,

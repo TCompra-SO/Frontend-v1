@@ -28,7 +28,7 @@ export function createChatMessageService(): HttpService {
   };
 }
 
-export function MarkChatMessagesAsReadService(): HttpService {
+export function markChatMessagesAsReadService(): HttpService {
   return {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.chat}${
       ApiRoutes.chat.readMessages

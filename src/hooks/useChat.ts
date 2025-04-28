@@ -218,22 +218,15 @@ export function useChat() {
       if (obj) {
         const ownerIsCurrentUser = obj.userId == uid;
         const updatedList = [...prevList];
-        if (ownerIsCurrentUser) {
-          for (let i = 0; i < updatedList.length; i++) {
-            if (updatedList[i].userId == uid) {
-              if (!updatedList[i].read) updatedList[i].read = true;
-              else break;
-            }
-            if (updatedList[i].uid == messageId) break;
+        for (let i = 0; i < updatedList.length; i++) {
+          if (
+            (ownerIsCurrentUser && updatedList[i].userId == uid) ||
+            (!ownerIsCurrentUser && updatedList[i].userId != uid)
+          ) {
+            if (!updatedList[i].read) updatedList[i].read = true;
+            else break;
           }
-        } else {
-          for (let i = 0; i < updatedList.length; i++) {
-            if (updatedList[i].userId != uid) {
-              if (!updatedList[i].read) updatedList[i].read = true;
-              else break;
-            }
-            if (updatedList[i].uid == messageId) break;
-          }
+          if (updatedList[i].uid == messageId) break;
         }
         return updatedList;
       }
@@ -259,6 +252,7 @@ export function useChat() {
           getMoreChats(false, "");
         }
       }, inputSearchAfterMseconds),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 

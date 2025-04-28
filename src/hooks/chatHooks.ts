@@ -96,9 +96,11 @@ export function useChatFunctions(showNotificationAfterMsgSent: boolean) {
       } else if (error) {
         showNotification("error", errorMsg);
       }
+      return { chatData, error };
     } catch (e) {
       console.log(e);
       showNotification("error", t(defaultErrorMsg));
+      return null;
     } finally {
       setLoading(false);
     }

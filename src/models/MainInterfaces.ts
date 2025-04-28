@@ -288,6 +288,7 @@ export interface ChatMessage {
   images?: string[];
   documents?: string[];
   error?: boolean;
+  waiting?: boolean;
 }
 
 export interface SocketChatMessage extends ChatMessage {
