@@ -12,6 +12,7 @@ import {
   NotificationDataFromServer,
   Offer,
   OfferItemSubUser,
+  PlanData,
   PurchaseOrder,
   PurchaseOrderItemSubUser,
   Requirement,
@@ -141,10 +142,13 @@ export function transformToFullUser(response: any) {
 
 export function transformToBaseUser(response: any, fromLogin: boolean = false) {
   const user: BaseUser = response;
+  user.isPremium = response.premium ? false : true;
   let subUser: BaseUser = response.auth_users;
   if (subUser) {
     // usuario es subusuario
     subUser.uid = response.auth_users.Uid;
+    subUser.planID = user.planID;
+    subUser.isPremium = user.isPremium;
   }
   if (!subUser && fromLogin) subUser = user; // para usuario logueado: usuario es principal, subuser y user son iguales
   return { user, subUser };
@@ -451,5 +455,10 @@ export function transformToChatMessage(data: any) {
 
 export function transformToNotificationDataFromServer(data: any) {
   const obj: NotificationDataFromServer = data;
+  return obj;
+}
+
+export function transformToPlanData(data: any) {
+  const obj: PlanData = data;
   return obj;
 }

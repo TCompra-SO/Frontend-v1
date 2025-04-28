@@ -8,7 +8,7 @@ export const mainUserInitialState: MainUserState = {
   name: "",
   email: "",
   typeID: UserRoles.NONE,
-  planID: 0,
+  planID: "",
   typeEntity: EntityType.COMPANY,
   document: "",
   isPremium: false,
@@ -33,7 +33,7 @@ export const mainUserSlice = createSlice({
       state.document = action.payload.document;
       state.image = action.payload.image;
       state.categories = action.payload.categories ?? [];
-      state.isPremium = true; // r3v
+      state.isPremium = action.payload.isPremium ? true : false;
     },
     setFullMainUser: (_, action: { payload: MainUserState; type: string }) => {
       return { ...action.payload };

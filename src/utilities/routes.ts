@@ -15,6 +15,7 @@ export const ApiMainRoutes = {
   reports: "reports/",
   notification: "notification/",
   chat: "chat/",
+  plan: "plan/",
 };
 
 export const ApiRoutes = {
@@ -170,6 +171,9 @@ export const ApiRoutes = {
     archiveChat: "archiveChat/",
     getCountMessageUnRead: "getCountMessageUnRead/",
     getChatState: "getChatState/",
+  },
+  plan: {
+    getAllPlans: "getAllPlans/",
   },
 };
 

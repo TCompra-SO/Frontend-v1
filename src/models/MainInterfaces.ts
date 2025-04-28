@@ -156,7 +156,7 @@ export interface BaseUser extends DisplayUser {
   typeEntity: EntityType;
   categories?: number[];
   planID: string;
-  premium: boolean;
+  isPremium: boolean;
 }
 
 export interface UserCounters {
@@ -188,7 +188,9 @@ export interface FullUser extends User, UserCounters {
   aboutMe?: string;
 }
 
-export interface SubUserBase extends BaseUser, UserCounters {
+export interface SubUserBase
+  extends Omit<BaseUser, "isPremium" | "planID">,
+    UserCounters {
   typeID: UserRoles;
   createdAt: string;
   state: boolean;
@@ -244,6 +246,7 @@ export interface PlanData {
   offersSales: number;
   subUsers: number;
   premium: boolean;
+  default?: boolean;
 }
 
 export interface BasicRateData {

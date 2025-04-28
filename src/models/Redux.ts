@@ -5,7 +5,7 @@ export interface MainUserState {
   name: string;
   email: string;
   typeID: UserRoles;
-  planID: number;
+  planID: string;
   //
   tenure?: number;
   customerScore?: number;

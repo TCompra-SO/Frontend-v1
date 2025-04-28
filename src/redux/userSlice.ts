@@ -12,7 +12,7 @@ export const userInitialState: UserState = {
   name: "",
   email: "",
   typeID: UserRoles.NONE,
-  planID: 0,
+  planID: "",
   typeEntity: EntityType.PERSON,
   document: "",
   isPremium: false,
@@ -29,7 +29,7 @@ export const userSlice = createSlice({
       const payload: LoginResponse = action.payload;
       // if (payload.accessToken) state.token = payload.accessToken;
       if (payload.dataUser) {
-        const { uid, name, email, type, typeID, planID, lastSession } =
+        const { uid, name, email, type, typeID, planID, lastSession, premium } =
           action.payload.dataUser[0];
         state.typeEntity = type;
         state.name = name;
@@ -38,6 +38,7 @@ export const userSlice = createSlice({
         state.planID = planID;
         state.uid = uid;
         state.lastSession = lastSession;
+        state.isPremium = premium ? true : false;
 
         localStorage.setItem(userDataKey, encryptData(JSON.stringify(state)));
         console.log(state.uid);
@@ -53,7 +54,7 @@ export const userSlice = createSlice({
       state.document = action.payload.document;
       state.image = action.payload.image;
       state.categories = action.payload.categories ?? [];
-      state.isPremium = true; // r3v
+      state.isPremium = action.payload.isPremium ? true : false;
     },
     setUid: (state, action) => {
       state.uid = action.payload;

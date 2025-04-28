@@ -46,7 +46,7 @@ export default function Profile(props: ProfileProps) {
   const { showNotification } = useShowNotification();
   const handleChangeImage = useHandleChangeImage();
   const context = useContext(ListsContext);
-  const { countryList, countryData, categoryData } = context;
+  const { countryList, countryData, categoryData, defaultPlanId } = context;
   const fileInputRef = React.useRef<InputRef>(null);
   const uid = useSelector((state: MainState) => state.user.uid);
   const userName = useSelector((state: MainState) => state.user.name);
@@ -128,7 +128,7 @@ export default function Profile(props: ProfileProps) {
       countryID: values.country,
       cityID: values.location,
       categories: [values.category1, values.category2, values.category3],
-      planID: 1, // r3v
+      planID: defaultPlanId,
     };
 
     if (props.docType == DocType.RUC) {

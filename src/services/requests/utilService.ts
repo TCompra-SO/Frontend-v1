@@ -71,15 +71,6 @@ export function whoCanOfferService(): HttpService {
   };
 }
 
-export function planTypeService(): HttpService {
-  return {
-    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.util}${
-      ApiRoutes.util.utilData.name
-    }${ApiRoutes.util.utilData.items.typesPlans}`,
-    type: "UT-PL-TY",
-  };
-}
-
 export function getNameReniecService(doc: string): HttpService {
   return {
     url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${

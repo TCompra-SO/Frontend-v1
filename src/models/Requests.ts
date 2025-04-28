@@ -45,7 +45,7 @@ export interface ProfileRequest
   categories: number[];
   countryID: string;
   avatar?: string;
-  planID: number;
+  planID: string;
 }
 
 export interface ValidateCodeRequest extends IncludeNotificationRequest {
