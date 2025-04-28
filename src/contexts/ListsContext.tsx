@@ -21,6 +21,7 @@ import { UserRoles } from "../utilities/types";
 import { getAllPlansService } from "../services/requests/planService";
 import { PlanData } from "../models/MainInterfaces";
 import { transformToPlanData } from "../utilities/transform";
+import { useGetBannedWords } from "../hooks/utilHooks";
 
 interface ListsContextType {
   tlds: string[];
@@ -34,6 +35,7 @@ interface ListsContextType {
   planTypeData: PlanData[];
   userRolesData: IdValueMap;
   defaultPlanId: string;
+  censorText: (text: string) => string;
 }
 
 export const ListsContext = createContext<ListsContextType>({
@@ -48,6 +50,7 @@ export const ListsContext = createContext<ListsContextType>({
   planTypeData: [],
   userRolesData: {},
   defaultPlanId: "",
+  censorText: () => "",
 });
 
 interface ListsProviderProps {
@@ -55,6 +58,7 @@ interface ListsProviderProps {
 }
 
 export function ListsProvider({ children }: ListsProviderProps) {
+  const { censorText } = useGetBannedWords();
   const [countryList, setCountryList] = useState<IdValueObj[]>([]);
   const [countryData, setCountryData] = useState<CountryCities>({});
   const { responseData: countryResponseData, fetchData: countryFetchData } =
@@ -288,6 +292,7 @@ export function ListsProvider({ children }: ListsProviderProps) {
         planTypeData,
         userRolesData,
         defaultPlanId,
+        censorText,
       }}
     >
       {children}

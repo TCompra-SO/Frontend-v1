@@ -1,5 +1,3 @@
-import { normalizeSpanish } from "./globalFunctions";
-
 export const rawBannedWords = [
   "puta",
   "puto",
@@ -54,5 +52,3 @@ export const rawBannedWords = [
   "tragaleche",
   "cago",
 ];
-
-export const bannedWords = rawBannedWords.map(normalizeSpanish);

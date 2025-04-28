@@ -48,11 +48,10 @@ import { setUserImage } from "../redux/userSlice";
 
 export default function MyProfile() {
   const { t } = useTranslation();
-  const context = useContext(ListsContext);
+  const { censorText, categoryData } = useContext(ListsContext);
   const dispatch = useDispatch();
   const handleChangeImage = useHandleChangeImage();
   const { showNotification } = useShowNotification();
-  const { categoryData } = context;
   const [user, setUser] = useState<FullUser | SubUserProfile>();
   const [mainUser, setMainUser] = useState<FullUser>();
   const [form] = Form.useForm();
@@ -304,8 +303,8 @@ export default function MyProfile() {
       };
       if (entityType == EntityType.COMPANY) {
         data.age = values.tenure;
-        data.specialtyID = values.specialty.trim();
-        data.about_me = values.aboutMe.trim();
+        data.specialtyID = censorText(values.specialty.trim());
+        data.about_me = censorText(values.aboutMe.trim());
       }
       setApiParamsForm({
         service:

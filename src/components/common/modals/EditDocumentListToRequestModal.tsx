@@ -6,8 +6,9 @@ import { Form } from "antd";
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
 import { useUpdateRequiredDocsCert } from "../../../hooks/certificateHooks";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useTrimmedMinMaxValidator } from "../../../hooks/validatorHooks";
+import { ListsContext } from "../../../contexts/ListsContext";
 
 interface EditDocumentListToRequestModalProps {
   text: string;
@@ -18,6 +19,7 @@ export default function EditDocumentListToRequestModal(
   props: EditDocumentListToRequestModalProps
 ) {
   const { t } = useTranslation();
+  const { censorText } = useContext(ListsContext);
   const { updateRequiredDocsCert, loadingUpdateRequiredDocs } =
     useUpdateRequiredDocsCert();
   const [form] = Form.useForm();
@@ -34,7 +36,7 @@ export default function EditDocumentListToRequestModal(
   }, [loadingUpdateRequiredDocs]);
 
   function handleSubmit(values: any) {
-    updateRequiredDocsCert(mainUid, values.list?.trim());
+    updateRequiredDocsCert(mainUid, censorText(values.list?.trim()));
   }
 
   return (

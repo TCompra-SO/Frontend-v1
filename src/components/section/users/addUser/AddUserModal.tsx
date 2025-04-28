@@ -256,8 +256,8 @@ export default function AddUserModal(props: AddUserModalProps) {
 
     const subUser: RegisterSubUserRequest = {
       dni: values.document,
-      phone: values.phone,
-      address: values.address,
+      phone: values.phone.trim(),
+      address: values.address.trim(),
       cityID: values.location,
       email: values.email,
       typeID: values.userType,

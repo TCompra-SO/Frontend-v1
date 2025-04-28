@@ -25,7 +25,6 @@ import { CreateRequirementRequest } from "../../../models/Requests";
 import { CommonModalProps, useApiParams } from "../../../models/Interfaces";
 import useApi, { UseApiType } from "../../../hooks/useApi";
 import {
-  censorText,
   checkWarranty,
   getCreateRecordService,
   getUploadDocsRecordService,
@@ -53,6 +52,7 @@ import { useGetRequiredDocsCert } from "../../../hooks/certificateHooks";
 import useShowNotification from "../../../hooks/utilHooks";
 import { LoadingDataContext } from "../../../contexts/LoadingDataContext";
 import SimpleLoading from "../../../pages/utils/SimpleLoading";
+import { ListsContext } from "../../../contexts/ListsContext";
 
 interface CreateRequirementProps extends CommonModalProps {
   closeModal: () => void;
@@ -87,6 +87,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   const { t } = useTranslation();
   const { createRequirementLoading, updateCreateRequirementLoading } =
     useContext(LoadingDataContext);
+  const { censorText } = useContext(ListsContext);
   const { getRequiredDocsCert, requiredDocs, errorRequiredDocs } =
     useGetRequiredDocsCert();
   const { showNotification } = useShowNotification();

@@ -18,7 +18,6 @@ interface RequirementDetailProps {
 }
 
 export default function RequirementDetail(props: RequirementDetailProps) {
-  console.log(111111111, props.orderId);
   return (
     <RequirementDetailProvider>
       <div className="modal-card">

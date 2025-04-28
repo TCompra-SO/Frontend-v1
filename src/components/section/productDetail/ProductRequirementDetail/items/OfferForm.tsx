@@ -55,6 +55,7 @@ import { MainSocketsContext } from "../../../../../contexts/MainSocketsContext";
 import useSystemNotification from "../../../../../hooks/useSystemNotification";
 import dayjs from "dayjs";
 import { defaultErrorMsg } from "../../../../../utilities/globals";
+import { ListsContext } from "../../../../../contexts/ListsContext";
 
 function RowContainer({ children }: { children: ReactNode }) {
   return (
@@ -75,6 +76,7 @@ export default function OfferForm(props: OfferFormProps) {
   const [form] = Form.useForm();
   const { showNotification } = useShowNotification();
   const { getNotification } = useContext(MainSocketsContext);
+  const { censorText } = useContext(ListsContext);
   const { getSystemNotification } = useSystemNotification();
   const email = useSelector((state: MainState) => state.user.email);
   const uid = useSelector((state: MainState) => state.user.uid);
@@ -374,9 +376,9 @@ export default function OfferForm(props: OfferFormProps) {
       });
 
       const data: CreateOfferRequest = {
-        name: values.title.trim(),
+        name: censorText(values.title.trim()),
         email: values.email,
-        description: values.description?.trim(),
+        description: censorText(values.description?.trim()),
         cityID: values.location,
         deliveryTimeID: values.deliveryTime,
         currencyID: values.currency,

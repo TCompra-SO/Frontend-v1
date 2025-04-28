@@ -45,8 +45,8 @@ export default function Profile(props: ProfileProps) {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
   const handleChangeImage = useHandleChangeImage();
-  const context = useContext(ListsContext);
-  const { countryList, countryData, categoryData, defaultPlanId } = context;
+  const { countryList, countryData, categoryData, defaultPlanId, censorText } =
+    useContext(ListsContext);
   const fileInputRef = React.useRef<InputRef>(null);
   const uid = useSelector((state: MainState) => state.user.uid);
   const userName = useSelector((state: MainState) => state.user.name);
@@ -132,11 +132,12 @@ export default function Profile(props: ProfileProps) {
     };
 
     if (props.docType == DocType.RUC) {
-      data.specialtyID = values.specialty.trim();
+      data.specialtyID = censorText(values.specialty.trim());
       data.age = values.tenure;
-      if (values.aboutMe?.trim()) data.about_me = values.aboutMe.trim();
+      if (values.aboutMe?.trim())
+        data.about_me = censorText(values.aboutMe.trim());
     }
-    console.log(values, data);
+
     setApiParams({
       service:
         props.docType == DocType.RUC
