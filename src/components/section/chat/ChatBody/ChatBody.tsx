@@ -36,6 +36,7 @@ import { useSelector } from "react-redux";
 import { MainState } from "../../../../models/Redux";
 import { transformToChatMessage } from "../../../../utilities/transform";
 import { debounce } from "lodash";
+import { useGetBannedWords } from "../../../../hooks/utilHooks";
 
 const loadingSpinner: ReactNode = (
   <Flex justify="center">
@@ -56,6 +57,7 @@ interface ChatBodyProps {
 }
 
 export default function ChatBody(props: ChatBodyProps) {
+  const { censorText } = useGetBannedWords();
   const { t } = useTranslation();
   const { width } = useWindowSize();
   const { createChatAndSendMessage, sendMessage, markAsRead } =
@@ -279,7 +281,7 @@ export default function ChatBody(props: ChatBodyProps) {
   async function sendMsg() {
     if (imgRef.current) imgRef.current.reset();
     if (docRef.current) docRef.current.reset();
-    const msg = message.trim();
+    const msg = censorText(message.trim());
     if (msg) {
       setMessage("");
       const msgUid = generateShortId();
