@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
-import InputContainer from "../../../containers/InputContainer";
+import InputContainer from "../../containers/InputContainer";
 import { useSelector } from "react-redux";
-import { MainState } from "../../../../models/Redux";
+import { MainState } from "../../../models/Redux";
 
 export default function EmailCR() {
   const { t } = useTranslation();

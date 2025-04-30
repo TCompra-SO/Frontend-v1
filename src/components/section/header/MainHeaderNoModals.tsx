@@ -1,23 +1,23 @@
 import { Dropdown, MenuProps, Space } from "antd";
-import Premium from "../items/Premium";
-import Chat from "../items/Chat";
-import UserName from "../items/UserName";
-import Logout from "../items/Logout";
+import Premium from "./items/Premium";
+import Chat from "./items/Chat";
+import UserName from "./items/UserName";
+import Logout from "./items/Logout";
 import { CSSProperties, ReactNode, useEffect, useState } from "react";
-import ProfileMenu from "../items/ProfileMenu";
-import useWindowSize from "../../../../hooks/useWindowSize";
-import { windowSize } from "../../../../utilities/globals";
+import ProfileMenu from "./items/ProfileMenu";
+import useWindowSize from "../../../hooks/useWindowSize";
+import { windowSize } from "../../../utilities/globals";
 import { useTranslation } from "react-i18next";
-import { useLogout } from "../../../../hooks/authHooks";
+import { useLogout } from "../../../hooks/authHooks";
 import { useSelector } from "react-redux";
-import { MainState } from "../../../../models/Redux";
-import { getSectionFromRoute } from "../../../../utilities/globalFunctions";
-import { pageRoutes } from "../../../../utilities/routes";
-import ButtonContainer from "../../../containers/ButtonContainer";
+import { MainState } from "../../../models/Redux";
+import { getSectionFromRoute } from "../../../utilities/globalFunctions";
+import { pageRoutes } from "../../../utilities/routes";
+import ButtonContainer from "../../containers/ButtonContainer";
 import { useLocation, useNavigate } from "react-router-dom";
-import { UserRoles } from "../../../../utilities/types";
-import ControlPanel from "../items/ControlPanel";
-import Notifications from "../items/Notifications";
+import { UserRoles } from "../../../utilities/types";
+import ControlPanel from "./items/ControlPanel";
+import Notifications from "./items/Notifications";
 
 interface MainHeaderNoModalsProps {
   onShowMenu?: (show: boolean) => void;

@@ -1,7 +1,7 @@
 import { Col, Flex, Form, Row, UploadFile } from "antd";
 import { useTranslation } from "react-i18next";
-import EmailCR from "./create-requirement-items/EmailCR";
-import DocumentsCertifCR from "./create-requirement-items/DocumentsCertifCR";
+import EmailCR from "../../common/formFields/EmailCR";
+import DocumentsCertifCR from "../../common/formFields/DocumentsCertifCR";
 import AddImagesField from "../../common/formFields/AddImagesField";
 import AddDocumentField from "../../common/formFields/AddDocumentField";
 import ButtonContainer from "../../containers/ButtonContainer";

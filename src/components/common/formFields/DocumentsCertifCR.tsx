@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import TextAreaContainer from "../../../containers/TextAreaContainer";
+import TextAreaContainer from "../../containers/TextAreaContainer";
 import { Form } from "antd";
 
 export default function DocumentsCertifCR() {

@@ -1,5 +1,5 @@
 import { lazy, useEffect, useState } from "react";
-import MainHeaderNoModals from "./header/MainHeaderNoModals.tsx";
+import MainHeaderNoModals from "./MainHeaderNoModals.tsx";
 import NoContentModalContainer from "../../containers/NoContentModalContainer.tsx";
 import ValidateCode from "../profile/ValidateCode.tsx";
 import { loginKey } from "../../../utilities/globals.ts";
