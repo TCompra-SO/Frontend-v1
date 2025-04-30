@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next";
-import FrontImage from "../../common/utils/FrontImage";
-import SubUserName from "../../common/utils/SubUserName";
-import { BasicRateData } from "../../../models/MainInterfaces";
+import FrontImage from "../../utils/FrontImage";
+import SubUserName from "../../utils/SubUserName";
+import { BasicRateData } from "../../../../models/MainInterfaces";
 import { Tooltip } from "antd";
-import { RequirementType, UserClass } from "../../../utilities/types";
-import { getUserClass } from "../../../utilities/globalFunctions";
+import { RequirementType, UserClass } from "../../../../utilities/types";
+import { getUserClass } from "../../../../utilities/globalFunctions";
 
 interface OfferDetailRequirementDataProps {
   requirementTitle: string;

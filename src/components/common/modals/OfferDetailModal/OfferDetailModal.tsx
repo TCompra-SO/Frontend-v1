@@ -1,25 +1,25 @@
-import { BasicRateData, Offer } from "../../../models/MainInterfaces";
+import { BasicRateData, Offer } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
-import FrontImage from "../../common/utils/FrontImage";
-import RequirementInfoNoTags from "../requirements/requirementDetail/RequirementInfoNoTags";
+import FrontImage from "../../utils/FrontImage";
+import RequirementInfoNoTags from "../requirementDetail/RequirementInfoNoTags";
 import { useContext, useEffect, useState } from "react";
-import { IdValueMap, IdValueObj } from "../../../models/Interfaces";
-import { ListsContext } from "../../../contexts/ListsContext";
+import { IdValueMap, IdValueObj } from "../../../../models/Interfaces";
+import { ListsContext } from "../../../../contexts/ListsContext";
 import {
   dateFormat,
   defaultCountry,
   windowSize,
-} from "../../../utilities/globals";
+} from "../../../../utilities/globals";
 import dayjs from "dayjs";
-import PriceInHeader from "../../common/utils/PriceInHeader";
+import PriceInHeader from "../../utils/PriceInHeader";
 import OfferDetailRequirementData from "./OfferDetailRequirementData";
-import ImagesAndDocs from "../../common/utils/ImagesAndDocs";
-import { CardByStateOffer } from "../../../utilities/colors";
-import { MainState } from "../../../models/Redux";
+import ImagesAndDocs from "../../utils/ImagesAndDocs";
+import { CardByStateOffer } from "../../../../utilities/colors";
+import { MainState } from "../../../../models/Redux";
 import { useSelector } from "react-redux";
-import { RequirementType } from "../../../utilities/types";
-import { useRedirectToChat } from "../../../hooks/utilHooks";
-import useWindowSize from "../../../hooks/useWindowSize";
+import { RequirementType } from "../../../../utilities/types";
+import { useRedirectToChat } from "../../../../hooks/utilHooks";
+import useWindowSize from "../../../../hooks/useWindowSize";
 
 interface OfferDetailModalProps {
   offer: Offer;

@@ -19,8 +19,8 @@ import { useTranslation } from "react-i18next";
 import { useContext, useState } from "react";
 import { ModalContent } from "../../../../models/Interfaces";
 import ModalContainer from "../../../containers/ModalContainer";
-import FrontImage from "../../../common/utils/FrontImage";
-import RateStarCount from "../../../common/utils/RateStarCount";
+import FrontImage from "../../utils/FrontImage";
+import RateStarCount from "../../utils/RateStarCount";
 import { requirementDetailContext } from "../../../../contexts/RequirementDetailContext";
 import {
   useDownloadPdfOrder,

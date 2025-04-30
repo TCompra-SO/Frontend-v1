@@ -1,7 +1,7 @@
 import { lazy, useEffect, useState } from "react";
 import MainHeaderNoModals from "./MainHeaderNoModals.tsx";
 import NoContentModalContainer from "../../containers/NoContentModalContainer.tsx";
-import ValidateCode from "../profile/ValidateCode.tsx";
+import ValidateCode from "../../common/modals/ValidateCode.tsx";
 import { loginKey } from "../../../utilities/globals.ts";
 
 const Login = lazy(() => import("./../../../pages/Login.tsx"));

@@ -555,7 +555,7 @@ _Props_
 | `onButtonClick` | `(action: Action, data: any) => void` | Función a ejecutarse cuando se hace click en el botón.               |
 | `hidden`        | `boolean`                             | Si es `true`, la columna estará oculta (valor por defecto: `false`). |
 
-#### modals
+#### Modals
 
 ##### AddCertificatesModal
 
@@ -671,6 +671,50 @@ _Props_
 | `setApiParams`            | `(params: useApiParams) => void`         | Función para configurar parámetros de la solicitud HTTP.                                      |
 | `setAdditionalApiParams`  | `(additionalParams: UseApiType) => void` | Función para configurar parámetros adicionales del hook useApi.                               |
 
+##### RequirementModalOfferSelected
+
+Componente modal para selección y confirmación de una oferta en un requerimiento.
+
+_Props_
+
+| Nombre                   | Tipo                                     | Descripción                                        |
+| ------------------------ | ---------------------------------------- | -------------------------------------------------- |
+| `offer`                  | `Offer`                                  | Oferta seleccionada.                               |
+| `requirement`            | `Requirement`                            | Requerimiento asociado.                            |
+| `onClose`                | `() => any`                              | Función para cerrar el modal.                      |
+| `onSuccess`              | `(offerId: string) => void`              | Callback al seleccionar oferta exitosamente.       |
+| `filters`                | `OfferFilters`                           | Filtros aplicados a la lista de ofertas.           |
+| `filterNames`            | `FilterNames`                            | Nombres de los filtros aplicados.                  |
+| `useApiHook`             | `ReturnType<typeof useApi>`              | Hook para manejo de API.                           |
+| `setAdditionalApiParams` | `(additionalParams: UseApiType) => void` | Configura parámetros adicionales para hook useApi. |
+| `setApiParams`           | `(params: useApiParams) => void`         | Configura parámetros para soliciud HTTP.           |
+
+##### RequirementModalRepublish
+
+Componente modal para republicación de requerimiento con selección de nueva fecha.
+
+_Props_
+
+| Nombre                   | Tipo                                     | Descripción                                        |
+| ------------------------ | ---------------------------------------- | -------------------------------------------------- |
+| `requirementId`          | `string`                                 | ID del requerimiento a republicar.                 |
+| `onClose`                | `() => any`                              | Función para cerrar el modal.                      |
+| `type`                   | `RequirementType`                        | Tipo de requerimiento.                             |
+| `useApiHook`             | `ReturnType<typeof useApi>`              | Hook para manejo de API.                           |
+| `setAdditionalApiParams` | `(additionalParams: UseApiType) => void` | Configura parámetros adicionales para hook useApi. |
+| `setApiParams`           | `(params: useApiParams) => void`         | Configura parámetros para soliciud HTTP.           |
+
+##### RequirementOfferSummary
+
+Componente modal que resume la información de una oferta y su ofertante.
+
+_Props_
+
+| Nombre  | Tipo    | Descripción                                    |
+| ------- | ------- | ---------------------------------------------- |
+| `offer` | `Offer` | Datos completos de la oferta.                  |
+| `user`  | `User`  | Información del usuario que realizó la oferta. |
+
 ##### SelectDocumentsToSendCertificateModal
 
 Componente modal para seleccionar y enviar documentos para certificación.
@@ -725,6 +769,18 @@ _Props_
 | ------ | ---------- | ----------------------------------------------------- |
 | `user` | `FullUser` | Objeto con toda la información del usuario a mostrar. |
 
+##### ValidateCode
+
+Componente modal de flujo de validación por código para verificación de identidad o recuperación de contraseña.
+
+_Props_
+
+| Nombre              | Tipo                                   | Descripción                                          |
+| ------------------- | -------------------------------------- | ---------------------------------------------------- |
+| `isOpen?`           | `boolean`                              | Controla si el modal está abierto.                   |
+| `onClose?`          | `(validationSuccess: boolean) => void` | Callback al cerrar el modal.                         |
+| `isForgotPassword?` | `boolean`                              | Determina si es flujo de recuperación de contraseña. |
+
 ##### ViewDocsReceivedCertificate
 
 Componente modal para visualizar y gestionar documentos recibidos para certificación.
@@ -740,6 +796,53 @@ _Props_
 | `useApiHook`             | `ReturnType<typeof useApi>`              | Hook para manejar la respuesta, error y estado de carga de la solicitud HTTP. |
 | `setApiParams`           | `(params: useApiParams) => void`         | Función para configurar parámetros de la solicitud HTTP.                      |
 | `setAdditionalApiParams` | `(additionalParams: UseApiType) => void` | Función para configurar parámetros adicionales del hook useApi.               |
+
+##### OfferDetailModal
+
+###### OfferDetailModal
+
+Componente modal para mostrar el detalle completo de una oferta, incluyendo información del producto, vendedor y estado.
+
+_Props_
+
+| Nombre          | Tipo                                  | Descripción                                  |
+| --------------- | ------------------------------------- | -------------------------------------------- |
+| `offer`         | `Offer`                               | Objeto con todos los datos de la oferta.     |
+| `basicRateData` | `BasicRateData`                       | Datos básicos del creador del requerimiento. |
+| `showActions`   | `boolean`                             | Controla si se muestran acciones.            |
+| `orderData?`    | `{id: string, type: RequirementType}` | Datos de la orden de compra/venta asociada.  |
+
+###### OfferDetailRequirementData
+
+Componente que muestra los datos principales del requerimiento asociado a una oferta.
+
+_Props_
+
+| Nombre             | Tipo              | Descripción                                                  |
+| ------------------ | ----------------- | ------------------------------------------------------------ |
+| `requirementTitle` | `string`          | Título del requerimiento asociado.                           |
+| `type`             | `RequirementType` | Tipo de requerimiento.                                       |
+| `isOffer`          | `boolean`         | Indica si a quien se califica es creador de una oferta o no. |
+| `basicRateData`    | `BasicRateData`   | Datos básicos del creador del requerimiento.                 |
+
+##### RequirementDetail
+
+###### RequirementDetail
+
+Componente principal para visualización detallada de un requerimiento y sus ofertas asociadas.
+
+_Props_
+
+| Nombre                       | Tipo                          | Descripción                                                    |
+| ---------------------------- | ----------------------------- | -------------------------------------------------------------- |
+| `offerList`                  | `Offer[]`                     | Listado de ofertas asociadas al requerimiento.                 |
+| `requirement`                | `Requirement`                 | Datos completos del requerimiento.                             |
+| `forPurchaseOrder`           | `boolean`                     | Indica si el modal funciona como historial de orden de compra. |
+| `filters?`                   | `OfferFilters`                | Filtros aplicados a las ofertas.                               |
+| `orderId?`                   | `string`                      | ID de la orden de compra.                                      |
+| `onClose`                    | `() => any`                   | Función para cerrar el modal.                                  |
+| `setDataModalSelectOffer?`   | `(val: ModalContent) => void` | Maneja datos del modal de selección de oferta.                 |
+| `setIsOpenModalSelectOffer?` | `(val: boolean) => void`      | Controla visibilidad del modal de selección de oferta.         |
 
 #### Utils
 
@@ -866,3 +969,514 @@ _Props_
 | ------------- | --------------------- | ---------------------------------------- |
 | `subUserName` | `string \| undefined` | Nombre del subusuario (muestra inicial). |
 | `small?`      | `boolean`             | Si es true, aplica estilo pequeño.       |
+
+### Containers
+
+#### AvatarContainer
+
+Contenedor para mostrar avatares. Soporta todas las propiedades de Avatar de Ant Design.
+
+#### ButtonContainer
+
+Contenedor para botones. Soporta todas las propiedades de Button de Ant Design.
+
+_Props_
+
+| Nombre              | Tipo      | Descripción                                                                   |
+| ------------------- | --------- | ----------------------------------------------------------------------------- |
+| `upperCaseSmaller?` | `boolean` | Convierte texto a mayúsculas y reduce tamaño de fuente.                       |
+| `common?`           | `boolean` | Si es true, usa elemento HTML button nativo en lugar de Button de Ant Design. |
+
+#### DatePickerContainer
+
+Contenedor para selector de fecha. Soporta todas las propiedades de DatePicker de Ant Design.
+
+#### ImagePreviewGroupContainer
+
+Contenedor para previsualización de grupos de imágenes.
+
+_Props_
+
+| Nombre  | Tipo                    | Descripción                                                          |
+| ------- | ----------------------- | -------------------------------------------------------------------- |
+| `image` | `string[] \| undefined` | Array de URLs de imágenes a mostrar en el grupo de previsualización. |
+
+_Ref_
+
+| Nombre        | Tipo         | Descripción                                    |
+| ------------- | ------------ | ---------------------------------------------- |
+| `openPreview` | `() => void` | Abre el modal de previsualización de imágenes. |
+
+#### InputContainer
+
+Contenedor para inputs con soporte para campos de contraseña. Soporta todas las propiedades de Input de Ant Design.
+
+_Props_
+
+| Nombre      | Tipo      | Descripción                                                    |
+| ----------- | --------- | -------------------------------------------------------------- |
+| `password?` | `boolean` | Si es true, renderiza un Input.Password (campo de contraseña). |
+
+#### InputNumberContainer
+
+Contenedor para ingreso de valores numéricos. Soporta todas las propiedades de InputNumber de Ant Design.
+
+#### ModalContainer
+
+Contenedor principal para modales. Usa `NoContentModalContainer`. Soporta solo los tipos definidos en `ModalTypes`.
+
+_Props_
+
+| Nombre            | Tipo           | Descripción                                                                      |
+| ----------------- | -------------- | -------------------------------------------------------------------------------- |
+| `content`         | `ModalContent` | Configuración del contenido y tipo de modal a mostrar.                           |
+| `isOpen`          | `boolean`      | Controla la visibilidad del modal.                                               |
+| `showFooter?`     | `boolean`      | Determina si se muestra el footer (barra de botones) del modal (default: false). |
+| `className?`      | `string`       | Clases CSS adicionales.                                                          |
+| `maskClosable?`   | `boolean`      | Permite cerrar el modal haciendo clic fuera (default: true).                     |
+| `onClose`         | `function`     | Función que se ejecuta al cerrar el modal.                                       |
+| `loadingConfirm?` | `boolean`      | Indica si el modal de confirmación está en estado de carga.                      |
+
+#### NoContentModalContainer
+
+Contenedor para modales con configuraciones predeterminadas. Soporta todas las propiedades de Modal de Ant Design.
+
+_Props_
+
+| Nombre            | Tipo       | Descripción                                                                  |
+| ----------------- | ---------- | ---------------------------------------------------------------------------- |
+| `showFooter?`     | `boolean`  | Si es true, muestra el footer (barra de botones) del modal (default: false). |
+| `destroyOnClose?` | `boolean`  | Si es true, destruye el contenido al cerrar (default: true).                 |
+| `closable?`       | `boolean`  | Muestra el botón de cerrar en la esquina (default: true).                    |
+| `maskClosable?`   | `boolean`  | Permite cerrar haciendo clic fuera del modal (default: true).                |
+| `onClose`         | `function` | Función que se ejecuta al cerrar el modal (requerido).                       |
+
+#### OTPInputContainer
+
+Contenedor para inputs de OTP (One-Time Password). Soporta todas las propiedades de Input.OTP de Ant Design.
+
+#### ParagraphContainer
+
+Contenedor para párrafos de texto. Soporta todas las propiedades de Paragraph de Ant Design.
+
+#### RangeDatePickerContainer
+
+Contenedor para selector de rangos de fecha. Soporta todas las propiedades de DatePicker.RangePicker de Ant Design.
+
+#### RatingContainer
+
+Componente para mostrar y capturar valoraciones con estrellas. Soporta todas las propiedades de Rate de Ant Design.
+
+_Props_
+
+| Nombre      | Tipo      | Descripción                                                             |
+| ----------- | --------- | ----------------------------------------------------------------------- |
+| `score`     | `number`  | Valoración actual.                                                      |
+| `readOnly?` | `boolean` | Si es true, deshabilita la interacción (solo lectura) (default: false). |
+
+#### SelectContainer
+
+Contenedor para selector. Soporta todas las propiedades de Select de Ant Design.
+
+#### TextAreaContainer
+
+Contenedor para área de texto. Soporta todas las propiedades de TextArea de Ant Design.
+
+### Guards
+
+#### AuthRoleGuard
+
+Componente que protege las rutas basado en roles de usuario. Si el usuario no tiene permisos, es redirigido a página de home.
+
+_Props_
+
+| Nombre         | Tipo                                                                       | Descripción                                            |
+| -------------- | -------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `children`     | `ReactNode`                                                                | Contenido a renderizar si el usuario tiene permisos.   |
+| `allowedRoles` | `Record<UserRoles, boolean> \| Record<string, Record<UserRoles, boolean>>` | Objeto que define los roles permitidos y sus permisos. |
+
+### Section
+
+#### Chat
+
+##### ChatBody
+
+###### ChatBody
+
+Componente principal para visualizar y gestionar conversaciones de chat.
+
+_Props_
+
+| Nombre                        | Tipo                                          | Descripción                                         |
+| ----------------------------- | --------------------------------------------- | --------------------------------------------------- |
+| `chatData`                    | `BasicChatListData`                           | Datos básicos del chat (usuario, título, etc.).     |
+| `messages`                    | `ChatMessage[]`                               | Lista de mensajes del chat.                         |
+| `onCloseChat`                 | `() => void`                                  | Función para cerrar el chat.                        |
+| `getMoreChatMessages`         | `(chatId: string) => void`                    | Función para cargar más mensajes (scroll infinito). |
+| `hasMore`                     | `boolean`                                     | Indica si hay más mensajes por cargar.              |
+| `loading`                     | `boolean \| undefined`                        | Estado de carga de los mensajes.                    |
+| `addMessageToChatMessageList` | `(message: ChatMessage) => void`              | Añade un nuevo mensaje a la lista.                  |
+| `updateMsg`                   | `(uid: string, message: ChatMessage) => void` | Actualiza un mensaje existente.                     |
+| `markMsgAsError`              | `(messageId: string) => void`                 | Marca un mensaje como fallido.                      |
+
+###### ChatBodyMessage
+
+Componente para renderizar mensajes individuales en un chat.
+
+_Props_
+
+| Nombre       | Tipo          | Descripción                                                               |
+| ------------ | ------------- | ------------------------------------------------------------------------- |
+| `message`    | `ChatMessage` | Objeto con los datos del mensaje (contenido, imágenes, documentos, etc.). |
+| `userImage?` | `string`      | URL de la imagen del usuario remitente.                                   |
+| `userName?`  | `string`      | Nombre del usuario remitente.                                             |
+
+###### ChatGallery
+
+Componente para adjuntar y previsualizar imágenes/documentos en el chat.
+
+_Props_
+
+| Nombre      | Tipo         | Descripción                                                              |
+| ----------- | ------------ | ------------------------------------------------------------------------ |
+| `forImages` | `boolean`    | Determina si el componente es para imágenes (true) o documentos (false). |
+| `onClose`   | `() => void` | Función para cerrar la galería.                                          |
+
+##### ChatList
+
+###### ChatList
+
+Componente para mostrar la lista de chats con funcionalidades de búsqueda y filtrado.
+
+_Props_
+
+| Nombre                 | Tipo                                           | Descripción                                           |
+| ---------------------- | ---------------------------------------------- | ----------------------------------------------------- |
+| `chatList`             | `ChatListData[]`                               | Lista de chats a mostrar.                             |
+| `onClickOnItem`        | `(item: ChatListData) => void`                 | Callback al seleccionar un chat.                      |
+| `loadMoreChats`        | `(archived: boolean, chatId?: string) => void` | Función para cargar más chats (scroll infinito).      |
+| `currentChat`          | `ChatListData \| null`                         | Chat actualmente seleccionado.                        |
+| `hasMore`              | `boolean`                                      | Indica si hay más chats por cargar.                   |
+| `loadingList`          | `boolean \| undefined`                         | Estado de carga de la lista principal.                |
+| `loadingSearch`        | `boolean \| undefined`                         | Estado de carga durante búsquedas.                    |
+| `showArchivedChats`    | `boolean`                                      | Controla si se muestran chats archivados.             |
+| `setShowArchivedChats` | `(val: boolean) => void`                       | Función para alternar entre chats archivados/activos. |
+| `handleSearch`         | `DebouncedFunc<(val: string) => void>`         | Función debounced para manejar búsquedas.             |
+| `usingSearch`          | `boolean`                                      | Indica si se está realizando una búsqueda.            |
+| `removeChatFromList`   | `(chatId: string) => void`                     | Elimina un chat de la lista.                          |
+| `closeChat`            | `() => void`                                   | Cierra el chat actual.                                |
+| `loadingAll`           | `boolean`                                      | Estado de carga general.                              |
+
+###### ChatListItem
+
+Componente para renderizar un elemento individual de la lista de chats.
+
+_Props_
+
+| Nombre               | Tipo                           | Descripción                                      |
+| -------------------- | ------------------------------ | ------------------------------------------------ |
+| `data`               | `ChatListData`                 | Datos del chat a mostrar.                        |
+| `onClickOnItem`      | `(item: ChatListData) => void` | Callback al hacer clic en el item.               |
+| `active?`            | `boolean`                      | Indica si el chat está actualmente seleccionado. |
+| `removeChatFromList` | `(chatId: string) => void`     | Función para eliminar el chat de la lista.       |
+
+#### Create-requirement
+
+##### CreateRequirement
+
+Componente de formulario para crear nuevos requerimientos.
+
+_Props_
+
+| Nombre                      | Tipo                                     | Descripción                                                      |
+| --------------------------- | ---------------------------------------- | ---------------------------------------------------------------- |
+| `closeModal`                | `() => void`                             | Función para cerrar el modal.                                    |
+| `useApiHookImg`             | `ReturnType<typeof useApi>`              | Hook para manejar subida de imágenes.                            |
+| `setApiParamsImg`           | `(params: useApiParams) => void`         | Configura parámetros de la solicitud HTTP para subir imágenes.   |
+| `setAdditionalApiParamsImg` | `(additionalParams: UseApiType) => void` | Configura parámetros adicionales de hook para subir imágenes.    |
+| `apiParamsImg`              | `useApiParams`                           | Parámetros actuales de solicitud HTTP para subir imágenes.       |
+| `useApiHookDoc`             | `ReturnType<typeof useApi>`              | Hook para manejar subida de documentos.                          |
+| `setApiParamsDoc`           | `(params: useApiParams) => void`         | Configura parámetros de la solicitud HTTP para subir documentos. |
+| `setAdditionalApiParamsDoc` | `(additionalParams: UseApiType) => void` | Configura parámetros adicionales de hook para subir documentos.  |
+| `apiParamsDoc`              | `useApiParams`                           | Parámetros actuales de solicitud HTTP para subir documentos.     |
+| `setReqSuccess`             | `(val: ProcessFlag) => void`             | Actualiza estado de éxito para creación de requerimiento.        |
+| `setDocSuccess`             | `(val: ProcessFlag) => void`             | Actualiza estado de éxito para subida de documentos.             |
+| `setImgSuccess`             | `(val: ProcessFlag) => void`             | Actualiza estado de éxito para subida de imágenes.               |
+| `setType`                   | `(val: RequirementType) => void`         | Actualiza el tipo de requerimiento.                              |
+
+##### CreateRequirementFloatButton
+
+Componente para mostrar una lista de botones flotantes. Además del botón para abrir formulario para crear requerimiento, se muestra condicionalmente botones para ir a home y a la sección de chat.
+
+#### Footer
+
+##### Footer
+
+Componente que muestra footer de la aplicación.
+
+#### Header
+
+##### MainHeader
+
+Componente principal de encabezado con gestión de modales.
+
+_Props_
+
+| Nombre        | Tipo                      | Descripción                                              |
+| ------------- | ------------------------- | -------------------------------------------------------- |
+| `onShowMenu?` | `(show: boolean) => void` | Callback para controlar la visibilidad del menú lateral. |
+
+##### MainHeaderNoModals
+
+Componente de encabezado con gestión de menú y renderizado de diferentes ítems, sin modales. Ejecuta diversas acciones al hacer click en los ítems.
+
+_Props_
+
+| Nombre              | Tipo                      | Descripción                                              |
+| ------------------- | ------------------------- | -------------------------------------------------------- |
+| `onShowMenu?`       | `(show: boolean) => void` | Callback para controlar la visibilidad del menú lateral. |
+| `onOpenLoginModal?` | `() => void`              | Callback para abrir el modal de login/registro.          |
+
+##### Items
+
+###### Chat
+
+Componente de ícono de chat con indicador de mensajes no leídos. Al hacer click en él, redirecciona a sección de chat.
+
+_Props_
+
+| Nombre         | Tipo      | Descripción                                                   |
+| -------------- | --------- | ------------------------------------------------------------- |
+| `forDropdown?` | `boolean` | Indica si el componente se usa dentro de un menú desplegable. |
+
+###### ControlPanel
+
+Componente de ícono de panel de control. Panel de control se refiere a alguna de las secciones en el menú lateral.
+
+###### Logout
+
+Componente de ícono para cerrar sesión.
+
+###### Notification
+
+Componente de notificaciones con scroll infinito y marcador de no leídas. Al hacer click en él, abre bandeja de notificaciones y permite marcar notificaciones como leídas al hacer click en ellas.
+
+_Props_
+
+| Nombre         | Tipo      | Descripción                                                      |
+| -------------- | --------- | ---------------------------------------------------------------- |
+| `forDropdown?` | `boolean` | Indica si el componente se usa en un menú desplegable.           |
+| `includeText?` | `boolean` | Determina si se muestra el texto "notifications" junto al ícono. |
+
+###### Premium
+
+Componente que indica si el usuario tiene el estado Premium.
+
+###### ProfileMenu
+
+Componente de ícono de perfil de usuario.
+
+###### UserName
+
+Componente que muestra la imagen de perfil y nombre del usuario.
+
+#### Home
+
+##### Ads
+
+Componente que muestra elementos de publicidad.
+
+##### Search
+
+Componente que muestra un buscador general usando keywords.
+
+##### CompanyData
+
+###### CompanyData
+
+Componente para mostrar información de una empresa y el estado de la certificación del usuario con dicha empresa.
+
+###### BasicCompanyData
+
+Componente para mostrar información básica de una empresa con datos de contacto y valoraciones.
+
+_Props_
+
+| Nombre | Tipo       | Descripción                                       |
+| ------ | ---------- | ------------------------------------------------- |
+| `user` | `FullUser` | Objeto con la información completa de la empresa. |
+
+###### CertificationData
+
+Componente para manejar el estado de certificación del usuario con una empresa.
+
+_Props_
+
+| Nombre          | Tipo                 | Descripción                                                       |
+| --------------- | -------------------- | ----------------------------------------------------------------- |
+| `state`         | `CertificationState` | Estado actual de certificación.                                   |
+| `user`          | `FullUser`           | Objeto con información de la empresa.                             |
+| `onRequestSent` | `() => void`         | Callback que se ejecuta al enviar una solicitud de certificación. |
+
+###### DetailedCompanyData
+
+Componente para mostrar información detallada de una empresa incluyendo categorías, ubicación y otros datos.
+
+_Props_
+
+| Nombre | Tipo       | Descripción                                       |
+| ------ | ---------- | ------------------------------------------------- |
+| `user` | `FullUser` | Objeto con la información completa de la empresa. |
+
+##### CompanyFilter
+
+###### CompanyFilter
+
+Componente para mostrar un filtro/buscador de empresas. Limpia la Id de de la empresa sleccionada al desmontarse.
+
+###### SelectCompanyField
+
+Componente de selección de empresas con búsqueda en tiempo real.
+
+_Props_
+
+| Nombre              | Tipo                   | Descripción                                                                 |
+| ------------------- | ---------------------- | --------------------------------------------------------------------------- |
+| `onCompanySelected` | `(id: string) => void` | Función que se ejecuta al seleccionar una empresa.                          |
+| `forHomeFilter?`    | `boolean`              | Indica si el selector es para el formulario de filtros de la tabla en home. |
+
+##### HomeTable
+
+###### HomeTable
+
+Componente contenedor para la tabla principal de la página de inicio con filtros.
+
+_Props_
+
+| Nombre                     | Tipo                          | Descripción                                  |
+| -------------------------- | ----------------------------- | -------------------------------------------- |
+| `loadingTable?`            | `boolean`                     | Indica si la tabla está cargando datos.      |
+| `content`                  | `TableType`                   | Datos y configuración de la tabla.           |
+| `onChangePageAndPageSize?` | `OnChangePageAndPageSizeType` | Callback para manejar cambios de paginación. |
+
+###### HomeFilters
+
+Componente del formulario de filtros aplicables a la tabla para la página de inicio. También incluye botones para cambiar el contenido de la tabla según el tipo de requerimiento.
+
+###### HomeMainTable
+
+Componente principal de tabla para la página de inicio, envuelto en contenedor estilizado.
+
+_Props_
+
+| Nombre                     | Tipo                          | Descripción                                  |
+| -------------------------- | ----------------------------- | -------------------------------------------- |
+| `loadingTable?`            | `boolean`                     | Indica si la tabla está cargando datos.      |
+| `content`                  | `TableType`                   | Datos y configuración de la tabla.           |
+| `onChangePageAndPageSize?` | `OnChangePageAndPageSizeType` | Callback para manejar cambios de paginación. |
+
+#### ProductDetail
+
+##### ProductDetailHeader
+
+Componente de encabezado para páginas de detalle de requerimiento con breadcrumb de navegación.
+
+_Props_
+
+| Nombre     | Tipo                           | Descripción               |
+| ---------- | ------------------------------ | ------------------------- |
+| `reqTitle` | `string \| undefined`          | Título del requerimiento. |
+| `type`     | `RequirementType \| undefined` | Tipo de requerimiento.    |
+
+##### ProductRequirementDetail
+
+###### ProductRequirementDetail
+
+Component para mostrar datos de un requerimiento, creador del requerimiento, imágenes y documentos asociados al requerimiento y un formulario para ofertar.
+
+_Props_
+
+| Nombre        | Tipo                       | Descripción              |
+| ------------- | -------------------------- | ------------------------ |
+| `requirement` | `Requirement \| undefined` | Datos del requerimiento. |
+
+###### BasicDataRequirement
+
+Component para mostrar datos básicos de un requerimiento.
+
+_Props_
+
+| Nombre        | Tipo                       | Descripción              |
+| ------------- | -------------------------- | ------------------------ |
+| `requirement` | `Requirement \| undefined` | Datos del requerimiento. |
+
+###### MoreDetailedRequirement
+
+Component para mostrar datos más detallados de un requerimiento.
+
+_Props_
+
+| Nombre        | Tipo                       | Descripción              |
+| ------------- | -------------------------- | ------------------------ |
+| `requirement` | `Requirement \| undefined` | Datos del requerimiento. |
+
+###### RequirementDescription
+
+Component para mostrar descripción de un requerimiento.
+
+_Props_
+
+| Nombre        | Tipo                  | Descripción                    |
+| ------------- | --------------------- | ------------------------------ |
+| `description` | `string \| undefined` | Descripción del requerimiento. |
+
+###### RequirementFilesAndImages
+
+Componente para visualización de archivos e imágenes asociados a un requerimiento.
+
+_Props_
+
+| Nombre   | Tipo                    | Descripción                  |
+| -------- | ----------------------- | ---------------------------- |
+| `images` | `string[] \| undefined` | Array de URLs de imágenes.   |
+| `docs`   | `string[] \| undefined` | Array de URLs de documentos. |
+
+###### UserDataRequirement
+
+Componente para mostrar información detallada del usuario asociado a un requerimiento.
+
+_Props_
+
+| Nombre        | Tipo          | Descripción                             |
+| ------------- | ------------- | --------------------------------------- |
+| `user`        | `BaseUser`    | Datos principales del usuario.          |
+| `requirement` | `Requirement` | Información del requerimiento asociado. |
+| `subUser?`    | `BaseUser`    | Datos del subusuario.                   |
+
+###### OfferForm
+
+Component de formulario para ofertar. Verifica si el usuario puede ofertar al requerimiento. Si la respuesta es positiva, se muestra el formulario. De lo contrario, muestra el componente `CantOfferMessage`.
+
+_Props_
+
+| Nombre        | Tipo                       | Descripción              |
+| ------------- | -------------------------- | ------------------------ |
+| `requirement` | `Requirement \| undefined` | Datos del requerimiento. |
+
+###### CantOfferMessage
+
+Componente que muestra mensajes y acciones cuando un usuario no puede realizar una oferta.
+
+_Props_
+
+| Nombre                            | Tipo                                  | Descripción                                         |
+| --------------------------------- | ------------------------------------- | --------------------------------------------------- |
+| `offerId`                         | `string`                              | ID de la oferta existente (si aplica).              |
+| `motive`                          | `CantOfferMotives`                    | Razón por la que no se puede ofertar.               |
+| `requirement`                     | `Requirement \| undefined`            | Datos del requerimiento relacionado.                |
+| `isPremium?`                      | `boolean`                             | Indica si el usuario es premium.                    |
+| `isCertified?`                    | `CertificationState`                  | Estado de certificación del usuario.                |
+| `loading?`                        | `boolean`                             | Estado de carga del componente.                     |
+| `onDeleteSuccess`                 | `() => void`                          | Callback al eliminar una oferta exitosamente.       |
+| `onSentDocsToGetCertifiedSuccess` | `() => void`                          | Callback al enviar documentos para certificación.   |
+| `setIsCertified`                  | `(state: CertificationState) => void` | Función para actualizar el estado de certificación. |

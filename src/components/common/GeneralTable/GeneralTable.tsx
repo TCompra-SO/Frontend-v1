@@ -63,7 +63,7 @@ import TypeColumn from "./columns/TypeColumn";
 import ViewColumn from "./columns/ViewColumn";
 import DocumentColumn from "./columns/DocumentColumn";
 import { useNavigate } from "react-router-dom";
-import RequirementInfo from "../../section/requirements/requirementDetail/RequirementInfo";
+import RequirementInfo from "../modals/requirementDetail/RequirementInfo";
 import { useState } from "react";
 import { getProductDetailRoute } from "../../../utilities/globalFunctions";
 

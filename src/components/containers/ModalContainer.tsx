@@ -1,9 +1,9 @@
 import { Action, ModalTypes, ModalWidth } from "../../utilities/types";
-import RequirementDetail from "../section/requirements/requirementDetail/RequirementDetail";
-import RequirementModalOfferSelected from "../section/requirements/RequirementModalOfferSelected";
+import RequirementDetail from "../common/modals/requirementDetail/RequirementDetail";
+import RequirementModalOfferSelected from "../common/modals/RequirementModalOfferSelected";
 import { ModalProps } from "antd/lib";
-import RequirementOfferSummary from "../section/requirements/requirementOfferSummary/RequirementOfferSummary";
-import RequirementModalRepublish from "../section/requirements/RequirementModalRepublish";
+import RequirementOfferSummary from "../common/modals/RequirementOfferSummary";
+import RequirementModalRepublish from "../common/modals/RequirementModalRepublish";
 import {
   CommonModalProps,
   ModalContent,
@@ -15,7 +15,7 @@ import RatingModal from "../common/modals/RatingModal";
 import ConfirmationModal from "../common/modals/ConfirmationModal";
 import InputEmailModal from "../common/modals/InputEmailModal";
 import NoContentModalContainer from "./NoContentModalContainer";
-import OfferDetailModal from "../section/offers/OfferDetailModal";
+import OfferDetailModal from "../common/modals/OfferDetailModal/OfferDetailModal";
 import UserInfoModal from "../common/modals/UserInfoModal";
 import AddCertificatesModal from "../common/modals/AddCertificatesModal";
 import EditDocumentListToRequestModal from "../common/modals/EditDocumentListToRequestModal";
@@ -260,7 +260,7 @@ export default function ModalContainer(props: ModalContainerProps) {
           <RequirementModalOfferSelected
             offer={props.content.data.offer}
             requirement={props.content.data.requirement}
-            onSucces={props.content.data.onSuccess}
+            onSuccess={props.content.data.onSuccess}
             onClose={props.onClose}
             filterNames={props.content.data.filterNames}
             filters={props.content.data.filters}

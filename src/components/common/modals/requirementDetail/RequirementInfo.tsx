@@ -5,8 +5,8 @@ import { useContext } from "react";
 import dayjs from "dayjs";
 import { dateFormat } from "../../../../utilities/globals";
 import RequirementInfoNoTags from "./RequirementInfoNoTags";
-import FrontImage from "../../../common/utils/FrontImage";
-import PriceInHeader from "../../../common/utils/PriceInHeader";
+import FrontImage from "../../utils/FrontImage";
+import PriceInHeader from "../../utils/PriceInHeader";
 
 interface RequirementInfoProps {
   requirement: Requirement;

@@ -1,11 +1,11 @@
 import { Tooltip } from "antd";
-import SubUserName from "../../../common/utils/SubUserName";
+import SubUserName from "../../utils/SubUserName";
 import { getLabelFromRequirementType } from "../../../../utilities/globalFunctions";
 import { useTranslation } from "react-i18next";
 import { BaseUser } from "../../../../models/MainInterfaces";
 import { RequirementType } from "../../../../utilities/types";
-import DescriptionParagraph from "../../../common/utils/DescriptionParagraph";
-import RateStarCount from "../../../common/utils/RateStarCount";
+import DescriptionParagraph from "../../utils/DescriptionParagraph";
+import RateStarCount from "../../utils/RateStarCount";
 
 interface RequirementInfoNoTagsProps {
   title: string;

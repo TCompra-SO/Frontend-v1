@@ -18,6 +18,7 @@ export interface IncludeNotificationRequest {
 export interface LoginRequest extends IncludeNotificationRequest {
   email: string;
   password: string;
+  browserId: string;
 }
 
 export interface RegisterRequest extends IncludeNotificationRequest {

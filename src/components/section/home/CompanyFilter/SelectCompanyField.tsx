@@ -28,6 +28,7 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
     return () => {
       searchCompany.cancel();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const searchCompany = useMemo(
@@ -40,6 +41,7 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
           clearList();
         }
       }, inputSearchAfterMseconds),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 

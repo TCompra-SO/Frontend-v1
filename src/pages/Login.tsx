@@ -37,6 +37,7 @@ import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { useLogin, useRegister } from "../hooks/authHooks";
 import useShowNotification from "../hooks/utilHooks";
 import TermsAndConditionsModal from "../components/common/modals/TermsAndConditionsModal";
+import { browserIdKey } from "../utilities/globals";
 
 const LoginType = {
   LOGIN: "login",
@@ -158,9 +159,15 @@ export default function Login(props: LoginProps) {
 
   function HandleSubmit(values: any) {
     if (loginType == LoginType.LOGIN) {
+      let browserId = localStorage.getItem(browserIdKey);
+      if (!browserId) {
+        browserId = crypto.randomUUID();
+        localStorage.setItem(browserIdKey, browserId);
+      }
       const data: LoginRequest = {
         email: values.email,
         password: values.password,
+        browserId,
       };
       setApiParams({
         service: loginService(),

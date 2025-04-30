@@ -37,7 +37,7 @@ interface CantOfferMessageProps {
   loading?: boolean;
   onDeleteSuccess: () => void;
   onSentDocsToGetCertifiedSuccess: () => void;
-  setIsCertified: (newMotive: CertificationState) => void;
+  setIsCertified: (state: CertificationState) => void;
 }
 
 export default function CantOfferMessage(props: CantOfferMessageProps) {

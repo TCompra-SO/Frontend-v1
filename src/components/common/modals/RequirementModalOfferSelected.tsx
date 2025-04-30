@@ -27,7 +27,7 @@ interface RequirementModalOfferSelectedProps extends CommonModalProps {
   offer: Offer;
   requirement: Requirement;
   onClose: () => any;
-  onSucces: (offerId: string) => void;
+  onSuccess: (offerId: string) => void;
   filters: OfferFilters;
   filterNames: FilterNames;
 }
@@ -53,7 +53,7 @@ export default function RequirementModalOfferSelected({
       ) {
         if (responseData) {
           showNotification("success", t("offerSelectedSuccessfully"));
-          props.onSucces(props.offer.key);
+          props.onSuccess(props.offer.key);
           props.onClose();
         } else if (error) {
           showNotification("error", errorMsg);
