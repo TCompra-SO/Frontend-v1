@@ -147,7 +147,9 @@ export default function useSearchTable(
           fieldName,
           orderType,
           filterColumn,
-          filterData,
+          filterData: filterData?.map((filter) =>
+            filter === "true" ? true : filter === "false" ? false : filter
+          ),
         },
       };
       setApiParams(apiData);

@@ -565,15 +565,15 @@ export default function OfferForm(props: OfferFormProps) {
                 {props.requirement.type == RequirementType.SALE ? (
                   <RowContainer>
                     <LocationField onlyItem />
-                    <DeliveryTimeField onlyItem />
-                    <CurrencyField onlyItem disabled />
+                    <DeliveryTimeField showDifferentPlaceholder />
+                    <CurrencyField showDifferentPlaceholder disabled />
                     <BudgetField required greaterThanZero />
                   </RowContainer>
                 ) : (
                   <RowContainer>
                     <LocationField onlyItem />
-                    <DeliveryTimeField onlyItem />
-                    <CurrencyField onlyItem disabled />
+                    <DeliveryTimeField showDifferentPlaceholder />
+                    <CurrencyField showDifferentPlaceholder disabled />
                   </RowContainer>
                 )}
                 {props.requirement.type != RequirementType.SALE && (
@@ -586,7 +586,7 @@ export default function OfferForm(props: OfferFormProps) {
                       <DurationField
                         required={warrantyRequired}
                         name={"duration"}
-                        onlyItem
+                        showDifferentPlaceholder
                         onChange={() => checkWarrantyField()}
                         forWarranty
                       />

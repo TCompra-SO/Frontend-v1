@@ -392,7 +392,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         visibility[TableColumns.NAME],
         props.content.fieldSort
       ),
-      CategoryColumn(props.content.type, visibility[TableColumns.CATEGORY]),
+      CategoryColumn(visibility[TableColumns.CATEGORY]),
       LocationColumn(
         visibility[TableColumns.LOCATION],
         props.content.fieldSort
@@ -984,7 +984,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         null,
         true
       ),
-      CategoryColumn(TableTypes.REQUIREMENT, visibility[TableColumns.CATEGORY]),
+      CategoryColumn(visibility[TableColumns.CATEGORY]),
       LocationColumn(
         visibility[TableColumns.LOCATION],
         props.content.fieldSort,

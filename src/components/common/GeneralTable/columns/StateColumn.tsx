@@ -111,11 +111,11 @@ export default function StateColumn(
       ? [
           {
             text: t("activeUser"),
-            value: true,
+            value: "true",
           },
           {
             text: t("suspendedUser"),
-            value: false,
+            value: "false",
           },
         ]
       : undefined;

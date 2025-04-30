@@ -527,7 +527,7 @@ export interface PaginationDataResponse {
 }
 
 export interface StrictColumnFilterItem extends ColumnFilterItem {
-  value: React.Key | boolean;
+  value: React.Key;
   children?: StrictColumnFilterItem[];
 }
 

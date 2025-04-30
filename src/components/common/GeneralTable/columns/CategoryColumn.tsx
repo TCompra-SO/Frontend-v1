@@ -4,15 +4,11 @@ import {
   Requirement,
 } from "../../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
-import { TableTypes } from "../../../../utilities/types";
 import { useContext } from "react";
 import { ListsContext } from "../../../../contexts/ListsContext";
 import { categoryColumnKey } from "../../../../utilities/globals";
 
-export default function CategoryColumn(
-  type: TableTypes,
-  hidden: boolean = false
-) {
+export default function CategoryColumn(hidden: boolean = false) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { categoryData } = context;
