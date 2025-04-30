@@ -735,6 +735,130 @@ _Props_
 
 #### Utils
 
+##### AvatarImage
+
+Componente para mostrar una imagen de avatar con valores por defecto.
+
+_Props_
+
+| Nombre   | Tipo                              | Descripción                                                                 |
+| -------- | --------------------------------- | --------------------------------------------------------------------------- |
+| `image`  | `string \| string[] \| undefined` | URL(s) de la imagen a mostrar. Puede ser string, array o undefined.         |
+| `isUser` | `boolean`                         | Determina la imagen por defecto a usar (true=usuario, false=requerimiento). |
+
+##### ContentHeader
+
+Componente para encabezados de sección con título y contenido adicional.
+
+_Props_
+
+| Nombre               | Tipo              | Descripción                                             |
+| -------------------- | ----------------- | ------------------------------------------------------- |
+| `title`              | `string`          | Texto principal del encabezado.                         |
+| `additionalContent?` | `React.ReactNode` | Contenido opcional adicional a mostrar junto al título. |
+| `icon`               | `ReactNode`       | Componente/ícono a mostrar junto al título.             |
+
+##### CustomFilterDropdown
+
+Componente personalizado para dropdown de filtros en tablas de Ant Design. Permite aplicar filtros otra vez cuando no han cambiado.
+
+_Props_
+
+| Nombre            | Tipo                                  | Descripción                                                  |
+| ----------------- | ------------------------------------- | ------------------------------------------------------------ |
+| `setSelectedKeys` | `(keys: React.Key[]) => void`         | Función para actualizar las claves de filtros seleccionados. |
+| `selectedKeys`    | `React.Key[]`                         | Claves de filtros actualmente seleccionadas.                 |
+| `confirm`         | `() => void`                          | Función para confirmar la selección.                         |
+| `clearFilters`    | `() => void`                          | Función para limpiar los filtros.                            |
+| `filters`         | `StrictColumnFilterItem[]`            | Lista de opciones de filtro disponibles.                     |
+| `filteredInfo`    | `Record<string, FilterValue \| null>` | Información sobre los filtros actualmente aplicados.         |
+
+##### DescriptionParagraph
+
+Componente para mostrar texto con funcionalidad de expandir/colapsar.
+
+_Props_
+
+| Nombre       | Tipo                  | Descripción                                                          |
+| ------------ | --------------------- | -------------------------------------------------------------------- |
+| `text`       | `string \| undefined` | Texto a mostrar. Si es `undefined`, no se renderiza el componente.   |
+| `className?` | `string`              | Clases CSS adicionales para personalizar el estilo.                  |
+| `rows?`      | `number`              | Número máximo de filas a mostrar cuando está colapsado (default: 3). |
+
+##### FrontImage
+
+Componente para mostrar imágenes con funcionalidad de previsualización.
+
+_Props_
+
+| Nombre     | Tipo                              | Descripción                                                          |
+| ---------- | --------------------------------- | -------------------------------------------------------------------- |
+| `image`    | `string \| string[] \| undefined` | URL(s) de la imagen a mostrar.                                       |
+| `isUser`   | `boolean`                         | Determina la imagen por defecto (true=usuario, false=requerimiento). |
+| `small?`   | `boolean`                         | Si es true, aplica estilo pequeño.                                   |
+| `forHome?` | `boolean`                         | Si es true, aplica estilo especial para home.                        |
+
+##### ImagesAndDocs
+
+Componente para mostrar y gestionar imágenes, documentos y otras acciones.
+
+_Props_
+
+| Nombre       | Tipo                                    | Descripción                                                     |
+| ------------ | --------------------------------------- | --------------------------------------------------------------- |
+| `image`      | `string[] \| undefined`                 | Array de URLs de imágenes.                                      |
+| `document`   | `string[] \| undefined`                 | Array de URLs de documentos.                                    |
+| `showChat?`  | `boolean`                               | Si es true, muestra el ícono de chat.                           |
+| `goToChat?`  | `() => void`                            | Función para navegar al chat.                                   |
+| `orderData?` | `{ id: string; type: RequirementType }` | Datos para descargar PDF de orden (id y tipo de requerimiento). |
+
+##### NotificationUserAvatar
+
+Componente para mostrar avatar de usuario en notificaciones.
+
+_Props_
+
+| Nombre        | Tipo                  | Descripción                                                                        |
+| ------------- | --------------------- | ---------------------------------------------------------------------------------- |
+| `senderImage` | `string \| undefined` | URL de la imagen del usuario. Si es undefined, muestra letra inicial de su nombre. |
+| `senderName`  | `string`              | Nombre del usuario para generar inicial cuando no hay imagen.                      |
+| `size?`       | `AvatarSize`          | Tamaño del avatar.                                                                 |
+
+##### PriceInHeader
+
+Componente para mostrar precios con formato de moneda en encabezados.
+
+_Props_
+
+| Nombre          | Tipo      | Descripción                                                              |
+| --------------- | --------- | ------------------------------------------------------------------------ |
+| `coin`          | `number`  | ID de la moneda para mostrar su símbolo.                                 |
+| `price`         | `number`  | Valor numérico del precio a mostrar.                                     |
+| `useOfferClass` | `boolean` | Determina la clase CSS a aplicar dependiendo si es para una oferta o no. |
+
+##### RateStarCount
+
+Componente para mostrar puntuaciones con estrellas y conteo de valoraciones.
+
+_Props_
+
+| Nombre  | Tipo                  | Descripción                                 |
+| ------- | --------------------- | ------------------------------------------- |
+| `score` | `number \| undefined` | Puntuación numérica a mostrar (0-5).        |
+| `count` | `number \| undefined` | Cantidad de valoraciones recibidas.         |
+| `type?` | `RateStartCountType`  | Tipo de visualización, afecta a clases CSS. |
+
+##### SubUserName
+
+Componente para mostrar inicial de subusuario con tooltip.
+
+_Props_
+
+| Nombre        | Tipo                  | Descripción                              |
+| ------------- | --------------------- | ---------------------------------------- |
+| `subUserName` | `string \| undefined` | Nombre del subusuario (muestra inicial). |
+| `small?`      | `boolean`             | Si es true, aplica estilo pequeño.       |
+
 ### Containers
 
 #### AvatarContainer
