@@ -181,24 +181,7 @@ export default function useUserSocket() {
 
       // Refrescar token si queda menos de cierto tiempo
       if (timeLeft <= remainingTokenTime) {
-        const success = await refreshToken(isAccessToken);
-        // Si no se pudo refrescar token, cerrar sesión después de un tiempo
-        if (success === false) {
-          localStorage.removeItem(tokenKey);
-          localStorage.removeItem(refreshTokenKey);
-          localStorage.removeItem(expiresInKey);
-          localStorage.removeItem(refreshExpiresInKey);
-          setTokenExpiration(null);
-          setRefreshTokenExpiration(null);
-          showNotification("error", t("noRefreshTokenMsg"));
-          logoutTimeout.current = setTimeout(() => {
-            logout();
-          }, logoutAfterNoTokenRefreshTime * 1000);
-        }
-        if (success === null || success) {
-          console.log("successful || actualizando en otra ventana");
-          return;
-        }
+        await refreshTokenAndHandleResult(isAccessToken);
       }
     }, remainingTokenTime * 1000);
 
@@ -206,6 +189,27 @@ export default function useUserSocket() {
       clearInterval(interval);
       // if (retryInterval) clearInterval(retryInterval);
     };
+  }
+
+  async function refreshTokenAndHandleResult(isAccessToken: boolean) {
+    const success = await refreshToken(isAccessToken);
+    // Si no se pudo refrescar token, cerrar sesión después de un tiempo
+    if (success === false) {
+      localStorage.removeItem(tokenKey);
+      localStorage.removeItem(refreshTokenKey);
+      localStorage.removeItem(expiresInKey);
+      localStorage.removeItem(refreshExpiresInKey);
+      setTokenExpiration(null);
+      setRefreshTokenExpiration(null);
+      showNotification("error", t("noRefreshTokenMsg"));
+      logoutTimeout.current = setTimeout(() => {
+        logout();
+      }, logoutAfterNoTokenRefreshTime * 1000);
+    }
+    if (success === null || success) {
+      console.log("successful || actualizando en otra ventana");
+      return;
+    }
   }
 
   async function refreshToken(isAccesToken: boolean) {
@@ -319,5 +323,6 @@ export default function useUserSocket() {
     disconnectUserSocket: disconnectSocket,
     setTokenExpiration,
     setRefreshTokenExpiration,
+    refreshTokenAndHandleResult,
   };
 }

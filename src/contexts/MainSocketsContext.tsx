@@ -65,6 +65,7 @@ export const MainSocketsContext = createContext<MainSocketsContextType>({
   setNewNotificationsExist: () => {},
   globalNumUnreadNotifications: 0,
   setGlobalNumUnreadNotifications: () => {},
+  refreshTokenAndHandleResult: async () => {},
 } as MainSocketsContextType);
 
 export function MainSocketsProvider({ children }: { children: ReactNode }) {
