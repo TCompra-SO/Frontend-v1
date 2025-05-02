@@ -18,7 +18,7 @@ import {
 } from "../models/Interfaces";
 import TablePageContent, {
   TablePageContentRef,
-} from "../components/section/table-page/TablePageContent";
+} from "../components/common/utils/TablePageContent";
 import {
   defaultErrorMsg,
   fieldNameSearchRequestOffer,

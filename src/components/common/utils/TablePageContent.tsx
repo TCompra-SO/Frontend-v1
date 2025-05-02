@@ -5,13 +5,13 @@ import {
   useImperativeHandle,
   useState,
 } from "react";
-import ContentHeader from "../../common/utils/ContentHeader";
+import ContentHeader from "./ContentHeader";
 import { Col, Row } from "antd";
 import InputContainer from "../../containers/InputContainer";
 import { SearchOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { TableType } from "../../../models/Interfaces";
-import GeneralTable from "../../common/GeneralTable/GeneralTable";
+import GeneralTable from "../GeneralTable/GeneralTable";
 import { OnChangePageAndPageSizeType } from "../../../utilities/types";
 
 export interface TablePageContentRef {

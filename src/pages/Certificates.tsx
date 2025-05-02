@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent, {
   TablePageContentRef,
-} from "../components/section/table-page/TablePageContent";
+} from "../components/common/utils/TablePageContent";
 import {
   defaultErrorMsg,
   fieldNameSearchRequestCertRequests,

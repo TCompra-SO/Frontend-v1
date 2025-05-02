@@ -60,7 +60,7 @@ const menuToggles: {
 
 interface SidebarProps {
   showMenu: boolean;
-  onShowMenu: (show: boolean) => void;
+  changeShowMenu: (show: boolean) => void;
 }
 
 export default function Sidebar(props: SidebarProps) {
@@ -186,7 +186,7 @@ export default function Sidebar(props: SidebarProps) {
       {props.showMenu && (
         <i
           className="fa-solid fa-circle-xmark btn-close"
-          onClick={() => props.onShowMenu(false)}
+          onClick={() => props.changeShowMenu(false)}
         ></i>
       )}
       <div>

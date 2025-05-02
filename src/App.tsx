@@ -70,7 +70,7 @@ function MainLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="t-flex">
-      <Sidebar showMenu={showMenu} onShowMenu={handleShowMenu} />
+      <Sidebar showMenu={showMenu} changeShowMenu={handleShowMenu} />
 
       <div className="col-datos">
         <MainHeader onShowMenu={handleShowMenu} />
@@ -99,7 +99,7 @@ function UserDataLoader() {
     dispatch(setIsLoading(true));
 
     async function getUserData() {
-      await loadUserInfo();
+      await loadUserInfo(true);
       dispatch(setIsLoading(false));
       dispatch(setIsUserLoading(false));
     }

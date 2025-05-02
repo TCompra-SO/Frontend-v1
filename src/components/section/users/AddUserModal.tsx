@@ -1,14 +1,14 @@
 import { useTranslation } from "react-i18next";
-import ButtonContainer from "../../../containers/ButtonContainer";
+import ButtonContainer from "../../containers/ButtonContainer";
 import { Col, Form, Row } from "antd";
-import DniField from "../../../common/formFields/DniField";
-import LocationField from "../../../common/formFields/LocationField";
-import AddressField from "../../../common/formFields/AddressField";
-import FullNameField from "../../../common/formFields/FullNameField";
-import PhoneField from "../../../common/formFields/PhoneField";
-import EmailField from "../../../common/formFields/EmailField";
-import UserTypeField from "../../../common/formFields/UserTypeField";
-import { getNameReniecService } from "../../../../services/requests/utilService";
+import DniField from "../../common/formFields/DniField";
+import LocationField from "../../common/formFields/LocationField";
+import AddressField from "../../common/formFields/AddressField";
+import FullNameField from "../../common/formFields/FullNameField";
+import PhoneField from "../../common/formFields/PhoneField";
+import EmailField from "../../common/formFields/EmailField";
+import UserTypeField from "../../common/formFields/UserTypeField";
+import { getNameReniecService } from "../../../services/requests/utilService";
 import { useEffect, useState } from "react";
 import {
   ChangeRoleSubUserRequest,
@@ -16,21 +16,21 @@ import {
   NewPasswordRequest,
   RegisterSubUserRequest,
   UpdateProfileSubUserRequest,
-} from "../../../../models/Requests";
-import { useApiParams } from "../../../../models/Interfaces";
-import useApi from "../../../../hooks/useApi";
+} from "../../../models/Requests";
+import { useApiParams } from "../../../models/Interfaces";
+import useApi from "../../../hooks/useApi";
 import {
   changeRoleSubUserService,
   registerSubUserService,
   updateProfileSubUserService,
-} from "../../../../services/requests/subUserService";
+} from "../../../services/requests/subUserService";
 import { useSelector } from "react-redux";
-import { MainState } from "../../../../models/Redux";
-import { equalServices } from "../../../../utilities/globalFunctions";
-import PasswordField from "../../../common/formFields/PasswordField";
-import { newPasswordService } from "../../../../services/requests/authService";
-import { SubUserProfile } from "../../../../models/MainInterfaces";
-import useShowNotification from "../../../../hooks/utilHooks";
+import { MainState } from "../../../models/Redux";
+import { equalServices } from "../../../utilities/globalFunctions";
+import PasswordField from "../../common/formFields/PasswordField";
+import { newPasswordService } from "../../../services/requests/authService";
+import { SubUserProfile } from "../../../models/MainInterfaces";
+import useShowNotification from "../../../hooks/utilHooks";
 
 interface AddUserModalProps {
   onClose: () => void;

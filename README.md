@@ -844,6 +844,76 @@ _Props_
 | `setDataModalSelectOffer?`   | `(val: ModalContent) => void` | Maneja datos del modal de selección de oferta.                 |
 | `setIsOpenModalSelectOffer?` | `(val: boolean) => void`      | Controla visibilidad del modal de selección de oferta.         |
 
+###### RequirementInfo
+
+Componente para mostrar información detallada de un requerimiento.
+
+_Props_
+
+| Nombre        | Tipo          | Descripción                                     |
+| ------------- | ------------- | ----------------------------------------------- |
+| `requirement` | `Requirement` | Datos completos del requerimiento.              |
+| `forHome?`    | `boolean`     | Indica si es para vista en la página de inicio. |
+
+###### RequirementInfoNoTags
+
+Componente para mostrar información básica de un requerimiento.
+
+_Props_
+
+| Nombre         | Tipo              | Descripción                                     |
+| -------------- | ----------------- | ----------------------------------------------- |
+| `title`        | `string`          | Título principal del requerimiento.             |
+| `user`         | `BaseUser`        | Datos del usuario principal.                    |
+| `subUser?`     | `BaseUser`        | Datos del subusuario (si aplica).               |
+| `type`         | `RequirementType` | Tipo de requerimiento.                          |
+| `description?` | `string`          | Descripción del requerimiento.                  |
+| `forHome?`     | `boolean`         | Indica si es para vista en la página de inicio. |
+
+###### RequirementOfferFilters
+
+Componente de filtros interactivos para ofertas de requerimientos.
+
+_Props_
+
+| Nombre              | Tipo           | Descripción                                       |
+| ------------------- | -------------- | ------------------------------------------------- |
+| `fromPurchaseOrder` | `boolean`      | Desactiva filtros cuando es para orden de compra. |
+| `filters?`          | `OfferFilters` | Valores iniciales de los filtros.                 |
+
+###### RequirementOfferList
+
+Componente para listado y gestión de ofertas asociadas a un requerimiento, con paginación y filtrado.
+
+_Props_
+
+| Nombre                       | Tipo                          | Descripción                                  |
+| ---------------------------- | ----------------------------- | -------------------------------------------- |
+| `offers`                     | `Offer[]`                     | Listado completo de ofertas.                 |
+| `requirement`                | `Requirement`                 | Requerimiento asociado.                      |
+| `forPurchaseOrder`           | `boolean`                     | Indica si es para flujo de orden de compra.  |
+| `onClose`                    | `() => any`                   | Función para cerrar el modal padre.          |
+| `setDataModalSelectOffer?`   | `(val: ModalContent) => void` | Maneja datos del modal de selección.         |
+| `setIsOpenModalSelectOffer?` | `(val: boolean) => void`      | Controla visibilidad del modal de selección. |
+| `orderId?`                   | `string`                      | ID de orden de compra asociada.              |
+
+###### RequirementOfferListItemHeader
+
+Componente de encabezado para ítems de ofertas en requerimientos, con acciones contextuales y estados visuales. Cuando el modal funciona como historial para órdenes de compra/venta, no se muestran las acciones para las ofertas (como seleccionar, cancelar, etc.).
+
+_Props_
+
+| Nombre                       | Tipo                                                                   | Descripción                                            |
+| ---------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------ |
+| `requirementId`              | `string`                                                               | ID del requerimiento asociado.                         |
+| `requirementTitle`           | `string`                                                               | Título del requerimiento.                              |
+| `offer`                      | `Offer`                                                                | Datos completos de la oferta.                          |
+| `style?`                     | `React.CSSProperties`                                                  | Estilos adicionales para el contenedor.                |
+| `onClose`                    | `() => any`                                                            | Función para cerrar modales padres.                    |
+| `showActions`                | `{ forPurchaseOrder: false, ... }` o `{ forPurchaseOrder: true, ... }` | Configuración de acciones disponibles según contexto.  |
+| `setDataModalSelectOffer?`   | `(val: ModalContent) => void`                                          | Maneja datos del modal de selección de oferta.         |
+| `setIsOpenModalSelectOffer?` | `(val: boolean) => void`                                               | Controla visibilidad del modal de selección de oferta. |
+
 #### Utils
 
 ##### AvatarImage
@@ -969,6 +1039,32 @@ _Props_
 | ------------- | --------------------- | ---------------------------------------- |
 | `subUserName` | `string \| undefined` | Nombre del subusuario (muestra inicial). |
 | `small?`      | `boolean`             | Si es true, aplica estilo pequeño.       |
+
+##### TablePageContent
+
+Componente contenedor para páginas con tablas. Incluye cabecera, buscador y tabla general.
+
+_Props_
+
+| Nombre                     | Tipo                          | Descripción                                |
+| -------------------------- | ----------------------------- | ------------------------------------------ |
+| `title`                    | `string`                      | Título principal de la página.             |
+| `subtitle?`                | `string`                      | Subtítulo de la página.                    |
+| `titleIcon`                | `ReactNode`                   | Icono para el título.                      |
+| `subtitleIcon?`            | `ReactNode`                   | Icono para el subtítulo.                   |
+| `table?`                   | `TableType`                   | Configuración y datos de la tabla.         |
+| `onSearch?`                | `(e: ChangeEvent) => void`    | Callback para búsqueda.                    |
+| `additionalContentHeader?` | `ReactNode`                   | Contenido adicional en la cabecera.        |
+| `hideSearch?`              | `boolean`                     | Oculta el campo de búsqueda.               |
+| `loading?`                 | `boolean`                     | Estado de carga para la tabla.             |
+| `onChangePageAndPageSize?` | `OnChangePageAndPageSizeType` | Callback para paginación, filtros y orden. |
+| `total?`                   | `number`                      | Total de registros para paginación.        |
+
+_Ref_
+
+| Nombre             | Tipo         | Descripción                  |
+| ------------------ | ------------ | ---------------------------- |
+| `resetSearchValue` | `() => void` | Limpia el valor de búsqueda. |
 
 ### Containers
 
@@ -1480,3 +1576,177 @@ _Props_
 | `onDeleteSuccess`                 | `() => void`                          | Callback al eliminar una oferta exitosamente.       |
 | `onSentDocsToGetCertifiedSuccess` | `() => void`                          | Callback al enviar documentos para certificación.   |
 | `setIsCertified`                  | `(state: CertificationState) => void` | Función para actualizar el estado de certificación. |
+
+#### Sidebar
+
+##### Sidebar
+
+Menú principal de la aplicación. Muestra secciones y subsecciones de acuerdo al rol del usuario.
+
+_Props_
+
+| Nombre           | Tipo                      | Descripción                              |
+| ---------------- | ------------------------- | ---------------------------------------- |
+| `showMenu`       | `boolean`                 | Indica si el menú es visible.            |
+| `changeShowMenu` | `(show: boolean) => void` | Callback al cambiar visibilidad de menú. |
+
+#### Users
+
+##### AddUserModal
+
+Modal para creación y edición de subusuarios con validación de datos y múltiples flujos. Permite crear y editar subusuarios, y cambiar sus contraseñas y roles. Los documentos de identidad son validados con la RENIEC.
+
+_Props_
+
+| Nombre      | Tipo             | Descripción                                             |
+| ----------- | ---------------- | ------------------------------------------------------- |
+| `onClose`   | `() => void`     | Función para cerrar el modal.                           |
+| `edit`      | `boolean`        | Modo edición (true) o creación (false).                 |
+| `userData?` | `SubUserProfile` | Datos del usuario a editar (requerido en modo edición). |
+
+##### SubUserTableModal
+
+Componente modal para visualización de tablas de subusuarios con múltiples tipos de contenido y acciones.
+
+_Props_
+
+| Nombre                     | Tipo                                                 | Descripción                                 |
+| -------------------------- | ---------------------------------------------------- | ------------------------------------------- |
+| `user`                     | `SubUserBase \| null`                                | Datos del subusuario.                       |
+| `content`                  | Varios tipos según `tableType`                       | Contenido específico de cada tipo de tabla. |
+| `onTabChange`              | `(tabId: RequirementType \| OrderTableType) => void` | Callback para cambio de pestaña.            |
+| `loading`                  | `boolean \| undefined`                               | Estado de carga.                            |
+| `tableType`                | `TableTypes`                                         | Tipo de tabla a mostrar.                    |
+| `onChangePageAndPageSize?` | `OnChangePageAndPageSizeType`                        | Callback para paginación.                   |
+| `currentPage`              | `number`                                             | Página actual.                              |
+| `currentPageSize`          | `number`                                             | Tamaño de página actual.                    |
+| `fieldSort?`               | `FieldSort \| undefined`                             | Configuración de ordenamiento de tabla.     |
+| `filteredInfo?`            | `Filters \| undefined`                               | Filtros aplicados a la tabla.               |
+
+## Contexts
+
+### HomeContext
+
+Contexto global para manejar el estado y las operaciones relacionadas con la página principal (home) y la tabla que contiene.
+
+- La tabla contiene un formulario para realizar búsquedas usando filtros y palabras clave.
+- Maneja cola de actualizaciones de requerimientos en tiempo real.
+- Permite hacer un filtrado por rubros directamente desde notificación.
+- Actualiza interfaz con datos de empresa seleccionada en filtro especial para empresas.
+
+| Nombre                           | Tipo                                                                           | Descripción                                                            |
+| -------------------------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------- |
+| **Propiedades**                  |
+| `type`                           | `RequirementType`                                                              | Tipo de requerimiento activo en la tabla.                              |
+| `userId`                         | `string`                                                                       | ID del usuario/empresa para filtrado, seleccionado en `CompanyFilter`. |
+| `useFilter`                      | `boolean \| null`                                                              | Estado de uso de los filtros de la tabla (null=sin aplicar).           |
+| `requirementList`                | `Requirement[]`                                                                | Lista actual de requerimientos.                                        |
+| `totalRequirementList`           | `number`                                                                       | Total de requerimientos disponibles.                                   |
+| `loadingRequirementList?`        | `boolean`                                                                      | Estado de carga de requerimientos.                                     |
+| `page`                           | `number`                                                                       | Página actual de resultados de tabla.                                  |
+| `keywordSearch`                  | `string`                                                                       | Término de búsqueda textual.                                           |
+| `notificationSearchData`         | `NotificationSearchData` (`{categoryId: number, targetType: RequirementType}`) | Datos para búsqueda desde notificaciones.                              |
+| **Métodos**                      |
+| `updateType`                     | `(val: RequirementType) => void`                                               | Cambia el tipo de requerimiento activo.                                |
+| `updateUserId`                   | `(id: string) => void`                                                         | Actualiza el ID de usuario para filtrado.                              |
+| `updateUseFilter`                | `(val: boolean) => void`                                                       | Habilita/deshabilita el uso de filtros.                                |
+| `updatePage`                     | `(val: number) => void`                                                        | Cambia la página actual.                                               |
+| `retrieveRequirements`           | `(page: number, pageSize?: number, params?: HomeFilterRequest) => void`        | Obtiene requerimientos con paginación y filtros.                       |
+| `updateChangesQueue`             | `(payload: SocketResponse, canAddRowUpdate: boolean) => void`                  | Maneja actualizaciones en tiempo real desde sockets.                   |
+| `resetChangesQueue`              | `() => void`                                                                   | Limpia la cola de cambios pendientes.                                  |
+| `retrieveLastSearchRequeriments` | `() => void`                                                                   | Repite la última búsqueda realizada.                                   |
+| `updateKeywordSearch`            | `(val: string) => void`                                                        | Actualiza el término de búsqueda textual.                              |
+| `updateNotificationSearchData`   | `(data: NotificationSearchData) => void`                                       | Configura búsqueda desde notificación.                                 |
+| `resetNotificationSearchData`    | `() => void`                                                                   | Restablece los datos de búsqueda por notificación.                     |
+
+### ListsContext
+
+Contexto para cargar datos generales para los formularios y componentes de la aplicación. Incluye la funcionalidad para censurar palabras dada una lista local de palabras prohibidas.
+
+| Nombre              | Tipo                       | Descripción                                           |
+| ------------------- | -------------------------- | ----------------------------------------------------- |
+| **Propiedades**     |
+| `countryList`       | `IdValueObj[]`             | Lista de países.                                      |
+| `countryData`       | `CountryCities`            | Datos de países con sus ciudades.                     |
+| `tlds`              | `string[]`                 | Lista de dominios de nivel superior (ej: .com, .net). |
+| `categoryData`      | `IdValueMap`               | Categorías disponibles.                               |
+| `currencyData`      | `IdValueAliasMap`          | Monedas con alias.                                    |
+| `paymentMethodData` | `IdValueMap`               | Métodos de pago.                                      |
+| `deliveryTimeData`  | `IdValueMap`               | Tiempos de entrega.                                   |
+| `whoCanOfferData`   | `IdValueMap`               | Roles que pueden ofertar.                             |
+| `planTypeData`      | `PlanData[]`               | Lista de planes disponibles con detalles completos.   |
+| `userRolesData`     | `IdValueMap`               | Roles de usuario disponibles.                         |
+| `defaultPlanId`     | `string`                   | ID del plan por defecto.                              |
+| **Métodos**         |
+| `censorText`        | `(text: string) => string` | Filtra palabras prohibidas en textos.                 |
+
+### LoadingDataContext
+
+Contexto para manejar estados de carga de diversas acciones en la aplicación. Cuando un estado de carga es `true`, otras acciones del mismo tipo son deshabilitadas en la interfaz.
+
+| Propiedad/Método                             | Tipo                       | Descripción                                                                                         |
+| -------------------------------------------- | -------------------------- | --------------------------------------------------------------------------------------------------- |
+| **Estados de Carga PDF**                     |
+| `myPurchaseOrdersLoadingPdf`                 | `boolean`                  | Estado de carga para generación de PDF de orden en tabla Mis órdenes de compra/venta.               |
+| `subUserPurchaseOrdersLoadingPdf`            | `boolean`                  | Estado de carga para generación de PDF de orden en tabla de órdenes de compra/venta de subusuarios. |
+| `allPurchaseOrdersLoadingPdf`                | `boolean`                  | Estado de carga para generación de PDF de orden en tabla de todas las órdenes de compra.            |
+| `allSalesOrdersLoadingPdf`                   | `boolean`                  | Estado de carga para generación de PDF de orden en tabla de todas las órdenes de venta.             |
+| `updateMyPurchaseOrdersLoadingPdf(val)`      | `(boolean) => void`        | Actualiza estado de carga correspondiente.                                                          |
+| `updateSubUserPurchaseOrdersLoadingPdf(val)` | `(boolean) => void`        | Actualiza estado de carga correspondiente.                                                          |
+| `updateAllPurchaseOrdersLoadingPdf(val)`     | `(boolean) => void`        | Actualiza estado de carga correspondiente.                                                          |
+| `updateAllSalesOrdersLoadingPdf(val)`        | `(boolean) => void`        | Actualiza estado de carga correspondiente.                                                          |
+| **Estados Ver Ofertas**                      |
+| `myRequirementsLoadingViewOffers`            | `boolean`                  | Estado de carga para ver ofertas de requerimiento en tabla de Mis requerimientos.                   |
+| `subUserRequirementsViewOffers`              | `boolean`                  | Estado de carga para ver ofertas de requerimiento en tabla de subusuarios.                          |
+| `allPurchaseOrdersViewOffers`                | `boolean`                  | Estado de carga para ver ofertas de requerimiento en tabla de todas las órdenes de compra.          |
+| `allSalesOrdersViewOffers`                   | `boolean`                  | Estado de carga para ver ofertas de requerimientos en tabla de todas las órdenes de venta.          |
+| `updateMyRequirementsLoadingViewOffers(val)` | `(boolean) => void`        | Actualiza estado de carga correspondiente.                                                          |
+| `updateSubUserRequirementsViewOffers(val)`   | `(boolean) => void`        | Actualiza estado de carga correspondiente.                                                          |
+| `updateAllPurchaseOrdersViewOffers(val)`     | `(boolean) => void`        | Actualiza estado de carga correspondiente.                                                          |
+| `updateAllSalesOrdersViewOffers(val)`        | `(boolean) => void`        | Actualiza estado de carga correspondiente.                                                          |
+| **Otros Estados y Métodos**                  |
+| `createRequirementLoading`                   | `boolean`                  | Estado de carga para creación de requerimiento.                                                     |
+| `changeCertificationStateLoading`            | `boolean`                  | Estado de carga para cambio de estado de certificación.                                             |
+| `idAndActionQueue`                           | `Record<string, Action>`   | Cola de acciones para desactivar otras acciones de fila en tablas.                                  |
+| `updateCreateRequirementLoading(val)`        | `(boolean) => void`        | Actualiza estado de creación de requerimiento.                                                      |
+| `updateChangeCertificationStateLoading(val)` | `(boolean) => void`        | Actualiza estado de carga de cambio de certificación.                                               |
+| `updateIdAndActionQueue(id, action)`         | `(string, Action) => void` | Añade acción a la cola usando ID de fila y acción.                                                  |
+| `deleteFromIdAndActionQueue(id)`             | `(string) => void`         | Elimina acción de la cola usando ID.                                                                |
+
+### MainSocketsContext
+
+Contexto que administra sockets principales y acciones al iniciar/cerrar sesión.
+
+- Conecta/desconecta sockets cuando el usuario inicia/cierra sesión.
+- Obtiene datos iniciales de notificaciones y mensajes de chat no leídos.
+- Redirige a home y actualiza tiempos de expiración de tokens al cerrar sesión.
+- Carga datos de usuario en pestaña cuando usuario ha iniciado sesión en otra pestaña.
+
+Los propiedades/métodos que maneja son la unión de los de `useUserSocket`, `useTCNotification` y `useChatSocket`.
+
+### ModalsContext
+
+Contexto para almacenar datos de acciones pendientes. Usado principalmente para ejecutar acciones después de hacer click en una notificación.
+
+| Nombre                               | Tipo                                              | Descripción                                                           |
+| ------------------------------------ | ------------------------------------------------- | --------------------------------------------------------------------- |
+| **Propiedades**                      |
+| `detailedRequirementModalData`       | `DetailedRequirementModalDataType`                | Almacena datos para mostrar un modal detallado de requisito           |
+| `detailedOfferModalData`             | `DetailedOfferModalDataType`                      | Almacena datos para mostrar un modal detallado de oferta              |
+| `viewHistoryModalData`               | `ViewHistoryModalDataType`                        | Almacena datos para mostrar historial de órden de compra              |
+| `viewHistorySalesModalData`          | `ViewHistoryModalDataType`                        | Almacena datos para mostrar historial de orden de venta               |
+| `downloadPdfOrderData`               | `DownloadPdfOrderType`                            | Almacena datos necesarios para descargar PDF de orden de compra/venta |
+| `viewCertificationData`              | `ViewCertificationDataType`                       | Almacena datos para mostrar detalles de solicitud de certificación    |
+| **Métodos**                          |
+| `updateDetailedRequirementModalData` | `(val: DetailedRequirementModalDataType) => void` | Actualiza variable correspondiente                                    |
+| `updateDetailedOfferModalData`       | `(val: DetailedOfferModalDataType) => void`       | Actualiza variable correspondiente                                    |
+| `updateViewHistoryModalData`         | `(val: ViewHistoryModalDataType) => void`         | Actualiza variable correspondiente                                    |
+| `updateViewHistorySalesModalData`    | `(val: ViewHistoryModalDataType) => void`         | Actualiza variable correspondiente                                    |
+| `updateDownloadPdfOrderData`         | `(val: DownloadPdfOrderType) => void`             | Actualiza variable correspondiente                                    |
+| `updateViewCertificationData`        | `(val: ViewCertificationDataType) => void`        | Actualiza variable correspondiente                                    |
+| `resetDetailedRequirementModalData`  | `() => void`                                      | Reinicia datos de variable correspondiente                            |
+| `resetDetailedOfferModalData`        | `() => void`                                      | Reinicia datos de variable correspondiente                            |
+| `resetViewHistoryModalData`          | `() => void`                                      | Reinicia datos de variable correspondiente                            |
+| `resetViewHistorySalesModalData`     | `() => void`                                      | Reinicia datos de variable correspondiente                            |
+| `resetDownloadPdfOrderData`          | `() => void`                                      | Reinicia datos de variable correspondiente                            |
+| `resetViewCertificationData`         | `() => void`                                      | Reinicia datos de variable correspondiente                            |

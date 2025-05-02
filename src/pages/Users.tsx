@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import NoContentModalContainer from "../components/containers/NoContentModalContainer";
 import TablePageContent, {
   TablePageContentRef,
-} from "../components/section/table-page/TablePageContent";
-import AddUserModal from "../components/section/users/addUser/AddUserModal";
+} from "../components/common/utils/TablePageContent";
+import AddUserModal from "../components/section/users/AddUserModal";
 import { useTranslation } from "react-i18next";
 import {
   Action,
@@ -33,7 +33,7 @@ import {
   equalServices,
   getFieldNameObjForOrders,
 } from "../utilities/globalFunctions";
-import SubUserTableModal from "../components/section/users/subUserTables/SubUserTableModal";
+import SubUserTableModal from "../components/section/users/SubUserTableModal";
 import {
   OfferItemSubUser,
   PurchaseOrderItemSubUser,

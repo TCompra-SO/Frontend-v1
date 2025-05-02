@@ -69,7 +69,7 @@ export function useLogin() {
         localStorage.setItem(refreshExpiresInKey, tokenExp.toString());
       }
 
-      await loadUserInfo();
+      await loadUserInfo(false);
       showNotification("success", t("welcome"));
       localStorage.setItem(loginKey, Date.now().toString());
       dispatch(setIsLoading(false));
@@ -138,8 +138,11 @@ export function useLogout() {
 
 export function useLoadUserInfo() {
   const dispatch = useDispatch();
-  const { setTokenExpiration } = useContext(MainSocketsContext);
-  const { setRefreshTokenExpiration } = useContext(MainSocketsContext);
+  const {
+    setTokenExpiration,
+    setRefreshTokenExpiration,
+    refreshTokenAndHandleResult,
+  } = useContext(MainSocketsContext);
   const logout = useLogout();
 
   // function checkToken() {
@@ -154,62 +157,66 @@ export function useLoadUserInfo() {
   //   }
   // }
 
-  async function loadUserInfo() {
-    const userData = localStorage.getItem(userDataKey);
-    const tokenData = localStorage.getItem(tokenKey);
-    const refreshTokenData = localStorage.getItem(refreshTokenKey);
-    const expiresIn = localStorage.getItem(expiresInKey);
-    const refreshExpiresIn = localStorage.getItem(refreshExpiresInKey);
-    if (
-      tokenData &&
-      refreshTokenData &&
-      userData &&
-      expiresIn !== null &&
-      refreshExpiresIn !== null
-    ) {
-      const userInfo = JSON.parse(decryptData(userData));
-      setTokenExpiration(Number(expiresIn));
-      setRefreshTokenExpiration(Number(refreshExpiresIn));
-      // if (!checkToken()) return;
-      if (userInfo) {
-        // localStorage.setItem(tokenKey, userInfo.token);
-        dispatch(setToken(tokenData));
-        dispatch(
-          setUser({
-            token: userInfo.token,
-            dataUser: [
-              {
-                uid: userInfo.uid,
-                name: userInfo.name,
-                email: userInfo.email,
-                typeID: userInfo.typeID,
-                planID: userInfo.planID,
-                type: userInfo.typeEntity,
-              },
-            ],
-          })
-        );
-        const { user, subUser } = await getBaseUserForUserSubUser(
-          userInfo.uid,
-          true
-        );
-        if (!user) {
-          dispatch(setIsLoggedIn(false));
-          logout();
+  async function loadUserInfo(refreshAccessToken: boolean) {
+    let refreshTokenData = localStorage.getItem(refreshTokenKey);
+    if (refreshTokenData) {
+      if (refreshAccessToken) await refreshTokenAndHandleResult(true);
+      const userData = localStorage.getItem(userDataKey);
+      const tokenData = localStorage.getItem(tokenKey);
+      const expiresIn = localStorage.getItem(expiresInKey);
+      const refreshExpiresIn = localStorage.getItem(refreshExpiresInKey);
+      refreshTokenData = localStorage.getItem(refreshTokenKey);
+      if (
+        tokenData &&
+        refreshTokenData &&
+        userData &&
+        expiresIn !== null &&
+        refreshExpiresIn !== null
+      ) {
+        const userInfo = JSON.parse(decryptData(userData));
+        setTokenExpiration(Number(expiresIn));
+        setRefreshTokenExpiration(Number(refreshExpiresIn));
+        // if (!checkToken()) return;
+        if (userInfo) {
+          // localStorage.setItem(tokenKey, userInfo.token);
+          dispatch(setToken(tokenData));
+          dispatch(
+            setUser({
+              token: userInfo.token,
+              dataUser: [
+                {
+                  uid: userInfo.uid,
+                  name: userInfo.name,
+                  email: userInfo.email,
+                  typeID: userInfo.typeID,
+                  planID: userInfo.planID,
+                  type: userInfo.typeEntity,
+                },
+              ],
+            })
+          );
+          const { user, subUser } = await getBaseUserForUserSubUser(
+            userInfo.uid,
+            true
+          );
+          if (!user) {
+            dispatch(setIsLoggedIn(false));
+            logout();
+            return;
+          } else {
+            dispatch(setMainUser(user));
+          }
+          if (subUser) {
+            dispatch(setBaseUser(subUser));
+          }
+          dispatch(setIsLoggedIn(user && subUser ? true : false));
+          if (!(user && subUser)) logout();
           return;
-        } else {
-          dispatch(setMainUser(user));
         }
-        if (subUser) {
-          dispatch(setBaseUser(subUser));
-        }
-        dispatch(setIsLoggedIn(user && subUser ? true : false));
-        if (!(user && subUser)) logout();
+        dispatch(setIsLoggedIn(false));
+        logout();
         return;
       }
-      dispatch(setIsLoggedIn(false));
-      logout();
-      return;
     }
     dispatch(setIsLoggedIn(false));
     logout();

@@ -7,35 +7,35 @@ import {
   OrderTableType,
   RequirementType,
   TableTypes,
-} from "../../../../utilities/types";
+} from "../../../utilities/types";
 import {
   OfferItemSubUser,
   PurchaseOrderItemSubUser,
   RequirementItemSubUser,
   SubUserBase,
-} from "../../../../models/MainInterfaces";
-import GeneralTable from "../../../common/GeneralTable/GeneralTable";
+} from "../../../models/MainInterfaces";
+import GeneralTable from "../../common/GeneralTable/GeneralTable";
 import { useContext, useEffect, useState } from "react";
-import { LoadingDataContext } from "../../../../contexts/LoadingDataContext";
-import { ModalContent, useApiParams } from "../../../../models/Interfaces";
-import useApi from "../../../../hooks/useApi";
+import { LoadingDataContext } from "../../../contexts/LoadingDataContext";
+import { ModalContent, useApiParams } from "../../../models/Interfaces";
+import useApi from "../../../hooks/useApi";
 import {
   getGetOrderPDFService,
   getProductDetailRoute,
   openPurchaseOrderPdf,
-} from "../../../../utilities/globalFunctions";
-import ModalContainer from "../../../containers/ModalContainer";
+} from "../../../utilities/globalFunctions";
+import ModalContainer from "../../containers/ModalContainer";
 import {
   mainModalScrollStyle,
   noPaginationPageSize,
-} from "../../../../utilities/globals";
+} from "../../../utilities/globals";
 import { useNavigate } from "react-router-dom";
-import ButtonContainer from "../../../containers/ButtonContainer";
-import { useGetOffersByRequirementId } from "../../../../hooks/requirementHooks";
+import ButtonContainer from "../../containers/ButtonContainer";
+import { useGetOffersByRequirementId } from "../../../hooks/requirementHooks";
 import useShowNotification, {
   useShowLoadingMessage,
-} from "../../../../hooks/utilHooks";
-import { FieldSort } from "../../../../models/Requests";
+} from "../../../hooks/utilHooks";
+import { FieldSort } from "../../../models/Requests";
 
 interface SubUserTableModalProps {
   user: SubUserBase | null;

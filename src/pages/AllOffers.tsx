@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import TablePageContent, {
   TablePageContentRef,
-} from "../components/section/table-page/TablePageContent";
+} from "../components/common/utils/TablePageContent";
 import { useEffect, useRef, useState } from "react";
 import {
   ModalContent,
