@@ -37,8 +37,12 @@ import {
 } from "./MainInterfaces";
 import useApi, { UseApiType } from "../hooks/useApi";
 import { FieldSort } from "./Requests";
-import { FilterNames } from "../contexts/RequirementDetailContext";
 import { ColumnFilterItem } from "antd/lib/table/interface";
+
+export interface FilterNames {
+  location: string;
+  deliveryTime: string;
+}
 
 /******** Modals *******/
 

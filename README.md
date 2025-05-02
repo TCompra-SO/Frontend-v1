@@ -1750,3 +1750,166 @@ Contexto para almacenar datos de acciones pendientes. Usado principalmente para 
 | `resetViewHistorySalesModalData`     | `() => void`                                      | Reinicia datos de variable correspondiente                            |
 | `resetDownloadPdfOrderData`          | `() => void`                                      | Reinicia datos de variable correspondiente                            |
 | `resetViewCertificationData`         | `() => void`                                      | Reinicia datos de variable correspondiente                            |
+
+### RequirementDetailContext
+
+Contexto para manejar la aplicación de filtros en el modal para ver la lista de ofertas hechas a un requerimiento.
+
+| Nombre          | Tipo                                                        | Descripción                                                                            |
+| --------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `filters`       | `OfferFilters`                                              | Objeto que contiene los filtros actuales para ofertas.                                 |
+| `filterNames`   | `FilterNames`                                               | Nombres mostrados para los filtros de ubicación y tiempo de entrega.                   |
+| `updateFilters` | `(newFilters: OfferFilters, newNames: FilterNames) => void` | Función para actualizar tanto los filtros como los nombres que se muestran al usuario. |
+
+## Hooks
+
+### authHooks
+
+#### `useLogin()`
+
+Maneja el proceso de autenticación/login .
+
+- Almacena tokens (access y refresh) en localStorage
+- Guarda tiempos de expiración de tokens
+- Ejecuta `loadUserInfo()` para cargar datos del usuario
+- Muestra notificación de bienvenida
+- Actualiza estado global de Redux
+
+#### `useRegister()`
+
+Maneja el registro de nuevos usuarios.
+
+- Muestra notificación de éxito
+- Actualiza estado con UID, nombre y email del usuario
+
+#### `useLogout()`
+
+Gestiona cierre de sesión.
+
+- Elimina todos los datos de autenticación de localStorage
+- Limpia estados de Redux
+- Actualiza tiempos de expiración de tokens
+- Realiza llamada API para logout en backend
+
+#### `useLoadUserInfo()`
+
+Carga y valida información del usuario.
+
+- Verifica y refresca tokens si es necesario
+- Decifra y carga datos de usuario desde localStorage
+- Actualiza estado global con información del usuario
+- Realiza validación de usuario/subusuario
+- Maneja auto-logout si la información es inválida
+
+### certificateHooks
+
+#### `useGetCertificatesList()`
+
+Obtiene lista paginada de certificados.
+
+- Maneja paginación y transformación de datos
+- Actualiza estado con lista de certificados y total
+- Muestra notificaciones de error
+- Utiliza API para obtener datos
+
+#### `useDeleteCertificate()`
+
+Elimina certificado por ID.
+
+- Maneja estado de carga durante operación
+- Muestra notificaciones de éxito/error
+- Realiza llamada directa a servicio de eliminación
+
+#### `useVerifyCertification()`
+
+Verifica estado de certificación.
+
+- Valida certificación del usuario con empresa
+- Retorna estado de certificación
+- Maneja estado de carga durante verificación
+
+#### `useGetRequiredDocsCert()`
+
+Obtiene descripción de documentos requeridos para certificación.
+
+- Maneja carga y transformación de datos
+- Actualiza estado con descripción de documentos requeridos
+- Muestra notificaciones de error
+- Utiliza API para obtener datos
+
+#### `useUpdateRequiredDocsCert()`
+
+Actualizar descripción de documentos requeridos para certificación
+
+- Envía nueva descripción de documentos requeridos al backend
+- Muestra notificaciones de éxito/error
+- Maneja estado de carga durante actualización
+- Utiliza API para enviar datos
+
+#### `useGetCertificationData()`
+
+Obtiene datos detallados de solicitud de certificación.
+
+- Maneja diferentes tipos de certificaciones (recibidas/enviadas)
+- Prepara datos para mostrar en modal
+- Transforma datos de API a formato requerido
+- Muestra notificaciones de error
+
+### chatHooks
+
+#### `useChatFunctions()`
+
+Maneja operaciones básicas de chat (archivar, marcar como leído, enviar mensaje).
+
+- Verifica existencia de chats antes de crear nuevos
+- Permite crear chat y enviar primer mensaje en una sola operación
+- Muestra notificaciones de éxito/error
+- Maneja estado de carga durante operaciones
+
+#### `useGetChatList()`
+
+Obtiene lista de chats activos o archivados.
+
+- Transforma datos de API
+- Maneja paginación de chats
+- Actualiza estado con lista de chats
+- Muestra notificaciones de error
+
+#### `useGetChatMessages()`
+
+Obtiene mensajes de un chat específico.
+
+- Maneja paginación de mensajes
+- Transforma datos de API
+- Actualiza estado con lista de mensajes
+- Muestra notificaciones de error
+
+#### `useChatSearch()`
+
+Busca chats por palabras clave.
+
+- Transforma resultados de búsqueda
+- Actualiza estado con lista de chats encontrados
+- Maneja estado de carga durante búsqueda
+
+### requirementHooks
+
+### searchTableHooks
+
+### socketQueueHooks
+
+### subUserHook
+
+### useApi
+
+### useChat
+
+### useHandleChangeImage
+
+### useSystemNotification
+
+### useWindowSize
+
+### utilHooks
+
+### validatorHooks

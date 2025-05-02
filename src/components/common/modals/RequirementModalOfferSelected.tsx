@@ -8,7 +8,11 @@ import { Lengths } from "../../../utilities/lengths";
 import SelectContainer from "../../containers/SelectContainer";
 import { filterLabels } from "../../../utilities/colors";
 import { SelectOfferRequest } from "../../../models/Requests";
-import { CommonModalProps, OfferFilters } from "../../../models/Interfaces";
+import {
+  CommonModalProps,
+  FilterNames,
+  OfferFilters,
+} from "../../../models/Interfaces";
 import useShowNotification from "../../../hooks/utilHooks";
 import {
   ErrorMsgRequestType,
@@ -17,7 +21,6 @@ import {
   ResponseRequestType,
   SystemNotificationType,
 } from "../../../utilities/types";
-import { FilterNames } from "../../../contexts/RequirementDetailContext";
 import { getSelectOfferService } from "../../../utilities/globalFunctions";
 import useSystemNotification from "../../../hooks/useSystemNotification";
 import { MainSocketsContext } from "../../../contexts/MainSocketsContext";
