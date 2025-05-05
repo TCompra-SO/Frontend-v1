@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 import { transformToStatistics } from "../utilities/transform";
+import { defaultErrorMsg } from "../utilities/globals";
 
 export default function Statistics() {
   const { t } = useTranslation();
@@ -20,16 +21,12 @@ export default function Statistics() {
     service: getStatisticsService(mainUid),
     method: "get",
   });
-  const { loading, responseData, error, errorMsg, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-    token: apiParams.token,
-    includeHeader: apiParams.includeHeader,
-  });
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi(apiParams);
 
   useEffect(() => {
     showLoadingMessage(loading);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
   useEffect(() => {
@@ -40,9 +37,15 @@ export default function Statistics() {
   }, [apiParams]);
 
   useEffect(() => {
-    if (responseData) {
-      setData(transformToStatistics(responseData.data));
-    } else if (error) showNotification("error", errorMsg);
+    try {
+      if (responseData) {
+        setData(transformToStatistics(responseData.data));
+      } else if (error) showNotification("error", errorMsg);
+    } catch (e) {
+      console.log(e);
+      showNotification("error", t(defaultErrorMsg));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
   return (

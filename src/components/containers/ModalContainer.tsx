@@ -1,9 +1,9 @@
 import { Action, ModalTypes, ModalWidth } from "../../utilities/types";
-import RequirementDetail from "../section/requirements/requirementDetail/RequirementDetail";
-import RequirementModalOfferSelected from "../section/requirements/RequirementModalOfferSelected";
+import RequirementDetail from "../common/modals/requirementDetail/RequirementDetail";
+import RequirementModalOfferSelected from "../common/modals/RequirementModalOfferSelected";
 import { ModalProps } from "antd/lib";
-import RequirementOfferSummary from "../section/requirements/requirementOfferSummary/RequirementOfferSummary";
-import RequirementModalRepublish from "../section/requirements/RequirementModalRepublish";
+import RequirementOfferSummary from "../common/modals/RequirementOfferSummary";
+import RequirementModalRepublish from "../common/modals/RequirementModalRepublish";
 import {
   CommonModalProps,
   ModalContent,
@@ -15,7 +15,7 @@ import RatingModal from "../common/modals/RatingModal";
 import ConfirmationModal from "../common/modals/ConfirmationModal";
 import InputEmailModal from "../common/modals/InputEmailModal";
 import NoContentModalContainer from "./NoContentModalContainer";
-import OfferDetailModal from "../section/offers/OfferDetailModal";
+import OfferDetailModal from "../common/modals/OfferDetailModal/OfferDetailModal";
 import UserInfoModal from "../common/modals/UserInfoModal";
 import AddCertificatesModal from "../common/modals/AddCertificatesModal";
 import EditDocumentListToRequestModal from "../common/modals/EditDocumentListToRequestModal";
@@ -47,11 +47,6 @@ export default function ModalContainer(props: ModalContainerProps) {
   const { updateIdAndActionQueue, deleteFromIdAndActionQueue } =
     useContext(LoadingDataContext);
 
-  /** Para CancelPurchaseOrderModal */
-
-  const useCancelRequirementHook = useCancelRequirement();
-  const useCancelOfferHook = useCancelOffer();
-
   /** Variables para solicitud */
 
   const [additionalApiParams, setAdditionalApiParams] = useState<UseApiType>({
@@ -71,6 +66,11 @@ export default function ModalContainer(props: ModalContainerProps) {
     setAdditionalApiParams: setAdditionalApiParams,
     apiParams,
   });
+
+  /** Para CancelPurchaseOrderModal */
+
+  const useCancelRequirementHook = useCancelRequirement(additionalApiParams);
+  const useCancelOfferHook = useCancelOffer(additionalApiParams);
 
   /** Acciones para solicitud */
 
@@ -232,6 +232,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             setIsOpenModalSelectOffer={
               props.content.selectOffer?.setIsOpenModalSelectOffer
             }
+            orderId={props.content.data.orderId}
           />
         );
       }
@@ -247,6 +248,10 @@ export default function ModalContainer(props: ModalContainerProps) {
             useCancelRequirementHook={useCancelRequirementHook}
             useCancelOfferHook={useCancelOfferHook}
             type={props.content.data.type}
+            additionalApiParams={additionalApiParams}
+            setAdditionalApiParams={setAdditionalApiParams}
+            notificationTargetData={props.content.data.notificationTargetData}
+            requirementTitle={props.content.data.requirementTitle}
           />
         );
       }
@@ -255,7 +260,7 @@ export default function ModalContainer(props: ModalContainerProps) {
           <RequirementModalOfferSelected
             offer={props.content.data.offer}
             requirement={props.content.data.requirement}
-            onSucces={props.content.data.onSuccess}
+            onSuccess={props.content.data.onSuccess}
             onClose={props.onClose}
             filterNames={props.content.data.filterNames}
             filters={props.content.data.filters}
@@ -287,6 +292,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             basicRateData={props.content.data.basicRateData}
             type={props.content.data.type}
             isOffer={props.content.data.isOffer}
+            requirementOrOfferId={props.content.data.requirementOrOfferId}
             onClose={props.onClose}
             onSuccess={props.content.data.onSuccess}
             onExecute={props.content.data.onExecute}
@@ -298,6 +304,7 @@ export default function ModalContainer(props: ModalContainerProps) {
       case ModalTypes.RATE_USER: {
         return (
           <RatingModal
+            requirementOrOfferTitle={props.content.data.requirementOrOfferTitle}
             onClose={props.onClose}
             basicRateData={props.content.data.basicRateData}
             type={props.content.data.type}
@@ -335,6 +342,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             offer={props.content.data.offer}
             basicRateData={props.content.data.basicRateData}
             showActions={props.content.data.showActions}
+            orderData={props.content.data.orderData}
           />
         );
       }
@@ -377,6 +385,7 @@ export default function ModalContainer(props: ModalContainerProps) {
             certificationId={props.content.data.certificationId}
             onClose={props.onClose}
             onRequestSent={props.content.data.onRequestSent}
+            setLoading={props.content.data.setLoading}
             {...commonModalProps}
           />
         );
@@ -386,7 +395,11 @@ export default function ModalContainer(props: ModalContainerProps) {
           <SendMessageModal
             onClose={props.onClose}
             requirementId={props.content.data.requirementId}
-            userId={props.content.data.userId}
+            title={props.content.data.title}
+            type={props.content.data.type}
+            receiverName={props.content.data.receiverName}
+            receiverImage={props.content.data.receiverImage}
+            receiverId={props.content.data.receiverId}
             {...commonModalProps}
           />
         );

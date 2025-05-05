@@ -4,6 +4,7 @@ import { EntityType, UserRoles } from "../utilities/types";
 import { BaseUser } from "../models/MainInterfaces";
 import { encryptData } from "../utilities/crypto";
 import { userDataKey } from "../utilities/globals";
+import { LoginResponse } from "../models/Interfaces";
 
 export const userInitialState: UserState = {
   token: "",
@@ -11,10 +12,13 @@ export const userInitialState: UserState = {
   name: "",
   email: "",
   typeID: UserRoles.NONE,
-  planID: 0,
+  planID: "",
   typeEntity: EntityType.PERSON,
   document: "",
   isPremium: false,
+  isLoggedIn: undefined,
+  categories: [],
+  lastSession: "",
 };
 
 export const userSlice = createSlice({
@@ -22,17 +26,19 @@ export const userSlice = createSlice({
   initialState: userInitialState,
   reducers: {
     setUser: (state, action) => {
-      const { token } = action.payload;
-      if (action.payload.dataUser) {
-        const { uid, name, email, type, typeID, planID } =
+      const payload: LoginResponse = action.payload;
+      // if (payload.accessToken) state.token = payload.accessToken;
+      if (payload.dataUser) {
+        const { uid, name, email, type, typeID, planID, lastSession, premium } =
           action.payload.dataUser[0];
-        state.token = token;
         state.typeEntity = type;
         state.name = name;
         state.email = email;
         state.typeID = typeID;
         state.planID = planID;
         state.uid = uid;
+        state.lastSession = lastSession;
+        state.isPremium = premium ? true : false;
 
         localStorage.setItem(userDataKey, encryptData(JSON.stringify(state)));
         console.log(state.uid);
@@ -47,10 +53,17 @@ export const userSlice = createSlice({
       state.typeEntity = action.payload.typeEntity;
       state.document = action.payload.document;
       state.image = action.payload.image;
-      state.isPremium = true; // r3v
+      state.categories = action.payload.categories ?? [];
+      state.isPremium = action.payload.isPremium ? true : false;
     },
     setUid: (state, action) => {
       state.uid = action.payload;
+    },
+    setToken: (state, action) => {
+      state.token = action.payload;
+    },
+    setUserName: (state, action) => {
+      state.name = action.payload;
     },
     setEmail: (state, action) => {
       state.email = action.payload;
@@ -60,6 +73,7 @@ export const userSlice = createSlice({
     },
     setIsLoggedIn: (state, action) => {
       state.isLoggedIn = action.payload;
+      console.log("setting", state.isLoggedIn);
     },
     setUserImage: (
       state,
@@ -81,5 +95,7 @@ export const {
   setFullUser,
   setIsLoggedIn,
   setUserImage,
+  setUserName,
+  setToken,
 } = userSlice.actions;
 export default userSlice.reducer;

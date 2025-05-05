@@ -172,6 +172,19 @@ export const CertificationStateMeta: {
   },
 };
 
+export function UserStateMeta(state: boolean) {
+  if (state)
+    return {
+      class: "es-atendido",
+      label: "activeUser",
+    };
+  else
+    return {
+      class: "es-eliminado",
+      label: "suspendedUser",
+    };
+}
+
 export const filterLabels: {
   [key in CommonFilter]: string;
 } = {

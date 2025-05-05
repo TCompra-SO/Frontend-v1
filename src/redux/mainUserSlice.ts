@@ -1,18 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { UserState } from "../models/Redux";
+import { MainUserState } from "../models/Redux";
 import { EntityType, UserRoles } from "../utilities/types";
 import { BaseUser } from "../models/MainInterfaces";
 
-export const mainUserInitialState: UserState = {
-  token: "",
+export const mainUserInitialState: MainUserState = {
   uid: "",
   name: "",
   email: "",
   typeID: UserRoles.NONE,
-  planID: 0,
+  planID: "",
   typeEntity: EntityType.COMPANY,
   document: "",
   isPremium: false,
+  categories: [],
 };
 
 export const mainUserSlice = createSlice({
@@ -32,9 +32,10 @@ export const mainUserSlice = createSlice({
       state.typeEntity = action.payload.typeEntity;
       state.document = action.payload.document;
       state.image = action.payload.image;
-      state.isPremium = true; // r3v
+      state.categories = action.payload.categories ?? [];
+      state.isPremium = action.payload.isPremium ? true : false;
     },
-    setFullMainUser: (_, action: { payload: UserState; type: string }) => {
+    setFullMainUser: (_, action: { payload: MainUserState; type: string }) => {
       return { ...action.payload };
     },
   },

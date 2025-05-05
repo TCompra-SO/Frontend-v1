@@ -7,7 +7,7 @@ import { getListForSelectIdValueMap } from "../../../utilities/globalFunctions";
 
 interface CurrencyFieldProps {
   disabled?: boolean;
-  onlyItem?: boolean;
+  showDifferentPlaceholder?: boolean;
 }
 
 export default function CurrencyField(props: CurrencyFieldProps) {
@@ -23,7 +23,7 @@ export default function CurrencyField(props: CurrencyFieldProps) {
       rules={[{ required: true }]}
     >
       <SelectContainer
-        placeholder={t(props.onlyItem ? "currency" : "select")}
+        placeholder={t(props.showDifferentPlaceholder ? "currency" : "select")}
         className="form-control"
         options={getListForSelectIdValueMap(currencyData)}
         disabled={props.disabled}

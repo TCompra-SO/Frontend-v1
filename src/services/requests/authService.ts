@@ -126,3 +126,30 @@ export function searchCompanyByNameService(name: string): HttpService {
     type: "AU-SE-CO-NA",
   };
 }
+
+export function refreshAccessTokenService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+      ApiRoutes.auth.refreshAccessToken
+    }`,
+    type: "AU-RE-AC-TO",
+  };
+}
+
+export function refreshRefreshTokenService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+      ApiRoutes.auth.refreshRefreshToken
+    }`,
+    type: "AU-RE-RE-TO",
+  };
+}
+
+export function logoutService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+      ApiRoutes.auth.logout
+    }`,
+    type: "AU-LOG-OU",
+  };
+}

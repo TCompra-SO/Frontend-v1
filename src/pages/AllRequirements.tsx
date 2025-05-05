@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import TablePageContent, {
   TablePageContentRef,
-} from "../components/section/table-page/TablePageContent";
+} from "../components/common/utils/TablePageContent";
 import { useEffect, useRef, useState } from "react";
 import {
   SocketDataPackType,
@@ -18,14 +18,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import { transformDataToBasicRequirement } from "../utilities/transform";
-import { fieldNameSearchRequestRequirement } from "../utilities/globals";
+import {
+  defaultErrorMsg,
+  fieldNameSearchRequestRequirement,
+} from "../utilities/globals";
 import useShowNotification from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
-import useSocketQueueHook, {
-  useAddOrUpdateRow,
-} from "../hooks/socketQueueHook";
+import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
 
 export default function AllRequirements() {
@@ -63,7 +64,7 @@ export default function AllRequirements() {
     fieldSort,
     filteredInfo,
   });
-  const { addNewRow, updateRow } = useAddOrUpdateRow(
+  const { addNewRow, updateRow } = useActionsForRow(
     TableTypes.ALL_REQUIREMENTS,
     (data: SocketDataPackType) => transformDataToBasicRequirement(data, type),
     requirementList,
@@ -155,7 +156,7 @@ export default function AllRequirements() {
       setRequirementList(data);
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     } finally {
       setLoadingTable(false);
     }

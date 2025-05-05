@@ -14,7 +14,7 @@ import TenureField from "../components/common/formFields/TenureField";
 import SpecialtyField from "../components/common/formFields/SpecialtyField";
 import AboutMeField from "../components/common/formFields/AboutMeField";
 import ButtonContainer from "../components/containers/ButtonContainer";
-import { defaultUserImage } from "../utilities/globals";
+import { defaultErrorMsg, defaultUserImage } from "../utilities/globals";
 import { useHandleChangeImage } from "../hooks/useHandleChangeImage";
 import PasswordField from "../components/common/formFields/PasswordField";
 import { useApiParams } from "../models/Interfaces";
@@ -48,11 +48,10 @@ import { setUserImage } from "../redux/userSlice";
 
 export default function MyProfile() {
   const { t } = useTranslation();
-  const context = useContext(ListsContext);
+  const { censorText, categoryData } = useContext(ListsContext);
   const dispatch = useDispatch();
   const handleChangeImage = useHandleChangeImage();
   const { showNotification } = useShowNotification();
-  const { categoryData } = context;
   const [user, setUser] = useState<FullUser | SubUserProfile>();
   const [mainUser, setMainUser] = useState<FullUser>();
   const [form] = Form.useForm();
@@ -149,8 +148,13 @@ export default function MyProfile() {
   }, [apiParamsMainUser]);
 
   useEffect(() => {
-    if (responseDataMainUser) {
-      setMainUser(transformToFullUser(responseDataMainUser.data));
+    try {
+      if (responseDataMainUser) {
+        setMainUser(transformToFullUser(responseDataMainUser.data));
+      }
+    } catch (e) {
+      console.log(e);
+      showNotification("error", t(defaultErrorMsg));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataMainUser]);
@@ -231,17 +235,21 @@ export default function MyProfile() {
   /** Funciones */
 
   function setFormData(responseData: any) {
-    if (entityType == EntityType.SUBUSER) {
-      setUser(transformToSubUserProfile(responseData));
-    } else {
-      const user = transformToFullUser(responseData.data);
-      dispatch(setUserImage(user.image));
-      setUser(user);
+    try {
+      if (entityType == EntityType.SUBUSER) {
+        setUser(transformToSubUserProfile(responseData[0]));
+      } else {
+        const user = transformToFullUser(responseData.data);
+        dispatch(setUserImage(user.image));
+        setUser(user);
+      }
+    } catch (e) {
+      console.log(e);
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 
   function handleClick() {
-    // Trigger the file input click event
     if (fileInputRef.current) {
       fileInputRef.current.input!.click();
     }
@@ -295,8 +303,8 @@ export default function MyProfile() {
       };
       if (entityType == EntityType.COMPANY) {
         data.age = values.tenure;
-        data.specialtyID = values.specialty.trim();
-        data.about_me = values.aboutMe.trim();
+        data.specialtyID = censorText(values.specialty.trim());
+        data.about_me = censorText(values.aboutMe.trim());
       }
       setApiParamsForm({
         service:
@@ -451,7 +459,7 @@ export default function MyProfile() {
             </div>
             <div className="oferta-usuario col-documento">
               <div className="text-truncate doc-name dato-cantidad1">
-                {user?.numGoods}
+                {user?.numGoods ?? "-"}
               </div>
               <div className="text-truncate detalles-oferta dato-cantidad2">
                 {t("goods")}
@@ -464,7 +472,7 @@ export default function MyProfile() {
             </div>
             <div className="oferta-usuario col-documento">
               <div className="text-truncate doc-name dato-cantidad1">
-                {user?.numServices}
+                {user?.numServices ?? "-"}
               </div>
               <div className="text-truncate detalles-oferta dato-cantidad2">
                 {t("services")}
@@ -477,7 +485,7 @@ export default function MyProfile() {
             </div>
             <div className="oferta-usuario col-documento">
               <div className="text-truncate doc-name dato-cantidad1">
-                {user?.numSales}
+                {user?.numSales ?? "-"}
               </div>
               <div className="text-truncate detalles-oferta dato-cantidad2">
                 {t("sales")}
@@ -490,7 +498,17 @@ export default function MyProfile() {
             </div>
             <div className="oferta-usuario col-documento">
               <div className="text-truncate doc-name dato-cantidad1">
-                {user?.numOffers}
+                {user
+                  ? Number.isNaN(
+                      user?.numOffersGoods +
+                        user?.numOffersServices +
+                        user?.numOffersSales
+                    )
+                    ? "-"
+                    : user?.numOffersGoods +
+                      user?.numOffersServices +
+                      user?.numOffersSales
+                  : "-"}
               </div>
               <div className="text-truncate detalles-oferta dato-cantidad2">
                 {t("offers")}

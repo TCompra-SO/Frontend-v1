@@ -7,11 +7,13 @@ import {
   Usage,
   UserRoles,
   EntityType,
-  PurchaseOrderTableTypes,
+  OrderTableType,
   CertificationState,
   OrderConfirmation,
   CanOfferType,
   Action,
+  CertificationTableType,
+  NotificationType,
 } from "../utilities/types";
 import { OfferFilters } from "./Interfaces";
 
@@ -103,7 +105,7 @@ export interface BasicPurchaseOrderItemSubUser extends BaseInterface {
 
 export interface PurchaseOrderItemSubUser
   extends BasicPurchaseOrderItemSubUser {
-  subType: PurchaseOrderTableTypes;
+  subType: OrderTableType;
   filters: OfferFilters;
 }
 
@@ -152,6 +154,22 @@ export interface BaseUser extends DisplayUser {
   customerCount?: number;
   sellerCount?: number;
   typeEntity: EntityType;
+  categories?: number[];
+  planID: string;
+  isPremium: boolean;
+}
+
+export interface UserCounters {
+  numGoods: number;
+  numServices: number;
+  numSales: number;
+  numOffersGoods: number;
+  numOffersServices: number;
+  numOffersSales: number;
+  numPurchaseOrdersProvider: number;
+  numPurchaseOrdersClient: number;
+  numSellingOrdersProvider: number;
+  numSellingOrdersClient: number;
 }
 
 export interface User extends BaseUser {
@@ -159,36 +177,23 @@ export interface User extends BaseUser {
   phone: string;
 }
 
-export interface FullUser extends User {
+export interface FullUser extends User, UserCounters {
   categories: number[];
   typeID: UserRoles;
   activeAccount: boolean;
   cityID: number;
   countryID: number;
-  planID: number;
+  planID: string;
   specialty?: string;
   aboutMe?: string;
-  numGoods: number;
-  numServices: number;
-  numSales: number;
-  numOffers: number;
-  numPurchaseOrdersProvider: number;
-  numPurchaseOrdersClient: number;
-  numSellingOrdersProvider: number;
-  numSellingOrdersClient: number;
 }
 
-export interface SubUserBase extends BaseUser {
+export interface SubUserBase
+  extends Omit<BaseUser, "isPremium" | "planID">,
+    UserCounters {
   typeID: UserRoles;
   createdAt: string;
-  numGoods: number;
-  numServices: number;
-  numSales: number;
-  numOffers: number;
-  numPurchaseOrdersProvider: number;
-  numPurchaseOrdersClient: number;
-  numSellingOrdersProvider: number;
-  numSellingOrdersClient: number;
+  state: boolean;
 }
 
 export interface SubUserProfile extends SubUserBase {
@@ -232,10 +237,16 @@ export interface StatisticsData {
 }
 
 export interface PlanData {
+  uid: string;
   goods: number;
   services: number;
   sales: number;
-  offers: number;
+  offersGoods: number;
+  offersServices: number;
+  offersSales: number;
+  subUsers: number;
+  premium: boolean;
+  default?: boolean;
 }
 
 export interface BasicRateData {
@@ -248,14 +259,20 @@ export interface BasicRateData {
   subUserName?: string;
 }
 
-export interface ChatListData {
-  uid: string;
+export interface BasicChatListData {
+  uid?: string;
   userImage?: string;
   userName: string;
-  userOnline?: boolean;
   userId: string;
+  userOnline?: boolean;
   title: string;
   requirementId: string;
+  type: RequirementType;
+  archive?: [{ userId: string; state: boolean }];
+}
+
+export interface ChatListData extends BasicChatListData {
+  uid: string;
   lastMessage: string;
   lastDate: string;
   numUnreadMessages?: number;
@@ -270,24 +287,50 @@ export interface ChatMessage {
   read: boolean;
   images?: string[];
   documents?: string[];
+  error?: boolean;
+  waiting?: boolean;
 }
 
-export interface ChatSocketData extends ChatMessage {
+export interface SocketChatMessage extends ChatMessage {
   userImage?: string;
   userName: string;
+  requirementId: string;
 }
 
-export interface NotificationData {
-  uid: string;
-  title: string;
-  body: string;
-  date: string;
-  time: string;
+export interface NotificationSenderData {
   senderImage?: string;
   senderId: string;
   senderName: string;
-  receiverId: string;
+}
+
+export interface BasicNotificationData {
+  title: string;
+  body: string;
   action: Action;
-  targetId: string;
-  targetType: RequirementType | PurchaseOrderTableTypes;
+}
+
+export interface NotificationTargetData {
+  receiverId?: string;
+  targetId?: string;
+  targetType: RequirementType | CertificationTableType;
+  extraTargetType?: number; // OrderTableType
+}
+
+export interface NotificationDataNoSender
+  extends BasicNotificationData,
+    NotificationTargetData {
+  timestamp: string;
+}
+
+export interface NotificationData
+  extends NotificationDataNoSender,
+    NotificationSenderData {
+  type: NotificationType;
+}
+
+export interface NotificationDataFromServer extends NotificationData {
+  uid: string;
+  categoryId?: number;
+  read?: boolean;
+  extraTargetId?: string;
 }

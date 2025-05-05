@@ -18,13 +18,15 @@ import {
 } from "../models/Interfaces";
 import TablePageContent, {
   TablePageContentRef,
-} from "../components/section/table-page/TablePageContent";
+} from "../components/common/utils/TablePageContent";
 import {
+  defaultErrorMsg,
   fieldNameSearchRequestOffer,
   mainModalScrollStyle,
 } from "../utilities/globals";
 import {
   getDeleteOfferService,
+  getInitialModalData,
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
@@ -35,14 +37,16 @@ import { MainState } from "../models/Redux";
 import { transformToOfferFromGetOffersByEntityOrSubUser } from "../utilities/transform";
 import { ModalsContext } from "../contexts/ModalsContext";
 import { useCulminate, useShowDetailOffer } from "../hooks/requirementHooks";
-import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
+import useShowNotification, {
+  useRedirectToChat,
+  useShowLoadingMessage,
+} from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
-import useSocketQueueHook, {
-  useAddOrUpdateRow,
-} from "../hooks/socketQueueHook";
+import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
+import { getBasicRateDataS } from "../services/general/generalServices";
 
 export default function Offers() {
   const { t } = useTranslation();
@@ -50,7 +54,9 @@ export default function Offers() {
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const searchValueRef = useRef<TablePageContentRef>(null);
-  const { detailedOfferModalData } = useContext(ModalsContext);
+  const { redirectToChat } = useRedirectToChat();
+  const { detailedOfferModalData, resetDetailedOfferModalData } =
+    useContext(ModalsContext);
   const { showNotification } = useShowNotification();
   const { showLoadingMessage } = useShowLoadingMessage();
   const { getOfferDetail, modalDataOfferDetail } = useShowDetailOffer();
@@ -59,11 +65,9 @@ export default function Offers() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [offerList, setOfferList] = useState<Offer[]>([]);
   const [total, setTotal] = useState(0);
-  const [dataModal, setDataModal] = useState<ModalContent>({
-    type: ModalTypes.NONE,
-    data: {},
-    action: Action.NONE,
-  });
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
   const {
     currentPage,
     currentPageSize,
@@ -87,7 +91,7 @@ export default function Offers() {
     fieldSort,
     filteredInfo,
   });
-  const { addNewRow, updateRow } = useAddOrUpdateRow(
+  const { addNewRow, updateRow } = useActionsForRow(
     TableTypes.OFFER,
     (data: SocketDataPackType) =>
       transformToOfferFromGetOffersByEntityOrSubUser(
@@ -137,38 +141,6 @@ export default function Offers() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offerList]);
 
-  /** Verificar si hay una solicitud pendiente */
-
-  useEffect(() => {
-    if (detailedOfferModalData.offerId) {
-      getOfferDetail(
-        detailedOfferModalData.offerId,
-        detailedOfferModalData.offerType,
-        true,
-        Action.OFFER_DETAIL,
-        true,
-        detailedOfferModalData.offer
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (modalDataOfferDetail.type !== ModalTypes.NONE) {
-      setDataModal(modalDataOfferDetail);
-      setIsOpenModal(true);
-    }
-  }, [modalDataOfferDetail]);
-
-  /** Para mostrar modales */
-
-  useEffect(() => {
-    if (modalDataRate.type !== ModalTypes.NONE) {
-      setDataModal(modalDataRate);
-      setIsOpenModal(true);
-    }
-  }, [modalDataRate]);
-
   /** Cargar datos iniciales */
 
   useEffect(() => {
@@ -189,6 +161,41 @@ export default function Offers() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
+
+  /** Verificar si hay una solicitud pendiente */
+
+  useEffect(() => {
+    if (detailedOfferModalData.offerId) {
+      const copy = { ...detailedOfferModalData };
+      getOfferDetail(
+        copy.offerId,
+        copy.offerType,
+        true,
+        Action.OFFER_DETAIL,
+        true,
+        copy.offer,
+        copy.orderId
+      );
+      resetDetailedOfferModalData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detailedOfferModalData]);
+
+  useEffect(() => {
+    if (modalDataOfferDetail.type !== ModalTypes.NONE) {
+      setDataModal(modalDataOfferDetail);
+      setIsOpenModal(true);
+    }
+  }, [modalDataOfferDetail]);
+
+  /** Para mostrar modales */
+
+  useEffect(() => {
+    if (modalDataRate.type !== ModalTypes.NONE) {
+      setDataModal(modalDataRate);
+      setIsOpenModal(true);
+    }
+  }, [modalDataRate]);
 
   /* Para eliminar */
 
@@ -257,7 +264,7 @@ export default function Offers() {
       setOfferList(data);
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 
@@ -272,8 +279,24 @@ export default function Offers() {
     });
   }
 
-  function goToChat(offer: Offer) {
-    console.log("goToChat", offer.key, offer.requirementId);
+  async function goToChat(offer: Offer) {
+    showLoadingMessage(true);
+    const { basicRateData, errorMsg } = await getBasicRateDataS(
+      offer.requirementId,
+      false,
+      offer.type
+    );
+    if (basicRateData) {
+      redirectToChat({
+        userName: basicRateData.subUserName ?? basicRateData.userName,
+        userId: basicRateData.subUserId ?? basicRateData.userId,
+        title: basicRateData.title,
+        requirementId: offer.requirementId,
+        type: offer.type,
+        userImage: basicRateData.userImage,
+      });
+    } else if (errorMsg) showNotification("error", t(errorMsg));
+    showLoadingMessage(false);
   }
 
   function handleOnButtonClick(action: Action, offer: Offer) {
@@ -308,7 +331,7 @@ export default function Offers() {
       }
 
       case Action.CHAT: {
-        goToChat(offer); //r3v
+        goToChat(offer);
         break;
       }
 
@@ -320,7 +343,8 @@ export default function Offers() {
           false,
           false,
           action,
-          offer.type
+          offer.type,
+          offer.title
         );
         break;
       }
@@ -335,6 +359,12 @@ export default function Offers() {
             canceledByCreator: true,
             rowId: offer.key,
             type: offer.type,
+            requirementTitle: offer.requirementTitle,
+            notificationTargetData: {
+              receiverId: "",
+              targetId: offer.requirementId,
+              targetType: offer.type,
+            },
           },
           action,
         });
@@ -350,7 +380,8 @@ export default function Offers() {
           false,
           false,
           action,
-          offer.type
+          offer.type,
+          offer.title
         );
         break;
       }

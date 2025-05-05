@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import {
   HttpService,
   PaginationDataResponse,
@@ -11,7 +11,7 @@ import {
   Filters,
   OnChangePageAndPageSizeTypeParams,
   OrderType,
-  PurchaseOrderTableTypes,
+  OrderTableType,
   RequirementType,
   TableTypes,
 } from "../utilities/types";
@@ -30,6 +30,12 @@ import {
 } from "../utilities/globalFunctions";
 import { debounce } from "lodash";
 import { FilterValue } from "antd/lib/table/interface";
+import { searchSubUsersService } from "../services/requests/subUserService";
+import {
+  searchCertificatesService,
+  searchReceivedRequestsByEntityService,
+  searchSentRequestsByEntityService,
+} from "../services/requests/certificateService";
 
 type SearchTableTypeParams = {
   page: number;
@@ -44,10 +50,10 @@ type SearchTableTypeParams = {
 export default function useSearchTable(
   uid: string,
   tableType: TableTypes,
-  entityType: EntityType, // subuser: registros de usuario | otro: registros de usuario + subusuarios
-  subType: RequirementType,
+  entityType: EntityType, // EntityType.SUBUSER: registros de usuario logueado | otro: registros de usuario logueado + subusuarios
+  subType?: RequirementType,
   resetChangesQueue?: () => void,
-  orderSubType?: PurchaseOrderTableTypes
+  orderSubType?: OrderTableType
 ) {
   const [apiParams, setApiParams] = useState<useApiParams<SearchTableRequest>>({
     service: null,
@@ -109,7 +115,7 @@ export default function useSearchTable(
     tableTypeParam?: TableTypes,
     subTypeParam?: RequirementType,
     uidParam?: string,
-    orderSubTypeParam?: PurchaseOrderTableTypes
+    orderSubTypeParam?: OrderTableType
   ) {
     resetChangesQueue?.();
     const stUid: string = uidParam ?? uid;
@@ -141,7 +147,9 @@ export default function useSearchTable(
           fieldName,
           orderType,
           filterColumn,
-          filterData,
+          filterData: filterData?.map((filter) =>
+            filter === "true" ? true : filter === "false" ? false : filter
+          ),
         },
       };
       setApiParams(apiData);
@@ -150,11 +158,23 @@ export default function useSearchTable(
 
   function getService(
     stTableType: TableTypes,
-    stSubType: RequirementType,
-    stOrderType?: PurchaseOrderTableTypes
+    stSubType?: RequirementType,
+    stOrderType?: OrderTableType
   ) {
     let service: HttpService | null = null;
     switch (stTableType) {
+      case TableTypes.USERS:
+        service = searchSubUsersService();
+        break;
+      case TableTypes.MY_DOCUMENTS:
+        service = searchCertificatesService();
+        break;
+      case TableTypes.SENT_CERT:
+        service = searchSentRequestsByEntityService();
+        break;
+      case TableTypes.RECEIVED_CERT:
+        service = searchReceivedRequestsByEntityService();
+        break;
       case TableTypes.REQUIREMENT:
       case TableTypes.ALL_REQUIREMENTS:
         service = getSearchRecordsService(stSubType);
@@ -165,16 +185,16 @@ export default function useSearchTable(
         break;
       case TableTypes.PURCHASE_ORDER:
       case TableTypes.ALL_PURCHASE_ORDERS:
-        if (stOrderType == PurchaseOrderTableTypes.ISSUED)
+        if (stOrderType == OrderTableType.ISSUED)
           service = getSearchOrdersByClientService(stSubType);
-        else if (stOrderType == PurchaseOrderTableTypes.RECEIVED)
+        else if (stOrderType == OrderTableType.RECEIVED)
           service = getSearchOrdersByProviderService(stSubType);
         break;
       case TableTypes.SALES_ORDER:
       case TableTypes.ALL_SALES_ORDERS:
-        if (stOrderType == PurchaseOrderTableTypes.ISSUED)
+        if (stOrderType == OrderTableType.ISSUED)
           service = getSearchOrdersByProviderService(stSubType);
-        else if (stOrderType == PurchaseOrderTableTypes.RECEIVED)
+        else if (stOrderType == OrderTableType.RECEIVED)
           service = getSearchOrdersByClientService(stSubType);
         break;
     }
@@ -200,24 +220,36 @@ export function useFilterSortPaginationForTable() {
   const [currentPageSize, setCurrentPageSize] = useState(pageSizeOptionsSt[0]);
   const [filteredInfo, setFilteredInfo] = useState<Filters | undefined>({});
 
-  const handleSearch = debounce(
-    (
-      e: ChangeEvent<HTMLInputElement>,
-      searchTable: (params: SearchTableTypeParams) => void
-    ) => {
-      setSearchValue(e.target.value);
-      setCurrentPage(1);
-      searchTable({
-        page: 1,
-        pageSize: currentPageSize,
-        keyWords: e.target.value,
-        fieldName: fieldSort?.fieldName,
-        orderType: fieldSort?.orderType,
-        filterColumn: fieldFilter?.filterColumn,
-        filterData: fieldFilter?.filterData,
-      });
-    },
-    tableSearchAfterMseconds
+  useEffect(() => {
+    return () => {
+      handleSearch.cancel();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSearch = useMemo(
+    () =>
+      debounce(
+        (
+          e: ChangeEvent<HTMLInputElement>,
+          searchTable: (params: SearchTableTypeParams) => void
+        ) => {
+          setSearchValue(e.target.value);
+          setCurrentPage(1);
+          searchTable({
+            page: 1,
+            pageSize: currentPageSize,
+            keyWords: e.target.value,
+            fieldName: fieldSort?.fieldName,
+            orderType: fieldSort?.orderType,
+            filterColumn: fieldFilter?.filterColumn,
+            filterData: fieldFilter?.filterData,
+          });
+        },
+        tableSearchAfterMseconds
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   function handleChangePageAndPageSize(

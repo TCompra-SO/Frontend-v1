@@ -3,6 +3,7 @@ import {
   HttpService,
   IdValueMap,
   IdValueObj,
+  ModalContent,
   useApiParams,
 } from "../models/Interfaces";
 import {
@@ -16,19 +17,25 @@ import {
   maxLengthStringToSearch,
   onlyLettersAndNumbers,
   pageSizeOptionsSt,
+  randomShortKeyLength,
+  reversedFieldNameSearchRequestSubUser,
+  userCounterKeys,
 } from "./globals";
 import {
   EntityType,
   ErrorMsgRequestType,
   ErrorRequestType,
   OrderType,
-  PurchaseOrderTableTypes,
+  OrderTableType,
   RequirementType,
   ResponseRequestType,
   TableTypes,
   TimeMeasurement,
   UserClass,
   UserRoles,
+  CertificationTableType,
+  Action,
+  ModalTypes,
 } from "./types";
 import { pageRoutes, pageSubRoutes } from "./routes";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
@@ -141,6 +148,7 @@ import {
   searchSalesOrdersByClientService,
   searchSalesOrdersByProviderService,
 } from "../services/requests/sale/salesOrderService";
+import { UserCounters } from "../models/MainInterfaces";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -233,13 +241,13 @@ export function getLabelFromRequirementType(
 
 // Retorna la llave del nombre del tipo de orden de compra
 export function getLabelFromPurchaseOrderType(
-  type: PurchaseOrderTableTypes,
+  type: OrderTableType,
   plural: boolean = false
 ) {
   switch (type) {
-    case PurchaseOrderTableTypes.ISSUED:
+    case OrderTableType.ISSUED:
       return plural ? "issuedPl" : "issued";
-    case PurchaseOrderTableTypes.RECEIVED:
+    case OrderTableType.RECEIVED:
       return plural ? "receivedPl" : "received";
   }
 }
@@ -260,8 +268,8 @@ export function calculateFinalScore(scores: number[]) {
 export function openDocument(documentUrl: string) {
   window.open(
     documentUrl,
-    "_blank",
-    "width=800,height=600,top=100,left=100,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes"
+    "_blank"
+    // "width=800,height=600,top=100,left=100,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes"
   );
 }
 
@@ -288,11 +296,11 @@ export function getPurchaseOrderType(
     : getPenultimateSegmentFromRoute(pathname);
   switch (segment) {
     case pageSubRoutes.issued:
-      return PurchaseOrderTableTypes.ISSUED;
+      return OrderTableType.ISSUED;
     case pageSubRoutes.received:
-      return PurchaseOrderTableTypes.RECEIVED;
+      return OrderTableType.RECEIVED;
     default:
-      return PurchaseOrderTableTypes.ISSUED;
+      return OrderTableType.ISSUED;
   }
 }
 
@@ -330,6 +338,12 @@ export function getSectionFromRoute(pathname: string) {
   if (pathSegments.length <= 1 || pathSegments[1] === "")
     return pageRoutes.home;
   return "/" + pathSegments[1];
+}
+
+export function getCertificationTableType(segment: string) {
+  if (segment == pageSubRoutes.received) return CertificationTableType.RECEIVED;
+  if (segment == pageSubRoutes.sent) return CertificationTableType.SENT;
+  return CertificationTableType.SENT; // default
 }
 
 // Retorna valor anidado para columna de tabla
@@ -426,16 +440,20 @@ export function openPurchaseOrderPdf(responseData: any) {
   if (pdfSrc) {
     window.open(
       pdfSrc,
-      "_blank",
-      "width=800,height=1000,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes"
+      "_blank"
+      // "width=800,height=1000,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes"
     );
   }
 }
 
 // Genera un identificador unico
 export function generateShortId(): string {
-  const timestamp = Date.now().toString(36).slice(-4);
-  const random = Math.random().toString(36).substring(2, 6);
+  const timestamp = Date.now()
+    .toString(36)
+    .slice(-Math.round(randomShortKeyLength / 2));
+  const random = Math.random()
+    .toString(36)
+    .substring(2, 2 + Math.round(randomShortKeyLength / 2));
   return `${timestamp}${random}`;
 }
 
@@ -530,26 +548,26 @@ export function getFieldNameObjForOrders(
     | TableTypes.SALES_ORDER
     | TableTypes.ALL_PURCHASE_ORDERS
     | TableTypes.ALL_SALES_ORDERS,
-  type: PurchaseOrderTableTypes
+  type: OrderTableType
 ) {
   if (
     tableType == TableTypes.ALL_PURCHASE_ORDERS ||
     tableType == TableTypes.ALL_SALES_ORDERS
   )
     if (tableType == TableTypes.ALL_PURCHASE_ORDERS)
-      return type == PurchaseOrderTableTypes.ISSUED
+      return type == OrderTableType.ISSUED
         ? fieldNameSearchRequestAllOrderClient
         : fieldNameSearchRequestAllOrderProvider;
     else
-      return type == PurchaseOrderTableTypes.ISSUED
+      return type == OrderTableType.ISSUED
         ? fieldNameSearchRequestAllOrderProvider
         : fieldNameSearchRequestAllOrderClient;
   if (tableType == TableTypes.PURCHASE_ORDER)
-    return type == PurchaseOrderTableTypes.ISSUED
+    return type == OrderTableType.ISSUED
       ? fieldNameSearchRequestOrderClient
       : fieldNameSearchRequestOrderProvider;
   else
-    return type == PurchaseOrderTableTypes.ISSUED
+    return type == OrderTableType.ISSUED
       ? fieldNameSearchRequestOrderProvider
       : fieldNameSearchRequestOrderClient;
 }
@@ -574,6 +592,7 @@ export function hasNoSortNorFilter(request: SearchTableRequest): boolean {
   return hasValidOptionalFields;
 }
 
+// Verifica y retorna si n es un RequirementType
 export function isRequirementType(n: any) {
   const temp =
     n == RequirementType.GOOD ||
@@ -582,6 +601,25 @@ export function isRequirementType(n: any) {
   return {
     result: temp,
     val: temp ? (n as RequirementType) : null,
+  };
+}
+
+// Verifica y retorna si n es un OrderTableType
+export function isOrderTableTypes(n: any) {
+  const temp = n == OrderTableType.RECEIVED || n == OrderTableType.ISSUED;
+  return {
+    result: temp,
+    val: temp ? (n as OrderTableType) : null,
+  };
+}
+
+// Verifica y retorna si n es un CertificationTableType
+export function isCertificationTableTypes(n: any) {
+  const temp =
+    n == CertificationTableType.RECEIVED || n == CertificationTableType.SENT;
+  return {
+    result: temp,
+    val: temp ? (n as CertificationTableType) : null,
   };
 }
 
@@ -658,7 +696,7 @@ export function getCancelRecordService(type: RequirementType) {
 }
 
 export function getSearchRecordsService(
-  type: RequirementType | PurchaseOrderTableTypes | undefined
+  type: RequirementType | OrderTableType | undefined
 ) {
   if (type == RequirementType.GOOD) return searchRequirementsService();
   if (type == RequirementType.SERVICE) return searchServicesService();
@@ -725,7 +763,7 @@ export function getCancelOfferService(type: RequirementType) {
 }
 
 export function getSearchOffersService(
-  type: RequirementType | PurchaseOrderTableTypes | undefined
+  type: RequirementType | OrderTableType | undefined
 ) {
   if (type == RequirementType.GOOD) return searchReqOffersService();
   if (type == RequirementType.SERVICE) return searchServiceOffersService();
@@ -777,7 +815,7 @@ export function getGetOrderByIdService(type: RequirementType) {
 }
 
 export function getSearchOrdersByClientService(
-  type: RequirementType | PurchaseOrderTableTypes | undefined
+  type: RequirementType | OrderTableType | undefined
 ) {
   if (type == RequirementType.GOOD)
     return searchReqPurchaseOrdersByClientService();
@@ -788,7 +826,7 @@ export function getSearchOrdersByClientService(
 }
 
 export function getSearchOrdersByProviderService(
-  type: RequirementType | PurchaseOrderTableTypes | undefined
+  type: RequirementType | OrderTableType | undefined
 ) {
   if (type == RequirementType.GOOD)
     return searchReqPurchaseOrdersByProviderService();
@@ -816,4 +854,124 @@ export function isSameDay(timestamp1: string, timestamp2: string) {
     date1.month() === date2.month() &&
     date1.date() === date2.date()
   );
+}
+
+// Retorna la subruta correspondiente al tipo de requerimiento
+export function getRequirementTypeSubRoute(type: RequirementType) {
+  switch (type) {
+    case RequirementType.GOOD:
+      return pageSubRoutes.goods;
+    case RequirementType.SERVICE:
+      return pageSubRoutes.services;
+    case RequirementType.SALE:
+      return pageSubRoutes.sales;
+    default:
+      return "";
+  }
+}
+
+// Retorna la subruta correspondiente al tipo de tabla de orden
+export function getOrderTableTypeSubRoute(type: OrderTableType) {
+  switch (type) {
+    case OrderTableType.ISSUED:
+      return pageSubRoutes.issued;
+    case OrderTableType.RECEIVED:
+      return pageSubRoutes.received;
+    default:
+      return "";
+  }
+}
+
+// Retorna la subruta correspondiente al tipo de tabla de certificados
+export function getCertificationTableTypeSubRoute(
+  type: CertificationTableType
+) {
+  switch (type) {
+    case CertificationTableType.SENT:
+      return pageSubRoutes.sent;
+    case CertificationTableType.RECEIVED:
+      return pageSubRoutes.received;
+    default:
+      return "";
+  }
+}
+
+export function getInitialModalData() {
+  const initialModalData: ModalContent = {
+    type: ModalTypes.NONE,
+    data: {},
+    action: Action.NONE,
+  };
+  return initialModalData;
+}
+
+export function getTokenExpirationTime(expiresIn: number) {
+  return Date.now() + expiresIn * 1000; // miliseconds
+}
+
+export function isFieldValueI(obj: any): obj is Record<string, any> {
+  return obj !== null && typeof obj === "object" && !Array.isArray(obj);
+}
+
+export function getReversedTransformFieldNameObject(type: TableTypes) {
+  if (type == TableTypes.USERS) return reversedFieldNameSearchRequestSubUser;
+  return null;
+}
+
+export function isUserCounterKey(key: string): key is keyof UserCounters {
+  return key in userCounterKeys;
+}
+
+// Retorna 2da lista sin objectos con uids repetidos que aparecen en la 1ra
+export function filterByMissingUIds<T extends { uid: string }>(
+  array1: T[],
+  array2: T[]
+): T[] {
+  const idsInArray1 = new Set(array1.map((item) => item.uid));
+  return array2.filter((item) => !idsInArray1.has(item.uid));
+}
+
+// Retorna lista con elementos con uids únicas
+export function filterUniqueOrFirstRepeated<T extends { uid: string }>(
+  arr: T[]
+): T[] {
+  const seen = new Map<string, T>();
+
+  return arr.filter((obj) => {
+    if (!seen.has(obj.uid)) {
+      seen.set(obj.uid, obj);
+      return true;
+    }
+    return false;
+  });
+}
+
+// Normalizar texto en español
+export function normalizeSpanish(text: string) {
+  return text
+    .normalize("NFD") // Descomponer caracteres acentuados
+    .replace(/[\u0300-\u036f]/g, "") // Remover acentos
+    .replace(/ñ/g, "n")
+    .replace(/Ñ/g, "N")
+    .toLowerCase();
+}
+
+// Eliminar letras repetidas
+export function collapseRepeatsLoose(text: string) {
+  return text.replace(/(\w)\1+/g, "$1");
+}
+
+// Eliminar letras repetidas: caso especial l y r
+export function collapseRepeatsSpecial(text: string) {
+  return text.replace(/(\w)\1+/g, (_, p1) => {
+    if (p1 === "r" || p1 === "l") {
+      return p1.repeat(2);
+    }
+    return p1;
+  });
+}
+
+// Contar cuántas veces aparece un caracter en un string
+export function countChar(text: string, char: string) {
+  return [...text].filter((c) => c === char).length;
 }

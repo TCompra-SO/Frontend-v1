@@ -6,10 +6,12 @@ import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import { RequirementType, TableTypes } from "../utilities/types";
 import { getRequirementFromData } from "../services/general/generalServices";
-import useSocketQueueHook, {
-  useAddOrUpdateRow,
-} from "../hooks/socketQueueHook";
-import { SocketDataPackType, SocketResponse } from "../models/Interfaces";
+import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
+import {
+  NotificationSearchData,
+  SocketDataPackType,
+  SocketResponse,
+} from "../models/Interfaces";
 import { homePageSize } from "../utilities/globals";
 
 interface HomeContextType {
@@ -37,6 +39,9 @@ interface HomeContextType {
   retrieveLastSearchRequeriments: () => void;
   keywordSearch: string;
   updateKeywordSearch: (val: string) => void;
+  notificationSearchData: NotificationSearchData;
+  updateNotificationSearchData: (data: NotificationSearchData) => void;
+  resetNotificationSearchData: () => void;
 }
 
 export const HomeContext = createContext<HomeContextType>({
@@ -56,6 +61,9 @@ export const HomeContext = createContext<HomeContextType>({
   resetChangesQueue: () => {},
   keywordSearch: "",
   updateKeywordSearch: () => {},
+  notificationSearchData: { categoryId: 0, targetType: RequirementType.GOOD },
+  updateNotificationSearchData: () => {},
+  resetNotificationSearchData: () => {},
 });
 
 export function HomeProvider({ children }: { children: ReactNode }) {
@@ -65,6 +73,11 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [userId, setUserId] = useState("");
   const [useFilter, setUseFilter] = useState<null | boolean>(null);
+  const [notificationSearchData, setNotificationSearchData] =
+    useState<NotificationSearchData>({
+      categoryId: 0,
+      targetType: RequirementType.GOOD,
+    });
   const [keywordSearch, setKeywordSearch] = useState("");
   const {
     getRequirementList,
@@ -72,9 +85,9 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     total: totalRequirementListOrig,
     loading: loadingRequirementList,
     usersCache,
-  } = useGetRequirementList();
+  } = useGetRequirementList(type);
   const [page, setPage] = useState(1);
-  const { addNewRow, updateRow } = useAddOrUpdateRow(
+  const { addNewRow, updateRow } = useActionsForRow(
     TableTypes.HOME,
     (data: SocketDataPackType) =>
       getRequirementFromData(data, type, undefined, undefined, usersCache),
@@ -117,6 +130,15 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     if (useFilter === false) setPage(1);
   }, [useFilter]);
 
+  /** Funciones */
+
+  function resetNotificationSearchData() {
+    setNotificationSearchData({
+      categoryId: 0,
+      targetType: RequirementType.GOOD,
+    });
+  }
+
   function retrieveRequirements(
     page: number,
     pageSize?: number,
@@ -138,9 +160,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
         lastSearchParams.pageSize,
         lastSearchParams.params
       );
-      console.log(lastSearchParams.page, success, totalPages);
       if (!success && totalPages) {
-        console.log(lastSearchParams.page - 1, totalPages);
         if (lastSearchParams.page - 1 <= totalPages)
           await retrieveRequirements(
             lastSearchParams.page - 1,
@@ -162,12 +182,16 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   }
 
   function updateType(val: RequirementType) {
-    console.log(val);
     setType(val);
   }
 
   function updateKeywordSearch(val: string) {
     setKeywordSearch(val);
+  }
+
+  function updateNotificationSearchData(data: NotificationSearchData) {
+    // updateType(data.targetType);
+    setNotificationSearchData(data);
   }
 
   return (
@@ -196,6 +220,10 @@ export function HomeProvider({ children }: { children: ReactNode }) {
 
         keywordSearch,
         updateKeywordSearch,
+
+        notificationSearchData,
+        updateNotificationSearchData,
+        resetNotificationSearchData,
       }}
     >
       {children}

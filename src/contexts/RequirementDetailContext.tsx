@@ -1,12 +1,7 @@
 import { createContext } from "react";
 import { CommonFilter } from "../utilities/types";
 import { allSelect } from "../utilities/globals";
-import { OfferFilters } from "../models/Interfaces";
-
-export interface FilterNames {
-  location: string;
-  deliveryTime: string;
-}
+import { FilterNames, OfferFilters } from "../models/Interfaces";
 
 export const requirementDetailContext = createContext<{
   filters: OfferFilters;

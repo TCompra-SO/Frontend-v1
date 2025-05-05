@@ -2,16 +2,29 @@ import { useTranslation } from "react-i18next";
 import ContentHeader from "../components/common/utils/ContentHeader";
 import ChatList from "../components/section/chat/ChatList/ChatList";
 import ChatBody from "../components/section/chat/ChatBody/ChatBody";
-import { ChatListData, ChatSocketData } from "../models/MainInterfaces";
-import { useEffect, useRef, useState } from "react";
+import {
+  BasicChatListData,
+  ChatListData,
+  SocketChatMessage,
+} from "../models/MainInterfaces";
+import { useContext, useEffect, useRef, useState } from "react";
 import useWindowSize from "../hooks/useWindowSize";
-import { chatDataFieldName, windowSize } from "../utilities/globals";
+import {
+  basicChatDataFieldName,
+  chatDataFieldName,
+  windowSize,
+} from "../utilities/globals";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useChat } from "../hooks/useChat";
-import { useLocation } from "react-router-dom";
+import { MainSocketsContext } from "../contexts/MainSocketsContext";
+import { useChatFunctions } from "../hooks/chatHooks";
+import { MainState } from "../models/Redux";
+import { useSelector } from "react-redux";
 
 export default function Chat() {
   const { t } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
   const { width } = useWindowSize();
   const {
     chatList,
@@ -19,64 +32,290 @@ export default function Chat() {
     chatMessageList,
     getMoreChatMessages,
     resetChatMessageList,
+    resetChatList,
     hasMoreChatList,
     hasMoreChatMessageList,
     loadingChatList,
+    loadingSearchChat,
     loadingChatMessages,
+    addMessageToChatMessageList,
+    markMsgAsRead,
+    isChatListResetToChangeTabs,
+    setIsChatListResetToChangeTabs,
+    handleSearch,
+    usingSearch,
+    markMsgAsError,
+    updateMsg,
+    setNewMessageAndChatData,
+    removeChatFromList,
+    chatListIsSet,
+    updateChatUnreadMessages,
   } = useChat();
+  const {
+    connectSingleChatSocket,
+    disconnectSingleChatSocket,
+    lastChatMessageReceived,
+    chatMessageRead,
+    newMessageAndChatDataFromSocket,
+    currentChatUnreadMessages,
+  } = useContext(MainSocketsContext);
+  const uid: string = useSelector((state: MainState) => state.user.uid);
+  const { verifyIfChatExists } = useChatFunctions(false);
   const hasHandledChatNotification = useRef(false);
+  const hasHandledReroutingChat = useRef(false);
+  const chatThatHasBeenCreated = useRef("");
   const [isChatOpened, setIsChatOpened] = useState(false);
+  const [openingChatFromExternalSource, setOpeningChatFromExternalSource] =
+    useState(true);
   const [currentChat, setCurrentChat] = useState<ChatListData | null>(null);
+  const [showArchivedChats, setShowArchivedChats] = useState(false);
+  const [basicChatDataFromRouting, setBasicChatDataFromRouting] = useState<
+    BasicChatListData | undefined
+  >(location.state?.[basicChatDataFieldName]);
+  const [chatDataFromNotification, setChatDataFromNotification] = useState<
+    SocketChatMessage | undefined
+  >(location.state?.[chatDataFieldName]);
 
   /** Obtener lista inicial de chats */
 
   useEffect(() => {
-    getMoreChats();
+    if (!usingSearch) {
+      handleCloseChat();
+      resetChatList(true);
+    }
+    return () => {
+      disconnectSingleChatSocket();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [showArchivedChats]);
 
-  /** Abrir chat desde notificación */
+  /** Obtener lista de chats después de resetear lista (al cambiar tabs o al inicio) */
 
   useEffect(() => {
-    const chatDataFromNotification: ChatSocketData =
-      location.state?.[chatDataFieldName];
-    hasHandledChatNotification.current = false;
+    if (isChatListResetToChangeTabs) {
+      getMoreChats(showArchivedChats);
+      setIsChatListResetToChangeTabs(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isChatListResetToChangeTabs]);
 
-    if (chatDataFromNotification && !hasHandledChatNotification.current) {
-      console.log(chatDataFromNotification);
+  /** Abrir chat desde notificación o desde redireccionamiento */
+
+  useEffect(() => {
+    openChatFromNotificationOrRerouting();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatListIsSet]);
+
+  /** Obtener lista inicial de mensajes de chat */
+
+  useEffect(() => {
+    if (isChatOpened && currentChat) {
+      getMoreChatMessages(currentChat.uid);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isChatOpened, currentChat]);
+
+  /** Agregar mensaje recibido de socket a lista de mensajes */
+
+  useEffect(() => {
+    if (lastChatMessageReceived)
+      addMessageToChatMessageList(lastChatMessageReceived);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastChatMessageReceived]);
+
+  /** Marcar mensaje como leído */
+
+  useEffect(() => {
+    if (chatMessageRead.endMessageId) {
+      markMsgAsRead(chatMessageRead.endMessageId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatMessageRead]);
+
+  /** Cambiar según si se usa búsqueda o no */
+
+  useEffect(() => {
+    if (usingSearch) setShowArchivedChats(false);
+  }, [usingSearch]);
+
+  /** Guardar datos de nuevo mensaje desde señal de socket
+   * Si hay datos obtenidos de la url, guardar uid del chat que acaba de ser creado
+   */
+
+  useEffect(() => {
+    setNewMessageAndChatData(newMessageAndChatDataFromSocket);
+    if (
+      !chatThatHasBeenCreated.current &&
+      newMessageAndChatDataFromSocket &&
+      basicChatDataFromRouting
+    ) {
+      if (
+        newMessageAndChatDataFromSocket.chatListData.requirementId ==
+          basicChatDataFromRouting.requirementId &&
+        newMessageAndChatDataFromSocket.chatListData.userId ==
+          basicChatDataFromRouting.userId
+      )
+        chatThatHasBeenCreated.current =
+          newMessageAndChatDataFromSocket.chatListData.uid;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newMessageAndChatDataFromSocket]);
+
+  /** Conectar al chat que acaba de ser creado al enviar 1er mensaje en chat que no existía */
+
+  useEffect(() => {
+    if (chatList.length && chatThatHasBeenCreated.current) {
+      const chatToOpen = chatList.find(
+        (chat) => chat.uid == chatThatHasBeenCreated.current
+      );
+      if (chatToOpen) {
+        handleClickOnChatItem(chatToOpen);
+        chatThatHasBeenCreated.current = "";
+        setBasicChatDataFromRouting(undefined);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatList]);
+
+  /** Actualizar cantidad de mensajes no leídos en chat actual */
+
+  useEffect(() => {
+    if (currentChat)
+      updateChatUnreadMessages(
+        currentChat.uid,
+        currentChatUnreadMessages.unreadMessages
+      );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentChatUnreadMessages]);
+
+  /** Funciones */
+
+  function handleCloseChat() {
+    console.log("closing chat");
+    disconnectSingleChatSocket();
+    setCurrentChat(null);
+    setIsChatOpened(false);
+    resetChatMessageList();
+  }
+
+  function handleClickOnChatItem(item: ChatListData, noReset?: boolean) {
+    if (currentChat?.uid != item.uid) {
+      if (!noReset) {
+        disconnectSingleChatSocket();
+        resetChatMessageList();
+      }
+      setCurrentChat(item);
+      setIsChatOpened(true);
+      if (item.uid) connectSingleChatSocket(item.uid);
+    }
+  }
+
+  async function openChatFromNotificationOrRerouting() {
+    if (
+      chatListIsSet === true &&
+      chatDataFromNotification &&
+      !hasHandledChatNotification.current
+    ) {
+      navigate(".", { replace: true, state: null });
       const chatToOpen = chatList.find(
         (chat) => chat.uid === chatDataFromNotification.chatId
       );
       if (chatToOpen) {
         handleClickOnChatItem(chatToOpen);
         hasHandledChatNotification.current = true;
+        setOpeningChatFromExternalSource(false);
+        setChatDataFromNotification(undefined);
+      } else {
+        await openChatIfNotFound(
+          chatDataFromNotification.userId,
+          chatDataFromNotification.requirementId,
+          true
+        );
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location, chatList]);
 
-  /** Obtener lista inicial de mensajes de chat */
+    if (!chatDataFromNotification) {
+      if (
+        chatListIsSet === true &&
+        basicChatDataFromRouting &&
+        !hasHandledReroutingChat.current
+      ) {
+        navigate(".", { replace: true, state: null });
 
-  useEffect(() => {
-    if (isChatOpened && currentChat) {
-      getMoreChatMessages();
+        const chatToOpen = basicChatDataFromRouting.uid
+          ? chatList.find((chat) => chat.uid === basicChatDataFromRouting.uid)
+          : chatList.find(
+              (chat) =>
+                chat.userId === basicChatDataFromRouting.userId &&
+                chat.requirementId === basicChatDataFromRouting.requirementId
+            );
+        // chat encontrado en lista cargada
+        if (chatToOpen) {
+          handleClickOnChatItem(chatToOpen);
+          hasHandledReroutingChat.current = true;
+          setOpeningChatFromExternalSource(false);
+        } else {
+          await openChatIfNotFound(
+            basicChatDataFromRouting.userId,
+            basicChatDataFromRouting.requirementId,
+            false
+          );
+        }
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isChatOpened, currentChat]);
-
-  /** Funciones */
-
-  function handleCloseChat() {
-    setCurrentChat(null);
-    setIsChatOpened(false);
-    resetChatMessageList();
+    if (!chatDataFromNotification && !basicChatDataFromRouting)
+      setOpeningChatFromExternalSource(false);
   }
 
-  function handleClickOnChatItem(item: ChatListData) {
-    console.log("opening chat...");
-    resetChatMessageList();
-    setCurrentChat(item);
-    setIsChatOpened(true);
+  async function openChatIfNotFound(
+    receiverId: string,
+    requirementId: string,
+    fromNotification: boolean
+  ) {
+    // chat no encontrado
+    const { chat } = await verifyIfChatExists({
+      userId1: uid,
+      userId2: receiverId,
+      requerimentId: requirementId,
+    });
+    // chat existe
+    if (chat) {
+      // chat archivado
+      if (chat.archive?.[0]?.state) {
+        if (showArchivedChats) {
+          handleClickOnChatItem(chat);
+          if (fromNotification) {
+            hasHandledChatNotification.current = true;
+            setChatDataFromNotification(undefined);
+          } else hasHandledReroutingChat.current = true;
+          setOpeningChatFromExternalSource(false);
+        } else setShowArchivedChats(true);
+      } else {
+        // chat no archivado
+        if (!showArchivedChats) {
+          handleClickOnChatItem(chat);
+          if (fromNotification) {
+            hasHandledChatNotification.current = true;
+            setChatDataFromNotification(undefined);
+          } else hasHandledReroutingChat.current = true;
+          setOpeningChatFromExternalSource(false);
+        } else setShowArchivedChats(false);
+      }
+    } else {
+      // chat no existe
+      setIsChatOpened(true);
+      // Caso improbable. En teoría, chat desde una notificación siempre debería existir
+      if (fromNotification) hasHandledChatNotification.current = true;
+      else {
+        hasHandledReroutingChat.current = true;
+        chatThatHasBeenCreated.current = "";
+      }
+      setOpeningChatFromExternalSource(false);
+    }
+  }
+
+  function closeChatIfOpened() {
+    if (isChatOpened) handleCloseChat();
   }
 
   return (
@@ -94,7 +333,15 @@ export default function Chat() {
             loadMoreChats={getMoreChats}
             currentChat={currentChat}
             hasMore={hasMoreChatList}
-            loading={loadingChatList}
+            loadingList={loadingChatList}
+            loadingSearch={loadingSearchChat}
+            showArchivedChats={showArchivedChats}
+            setShowArchivedChats={setShowArchivedChats}
+            handleSearch={handleSearch}
+            usingSearch={usingSearch}
+            removeChatFromList={removeChatFromList}
+            closeChat={closeChatIfOpened}
+            loadingAll={openingChatFromExternalSource}
           />
         )}
         {isChatOpened && currentChat ? (
@@ -105,6 +352,21 @@ export default function Chat() {
             getMoreChatMessages={getMoreChatMessages}
             hasMore={hasMoreChatMessageList}
             loading={loadingChatMessages}
+            addMessageToChatMessageList={addMessageToChatMessageList}
+            markMsgAsError={markMsgAsError}
+            updateMsg={updateMsg}
+          />
+        ) : isChatOpened && !currentChat && basicChatDataFromRouting ? (
+          <ChatBody
+            addMessageToChatMessageList={addMessageToChatMessageList}
+            chatData={basicChatDataFromRouting}
+            onCloseChat={handleCloseChat}
+            messages={chatMessageList}
+            getMoreChatMessages={getMoreChatMessages}
+            hasMore={false}
+            loading={loadingChatMessages}
+            markMsgAsError={markMsgAsError}
+            updateMsg={updateMsg}
           />
         ) : (
           <div className="card-white mch-2 t-flex j-conten j-items f-column">

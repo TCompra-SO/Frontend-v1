@@ -23,7 +23,10 @@ import { ModalsContext } from "../../../../../contexts/ModalsContext";
 import useShowNotification, {
   useShowLoadingMessage,
 } from "../../../../../hooks/utilHooks";
-import { getDeleteOfferService } from "../../../../../utilities/globalFunctions";
+import {
+  getDeleteOfferService,
+  getInitialModalData,
+} from "../../../../../utilities/globalFunctions";
 
 interface CantOfferMessageProps {
   offerId: string;
@@ -34,7 +37,7 @@ interface CantOfferMessageProps {
   loading?: boolean;
   onDeleteSuccess: () => void;
   onSentDocsToGetCertifiedSuccess: () => void;
-  setIsCertified: (newMotive: CertificationState) => void;
+  setIsCertified: (state: CertificationState) => void;
 }
 
 export default function CantOfferMessage(props: CantOfferMessageProps) {
@@ -47,11 +50,9 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
   const [mainText, setMainText] = useState("");
   const [optionalText, setOptionalText] = useState("");
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [dataModal, setDataModal] = useState<ModalContent>({
-    type: ModalTypes.NONE,
-    data: {},
-    action: Action.NONE,
-  });
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
 
   /* Para eliminar */
 

@@ -27,6 +27,8 @@ export default function HomeFilters() {
   const divRef = useRef<HTMLDivElement>(null);
   const [form] = Form.useForm();
   const [hideFilters, setHideFilters] = useState(true);
+  const [searchFromNotifCompleted, setSearchFromNotifCompleted] =
+    useState<boolean>(true);
   const {
     updateUseFilter,
     retrieveRequirements,
@@ -38,6 +40,8 @@ export default function HomeFilters() {
     updateType,
     keywordSearch,
     updateKeywordSearch,
+    notificationSearchData,
+    resetNotificationSearchData,
   } = useContext(HomeContext);
   const [homeFilter, setHomeFilter] = useState<HomeFilterRequest>({
     page: 1,
@@ -47,7 +51,12 @@ export default function HomeFilters() {
   /** Reset al cambiar tipo de tabla */
 
   useEffect(() => {
-    resetFilters();
+    resetFilters(searchFromNotifCompleted === false);
+    if (searchFromNotifCompleted === false) {
+      form.setFieldValue("category", notificationSearchData.categoryId);
+      form.submit();
+      resetNotificationSearchData();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
@@ -68,13 +77,27 @@ export default function HomeFilters() {
       form.setFieldValue(formFieldKeyword, keywordSearch);
       search({ ...form.getFieldsValue(), [formFieldKeyword]: keywordSearch });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keywordSearch]);
 
-  function scrollToTable() {
-    if (divRef.current) {
-      divRef.current.scrollIntoView({ behavior: "smooth" });
+  /** Buscar al recibir datos de notificación  */
+
+  useEffect(() => {
+    if (notificationSearchData.categoryId) {
+      setHideFilters(false);
+      scrollToTable();
+      setSearchFromNotifCompleted(false);
+      if (type != notificationSearchData.targetType) {
+        updateType(notificationSearchData.targetType);
+      } else {
+        resetFilters(true);
+        form.setFieldValue("category", notificationSearchData.categoryId);
+        resetNotificationSearchData();
+        form.submit();
+      }
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notificationSearchData]);
 
   /** Paginación */
 
@@ -82,14 +105,23 @@ export default function HomeFilters() {
     if (useFilter) {
       const newPageFilter = homeFilter;
       newPageFilter.page = page;
-      retrieveRequirements(page, homePageSize, newPageFilter);
+      if (searchFromNotifCompleted) {
+        // setSearchFromNotifCompleted(true)
+        retrieveRequirements(page, homePageSize, newPageFilter);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [homeFilter, page]);
+  }, [homeFilter, page, searchFromNotifCompleted]);
 
   /**
    * Funciones
    */
+
+  function scrollToTable() {
+    if (divRef.current) {
+      divRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }
 
   function search(values: any) {
     updateUseFilter(true);
@@ -119,12 +151,13 @@ export default function HomeFilters() {
       updatePage(1);
       setHomeFilter(filter);
     }
+    setSearchFromNotifCompleted(true);
   }
 
-  function resetFilters() {
+  function resetFilters(keepUsingFilterMode?: boolean) {
     form.resetFields();
-    updateUseFilter(false);
     updateKeywordSearch("");
+    if (!keepUsingFilterMode) updateUseFilter(false);
   }
 
   function getTypeButton(reqType: RequirementType) {
@@ -221,7 +254,7 @@ export default function HomeFilters() {
                 icon={
                   <i className="fa-solid fa-magnifying-glass-arrows-rotate"></i>
                 }
-                onClick={resetFilters}
+                onClick={() => resetFilters()}
               >
                 {t("resetFilters")}
               </ButtonContainer>

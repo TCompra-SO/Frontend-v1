@@ -1,506 +1,285 @@
-import { useEffect, useState } from "react";
-import { io, Socket } from "socket.io-client";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ChatListData, ChatMessage } from "../models/MainInterfaces";
+import { useChatSearch, useGetChatList, useGetChatMessages } from "./chatHooks";
 import {
-  ChatListData,
-  ChatMessage,
-  ChatSocketData,
-} from "../models/MainInterfaces";
-import { RTNotificationType } from "../utilities/types";
-import useShowNotification from "./utilHooks";
-import { useNavigate } from "react-router-dom";
-import { pageRoutes } from "../utilities/routes";
-import { chatDataFieldName } from "../utilities/globals";
-
-const chatElements: ChatListData[] = [
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xx",
-    uid: "RJxx",
-  },
-  {
-    userImage: undefined,
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ1",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xrrfe4x",
-    uid: "RJ1xrrfe4x",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ2",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    userOnline: true,
-    requirementId: "x4445x",
-    uid: "RJ2x4445x",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ3",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xxewer",
-    uid: "RJ3xxewer",
-  },
-  {
-    userImage: undefined,
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ4",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xgfgx",
-    uid: "RJ4xgfgx",
-  },
-  {
-    userImage: undefined,
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ5",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "wexx",
-    uid: "RJ5wexx",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ6",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xghx",
-    uid: "RJ6xghx",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ7",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xfdsfx",
-    uid: "RJ7xfdsfx",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ8",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xx",
-    uid: "RJ8xx",
-  },
-  {
-    userImage: undefined,
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ9",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xrrfe4x",
-    uid: "RJ9xrrfe4x",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ10",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    userOnline: true,
-    requirementId: "x4445x",
-    uid: "RJ10x4445x",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ11",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xxewer",
-    uid: "RJ11xxewer",
-  },
-  {
-    userImage: undefined,
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ12",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xgfgx",
-    uid: "RJ12xgfgx",
-  },
-  {
-    userImage: undefined,
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ13",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "wexx",
-    uid: "RJ13wexx",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ14",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xghx",
-    uid: "RJ14xghx",
-  },
-  {
-    userImage: "https://dummyimage.com/250/ffffff/000000",
-    userName: "Rio Jimenez Salas del Carpio",
-    userId: "RJ15",
-    title: "Nombre del Requerimiento",
-    lastMessage: "Mensaje de prueba para las",
-    lastDate: "2024-11-20T19:33:58.001Z",
-    numUnreadMessages: 10,
-    requirementId: "xfdsfx",
-    uid: "RJ15xfdsfx",
-  },
-];
-
-const fullChatMessages: ChatMessage[] = [
-  {
-    userId: "ru1VLrbCKDR7BPQIGrk2",
-    message:
-      "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados. ¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados, ¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados, ¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados ¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados. ¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados, ¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados, ¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
-    timestamp: "2024-11-22T15:31:00.000Z",
-    read: true,
-    uid: "2x",
-    chatId: "RJ1xrrfvve4x",
-  },
-  {
-    userId: "ru1VLrbCKDR7BPQIGrk2",
-    timestamp: "2024-11-22T15:30:00.000Z",
-    read: false,
-    documents: [
-      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-    ],
-    uid: "8",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "EOuyocZiTZVT91ZOo0rW",
-    timestamp: "2024-11-22T15:29:00.000Z",
-    read: false,
-    documents: [
-      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-    ],
-    uid: "7",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "ru1VLrbCKDR7BPQIGrk2",
-    timestamp: "2024-11-22T15:28:00.000Z",
-    read: true,
-    images: ["https://dummyimage.com/250/ff3fff/000000"],
-    uid: "6",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "ru1VLrbCKDR7BPQIGrk2",
-    timestamp: "2024-11-20T15:28:00.000Z",
-    read: true,
-    images: ["https://dummyimage.com/250/ff3fff/000000"],
-    uid: "5",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "EOuyocZiTZVT91ZOo0rW",
-    timestamp: "2024-11-20T15:27:00.000Z",
-    read: true,
-    images: [
-      "https://dummyimage.com/250/ff3fff/000000",
-      "https://dummyimage.com/250/ff3ff1/000000",
-      "https://dummyimage.com/250/af3ff1/000000",
-    ],
-    uid: "4",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "ru1VLrbCKDR7BPQIGrk2",
-    message: "El costo es de $500 mensuales",
-    read: true,
-    timestamp: "2024-11-20T15:26:00.000Z",
-    uid: "3",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "ru1VLrbCKDR7BPQIGrk2",
-    message:
-      "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
-    timestamp: "2024-11-20T15:25:00.000Z",
-    read: true,
-    uid: "2",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "ru1VLrbCKDR7BPQIGrk2",
-    message:
-      "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
-    timestamp: "2024-11-20T15:25:00.000Z",
-    read: true,
-    uid: "10",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "ru1VLrbCKDR7BPQIGrk2",
-    message:
-      "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
-    timestamp: "2024-11-20T15:25:00.000Z",
-    read: true,
-    uid: "12",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "ru1VLrbCKDR7BPQIGrk2",
-    message:
-      "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
-    timestamp: "2024-11-20T15:25:00.000Z",
-    read: true,
-    uid: "14",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "EOuyocZiTZVT91ZOo0rW",
-    message:
-      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
-    timestamp: "2024-11-20T15:24:00.000Z",
-    read: true,
-    uid: "9",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "EOuyocZiTZVT91ZOo0rW",
-    message:
-      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
-    timestamp: "2024-11-20T15:24:00.000Z",
-    read: true,
-    uid: "11",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "EOuyocZiTZVT91ZOo0rW",
-    message:
-      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
-    timestamp: "2024-11-20T15:24:00.000Z",
-    read: true,
-    uid: "13",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "EOuyocZiTZVT91ZOo0rW",
-    message:
-      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
-    timestamp: "2024-11-19T15:24:00.000Z",
-    read: true,
-    uid: "9a",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "EOuyocZiTZVT91ZOo0rW",
-    message:
-      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
-    timestamp: "2024-11-19T15:24:00.000Z",
-    read: true,
-    uid: "1a",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "EOuyocZiTZVT91ZOo0rW",
-    message:
-      "Buenos días, estoy buscando información sobre el alquiler de un espacio en su almacén",
-    timestamp: "2024-11-19T15:24:00.000Z",
-    read: true,
-    uid: "13a",
-    chatId: "RJ1xrrfe4x",
-  },
-];
-
-const chatMessages: ChatSocketData[] = [
-  {
-    userId: "ru1VLrbCKDR7BPQIGrk2",
-    message:
-      "¡Claro! Buenos días. Ofrecemos espacios de almacenamiento desde 10 hasta 200 metros cuadrados",
-    timestamp: "2024-11-20T15:25:00.000Z",
-    read: true,
-    uid: "2",
-    userName: "Soluciones Online",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "EOuyocZiTZVT91ZOo0rW",
-    timestamp: "2024-11-20T15:27:00.000Z",
-    read: true,
-    images: [
-      "https://dummyimage.com/250/ff3fff/000000",
-      "https://dummyimage.com/250/ff3ff1/000000",
-      "https://dummyimage.com/250/af3ff1/000000",
-    ],
-    uid: "4",
-    userName: "Soluciones Online",
-    chatId: "RJ1xrrfe4x",
-  },
-  {
-    userId: "EOuyocZiTZVT91ZOo0rW",
-    timestamp: "2024-11-20T15:29:00.000Z",
-    read: false,
-    documents: [
-      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-    ],
-    uid: "7",
-    userName: "Soluciones Online",
-    chatId: "RJ1xrrfe4x",
-  },
-];
-let chatSocketAPI: Socket | null = null;
+  chatListPageSize,
+  chatMessagesPageSize,
+  inputSearchAfterMseconds,
+} from "../utilities/globals";
+import { debounce } from "lodash";
+import { useSelector } from "react-redux";
+import { MainState } from "../models/Redux";
+import { filterUniqueOrFirstRepeated } from "../utilities/globalFunctions";
 
 export function useChat() {
-  const [loadingChatList, setLoadingChatList] = useState(false);
-  const [loadingChatMessages, setLoadingChatMessages] = useState(false);
+  const {
+    getChatList,
+    loadingGetChatList,
+    chatList: currentPageChatList,
+  } = useGetChatList();
+  const {
+    getChatMessages,
+    loadingGetChatMessages,
+    chatMessages: currentChatMessages,
+  } = useGetChatMessages();
+  const uid = useSelector((state: MainState) => state.user.uid);
+  const { loadingSearchChat, searchChat, foundChatList } = useChatSearch();
+  const [usingSearch, setUsingSearch] = useState(false);
   const [chatList, setChatList] = useState<ChatListData[]>([]);
+  const [chatListIsSet, setChatListIsSet] = useState<boolean>();
   const [hasMoreChatList, setHasMoreChatList] = useState(true);
   const [chatMessageList, setChatMessageList] = useState<ChatMessage[]>([]);
   const [hasMoreChatMessageList, setHasMoreChatMessageList] = useState(true);
+  const [newMessageAndChatData, setNewMessageAndChatData] = useState<{
+    chatMessage: ChatMessage;
+    chatListData: ChatListData;
+  } | null>(null);
+  const [isChatListResetToChangeTabs, setIsChatListResetToChangeTabs] =
+    useState(false);
+  const [pageData, setPageData] = useState({
+    chatId: "",
+    retrieve: false,
+    archived: false,
+  });
+  const [dataToGetMoreMsgs, setDataToGetMoreMsgs] = useState({
+    chatId: "",
+    messageId: "",
+  });
+  const prevChatId = useRef("");
+  const isNewChat = useRef(true);
+
+  /** Cleanup */
+
+  useEffect(() => {
+    return () => {
+      setChatList([]);
+      handleSearch.cancel();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /** Obtener más chats */
+
+  useEffect(() => {
+    if (pageData.retrieve) getChatList(pageData.chatId, pageData.archived);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageData]);
+
+  useEffect(() => {
+    if (currentPageChatList.length < chatListPageSize)
+      setHasMoreChatList(false);
+    setChatList(chatList.concat(currentPageChatList));
+    if (chatListIsSet === false) setChatListIsSet(true); // solo actualizar si antes se hizo una solicitud para obtener más chats
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPageChatList]);
+
+  /** Obtener más mensajes de chat */
+
+  useEffect(() => {
+    if (dataToGetMoreMsgs.chatId)
+      getChatMessages(
+        dataToGetMoreMsgs.chatId,
+        chatMessageList.length
+          ? chatMessageList[chatMessageList.length - 1].uid
+          : ""
+      );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataToGetMoreMsgs]);
+
+  useEffect(() => {
+    if (currentChatMessages.length < chatMessagesPageSize)
+      setHasMoreChatMessageList(false);
+    const newList = isNewChat.current
+      ? currentChatMessages
+      : filterUniqueOrFirstRepeated([
+          ...chatMessageList,
+          ...currentChatMessages,
+        ]);
+    setChatMessageList(newList);
+    // setChatMessageList((prevList) => [...prevList, ...currentChatMessages]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentChatMessages]);
+
+  /** Reemplazar lista de chats por chats encontrados */
+
+  useEffect(() => {
+    resetChatList();
+    setChatList(foundChatList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [foundChatList]);
+
+  /** Actualizar datos de lista de chats según señal de socket */
+
+  useEffect(() => {
+    if (newMessageAndChatData) {
+      setChatList((prevList) => {
+        const index = prevList.findIndex(
+          (item) => item.uid === newMessageAndChatData.chatListData.uid
+        );
+        if (index === -1)
+          // chat no encontrado, poner en 1er lugar
+          return [newMessageAndChatData.chatListData, ...prevList];
+        // Chat encontrado, actualizar
+        const newList = [...prevList];
+        newList[index] = newMessageAndChatData.chatListData;
+        if (newList[index].lastDate !== prevList[index].lastDate) {
+          // asumiendo que la fecha fue actualizada
+          const [item] = newList.splice(index, 1);
+          newList.unshift(item);
+        }
+        return newList;
+      });
+    }
+  }, [newMessageAndChatData]);
+
+  /** Si se hizo una solicitud para obtener más chats, cambiar flag a false */
+
+  useEffect(() => {
+    if (loadingGetChatList) setChatListIsSet(false);
+  }, [loadingGetChatList]);
 
   /** Funciones */
 
-  function getMoreChats() {
-    console.log("gettin more chats");
-    setLoadingChatList(true);
-    setTimeout(() => {
-      if (chatList.length >= chatElements.length) setHasMoreChatList(false);
-      else
-        setChatList(
-          chatList.length > 0
-            ? chatList.concat(
-                chatElements.slice(chatList.length, 10 + chatList.length)
-              )
-            : chatElements.slice(0, 10)
-        );
-      setLoadingChatList(false);
-    }, 2000);
+  function getMoreChats(archived: boolean, chatId?: string) {
+    setPageData({
+      chatId:
+        chatId ?? chatList.length ? chatList[chatList.length - 1].uid : "",
+      retrieve: true,
+      archived,
+    });
   }
 
-  function getMoreChatMessages() {
-    setLoadingChatMessages(true);
-    setTimeout(() => {
-      if (chatMessageList.length >= fullChatMessages.length)
-        setHasMoreChatMessageList(false);
-      else
-        setChatMessageList(
-          chatMessageList.length > 0
-            ? chatMessageList.concat(
-                fullChatMessages.slice(
-                  chatMessageList.length,
-                  10 + chatMessageList.length
-                )
-              )
-            : fullChatMessages.slice(0, 10)
-        );
-      setLoadingChatMessages(false);
-    }, 1000);
+  function getMoreChatMessages(chatId: string) {
+    isNewChat.current = prevChatId.current != chatId;
+    prevChatId.current = chatId;
+    setDataToGetMoreMsgs({
+      chatId,
+      messageId: chatMessageList.length
+        ? chatMessageList[chatMessageList.length - 1].uid
+        : "",
+    });
   }
 
-  function resetChatList() {
+  function resetChatList(changeTabs?: boolean) {
+    setPageData({ chatId: "", retrieve: false, archived: false });
     setChatList([]);
+    setHasMoreChatList(true);
+    resetChatMessageList();
+    if (changeTabs) setIsChatListResetToChangeTabs(true);
+    prevChatId.current = "";
+    isNewChat.current = true;
   }
 
   function resetChatMessageList() {
+    setDataToGetMoreMsgs({ chatId: "", messageId: "" });
     setChatMessageList([]);
     setHasMoreChatMessageList(true);
   }
 
+  function addMessageToChatMessageList(message: ChatMessage) {
+    setChatMessageList([message, ...chatMessageList]);
+  }
+
+  function updateMsg(uid: string, message: ChatMessage) {
+    setChatMessageList((prevList) => {
+      const ind = prevList.findIndex((msg) => msg.uid == uid);
+      if (ind == -1) return prevList;
+      const newList = [...prevList];
+      newList[ind] = { ...message };
+      return newList;
+    });
+  }
+
+  function updateChatUnreadMessages(uid: string, unreadMsgs: number) {
+    setChatList((prevList) => {
+      const ind = prevList.findIndex((chat) => chat.uid == uid);
+      if (ind == -1) return prevList;
+      const newList = [...prevList];
+      newList[ind] = { ...newList[ind], numUnreadMessages: unreadMsgs };
+      return newList;
+    });
+  }
+
+  function markMsgAsError(messageId: string) {
+    if (messageId)
+      setChatMessageList((prevList) => {
+        const ind = prevList.findIndex((msg) => msg.uid == messageId);
+        if (ind == -1) return prevList;
+        const newList = [...prevList];
+        newList[ind] = { ...newList[ind], error: true };
+        return newList;
+      });
+  }
+
+  function markMsgAsRead(messageId: string) {
+    setChatMessageList((prevList) => {
+      const obj = prevList.find((item) => item.uid == messageId);
+      if (obj) {
+        const ownerIsCurrentUser = obj.userId == uid;
+        const updatedList = [...prevList];
+        for (let i = 0; i < updatedList.length; i++) {
+          if (
+            (ownerIsCurrentUser && updatedList[i].userId == uid) ||
+            (!ownerIsCurrentUser && updatedList[i].userId != uid)
+          ) {
+            if (!updatedList[i].read) updatedList[i].read = true;
+            else break;
+          }
+          if (updatedList[i].uid == messageId) break;
+        }
+        return updatedList;
+      }
+      return prevList;
+    });
+  }
+
+  function removeChatFromList(chatId: string) {
+    setChatList((prevList) => {
+      return prevList.filter((chat) => chat.uid !== chatId);
+    });
+  }
+
+  const handleSearch = useMemo(
+    () =>
+      debounce((val: string) => {
+        if (val) {
+          setUsingSearch(true);
+          searchChat(val);
+        } else {
+          setUsingSearch(false);
+          resetChatList();
+          getMoreChats(false, "");
+        }
+      }, inputSearchAfterMseconds),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
   return {
     resetChatList,
     chatList,
-    loadingChatList,
+    loadingChatList: loadingGetChatList,
+    loadingSearchChat,
     getMoreChats,
-    loadingChatMessages,
+    loadingChatMessages: loadingGetChatMessages,
     resetChatMessageList,
     chatMessageList,
     getMoreChatMessages,
     hasMoreChatList,
     hasMoreChatMessageList,
+    addMessageToChatMessageList,
+    markMsgAsRead,
+    isChatListResetToChangeTabs,
+    setIsChatListResetToChangeTabs,
+    handleSearch,
+    usingSearch,
+    chatListPageData: pageData,
+    updateMsg,
+    markMsgAsError,
+    setNewMessageAndChatData,
+    removeChatFromList,
+    chatListIsSet,
+    updateChatUnreadMessages,
   };
-}
-
-export function useChatSocket() {
-  const navigate = useNavigate();
-  const { showRealTimeNotification } = useShowNotification();
-
-  useEffect(() => {
-    if (!chatSocketAPI) {
-      chatSocketAPI = io(import.meta.env.VITE_CHAT_SOCKET_URL);
-
-      chatSocketAPI.on("connect", () => {
-        console.log("Connected chat");
-      });
-
-      // setTimeout(() => {
-      //   showRealTimeNotification({
-      //     type: RTNotificationType.CHAT,
-      //     content: chatMessages[0],
-      //     onClickCallback: redirectFromNotification,
-      //   });
-      // }, 3000);
-      // setTimeout(() => {
-      //   showRealTimeNotification({
-      //     type: RTNotificationType.CHAT,
-      //     content: chatMessages[1],
-      //     onClickCallback: redirectFromNotification,
-      //   });
-      // }, 6000);
-      // setTimeout(() => {
-      //   showRealTimeNotification({
-      //     type: RTNotificationType.CHAT,
-      //     content: chatMessages[2],
-      //     onClickCallback: redirectFromNotification,
-      //   });
-      // }, 9000);
-    }
-    return () => {
-      if (chatSocketAPI) {
-        console.log("Disconnected chat");
-        chatSocketAPI.disconnect();
-        chatSocketAPI = null;
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  function redirectFromNotification(chatData: ChatSocketData) {
-    navigate(pageRoutes.chat, { state: { [chatDataFieldName]: chatData } });
-  }
 }

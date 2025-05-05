@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import TablePageContent, {
   TablePageContentRef,
-} from "../components/section/table-page/TablePageContent";
+} from "../components/common/utils/TablePageContent";
 import { useContext, useEffect, useRef, useState } from "react";
 import {
   ModalContent,
@@ -12,7 +12,7 @@ import {
 import {
   Action,
   ModalTypes,
-  PurchaseOrderTableTypes,
+  OrderTableType,
   RequirementType,
   TableTypes,
 } from "../utilities/types";
@@ -31,6 +31,7 @@ import { useSelector } from "react-redux";
 import { transformToPurchaseOrder } from "../utilities/transform";
 import ModalContainer from "../components/containers/ModalContainer";
 import {
+  defaultErrorMsg,
   mainModalScrollStyle,
   noPaginationPageSize,
 } from "../utilities/globals";
@@ -40,9 +41,7 @@ import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
-import useSocketQueueHook, {
-  useAddOrUpdateRow,
-} from "../hooks/socketQueueHook";
+import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
 
 export default function AllPurchaseOrders() {
@@ -56,7 +55,7 @@ export default function AllPurchaseOrders() {
     useGetOffersByRequirementId();
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
-  const [type, setType] = useState<PurchaseOrderTableTypes>(
+  const [type, setType] = useState<OrderTableType>(
     getReqTypeAndOrderType(location.pathname).orderType
   );
   const [requirementType, setRequirementType] = useState<RequirementType>(
@@ -95,7 +94,7 @@ export default function AllPurchaseOrders() {
     fieldSort,
     filteredInfo,
   });
-  const { addNewRow, updateRow } = useAddOrUpdateRow(
+  const { addNewRow, updateRow } = useActionsForRow(
     TableTypes.ALL_PURCHASE_ORDERS,
     (data: SocketDataPackType) => transformToPurchaseOrder(data),
     purchaseOrderList,
@@ -250,7 +249,7 @@ export default function AllPurchaseOrders() {
       setPurchaseOrderList(data);
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 

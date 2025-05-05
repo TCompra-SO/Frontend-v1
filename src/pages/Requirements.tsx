@@ -19,8 +19,9 @@ import {
 import { useTranslation } from "react-i18next";
 import TablePageContent, {
   TablePageContentRef,
-} from "../components/section/table-page/TablePageContent";
+} from "../components/common/utils/TablePageContent";
 import {
+  defaultErrorMsg,
   fieldNameSearchRequestRequirement,
   mainModalScrollStyle,
   noPaginationPageSize,
@@ -30,6 +31,7 @@ import { transformDataToRequirement } from "../utilities/transform";
 import { useLocation } from "react-router-dom";
 import {
   getDeleteRecordService,
+  getInitialModalData,
   getLabelFromRequirementType,
   getRouteType,
 } from "../utilities/globalFunctions";
@@ -50,15 +52,14 @@ import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
-import useSocketQueueHook, {
-  useAddOrUpdateRow,
-} from "../hooks/socketQueueHook";
+import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
 
 export default function Requirements() {
   const { t } = useTranslation();
   const location = useLocation();
-  const { detailedRequirementModalData } = useContext(ModalsContext);
+  const { detailedRequirementModalData, resetDetailedRequirementModalData } =
+    useContext(ModalsContext);
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const searchValueRef = useRef<TablePageContentRef>(null);
@@ -83,18 +84,12 @@ export default function Requirements() {
   const [loadingTable, setLoadingTable] = useState(true);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [total, setTotal] = useState(0);
-  const [dataModal, setDataModal] = useState<ModalContent>({
-    type: ModalTypes.NONE,
-    data: {},
-    action: Action.NONE,
-  });
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
   const [isOpenModalSelectOffer, setIsOpenModalSelectOffer] = useState(false);
   const [dataModalSelectOffer, setDataModalSelectOffer] =
-    useState<ModalContent>({
-      type: ModalTypes.NONE,
-      data: {},
-      action: Action.NONE,
-    });
+    useState<ModalContent>(getInitialModalData());
   const [tableContent, setTableContent] = useState<TableTypeRequirement>({
     type: TableTypes.REQUIREMENT,
     data: requirementList,
@@ -108,7 +103,7 @@ export default function Requirements() {
     fieldSort,
     filteredInfo,
   });
-  const { addNewRow, updateRow } = useAddOrUpdateRow(
+  const { addNewRow, updateRow } = useActionsForRow(
     TableTypes.REQUIREMENT,
     (data: SocketDataPackType) =>
       transformDataToRequirement(data, type, dataUser, mainDataUser),
@@ -158,20 +153,21 @@ export default function Requirements() {
 
   useEffect(() => {
     if (detailedRequirementModalData.requirementId) {
-      console.log(detailedRequirementModalData.requirementId);
+      const copy = { ...detailedRequirementModalData };
       getOffersByRequirementId(
         TableTypes.REQUIREMENT,
-        detailedRequirementModalData.requirementId,
-        detailedRequirementModalData.requirementType,
+        copy.requirementId,
+        copy.requirementType,
         false,
         1,
         noPaginationPageSize,
         Action.SHOW_OFFERS,
-        detailedRequirementModalData.requirement
+        copy.requirement
       );
+      resetDetailedRequirementModalData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [detailedRequirementModalData]);
 
   /** Para mostrar modales */
 
@@ -284,7 +280,7 @@ export default function Requirements() {
       setRequirementList(data);
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     } finally {
       setLoadingTable(false);
     }
@@ -341,10 +337,10 @@ export default function Requirements() {
               });
               setIsOpenModal(true);
             } else {
-              showNotification("error", t("errorOccurred"));
+              showNotification("error", t(defaultErrorMsg));
             }
           } else {
-            showNotification("error", t("errorOccurred"));
+            showNotification("error", t(defaultErrorMsg));
           }
           showLoadingMessage(false);
         }
@@ -368,7 +364,8 @@ export default function Requirements() {
             true,
             true,
             action,
-            requirement.type
+            requirement.type,
+            requirement.title
           );
         break;
       }
@@ -403,6 +400,13 @@ export default function Requirements() {
               canceledByCreator: false,
               rowId: requirement.key,
               type: requirement.type,
+              requirementTitle: requirement.title,
+              notificationTargetData: {
+                receiverId:
+                  requirement.offerSubUserId ?? requirement.offerUserId ?? "",
+                targetId: requirement.offerId,
+                targetType: requirement.type,
+              },
             },
             action,
           });

@@ -26,6 +26,9 @@ interface LoadingDataContextType {
   changeCertificationStateLoading: boolean;
   updateChangeCertificationStateLoading: (val: boolean | undefined) => void;
 
+  // changeSubUserStatusLoading: boolean;
+  // updateChangeSubUserStatusLoading: (val: boolean | undefined) => void;
+
   // Para acciones
   idAndActionQueue: Record<string, Action>;
   updateIdAndActionQueue: (id: string, action: Action) => void;
@@ -56,6 +59,8 @@ export const LoadingDataContext = createContext<LoadingDataContextType>({
   deleteFromIdAndActionQueue: () => {},
   changeCertificationStateLoading: false,
   updateChangeCertificationStateLoading: () => {},
+  // changeSubUserStatusLoading: false,
+  // updateChangeSubUserStatusLoading: () => {},
 });
 
 export function LoadingDataProvider({ children }: { children: ReactNode }) {
@@ -79,49 +84,55 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
     useState(false);
   const [changeCertificationStateLoading, setChangeCertificationStateLoading] =
     useState(false);
+  // const [changeSubUserStatusLoading, setChangeSubUserStatusLoading] =
+  //   useState(false);
   const [idAndActionQueue, setIdAndActionQueue] = useState<
     Record<string, Action>
   >({});
 
   function updateMyPurchaseOrdersLoadingPdf(val: boolean | undefined) {
-    setMyPurchaseOrdersLoadingPdf(val ? true : false);
+    setMyPurchaseOrdersLoadingPdf(val ?? false);
   }
 
   function updateSubUserPurchaseOrdersLoadingPdf(val: boolean | undefined) {
-    setSubUserPurchaseOrdersLoadingPdf(val ? true : false);
+    setSubUserPurchaseOrdersLoadingPdf(val ?? false);
   }
 
   function updateAllPurchaseOrdersLoadingPdf(val: boolean | undefined) {
-    setAllPurchaseOrdersLoadingPdf(val ? true : false);
+    setAllPurchaseOrdersLoadingPdf(val ?? false);
   }
 
   function updateAllSalesOrdersLoadingPdf(val: boolean | undefined) {
-    setAllSalesOrdersLoadingPdf(val ? true : false);
+    setAllSalesOrdersLoadingPdf(val ?? false);
   }
 
   function updateMyRequirementsLoadingViewOffers(val: boolean | undefined) {
-    setMyRequirementsLoadingViewOffers(val ? true : false);
+    setMyRequirementsLoadingViewOffers(val ?? false);
   }
 
   function updateSubUserRequirementsViewOffers(val: boolean | undefined) {
-    setSubUserRequirementsViewOffers(val ? true : false);
+    setSubUserRequirementsViewOffers(val ?? false);
   }
 
   function updateAllPurchaseOrdersViewOffers(val: boolean | undefined) {
-    setAllPurchaseOrdersViewOffers(val ? true : false);
+    setAllPurchaseOrdersViewOffers(val ?? false);
   }
 
   function updateAllSalesOrdersViewOffers(val: boolean | undefined) {
-    setAllSalesOrdersViewOffers(val ? true : false);
+    setAllSalesOrdersViewOffers(val ?? false);
   }
 
   function updateCreateRequirementLoading(val: boolean | undefined) {
-    setCreateRequirementLoading(val ? true : false);
+    setCreateRequirementLoading(val ?? false);
   }
 
   function updateChangeCertificationStateLoading(val: boolean | undefined) {
-    setChangeCertificationStateLoading(val ? true : false);
+    setChangeCertificationStateLoading(val ?? false);
   }
+
+  // function updateChangeSubUserStatusLoading(val: boolean | undefined) {
+  //   setChangeSubUserStatusLoading(val ?? false);
+  // }
 
   function updateIdAndActionQueue(id: string, action: Action) {
     setIdAndActionQueue((prev) => ({
@@ -151,6 +162,7 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
         allSalesOrdersViewOffers,
         createRequirementLoading,
         changeCertificationStateLoading,
+        // changeSubUserStatusLoading,
         idAndActionQueue,
         updateMyPurchaseOrdersLoadingPdf,
         updateSubUserPurchaseOrdersLoadingPdf,
@@ -164,6 +176,7 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
         updateIdAndActionQueue,
         deleteFromIdAndActionQueue,
         updateChangeCertificationStateLoading,
+        // updateChangeSubUserStatusLoading,
       }}
     >
       {children}

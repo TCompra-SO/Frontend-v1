@@ -5,8 +5,6 @@ import InputNumberContainer from "../../containers/InputNumberContainer";
 import { useTenureRules } from "../../../hooks/validatorHooks";
 
 interface TenureFieldProps {
-  edit?: boolean;
-  value?: string;
   fromMyPerfil?: boolean;
   onlyItem?: boolean;
 }

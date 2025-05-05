@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { pageRoutes } from "../../../../utilities/routes";
-import { useChatSocket } from "../../../../hooks/useChat";
+import { MainSocketsContext } from "../../../../contexts/MainSocketsContext";
+import { useContext } from "react";
 
 export default function Chat({ forDropdown }: { forDropdown?: boolean }) {
   const navigate = useNavigate();
-  useChatSocket();
+  const { globalNumUnreadMessages } = useContext(MainSocketsContext);
 
   return (
     <div onClick={() => navigate(`${pageRoutes.chat}`)}>
@@ -13,7 +14,9 @@ export default function Chat({ forDropdown }: { forDropdown?: boolean }) {
           forDropdown ? "i-main " : "i-opt"
         }`}
       ></i>
-      {!forDropdown && <b className="i-notf"></b>}
+      {!forDropdown && globalNumUnreadMessages > 0 && (
+        <b className="i-notf"></b>
+      )}
     </div>
   );
 }

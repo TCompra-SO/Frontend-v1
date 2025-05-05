@@ -7,11 +7,12 @@ import {
   TableColumns,
   TableTypes,
   CommonFilter,
-  PurchaseOrderTableTypes,
+  OrderTableType,
   CodeResponseCanOffer,
   Filters,
   SocketChangeType,
   RTNotificationType,
+  ChatMessageType,
 } from "../utilities/types";
 import {
   OfferItemSubUser,
@@ -28,13 +29,20 @@ import {
   CertificationItem,
   BasicRateData,
   SubUserBase,
-  NotificationData,
-  ChatSocketData,
+  SocketChatMessage,
+  NotificationDataFromServer,
+  NotificationTargetData,
+  ChatMessage,
+  ChatListData,
 } from "./MainInterfaces";
 import useApi, { UseApiType } from "../hooks/useApi";
 import { FieldSort } from "./Requests";
-import { FilterNames } from "../contexts/RequirementDetailContext";
 import { ColumnFilterItem } from "antd/lib/table/interface";
+
+export interface FilterNames {
+  location: string;
+  deliveryTime: string;
+}
 
 /******** Modals *******/
 
@@ -54,6 +62,8 @@ export interface ModalCancelPurchaseOrder extends CommonModalType {
     onCancelSuccess?: (offerId: string) => void;
     rowId: string;
     type: RequirementType;
+    notificationTargetData: NotificationTargetData;
+    requirementTitle: string;
   };
 }
 
@@ -64,6 +74,7 @@ export interface ModalDetailedRequirement extends CommonModalType {
     requirement: Requirement;
     forPurchaseOrder: boolean;
     filters?: OfferFilters;
+    orderId?: string;
   };
   selectOffer?: {
     setDataModalSelectOffer: (val: ModalContent) => void;
@@ -84,6 +95,7 @@ export interface ModalRateCanceled extends CommonModalType {
     isOffer: boolean;
     requirementOrOfferId: string;
     rowId: string;
+    requirementOrOfferTitle: string;
     onSuccess?: (id: string) => void;
     onExecute?: (id: string) => void;
     onError?: (id: string) => void;
@@ -97,6 +109,7 @@ export interface ModalRateUser extends CommonModalType {
     type: RequirementType;
     isOffer: boolean;
     requirementOrOfferId: string;
+    requirementOrOfferTitle: string;
     rowId: string;
   };
 }
@@ -149,6 +162,7 @@ export interface ModalOfferDetail extends CommonModalType {
     offer: Offer;
     basicRateData: BasicRateData;
     showActions: boolean;
+    orderData?: { id: string; type: RequirementType };
   };
 }
 
@@ -197,6 +211,7 @@ export interface ModalSelectDocsCert extends CommonModalType {
     data: SelectDocsModalData;
     certificationId?: string;
     onRequestSent?: () => void;
+    setLoading?: (val: boolean) => void;
   };
 }
 
@@ -209,7 +224,11 @@ export interface ModalSendMessage extends CommonModalType {
   type: ModalTypes.SEND_MESSAGE;
   data: {
     requirementId: string;
-    userId: string;
+    title: string;
+    type: RequirementType;
+    receiverImage?: string;
+    receiverName: string;
+    receiverId: string;
   };
 }
 
@@ -268,13 +287,13 @@ export interface TableTypeOffer extends TableHiddenColumns {
 
 export interface TableTypePurchaseOrder extends TableHiddenColumns {
   type: TableTypes.PURCHASE_ORDER;
-  subType: PurchaseOrderTableTypes;
+  subType: OrderTableType;
   data: PurchaseOrder[];
 }
 
 export interface TableTypeSalesOrder extends TableHiddenColumns {
   type: TableTypes.SALES_ORDER;
-  subType: PurchaseOrderTableTypes;
+  subType: OrderTableType;
   data: PurchaseOrder[];
 }
 
@@ -295,13 +314,13 @@ export interface TableTypeOfferSubUser extends TableHiddenColumns {
 
 export interface TableTypePurchaseOrderSubUser extends TableHiddenColumns {
   type: TableTypes.PURCHASE_ORDER_SUBUSER;
-  subType: PurchaseOrderTableTypes;
+  subType: OrderTableType;
   data: PurchaseOrderItemSubUser[];
 }
 
 export interface TableTypeSalesOrderSubUser extends TableHiddenColumns {
   type: TableTypes.SALES_ORDER_SUBUSER;
-  subType: PurchaseOrderTableTypes;
+  subType: OrderTableType;
   data: PurchaseOrderItemSubUser[];
 }
 
@@ -317,13 +336,13 @@ export interface TableTypeAllOffers extends TableHiddenColumns {
 
 export interface TableTypeAllPurchaseOrders extends TableHiddenColumns {
   type: TableTypes.ALL_PURCHASE_ORDERS;
-  subType: PurchaseOrderTableTypes;
+  subType: OrderTableType;
   data: BasicPurchaseOrder[];
 }
 
 export interface TableTypeAllSalesOrders extends TableHiddenColumns {
   type: TableTypes.ALL_SALES_ORDERS;
-  subType: PurchaseOrderTableTypes;
+  subType: OrderTableType;
   data: BasicPurchaseOrder[];
 }
 
@@ -497,6 +516,11 @@ export interface SocketResponse {
   userId: string;
 }
 
+export interface FieldValueI {
+  field: string;
+  value: any;
+}
+
 export type SocketDataPackType = SocketResponse["dataPack"]["data"][number];
 
 export interface PaginationDataResponse {
@@ -513,16 +537,92 @@ export interface StrictColumnFilterItem extends ColumnFilterItem {
 
 export interface RealTimeNotificationData {
   type: RTNotificationType.NOTIFICATION;
-  content: NotificationData;
-  onClickCallback: (notification: NotificationData) => void;
+  content: NotificationDataFromServer;
+  onClickCallback: (notification: NotificationDataFromServer) => void;
 }
 
 export interface RealTimeChatData {
   type: RTNotificationType.CHAT;
-  content: ChatSocketData;
-  onClickCallback: (notification: ChatSocketData) => void;
+  content: SocketChatMessage;
+  onClickCallback: (notification: SocketChatMessage) => void;
 }
 
 export type ShowRealTimeNotificationParams =
   | RealTimeNotificationData
   | RealTimeChatData;
+
+export interface SelectOfferResponse {
+  offerUID: string;
+  purchaseOrderUID?: string;
+  saleOrderUID?: string;
+}
+
+export interface LoginResponse {
+  dataUser: {
+    CompanyID?: string;
+    email: string;
+    name: string;
+    planID: string;
+    type: string;
+    typeID: number;
+    uid: string;
+    lastSession: string;
+    premium: boolean;
+  }[];
+  refreshToken: string;
+  accessToken: string;
+  accessExpiresIn: number;
+  refreshExpiresIn: number;
+}
+
+export interface NotificationSearchData {
+  categoryId: number;
+  targetType: RequirementType;
+}
+
+export interface RefreshAccessTokenResponse {
+  accessToken: string;
+  expiresIn: number;
+}
+
+export interface RefreshRefreshTokenResponse {
+  accessToken: string;
+  accessExpiresIn: number;
+  refreshToken: string;
+  refreshExpiresIn: number;
+}
+
+export interface ChatMessageRead {
+  endMessageId: string;
+}
+
+export interface NewMessageSingleChatSocketResponse {
+  messageData: ChatMessage;
+  type: ChatMessageType.NEW_MESSAGE;
+}
+
+export interface MessageReadSingleChatSocketResponse {
+  numUnreadMessages: number;
+  res: ChatMessageRead;
+  type: ChatMessageType.READ;
+}
+
+export type SingleChatSocketResponse =
+  | NewMessageSingleChatSocketResponse
+  | MessageReadSingleChatSocketResponse;
+
+export interface NewMessageGeneralChatSocketResponse {
+  chatData: ChatListData[];
+  messageData: ChatMessage;
+  numUnreadMessages: number;
+  type: ChatMessageType.NEW_MESSAGE;
+}
+
+export interface MessageReadGeneralChatSocketResponse {
+  numUnreadMessages: number;
+  type: ChatMessageType.READ;
+}
+
+export type GeneralChatSocketResponse =
+  | NewMessageGeneralChatSocketResponse
+  | MessageReadGeneralChatSocketResponse;

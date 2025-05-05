@@ -6,10 +6,7 @@ import {
   Requirement,
   SubUserBase,
 } from "../../../../models/MainInterfaces";
-import {
-  PurchaseOrderTableTypes,
-  TableTypes,
-} from "../../../../utilities/types";
+import { OrderTableType, TableTypes } from "../../../../utilities/types";
 import { useContext } from "react";
 import { ListsContext } from "../../../../contexts/ListsContext";
 import {
@@ -46,22 +43,19 @@ export default function NameColumn(
       dataIndex = "name";
       break;
     case TableTypes.PURCHASE_ORDER:
-      if (extraParam == PurchaseOrderTableTypes.ISSUED)
-        dataIndex = "userNameProvider";
+      if (extraParam == OrderTableType.ISSUED) dataIndex = "userNameProvider";
       else dataIndex = "userNameClient";
       break;
     case TableTypes.ALL_PURCHASE_ORDERS:
-      if (extraParam == PurchaseOrderTableTypes.ISSUED)
-        dataIndex = "subUserNameClient";
+      if (extraParam == OrderTableType.ISSUED) dataIndex = "subUserNameClient";
       else dataIndex = "subUserNameProvider";
       break;
     case TableTypes.SALES_ORDER:
-      if (extraParam == PurchaseOrderTableTypes.ISSUED)
-        dataIndex = "userNameClient";
+      if (extraParam == OrderTableType.ISSUED) dataIndex = "userNameClient";
       else dataIndex = "userNameProvider";
       break;
     case TableTypes.ALL_SALES_ORDERS:
-      if (extraParam == PurchaseOrderTableTypes.ISSUED)
+      if (extraParam == OrderTableType.ISSUED)
         dataIndex = "subUserNameProvider";
       else dataIndex = "subUserNameClient";
       break;
@@ -95,19 +89,19 @@ export default function NameColumn(
               {type === TableTypes.MY_DOCUMENTS &&
                 (record as CertificateFile).name}
               {type === TableTypes.PURCHASE_ORDER &&
-                (extraParam == PurchaseOrderTableTypes.ISSUED
+                (extraParam == OrderTableType.ISSUED
                   ? (record as BasicPurchaseOrder).userNameProvider
                   : (record as BasicPurchaseOrder).userNameClient)}
               {type === TableTypes.ALL_PURCHASE_ORDERS &&
-                (extraParam == PurchaseOrderTableTypes.ISSUED
+                (extraParam == OrderTableType.ISSUED
                   ? (record as BasicPurchaseOrder).subUserNameClient
                   : (record as BasicPurchaseOrder).subUserNameProvider)}
               {type === TableTypes.SALES_ORDER &&
-                (extraParam == PurchaseOrderTableTypes.ISSUED
+                (extraParam == OrderTableType.ISSUED
                   ? (record as BasicPurchaseOrder).userNameClient
                   : (record as BasicPurchaseOrder).userNameProvider)}
               {type === TableTypes.ALL_SALES_ORDERS &&
-                (extraParam == PurchaseOrderTableTypes.ISSUED
+                (extraParam == OrderTableType.ISSUED
                   ? (record as BasicPurchaseOrder).subUserNameProvider
                   : (record as BasicPurchaseOrder).subUserNameClient)}
             </div>

@@ -201,3 +201,32 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
 .ant-table-wrapper .ant-table-expanded-row-fixed {
   padding: 11px 0px;
 }
+
+.no-pointer-events {
+  pointer-events: none;
+}
+
+.chat-tab .ant-tag-checkable:not(.ant-tag-checkable-checked):hover {
+  background-color: #f3f7fa;
+}
+
+.chat-tab .ant-tag {
+  border-radius: 10px;
+}
+
+.ant-input-outlined:hover {
+  background-color: initial;
+  border-color: initial;
+}
+
+/* Para poner background en notificaciones */
+
+.notification-popover .ant-popover-inner {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.notification-popover .ant-popover-title {
+  padding: 12px 12px 0 12px;
+}

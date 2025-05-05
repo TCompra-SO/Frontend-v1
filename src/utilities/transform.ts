@@ -5,10 +5,14 @@ import {
   BasicRequirement,
   CertificateFile,
   CertificationItem,
+  ChatListData,
+  ChatMessage,
   DisplayUser,
   FullUser,
+  NotificationDataFromServer,
   Offer,
   OfferItemSubUser,
+  PlanData,
   PurchaseOrder,
   PurchaseOrderItemSubUser,
   Requirement,
@@ -16,14 +20,28 @@ import {
   StatisticsData,
   SubUserBase,
   SubUserProfile,
+  UserCounters,
 } from "../models/MainInterfaces";
 import { UserState } from "../models/Redux";
 import { getBaseDataUserService } from "../services/requests/authService";
 import makeRequest from "./globalFunctions";
 import {
+  fieldNameSearchRequestSubUser,
+  numGoodsColumnKey,
+  numOffersGoodsColumnKey,
+  numOffersSalesColumnKey,
+  numOffersServicesColumnKey,
+  numPurchaseOrdersClientColumnKey,
+  numPurchaseOrdersProviderColumnKey,
+  numSalesColumnKey,
+  numSellingOrdersClientColumnKey,
+  numSellingOrdersProviderColumnKey,
+  numServicesColumnKey,
+} from "./globals";
+import {
   EntityType,
   OrderConfirmation,
-  PurchaseOrderTableTypes,
+  OrderTableType,
   RequirementType,
   Usage,
 } from "./types";
@@ -47,6 +65,7 @@ export function transformDataToRequirement(
   req.allowedBidder = data.allowed_bidersID;
   req.image = data.images;
   req.document = data.files;
+  req.used = data.state_article;
   if (data.winOffer) {
     req.offerId = data.winOffer.uid;
     req.offerUserId = data.winOffer.entityID;
@@ -119,15 +138,18 @@ export function transformToFullUser(response: any) {
   user.numGoods = response.numProducts;
   user.numSales = response.numLiquidations;
   user.image = response.avatar;
-  return user;
+  return { ...user, ...transformToUserCounters(response) };
 }
 
 export function transformToBaseUser(response: any, fromLogin: boolean = false) {
   const user: BaseUser = response;
+  user.isPremium = response.premium ? false : true;
   let subUser: BaseUser = response.auth_users;
   if (subUser) {
     // usuario es subusuario
     subUser.uid = response.auth_users.Uid;
+    subUser.planID = user.planID;
+    subUser.isPremium = user.isPremium;
   }
   if (!subUser && fromLogin) subUser = user; // para usuario logueado: usuario es principal, subuser y user son iguales
   return { user, subUser };
@@ -172,6 +194,7 @@ export async function transformFromGetRequirementByIdToRequirement(
       type,
       userName: data.userName,
       subUserName: data.subUserName,
+      used: data.state_article,
     };
     if (data.winOffer) {
       req.offerId = data.winOffer.uid;
@@ -299,7 +322,7 @@ export function transformToPurchaseOrder(data: any) {
 
 export function transformToPurchaseOrderItemSubUser(
   data: any,
-  subType: PurchaseOrderTableTypes
+  subType: OrderTableType
 ) {
   const purcOrder: PurchaseOrderItemSubUser = {
     requirementTitle: data.requerimentTitle,
@@ -321,28 +344,45 @@ export function transformToPurchaseOrderItemSubUser(
   return purcOrder;
 }
 
+export function transformToUserCounters(data: any) {
+  const counters: UserCounters = {
+    numGoods: data[fieldNameSearchRequestSubUser[numGoodsColumnKey]],
+    numServices: data[fieldNameSearchRequestSubUser[numServicesColumnKey]],
+    numSales: data[fieldNameSearchRequestSubUser[numSalesColumnKey]],
+    numOffersGoods:
+      data[fieldNameSearchRequestSubUser[numOffersGoodsColumnKey]],
+    numOffersServices:
+      data[fieldNameSearchRequestSubUser[numOffersServicesColumnKey]],
+    numOffersSales:
+      data[fieldNameSearchRequestSubUser[numOffersSalesColumnKey]],
+    numPurchaseOrdersProvider:
+      data[fieldNameSearchRequestSubUser[numPurchaseOrdersProviderColumnKey]],
+    numPurchaseOrdersClient:
+      data[fieldNameSearchRequestSubUser[numPurchaseOrdersClientColumnKey]],
+    numSellingOrdersProvider:
+      data[fieldNameSearchRequestSubUser[numSellingOrdersProviderColumnKey]],
+    numSellingOrdersClient:
+      data[fieldNameSearchRequestSubUser[numSellingOrdersClientColumnKey]],
+  };
+  return counters;
+}
+
 export function transformToSubUserBase(data: any) {
   const subUser: SubUserBase = {
     typeID: data.typeID,
     createdAt: data.createdAt,
-    numGoods: data.numProducts,
-    numServices: data.numServices,
-    numSales: data.numLiquidations,
-    numOffers: data.numOffers,
-    uid: data.userID,
+    uid: data.uid,
     name: data.name,
     document: data.document,
     email: data.email,
     typeEntity: EntityType.SUBUSER,
-    numPurchaseOrdersProvider: data.numPurchaseOrdersProvider,
-    numPurchaseOrdersClient: data.numPurchaseOrdersClient,
-    numSellingOrdersProvider: data.numSellingOrdersProvider,
-    numSellingOrdersClient: data.numSellingOrdersClient,
+    state: data.active_account,
+    ...transformToUserCounters(data),
   };
   return subUser;
 }
 
-export function transformToSubUserProfile(data: any, forSubuser?: boolean) {
+export function transformToSubUserProfile(data: any) {
   const subUser: SubUserProfile = {
     ...transformToSubUserBase(data),
     address: data.address,
@@ -350,7 +390,6 @@ export function transformToSubUserProfile(data: any, forSubuser?: boolean) {
     companyID: data.companyID,
     phone: data.phone,
   };
-  if (forSubuser) subUser.uid = data.uid;
   return subUser;
 }
 
@@ -395,5 +434,33 @@ export function transformToDisplayUser(data: any) {
 
 export function transformToStatistics(data: any) {
   const obj: StatisticsData = data;
+  return obj;
+}
+
+export function transformToChatListData(data: any, uid: string) {
+  const obj: ChatListData = data;
+  obj.requirementId = data.requerimentId;
+  if (uid == data.userId) {
+    obj.userId = data.chatPartnerId;
+    obj.numUnreadMessages = data.unReadUser;
+  } else {
+    obj.userId = data.userId;
+    obj.numUnreadMessages = data.unReadPartner;
+  }
+  return obj;
+}
+
+export function transformToChatMessage(data: any) {
+  const obj: ChatMessage = data;
+  return obj;
+}
+
+export function transformToNotificationDataFromServer(data: any) {
+  const obj: NotificationDataFromServer = data;
+  return obj;
+}
+
+export function transformToPlanData(data: any) {
+  const obj: PlanData = data;
   return obj;
 }

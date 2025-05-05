@@ -7,7 +7,6 @@ import {
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { ListsContext } from "../../../../contexts/ListsContext";
-import { Coins } from "../../../../utilities/types";
 import { priceColumnKey } from "../../../../utilities/globals";
 import { FieldSort } from "../../../../models/Requests";
 import { getSortOrderFromFieldSort } from "../../../../utilities/globalFunctions";
@@ -27,14 +26,16 @@ export default function PriceColumn(
     align: "center",
     key: priceColumnKey,
     hidden,
-    render: (_, record) => (
-      <div style={{ textAlign: "left" }} className="t-flex dato-table">
-        {currencyData && currencyData[record.coin]
-          ? Coins[currencyData[record.coin].alias]
-          : null}{" "}
-        {record.price}
-      </div>
-    ),
+    render: (_, record) => {
+      return (
+        <div style={{ textAlign: "left" }} className="t-flex dato-table">
+          {currencyData && currencyData[record.coin]
+            ? currencyData[record.coin].alias
+            : null}{" "}
+          {record.price}
+        </div>
+      );
+    },
     sorter: noSorter ? undefined : true,
     showSorterTooltip: false,
     sortOrder: getSortOrderFromFieldSort(priceColumnKey, fieldSort),

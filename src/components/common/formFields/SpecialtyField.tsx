@@ -5,8 +5,6 @@ import InputContainer from "../../containers/InputContainer";
 import { ReactNode } from "react";
 
 interface SpecialtyFieldProps {
-  edit?: boolean;
-  value?: string;
   fromMyPerfil?: boolean;
   onlyItem?: boolean;
 }

@@ -2,13 +2,15 @@ import { useTranslation } from "react-i18next";
 import ButtonContainer from "../../containers/ButtonContainer";
 import {
   Action,
+  CertificationTableType,
   ErrorMsgRequestType,
   ErrorRequestType,
   ModalTypes,
   ResponseRequestType,
+  SystemNotificationType,
 } from "../../../utilities/types";
 import { CertificateFile } from "../../../models/MainInterfaces";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import TextAreaContainer from "../../containers/TextAreaContainer";
 import {
   CommonModalProps,
@@ -18,8 +20,8 @@ import {
 import { Checkbox, Flex, Pagination } from "antd";
 import ModalContainer from "../../containers/ModalContainer";
 import {
+  certificatesToSendPageSize,
   mainModalScrollStyle,
-  pageSizeOptionsSt,
 } from "../../../utilities/globals";
 import SimpleLoading from "../../../pages/utils/SimpleLoading";
 import {
@@ -37,19 +39,26 @@ import {
 import { MainState } from "../../../models/Redux";
 import { useSelector } from "react-redux";
 import useShowNotification from "../../../hooks/utilHooks";
+import useSystemNotification from "../../../hooks/useSystemNotification";
+import { MainSocketsContext } from "../../../contexts/MainSocketsContext";
+import dayjs from "dayjs";
+import { openDocument } from "../../../utilities/globalFunctions";
 
 interface SelectDocumentsToSendCertificateModalProps extends CommonModalProps {
   data: SelectDocsModalData;
   onClose: () => any;
   certificationId?: string;
   onRequestSent?: () => void;
+  setLoading?: (val: boolean) => void;
 }
 
 export default function SelectDocumentsToSendCertificateModal(
   props: SelectDocumentsToSendCertificateModalProps
 ) {
   const { t } = useTranslation();
+  const { getNotification } = useContext(MainSocketsContext);
   const { showNotification } = useShowNotification();
+  const { getSystemNotification } = useSystemNotification();
   const { getRequiredDocsCert, requiredDocs, loadingRequiredDocs } =
     useGetRequiredDocsCert();
   const mainUserUid = useSelector((state: MainState) => state.mainUser.uid);
@@ -78,7 +87,7 @@ export default function SelectDocumentsToSendCertificateModal(
   /** Obtener lista de documentos */
 
   useEffect(() => {
-    getCertificatesList(currentPage, pageSizeOptionsSt[0]);
+    getCertificatesList(currentPage, certificatesToSendPageSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -101,6 +110,7 @@ export default function SelectDocumentsToSendCertificateModal(
   /** Obtener texto de documentos requeridos */
 
   useEffect(() => {
+    console.log("props.data.userId", props.data.userId);
     getRequiredDocsCert(props.data.userId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.data]);
@@ -114,6 +124,7 @@ export default function SelectDocumentsToSendCertificateModal(
         error: ErrorRequestType,
         errorMsg: ErrorMsgRequestType
       ) {
+        props.setLoading?.(false);
         if (responseData) {
           showNotification("success", t("documentsSentSuccessfully"));
           if (props.onRequestSent) props.onRequestSent();
@@ -123,6 +134,10 @@ export default function SelectDocumentsToSendCertificateModal(
         }
       },
     });
+
+    return () => {
+      props.setAdditionalApiParams({ functionToExecute: () => {} });
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -134,7 +149,7 @@ export default function SelectDocumentsToSendCertificateModal(
 
   function handleOnDocumentAdded() {
     setCurrentPage(1);
-    getCertificatesList(1, pageSizeOptionsSt[0]);
+    getCertificatesList(1, certificatesToSendPageSize);
   }
 
   function onChangePageAndPageSize(page: number, pageSize: number) {
@@ -165,17 +180,32 @@ export default function SelectDocumentsToSendCertificateModal(
       showNotification("error", t("mustSelectAtLeastOneDocument"));
       return;
     }
+    props.setLoading?.(true);
+
+    const notificationFn = getSystemNotification(
+      SystemNotificationType.RECEIVED_DOCS_FOR_CERT
+    );
+    const basicNotification = notificationFn();
+    const notification = getNotification({
+      ...basicNotification,
+      timestamp: dayjs().toISOString(),
+      receiverId: props.data.userId,
+      targetId: props.certificationId ?? "",
+      targetType: CertificationTableType.RECEIVED,
+    });
 
     const data: SendCertificationRequest | ResendCertificatesRequest =
       props.certificationId
         ? {
             certificateRequestID: props.certificationId,
             certificateIDs: certificateIds,
+            notification,
           }
         : {
             userID: mainUserUid,
             companyID: props.data.userId,
             certificateIDs: certificateIds,
+            notification,
           };
 
     props.setApiParams({
@@ -220,7 +250,7 @@ export default function SelectDocumentsToSendCertificateModal(
                     className="form-control wd-100"
                     autoSize
                     readOnly
-                    placeholder={`${t("notes")}...`}
+                    placeholder={`${t("unavailableRequiredDocumentsCert")}.`}
                     value={requiredDocs ?? ""}
                   />
                 </div>
@@ -233,11 +263,19 @@ export default function SelectDocumentsToSendCertificateModal(
               <SimpleLoading style={{ width: "15vw" }} />
             </Flex>
           )}
-          {!loadingCertList &&
+          {!loadingCertList && docs.length > 0 ? (
             docs.map((obj, index) => (
-              <div key={index} className="card-ofertas certificado-bloque">
+              <div
+                key={index}
+                className="card-ofertas certificado-bloque"
+                style={{ cursor: "pointer" }}
+                onClick={() => setCheckedDoc(!checked[index], index)}
+              >
                 <div className="t-flex oferta-titulo gap-10">
-                  <div className="icon-doc-estado">
+                  <div
+                    className="icon-doc-estado"
+                    onClick={() => openDocument(obj.url)}
+                  >
                     <i className="fa-regular fa-file-lines"></i>
                   </div>
                   <div className="oferta-usuario col-documento">
@@ -254,21 +292,37 @@ export default function SelectDocumentsToSendCertificateModal(
                   </div>
 
                   <Checkbox
-                    onChange={(e) => setCheckedDoc(e.target.checked, index)}
+                    // onClick={(e) => e.stopPropagation()}
+                    onChange={(e) => {
+                      setCheckedDoc(e.target.checked, index);
+                    }}
                     checked={checked[index]}
                   ></Checkbox>
                 </div>
               </div>
-            ))}
-          <Flex justify="center">
-            <Pagination
-              size="small"
-              total={totalCertList}
-              onChange={onChangePageAndPageSize}
-              // showTotal={(total) => `${total}`}
-              current={currentPage}
-            />
-          </Flex>
+            ))
+          ) : (
+            <div className="card-ofertas certificado-bloque no-pointer-events">
+              <div className="t-flex oferta-descripcion">
+                <div className="detalles-oferta">
+                  {t("noDocumentsForCertification")}
+                </div>
+              </div>
+            </div>
+          )}
+          {docs.length > 0 && (
+            <Flex justify="center">
+              <Pagination
+                size="small"
+                total={totalCertList}
+                onChange={onChangePageAndPageSize}
+                // showTotal={(total) => `${total}`}
+                pageSize={certificatesToSendPageSize}
+                current={currentPage}
+                hideOnSinglePage={true}
+              />
+            </Flex>
+          )}
           <div className="t-flex gap-15 wd-100 alert-btn">
             <ButtonContainer
               className="btn alert-boton btn-green"

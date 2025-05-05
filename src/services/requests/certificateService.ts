@@ -1,5 +1,6 @@
 import { HttpService } from "../../models/Interfaces";
 import { ApiMainRoutes, ApiRoutes } from "../../utilities/routes";
+import { CertificationTableType } from "../../utilities/types";
 
 export function uploadCertificateService(): HttpService {
   return {
@@ -20,6 +21,15 @@ export function getCertificatesService(
       ApiRoutes.certificate.getCertificates
     }${userId}/${page}/${pageSize}`,
     type: "CE-GET",
+  };
+}
+
+export function searchCertificatesService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
+      ApiRoutes.certificate.searchCertificates
+    }`,
+    type: "CE-SEA",
   };
 }
 
@@ -54,6 +64,15 @@ export function getSentRequestsByEntityService(
   };
 }
 
+export function searchSentRequestsByEntityService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
+      ApiRoutes.certificate.searchSentRequestByEntity
+    }`,
+    type: "CE-SE-SE",
+  };
+}
+
 export function getReceivedRequestsByEntityService(
   userId: string,
   page: number,
@@ -64,6 +83,15 @@ export function getReceivedRequestsByEntityService(
       ApiRoutes.certificate.getReceivedRequestsByEntity
     }${userId}/${page}/${pageSize}`,
     type: "CE-GE-RE",
+  };
+}
+
+export function searchReceivedRequestsByEntityService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
+      ApiRoutes.certificate.searchReceivedRequestByEntity
+    }`,
+    type: "CE-SE-RE",
   };
 }
 
@@ -112,5 +140,17 @@ export function getRequiredDocumentsService(companyId: string): HttpService {
       ApiRoutes.certificate.getRequiredDocuments
     }${companyId}`,
     type: "CE-GET-DOC",
+  };
+}
+
+export function getCertificateRequestService(
+  requestId: string,
+  type: CertificationTableType
+): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.certificate}${
+      ApiRoutes.certificate.getCertificateRequest
+    }${type}/${requestId}`,
+    type: "CE-GET-REQ",
   };
 }

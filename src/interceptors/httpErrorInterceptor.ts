@@ -41,9 +41,10 @@ import {
   updateProfileSubUserService,
 } from "../services/requests/subUserService";
 import { getNameReniecService } from "../services/requests/utilService";
+import { defaultErrorMsg } from "../utilities/globals";
 
 export default function httpErrorInterceptor(error: any, type: string): string {
-  let erroMsg: string = "errorOccurred";
+  let erroMsg: string = defaultErrorMsg;
   const code = error.response?.status;
 
   switch (type) {
@@ -58,6 +59,9 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
         case 409:
           erroMsg = "userIncompleteProfile";
+          break;
+        case 423:
+          erroMsg = "inactiveAccountLogin";
           break;
       }
       break;
@@ -102,6 +106,9 @@ export default function httpErrorInterceptor(error: any, type: string): string {
         case 410:
           erroMsg = "completeProfile";
           break;
+        case 400:
+          erroMsg = "subUserNoNeedValidationCode";
+          break;
       }
       break;
     case sendCodeRecoveryService().type:
@@ -111,6 +118,9 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           break;
         case 409:
           erroMsg = "generateCodeAgainInAFewSeconds";
+          break;
+        case 410:
+          erroMsg = "contactMainAccountToChangePassword";
           break;
       }
       break;
@@ -237,6 +247,9 @@ export default function httpErrorInterceptor(error: any, type: string): string {
       switch (code) {
         case 401:
           erroMsg = "cantRateSameEntity";
+          break;
+        case 409:
+          erroMsg = "alreadyRatedUser";
           break;
       }
       break;

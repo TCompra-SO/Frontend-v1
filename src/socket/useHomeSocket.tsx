@@ -5,7 +5,7 @@ import { HomeContext } from "../contexts/Homecontext";
 import { SocketResponse } from "../models/Interfaces";
 import { RequirementType, SocketChangeType } from "../utilities/types";
 
-let socketAPI: Socket | null = null;
+let socketHomeAPI: Socket | null = null;
 
 export default function useHomeSocket() {
   const {
@@ -15,26 +15,29 @@ export default function useHomeSocket() {
     type,
     updateChangesQueue,
     updatePage,
+    notificationSearchData,
   } = useContext(HomeContext);
   const useFilterRef = useRef(useFilter);
   const pageRef = useRef(page);
 
   useEffect(() => {
     updatePage(1);
-    if (!useFilter) getData(true);
+    if (!useFilter && !notificationSearchData.categoryId) {
+      getData(true);
+    }
 
-    if (!socketAPI) {
+    if (!socketHomeAPI) {
       if (type == RequirementType.GOOD)
-        socketAPI = io(import.meta.env.VITE_REQUIREMENTS_SOCKET_URL);
+        socketHomeAPI = io(import.meta.env.VITE_REQUIREMENTS_SOCKET_URL);
       else if (type == RequirementType.SERVICE)
-        socketAPI = io(import.meta.env.VITE_SERVICES_SOCKET_URL);
+        socketHomeAPI = io(import.meta.env.VITE_SERVICES_SOCKET_URL);
       else if (type == RequirementType.SALE)
-        socketAPI = io(import.meta.env.VITE_SALES_SOCKET_URL);
+        socketHomeAPI = io(import.meta.env.VITE_SALES_SOCKET_URL);
 
-      if (socketAPI) {
-        socketAPI.on("connect", () => {
+      if (socketHomeAPI) {
+        socketHomeAPI.on("connect", () => {
           console.log("Connected");
-          socketAPI?.emit(
+          socketHomeAPI?.emit(
             "joinRoom",
             type == RequirementType.GOOD
               ? "homeRequerimentProduct"
@@ -44,28 +47,33 @@ export default function useHomeSocket() {
           );
         });
 
-        socketAPI.on("joinedRoom", (message) => {
+        socketHomeAPI.on("joinedRoom", (message) => {
           console.log(message);
         });
 
-        socketAPI.on("updateRoom", (payload: SocketResponse) => {
+        socketHomeAPI.on("updateRoom", (payload: SocketResponse) => {
           console.log("Nuevos datos recibido:", payload);
-          const canAddRow: boolean =
-            pageRef.current == 1 && !useFilterRef.current;
-          if (
-            payload.typeSocket == SocketChangeType.UPDATE ||
-            (payload.typeSocket == SocketChangeType.CREATE && canAddRow)
-          )
-            updateChangesQueue(payload, canAddRow);
+          try {
+            const canAddRow: boolean =
+              pageRef.current == 1 && !useFilterRef.current;
+            if (
+              payload.typeSocket == SocketChangeType.UPDATE ||
+              (payload.typeSocket == SocketChangeType.CREATE && canAddRow)
+            )
+              updateChangesQueue(payload, canAddRow);
+          } catch (e) {
+            console.log(e);
+          }
         });
       }
     }
 
     return () => {
-      if (socketAPI) {
+      if (socketHomeAPI) {
         console.log("Socket disconnected");
-        socketAPI.disconnect();
-        socketAPI = null;
+        socketHomeAPI.removeAllListeners();
+        socketHomeAPI.disconnect();
+        socketHomeAPI = null;
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -80,7 +88,9 @@ export default function useHomeSocket() {
   }, [page]);
 
   useEffect(() => {
-    if (!useFilter) getData();
+    if (!useFilter && !notificationSearchData.categoryId) {
+      getData();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, useFilter]);
 

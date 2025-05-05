@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import SelectContainer from "../../../containers/SelectContainer";
 import { DocType } from "../../../../utilities/types";
 import { Avatar } from "antd";
 import {
-  companySearchAfterMseconds,
+  inputSearchAfterMseconds,
   defaultUserImage,
   searchSinceLength,
 } from "../../../../utilities/globals";
@@ -23,21 +23,27 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
   const { loadingCompanyList, searchCompanyByName, clearList, companyList } =
     useSearchCompanyByName();
   const [value, setValue] = useState<string>();
-  const [lastSearchValue, setLastSearchValue] = useState("");
 
-  const searchCompany = debounce((newValue: string) => {
-    const temp = getSearchString(newValue);
-    if (
-      typeof temp === "string" &&
-      lastSearchValue != temp &&
-      temp.length >= searchSinceLength
-    ) {
-      searchCompanyByName(temp);
-      setLastSearchValue(temp);
-    } else {
-      clearList();
-    }
-  }, companySearchAfterMseconds);
+  useEffect(() => {
+    return () => {
+      searchCompany.cancel();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const searchCompany = useMemo(
+    () =>
+      debounce((newValue: string) => {
+        const temp = getSearchString(newValue);
+        if (typeof temp === "string" && temp.length >= searchSinceLength) {
+          searchCompanyByName(temp);
+        } else {
+          clearList();
+        }
+      }, inputSearchAfterMseconds),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   function onCompanySelected(companyId: string) {
     props.onCompanySelected(companyId);

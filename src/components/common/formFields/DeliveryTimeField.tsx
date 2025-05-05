@@ -6,7 +6,7 @@ import SelectContainer from "../../containers/SelectContainer";
 import { getListForSelectIdValueMap } from "../../../utilities/globalFunctions";
 
 interface DeliveryTimeFieldProps {
-  onlyItem?: boolean;
+  showDifferentPlaceholder?: boolean;
 }
 
 export default function DeliveryTimeField(props: DeliveryTimeFieldProps) {
@@ -22,7 +22,9 @@ export default function DeliveryTimeField(props: DeliveryTimeFieldProps) {
       rules={[{ required: true }]}
     >
       <SelectContainer
-        placeholder={t(props.onlyItem ? "deliveryTime" : "select")}
+        placeholder={t(
+          props.showDifferentPlaceholder ? "deliveryTime" : "select"
+        )}
         className="form-control"
         options={getListForSelectIdValueMap(deliveryTimeData)}
       />

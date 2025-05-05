@@ -6,7 +6,7 @@ import {
   ImagePreviewGroupContainer,
   ImagePreviewGroupContainerRef,
 } from "../../../containers/ImagePreviewGroupContainer";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../../models/Redux";
 
@@ -18,11 +18,24 @@ interface ChatBodyMessageProps {
 
 export default function ChatBodyMessage(props: ChatBodyMessageProps) {
   const childRef = useRef<ImagePreviewGroupContainerRef>(null);
-  const isInputMsg =
-    useSelector((state: MainState) => state.user.uid) == props.message.userId;
+  const uid = useSelector((state: MainState) => state.user.uid);
+  const isInputMsg = uid != props.message.userId;
+  const [emptyImages, setEmptyImages] = useState(true);
+  const [emptyDocs, setEmptyDocs] = useState(true);
+
+  useEffect(() => {
+    setEmptyImages(
+      !props.message.images ||
+        (props.message.images && !props.message.images.length)
+    );
+    setEmptyDocs(
+      !props.message.documents ||
+        (props.message.documents && !props.message.documents.length)
+    );
+  }, [props.message]);
 
   function handleOpenPreview() {
-    if (props.message.images && props.message.images.length > 0) {
+    if (!emptyImages) {
       if (childRef.current) {
         childRef.current.openPreview();
       }
@@ -37,6 +50,7 @@ export default function ChatBodyMessage(props: ChatBodyMessageProps) {
           isInputMsg ? "txt-entrada" : "txt-salida"
         }`}
         data-timestamp={props.message.timestamp}
+        data-message-id={props.message.uid}
       >
         {isInputMsg ? (
           props.userImage ? (
@@ -49,17 +63,15 @@ export default function ChatBodyMessage(props: ChatBodyMessageProps) {
             </div>
           )
         ) : (
-          !(props.message.images || props.message.documents) && (
-            <div className="space-img"></div>
-          )
+          emptyImages && emptyDocs && <div className="space-img"></div>
         )}
         <div
           className={
-            props.message.images
+            !emptyImages
               ? `t-flex gap-5 ${
                   isInputMsg ? "mensaje-entrada-img" : "mensaje-salida-img"
                 }`
-              : props.message.documents
+              : !emptyDocs
               ? isInputMsg
                 ? "mensaje-entrada-doc text-right"
                 : "mensaje-salida-doc text-right"
@@ -68,7 +80,7 @@ export default function ChatBodyMessage(props: ChatBodyMessageProps) {
               : "mensaje-salida"
           }
         >
-          {props.message.images ? (
+          {!emptyImages && props.message.images ? (
             props.message.images.map((img) => (
               <img
                 src={img}
@@ -79,7 +91,7 @@ export default function ChatBodyMessage(props: ChatBodyMessageProps) {
                 style={{ cursor: "pointer" }}
               />
             ))
-          ) : props.message.documents ? (
+          ) : props.message.documents && !emptyDocs ? (
             props.message.documents.map((doc) => (
               <div
                 className="file-min-2 gap-5"
@@ -99,20 +111,24 @@ export default function ChatBodyMessage(props: ChatBodyMessageProps) {
           ) : (
             <div>{props.message.message}</div>
           )}
-          <span
-            className={
-              props.message.images ? "mensaje-hora-img" : "mensaje-hora"
-            }
-          >
+          <span className={!emptyImages ? "mensaje-hora-img" : "mensaje-hora"}>
             {dayjs(props.message.timestamp).format(hourFormatChatBody)}{" "}
             <i
-              className={`fa-solid ${
-                props.message.read ? "fa-check-double" : "fa-check"
+              className={`${
+                props.message.error
+                  ? "fa-regular fa-circle-exclamation"
+                  : props.message.waiting
+                  ? "fa-regular fa-clock"
+                  : !isInputMsg //
+                  ? props.message.read
+                    ? "fa-solid fa-check-double"
+                    : "fa-solid fa-check"
+                  : null //
               }`}
             ></i>
           </span>
         </div>
-        {isInputMsg && !(props.message.images || props.message.documents) && (
+        {isInputMsg && emptyImages && emptyDocs && (
           <div className="space-img"></div>
         )}
       </div>

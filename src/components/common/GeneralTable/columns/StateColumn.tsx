@@ -10,12 +10,14 @@ import {
   BasicOffer,
   BasicPurchaseOrder,
   CertificationItem,
+  SubUserBase,
 } from "../../../../models/MainInterfaces";
 import {
   CertificationStateMeta,
   OfferStateMeta,
   PurchaseOrderStateMeta,
   RequirementStateMeta,
+  UserStateMeta,
 } from "../../../../utilities/colors";
 import { useTranslation } from "react-i18next";
 import {
@@ -24,7 +26,7 @@ import {
   OfferState,
   OrderConfirmation,
   PurchaseOrderState,
-  PurchaseOrderTableTypes,
+  OrderTableType,
   RequirementState,
   TableTypes,
 } from "../../../../utilities/types";
@@ -105,6 +107,17 @@ export default function StateColumn(
               value: Number(state) as PurchaseOrderState,
             };
           })
+      : type == TableTypes.USERS
+      ? [
+          {
+            text: t("activeUser"),
+            value: "true",
+          },
+          {
+            text: t("suspendedUser"),
+            value: "false",
+          },
+        ]
       : undefined;
 
   const col: ColumnType<
@@ -118,6 +131,7 @@ export default function StateColumn(
     | BasicOffer
     | BasicPurchaseOrder
     | CertificationItem
+    | SubUserBase
   > = {
     title: t("stateColumn"),
     key: stateColumnKey,
@@ -181,10 +195,10 @@ export default function StateColumn(
           const bpo = record as BasicPurchaseOrder;
           let state = bpo.state;
           if (
-            (extraParam == PurchaseOrderTableTypes.ISSUED &&
+            (extraParam == OrderTableType.ISSUED &&
               state == PurchaseOrderState.PENDING &&
               bpo.clientConfirmation != OrderConfirmation.NONE) ||
-            (extraParam == PurchaseOrderTableTypes.RECEIVED &&
+            (extraParam == OrderTableType.RECEIVED &&
               state == PurchaseOrderState.PENDING &&
               bpo.providerConfirmation != OrderConfirmation.NONE)
           )
@@ -198,6 +212,11 @@ export default function StateColumn(
           const state = (record as CertificationItem).state;
           label = t(CertificationStateMeta[state]?.label);
           className = `cont-estado ${CertificationStateMeta[state]?.class}`;
+        } else if (type == TableTypes.USERS) {
+          const state = (record as SubUserBase).state;
+          const temp = UserStateMeta(state);
+          className = `cont-estado ${temp.class}`;
+          label = t(temp.label);
         }
       } catch (e) {
         console.log(e);

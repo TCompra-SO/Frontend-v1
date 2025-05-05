@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import TablePageContent, {
   TablePageContentRef,
-} from "../components/section/table-page/TablePageContent";
+} from "../components/common/utils/TablePageContent";
 import { useContext, useEffect, useRef, useState } from "react";
 import {
   ModalContent,
@@ -12,7 +12,7 @@ import {
 import {
   Action,
   ModalTypes,
-  PurchaseOrderTableTypes,
+  OrderTableType,
   RequirementType,
   TableTypes,
 } from "../utilities/types";
@@ -32,6 +32,7 @@ import { useSelector } from "react-redux";
 import { transformToPurchaseOrder } from "../utilities/transform";
 import ModalContainer from "../components/containers/ModalContainer";
 import {
+  defaultErrorMsg,
   mainModalScrollStyle,
   noPaginationPageSize,
 } from "../utilities/globals";
@@ -41,9 +42,7 @@ import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
-import useSocketQueueHook, {
-  useAddOrUpdateRow,
-} from "../hooks/socketQueueHook";
+import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
 
 export default function AllSalesOrders() {
@@ -81,7 +80,7 @@ export default function AllSalesOrders() {
   const [tableContent, setTableContent] = useState<TableTypeAllSalesOrders>({
     type: TableTypes.ALL_SALES_ORDERS,
     data: salesOrderList,
-    subType: PurchaseOrderTableTypes.ISSUED,
+    subType: OrderTableType.ISSUED,
     hiddenColumns: [],
     nameColumnHeader: t("user"),
     onButtonClick: handleOnButtonClick,
@@ -91,7 +90,7 @@ export default function AllSalesOrders() {
     fieldSort,
     filteredInfo,
   });
-  const { addNewRow, updateRow } = useAddOrUpdateRow(
+  const { addNewRow, updateRow } = useActionsForRow(
     TableTypes.ALL_SALES_ORDERS,
     (data: SocketDataPackType) => transformToPurchaseOrder(data),
     salesOrderList,
@@ -239,7 +238,7 @@ export default function AllSalesOrders() {
       setSalesOrderList(data);
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 

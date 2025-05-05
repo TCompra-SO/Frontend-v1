@@ -1,7 +1,7 @@
 import { App } from "antd";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { DisplayUser, NotificationData } from "../models/MainInterfaces";
+import { BasicChatListData, DisplayUser } from "../models/MainInterfaces";
 import {
   ShowRealTimeNotificationParams,
   useApiParams,
@@ -9,8 +9,12 @@ import {
 import { transformToDisplayUser } from "../utilities/transform";
 import { searchCompanyByNameService } from "../services/requests/authService";
 import {
+  collapseRepeatsLoose,
+  collapseRepeatsSpecial,
+  countChar,
   generateRandomKey,
   getGetOrderPDFService,
+  normalizeSpanish,
   openPurchaseOrderPdf,
 } from "../utilities/globalFunctions";
 import useApi from "./useApi";
@@ -18,6 +22,10 @@ import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import { RequirementType, RTNotificationType } from "../utilities/types";
 import NotificationUserAvatar from "../components/common/utils/NotificationUserAvatar";
 import ParagraphContainer from "../components/containers/ParagraphContainer";
+import { useNavigate } from "react-router-dom";
+import { pageRoutes } from "../utilities/routes";
+import { basicChatDataFieldName } from "../utilities/globals";
+import { rawBannedWords } from "../utilities/bannedWords";
 
 export default function useShowNotification() {
   const { t } = useTranslation();
@@ -199,7 +207,7 @@ export function useDownloadPdfOrder() {
 
   useEffect(() => {
     updateMyPurchaseOrdersLoadingPdf(loadingPdf);
-    showLoadingMessage(loadingPdf);
+    showLoadingMessage(loadingPdf, "generatingPDF");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingPdf]);
 
@@ -225,4 +233,54 @@ export function useDownloadPdfOrder() {
   }
 
   return downloadPdfOrder;
+}
+
+export function useRedirectToChat() {
+  const navigate = useNavigate();
+
+  function redirectToChat(data: BasicChatListData) {
+    navigate(pageRoutes.chat, {
+      state: { [basicChatDataFieldName]: data },
+    });
+  }
+
+  return { redirectToChat };
+}
+
+export function useGetBannedWords() {
+  const [bannedWords] = useState(getBannedWords());
+
+  function getBannedWords() {
+    const bannedWords = new Set<string>();
+    rawBannedWords.forEach((word) => {
+      const normalizedWord = normalizeSpanish(word);
+      bannedWords.add(normalizedWord);
+      // Caso específico para palabras que contienen número impar de rs y ls (e.g r y rr o l y ll)
+      // asumiendo la poca probabilidad de que haya palabras prohibidas con r rr rr o similares
+      const rCount = countChar(word, "r");
+      const lCount = countChar(word, "l");
+      if ((rCount > 2 && rCount % 2 !== 0) || (lCount > 2 && lCount % 2 !== 0))
+        bannedWords.add(collapseRepeatsLoose(normalizedWord));
+    });
+    return [...bannedWords];
+  }
+
+  function censorText(input: string) {
+    const words = input.match(/\p{L}+/gu) || [];
+    return words
+      .map((word) => {
+        const normalizedLoose = collapseRepeatsLoose(normalizeSpanish(word));
+        const normalizedSpecial = collapseRepeatsSpecial(
+          normalizeSpanish(word)
+        );
+        const match = bannedWords.find(
+          (bw) => normalizedLoose === bw || normalizedSpecial === bw
+        );
+        if (match) return "*".repeat(word.length);
+        return word;
+      })
+      .join(" ");
+  }
+
+  return { getBannedWords, censorText };
 }

@@ -418,6 +418,10 @@ body {
   border-radius: 0.5rem;
   margin-right: 5px;
   line-height: 1;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  gap: 4px;
 }
 
 /* Login y registro */
@@ -929,6 +933,26 @@ body {
   border-radius: 0.9rem;
   line-height: 1;
 }
+.badge-dispute {
+  background: #17a2b8;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  padding: 12px 14px;
+  border-radius: 0.9rem;
+  line-height: 1;
+}
+.badge-finish {
+  background: #007aff;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  padding: 12px 14px;
+  border-radius: 0.9rem;
+  line-height: 1;
+}
 .mas-acciones {
   font-size: 22px;
   height: 40px;
@@ -1176,6 +1200,24 @@ body {
 }
 .multi-chat:hover {
   background: #00a236;
+}
+
+.multi-download {
+  background: #283bb6;
+  color: #fff;
+  font-size: 20px;
+  height: 44px;
+  width: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+.multi-download:hover {
+  background: #0119b4;
 }
 
 /* Modal Altertas */
@@ -2692,4 +2734,7 @@ body {
   border-radius: 0.9rem;
   max-width: 100%;
   max-height: 100%;
+}
+.certificado-bloque:hover {
+  background: #c8ced3;
 }

@@ -1,36 +1,39 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import NoContentModalContainer from "../components/containers/NoContentModalContainer";
-import TablePageContent from "../components/section/table-page/TablePageContent";
-import AddUserModal from "../components/section/users/addUser/AddUserModal";
+import TablePageContent, {
+  TablePageContentRef,
+} from "../components/common/utils/TablePageContent";
+import AddUserModal from "../components/section/users/AddUserModal";
 import { useTranslation } from "react-i18next";
 import {
   Action,
   EntityType,
-  OnChangePageAndPageSizeTypeParams,
-  PurchaseOrderTableTypes,
+  OrderTableType,
   RequirementType,
   TableTypes,
 } from "../utilities/types";
-import { TableTypeUsers, useApiParams } from "../models/Interfaces";
 import {
+  SocketDataPackType,
+  TableTypeUsers,
+  useApiParams,
+} from "../models/Interfaces";
+import {
+  defaultErrorMsg,
   fieldNameSearchRequestOffer,
   fieldNameSearchRequestRequirement,
+  fieldNameSearchRequestSubUser,
   mainModalScrollStyle,
-  pageSizeOptionsSt,
 } from "../utilities/globals";
 import ButtonContainer from "../components/containers/ButtonContainer";
 import useApi from "../hooks/useApi";
-import {
-  getSubUsersByEntityService,
-  getSubUserService,
-} from "../services/requests/subUserService";
+import { getSubUserService } from "../services/requests/subUserService";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import {
   equalServices,
   getFieldNameObjForOrders,
 } from "../utilities/globalFunctions";
-import SubUserTableModal from "../components/section/users/subUserTables/SubUserTableModal";
+import SubUserTableModal from "../components/section/users/SubUserTableModal";
 import {
   OfferItemSubUser,
   PurchaseOrderItemSubUser,
@@ -49,17 +52,26 @@ import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
+import { useChangeSubUserStatus } from "../hooks/useChangeSubUserStatus";
+import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
+import useSocket from "../socket/useSocket";
 
 export default function Users() {
   const { t } = useTranslation();
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
+  const { changeSubUserStatus } = useChangeSubUserStatus();
   const token = useSelector((state: MainState) => state.user.token);
-  const uid = useSelector((state: MainState) => state.user.uid);
+  const mainUid = useSelector((state: MainState) => state.mainUser.uid);
+  const mainEntityType = useSelector(
+    (state: MainState) => state.mainUser.typeEntity
+  );
+  const [subUserList, setSubUserList] = useState<SubUserBase[]>([]);
+  const [total, setTotal] = useState(0);
   const [action, setAction] = useState<Action>(Action.ADD_USER);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [subTypeOrder, setSubTypeOrder] = useState<PurchaseOrderTableTypes>(
-    PurchaseOrderTableTypes.ISSUED
+  const [subTypeOrder, setSubTypeOrder] = useState<OrderTableType>(
+    OrderTableType.ISSUED
   );
   const [subType, setSubType] = useState<RequirementType>(RequirementType.GOOD);
   const [userData, setUserData] = useState<SubUserBase | null>(null);
@@ -71,89 +83,71 @@ export default function Users() {
   const [reqList, setReqList] = useState<RequirementItemSubUser[]>([]);
   const [offerList, setOfferList] = useState<OfferItemSubUser[]>([]);
   const [orderList, setOrderList] = useState<PurchaseOrderItemSubUser[]>([]);
+  const searchValueRef = useRef<TablePageContentRef>(null);
   const [tableType, setTableType] = useState<TableTypes>(
     TableTypes.REQUIREMENT
   );
+  const {
+    currentPage: currentPageSubUser,
+    currentPageSize: currentPageSizeSubUser,
+    setCurrentPage: setCurrentPageSubUser,
+    fieldSort: fieldSortSubUser,
+    filteredInfo: filteredInfoSubUser,
+    handleChangePageAndPageSize: handleChangePageAndPageSizeSubUser,
+    handleSearch: handleSearchSubUser,
+    reset: resetSubUser,
+  } = useFilterSortPaginationForTable();
   const [tableContent, setTableContent] = useState<TableTypeUsers>({
     type: TableTypes.USERS,
-    data: [],
+    data: subUserList,
     hiddenColumns: [],
     nameColumnHeader: t("user"),
     onButtonClick: handleOnActionClick,
-    total: 0,
+    total,
+    page: currentPageSubUser,
+    pageSize: currentPageSizeSubUser,
+    fieldSort: fieldSortSubUser,
+    filteredInfo: filteredInfoSubUser,
   });
-
-  /** Obtener lista de subusuarios */
-
-  const [apiParams, setApiParams] = useState<useApiParams>({
-    service: getSubUsersByEntityService(uid, 1, pageSizeOptionsSt[0]),
-    method: "get",
-  });
-
-  const { loading, responseData, error, errorMsg, fetchData } =
-    useApi(apiParams);
-
-  useEffect(() => {
-    if (responseData) {
-      setTableData();
-    } else if (error) {
-      setTableContent({
-        type: TableTypes.USERS,
-        data: [],
-        hiddenColumns: [],
-        nameColumnHeader: t("user"),
-        onButtonClick: handleOnActionClick,
-        total: 0,
-      });
-      showNotification("error", errorMsg);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseData, error]);
-
-  useEffect(() => {
-    if (apiParams.service) fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParams]);
-
-  /** Obtener datos de subusuario */
-
-  const [apiParamsUser, setApiParamsUser] = useState<useApiParams>({
-    service: null,
-    method: "get",
-    // token,
-  });
+  const { addNewRow, updateRow, updateFieldInRow, deleteRow } =
+    useActionsForRow(
+      TableTypes.USERS,
+      (data: SocketDataPackType) => transformToSubUserBase(data),
+      subUserList,
+      setSubUserList,
+      total,
+      setTotal,
+      currentPageSizeSubUser
+    );
+  const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
+    addNewRow,
+    updateRow,
+    deleteRow,
+    updateFieldInRow
+  );
   const {
-    loading: loadingUser,
-    responseData: responseDataUser,
-    error: errorUser,
-    errorMsg: errorMsgUser,
-    fetchData: fetchDataUser,
-  } = useApi(apiParamsUser);
+    searchTable: searchSubUserTable,
+    responseData,
+    error,
+    errorMsg,
+    loading,
+    apiParams,
+  } = useSearchTable(
+    mainUid,
+    TableTypes.USERS,
+    mainEntityType,
+    undefined,
+    resetChangesQueue
+  );
+  useSocket(
+    TableTypes.USERS,
+    undefined,
+    currentPageSubUser,
+    apiParams.dataToSend,
+    updateChangesQueue
+  );
 
-  useEffect(() => {
-    showLoadingMessage(loadingUser);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingUser]);
-
-  useEffect(() => {
-    if (apiParamsUser.service) fetchDataUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiParamsUser]);
-
-  useEffect(() => {
-    if (responseDataUser) {
-      if (equalServices(apiParamsUser.service, getSubUserService(""))) {
-        setUserDataEdit(transformToSubUserProfile(responseDataUser[0], true));
-        handleOpenModal();
-      }
-    } else if (errorUser) {
-      showNotification("error", errorMsgUser);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseDataUser, errorUser]);
-
-  /** Obtener lista de requerimientos */
+  /** Variables para obtener lista de requerimientos/ofertas/... */
 
   const {
     searchTable,
@@ -176,9 +170,88 @@ export default function Users() {
     fieldSort,
     filteredInfo,
     handleChangePageAndPageSize,
-    handleSearch,
+    // handleSearch,
     reset,
   } = useFilterSortPaginationForTable();
+
+  /** Actualiza el contenido de tabla de subsuarios */
+
+  useEffect(() => {
+    setTableContent((prev) => ({
+      ...prev,
+      data: subUserList,
+      total,
+      page: currentPageSubUser,
+      pageSize: currentPageSizeSubUser,
+      fieldSort: fieldSortSubUser,
+      filteredInfo: filteredInfoSubUser,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subUserList]);
+
+  /* Obtener lista de subusuarios inicialmente */
+
+  useEffect(() => {
+    clearSearchValue();
+    resetSubUser();
+    searchSubUserTable({ page: 1, pageSize: currentPageSizeSubUser });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (responseData) {
+      setTableData();
+    } else if (error) {
+      setCurrentPageSubUser(1);
+      setTotal(0);
+      setSubUserList([]);
+      showNotification("error", errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
+
+  /** Obtener datos de subusuario */
+
+  const [apiParamsUser, setApiParamsUser] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+  const {
+    loading: loadingUser,
+    responseData: responseDataUser,
+    error: errorUser,
+    errorMsg: errorMsgUser,
+    fetchData: fetchDataUser,
+  } = useApi(apiParamsUser);
+
+  useEffect(() => {
+    showLoadingMessage(loadingUser);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingUser]);
+
+  useEffect(() => {
+    if (apiParamsUser.service) fetchDataUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsUser]);
+
+  useEffect(() => {
+    try {
+      if (responseDataUser) {
+        if (equalServices(apiParamsUser.service, getSubUserService(""))) {
+          setUserDataEdit(transformToSubUserProfile(responseDataUser[0]));
+          handleOpenModal();
+        }
+      } else if (errorUser) {
+        showNotification("error", errorMsgUser);
+      }
+    } catch (e) {
+      console.log(e);
+      showNotification("error", t(defaultErrorMsg));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDataUser, errorUser]);
+
+  /** Obtener lista de requerimientos/ofertas/... */
 
   useEffect(() => {
     if (!isOpenModal) showLoadingMessage(loadingTable);
@@ -228,32 +301,27 @@ export default function Users() {
 
   /** Funciones */
 
-  async function setTableData() {
-    try {
-      let data: SubUserBase[] = [];
-      if (responseData.data.length > 0) {
-        data = responseData.data.map((e: any) => transformToSubUserBase(e));
-      }
+  function clearSearchValue() {
+    if (searchValueRef.current) {
+      searchValueRef.current.resetSearchValue();
+    }
+  }
 
-      setTableContent({
-        type: TableTypes.USERS,
-        data,
-        hiddenColumns: [],
-        nameColumnHeader: t("user"),
-        onButtonClick: handleOnActionClick,
-        total: responseData.res?.totalDocuments,
-      });
+  function setTableData() {
+    try {
+      const data = responseData.data.map((e: any) => transformToSubUserBase(e));
+      setTotal(responseData.res?.totalDocuments);
+      setSubUserList(data);
     } catch (error) {
-      showNotification("error", t("errorOccurred"));
       console.log(error);
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 
   function setModalTableDataReq() {
     try {
       const data: RequirementItemSubUser[] = responseDataTable.data.map(
-        (e: any) =>
-          transformDataToRequirementItemSubUser(e, RequirementType.GOOD) // r3v
+        (e: any) => transformDataToRequirementItemSubUser(e, subType)
       );
       setTotalReq(responseDataTable.res?.totalDocuments);
       setReqList(data);
@@ -263,14 +331,14 @@ export default function Users() {
       setReqList([]);
       setTotalReq(0);
       setCurrentPage(1);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 
   function setModalTableDataOffer() {
     try {
-      const data: OfferItemSubUser[] = responseDataTable.data.map(
-        (e: any) => transformDataToOfferItemSubUser(e, RequirementType.GOOD) // r3v
+      const data: OfferItemSubUser[] = responseDataTable.data.map((e: any) =>
+        transformDataToOfferItemSubUser(e, subType)
       );
       setTotalOffer(responseDataTable.res?.totalDocuments);
       setOfferList(data);
@@ -280,15 +348,14 @@ export default function Users() {
       setOfferList([]);
       setTotalOffer(0);
       setCurrentPage(1);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 
   function setModalTableDataOrder() {
     try {
       const data: PurchaseOrderItemSubUser[] = responseDataTable.data.map(
-        (e: any) =>
-          transformToPurchaseOrderItemSubUser(e, PurchaseOrderTableTypes.ISSUED) // r3v
+        (e: any) => transformToPurchaseOrderItemSubUser(e, subTypeOrder)
       );
       setTotalPurc(responseDataTable.res?.totalDocuments);
       setOrderList(data);
@@ -298,15 +365,14 @@ export default function Users() {
       setOrderList([]);
       setTotalPurc(0);
       setCurrentPage(1);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 
   function setModalTableDataSalesOrder() {
     try {
       const data: PurchaseOrderItemSubUser[] = responseDataTable.data.map(
-        (e: any) =>
-          transformToPurchaseOrderItemSubUser(e, PurchaseOrderTableTypes.ISSUED) // r3v
+        (e: any) => transformToPurchaseOrderItemSubUser(e, subTypeOrder)
       );
       setTotalSales(responseDataTable.res?.totalDocuments);
       setOrderList(data);
@@ -316,7 +382,7 @@ export default function Users() {
       setOrderList([]);
       setTotalSales(0);
       setCurrentPage(1);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 
@@ -327,7 +393,7 @@ export default function Users() {
 
   function handleCloseModal() {
     setIsOpenModal(false);
-    setSubTypeOrder(PurchaseOrderTableTypes.ISSUED);
+    setSubTypeOrder(OrderTableType.ISSUED);
     setSubType(RequirementType.GOOD);
   }
 
@@ -379,7 +445,7 @@ export default function Users() {
           if (subAction == Action.GOODS) setSubType(RequirementType.GOOD);
           if (subAction == Action.SERVICES) setSubType(RequirementType.SERVICE);
           setTableType(TableTypes.PURCHASE_ORDER);
-          setSubTypeOrder(PurchaseOrderTableTypes.ISSUED);
+          setSubTypeOrder(OrderTableType.ISSUED);
           reset();
           searchTable(
             { page: 1, pageSize: currentPageSize },
@@ -389,14 +455,14 @@ export default function Users() {
               ? RequirementType.GOOD
               : RequirementType.SERVICE,
             user.uid,
-            PurchaseOrderTableTypes.ISSUED
+            OrderTableType.ISSUED
           );
         }
         break;
       case Action.VIEw_SALES_ORDERS:
         setSubType(RequirementType.SALE);
         setTableType(TableTypes.SALES_ORDER);
-        setSubTypeOrder(PurchaseOrderTableTypes.ISSUED);
+        setSubTypeOrder(OrderTableType.ISSUED);
         reset();
         searchTable(
           { page: 1, pageSize: currentPageSize },
@@ -404,8 +470,14 @@ export default function Users() {
           TableTypes.SALES_ORDER,
           RequirementType.SALE,
           user.uid,
-          PurchaseOrderTableTypes.ISSUED
+          OrderTableType.ISSUED
         );
+        break;
+      case Action.SUSPEND:
+        changeSubUserStatus(user.uid, false);
+        break;
+      case Action.REACTIVATE:
+        changeSubUserStatus(user.uid, true);
         break;
     }
   }
@@ -532,7 +604,7 @@ export default function Users() {
     }
   }
 
-  function handleTabChange(tabId: RequirementType | PurchaseOrderTableTypes) {
+  function handleTabChange(tabId: RequirementType | OrderTableType) {
     if (userData) {
       if (
         ((action == Action.VIEW_REQUIREMENTS || action == Action.VIEW_OFFERS) &&
@@ -541,8 +613,7 @@ export default function Users() {
             tabId == RequirementType.SALE)) ||
         ((action == Action.VIEW_PURCHASE_ORDERS ||
           action == Action.VIEw_SALES_ORDERS) &&
-          (tabId == PurchaseOrderTableTypes.ISSUED ||
-            tabId == PurchaseOrderTableTypes.RECEIVED))
+          (tabId == OrderTableType.ISSUED || tabId == OrderTableType.RECEIVED))
       ) {
         reset();
         if (
@@ -558,28 +629,18 @@ export default function Users() {
             undefined
           );
         } else {
-          setSubTypeOrder(tabId as PurchaseOrderTableTypes);
+          setSubTypeOrder(tabId as OrderTableType);
           searchTable(
             { page: 1, pageSize: currentPageSize },
             undefined,
             tableType,
             subType,
             undefined,
-            tabId as PurchaseOrderTableTypes
+            tabId as OrderTableType
           );
         }
       }
     }
-  }
-
-  function handleChangePageAndPageSizeMainTable({
-    page,
-    pageSize,
-  }: OnChangePageAndPageSizeTypeParams) {
-    setApiParams({
-      service: getSubUsersByEntityService(uid, page, pageSize),
-      method: "get",
-    });
   }
 
   return (
@@ -600,7 +661,7 @@ export default function Users() {
         subtitle={`${t("listOf")} ${t("users")}`}
         subtitleIcon={<i className="fa-regular fa-user-group sub-icon"></i>}
         table={tableContent}
-        onSearch={(e) => handleSearch(e, searchTable)}
+        onSearch={(e) => handleSearchSubUser(e, searchSubUserTable)}
         additionalContentHeader={
           <div>
             <ButtonContainer
@@ -613,7 +674,14 @@ export default function Users() {
           </div>
         }
         loading={loading}
-        onChangePageAndPageSize={handleChangePageAndPageSizeMainTable}
+        onChangePageAndPageSize={(params) =>
+          handleChangePageAndPageSizeSubUser(
+            params,
+            fieldNameSearchRequestSubUser,
+            searchSubUserTable
+          )
+        }
+        ref={searchValueRef}
       />
     </>
   );

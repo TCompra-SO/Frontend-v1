@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode } from "react";
 import { MainState } from "../../models/Redux";
 import { useSelector } from "react-redux";
 import { UserRoles } from "../../utilities/types";
@@ -16,19 +16,16 @@ export default function AuthRoleGuard({
   children,
   allowedRoles,
 }: AuthRoleGuardProps) {
-  const [isWaiting, setIsWaiting] = useState(true);
-  const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
+  const isLoading = useSelector(
+    (state: MainState) => state.loadingUser.isLoading
+  );
   const typeId = useSelector((state: MainState) => state.user.typeID);
 
-  useEffect(() => {
-    if (isLoggedIn !== undefined) setIsWaiting(false);
-  }, [isLoggedIn]);
-
-  if (isWaiting) {
+  if (isLoading) {
     return null;
   }
 
-  if (!allowedRoles[typeId]) {
+  if (!isLoading && !allowedRoles[typeId]) {
     return <Navigate to={navigateToAfterLoggingOut} />;
   }
 

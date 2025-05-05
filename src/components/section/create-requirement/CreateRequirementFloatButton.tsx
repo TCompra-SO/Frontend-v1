@@ -183,6 +183,9 @@ export default function CreateRequirementFloatButton() {
       if (!avoidClosingModal) setIsOpenModal(false);
       updateCreateRequirementLoading(false);
       reset();
+    } else if (reqSuccess == ProcessFlag.FIN_UNSUCCESS) {
+      updateCreateRequirementLoading(false);
+      reset();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reqSuccess, imgSuccess, docSuccess]);
@@ -203,7 +206,6 @@ export default function CreateRequirementFloatButton() {
     setReqSuccess(ProcessFlag.NOT_INI);
     setDocSuccess(ProcessFlag.NOT_INI);
     setImgSuccess(ProcessFlag.NOT_INI);
-    setType(RequirementType.GOOD);
     setAvoidClosingModal(false);
   }
 
@@ -227,12 +229,23 @@ export default function CreateRequirementFloatButton() {
               />
             )}
             {isLoggedIn && (
-              <FloatButton
-                icon={<i className="fa-solid fa-plus" />}
-                type="primary"
-                tooltip={t("createRequirement")}
-                onClick={() => setIsOpenModal(true)}
-              />
+              <>
+                {!isChatPage && (
+                  <FloatButton
+                    icon={<i className="fa-regular fa-comment" />}
+                    type="primary"
+                    tooltip={t("chat")}
+                    onClick={() => navigate(pageRoutes.chat)}
+                  />
+                )}
+
+                <FloatButton
+                  icon={<i className="fa-solid fa-plus" />}
+                  type="primary"
+                  tooltip={t("createRequirement")}
+                  onClick={() => setIsOpenModal(true)}
+                />
+              </>
             )}
           </FloatButton.Group>
 

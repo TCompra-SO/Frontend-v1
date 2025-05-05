@@ -2,18 +2,41 @@ import { Flex } from "antd";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import TextAreaContainer from "../../containers/TextAreaContainer";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CommonModalProps } from "../../../models/Interfaces";
+import { RequirementType } from "../../../utilities/types";
+import { useChatFunctions } from "../../../hooks/chatHooks";
+import { useSelector } from "react-redux";
+import { MainState } from "../../../models/Redux";
+import { BasicChatListData } from "../../../models/MainInterfaces";
+import { useRedirectToChat } from "../../../hooks/utilHooks";
 
 interface SendMessageModalProps extends CommonModalProps {
   onClose: () => any;
   requirementId: string;
-  userId: string;
+  title: string;
+  type: RequirementType;
+  receiverImage?: string;
+  receiverName: string;
+  receiverId: string;
 }
 
 export default function SendMessageModal(props: SendMessageModalProps) {
   const { t } = useTranslation();
+  const { createChatAndSendMessage, loadingCreateChatAndSendMessage } =
+    useChatFunctions(true);
+  const { redirectToChat } = useRedirectToChat();
+  const uid = useSelector((state: MainState) => state.user.uid);
   const [msg, setMsg] = useState("");
+  const prevLoadingRef = useRef<boolean | null>(null);
+
+  useEffect(() => {
+    if (prevLoadingRef.current && !loadingCreateChatAndSendMessage) {
+      props.onClose();
+    }
+    prevLoadingRef.current = loadingCreateChatAndSendMessage;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingCreateChatAndSendMessage]);
 
   function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setMsg(e.target.value.trim());
@@ -21,14 +44,29 @@ export default function SendMessageModal(props: SendMessageModalProps) {
 
   function sendMessage() {
     if (msg) {
-      console.log(msg, props.requirementId, props.userId); //r3v y gotochat
-      props.onClose();
+      createChatAndSendMessage(
+        {
+          userId: uid,
+          requerimentId: props.requirementId,
+          title: props.title,
+          type: props.type,
+        },
+        msg
+      );
     }
   }
 
   function goToChat() {
-    console.log(props.requirementId, props.userId);
     props.onClose();
+    const data: BasicChatListData = {
+      userName: props.receiverName,
+      title: props.title,
+      requirementId: props.requirementId,
+      userImage: props.receiverImage,
+      type: props.type,
+      userId: props.receiverId,
+    };
+    redirectToChat(data);
   }
 
   return (
@@ -59,11 +97,13 @@ export default function SendMessageModal(props: SendMessageModalProps) {
                 children={t("send")}
                 disabled={msg == ""}
                 onClick={sendMessage}
+                loading={loadingCreateChatAndSendMessage}
               />
               <ButtonContainer
                 className="btn btn-green wd-100"
                 children={t("goToChat")}
                 onClick={goToChat}
+                loading={loadingCreateChatAndSendMessage}
               />
             </div>
           </div>

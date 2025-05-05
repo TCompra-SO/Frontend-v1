@@ -13,12 +13,15 @@ import {
   currencyService,
   deliveryTimeService,
   paymentMethodService,
-  planTypeService,
   TLDsService,
   userRolesService,
   whoCanOfferService,
 } from "../services/requests/utilService";
 import { UserRoles } from "../utilities/types";
+import { getAllPlansService } from "../services/requests/planService";
+import { PlanData } from "../models/MainInterfaces";
+import { transformToPlanData } from "../utilities/transform";
+import { useGetBannedWords } from "../hooks/utilHooks";
 
 interface ListsContextType {
   tlds: string[];
@@ -29,8 +32,10 @@ interface ListsContextType {
   paymentMethodData: IdValueMap;
   deliveryTimeData: IdValueMap;
   whoCanOfferData: IdValueMap;
-  planTypeData: IdValueMap;
+  planTypeData: PlanData[];
   userRolesData: IdValueMap;
+  defaultPlanId: string;
+  censorText: (text: string) => string;
 }
 
 export const ListsContext = createContext<ListsContextType>({
@@ -42,8 +47,10 @@ export const ListsContext = createContext<ListsContextType>({
   paymentMethodData: {},
   deliveryTimeData: {},
   whoCanOfferData: {},
-  planTypeData: {},
+  planTypeData: [],
   userRolesData: {},
+  defaultPlanId: "",
+  censorText: () => "",
 });
 
 interface ListsProviderProps {
@@ -51,6 +58,7 @@ interface ListsProviderProps {
 }
 
 export function ListsProvider({ children }: ListsProviderProps) {
+  const { censorText } = useGetBannedWords();
   const [countryList, setCountryList] = useState<IdValueObj[]>([]);
   const [countryData, setCountryData] = useState<CountryCities>({});
   const { responseData: countryResponseData, fetchData: countryFetchData } =
@@ -107,10 +115,11 @@ export function ListsProvider({ children }: ListsProviderProps) {
     method: "get",
   });
 
-  const [planTypeData, setPlanTypeList] = useState<IdValueMap>({});
+  const [defaultPlanId, setDefaultPlanId] = useState("");
+  const [planTypeData, setPlanTypeList] = useState<PlanData[]>([]);
   const { responseData: planTypeResponseData, fetchData: planTypeFetchData } =
     useApi<any>({
-      service: planTypeService(),
+      service: getAllPlansService(),
       method: "get",
     });
 
@@ -238,16 +247,19 @@ export function ListsProvider({ children }: ListsProviderProps) {
 
   useEffect(() => {
     if (planTypeResponseData) {
-      if (planTypeResponseData.plans)
-        setPlanTypeList(
-          planTypeResponseData.plans.reduce(
-            (acc: IdValueMap, { id, value }: IdValueObj) => {
-              acc[id] = { value };
-              return acc;
-            },
-            {}
-          )
+      try {
+        const plans = ((planTypeResponseData.data as any[]) ?? []).map((plan) =>
+          transformToPlanData(plan)
         );
+        setPlanTypeList(plans);
+        const defaultPlan = plans.find((plan) => plan.default == true);
+        if (defaultPlan) setDefaultPlanId(defaultPlan.uid);
+        else setDefaultPlanId("");
+      } catch (e) {
+        console.log(e);
+        setPlanTypeList([]);
+        setDefaultPlanId("");
+      }
     }
   }, [planTypeResponseData]);
 
@@ -279,6 +291,8 @@ export function ListsProvider({ children }: ListsProviderProps) {
         whoCanOfferData,
         planTypeData,
         userRolesData,
+        defaultPlanId,
+        censorText,
       }}
     >
       {children}

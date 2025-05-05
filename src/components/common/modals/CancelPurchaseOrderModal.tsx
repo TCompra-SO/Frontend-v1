@@ -1,14 +1,28 @@
 import TextAreaContainer from "../../containers/TextAreaContainer";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import { Lengths } from "../../../utilities/lengths";
-import { Action, ActionLabel, RequirementType } from "../../../utilities/types";
+import {
+  Action,
+  ActionLabel,
+  RequirementType,
+  SystemNotificationType,
+} from "../../../utilities/types";
 import {
   useCancelOffer,
   useCancelRequirement,
 } from "../../../hooks/requirementHooks";
 import useShowNotification from "../../../hooks/utilHooks";
+import { UseApiType } from "../../../hooks/useApi";
+import useSystemNotification from "../../../hooks/useSystemNotification";
+import { MainSocketsContext } from "../../../contexts/MainSocketsContext";
+import {
+  BasicNotificationData,
+  NotificationTargetData,
+} from "../../../models/MainInterfaces";
+import dayjs from "dayjs";
+import { getBasicRateDataS } from "../../../services/general/generalServices";
 
 interface CancelPurchaseOrderModalProps {
   onClose: () => any;
@@ -20,13 +34,19 @@ interface CancelPurchaseOrderModalProps {
   useCancelRequirementHook: ReturnType<typeof useCancelRequirement>;
   useCancelOfferHook: ReturnType<typeof useCancelOffer>;
   type: RequirementType;
+  additionalApiParams: UseApiType;
+  setAdditionalApiParams: (additionalParams: UseApiType) => void;
+  notificationTargetData: NotificationTargetData;
+  requirementTitle: string;
 }
 
 export default function CancelPurchaseOrderModal(
   props: CancelPurchaseOrderModalProps
 ) {
   const { t } = useTranslation();
+  const { getNotification } = useContext(MainSocketsContext);
   const { showNotification } = useShowNotification();
+  const { getSystemNotification } = useSystemNotification();
   const [text, setText] = useState<string>("");
   const { cancelRequirement, loadingCancelRequirement } =
     props.useCancelRequirementHook;
@@ -46,21 +66,58 @@ export default function CancelPurchaseOrderModal(
 
   /** Funciones */
 
+  async function generateNotification() {
+    let notification: BasicNotificationData | null = null;
+    if (props.canceledByCreator) {
+      const notificationFn = getSystemNotification(
+        SystemNotificationType.CANCEL_MY_OFFER
+      );
+      notification = notificationFn(props.requirementTitle, props.type);
+    } else {
+      const notificationFn = getSystemNotification(
+        SystemNotificationType.CANCEL_AN_OFFER
+      );
+      notification = notificationFn(props.type);
+    }
+
+    let receiverId = props.notificationTargetData.receiverId;
+    if (!receiverId && !props.fromRequirementTable) {
+      const { basicRateData } = await getBasicRateDataS(
+        props.fromRequirementTable ? props.offerId : props.requirementId,
+        props.fromRequirementTable,
+        props.type
+      );
+      if (basicRateData)
+        receiverId = basicRateData.subUserId ?? basicRateData.userId;
+    }
+    if (receiverId)
+      return getNotification({
+        ...notification,
+        ...props.notificationTargetData,
+        receiverId,
+        timestamp: dayjs().toISOString(),
+      });
+  }
+
   function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setText(e.target.value.trim());
   }
 
-  function cancelPurchaseOrder() {
+  async function cancelPurchaseOrder() {
     if (!text) {
       showNotification("error", t("mustIndicateReasonCancellation"));
       return;
     }
+
+    const notification = await generateNotification();
+
     if (props.fromRequirementTable)
       cancelRequirement(
         props.requirementId,
         Action.CANCEL_REQUIREMENT,
         props.type,
-        text.trim()
+        text.trim(),
+        notification
       );
     else
       cancelOffer(
@@ -68,7 +125,8 @@ export default function CancelPurchaseOrderModal(
         props.type,
         props.canceledByCreator,
         Action.CANCEL_OFFER,
-        text.trim()
+        text.trim(),
+        notification
       );
   }
 

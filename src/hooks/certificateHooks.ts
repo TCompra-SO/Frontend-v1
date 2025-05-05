@@ -1,17 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useApiParams } from "../models/Interfaces";
+import { ModalContent, useApiParams } from "../models/Interfaces";
 import useApi from "./useApi";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
 import {
+  getCertificateRequestService,
   getCertificatesService,
   getRequiredDocumentsService,
   updateRequiredDocumentsService,
 } from "../services/requests/certificateService";
-import { CertificateFile } from "../models/MainInterfaces";
+import { CertificateFile, CertificationItem } from "../models/MainInterfaces";
 import {
   transformToCertificateFile,
+  transformToCertificationItem,
   transformToRequiredDocsCert,
 } from "../utilities/transform";
 import {
@@ -20,6 +22,9 @@ import {
 } from "../services/general/generalServices";
 import { UpdateRequiredDocsRequest } from "../models/Requests";
 import useShowNotification, { useShowLoadingMessage } from "./utilHooks";
+import { getInitialModalData } from "../utilities/globalFunctions";
+import { Action, CertificationTableType, ModalTypes } from "../utilities/types";
+import { defaultErrorMsg } from "../utilities/globals";
 
 export function useGetCertificatesList() {
   const { t } = useTranslation();
@@ -31,17 +36,8 @@ export function useGetCertificatesList() {
     service: null,
     method: "get",
   });
-  const { loading, responseData, error, errorMsg, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
-
-  useEffect(() => {
-    return () => {
-      console.log("destroying modaldd");
-    };
-  }, []);
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi(apiParams);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
@@ -57,7 +53,7 @@ export function useGetCertificatesList() {
         );
       } catch (err) {
         console.log(err);
-        showNotification("error", t("errorOccurred"));
+        showNotification("error", t(defaultErrorMsg));
         setTotal(0);
       } finally {
         // showLoadingMessage( false);
@@ -141,11 +137,13 @@ export function useGetRequiredDocsCert() {
     service: null,
     method: "get",
   });
-  const { loading, responseData, error, errorMsg, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi(apiParams);
+
+  useEffect(() => {
+    return () => showLoadingMessage(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
@@ -165,7 +163,7 @@ export function useGetRequiredDocsCert() {
         );
       } catch (err) {
         console.log(err);
-        showNotification("error", t("errorOccurred"));
+        showNotification("error", t(defaultErrorMsg));
       }
     } else if (error) {
       showNotification("error", errorMsg);
@@ -197,11 +195,8 @@ export function useUpdateRequiredDocsCert() {
     service: null,
     method: "get",
   });
-  const { loading, responseData, error, errorMsg, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi(apiParams);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
@@ -237,5 +232,100 @@ export function useUpdateRequiredDocsCert() {
   return {
     updateRequiredDocsCert,
     loadingUpdateRequiredDocs: loading,
+  };
+}
+
+export function useGetCertificationData(
+  certificationTableType: CertificationTableType
+) {
+  const { showLoadingMessage } = useShowLoadingMessage();
+  const { showNotification } = useShowNotification();
+  const { t } = useTranslation();
+  const latestTypeRef = useRef(certificationTableType);
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
+  const [apiParams, setApiParams] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+  const { loading, responseData, error, errorMsg, fetchData } =
+    useApi(apiParams);
+
+  useEffect(() => {
+    latestTypeRef.current = certificationTableType;
+  }, [certificationTableType]);
+
+  useEffect(() => {
+    if (apiParams.service) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParams]);
+
+  useEffect(() => {
+    showLoadingMessage(loading);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
+
+  useEffect(() => {
+    try {
+      if (responseData) {
+        const certItem: CertificationItem = transformToCertificationItem(
+          responseData.data[0]
+        );
+        setDataModal({
+          type:
+            latestTypeRef.current == CertificationTableType.RECEIVED
+              ? ModalTypes.VIEW_DOCS_RECEIVED_CERT
+              : ModalTypes.VIEW_DOCS_SENT_CERT,
+          data: {
+            docs: certItem.certificates,
+            data: certItem,
+            readonly: latestTypeRef.current == CertificationTableType.SENT,
+          },
+          action: Action.VIEW,
+        });
+      } else if (error) {
+        showNotification("error", errorMsg);
+      }
+    } catch (e) {
+      showNotification("error", t(defaultErrorMsg));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseData, error]);
+
+  async function getCertificationData(
+    certificationId: string,
+    type: CertificationTableType,
+    certificationItem: undefined | CertificationItem
+  ) {
+    try {
+      setDataModal(getInitialModalData());
+      if (!certificationItem) {
+        setApiParams({
+          service: getCertificateRequestService(certificationId, type),
+          method: "get",
+        });
+      } else {
+        setDataModal({
+          type:
+            latestTypeRef.current == CertificationTableType.RECEIVED
+              ? ModalTypes.VIEW_DOCS_RECEIVED_CERT
+              : ModalTypes.VIEW_DOCS_SENT_CERT,
+          data: {
+            docs: certificationItem.certificates,
+            data: certificationItem,
+            readonly: latestTypeRef.current == CertificationTableType.SENT,
+          },
+          action: Action.VIEW,
+        });
+      }
+    } catch (error) {
+      showNotification("error", t(defaultErrorMsg));
+    }
+  }
+
+  return {
+    getCertificationData,
+    modalDataCertificationData: dataModal,
   };
 }

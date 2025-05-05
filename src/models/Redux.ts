@@ -1,12 +1,11 @@
 import { EntityType, UserRoles } from "../utilities/types";
 
-export interface UserState {
-  token: string;
+export interface MainUserState {
   uid: string;
   name: string;
   email: string;
   typeID: UserRoles;
-  planID: number;
+  planID: string;
   //
   tenure?: number;
   customerScore?: number;
@@ -18,6 +17,12 @@ export interface UserState {
   isLoggedIn?: boolean;
   image?: string;
   isPremium: boolean;
+  categories: number[];
+}
+
+export interface UserState extends MainUserState {
+  token: string;
+  lastSession: string;
 }
 
 export interface LoadingState {
@@ -31,6 +36,6 @@ export interface LoadingUserState {
 export interface MainState {
   user: UserState;
   loading: LoadingState;
-  mainUser: UserState;
+  mainUser: MainUserState;
   loadingUser: LoadingUserState;
 }

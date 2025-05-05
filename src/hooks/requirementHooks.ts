@@ -1,11 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   HttpService,
   ModalContent,
   OfferFilters,
   useApiParams,
 } from "../models/Interfaces";
-import useApi from "./useApi";
+import useApi, { UseApiType } from "./useApi";
 import {
   CancelOfferRequest,
   CancelRequirementRequest,
@@ -19,9 +19,14 @@ import {
   RequirementType,
   TableTypes,
 } from "../utilities/types";
-import { BaseUser, Offer, Requirement } from "../models/MainInterfaces";
 import {
-  getBasicRateData,
+  BaseUser,
+  NotificationData,
+  Offer,
+  Requirement,
+} from "../models/MainInterfaces";
+import {
+  getBasicRateDataS,
   getOfferById,
   getPurchaseOrderById,
   getRequirementById,
@@ -35,6 +40,7 @@ import makeRequest, {
   getGetOffersByRecordIdService,
   getHomeFilterService,
   getHomeRecordsService,
+  getInitialModalData,
 } from "../utilities/globalFunctions";
 import {
   transformToBaseUser,
@@ -46,11 +52,11 @@ import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import useShowNotification, { useShowLoadingMessage } from "./utilHooks";
-import { pageSizeOptionsSt } from "../utilities/globals";
+import { defaultErrorMsg, pageSizeOptionsSt } from "../utilities/globals";
 
 /** useCancelRequirement */
 
-export function useCancelRequirement() {
+export function useCancelRequirement(additionalApiParams?: UseApiType) {
   const { t } = useTranslation();
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
@@ -71,11 +77,7 @@ export function useCancelRequirement() {
     errorMsg: errorMsgCancel,
     fetchData: fetchDataCancel,
     reset: resetUseApi,
-  } = useApi<CancelRequirementRequest>({
-    service: apiParamsCancel.service,
-    method: apiParamsCancel.method,
-    dataToSend: apiParamsCancel.dataToSend,
-  });
+  } = useApi<CancelRequirementRequest>(apiParamsCancel, additionalApiParams);
 
   useEffect(() => {
     return () => {
@@ -102,11 +104,9 @@ export function useCancelRequirement() {
       } else if (errorCancel) {
         showNotification("error", errorMsgCancel);
       }
-      if (responseDataCancel || errorCancel)
-        if (apiParamsCancel.dataToSend?.requerimentID)
-          deleteFromIdAndActionQueue(apiParamsCancel.dataToSend.requerimentID);
     } catch (err) {
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
+    } finally {
       if (apiParamsCancel.dataToSend?.requerimentID)
         deleteFromIdAndActionQueue(apiParamsCancel.dataToSend.requerimentID);
     }
@@ -117,12 +117,14 @@ export function useCancelRequirement() {
     reqId: string,
     action: Action,
     type: RequirementType,
-    motive?: string
+    motive?: string,
+    notification?: NotificationData
   ) {
     updateIdAndActionQueue(reqId, action);
     const data: CancelRequirementRequest = {
       requerimentID: reqId,
       reason: motive,
+      notification,
     };
     setApiParamsCancel({
       service: getCancelRecordService(type),
@@ -150,7 +152,7 @@ export function useCancelRequirement() {
 
 /** useCancelOffer */
 
-export function useCancelOffer() {
+export function useCancelOffer(additionalApiParams?: UseApiType) {
   const { t } = useTranslation();
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
@@ -169,11 +171,7 @@ export function useCancelOffer() {
     errorMsg,
     fetchData,
     reset: resetUseApi,
-  } = useApi<CancelOfferRequest>({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
+  } = useApi<CancelOfferRequest>(apiParams, additionalApiParams);
 
   useEffect(() => {
     return () => {
@@ -200,11 +198,9 @@ export function useCancelOffer() {
       } else if (error) {
         showNotification("error", errorMsg);
       }
-      if (responseData || error)
-        if (apiParams.dataToSend?.offerID)
-          deleteFromIdAndActionQueue(apiParams.dataToSend.offerID);
     } catch (err) {
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
+    } finally {
       if (apiParams.dataToSend?.offerID)
         deleteFromIdAndActionQueue(apiParams.dataToSend.offerID);
     }
@@ -216,13 +212,15 @@ export function useCancelOffer() {
     type: RequirementType,
     canceledByCreator: boolean,
     action: Action,
-    motive?: string
+    motive?: string,
+    notification?: NotificationData
   ) {
     updateIdAndActionQueue(offerId, action);
     const data: CancelOfferRequest = {
       offerID: offerId,
       reason: motive,
       canceledByCreator,
+      notification,
     };
     setApiParams({
       service: getCancelOfferService(type),
@@ -278,11 +276,9 @@ export function useGetOffersByRequirementId() {
     purchaseOrderId: undefined,
     tableType: TableTypes.REQUIREMENT,
   });
-  const [dataModal, setDataModal] = useState<ModalContent>({
-    type: ModalTypes.NONE,
-    data: {},
-    action: Action.NONE,
-  });
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: null,
     method: "get",
@@ -312,7 +308,6 @@ export function useGetOffersByRequirementId() {
     async function process() {
       try {
         if (responseData && requirementData.requirementId) {
-          console.log(responseData);
           // Obtener filtros para órdenes en caso de que no existan
           let filters: OfferFilters | undefined = undefined;
           if (
@@ -400,17 +395,18 @@ export function useGetOffersByRequirementId() {
                   requirement: req,
                   forPurchaseOrder: requirementData.forPurchaseOrder,
                   filters: requirementData.filters ?? filters,
+                  orderId: requirementData.purchaseOrderId,
                 },
                 action,
               });
             }
-          } else showNotification("error", t("errorOccurred"));
+          } else showNotification("error", t(defaultErrorMsg));
         } else if (error) {
           showNotification("error", errorMsg);
         }
       } catch (error) {
         console.log(error);
-        showNotification("error", t("errorOccurred"));
+        showNotification("error", t(defaultErrorMsg));
       } finally {
         if (requirementData.requirementId && (error || responseData)) {
           showLoadingMessage(false);
@@ -489,11 +485,9 @@ export function useShowDetailOffer() {
   const { t } = useTranslation();
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
-  const [dataModal, setDataModal] = useState<ModalContent>({
-    type: ModalTypes.NONE,
-    data: {},
-    action: Action.NONE,
-  });
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
 
   async function getOfferDetail(
     offerId: string,
@@ -501,7 +495,8 @@ export function useShowDetailOffer() {
     useUserData: boolean,
     action: Action,
     showActions: boolean,
-    offerData?: Offer
+    offerData?: Offer,
+    orderId?: string
   ) {
     try {
       showLoadingMessage(true);
@@ -522,7 +517,7 @@ export function useShowDetailOffer() {
             : undefined
         );
         if (offer) {
-          const { basicRateData } = await getBasicRateData(
+          const { basicRateData } = await getBasicRateDataS(
             offer.requirementId,
             false,
             type
@@ -534,17 +529,23 @@ export function useShowDetailOffer() {
                 offer,
                 basicRateData,
                 showActions,
+                orderData: orderId
+                  ? {
+                      id: orderId,
+                      type,
+                    }
+                  : undefined,
               },
               action,
             });
-          else showNotification("error", t("errorOccurred"));
-        } else showNotification("error", t("errorOccurred"));
+          else showNotification("error", t(defaultErrorMsg));
+        } else showNotification("error", t(defaultErrorMsg));
       } else {
-        const { basicRateData } = await getBasicRateData(
+        const { basicRateData } = await getBasicRateDataS(
           offerData.requirementId,
           false,
-          RequirementType.GOOD
-        ); // r3v
+          type
+        );
         if (basicRateData)
           setDataModal({
             type: ModalTypes.OFFER_DETAIL,
@@ -552,14 +553,20 @@ export function useShowDetailOffer() {
               offer: offerData,
               basicRateData,
               showActions,
+              orderData: orderId
+                ? {
+                    id: orderId,
+                    type,
+                  }
+                : undefined,
             },
             action,
           });
-        else showNotification("error", t("errorOccurred"));
+        else showNotification("error", t(defaultErrorMsg));
       }
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     } finally {
       showLoadingMessage(false);
     }
@@ -582,6 +589,7 @@ export function useCulminate() {
     isOffer: boolean;
     idToFinish: string;
     idToGetData: string;
+    titleToFinish: string;
     action: Action;
     rowId: string;
   }>({
@@ -589,23 +597,18 @@ export function useCulminate() {
     isOffer: false,
     action: Action.FINISH,
     idToFinish: "",
+    titleToFinish: "",
     idToGetData: "",
     rowId: "",
   });
-  const [dataModal, setDataModal] = useState<ModalContent>({
-    type: ModalTypes.NONE,
-    data: {},
-    action: Action.NONE,
-  });
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: null,
     method: "get",
   });
-  const { responseData, error, errorMsg, fetchData } = useApi({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
-  });
+  const { responseData, error, errorMsg, fetchData } = useApi(apiParams);
 
   useEffect(() => {
     if (apiParams.service) fetchData();
@@ -627,6 +630,7 @@ export function useCulminate() {
             isOffer: culminateData.isOffer,
             requirementOrOfferId: culminateData.idToFinish,
             rowId: culminateData.rowId,
+            requirementOrOfferTitle: culminateData.titleToFinish,
           },
           action: culminateData.action,
         });
@@ -635,7 +639,7 @@ export function useCulminate() {
       }
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     } finally {
       showLoadingMessage(false);
     }
@@ -649,7 +653,8 @@ export function useCulminate() {
     useOfferService: boolean,
     isOffer: boolean,
     action: Action,
-    type: RequirementType
+    type: RequirementType,
+    titleToFinish: string
   ) {
     showLoadingMessage(true);
     setDataModal({
@@ -664,6 +669,7 @@ export function useCulminate() {
       idToGetData,
       action,
       rowId,
+      titleToFinish,
     });
     setApiParams({
       service: useOfferService
@@ -678,15 +684,21 @@ export function useCulminate() {
   };
 }
 
-export function useGetRequirementList() {
+export function useGetRequirementList(contextType: RequirementType) {
   const [requirements, setRequirements] = useState<Requirement[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [usersCache, setUsersCache] = useState<Map<string, any>>(new Map());
+  const latestTypeRef = useRef(contextType);
+
+  useEffect(() => {
+    latestTypeRef.current = contextType;
+  }, [contextType]);
 
   async function getRequirementList(
     page: number,
     type: RequirementType,
+
     pageSize?: number,
     params?: HomeFilterRequest
   ) {
@@ -721,13 +733,17 @@ export function useGetRequirementList() {
           success = false;
         else success = true;
       } else if (error) {
-        setTotal(0);
-        setRequirements([]);
+        if (type == latestTypeRef.current) {
+          setTotal(0);
+          setRequirements([]);
+        }
       }
     } catch (error) {
       console.log(error);
-      setTotal(0);
-      setRequirements([]);
+      if (type == latestTypeRef.current) {
+        setTotal(0);
+        setRequirements([]);
+      }
     } finally {
       setLoading(false);
     }

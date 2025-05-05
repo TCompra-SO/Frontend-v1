@@ -1,9 +1,9 @@
 import { ReactNode, useState } from "react";
+import { OfferFilters } from "../models/Interfaces";
+import { requirementDetailContext } from "./RequirementDetailContext";
 import { CommonFilter } from "../utilities/types";
 import { allSelect } from "../utilities/globals";
-import { OfferFilters } from "../models/Interfaces";
 import { useTranslation } from "react-i18next";
-import { requirementDetailContext } from "./RequirementDetailContext";
 
 interface RequirementDetailProps {
   children: ReactNode;

@@ -6,7 +6,7 @@ import {
   RegisterRequest,
 } from "../models/Requests";
 import { useDispatch } from "react-redux";
-import { setUid, setEmail } from "../redux/userSlice";
+import { setUid, setEmail, setUserName } from "../redux/userSlice";
 import {
   Action,
   DocType,
@@ -37,6 +37,7 @@ import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { useLogin, useRegister } from "../hooks/authHooks";
 import useShowNotification from "../hooks/utilHooks";
 import TermsAndConditionsModal from "../components/common/modals/TermsAndConditionsModal";
+import { browserIdKey } from "../utilities/globals";
 
 const LoginType = {
   LOGIN: "login",
@@ -119,6 +120,9 @@ export default function Login(props: LoginProps) {
       error.response?.data.entity
     ) {
       dispatch(setUid(error.response?.data.uid));
+      if (error.response?.data.name)
+        dispatch(setUserName(error.response?.data.name));
+      else dispatch(setUserName(""));
       dispatch(setEmail(form.getFieldValue("email")));
       props.onRegisterSuccess(
         error.response?.data.entity == "User" ? DocType.DNI : DocType.RUC
@@ -155,9 +159,15 @@ export default function Login(props: LoginProps) {
 
   function HandleSubmit(values: any) {
     if (loginType == LoginType.LOGIN) {
+      let browserId = localStorage.getItem(browserIdKey);
+      if (!browserId) {
+        browserId = crypto.randomUUID();
+        localStorage.setItem(browserIdKey, browserId);
+      }
       const data: LoginRequest = {
         email: values.email,
         password: values.password,
+        browserId,
       };
       setApiParams({
         service: loginService(),

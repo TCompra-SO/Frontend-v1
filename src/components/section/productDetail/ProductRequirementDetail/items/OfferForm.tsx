@@ -16,7 +16,7 @@ import BudgetField from "../../../../common/formFields/BudgetField";
 import AddImagesField from "../../../../common/formFields/AddImagesField";
 import AddDocumentField from "../../../../common/formFields/AddDocumentField";
 import { CreateOfferRequest } from "../../../../../models/Requests";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useContext, useEffect, useRef, useState } from "react";
 import {
   CanOfferResponse,
   useApiParams,
@@ -34,6 +34,7 @@ import {
   ProcessFlag,
   RequirementState,
   RequirementType,
+  SystemNotificationType,
   UserRoles,
 } from "../../../../../utilities/types";
 import React from "react";
@@ -50,6 +51,11 @@ import SimpleLoading from "../../../../../pages/utils/SimpleLoading";
 import ModalContainer from "../../../../containers/ModalContainer";
 import { verifyCertificationByUserIdAndCompanyId } from "../../../../../services/general/generalServices";
 import useShowNotification from "../../../../../hooks/utilHooks";
+import { MainSocketsContext } from "../../../../../contexts/MainSocketsContext";
+import useSystemNotification from "../../../../../hooks/useSystemNotification";
+import dayjs from "dayjs";
+import { defaultErrorMsg } from "../../../../../utilities/globals";
+import { ListsContext } from "../../../../../contexts/ListsContext";
 
 function RowContainer({ children }: { children: ReactNode }) {
   return (
@@ -68,6 +74,10 @@ interface OfferFormProps {
 export default function OfferForm(props: OfferFormProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
+  const { showNotification } = useShowNotification();
+  const { getNotification } = useContext(MainSocketsContext);
+  const { censorText } = useContext(ListsContext);
+  const { getSystemNotification } = useSystemNotification();
   const email = useSelector((state: MainState) => state.user.email);
   const uid = useSelector((state: MainState) => state.user.uid);
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
@@ -75,7 +85,6 @@ export default function OfferForm(props: OfferFormProps) {
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const role = useSelector((state: MainState) => state.user.typeID);
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
-  const { showNotification } = useShowNotification();
   const [isCertified, setIsCertified] = useState<CertificationState>(
     CertificationState.NONE
   );
@@ -101,9 +110,18 @@ export default function OfferForm(props: OfferFormProps) {
   }, [cantOfferMotive]);
 
   useEffect(() => {
-    form.setFieldValue("currency", props.requirement?.coin);
+    if (props.requirement)
+      form.setFieldValue("currency", props.requirement.coin);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.requirement]);
+
+  useEffect(() => {
+    if (!loadingForm) {
+      form.setFieldValue("email", email);
+      form.setFieldValue("currency", props.requirement?.coin);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingForm]);
 
   /** Guardar imágenes y documentos */
 
@@ -118,6 +136,7 @@ export default function OfferForm(props: OfferFormProps) {
   /** Verificar si el usuario puede ofertar */
 
   useEffect(() => {
+    if (!isLoggedIn) form.resetFields();
     if (props.requirement) checkIfUserCanOffer();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, props.requirement]);
@@ -139,7 +158,6 @@ export default function OfferForm(props: OfferFormProps) {
   useEffect(() => {
     if (responseData) {
       setReqSuccess(ProcessFlag.FIN_SUCCESS);
-      console.log(responseData);
       setOfferId(responseData.data?.uid);
       uploadImgsAndDocs(responseData.data?.uid);
     } else if (error) {
@@ -342,18 +360,32 @@ export default function OfferForm(props: OfferFormProps) {
     setFormDataImg(null);
     setDocSuccess(ProcessFlag.NOT_INI);
     setImgSuccess(ProcessFlag.NOT_INI);
-    console.log(values);
+
     if (props.requirement) {
+      const notificationFn = getSystemNotification(
+        SystemNotificationType.MAKE_OFFER
+      );
+      const basicNotification = notificationFn(props.requirement.title);
+      const notification = getNotification({
+        ...basicNotification,
+        receiverId:
+          props.requirement.subUser?.uid ?? props.requirement.user.uid,
+        targetId: props.requirement.key,
+        targetType: props.requirement.type,
+        timestamp: dayjs().toISOString(),
+      });
+
       const data: CreateOfferRequest = {
-        name: values.title.trim(),
+        name: censorText(values.title.trim()),
         email: values.email,
-        description: values.description?.trim(),
+        description: censorText(values.description?.trim()),
         cityID: values.location,
         deliveryTimeID: values.deliveryTime,
         currencyID: values.currency,
         budget: values.budget,
         requerimentID: props.requirement.key,
         userID: uid,
+        notification,
       };
 
       if (
@@ -395,7 +427,7 @@ export default function OfferForm(props: OfferFormProps) {
       }
 
       submit(data);
-    } else showNotification("error", t("errorOccurred"));
+    } else showNotification("error", t(defaultErrorMsg));
   }
 
   function submit(data: CreateOfferRequest) {
@@ -475,8 +507,15 @@ export default function OfferForm(props: OfferFormProps) {
             type: ModalTypes.SEND_MESSAGE,
             data: {
               requirementId: props.requirement.key,
-              userId:
-                props.requirement.subUser?.uid ?? props.requirement?.user.uid,
+              title: props.requirement.title,
+              type: props.requirement.type,
+              receiverName: props.requirement.subUser
+                ? props.requirement.subUser.name
+                : props.requirement.user.name,
+              receiverImage: props.requirement.user.image,
+              receiverId: props.requirement.subUser
+                ? props.requirement.subUser.uid
+                : props.requirement.user.uid,
             },
             action: Action.SEND_MESSAGE,
           }}
@@ -518,7 +557,7 @@ export default function OfferForm(props: OfferFormProps) {
               <div className="t-flex gap-15 f-column form-oferta">
                 <RowContainer>
                   <TitleField />
-                  <EmailField onlyItem edit value={email} />
+                  <EmailField onlyItem edit />
                 </RowContainer>
                 <RowContainer>
                   <OfferDescriptionField />
@@ -526,15 +565,15 @@ export default function OfferForm(props: OfferFormProps) {
                 {props.requirement.type == RequirementType.SALE ? (
                   <RowContainer>
                     <LocationField onlyItem />
-                    <DeliveryTimeField onlyItem />
-                    <CurrencyField onlyItem disabled />
+                    <DeliveryTimeField showDifferentPlaceholder />
+                    <CurrencyField showDifferentPlaceholder disabled />
                     <BudgetField required greaterThanZero />
                   </RowContainer>
                 ) : (
                   <RowContainer>
                     <LocationField onlyItem />
-                    <DeliveryTimeField onlyItem />
-                    <CurrencyField onlyItem disabled />
+                    <DeliveryTimeField showDifferentPlaceholder />
+                    <CurrencyField showDifferentPlaceholder disabled />
                   </RowContainer>
                 )}
                 {props.requirement.type != RequirementType.SALE && (
@@ -547,7 +586,7 @@ export default function OfferForm(props: OfferFormProps) {
                       <DurationField
                         required={warrantyRequired}
                         name={"duration"}
-                        onlyItem
+                        showDifferentPlaceholder
                         onChange={() => checkWarrantyField()}
                         forWarranty
                       />

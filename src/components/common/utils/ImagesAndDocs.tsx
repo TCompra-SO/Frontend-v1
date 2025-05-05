@@ -4,16 +4,20 @@ import {
   ImagePreviewGroupContainer,
   ImagePreviewGroupContainerRef,
 } from "../../containers/ImagePreviewGroupContainer";
+import { RequirementType } from "../../../utilities/types";
+import { useDownloadPdfOrder } from "../../../hooks/utilHooks";
 
 interface ImagesAndDocsProps {
   image: string[] | undefined;
   document: string[] | undefined;
   showChat?: boolean;
   goToChat?: () => void;
+  orderData?: { id: string; type: RequirementType };
 }
 
 export default function ImagesAndDocs(props: ImagesAndDocsProps) {
   const childRef = useRef<ImagePreviewGroupContainerRef>(null);
+  const downloadPdfOrder = useDownloadPdfOrder();
 
   function handleOpenPreview() {
     if (childRef.current) {
@@ -61,6 +65,17 @@ export default function ImagesAndDocs(props: ImagesAndDocsProps) {
           <i
             className="fa-regular fa-comment multi-chat"
             onClick={props.goToChat}
+          ></i>
+        </div>
+      )}
+      {props.orderData && (
+        <div className="t-flex">
+          <i
+            className="fa-regular fa-arrow-down-to-line multi-download"
+            onClick={() => {
+              if (props.orderData)
+                downloadPdfOrder(props.orderData.id, props.orderData.type);
+            }}
           ></i>
         </div>
       )}

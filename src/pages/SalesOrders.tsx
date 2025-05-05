@@ -3,7 +3,7 @@ import {
   Action,
   EntityType,
   ModalTypes,
-  PurchaseOrderTableTypes,
+  OrderTableType,
   RequirementType,
   TableTypes,
 } from "../utilities/types";
@@ -18,11 +18,12 @@ import { useContext, useEffect, useRef, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent, {
   TablePageContentRef,
-} from "../components/section/table-page/TablePageContent";
+} from "../components/common/utils/TablePageContent";
 import useApi from "../hooks/useApi";
 import { getUserService } from "../services/requests/authService";
 import {
   getFieldNameObjForOrders,
+  getInitialModalData,
   getLabelFromPurchaseOrderType,
   getLabelFromRequirementType,
   getPurchaseOrderType,
@@ -32,6 +33,7 @@ import {
   transformToPurchaseOrder,
 } from "../utilities/transform";
 import {
+  defaultErrorMsg,
   mainModalScrollStyle,
   noPaginationPageSize,
 } from "../utilities/globals";
@@ -51,10 +53,9 @@ import useShowNotification, {
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
-import useSocketQueueHook, {
-  useAddOrUpdateRow,
-} from "../hooks/socketQueueHook";
+import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
+import { getPurchaseOrderById } from "../services/general/generalServices";
 
 export default function SalesOrders() {
   const { t } = useTranslation();
@@ -62,7 +63,8 @@ export default function SalesOrders() {
   const uid = useSelector((state: MainState) => state.user.uid);
   const searchValueRef = useRef<TablePageContentRef>(null);
   const { updateMyPurchaseOrdersLoadingPdf } = useContext(LoadingDataContext);
-  const { viewHistorySalesModalData } = useContext(ModalsContext);
+  const { viewHistorySalesModalData, resetViewHistorySalesModalData } =
+    useContext(ModalsContext);
   const { showNotification } = useShowNotification();
   const { getBasicRateData, modalDataRate } = useCulminate();
   const { showLoadingMessage } = useShowLoadingMessage();
@@ -88,13 +90,11 @@ export default function SalesOrders() {
   const [action, setAction] = useState<Action>(Action.NONE);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [nameHeader, setNameHeader] = useState(
-    type == PurchaseOrderTableTypes.ISSUED ? t("customer") : t("seller")
+    type == OrderTableType.ISSUED ? t("customer") : t("seller")
   );
-  const [dataModal, setDataModal] = useState<ModalContent>({
-    type: ModalTypes.NONE,
-    data: {},
-    action: Action.NONE,
-  });
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
   const [tableContent, setTableContent] = useState<TableTypeSalesOrder>({
     type: TableTypes.SALES_ORDER,
     data: salesOrderList,
@@ -108,7 +108,7 @@ export default function SalesOrders() {
     fieldSort,
     filteredInfo,
   });
-  const { addNewRow, updateRow } = useAddOrUpdateRow(
+  const { addNewRow, updateRow } = useActionsForRow(
     TableTypes.SALES_ORDER,
     (data: SocketDataPackType) => transformToPurchaseOrder(data),
     salesOrderList,
@@ -178,21 +178,42 @@ export default function SalesOrders() {
   /** Verificar si hay una solicitud pendiente */
 
   useEffect(() => {
-    if (viewHistorySalesModalData.requirementId) {
-      getOffersByRequirementId(
-        TableTypes.PURCHASE_ORDER,
-        viewHistorySalesModalData.requirementId,
-        viewHistorySalesModalData.requirementType,
-        true,
-        1,
-        noPaginationPageSize,
-        Action.VIEW_HISTORY,
-        viewHistorySalesModalData.requirement,
-        viewHistorySalesModalData.filters
-      );
+    async function checkData() {
+      if (viewHistorySalesModalData.purchaseOrderId) {
+        downloadPdfOrder(
+          viewHistorySalesModalData.purchaseOrderId,
+          viewHistorySalesModalData.requirementType
+        );
+        const copy = { ...viewHistorySalesModalData };
+        let requirementId = copy.requirementId;
+        if (!requirementId) {
+          const { purchaseOrder } = await getPurchaseOrderById(
+            copy.purchaseOrderId,
+            copy.requirementType
+          );
+          if (purchaseOrder) requirementId = purchaseOrder.requirementId;
+          else {
+            resetViewHistorySalesModalData();
+            return;
+          }
+        }
+        getOffersByRequirementId(
+          TableTypes.PURCHASE_ORDER,
+          requirementId,
+          copy.requirementType,
+          true,
+          1,
+          noPaginationPageSize,
+          Action.VIEW_HISTORY,
+          copy.requirement,
+          copy.filters
+        );
+        resetViewHistorySalesModalData();
+      }
     }
+    checkData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [viewHistorySalesModalData]);
 
   /** Para mostrar modales */
 
@@ -215,9 +236,7 @@ export default function SalesOrders() {
   useEffect(() => {
     clearSearchValue();
     reset();
-    setNameHeader(
-      type == PurchaseOrderTableTypes.ISSUED ? t("customer") : t("seller")
-    );
+    setNameHeader(type == OrderTableType.ISSUED ? t("customer") : t("seller"));
     searchTable({
       page: 1,
       pageSize: currentPageSize,
@@ -292,7 +311,7 @@ export default function SalesOrders() {
       setSalesOrderList(data);
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 
@@ -301,15 +320,20 @@ export default function SalesOrders() {
   }
 
   function showUserInfo() {
-    const user = transformToFullUser(responseDataUser.data);
-    setDataModal({
-      type: ModalTypes.USER_INFO,
-      data: {
-        user,
-      },
-      action: action,
-    });
-    setIsOpenModal(true);
+    try {
+      const user = transformToFullUser(responseDataUser.data);
+      setDataModal({
+        type: ModalTypes.USER_INFO,
+        data: {
+          user,
+        },
+        action: action,
+      });
+      setIsOpenModal(true);
+    } catch (e) {
+      console.log(e);
+      showNotification("error", t(defaultErrorMsg));
+    }
   }
 
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
@@ -331,7 +355,7 @@ export default function SalesOrders() {
         downloadPdfOrder(purchaseOrder.key, purchaseOrder.type);
         break;
       case Action.FINISH:
-        if (typeRef.current == PurchaseOrderTableTypes.ISSUED) {
+        if (typeRef.current == OrderTableType.ISSUED) {
           // Buscar en oferta de liquidación
           getBasicRateData(
             purchaseOrder.key,
@@ -340,9 +364,10 @@ export default function SalesOrders() {
             true,
             true,
             action,
-            purchaseOrder.type
+            purchaseOrder.type,
+            purchaseOrder.requirementTitle
           );
-        } else if (typeRef.current == PurchaseOrderTableTypes.RECEIVED)
+        } else if (typeRef.current == OrderTableType.RECEIVED)
           // Buscar en liquidación
           getBasicRateData(
             purchaseOrder.key,
@@ -351,7 +376,8 @@ export default function SalesOrders() {
             false,
             false,
             action,
-            purchaseOrder.type
+            purchaseOrder.type,
+            purchaseOrder.offerTitle
           );
         break;
       case Action.VIEW_HISTORY:
@@ -368,15 +394,32 @@ export default function SalesOrders() {
         );
         break;
       case Action.CANCEL:
+        console.log(
+          type,
+          purchaseOrder.subUserProviderId,
+          purchaseOrder.requirementId
+        );
         setDataModal({
           type: ModalTypes.CANCEL_PURCHASE_ORDER,
           data: {
             offerId: purchaseOrder.offerId,
             requirementId: purchaseOrder.requirementId,
             fromRequirementTable: false,
-            canceledByCreator: type == PurchaseOrderTableTypes.ISSUED,
+            canceledByCreator: type == OrderTableType.RECEIVED,
             rowId: purchaseOrder.key,
             type: purchaseOrder.type,
+            requirementTitle: purchaseOrder.requirementTitle,
+            notificationTargetData: {
+              receiverId:
+                type == OrderTableType.ISSUED
+                  ? purchaseOrder.subUserClientId
+                  : purchaseOrder.subUserProviderId,
+              targetId:
+                type == OrderTableType.ISSUED
+                  ? purchaseOrder.offerId
+                  : purchaseOrder.requirementId,
+              targetType: purchaseOrder.type,
+            },
           },
           action,
         });

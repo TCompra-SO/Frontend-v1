@@ -6,10 +6,16 @@ import {
   ResponseRequestType,
   ErrorRequestType,
   ErrorMsgRequestType,
+  SystemNotificationType,
+  NotificationType,
 } from "../../../utilities/types";
 import SelectContainer from "../../containers/SelectContainer";
 import RatingContainer from "../../containers/RatingContainer";
-import { BasicRateData } from "../../../models/MainInterfaces";
+import {
+  BasicNotificationData,
+  BasicRateData,
+  NotificationData,
+} from "../../../models/MainInterfaces";
 import {
   calculateFinalScore,
   getCulminateOfferService,
@@ -17,24 +23,33 @@ import {
   getUserClass,
 } from "../../../utilities/globalFunctions";
 import ButtonContainer from "../../containers/ButtonContainer";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import FrontImage from "../utils/FrontImage";
 import SubUserName from "../utils/SubUserName";
 import { CommonModalProps } from "../../../models/Interfaces";
 import { CulminateRequest } from "../../../models/Requests";
 import useShowNotification from "../../../hooks/utilHooks";
+import { MainSocketsContext } from "../../../contexts/MainSocketsContext";
+import useSystemNotification from "../../../hooks/useSystemNotification";
+import dayjs from "dayjs";
+import { MainState } from "../../../models/Redux";
+import { useSelector } from "react-redux";
 
 interface RatingModalProps extends CommonModalProps {
   basicRateData: BasicRateData;
   type: RequirementType;
   isOffer: boolean; // indica si a quien se califica es creador de una oferta o no
   onClose: () => any;
-  requirementOrOfferId: string;
+  requirementOrOfferId: string; // Id de oferta o requerimiento que se está culminando
+  requirementOrOfferTitle: string; // Título de oferta o requerimiento que se está culminando
 }
 
 export default function RatingModal(props: RatingModalProps) {
   const { t } = useTranslation();
+  const { getNotification } = useContext(MainSocketsContext);
+  const { getSystemNotification } = useSystemNotification();
+  const uid = useSelector((state: MainState) => state.user.uid);
   const [answer, setAnswer] = useState<YesNo | null>(null);
   const [scores, setScores] = useState([0, 0, 0]);
   const { showNotification } = useShowNotification();
@@ -111,6 +126,10 @@ export default function RatingModal(props: RatingModalProps) {
         }
       },
     });
+
+    return () => {
+      props.setAdditionalApiParams({ functionToExecute: () => {} });
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -129,12 +148,19 @@ export default function RatingModal(props: RatingModalProps) {
       showNotification("info", t("mustAnswerAllQuestions"));
       return;
     }
+
+    const notification = getCurrentNotification(false);
+    const disputeNotifications = getCurrentNotification(true);
+
     const data: CulminateRequest = {
       delivered: answer == YesNo.YES,
       score: calculateFinalScore(scores),
+      notification: notification?.[0],
+      extraNotifications: disputeNotifications,
     };
     if (props.isOffer) data.requerimentID = props.requirementOrOfferId;
     else data.offerID = props.requirementOrOfferId;
+
     props.setApiParams({
       service: props.isOffer
         ? getCulminateRecordService(props.type)
@@ -142,6 +168,83 @@ export default function RatingModal(props: RatingModalProps) {
       method: "post",
       dataToSend: data,
     });
+  }
+
+  function getCurrentNotification(
+    dispute: boolean
+  ): NotificationData[] | undefined {
+    if (dispute) {
+      let basicNotification: BasicNotificationData | null = null;
+      let secondBasicNotification: BasicNotificationData | null = null;
+      if (props.isOffer) {
+        basicNotification = getSystemNotification(
+          SystemNotificationType.DISPUTE_OFFER_CREATOR
+        )(props.basicRateData.title);
+        secondBasicNotification = getSystemNotification(
+          SystemNotificationType.DISPUTE_REQ_CREATOR
+        )(props.requirementOrOfferTitle, props.type);
+      } else {
+        basicNotification = getSystemNotification(
+          SystemNotificationType.DISPUTE_REQ_CREATOR
+        )(props.basicRateData.title, props.type);
+        secondBasicNotification = getSystemNotification(
+          SystemNotificationType.DISPUTE_OFFER_CREATOR
+        )(props.requirementOrOfferTitle);
+      }
+      const notif1 = createNotification(
+        basicNotification,
+        props.basicRateData.uid
+      );
+      const notif2 = createSecondNotification(
+        secondBasicNotification,
+        props.requirementOrOfferId
+      );
+      return notif1 && notif2 ? [notif1, notif2] : undefined;
+    } else {
+      const basicNotification = getSystemNotification(
+        props.isOffer
+          ? SystemNotificationType.FINISH_REQUIREMENT
+          : SystemNotificationType.FINISH_OFFER
+      )(answer == YesNo.YES, props.type);
+      const notif = createNotification(
+        basicNotification,
+        props.basicRateData.uid
+      );
+      return notif ? [notif] : undefined;
+    }
+  }
+
+  function createNotification(
+    notification: BasicNotificationData,
+    targetId: string
+  ): NotificationData | undefined {
+    return getNotification({
+      ...notification,
+      receiverId: props.basicRateData.subUserId ?? props.basicRateData.userId,
+      timestamp: dayjs().toISOString(),
+      targetId,
+      targetType: props.type,
+    });
+  }
+
+  function createSecondNotification( // Notificación para usuario logueado
+    notification: BasicNotificationData,
+    targetId: string
+  ): NotificationData | undefined {
+    return {
+      ...notification,
+      timestamp: dayjs().toISOString(),
+      targetType: props.type,
+      targetId,
+      receiverId: uid,
+      type: NotificationType.DIRECT,
+      senderId: props.basicRateData.subUserId ?? props.basicRateData.userId,
+      senderName:
+        props.basicRateData.subUserName !== props.basicRateData.userName
+          ? `${props.basicRateData.subUserName} (${props.basicRateData.userName})`
+          : props.basicRateData.subUserName,
+      senderImage: props.basicRateData.userImage,
+    };
   }
 
   return (

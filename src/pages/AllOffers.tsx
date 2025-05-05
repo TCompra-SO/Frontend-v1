@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import TablePageContent, {
   TablePageContentRef,
-} from "../components/section/table-page/TablePageContent";
+} from "../components/common/utils/TablePageContent";
 import { useEffect, useRef, useState } from "react";
 import {
   ModalContent,
@@ -23,6 +23,7 @@ import {
 } from "../utilities/transform";
 import { getBaseDataUserService } from "../services/requests/authService";
 import {
+  defaultErrorMsg,
   fieldNameSearchRequestOffer,
   mainModalScrollStyle,
 } from "../utilities/globals";
@@ -32,9 +33,7 @@ import useShowNotification from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
-import useSocketQueueHook, {
-  useAddOrUpdateRow,
-} from "../hooks/socketQueueHook";
+import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
 
 export default function AllOffers() {
@@ -80,7 +79,7 @@ export default function AllOffers() {
     fieldSort,
     filteredInfo,
   });
-  const { addNewRow, updateRow } = useAddOrUpdateRow(
+  const { addNewRow, updateRow } = useActionsForRow(
     TableTypes.ALL_OFFERS,
     (data: SocketDataPackType) => {
       // console.log(subUsersCache, data.subUser);
@@ -231,7 +230,7 @@ export default function AllOffers() {
       setOfferList(data);
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     } finally {
       setLoadingTable(false);
     }

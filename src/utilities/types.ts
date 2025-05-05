@@ -168,6 +168,10 @@ export enum Action {
   VIEW_SALES_ORDER = 35,
   GOODS = 36,
   SERVICES = 37,
+  SUSPEND = 38,
+  REACTIVATE = 39,
+  VIEW_CERTIFICATION = 40,
+  VIEW_CAT_LAST_REQUIREMENTS = 41,
 }
 
 export const ActionLabel: {
@@ -211,16 +215,20 @@ export const ActionLabel: {
   [Action.VIEW_SALES_ORDER]: "view",
   [Action.GOODS]: "goods",
   [Action.SERVICES]: "services",
+  [Action.SUSPEND]: "suspend",
+  [Action.REACTIVATE]: "reactivate",
+  [Action.VIEW_CERTIFICATION]: "view",
+  [Action.VIEW_CAT_LAST_REQUIREMENTS]: "view",
 };
 
 export const ActionByStateRequirement: {
   [key in RequirementState]: Array<Action>;
 } = {
-  [RequirementState.CANCELED]: [Action.REPUBLISH], // Action.DELETE
+  [RequirementState.CANCELED]: [Action.VIEW], // Action.DELETE Action.REPUBLISH
   [RequirementState.DISPUTE]: [Action.SHOW_SUMMARY],
-  [RequirementState.EXPIRED]: [Action.DELETE, Action.REPUBLISH],
+  [RequirementState.EXPIRED]: [Action.REPUBLISH], // Action.DELETE
   [RequirementState.FINISHED]: [Action.SHOW_SUMMARY],
-  [RequirementState.PUBLISHED]: [Action.DELETE, Action.CANCEL_REQUIREMENT],
+  [RequirementState.PUBLISHED]: [Action.CANCEL_REQUIREMENT], // Action.DELETE
   [RequirementState.SELECTED]: [Action.CANCEL_REQUIREMENT, Action.FINISH],
   [RequirementState.ELIMINATED]: [Action.VIEW],
 };
@@ -284,6 +292,8 @@ export const ActionSubUsers: {
     Action.VIEW_PURCHASE_ORDERS,
     Action.VIEw_SALES_ORDERS,
     Action.EDIT_USER,
+    Action.SUSPEND,
+    Action.REACTIVATE,
   ],
 };
 
@@ -404,13 +414,18 @@ export enum UserRoles {
   LEGAL = 5,
 }
 
-export enum PurchaseOrderTableTypes {
+export enum OrderTableType {
   ISSUED = 0,
   RECEIVED = 1,
 }
 
+export enum CertificationTableType {
+  SENT = 1,
+  RECEIVED = 2,
+}
+
 export enum CertificationState {
-  NONE = 5,
+  NONE = 0,
   CERTIFIED = 1,
   REJECTED = 2,
   PENDING = 3,
@@ -502,9 +517,40 @@ export type OnChangePageAndPageSizeType = (
 export enum SocketChangeType {
   CREATE = 0,
   UPDATE = 1,
+  DELETE = 2,
+  UPDATE_FIELD = 4,
 }
 
 export enum RTNotificationType {
   NOTIFICATION = 0,
   CHAT = 1,
+}
+
+export enum SystemNotificationType {
+  MAKE_OFFER = 0,
+  CERTIFICATE_COMPANY = 1,
+  CANCEL_MY_OFFER = 2,
+  FINISH_OFFER = 3,
+  DISPUTE_OFFER_CREATOR = 4,
+  DISPUTE_REQ_CREATOR = 5,
+  CANCEL_AN_OFFER = 6,
+  FINISH_REQUIREMENT = 7,
+  SELECT_OFFER = 8,
+  RECEIVED_DOCS_FOR_CERT = 9,
+}
+
+export enum NotificationType {
+  DIRECT = 0,
+  BROADCAST = 1,
+}
+
+export enum CertificateRooms {
+  DOCUMENT = "docCert",
+  SENT = "sentCert",
+  RECEIVED = "receivedCert",
+}
+
+export enum ChatMessageType {
+  NEW_MESSAGE = 0,
+  READ = 1,
 }

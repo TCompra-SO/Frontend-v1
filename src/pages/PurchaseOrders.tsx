@@ -3,7 +3,7 @@ import {
   Action,
   EntityType,
   ModalTypes,
-  PurchaseOrderTableTypes,
+  OrderTableType,
   RequirementType,
   TableTypes,
 } from "../utilities/types";
@@ -18,11 +18,12 @@ import { useContext, useEffect, useRef, useState } from "react";
 import ModalContainer from "../components/containers/ModalContainer";
 import TablePageContent, {
   TablePageContentRef,
-} from "../components/section/table-page/TablePageContent";
+} from "../components/common/utils/TablePageContent";
 import useApi from "../hooks/useApi";
 import { getUserService } from "../services/requests/authService";
 import {
   getFieldNameObjForOrders,
+  getInitialModalData,
   getLabelFromPurchaseOrderType,
   getReqTypeAndOrderType,
 } from "../utilities/globalFunctions";
@@ -31,6 +32,7 @@ import {
   transformToPurchaseOrder,
 } from "../utilities/transform";
 import {
+  defaultErrorMsg,
   mainModalScrollStyle,
   noPaginationPageSize,
 } from "../utilities/globals";
@@ -50,10 +52,9 @@ import useShowNotification, {
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
-import useSocketQueueHook, {
-  useAddOrUpdateRow,
-} from "../hooks/socketQueueHook";
+import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
+import { getPurchaseOrderById } from "../services/general/generalServices";
 
 export default function PurchaseOrders() {
   const { t } = useTranslation();
@@ -61,14 +62,15 @@ export default function PurchaseOrders() {
   const uid = useSelector((state: MainState) => state.user.uid);
   const searchValueRef = useRef<TablePageContentRef>(null);
   const { updateMyPurchaseOrdersLoadingPdf } = useContext(LoadingDataContext);
-  const { viewHistoryModalData } = useContext(ModalsContext);
+  const { viewHistoryModalData, resetViewHistoryModalData } =
+    useContext(ModalsContext);
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
   const { getOffersByRequirementId, modalDataOffersByRequirementId } =
     useGetOffersByRequirementId();
   const { getBasicRateData, modalDataRate } = useCulminate();
   const downloadPdfOrder = useDownloadPdfOrder();
-  const [type, setType] = useState<PurchaseOrderTableTypes>(
+  const [type, setType] = useState<OrderTableType>(
     getReqTypeAndOrderType(location.pathname).orderType
   );
   const typeRef = useRef(type);
@@ -92,13 +94,11 @@ export default function PurchaseOrders() {
   );
   const [total, setTotal] = useState(0);
   const [nameHeader, setNameHeader] = useState(
-    type == PurchaseOrderTableTypes.ISSUED ? t("seller") : t("customer")
+    type == OrderTableType.ISSUED ? t("seller") : t("customer")
   );
-  const [dataModal, setDataModal] = useState<ModalContent>({
-    type: ModalTypes.NONE,
-    data: {},
-    action: Action.NONE,
-  });
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
   const [tableContent, setTableContent] = useState<TableTypePurchaseOrder>({
     type: TableTypes.PURCHASE_ORDER,
     data: purchaseOrderList,
@@ -112,7 +112,7 @@ export default function PurchaseOrders() {
     fieldSort,
     filteredInfo,
   });
-  const { addNewRow, updateRow } = useAddOrUpdateRow(
+  const { addNewRow, updateRow } = useActionsForRow(
     TableTypes.PURCHASE_ORDER,
     (data: SocketDataPackType) => transformToPurchaseOrder(data),
     purchaseOrderList,
@@ -186,21 +186,44 @@ export default function PurchaseOrders() {
   /** Verificar si hay una solicitud pendiente */
 
   useEffect(() => {
-    if (viewHistoryModalData.requirementId) {
-      getOffersByRequirementId(
-        TableTypes.PURCHASE_ORDER,
-        viewHistoryModalData.requirementId,
-        viewHistoryModalData.requirementType,
-        true,
-        1,
-        noPaginationPageSize,
-        Action.VIEW_HISTORY,
-        viewHistoryModalData.requirement,
-        viewHistoryModalData.filters
-      );
+    async function checkData() {
+      if (viewHistoryModalData.purchaseOrderId) {
+        downloadPdfOrder(
+          viewHistoryModalData.purchaseOrderId,
+          viewHistoryModalData.requirementType
+        );
+        const copy = { ...viewHistoryModalData };
+        let requirementId = copy.requirementId;
+        if (!requirementId) {
+          const { purchaseOrder } = await getPurchaseOrderById(
+            copy.purchaseOrderId,
+            copy.requirementType
+          );
+          if (purchaseOrder) requirementId = purchaseOrder.requirementId;
+          else {
+            resetViewHistoryModalData();
+            return;
+          }
+        }
+        getOffersByRequirementId(
+          TableTypes.PURCHASE_ORDER,
+          requirementId,
+          copy.requirementType,
+          true,
+          1,
+          noPaginationPageSize,
+          Action.VIEW_HISTORY,
+          copy.requirement,
+          copy.filters,
+          copy.purchaseOrderId
+        );
+        resetViewHistoryModalData();
+      }
     }
+
+    checkData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [viewHistoryModalData]);
 
   /** Para mostrar modales */
 
@@ -223,9 +246,7 @@ export default function PurchaseOrders() {
   useEffect(() => {
     clearSearchValue();
     reset();
-    setNameHeader(
-      type == PurchaseOrderTableTypes.ISSUED ? t("seller") : t("customer")
-    );
+    setNameHeader(type == OrderTableType.ISSUED ? t("seller") : t("customer"));
     searchTable({
       page: 1,
       pageSize: currentPageSize,
@@ -300,7 +321,7 @@ export default function PurchaseOrders() {
       setPurchaseOrderList(data);
     } catch (error) {
       console.log(error);
-      showNotification("error", t("errorOccurred"));
+      showNotification("error", t(defaultErrorMsg));
     }
   }
 
@@ -309,15 +330,20 @@ export default function PurchaseOrders() {
   }
 
   function showUserInfo() {
-    const user = transformToFullUser(responseDataUser.data);
-    setDataModal({
-      type: ModalTypes.USER_INFO,
-      data: {
-        user,
-      },
-      action: action,
-    });
-    setIsOpenModal(true);
+    try {
+      const user = transformToFullUser(responseDataUser.data);
+      setDataModal({
+        type: ModalTypes.USER_INFO,
+        data: {
+          user,
+        },
+        action: action,
+      });
+      setIsOpenModal(true);
+    } catch (e) {
+      console.log(e);
+      showNotification("error", t(defaultErrorMsg));
+    }
   }
 
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
@@ -339,7 +365,7 @@ export default function PurchaseOrders() {
         downloadPdfOrder(purchaseOrder.key, purchaseOrder.type);
         break;
       case Action.FINISH:
-        if (typeRef.current == PurchaseOrderTableTypes.ISSUED) {
+        if (typeRef.current == OrderTableType.ISSUED) {
           // Buscar en oferta de requerimiento
           getBasicRateData(
             purchaseOrder.key,
@@ -348,9 +374,10 @@ export default function PurchaseOrders() {
             true,
             true,
             action,
-            purchaseOrder.type
+            purchaseOrder.type,
+            purchaseOrder.requirementTitle
           );
-        } else if (typeRef.current == PurchaseOrderTableTypes.RECEIVED)
+        } else if (typeRef.current == OrderTableType.RECEIVED)
           // Buscar en requerimiento
           getBasicRateData(
             purchaseOrder.key,
@@ -359,7 +386,8 @@ export default function PurchaseOrders() {
             false,
             false,
             action,
-            purchaseOrder.type
+            purchaseOrder.type,
+            purchaseOrder.offerTitle
           );
         break;
       case Action.VIEW_HISTORY:
@@ -372,7 +400,8 @@ export default function PurchaseOrders() {
           noPaginationPageSize,
           action,
           undefined,
-          purchaseOrder.filters
+          purchaseOrder.filters,
+          purchaseOrder.key
         );
         break;
       case Action.CANCEL:
@@ -382,9 +411,21 @@ export default function PurchaseOrders() {
             offerId: purchaseOrder.offerId,
             requirementId: purchaseOrder.requirementId,
             fromRequirementTable: false,
-            canceledByCreator: type == PurchaseOrderTableTypes.RECEIVED,
+            canceledByCreator: type == OrderTableType.RECEIVED,
             rowId: purchaseOrder.key,
             type: purchaseOrder.type,
+            requirementTitle: purchaseOrder.requirementTitle,
+            notificationTargetData: {
+              receiverId:
+                type == OrderTableType.ISSUED
+                  ? purchaseOrder.subUserProviderId
+                  : purchaseOrder.subUserClientId,
+              targetId:
+                type == OrderTableType.ISSUED
+                  ? purchaseOrder.offerId
+                  : purchaseOrder.requirementId,
+              targetType: purchaseOrder.type,
+            },
           },
           action,
         });

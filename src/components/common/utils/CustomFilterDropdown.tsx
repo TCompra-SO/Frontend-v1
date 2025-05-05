@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Button, Checkbox, Space } from "antd";
 import ButtonContainer from "../../containers/ButtonContainer";
 
-// Permite aplicar filtros otra vez cuando no éstos no han cambiado
+// Permite aplicar filtros otra vez cuando no han cambiado
 export default function CustomFilterDropdown({
   setSelectedKeys,
   selectedKeys,

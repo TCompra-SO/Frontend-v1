@@ -6,7 +6,7 @@ import { TimeMeasurement } from "../../../utilities/types";
 interface DurationFieldProps {
   required: boolean;
   name: string;
-  onlyItem?: boolean;
+  showDifferentPlaceholder?: boolean;
   onChange?: (val: TimeMeasurement | undefined) => void;
   forWarranty?: boolean;
 }
@@ -29,7 +29,7 @@ export default function DurationField(props: DurationFieldProps) {
       <SelectContainer
         allowClear
         placeholder={
-          t(props.onlyItem ? "duration" : "select") +
+          t(props.showDifferentPlaceholder ? "duration" : "select") +
           `${props.forWarranty ? " - " + t("warranty") : ""}`
         }
         className="form-control"
