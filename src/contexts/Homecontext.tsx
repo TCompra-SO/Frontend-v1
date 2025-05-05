@@ -85,7 +85,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     total: totalRequirementListOrig,
     loading: loadingRequirementList,
     usersCache,
-  } = useGetRequirementList();
+  } = useGetRequirementList(type);
   const [page, setPage] = useState(1);
   const { addNewRow, updateRow } = useActionsForRow(
     TableTypes.HOME,

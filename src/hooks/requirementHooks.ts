@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   HttpService,
   ModalContent,
@@ -684,15 +684,21 @@ export function useCulminate() {
   };
 }
 
-export function useGetRequirementList() {
+export function useGetRequirementList(contextType: RequirementType) {
   const [requirements, setRequirements] = useState<Requirement[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [usersCache, setUsersCache] = useState<Map<string, any>>(new Map());
+  const latestTypeRef = useRef(contextType);
+
+  useEffect(() => {
+    latestTypeRef.current = contextType;
+  }, [contextType]);
 
   async function getRequirementList(
     page: number,
     type: RequirementType,
+
     pageSize?: number,
     params?: HomeFilterRequest
   ) {
@@ -727,13 +733,17 @@ export function useGetRequirementList() {
           success = false;
         else success = true;
       } else if (error) {
-        setTotal(0);
-        setRequirements([]);
+        if (type == latestTypeRef.current) {
+          setTotal(0);
+          setRequirements([]);
+        }
       }
     } catch (error) {
       console.log(error);
-      setTotal(0);
-      setRequirements([]);
+      if (type == latestTypeRef.current) {
+        setTotal(0);
+        setRequirements([]);
+      }
     } finally {
       setLoading(false);
     }

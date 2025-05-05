@@ -6,6 +6,7 @@ import {
   OrderType,
   RegisterTypeId,
   RequirementType,
+  Usage,
   UserRoles,
 } from "../utilities/types";
 import { NotificationData } from "./MainInterfaces";
@@ -117,7 +118,7 @@ export interface CreateRequirementRequest extends IncludeNotificationRequest {
   durationID?: number;
   allowed_bidersID: number;
   userID: string;
-  used?: boolean;
+  state_article?: Usage;
 }
 
 export interface UploadAvatarRequest extends IncludeNotificationRequest {

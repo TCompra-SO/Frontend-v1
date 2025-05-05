@@ -14,7 +14,6 @@ import {
   ProcessFlag,
   RequirementType,
   ResponseRequestType,
-  Usage,
 } from "../../../utilities/types";
 import { useContext, useEffect, useRef, useState } from "react";
 import {
@@ -271,8 +270,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       }
     }
 
-    if (type == RequirementType.SALE)
-      data.used = values.itemCondition == Usage.USED;
+    if (type == RequirementType.SALE) data.state_article = values.itemCondition;
 
     console.log(values, data);
     props.setApiParams({

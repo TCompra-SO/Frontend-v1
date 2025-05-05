@@ -77,9 +77,9 @@ export default function useUserSocket() {
 
   function handleTokenUpdatedEvent(event: StorageEvent) {
     if (event.key === refreshingTokenKey) {
-      console.log("Actualizado Token, sincronizando...");
+      console.log("Actualizando Token, sincronizando...");
     } else if (event.key === refreshingRefreshTokenKey) {
-      console.log("Actualizado Refresh Token, sincronizando...");
+      console.log("Actualizando Refresh Token, sincronizando...");
     }
   }
 
