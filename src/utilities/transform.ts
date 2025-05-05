@@ -65,6 +65,7 @@ export function transformDataToRequirement(
   req.allowedBidder = data.allowed_bidersID;
   req.image = data.images;
   req.document = data.files;
+  req.used = data.state_article;
   if (data.winOffer) {
     req.offerId = data.winOffer.uid;
     req.offerUserId = data.winOffer.entityID;
@@ -193,6 +194,7 @@ export async function transformFromGetRequirementByIdToRequirement(
       type,
       userName: data.userName,
       subUserName: data.subUserName,
+      used: data.state_article,
     };
     if (data.winOffer) {
       req.offerId = data.winOffer.uid;

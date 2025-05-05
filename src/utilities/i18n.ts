@@ -563,6 +563,7 @@ const resources = {
       activeUser: "Active",
       suspendedUser: "Suspended",
       archivedPl: "Archived",
+      state: "State"
     },
   },
   es: {
@@ -1135,6 +1136,7 @@ const resources = {
       activeUser: "Activo",
       suspendedUser: "Suspendido",
       archivedPl: "Archivados",
+      state: "Estado"
     },
   },
 };

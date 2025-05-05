@@ -2,7 +2,11 @@ import { useTranslation } from "react-i18next";
 import { ListsContext } from "../../../../../contexts/ListsContext";
 import { useContext } from "react";
 import { Requirement } from "../../../../../models/MainInterfaces";
-import { TimeMeasurement } from "../../../../../utilities/types";
+import {
+  RequirementType,
+  TimeMeasurement,
+  Usage,
+} from "../../../../../utilities/types";
 import dayjs from "dayjs";
 import { dateFormat } from "../../../../../utilities/globals";
 
@@ -37,6 +41,14 @@ export default function MoreDetailedRequirement(
           {props.requirement?.coin &&
             currencyData[props.requirement?.coin]?.value}
         </div>
+        {props.requirement?.type == RequirementType.SALE &&
+          (props.requirement?.used == Usage.NEW ||
+            props.requirement?.used == Usage.USED) && (
+            <div className="badge-grey-border">
+              {t("state")}:{" "}
+              {props.requirement?.used == Usage.NEW ? t("new") : t("used")}
+            </div>
+          )}
         {props.requirement?.warranty &&
         props.requirement?.warrantyTime !== undefined ? (
           <div className="badge-grey-border">
