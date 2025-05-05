@@ -224,6 +224,7 @@ export function useFilterSortPaginationForTable() {
     return () => {
       handleSearch.cancel();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSearch = useMemo(
@@ -247,6 +248,7 @@ export function useFilterSortPaginationForTable() {
         },
         tableSearchAfterMseconds
       ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 

@@ -184,5 +184,3 @@ export default function useSystemNotification() {
     getSystemNotification,
   };
 }
-
-//eliminar oferta  en ver ofertas

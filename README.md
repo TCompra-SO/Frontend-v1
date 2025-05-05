@@ -1894,22 +1894,353 @@ Busca chats por palabras clave.
 
 ### requirementHooks
 
+#### `useCancelRequirement()`
+
+Cancela requisitos con motivo opcional.
+
+- Maneja notificaciones de éxito/error
+- Gestiona cola de acciones en contexto LoadingDataContext
+
+#### `useCancelOffer()`
+
+Cancela ofertas con motivo.
+
+- Maneja estado de carga y notificaciones
+- Gestiona cola de acciones en contexto LoadingDataContext
+
+#### `useGetOffersByRequirementId()`
+
+Obtiene ofertas asociadas a un requerimiento.
+
+- Carga datos adicionales de ser necesario (requerimiento, usuarios, órdenes)
+- Transforma y prepara datos para modal
+- Gestiona cola de acciones en contexto LoadingDataContext según el tipo de tabla
+
+#### `useShowDetailOffer()`
+
+Muestra detalles completos de una oferta.
+
+- Obtiene datos básicos de requerimiento asociado
+- Integra información de órden relacionada, si hubiera
+
+#### `useCulminate()`
+
+Obtiene datos básicos de requerimiento/oferta asociada para calificación al usuario y/o culminación de requerimiento.
+
+- Prepara datos para modales de calificación (modal de culminación o modal de calificar cancelado)
+- Maneja tanto requerimientos como ofertas
+
+#### `useGetRequirementList()`
+
+Obtiene lista paginada de requisitos
+
+- Soporta filtrado y maneja paginación
+- Implementa caché de usuarios
+- Retorna éxito/fallo de carga
+
 ### searchTableHooks
+
+#### `useSearchTable()`
+
+Maneja búsqueda y paginación para diferentes tipos de tablas
+
+- Soporta múltiples tipos de datos (requerimientos, ofertas, órdenes, certificados, subusuarios)
+- Implementa lógica de paginación automática
+- Recibe parámetros de filtros y ordenamiento para la solicitud al servidor
+
+#### `useFilterSortPaginationForTable()`
+
+Centraliza gestión de filtros, ordenamiento y paginación de tabla
+
+- Implementa debounce para búsquedas
+- Maneja cambios de paginación, filtros y ordenamiento
+- Sólo permite aplicar un filtro (el más reciente)
 
 ### socketQueueHooks
 
-### subUserHook
+#### `useSocketQueueHook()`
+
+Maneja cola de cambios recibidos por sockets.
+
+- Procesa operaciones CRUD en orden (crear, actualizar, eliminar)
+- Soporta callbacks diferenciados por tipo de operación
+- Implementa sistema de cola FIFO
+
+#### `useActionsForRow()`
+
+Gestiona operaciones sobre filas de tablas.
+
+- Maneja lógica específica para diferentes tipos de tablas
+- Actualiza listas y totales de forma optimizada
+- Implementa:
+  - Inserción de nuevas filas
+  - Actualización de filas existentes
+  - Eliminación de filas
+  - Actualización de campos específicos en fila
 
 ### useApi
 
+Hook genérico para manejar llamadas API
+
+- Centraliza la lógica de solicitudes HTTP
+- Proporciona estados para loading, respuesta y errores
+- Integra interceptores de errores HTTP
+- Permite ejecutar una función después de que la solicitud HTTP se haya completado
+
+### useChangeSubUserStatus
+
+Cambia estado (activo/suspendido) de subusuarios
+
+- Maneja notificaciones de éxito/error
+- Integración con con cola de acciones de LoadingDataContext
+- Gestiona estado de carga durante operación
+
 ### useChat
+
+Gestiona de chats y mensajes.
+
+- **Chats**:
+
+  - Maneja lista de conversaciones
+  - Permite búsqueda y filtrado
+  - Actualiza en tiempo real con sockets
+  - Controla chats leídos/no leídos
+
+- **Mensajes**:
+  - Maneja lista de mensajes
+  - Soporta marcado como leídos/error
+  - Agrega nuevos mensajes en tiempo real
+  - Maneja estados de carga
 
 ### useHandleChangeImage
 
+Verifica si una imagen es una imagen válida y si tiene un peso válido (no debe superar un valor establecido).
+
 ### useSystemNotification
+
+Genera notificaciones del sistema para diferentes acciones realizadas por usuarios, con mensajes personalizados según el contexto. Las notificaciones requieren diferentes parámetros par ser generadas.
 
 ### useWindowSize
 
+Monitoriza y proporciona las dimensiones actuales de la ventana del navegador en tiempo real.
+
 ### utilHooks
 
+#### `useShowNotification()`
+
+Muestra notificaciones básicas (success/error/info/warning) y notificaciones en tiempo real para mensajes de chat.
+
+#### `useShowLoadingMessage()`
+
+Muestra mensajes de carga.
+
+#### `useSearchCompanyByName()`
+
+Realiza búsqueda de empresas por nombre.
+
+#### `useDownloadPdfOrder()`
+
+Descarga PDFs de órdenes de compra/venta.
+
+#### `useRedirectToChat()`
+
+Redirecciona a sección de Chat y pasa datos básicos de chat por ruta.
+
+#### `useGetBannedWords()`
+
+Censura palabras prohibidas, reemplazándolas con asteriscos.
+
 ### validatorHooks
+
+Contiene validadores custom y hooks para reglas de campos específicos.
+
+## Interceptors
+
+### httpErrorInterceptor
+
+Genera un mensaje de error de acuerdo al endpoint y código de error.
+
+## Pages
+
+### AllOffers
+
+Página para mostrar la tabla de todas las ofertas (incluye las del usuario + las de sus subusuarios) y campo para búsqueda.
+
+- Realiza la conexión con el socket para actualizaciones en tiempo real
+- Administra las acciones de la columna de acciones de la tabla
+- Administra la búsqueda, filtros y ordenamiento aplicados a la tabla
+
+### AllPurchaseOrders
+
+Página para mostrar la tabla de todas las órdenes de compra (incluye las del usuario + las de sus subusuarios) y campo para búsqueda.
+
+- Realiza la conexión con el socket para actualizaciones en tiempo real
+- Administra las acciones de la columna de acciones de la tabla
+- Administra la búsqueda, filtros y ordenamiento aplicados a la tabla
+
+### AllRequirements
+
+Página para mostrar la tabla de todos los requerimientos (incluye los del usuario + los de sus subusuarios) y campo para búsqueda.
+
+- Realiza la conexión con el socket para actualizaciones en tiempo real
+- Administra las acciones de la columna de acciones de la tabla
+- Administra la búsqueda, filtros y ordenamiento aplicados a la tabla
+
+### AllSalesOrders
+
+Página para mostrar la tabla de todas las órdenes de venta (incluye las del usuario + las de sus subusuarios) y campo para búsqueda.
+
+- Realiza la conexión con el socket para actualizaciones en tiempo real
+- Administra las acciones de la columna de acciones de la tabla
+- Administra la búsqueda, filtros y ordenamiento aplicados a la tabla
+
+### Certificates
+
+Página para mostrar la tabla de solicitudes de certificación enviadas/recibidas.
+
+- Realiza la conexión con el socket para actualizaciones en tiempo real
+- Administra las acciones de la columna de acciones de la tabla
+- Administra la búsqueda, filtros y ordenamiento aplicados a la tabla
+- Abre modal con datos de solicitud de certificación si existe solicitud para abrir modal
+
+### CertificatesDocs
+
+Página para mostrar la tabla de certificados, campo para búsqueda y botones para agregar certificados y para editar lista de documentos a solicitar.
+
+- Realiza la conexión con el socket para actualizaciones en tiempo real
+- Administra las acciones de la columna de acciones de la tabla
+- Administra la búsqueda, filtros y ordenamiento aplicados a la tabla
+
+### Chat
+
+Página para mostrar la lista de chats, campo para búsqueda y chat abierto.
+
+- Realiza la conexión con el socket para actualizaciones en tiempo real
+- Administra las acciones de chat
+- Permite intercambiar entre lista de chats archivados y no archivados
+
+### Home
+
+Página principal. Muestra la tabla de requerimientos, buscador general, buscador de empresas. Permite cambiar de tipo de tabla (tipo de requerimiento).
+
+- Realiza la conexión con el socket para actualizaciones en tiempo real
+- Administra la búsqueda y filtros aplicados a la tabla
+
+### Login
+
+Componente principal para autenticación (login/registro) que maneja:
+
+- Inicio de sesión de usuarios existentes
+- Registro de nuevos usuarios
+- Recuperación de contraseña
+- Validación de documentos (DNI/RUC)
+
+_Props_
+
+| Nombre                       | Tipo                        | Descripción                                                                                  |
+| ---------------------------- | --------------------------- | -------------------------------------------------------------------------------------------- |
+| `onRegisterSuccess`          | `(docType: string) => void` | Callback que se ejecuta cuando el registro es exitoso, recibe el tipo de documento (DNI/RUC) |
+| `changeIsFromForgotPassword` | `(type: boolean) => void`   | Función para determinar el contenido del modal de validación de código                       |
+| `openValidateCodeModal`      | `() => void`                | Función para abrir el modal de validación de código                                          |
+| `closeLoginModal`            | `() => void`                | Función para cerrar el modal de login                                                        |
+
+### MyProfile
+
+Página para mostrar y editar datos del usuario y cambiar contraseña.
+
+### Offers
+
+Página para mostrar la tabla de las ofertas del usuario y campo para búsqueda.
+
+- Realiza la conexión con el socket para actualizaciones en tiempo real
+- Administra las acciones de la columna de acciones de la tabla
+- Administra la búsqueda, filtros y ordenamiento aplicados a la tabla
+- Abre modal con datos de oferta si existe solicitud para abrir modal
+
+### ProductDetail
+
+Página que muestra los datos de un requerimiento, incluyendo datos de su creador. Permite hacer una oferta a través de un formulario.
+
+### Profile
+
+Componente que permite registrar por primera vez los datos del usuario registrado.
+
+### PurchaseOrders
+
+Página para mostrar la tabla de las órdenes de compra del usuario y campo para búsqueda.
+
+- Realiza la conexión con el socket para actualizaciones en tiempo real
+- Administra las acciones de la columna de acciones de la tabla
+- Administra la búsqueda, filtros y ordenamiento aplicados a la tabla
+- Abre modal de historial si existe solicitud para abrir modal
+
+### Requirements
+
+Página para mostrar la tabla de los requerimientos del usuario y campo para búsqueda.
+
+- Realiza la conexión con el socket para actualizaciones en tiempo real
+- Administra las acciones de la columna de acciones de la tabla
+- Administra la búsqueda, filtros y ordenamiento aplicados a la tabla
+- Abre modal con lista de ofertas asociadas si existe solicitud para abrir modal
+
+### SalesOrders
+
+Página para mostrar la tabla de las órdenes de venta del usuario y campo para búsqueda.
+
+- Realiza la conexión con el socket para actualizaciones en tiempo real
+- Administra las acciones de la columna de acciones de la tabla
+- Administra la búsqueda, filtros y ordenamiento aplicados a la tabla
+- Abre modal de historial si existe solicitud para abrir modal
+
+### Statistics
+
+Página que muestra datos estadísticos de la cuenta del usuario.
+
+### Users
+
+Página para mostrar la tabla de los subusuarios del usuario, campo para búsqueda y botón para agregar nuevo subusuario.
+
+- Realiza la conexión con el socket para actualizaciones en tiempo real
+- Administra las acciones de la columna de acciones de la tabla
+- Administra la búsqueda, filtros y ordenamiento aplicados a la tabla
+
+## Socket
+
+### useChatSocket
+
+Gestiona la conexión con un socket para obtener actualizaciones en tiempo real de chats del usuario y otro socket para obtener actualizaciones en tiempo real del chat actualmente abierto.
+
+- Muestra alertas para nuevos mensajes cuando el usuario no está en la sección de chat
+- Actualiza contadores de mensajes no leídos, lista de chats, estado de lectura de mensaje
+
+### useHomeSocket
+
+Gestiona la conexión con el socket para actualizaciones en tiempo real de lista de requerimientos y recupera dicha lista con paginación.
+
+### useSocket
+
+Gestión avanzada de conexiones WebSocket para múltiples tipos de tablas con:
+
+- Actualizaciones en tiempo real
+- Filtrado y paginación
+- Soporte para múltiples subsistemas
+
+### useTCNotification
+
+Establece conexiones con sockets para recibir notificaciones en tiempo real (tanto globales como personales).
+
+- Manejo de notificaciones: Almacena y gestiona lista de notificaciones, permite cargar más y maneja el estado de notificaciones no leídas
+- Redirecciona a diferentes secciones después de hacer click en notificaciones y abre modales específicos según el tipo de notificación
+
+### useUserSocket
+
+Establece una conexión con el socket para el usuario autenticado.
+
+- Escucha eventos de suspensión/cierre de sesión desde el servidor
+- Implementa lógica para refrescar automáticamente los tokens antes de que expiren
+- Maneja el cierre de sesión cuando los tokens no pueden ser refrescados
+- Coordina el refresco de tokens entre múltiples pestañas
+
+## App
+
+Refresca el access token cuando la aplicación es iniciada y obtiene datos del usuario para guardarlos en redux.

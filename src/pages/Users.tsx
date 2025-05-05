@@ -52,7 +52,7 @@ import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
-import { useChangeSubUserStatus } from "../hooks/subUserHook";
+import { useChangeSubUserStatus } from "../hooks/useChangeSubUserStatus";
 import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
 
