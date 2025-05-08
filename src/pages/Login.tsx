@@ -30,7 +30,7 @@ import InputContainer from "../components/containers/InputContainer";
 import SelectContainer from "../components/containers/SelectContainer";
 import ButtonContainer from "../components/containers/ButtonContainer";
 import { getNameReniecService } from "../services/requests/utilService";
-import { equalServices } from "../utilities/globalFunctions";
+import { equalServices, generateRandomKey } from "../utilities/globalFunctions";
 import ModalContainer from "../components/containers/ModalContainer";
 import { AxiosError } from "axios";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
@@ -161,7 +161,7 @@ export default function Login(props: LoginProps) {
     if (loginType == LoginType.LOGIN) {
       let browserId = localStorage.getItem(browserIdKey);
       if (!browserId) {
-        browserId = crypto.randomUUID();
+        browserId = generateRandomKey();
         localStorage.setItem(browserIdKey, browserId);
       }
       const data: LoginRequest = {
