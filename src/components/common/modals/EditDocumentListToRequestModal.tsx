@@ -36,7 +36,10 @@ export default function EditDocumentListToRequestModal(
   }, [loadingUpdateRequiredDocs]);
 
   function handleSubmit(values: any) {
-    updateRequiredDocsCert(mainUid, censorText(values.list?.trim()));
+    updateRequiredDocsCert(
+      mainUid,
+      values.list ? censorText(values.list.trim()) : values.list
+    );
   }
 
   return (

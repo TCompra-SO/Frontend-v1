@@ -378,7 +378,9 @@ export default function OfferForm(props: OfferFormProps) {
       const data: CreateOfferRequest = {
         name: censorText(values.title.trim()),
         email: values.email,
-        description: censorText(values.description?.trim()),
+        description: values.description
+          ? censorText(values.description.trim())
+          : values.description,
         cityID: values.location,
         deliveryTimeID: values.deliveryTime,
         currencyID: values.currency,
