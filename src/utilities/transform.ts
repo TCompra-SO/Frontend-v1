@@ -58,7 +58,7 @@ export function transformDataToRequirement(
   req.subUser = undefined;
   req.deliveryTime = data.submission_date;
   req.type = type;
-  req.warrantyTime = data.duration;
+  req.warrantyTime = data.durationID;
   req.used = data.used ? Usage.USED : Usage.NEW;
   req.expirationDate = data.completion_date;
   req.paymentMethod = data.payment_methodID;
@@ -182,7 +182,7 @@ export async function transformFromGetRequirementByIdToRequirement(
       expirationDate: data.completion_date,
       deliveryTime: data.submission_dateID,
       warranty: data.warranty,
-      warrantyTime: data.duration,
+      warrantyTime: data.durationID,
       allowedBidder: data.allowed_bidersID,
       publishDate: data.publish_date,
       state: data.stateID,
