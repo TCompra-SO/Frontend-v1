@@ -266,20 +266,14 @@ export function useGetBannedWords() {
   }
 
   function censorText(input: string) {
-    const words = input.match(/\p{L}+/gu) || [];
-    return words
-      .map((word) => {
-        const normalizedLoose = collapseRepeatsLoose(normalizeSpanish(word));
-        const normalizedSpecial = collapseRepeatsSpecial(
-          normalizeSpanish(word)
-        );
-        const match = bannedWords.find(
-          (bw) => normalizedLoose === bw || normalizedSpecial === bw
-        );
-        if (match) return "*".repeat(word.length);
-        return word;
-      })
-      .join(" ");
+    return input.replace(/\p{L}+/gu, (word) => {
+      const normalizedLoose = collapseRepeatsLoose(normalizeSpanish(word));
+      const normalizedSpecial = collapseRepeatsSpecial(normalizeSpanish(word));
+      const match = bannedWords.find(
+        (bw) => normalizedLoose === bw || normalizedSpecial === bw
+      );
+      return match ? "*".repeat(word.length) : word;
+    });
   }
 
   return { getBannedWords, censorText };
