@@ -362,6 +362,7 @@ const resources = {
       unavailableRequiredDocumentsCert: 'The required document list is not yet available',
       messageSentSuccessfully: 'Message sent successfully',
       generatingPDF: 'Generating PDF...',
+      chatBotGreeting: 'Hello, how can I help you?',
       // Other
       characters: "characters",
       yes: "Yes",
@@ -563,7 +564,8 @@ const resources = {
       activeUser: "Active",
       suspendedUser: "Suspended",
       archivedPl: "Archived",
-      state: "State"
+      state: "State",
+      chatBotTooltip: 'Chat with us'
     },
   },
   es: {
@@ -933,6 +935,7 @@ const resources = {
       unavailableRequiredDocumentsCert: 'La lista de documentos requeridos aún no está disponible',
       messageSentSuccessfully: 'Mensaje enviado exitosamente',
       generatingPDF: 'Generando PDF...',
+      chatBotGreeting: 'Hola, ¿cómo puedo ayudarte?',
       // Other
       characters: "caracteres",
       yes: "Sí",
@@ -1136,7 +1139,8 @@ const resources = {
       activeUser: "Activo",
       suspendedUser: "Suspendido",
       archivedPl: "Archivados",
-      state: "Estado"
+      state: "Estado",
+      chatBotTooltip: "Chatea con nosotros"
     },
   },
 };

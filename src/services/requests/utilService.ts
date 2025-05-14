@@ -88,3 +88,12 @@ export function userRolesService(): HttpService {
     type: "UT-US-RO",
   };
 }
+
+export function chatBotService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.util}${
+      ApiRoutes.util.chatBot
+    }`,
+    type: "UT-CH-BO",
+  };
+}

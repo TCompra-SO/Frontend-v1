@@ -418,7 +418,10 @@ export default function ChatBody(props: ChatBodyProps) {
                     const isLast = index === array.length - 1;
                     const messageNode = (
                       <ChatBodyMessage
-                        message={msg}
+                        message={{
+                          isChatMessage: true,
+                          data: msg,
+                        }}
                         userImage={props.chatData.userImage}
                         userName={props.chatData.userName}
                       />

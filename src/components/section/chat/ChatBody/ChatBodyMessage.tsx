@@ -1,7 +1,10 @@
 import dayjs from "dayjs";
 import { hourFormatChatBody } from "../../../../utilities/globals";
 import { openDocument } from "../../../../utilities/globalFunctions";
-import { ChatMessage } from "../../../../models/MainInterfaces";
+import {
+  BasicChatMessage,
+  ChatMessage,
+} from "../../../../models/MainInterfaces";
 import {
   ImagePreviewGroupContainer,
   ImagePreviewGroupContainerRef,
@@ -11,7 +14,15 @@ import { useSelector } from "react-redux";
 import { MainState } from "../../../../models/Redux";
 
 interface ChatBodyMessageProps {
-  message: ChatMessage;
+  message:
+    | {
+        isChatMessage: true;
+        data: ChatMessage;
+      }
+    | {
+        isChatMessage: false;
+        data: BasicChatMessage;
+      };
   userImage?: string;
   userName?: string;
 }
@@ -19,19 +30,21 @@ interface ChatBodyMessageProps {
 export default function ChatBodyMessage(props: ChatBodyMessageProps) {
   const childRef = useRef<ImagePreviewGroupContainerRef>(null);
   const uid = useSelector((state: MainState) => state.user.uid);
-  const isInputMsg = uid != props.message.userId;
+  const isInputMsg = uid != props.message.data.userId;
   const [emptyImages, setEmptyImages] = useState(true);
   const [emptyDocs, setEmptyDocs] = useState(true);
 
   useEffect(() => {
-    setEmptyImages(
-      !props.message.images ||
-        (props.message.images && !props.message.images.length)
-    );
-    setEmptyDocs(
-      !props.message.documents ||
-        (props.message.documents && !props.message.documents.length)
-    );
+    if (props.message.isChatMessage) {
+      setEmptyImages(
+        !props.message.data.images ||
+          (props.message.data.images && !props.message.data.images.length)
+      );
+      setEmptyDocs(
+        !props.message.data.documents ||
+          (props.message.data.documents && !props.message.data.documents.length)
+      );
+    }
   }, [props.message]);
 
   function handleOpenPreview() {
@@ -44,27 +57,36 @@ export default function ChatBodyMessage(props: ChatBodyMessageProps) {
 
   return (
     <>
-      <ImagePreviewGroupContainer ref={childRef} image={props.message.images} />
+      {props.message.isChatMessage && (
+        <ImagePreviewGroupContainer
+          ref={childRef}
+          image={props.message.data.images}
+        />
+      )}
       <div
         className={`t-flex chat-body-message ${
           isInputMsg ? "txt-entrada" : "txt-salida"
         }`}
-        data-timestamp={props.message.timestamp}
-        data-message-id={props.message.uid}
+        data-timestamp={
+          props.message.isChatMessage ? props.message.data.timestamp : ""
+        }
+        data-message-id={props.message.data.uid}
       >
-        {isInputMsg ? (
-          props.userImage ? (
-            <img src={props.userImage} className="useri-chat" />
+        {props.message.isChatMessage ? (
+          isInputMsg ? (
+            props.userImage ? (
+              <img src={props.userImage} className="useri-chat" />
+            ) : (
+              <div className="inicial-chat-2">
+                {props.userName && props.userName.length > 0
+                  ? props.userName[0]
+                  : null}
+              </div>
+            )
           ) : (
-            <div className="inicial-chat-2">
-              {props.userName && props.userName.length > 0
-                ? props.userName[0]
-                : null}
-            </div>
+            emptyImages && emptyDocs && <div className="space-img"></div>
           )
-        ) : (
-          emptyImages && emptyDocs && <div className="space-img"></div>
-        )}
+        ) : null}
         <div
           className={
             !emptyImages
@@ -79,58 +101,82 @@ export default function ChatBodyMessage(props: ChatBodyMessageProps) {
               ? "mensaje-entrada"
               : "mensaje-salida"
           }
+          style={!props.message.isChatMessage ? { marginLeft: 0 } : undefined}
         >
-          {!emptyImages && props.message.images ? (
-            props.message.images.map((img) => (
-              <img
-                src={img}
-                alt=""
-                className="image-send"
-                key={img}
-                onClick={handleOpenPreview}
-                style={{ cursor: "pointer" }}
-              />
-            ))
-          ) : props.message.documents && !emptyDocs ? (
-            props.message.documents.map((doc) => (
-              <div
-                className="file-min-2 gap-5"
-                onClick={() => openDocument(doc)}
-                style={{ cursor: "pointer" }}
-                key={doc}
-              >
-                <i className="fa-regular fa-file-doc"></i>
+          {props.message.isChatMessage ? (
+            !emptyImages && props.message.data.images ? (
+              props.message.data.images.map((img) => (
+                <img
+                  src={img}
+                  alt=""
+                  className="image-send"
+                  key={img}
+                  onClick={handleOpenPreview}
+                  style={{ cursor: "pointer" }}
+                />
+              ))
+            ) : props.message.data.documents && !emptyDocs ? (
+              props.message.data.documents.map((doc) => (
                 <div
-                  className="text-truncate"
-                  style={{ fontSize: "14px", width: "200px" }}
+                  className="file-min-2 gap-5"
+                  onClick={() => openDocument(doc)}
+                  style={{ cursor: "pointer" }}
+                  key={doc}
                 >
-                  aaaaaaaaaaaaa ghjgjhggj ghghjg jjhg.pdf
+                  <i className="fa-regular fa-file-doc"></i>
+                  <div
+                    className="text-truncate"
+                    style={{ fontSize: "14px", width: "200px" }}
+                  >
+                    aaaaaaaaaaaaa ghjgjhggj ghghjg jjhg.pdf
+                  </div>
                 </div>
-              </div>
-            ))
+              ))
+            ) : (
+              <div>{props.message.data.message}</div>
+            )
           ) : (
-            <div>{props.message.message}</div>
+            <div>{props.message.data.message}</div>
           )}
-          <span className={!emptyImages ? "mensaje-hora-img" : "mensaje-hora"}>
-            {dayjs(props.message.timestamp).format(hourFormatChatBody)}{" "}
-            <i
-              className={`${
-                props.message.error
-                  ? "fa-regular fa-circle-exclamation"
-                  : props.message.waiting
-                  ? "fa-regular fa-clock"
-                  : !isInputMsg //
-                  ? props.message.read
-                    ? "fa-solid fa-check-double"
-                    : "fa-solid fa-check"
-                  : null //
-              }`}
-            ></i>
-          </span>
+          {props.message.isChatMessage ? (
+            <span
+              className={!emptyImages ? "mensaje-hora-img" : "mensaje-hora"}
+            >
+              {dayjs(props.message.data.timestamp).format(hourFormatChatBody)}{" "}
+              <i
+                className={`${
+                  props.message.data.error
+                    ? "fa-regular fa-circle-exclamation"
+                    : props.message.data.waiting
+                    ? "fa-regular fa-clock"
+                    : !isInputMsg //
+                    ? props.message.data.read
+                      ? "fa-solid fa-check-double"
+                      : "fa-solid fa-check"
+                    : null //
+                }`}
+              ></i>
+            </span>
+          ) : (
+            <span
+              className={!emptyImages ? "mensaje-hora-img" : "mensaje-hora"}
+            >
+              <i
+                className={`${
+                  props.message.data.error
+                    ? "fa-regular fa-circle-exclamation"
+                    : props.message.data.waiting
+                    ? "fa-regular fa-clock"
+                    : null
+                }`}
+              ></i>
+            </span>
+          )}
         </div>
-        {isInputMsg && emptyImages && emptyDocs && (
-          <div className="space-img"></div>
-        )}
+        {props.message.isChatMessage &&
+          isInputMsg &&
+          emptyImages &&
+          emptyDocs && <div className="space-img"></div>}
       </div>
     </>
   );

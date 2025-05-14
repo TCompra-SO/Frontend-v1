@@ -410,7 +410,7 @@ export default function ModalContainer(props: ModalContainerProps) {
   return (
     <NoContentModalContainer
       {...props}
-      destroyOnClose={true}
+      destroyOnHidden={true}
       width={ModalWidth[props.content.type]}
       open={props.isOpen}
       showFooter={props.showFooter}

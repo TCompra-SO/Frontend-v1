@@ -1221,11 +1221,11 @@ Componente para renderizar mensajes individuales en un chat.
 
 _Props_
 
-| Nombre       | Tipo          | Descripción                                                               |
-| ------------ | ------------- | ------------------------------------------------------------------------- |
-| `message`    | `ChatMessage` | Objeto con los datos del mensaje (contenido, imágenes, documentos, etc.). |
-| `userImage?` | `string`      | URL de la imagen del usuario remitente.                                   |
-| `userName?`  | `string`      | Nombre del usuario remitente.                                             |
+| Nombre       | Tipo                                             | Descripción                                                                                                                                                        |
+| ------------ | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `message`    | `{ isChatMessage: true; data: ChatMessage ... }` | Objeto con los datos del mensaje (contenido, imágenes, documentos, etc.) si es de tipo `ChatMessage`. El tipo `BasicChatMessage` se usa para mensajes del chatbot. |
+| `userImage?` | `string`                                         | URL de la imagen del usuario remitente.                                                                                                                            |
+| `userName?`  | `string`                                         | Nombre del usuario remitente.                                                                                                                                      |
 
 ###### ChatGallery
 
@@ -1302,7 +1302,7 @@ _Props_
 
 ##### CreateRequirementFloatButton
 
-Componente para mostrar una lista de botones flotantes. Además del botón para abrir formulario para crear requerimiento, se muestra condicionalmente botones para ir a home y a la sección de chat.
+Componente para mostrar una lista de botones flotantes. Además del botón para abrir formulario para crear requerimiento, se muestra condicionalmente botones para ir a home, a la sección de chat y un botón para abrir el chat bot.
 
 #### Footer
 

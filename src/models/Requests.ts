@@ -315,3 +315,7 @@ export interface GetUnreadNotificationsCounterRequest {
   receiverId: string;
   lastSession: string;
 }
+
+export interface ChatBotRequest {
+  message: string;
+}

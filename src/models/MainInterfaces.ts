@@ -278,17 +278,20 @@ export interface ChatListData extends BasicChatListData {
   numUnreadMessages?: number;
 }
 
-export interface ChatMessage {
-  chatId: string;
+export interface BasicChatMessage {
   uid: string;
   userId: string;
+  error?: boolean;
+  waiting?: boolean;
   message?: string;
+}
+
+export interface ChatMessage extends BasicChatMessage {
+  chatId: string;
   timestamp: string;
   read: boolean;
   images?: string[];
   documents?: string[];
-  error?: boolean;
-  waiting?: boolean;
 }
 
 export interface SocketChatMessage extends ChatMessage {

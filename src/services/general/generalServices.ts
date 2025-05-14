@@ -2,6 +2,7 @@ import { BaseUser } from "../../models/MainInterfaces";
 import { UserState } from "../../models/Redux";
 import {
   ArchiveChatRequest,
+  ChatBotRequest,
   CreateChatRequest,
   CreateMessageRequest,
   GetChatStateRequest,
@@ -56,6 +57,7 @@ import {
   getUnreadNotificationsCounterService,
   readNotificationService,
 } from "../requests/notificationService";
+import { chatBotService } from "../requests/utilService";
 
 export async function getBaseUserForUserSubUser(
   uid: string,
@@ -517,6 +519,25 @@ export async function readNotification(notificationId: string) {
 
   return {
     responseData,
+    error,
+    errorMsg,
+  };
+}
+
+export async function sendToChatBot(message: string) {
+  const { responseData, error, errorMsg } = await makeRequest<ChatBotRequest>({
+    service: chatBotService(),
+    method: "post",
+    dataToSend: {
+      message,
+    },
+  });
+
+  return {
+    reply:
+      typeof responseData?.reply === "string"
+        ? (responseData.reply as string)
+        : null,
     error,
     errorMsg,
   };

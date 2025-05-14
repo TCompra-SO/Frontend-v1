@@ -1,7 +1,7 @@
-import { FloatButton } from "antd";
+import { FloatButton, Popover } from "antd";
 import { useTranslation } from "react-i18next";
 import NoContentModalContainer from "../../containers/NoContentModalContainer";
-import { lazy, useContext, useEffect, useState } from "react";
+import { lazy, useContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { isChat, isHome } from "../../../utilities/globalFunctions";
 import { pageRoutes } from "../../../utilities/routes";
@@ -17,6 +17,7 @@ import useShowNotification, {
 } from "../../../hooks/utilHooks";
 import { ProcessFlag, RequirementType } from "../../../utilities/types";
 import { LoadingDataContext } from "../../../contexts/LoadingDataContext";
+import { ChatBot, ChatBotRef } from "../../common/utils/ChatBot";
 
 const CreateRequirement = lazy(
   () => import("../create-requirement/CreateRequirement")
@@ -43,6 +44,11 @@ export default function CreateRequirementFloatButton() {
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
 
   const [avoidClosingModal, setAvoidClosingModal] = useState(false);
+  const [showChatBotTooltip, setShowChatBotTooltip] = useState<
+    boolean | undefined
+  >(undefined);
+  const [openChatBot, setOpenChatBot] = useState(false);
+  const chatBotRef = useRef<ChatBotRef>(null);
 
   useEffect(() => {
     return () => {
@@ -209,6 +215,11 @@ export default function CreateRequirementFloatButton() {
     setAvoidClosingModal(false);
   }
 
+  function closeChatBot() {
+    setOpenChatBot(false);
+    if (chatBotRef.current) chatBotRef.current.scrollToBottom();
+  }
+
   return (
     <>
       {!isLoading &&
@@ -223,7 +234,7 @@ export default function CreateRequirementFloatButton() {
                     style={{ marginLeft: "-1px" }}
                   ></i>
                 }
-                tooltip={t("home")}
+                tooltip={{ title: t("home"), placement: "left" }}
                 type="primary"
                 onClick={() => navigate(pageRoutes.home)}
               />
@@ -234,7 +245,7 @@ export default function CreateRequirementFloatButton() {
                   <FloatButton
                     icon={<i className="fa-regular fa-comment" />}
                     type="primary"
-                    tooltip={t("chat")}
+                    tooltip={{ title: t("chat"), placement: "left" }}
                     onClick={() => navigate(pageRoutes.chat)}
                   />
                 )}
@@ -242,11 +253,53 @@ export default function CreateRequirementFloatButton() {
                 <FloatButton
                   icon={<i className="fa-solid fa-plus" />}
                   type="primary"
-                  tooltip={t("createRequirement")}
+                  tooltip={{ title: t("createRequirement"), placement: "left" }}
                   onClick={() => setIsOpenModal(true)}
                 />
               </>
             )}
+            <Popover
+              placement="rightBottom"
+              classNames={{
+                root: "chatbot-popover",
+              }}
+              arrow={false}
+              content={
+                <ChatBot
+                  ref={chatBotRef}
+                  key={openChatBot ? "open" : "closed"}
+                  onClose={() => closeChatBot()}
+                  isOpen={openChatBot}
+                ></ChatBot>
+              }
+              trigger={"click"}
+              onOpenChange={(visible) => {
+                if (visible) {
+                  setShowChatBotTooltip(false);
+                  setOpenChatBot(visible);
+                } else {
+                  setShowChatBotTooltip(undefined);
+                  closeChatBot();
+                }
+              }}
+              open={openChatBot}
+            >
+              <FloatButton
+                icon={
+                  <i
+                    className="fa-regular fa-comments-question"
+                    style={{ fontSize: "0.9em", marginLeft: "-2px" }}
+                  />
+                }
+                type="primary"
+                tooltip={{
+                  title: t("chatBotTooltip"),
+                  placement: "left",
+                  open: showChatBotTooltip,
+                }}
+                onClick={() => setOpenChatBot(true)}
+              />
+            </Popover>
           </FloatButton.Group>
 
           {isLoggedIn && (

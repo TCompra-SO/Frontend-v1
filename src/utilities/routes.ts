@@ -42,6 +42,7 @@ export const ApiRoutes = {
     refreshRefreshToken: "refreshToken",
   },
   util: {
+    chatBot: "chatBot/",
     countries: "countries/",
     categories: "categories/",
     userRoles: "userRoles/",

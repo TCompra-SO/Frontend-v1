@@ -148,7 +148,11 @@ import {
   searchSalesOrdersByClientService,
   searchSalesOrdersByProviderService,
 } from "../services/requests/sale/salesOrderService";
-import { UserCounters } from "../models/MainInterfaces";
+import {
+  BasicChatMessage,
+  ChatMessage,
+  UserCounters,
+} from "../models/MainInterfaces";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -974,4 +978,11 @@ export function collapseRepeatsSpecial(text: string) {
 // Contar cuántas veces aparece un caracter en un string
 export function countChar(text: string, char: string) {
   return [...text].filter((c) => c === char).length;
+}
+
+// Type guard
+export function isChatMessage(
+  obj: ChatMessage | BasicChatMessage
+): obj is ChatMessage {
+  return "chatId" in obj;
 }

@@ -230,3 +230,14 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
 .notification-popover .ant-popover-title {
   padding: 12px 12px 0 12px;
 }
+
+/* Popover para chatbot */
+.chatbot-popover .ant-popover-content .ant-popover-inner {
+  background: transparent;
+  padding: 0;
+  box-shadow: none !important;
+}
+
+.chatbot-popover .ant-popover-content .ant-popover-inner-content {
+  background: transparent;
+}

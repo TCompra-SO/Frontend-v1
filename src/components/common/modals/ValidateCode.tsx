@@ -289,8 +289,8 @@ export default function ValidateCode({
 
   return (
     <NoContentModalContainer
-      centered
-      destroyOnClose
+      centered={true}
+      destroyOnHidden={true}
       open={isOpen}
       closable={false}
       maskClosable={false}

@@ -18,7 +18,7 @@ export default function TermsAndConditionsModal(
 
   return (
     <NoContentModalContainer
-      destroyOnClose={true}
+      destroyOnHidden={true}
       width={mediumPlusModalWidth}
       open={props.isOpen}
       style={mainModalScrollStyle}
