@@ -267,9 +267,7 @@ export default function CreateRequirementFloatButton() {
               content={
                 <ChatBot
                   ref={chatBotRef}
-                  key={openChatBot ? "open" : "closed"}
                   onClose={() => closeChatBot()}
-                  isOpen={openChatBot}
                 ></ChatBot>
               }
               trigger={"click"}

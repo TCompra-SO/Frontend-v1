@@ -12,7 +12,6 @@ import { primaryColor } from "../../../utilities/colors";
 
 interface ChatBotProps {
   onClose: () => void;
-  isOpen: boolean;
 }
 
 export interface ChatBotRef {
@@ -36,6 +35,7 @@ export const ChatBot = forwardRef<ChatBotRef, ChatBotProps>(function ChatBot(
     },
   ]);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [disableSendButton, setDisableSendButton] = useState(false);
 
   useImperativeHandle(ref, () => ({
     scrollToBottom,
@@ -70,7 +70,9 @@ export const ChatBot = forwardRef<ChatBotRef, ChatBotProps>(function ChatBot(
         waiting: true,
       };
       setMessages((prev) => [userMsg, ...prev]);
+      setDisableSendButton(true);
       const { reply, error } = await sendToChatBot(msg);
+      setDisableSendButton(false);
       if (reply !== null) {
         updatMessage(msgUid);
         if (reply) {
@@ -164,11 +166,12 @@ export const ChatBot = forwardRef<ChatBotRef, ChatBotProps>(function ChatBot(
             placeholder={t("message")}
             onChange={(e) => setMessage(e.currentTarget.value)}
             value={message}
-            onPressEnter={sendMsg}
+            onPressEnter={disableSendButton ? undefined : sendMsg}
           />
           <i
             className="fa-regular fa-paper-plane-top mensaje-send"
-            onClick={sendMsg}
+            onClick={disableSendButton ? undefined : sendMsg}
+            style={disableSendButton ? { color: "#d3d8db" } : undefined}
           ></i>
         </div>
       </div>

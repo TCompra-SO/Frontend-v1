@@ -927,6 +927,22 @@ _Props_
 | `image`  | `string \| string[] \| undefined` | URL(s) de la imagen a mostrar. Puede ser string, array o undefined.         |
 | `isUser` | `boolean`                         | Determina la imagen por defecto a usar (true=usuario, false=requerimiento). |
 
+##### CHatBot
+
+Componente que maneja el chatbot de la aplicación. Permite enviar mensajes y mantiene el contenido del chat al cambiar de ruta.
+
+_Props_
+
+| Nombre    | Tipo         | Descripción                  |
+| --------- | ------------ | ---------------------------- |
+| `onClose` | `() => void` | Función para cerrar el chat. |
+
+_Ref_
+
+| Nombre           | Tipo         | Descripción                             |
+| ---------------- | ------------ | --------------------------------------- |
+| `scrollToBottom` | `() => void` | Scrollea hasta el mensaje más reciente. |
+
 ##### ContentHeader
 
 Componente para encabezados de sección con título y contenido adicional.
