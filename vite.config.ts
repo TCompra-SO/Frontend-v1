@@ -6,5 +6,8 @@ export default defineConfig({
   server: {
     host: true, // Permite conexiones desde cualquier IP
     port: 3000, // El puerto en el que Vite está corriendo
+    hmr: {
+      overlay: false,
+    },
   },
 });
