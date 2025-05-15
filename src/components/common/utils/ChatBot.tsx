@@ -145,6 +145,25 @@ export const ChatBot = forwardRef<ChatBotRef, ChatBotProps>(function ChatBot(
             style={{ width: "100%", maxHeight: "212px" }}
             ref={containerRef}
           >
+            {disableSendButton && (
+              <ChatBodyMessage
+                key={"fm1-typing-dots"}
+                message={{
+                  data: {
+                    uid: "fm1-typing-dots",
+                    userId: botId,
+                    message: (
+                      <div className="typing-indicator">
+                        <div className="dot-ti"></div>
+                        <div className="dot-ti"></div>
+                        <div className="dot-ti"></div>
+                      </div>
+                    ),
+                  },
+                  isChatMessage: false,
+                }}
+              />
+            )}
             {messages.map((msg) => {
               const node = (
                 <ChatBodyMessage

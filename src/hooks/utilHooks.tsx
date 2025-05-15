@@ -64,7 +64,11 @@ export default function useShowNotification() {
         senderImage = params.content.userImage;
         senderName = params.content.userName;
         callback = () => params.onClickCallback(params.content);
-        if (params.content.message) description = params.content.message;
+        if (
+          params.content.message &&
+          typeof params.content.message === "string"
+        )
+          description = params.content.message;
         else if (params.content.images)
           description = `${t("chatMessageImagesDocs")} ${
             params.content.images.length

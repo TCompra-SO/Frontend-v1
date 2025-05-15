@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import {
   OfferState,
   PurchaseOrderState,
@@ -283,7 +284,7 @@ export interface BasicChatMessage {
   userId: string;
   error?: boolean;
   waiting?: boolean;
-  message?: string;
+  message?: ReactNode;
 }
 
 export interface ChatMessage extends BasicChatMessage {
