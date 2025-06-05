@@ -6,6 +6,7 @@ import { useContext } from "react";
 import dayjs from "dayjs";
 import { dateFormat, defaultCountry } from "../../../../../utilities/globals";
 import { ListsContext } from "../../../../../contexts/ListsContext";
+import { getCityObj } from "../../../../../utilities/globalFunctions";
 
 interface UserDataRequirementProps {
   user: BaseUser | undefined;
@@ -16,6 +17,7 @@ export default function UserDataRequirement(props: UserDataRequirementProps) {
   const { t } = useTranslation();
   const context = useContext(ListsContext);
   const { countryData, categoryData } = context;
+  const cities = getCityObj(countryData, defaultCountry);
 
   return (
     <div className="card-white cbl-2">
@@ -83,11 +85,7 @@ export default function UserDataRequirement(props: UserDataRequirementProps) {
             <i className="fas fa-angle-right i-vi"></i> {t("location")}:
           </div>
           <div className="dato-detalle-2 text-truncate">
-            {props.requirement &&
-              countryData &&
-              countryData[defaultCountry] &&
-              countryData[defaultCountry].cities[props.requirement?.location]
-                ?.value}
+            {props.requirement && cities[props.requirement?.location]?.value}
           </div>
         </div>
         {/* <div className="t-flex gap-10">

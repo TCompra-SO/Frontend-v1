@@ -7,9 +7,12 @@ import {
   defaultCountry,
   locationColumnKey,
 } from "../../../../utilities/globals";
-import { IdValueMap, IdValueObj } from "../../../../models/Interfaces";
+import { IdValueMap } from "../../../../models/Interfaces";
 import { FieldSort } from "../../../../models/Requests";
-import { getSortOrderFromFieldSort } from "../../../../utilities/globalFunctions";
+import {
+  getCityObj,
+  getSortOrderFromFieldSort,
+} from "../../../../utilities/globalFunctions";
 
 export default function LocationColumn(
   hidden: boolean = false,
@@ -23,14 +26,7 @@ export default function LocationColumn(
 
   useEffect(() => {
     if (countryData && countryData[defaultCountry]) {
-      const loadedCities = countryData[defaultCountry].cities.reduce(
-        (acc: IdValueMap, { id, value }: IdValueObj) => {
-          acc[id] = { value };
-          return acc;
-        },
-        {}
-      );
-      setCities(loadedCities);
+      setCities(getCityObj(countryData, defaultCountry));
     }
   }, [countryData]);
 

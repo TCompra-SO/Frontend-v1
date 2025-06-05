@@ -6,9 +6,10 @@ import { TimeMeasurement, EntityType } from "../../../../utilities/types";
 import { ListsContext } from "../../../../contexts/ListsContext";
 import { useContext, useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { IdValueMap, IdValueObj } from "../../../../models/Interfaces";
+import { IdValueMap } from "../../../../models/Interfaces";
 import PriceInHeader from "../../utils/PriceInHeader";
 import ImagesAndDocs from "../../utils/ImagesAndDocs";
+import { getCityObj } from "../../../../utilities/globalFunctions";
 
 interface RequirementOfferListItemBodyProps {
   offer: Offer;
@@ -26,14 +27,7 @@ export default function RequirementOfferListItemBody(
 
   useEffect(() => {
     if (countryData && countryData[defaultCountry]) {
-      const loadedCities = countryData[defaultCountry].cities.reduce(
-        (acc: IdValueMap, { id, value }: IdValueObj) => {
-          acc[id] = { value };
-          return acc;
-        },
-        {}
-      );
-      setCities(loadedCities);
+      setCities(getCityObj(countryData, defaultCountry));
     }
   }, [countryData]);
 

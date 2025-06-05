@@ -707,14 +707,14 @@ export default function GeneralTable(props: GeneralTableProps) {
         props.content.fieldSort
       ),
       GeneralColumnNumber(
-        t("serviceAbbrev"),
+        t("services"),
         numServicesColumnKey,
         visibility[TableColumns.SERVICES],
         85,
         props.content.fieldSort
       ),
       GeneralColumnNumber(
-        t("salesAbbrev"),
+        t("sales"),
         numSalesColumnKey,
         visibility[TableColumns.SALES],
         85,

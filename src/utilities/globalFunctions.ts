@@ -214,8 +214,17 @@ export function getListForSelectIdValueMap(data: IdValueMap) {
 }
 
 // Retorna la lista de ciudades para select de Antd
-export function getCityListForSelect(countryData: CountryCities) {
-  const showCountry = countryData[defaultCountry]
+export function getCityListForSelect(
+  countryData: CountryCities,
+  countryToShow?: string
+) {
+  const showCountry = countryToShow
+    ? countryData[countryToShow]
+      ? countryToShow
+      : countryData[defaultCountry]
+      ? defaultCountry
+      : Object.keys(countryData)[0]
+    : countryData[defaultCountry]
     ? defaultCountry
     : Object.keys(countryData)[0];
 
@@ -224,6 +233,29 @@ export function getCityListForSelect(countryData: CountryCities) {
         return { label: cit.value, value: cit.id };
       })
     : [];
+}
+
+// Retorna obj para ciudades de país
+export function getCityObj(countryData: CountryCities, countryToShow?: string) {
+  const showCountry = countryToShow
+    ? countryData[countryToShow]
+      ? countryToShow
+      : countryData[defaultCountry]
+      ? defaultCountry
+      : Object.keys(countryData)[0]
+    : countryData[defaultCountry]
+    ? defaultCountry
+    : Object.keys(countryData)[0];
+
+  const loadedCities = countryData[showCountry].cities.reduce(
+    (acc: IdValueMap, { id, value }: IdValueObj) => {
+      acc[id] = { value };
+      return acc;
+    },
+    {}
+  );
+
+  return loadedCities;
 }
 
 // Retorna la llave del nombre del tipo de requerimiento

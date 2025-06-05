@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import FrontImage from "../../utils/FrontImage";
 import RequirementInfoNoTags from "../requirementDetail/RequirementInfoNoTags";
 import { useContext, useEffect, useState } from "react";
-import { IdValueMap, IdValueObj } from "../../../../models/Interfaces";
+import { IdValueMap } from "../../../../models/Interfaces";
 import { ListsContext } from "../../../../contexts/ListsContext";
 import {
   dateFormat,
@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 import { RequirementType } from "../../../../utilities/types";
 import { useRedirectToChat } from "../../../../hooks/utilHooks";
 import useWindowSize from "../../../../hooks/useWindowSize";
+import { getCityObj } from "../../../../utilities/globalFunctions";
 
 interface OfferDetailModalProps {
   offer: Offer;
@@ -39,14 +40,7 @@ export default function OfferDetailModal(props: OfferDetailModalProps) {
 
   useEffect(() => {
     if (countryData && countryData[defaultCountry]) {
-      const loadedCities = countryData[defaultCountry].cities.reduce(
-        (acc: IdValueMap, { id, value }: IdValueObj) => {
-          acc[id] = { value };
-          return acc;
-        },
-        {}
-      );
-      setCities(loadedCities);
+      setCities(getCityObj(countryData, defaultCountry));
     }
   }, [countryData]);
 

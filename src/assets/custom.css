@@ -283,3 +283,15 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
     opacity: 1;
   }
 }
+
+/* Reducir padding en head de table */
+.ant-table-wrapper .ant-table-thead > tr > th {
+  padding: 16px 10px;
+}
+
+/* Truncar nombre de columna */
+.ant-table-column-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

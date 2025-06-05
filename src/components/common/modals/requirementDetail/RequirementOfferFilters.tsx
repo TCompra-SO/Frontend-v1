@@ -8,11 +8,14 @@ import {
 } from "../../../../utilities/globals";
 import { useContext, useEffect, useState } from "react";
 import { CommonFilter } from "../../../../utilities/types";
-import { IdValueObj, OfferFilters } from "../../../../models/Interfaces";
+import { OfferFilters } from "../../../../models/Interfaces";
 import { requirementDetailContext } from "../../../../contexts/RequirementDetailContext";
 import { useTranslation } from "react-i18next";
 import { ListsContext } from "../../../../contexts/ListsContext";
-import { getListForSelectIdValueMap } from "../../../../utilities/globalFunctions";
+import {
+  getCityListForSelect,
+  getListForSelectIdValueMap,
+} from "../../../../utilities/globalFunctions";
 import { filterLabels } from "../../../../utilities/colors";
 
 interface RequirementOfferFiltersProps {
@@ -135,13 +138,7 @@ export default function RequirementOfferFilters(
                     <SelectContainer
                       disabled={props.fromPurchaseOrder}
                       options={[{ label: t("all"), value: allSelect }].concat(
-                        Object.keys(countryData).length > 0
-                          ? countryData[showCountry].cities.map(
-                              (cit: IdValueObj) => {
-                                return { label: cit.value, value: cit.id };
-                              }
-                            )
-                          : []
+                        getCityListForSelect(countryData, showCountry)
                       )}
                       className="form-control"
                       style={{ marginTop: "5px" }}
