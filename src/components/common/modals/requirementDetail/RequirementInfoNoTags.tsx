@@ -29,7 +29,7 @@ export default function RequirementInfoNoTags(
         </h2>
       )}
 
-      <div className="t-flex tags-req">
+      <div className={`t-flex ${props.forHome ? "tags-req-2" : "tags-req"}`}>
         <Tooltip title={props.user.name}>
           <div
             className={`${props.forHome ? "" : "badge-default "}text-truncate`}
@@ -64,6 +64,7 @@ export default function RequirementInfoNoTags(
 
       <DescriptionParagraph
         text={props.description}
+        rows={props.forHome ? 3 : undefined}
         className={props.forHome ? "ofer-req-2-no-clamp" : "info-req-no-clamp"}
       />
     </>

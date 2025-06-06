@@ -183,8 +183,9 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
       {isLoggedIn ? (
         <div
           className={`t-flex header-tc  ${
-            currentSection == pageRoutes.home ||
-            currentSection == pageRoutes.productDetail
+            currentSection == pageRoutes.home
+              ? "header-menu home"
+              : currentSection == pageRoutes.productDetail
               ? "header-menu"
               : ""
           }`}

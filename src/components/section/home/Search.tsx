@@ -55,7 +55,7 @@ export default function Search() {
           <h2 className="m-0">{t("homeTitle")}</h2>
           <h3 className="m-0">{t("homeSubtitle")}</h3>
         </div>
-        <div className="t-flex gap-10 ht-s2">
+        <div className="t-flex gap-10 ht-s2" style={{ width: "50%" }}>
           <InputContainer
             type="text"
             className="form-control form-buscar"
@@ -72,43 +72,50 @@ export default function Search() {
           </ButtonContainer>
         </div>
         {data && (
-          <div className="text-left t-flex gap-10 ht-s3">
-            <div className="t-flex count-req gap-10">
-              <div className="icon-home">
-                <i className="fa-regular fa-dolly"></i>
-              </div>
-              <div className="oferta-usuario col-documento-2">
-                <div className="text-truncate ti-1">{data.numProducts}</div>
-                <div className="text-truncate ti-2">{t("goods")}</div>
-              </div>
+          <div className="t-flex gap-5 f-column j-items">
+            <div
+              className="text-left t-flex gap-10 ht-s3"
+              style={{ fontWeight: 600, fontSize: "1.17em" }}
+            >
+              Publicados en total: 📈
             </div>
-            <div className="t-flex count-req gap-10">
-              <div className="icon-home">
-                <i className="fa-regular fa-hand-holding-magic"></i>
-              </div>
-              <div className="oferta-usuario col-documento-2">
-                <div className="text-truncate ti-1" style={{ color: "#fff" }}>
-                  {data.numServices}
+            <div className="text-left t-flex gap-10 ht-s3">
+              <div className="t-flex count-req gap-10">
+                <div className="icon-home">
+                  <i className="fa-regular fa-dolly"></i>
                 </div>
-                <div className="text-truncate ti-2" style={{ color: "#fff" }}>
-                  {t("services")}
+                <div className="oferta-usuario col-documento-2">
+                  <div className="text-truncate ti-1">{data.numProducts}</div>
+                  <div className="text-truncate ti-2">{t("goods")}</div>
                 </div>
               </div>
-            </div>
-            <div className="t-flex count-req gap-10">
-              <div className="icon-home">
-                <i className="fa-regular fa-basket-shopping"></i>
-              </div>
-              <div className="oferta-usuario col-documento-2">
-                <div className="text-truncate ti-1" style={{ color: "#fff" }}>
-                  {data.numLiquidations}
+              <div className="t-flex count-req gap-10">
+                <div className="icon-home">
+                  <i className="fa-regular fa-hand-holding-magic"></i>
                 </div>
-                <div className="text-truncate ti-2" style={{ color: "#fff" }}>
-                  {t("sales")}
+                <div className="oferta-usuario col-documento-2">
+                  <div className="text-truncate ti-1" style={{ color: "#fff" }}>
+                    {data.numServices}
+                  </div>
+                  <div className="text-truncate ti-2" style={{ color: "#fff" }}>
+                    {t("services")}
+                  </div>
                 </div>
               </div>
-            </div>
-            {/* <div className="t-flex count-req gap-10">
+              <div className="t-flex count-req gap-10">
+                <div className="icon-home">
+                  <i className="fa-regular fa-basket-shopping"></i>
+                </div>
+                <div className="oferta-usuario col-documento-2">
+                  <div className="text-truncate ti-1" style={{ color: "#fff" }}>
+                    {data.numLiquidations}
+                  </div>
+                  <div className="text-truncate ti-2" style={{ color: "#fff" }}>
+                    {t("sales")}
+                  </div>
+                </div>
+              </div>
+              {/* <div className="t-flex count-req gap-10">
             <div className="icon-home">
               <i className="fa-regular fa-user-tie"></i>
             </div>
@@ -121,6 +128,7 @@ export default function Search() {
               </div>
             </div>
           </div> */}
+            </div>
           </div>
         )}
       </div>

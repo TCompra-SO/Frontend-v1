@@ -720,6 +720,10 @@ body {
   align-items: center;
   /* line-height: 0; */
 }
+.tags-req-2 {
+  font-size: 1.5rem !important;
+  line-height: 1.08;
+}
 .badge-default {
   background: #bc1373;
   color: #fff;
@@ -1833,14 +1837,10 @@ body {
 .header-menu {
   border-bottom: 1px solid rgba(255, 255, 255, 0.25);
 }
-.header-menu .i-opt {
+.header-menu.home .i-opt,
+.header-menu.home .user-opt,
+.header-menu.home .ant-dropdown-trigger {
   color: #ffffff;
-}
-.header-menu .user-opt {
-  color: #fff;
-}
-.header-menu .ant-dropdown-trigger {
-  color: #fff;
 }
 
 .section-slider {

@@ -1,4 +1,4 @@
-import { Badge, Dropdown, Popover, Tooltip } from "antd";
+import { Dropdown, Popover, Tooltip } from "antd";
 import {
   BasicRateData,
   NotificationTargetData,
@@ -293,18 +293,12 @@ export default function RequirementOfferListItemHeader({
             menu={{ items }}
             placement="bottomRight"
           >
-            <span style={{ position: "relative", cursor: "pointer" }}>
-              <i className="fa-solid fa-ellipsis-vertical mas-acciones"></i>
-              <Badge
-                status="processing"
-                color={primaryColor}
-                style={{
-                  position: "absolute",
-                  top: "-7px",
-                  right: "3px",
-                }}
-              />
-            </span>
+            <Tooltip title={t("options")}>
+              <i
+                className="fa-solid fa-ellipsis-vertical mas-acciones"
+                style={{ color: "#fff", background: primaryColor }}
+              ></i>
+            </Tooltip>
           </Dropdown>
         </div>
       </div>
