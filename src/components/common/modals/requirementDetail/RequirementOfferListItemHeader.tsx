@@ -1,4 +1,4 @@
-import { Dropdown, Popover, Tooltip } from "antd";
+import { Badge, Dropdown, Popover, Tooltip } from "antd";
 import {
   BasicRateData,
   NotificationTargetData,
@@ -26,6 +26,7 @@ import {
   useDownloadPdfOrder,
   useRedirectToChat,
 } from "../../../../hooks/utilHooks";
+import { primaryColor } from "../../../../utilities/colors";
 
 interface RequirementOfferListItemProps {
   requirementId: string;
@@ -292,7 +293,18 @@ export default function RequirementOfferListItemHeader({
             menu={{ items }}
             placement="bottomRight"
           >
-            <i className="fa-solid fa-ellipsis-vertical mas-acciones"></i>
+            <span style={{ position: "relative", cursor: "pointer" }}>
+              <i className="fa-solid fa-ellipsis-vertical mas-acciones"></i>
+              <Badge
+                status="processing"
+                color={primaryColor}
+                style={{
+                  position: "absolute",
+                  top: "-7px",
+                  right: "3px",
+                }}
+              />
+            </span>
           </Dropdown>
         </div>
       </div>
