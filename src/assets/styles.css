@@ -718,6 +718,7 @@ body {
 .tags-req {
   gap: 8px;
   align-items: center;
+  /* line-height: 0; */
 }
 .badge-default {
   background: #bc1373;
@@ -1832,6 +1833,16 @@ body {
 .header-menu {
   border-bottom: 1px solid rgba(255, 255, 255, 0.25);
 }
+.header-menu .i-opt {
+  color: #ffffff;
+}
+.header-menu .user-opt {
+  color: #fff;
+}
+.header-menu .ant-dropdown-trigger {
+  color: #fff;
+}
+
 .section-slider {
   background-image: url(images/back-01.jpg);
   background-repeat: no-repeat;
@@ -2294,7 +2305,7 @@ body {
 .titulo-req-2 {
   color: #3b4c56;
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.5rem !important;
   text-align: justify;
   line-height: 1.08;
 }
