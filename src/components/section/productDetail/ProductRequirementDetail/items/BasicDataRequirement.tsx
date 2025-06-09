@@ -7,6 +7,7 @@ import {
   ImagePreviewGroupContainer,
   ImagePreviewGroupContainerRef,
 } from "../../../../containers/ImagePreviewGroupContainer";
+import { getCityObj } from "../../../../../utilities/globalFunctions";
 
 interface BasicDataRequirementProps {
   requirement: Requirement | undefined;
@@ -17,6 +18,7 @@ export default function BasicDataRequirement(props: BasicDataRequirementProps) {
   const context = useContext(ListsContext);
   const { countryData, currencyData } = context;
   const childRef = useRef<ImagePreviewGroupContainerRef>(null);
+  const cities = getCityObj(countryData, defaultCountry);
 
   function handleOpenPreview() {
     if (
@@ -66,12 +68,7 @@ export default function BasicDataRequirement(props: BasicDataRequirementProps) {
               style={{ cursor: "default" }}
             >
               <div className="ub-1">
-                {props.requirement &&
-                  countryData &&
-                  countryData[defaultCountry] &&
-                  countryData[defaultCountry].cities[
-                    props.requirement?.location
-                  ]?.value}
+                {props.requirement && cities[props.requirement.location]?.value}
                 , {countryData[defaultCountry]?.value}
               </div>
               <div className="ub-2">{props.requirement?.title}</div>
