@@ -10,6 +10,8 @@ import useApi from "../../../hooks/useApi";
 import { masterUid } from "../../../utilities/globals";
 import { transformToStatistics } from "../../../utilities/transform";
 import { StatisticsData } from "../../../models/MainInterfaces";
+import { sectionIcons } from "../../../utilities/colors";
+import { RequirementType } from "../../../utilities/types";
 
 export default function Search() {
   const { t } = useTranslation();
@@ -82,7 +84,7 @@ export default function Search() {
             <div className="text-left t-flex gap-10 ht-s3">
               <div className="t-flex count-req gap-10">
                 <div className="icon-home">
-                  <i className="fa-regular fa-dolly"></i>
+                  <i className={sectionIcons[RequirementType.GOOD]}></i>
                 </div>
                 <div className="oferta-usuario col-documento-2">
                   <div className="text-truncate ti-1">{data.numProducts}</div>

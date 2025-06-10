@@ -6,7 +6,6 @@ import ButtonContainer from "../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
 import { Lengths } from "../../../utilities/lengths";
 import SelectContainer from "../../containers/SelectContainer";
-import { filterLabels } from "../../../utilities/colors";
 import { SelectOfferRequest } from "../../../models/Requests";
 import {
   CommonModalProps,
@@ -17,6 +16,7 @@ import useShowNotification from "../../../hooks/utilHooks";
 import {
   ErrorMsgRequestType,
   ErrorRequestType,
+  filterLabels,
   OrderTableType,
   ResponseRequestType,
   SystemNotificationType,

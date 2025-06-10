@@ -7,7 +7,7 @@ import {
   defaultCountry,
 } from "../../../../utilities/globals";
 import { useContext, useEffect, useState } from "react";
-import { CommonFilter } from "../../../../utilities/types";
+import { CommonFilter, filterLabels } from "../../../../utilities/types";
 import { OfferFilters } from "../../../../models/Interfaces";
 import { requirementDetailContext } from "../../../../contexts/RequirementDetailContext";
 import { useTranslation } from "react-i18next";
@@ -16,7 +16,6 @@ import {
   getCityListForSelect,
   getListForSelectIdValueMap,
 } from "../../../../utilities/globalFunctions";
-import { filterLabels } from "../../../../utilities/colors";
 
 interface RequirementOfferFiltersProps {
   fromPurchaseOrder: boolean;

@@ -1,9 +1,10 @@
+import { ReactNode } from "react";
 import {
   CertificationState,
-  CommonFilter,
   OfferState,
   PurchaseOrderState,
   RequirementState,
+  RequirementType,
 } from "./types";
 
 export const primaryColor = "#BC1373";
@@ -185,10 +186,12 @@ export function UserStateMeta(state: boolean) {
     };
 }
 
-export const filterLabels: {
-  [key in CommonFilter]: string;
-} = {
-  [CommonFilter.ALL]: "all",
-  [CommonFilter.ASC]: "ascending",
-  [CommonFilter.DESC]: "descending",
+export const sectionIcons: Record<any, string> = {
+  [RequirementType.GOOD]: "fa-regular fa-dolly",
+  [RequirementType.SERVICE]: "fa-regular fa-hand-holding-magic",
+  [RequirementType.SALE]: "fa-regular fa-basket-shopping",
+  requirement: "fa-regular fa-cart-flatbed",
+  offer: "fa-light fa-person-dolly",
+  sent: "fa-regular fa-file-export",
+  received: "fa-regular fa-file-import",
 };

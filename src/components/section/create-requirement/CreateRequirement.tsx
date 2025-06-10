@@ -52,6 +52,7 @@ import useShowNotification from "../../../hooks/utilHooks";
 import { LoadingDataContext } from "../../../contexts/LoadingDataContext";
 import SimpleLoading from "../../../pages/utils/SimpleLoading";
 import { ListsContext } from "../../../contexts/ListsContext";
+import { sectionIcons } from "../../../utilities/colors";
 
 interface CreateRequirementProps extends CommonModalProps {
   closeModal: () => void;
@@ -404,7 +405,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
               changeTab(RequirementType.GOOD);
             }}
           >
-            <i className="fa-regular fa-dolly"></i>{" "}
+            <i className={sectionIcons[RequirementType.GOOD]}></i>{" "}
             <span className="req-btn-info">{t("goods")}</span>
           </ButtonContainer>
           <ButtonContainer

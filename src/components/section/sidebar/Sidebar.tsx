@@ -17,8 +17,9 @@ import {
   getPenultimateSegmentFromRoute,
   getSectionFromRoute,
 } from "../../../utilities/globalFunctions";
-import { EntityType } from "../../../utilities/types";
+import { EntityType, RequirementType } from "../../../utilities/types";
 import { MainSocketsContext } from "../../../contexts/MainSocketsContext";
+import { sectionIcons } from "../../../utilities/colors";
 
 const menuToggles: {
   [key in (typeof pageRoutes)[keyof typeof pageRoutes]]: {
@@ -225,7 +226,11 @@ export default function Sidebar(props: SidebarProps) {
               {getMenuButton(
                 false,
                 `${pageRoutes.myRequirements}/${pageSubRoutes.goods}`,
-                <i className="fa-regular fa-dolly text-center i-btn"></i>,
+                <i
+                  className={`${
+                    sectionIcons[RequirementType.GOOD]
+                  } text-center i-btn`}
+                ></i>,
                 t("goods")
               )}
               {getMenuButton(
@@ -261,7 +266,11 @@ export default function Sidebar(props: SidebarProps) {
               {getMenuButton(
                 false,
                 `${pageRoutes.myOffers}/${pageSubRoutes.goods}`,
-                <i className="fa-regular fa-dolly text-center i-btn"></i>,
+                <i
+                  className={`${
+                    sectionIcons[RequirementType.GOOD]
+                  } text-center i-btn`}
+                ></i>,
                 t("goods")
               )}
               {getMenuButton(
@@ -299,7 +308,11 @@ export default function Sidebar(props: SidebarProps) {
               {getMenuButton(
                 true,
                 `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issued}`,
-                <i className="fa-regular fa-dolly text-center i-btn"></i>,
+                <i
+                  className={`${
+                    sectionIcons[RequirementType.GOOD]
+                  } text-center i-btn`}
+                ></i>,
                 t("issuedPl"),
                 <i className="fa-solid fa-chevron-down i-sub text-center"></i>
               )}
@@ -316,7 +329,11 @@ export default function Sidebar(props: SidebarProps) {
                 {getMenuButton(
                   false,
                   `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issued}/${pageSubRoutes.goods}`,
-                  <i className="fa-regular fa-dolly text-center i-btn"></i>,
+                  <i
+                    className={`${
+                      sectionIcons[RequirementType.GOOD]
+                    } text-center i-btn`}
+                  ></i>,
                   t("goods")
                 )}
                 {getMenuButton(
@@ -346,7 +363,11 @@ export default function Sidebar(props: SidebarProps) {
                 {getMenuButton(
                   false,
                   `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.received}/${pageSubRoutes.goods}`,
-                  <i className="fa-regular fa-dolly text-center i-btn"></i>,
+                  <i
+                    className={`${
+                      sectionIcons[RequirementType.GOOD]
+                    } text-center i-btn`}
+                  ></i>,
                   t("goods")
                 )}
                 {getMenuButton(
@@ -379,7 +400,11 @@ export default function Sidebar(props: SidebarProps) {
               {getMenuButton(
                 false,
                 `${pageRoutes.mySalesOrders}/${pageSubRoutes.issued}`,
-                <i className="fa-regular fa-dolly text-center i-btn"></i>,
+                <i
+                  className={`${
+                    sectionIcons[RequirementType.GOOD]
+                  } text-center i-btn`}
+                ></i>,
                 t("issuedPl")
               )}
               {getMenuButton(
@@ -429,7 +454,11 @@ export default function Sidebar(props: SidebarProps) {
                 {getMenuButton(
                   false,
                   `${pageRoutes.allRequirements}/${pageSubRoutes.goods}`,
-                  <i className="fa-regular fa-dolly text-center i-btn"></i>,
+                  <i
+                    className={`${
+                      sectionIcons[RequirementType.GOOD]
+                    } text-center i-btn`}
+                  ></i>,
                   t("goods")
                 )}
                 {getMenuButton(
@@ -468,7 +497,11 @@ export default function Sidebar(props: SidebarProps) {
                 {getMenuButton(
                   false,
                   `${pageRoutes.allOffers}/${pageSubRoutes.goods}`,
-                  <i className="fa-regular fa-dolly text-center i-btn"></i>,
+                  <i
+                    className={`${
+                      sectionIcons[RequirementType.GOOD]
+                    } text-center i-btn`}
+                  ></i>,
                   t("goods")
                 )}
                 {getMenuButton(
@@ -507,7 +540,11 @@ export default function Sidebar(props: SidebarProps) {
                 {getMenuButton(
                   false,
                   `${pageRoutes.certificates}/${pageSubRoutes.documents}`,
-                  <i className="fa-regular fa-dolly text-center i-btn"></i>,
+                  <i
+                    className={`${
+                      sectionIcons[RequirementType.GOOD]
+                    } text-center i-btn`}
+                  ></i>,
                   t("myDocuments")
                 )}
                 {getMenuButton(
@@ -549,7 +586,11 @@ export default function Sidebar(props: SidebarProps) {
                 {getMenuButton(
                   true,
                   `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.issued}`,
-                  <i className="fa-regular fa-dolly text-center i-btn"></i>,
+                  <i
+                    className={`${
+                      sectionIcons[RequirementType.GOOD]
+                    } text-center i-btn`}
+                  ></i>,
                   t("issuedPl"),
                   <i className="fa-solid fa-chevron-down i-sub text-center"></i>
                 )}
@@ -566,7 +607,11 @@ export default function Sidebar(props: SidebarProps) {
                   {getMenuButton(
                     false,
                     `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.issued}/${pageSubRoutes.goods}`,
-                    <i className="fa-regular fa-dolly text-center i-btn"></i>,
+                    <i
+                      className={`${
+                        sectionIcons[RequirementType.GOOD]
+                      } text-center i-btn`}
+                    ></i>,
                     t("goods")
                   )}
                   {getMenuButton(
@@ -596,7 +641,11 @@ export default function Sidebar(props: SidebarProps) {
                   {getMenuButton(
                     false,
                     `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.received}/${pageSubRoutes.goods}`,
-                    <i className="fa-regular fa-dolly text-center i-btn"></i>,
+                    <i
+                      className={`${
+                        sectionIcons[RequirementType.GOOD]
+                      } text-center i-btn`}
+                    ></i>,
                     t("goods")
                   )}
                   {getMenuButton(
@@ -633,7 +682,11 @@ export default function Sidebar(props: SidebarProps) {
                 {getMenuButton(
                   false,
                   `${pageRoutes.allSalesOrders}/${pageSubRoutes.issued}`,
-                  <i className="fa-regular fa-dolly text-center i-btn"></i>,
+                  <i
+                    className={`${
+                      sectionIcons[RequirementType.GOOD]
+                    } text-center i-btn`}
+                  ></i>,
                   t("issuedPl")
                 )}
                 {getMenuButton(

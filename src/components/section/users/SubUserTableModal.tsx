@@ -36,6 +36,7 @@ import useShowNotification, {
   useShowLoadingMessage,
 } from "../../../hooks/utilHooks";
 import { FieldSort } from "../../../models/Requests";
+import { sectionIcons } from "../../../utilities/colors";
 
 interface SubUserTableModalProps {
   user: SubUserBase | null;
@@ -210,7 +211,9 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
       />
       <div className="modal-card">
         <div className="t-flex t-wrap mr-sub-2">
-          <i className="fa-regular fa-dolly sub-icon m-0"></i>
+          <i
+            className={`${sectionIcons[RequirementType.GOOD]} sub-icon m-0`}
+          ></i>
           <div className="sub-titulo sub-calificar">
             <div>
               {props.tableType == TableTypes.REQUIREMENT_SUBUSER && (
@@ -245,7 +248,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
                   changeSubType(RequirementType.GOOD);
                 }}
               >
-                <i className="fa-regular fa-dolly"></i>{" "}
+                <i className={sectionIcons[RequirementType.GOOD]}></i>{" "}
                 <span className="req-btn-info">{t("goods")}</span>
               </ButtonContainer>
               <ButtonContainer

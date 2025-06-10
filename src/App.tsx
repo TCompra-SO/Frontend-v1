@@ -12,7 +12,7 @@ import {
   primaryColor,
   tableHeaderTextColor,
   white,
-} from "./utilities/colors.ts";
+} from "./utilities/colors.tsx";
 import esEs from "antd/locale/es_ES";
 import enUs from "antd/locale/en_US";
 import i18n from "./utilities/i18n.ts";

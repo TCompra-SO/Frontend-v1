@@ -554,3 +554,11 @@ export enum ChatMessageType {
   NEW_MESSAGE = 0,
   READ = 1,
 }
+
+export const filterLabels: {
+  [key in CommonFilter]: string;
+} = {
+  [CommonFilter.ALL]: "all",
+  [CommonFilter.ASC]: "ascending",
+  [CommonFilter.DESC]: "descending",
+};
