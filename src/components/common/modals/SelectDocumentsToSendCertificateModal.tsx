@@ -110,11 +110,9 @@ export default function SelectDocumentsToSendCertificateModal(
   /** Obtener texto de documentos requeridos */
 
   useEffect(() => {
-    console.log("props.data.userId", props.data.userId);
     getRequiredDocsCert(props.data.userId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.data]);
-
   /** Para enviar documentos */
 
   useEffect(() => {
@@ -292,7 +290,7 @@ export default function SelectDocumentsToSendCertificateModal(
                   </div>
 
                   <Checkbox
-                    // onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => e.stopPropagation()}
                     onChange={(e) => {
                       setCheckedDoc(e.target.checked, index);
                     }}

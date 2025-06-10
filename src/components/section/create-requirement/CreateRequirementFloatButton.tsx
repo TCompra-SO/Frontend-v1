@@ -225,7 +225,7 @@ export default function CreateRequirementFloatButton() {
       {!isLoading &&
       (width > windowSize.sm || (width <= windowSize.sm && !isChatPage)) ? (
         <>
-          <FloatButton.Group shape="circle" style={{ insetInlineEnd: 24 }}>
+          <FloatButton.Group shape="circle" style={{ insetInlineEnd: 15 }}>
             {!isHomePage && (
               <FloatButton
                 icon={

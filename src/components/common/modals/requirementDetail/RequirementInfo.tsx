@@ -46,7 +46,10 @@ export default function RequirementInfo(props: RequirementInfoProps) {
           forHome={props.forHome}
         />
 
-        <div className="t-flex tags-req t-wrap">
+        <div
+          className="t-flex tags-req t-wrap"
+          style={props.forHome ? { lineHeight: 0 } : undefined}
+        >
           <PriceInHeader
             coin={props.requirement.coin}
             price={props.requirement.price}

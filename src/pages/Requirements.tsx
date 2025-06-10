@@ -325,7 +325,7 @@ export default function Requirements() {
           if (user && fullUser) {
             const { offer } = await getOfferById(
               requirement.offerId,
-              type,
+              requirement.type,
               subUser ?? user,
               subUser ? user : undefined
             );

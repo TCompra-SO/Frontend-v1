@@ -295,3 +295,11 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* Para botones flotantes */
+.ant-float-btn-group-circle {
+  gap: 10px;
+}
+.ant-float-btn-group {
+  bottom: 20px;
+}

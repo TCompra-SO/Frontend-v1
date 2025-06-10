@@ -26,6 +26,7 @@ import {
   useDownloadPdfOrder,
   useRedirectToChat,
 } from "../../../../hooks/utilHooks";
+import { primaryColor } from "../../../../utilities/colors";
 
 interface RequirementOfferListItemProps {
   requirementId: string;
@@ -292,7 +293,12 @@ export default function RequirementOfferListItemHeader({
             menu={{ items }}
             placement="bottomRight"
           >
-            <i className="fa-solid fa-ellipsis-vertical mas-acciones"></i>
+            <Tooltip title={t("options")}>
+              <i
+                className="fa-solid fa-ellipsis-vertical mas-acciones"
+                style={{ color: "#fff", background: primaryColor }}
+              ></i>
+            </Tooltip>
           </Dropdown>
         </div>
       </div>

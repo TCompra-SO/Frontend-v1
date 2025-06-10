@@ -133,7 +133,7 @@ const resources = {
       deliveryTime: "Delivery time",
       expirationDate: "Expiration date",
       warranty: "Warranty",
-      participantDetails: "Participant details",
+      bidderDetails: "Bidder details",
       selectionDate: "Selection date",
       tenure: "Business tenure",
       selectedOffer: "Selected offer",
@@ -358,11 +358,12 @@ const resources = {
       noDocumentsForCertification:
         "No documents available. Click 'Add certificates' to add new files.",
       noRefreshTokenMsg: "Your session has expired. Please log in again.",
-      inactiveAccountLogin: 'This account is inactive',
-      unavailableRequiredDocumentsCert: 'The required document list is not yet available',
-      messageSentSuccessfully: 'Message sent successfully',
-      generatingPDF: 'Generating PDF...',
-      chatBotGreeting: 'Hello, how can I help you?',
+      inactiveAccountLogin: "This account is inactive",
+      unavailableRequiredDocumentsCert:
+        "The required document list is not yet available",
+      messageSentSuccessfully: "Message sent successfully",
+      generatingPDF: "Generating PDF...",
+      chatBotGreeting: "Hello, how can I help you?",
       // Other
       characters: "characters",
       yes: "Yes",
@@ -464,8 +465,8 @@ const resources = {
       view: "View",
       issued: "Issued",
       received: "Received",
-      receivedMasc: 'Received',
-      notReceivedMasc: 'Not received',
+      receivedMasc: "Received",
+      notReceivedMasc: "Not received",
       issuedPl: "Issued",
       receivedPl: "Received",
       sentPlFem: "Sent",
@@ -565,7 +566,8 @@ const resources = {
       suspendedUser: "Suspended",
       archivedPl: "Archived",
       state: "State",
-      chatBotTooltip: 'Chat with us'
+      chatBotTooltip: "Chat with us",
+      options: "Options",
     },
   },
   es: {
@@ -696,7 +698,7 @@ const resources = {
       deliveryTime: "Tiempo de entrega",
       expirationDate: "Fecha de expiración",
       warranty: "Garantía",
-      participantDetails: "Detalles del ofertante",
+      bidderDetails: "Detalles del ofertante",
       selectionDate: "Fecha de selección",
       tenure: "Antigüedad",
       selectedOffer: "Oferta elegida",
@@ -930,12 +932,14 @@ const resources = {
       userReactivatedSuccessfully: "Usuario reactivado exitosamente",
       noDocumentsForCertification:
         "No hay documentos disponibles. Haga click en 'Agregar certificados' para añadir nuevos archivos.",
-      noRefreshTokenMsg: "Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.",
-      inactiveAccountLogin: 'Esta cuenta está inactiva',
-      unavailableRequiredDocumentsCert: 'La lista de documentos requeridos aún no está disponible',
-      messageSentSuccessfully: 'Mensaje enviado exitosamente',
-      generatingPDF: 'Generando PDF...',
-      chatBotGreeting: 'Hola, ¿cómo puedo ayudarte?',
+      noRefreshTokenMsg:
+        "Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.",
+      inactiveAccountLogin: "Esta cuenta está inactiva",
+      unavailableRequiredDocumentsCert:
+        "La lista de documentos requeridos aún no está disponible",
+      messageSentSuccessfully: "Mensaje enviado exitosamente",
+      generatingPDF: "Generando PDF...",
+      chatBotGreeting: "Hola, ¿cómo puedo ayudarte?",
       // Other
       characters: "caracteres",
       yes: "Sí",
@@ -1040,7 +1044,7 @@ const resources = {
       issued: "Emitida",
       received: "Recibida",
       receivedMasc: "Recibido",
-      notReceivedMasc: 'No recibido',
+      notReceivedMasc: "No recibido",
       issuedPl: "Emitidas",
       receivedPl: "Recibidas",
       sentPlFem: "Enviadas",
@@ -1140,7 +1144,8 @@ const resources = {
       suspendedUser: "Suspendido",
       archivedPl: "Archivados",
       state: "Estado",
-      chatBotTooltip: "Chatea con nosotros"
+      chatBotTooltip: "Chatea con nosotros",
+      options: "Opciones",
     },
   },
 };

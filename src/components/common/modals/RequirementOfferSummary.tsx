@@ -17,6 +17,13 @@ export default function RequirementOfferSummary(
 
   return (
     <div className="modal-card">
+      <div className="t-flex t-wrap mr-sub-2">
+        <i className="fa-light fa-person-dolly sub-icon m-0"></i>
+        <div className="sub-titulo sub-calificar">
+          <div>{t("summary")}</div>
+          <div className="calificar-detalle">{t("bidderDetails")}</div>
+        </div>
+      </div>
       <div className="detalle-oferta">
         <div className="t-flex gap-15 requerimiento-o">
           <FrontImage image={props.user.image} isUser={true} />
@@ -52,6 +59,9 @@ export default function RequirementOfferSummary(
               </div>
             </div>
           </div>
+        </div>
+        <div className="card-gray">
+          <div className="ofertas-recib">{t("winningOffer")}</div>
         </div>
         <div className="t-flex gap-15" style={{ flexDirection: "column" }}>
           <div className="card-ofertas">
