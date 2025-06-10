@@ -54,6 +54,7 @@ import useSearchTable, {
 } from "../hooks/searchTableHooks";
 import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
+import { sectionIcons } from "../utilities/colors";
 
 export default function Requirements() {
   const { t } = useTranslation();
@@ -446,9 +447,11 @@ export default function Requirements() {
       />
       <TablePageContent
         title={t("myRequirements")}
-        titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
+        titleIcon={<i className={`${sectionIcons[type]} c-default`}></i>}
         subtitle={`${t("listOf")} ${t(getLabelFromRequirementType(type))}`}
-        subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
+        subtitleIcon={
+          <i className={`${sectionIcons["requirement"]} sub-icon`}></i>
+        }
         table={tableContent}
         onSearch={(e) => handleSearch(e, searchTable)}
         loading={loadingTable}

@@ -40,6 +40,7 @@ import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import { transformToCertificateFile } from "../utilities/transform";
 import useSocket from "../socket/useSocket";
 import useShowNotification from "../hooks/utilHooks";
+import { sectionIcons } from "../utilities/colors";
 
 export default function CertificatesDocs() {
   const { t } = useTranslation();
@@ -258,9 +259,13 @@ export default function CertificatesDocs() {
       />
       <TablePageContent
         title={t("certificates")}
-        titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
+        titleIcon={
+          <i className={`${sectionIcons["myCertificates"]} c-default`}></i>
+        }
         subtitle={t("myDocuments")}
-        subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
+        subtitleIcon={
+          <i className={`${sectionIcons["certificate"]} sub-icon`}></i>
+        }
         table={tableContent}
         onSearch={(e) => handleSearch(e, searchTable)}
         additionalContentHeader={

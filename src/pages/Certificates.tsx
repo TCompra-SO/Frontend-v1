@@ -39,6 +39,7 @@ import useSearchTable, {
 } from "../hooks/searchTableHooks";
 import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
+import { sectionIcons } from "../utilities/colors";
 
 export default function Certificates() {
   const location = useLocation();
@@ -243,13 +244,23 @@ export default function Certificates() {
       />
       <TablePageContent
         title={t("certificates")}
-        titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
+        titleIcon={
+          <i
+            className={`${
+              sectionIcons[
+                type == CertificationTableType.RECEIVED ? "received" : "sent"
+              ]
+            } c-default`}
+          ></i>
+        }
         subtitle={
           type == CertificationTableType.RECEIVED
             ? t("certifiesReceived")
             : t("certifiesSent")
         }
-        subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
+        subtitleIcon={
+          <i className={`${sectionIcons["certificate"]} sub-icon`}></i>
+        }
         table={tableContent}
         loading={loading}
         onChangePageAndPageSize={(params) =>

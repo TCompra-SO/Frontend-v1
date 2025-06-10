@@ -174,7 +174,7 @@ export default function AllRequirements() {
       titleIcon={<i className={`${sectionIcons[type]} c-default`}></i>}
       subtitle={`${t("listOf")} ${t(getLabelFromRequirementType(type))}`}
       subtitleIcon={
-        <i className={`${sectionIcons["requirement"]} sub-icon`}></i>
+        <i className={`${sectionIcons["allRequirements"]} sub-icon`}></i>
       }
       table={tableContent}
       onSearch={(e) => handleSearch(e, searchTable)}

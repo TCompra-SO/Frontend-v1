@@ -194,4 +194,8 @@ export const sectionIcons: Record<any, string> = {
   offer: "fa-light fa-person-dolly",
   sent: "fa-regular fa-file-export",
   received: "fa-regular fa-file-import",
+  allRequirements: "fa-regular fa-paste",
+  allOffers: "fa-regular fa-ballot-check",
+  certificate: "fa-regular fa-file-certificate",
+  myCertificates: "fa-regular fa-files",
 };

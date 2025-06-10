@@ -43,6 +43,7 @@ import useSearchTable, {
 } from "../hooks/searchTableHooks";
 import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
+import { sectionIcons } from "../utilities/colors";
 
 export default function AllPurchaseOrders() {
   const { t } = useTranslation();
@@ -295,11 +296,19 @@ export default function AllPurchaseOrders() {
       />
       <TablePageContent
         title={t("purchaseOrders")}
-        titleIcon={<i className="fa-regular fa-dolly c-default"></i>}
+        titleIcon={
+          <i className={`${sectionIcons[requirementType]} c-default`}></i>
+        }
         subtitle={`${t("listOf")} ${t(
           getLabelFromPurchaseOrderType(type, true)
         )}`}
-        subtitleIcon={<i className="fa-light fa-person-dolly sub-icon"></i>}
+        subtitleIcon={
+          <i
+            className={`${
+              sectionIcons[type == OrderTableType.ISSUED ? "sent" : "received"]
+            } sub-icon`}
+          ></i>
+        }
         table={tableContent}
         onSearch={(e) => handleSearch(e, searchTable)}
         loading={loading}

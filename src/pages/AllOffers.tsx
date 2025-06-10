@@ -268,7 +268,9 @@ export default function AllOffers() {
         subtitle={`${t("listOf")} ${t("offers")} - ${t(
           getLabelFromRequirementType(type)
         )}`}
-        subtitleIcon={<i className={`${sectionIcons["offer"]} sub-icon`}></i>}
+        subtitleIcon={
+          <i className={`${sectionIcons["allOffers"]} sub-icon`}></i>
+        }
         table={tableContent}
         onSearch={(e) => handleSearch(e, searchTable)}
         loading={loadingTable}
