@@ -76,6 +76,7 @@ export default function RequirementOfferListItemHeader({
           userImage: props.offer.subUser?.image ?? props.offer.user.image,
         });
       },
+      icon: <i className="fa-regular fa-comment"></i>,
     },
   ];
 
@@ -85,6 +86,7 @@ export default function RequirementOfferListItemHeader({
         label: t(ActionLabel[Action.CANCEL_PURCHASE_ORDER]),
         key: Action.CANCEL_PURCHASE_ORDER,
         onClick: () => onOpenModal(Action.CANCEL_PURCHASE_ORDER),
+        icon: <i className="fa-regular fa-ban"></i>,
       });
     if (
       props.offer.state == OfferState.ACTIVE &&
@@ -94,6 +96,7 @@ export default function RequirementOfferListItemHeader({
         label: t(ActionLabel[Action.SELECT_OFFER]),
         key: Action.SELECT_OFFER,
         onClick: () => onOpenModal(Action.SELECT_OFFER),
+        icon: <i className="fa-regular fa-circle-check"></i>,
       });
     }
     if (
@@ -105,6 +108,7 @@ export default function RequirementOfferListItemHeader({
         label: t(ActionLabel[Action.RATE_CANCELED]),
         key: Action.RATE_CANCELED,
         onClick: () => onOpenModal(Action.RATE_CANCELED),
+        icon: <i className="fa-regular fa-star"></i>,
       });
   } else if (props.showActions.orderId) {
     const oi = props.showActions.orderId;
@@ -114,6 +118,7 @@ export default function RequirementOfferListItemHeader({
       onClick: () => {
         downloadPdfOrder(oi, props.offer.type);
       },
+      icon: <i className="fa-regular fa-arrow-down-to-line"></i>,
     });
   }
 
