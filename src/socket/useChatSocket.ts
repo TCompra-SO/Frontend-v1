@@ -95,9 +95,11 @@ export function useChatSocket() {
               } else {
                 const cld = transformToChatListData(payload.chatData[0], uid);
                 if (
-                  !cld.archive ||
-                  !cld.archive?.length ||
-                  (cld.archive?.[0].userId == uid && !cld.archive?.[0].state)
+                  (!cld.archive || // no archivado
+                    !cld.archive?.length || // no archivado
+                    (cld.archive?.[0].userId == uid &&
+                      !cld.archive?.[0].state)) && // archivado prev. (ahora false) por usuario actual
+                  payload.messageData.userId != uid
                 )
                   showRealTimeNotification({
                     type: RTNotificationType.CHAT,

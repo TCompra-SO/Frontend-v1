@@ -1,6 +1,7 @@
 import React from "react";
 import { pageRoutes } from "./routes";
 import { Requirement, UserCounters } from "../models/MainInterfaces";
+import { RequirementType } from "./types";
 
 export const dateFormat: string = "DD-MM-YYYY";
 export const dateFormatHomeSearch: string = "YYYY-MM-DD";
@@ -243,3 +244,7 @@ export const userCounterKeys: Record<keyof UserCounters, true> = {
   numSellingOrdersProvider: true,
   numSellingOrdersClient: true,
 };
+
+// export const sectionIcons = {
+//   [RequirementType.GOOD]:
+// }

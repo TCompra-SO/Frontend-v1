@@ -50,6 +50,7 @@ export default function SendMessageModal(props: SendMessageModalProps) {
           requerimentId: props.requirementId,
           title: props.title,
           type: props.type,
+          recUserId: props.receiverId,
         },
         msg
       );

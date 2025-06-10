@@ -303,6 +303,7 @@ export default function ChatBody(props: ChatBodyProps) {
             requerimentId: props.chatData.requirementId,
             title: props.chatData.title,
             type: props.chatData.type,
+            recUserId: props.chatData.userId,
           },
           msg
         );

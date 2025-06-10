@@ -267,6 +267,7 @@ export interface CreateChatRequest {
   requerimentId: string;
   title: string;
   type: RequirementType;
+  recUserId: string;
 }
 
 export interface CreateMessageRequest {
