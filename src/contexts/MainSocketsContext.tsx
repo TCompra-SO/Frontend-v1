@@ -99,10 +99,9 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
       chatData.connectChatSocket();
       getUnreadChatMessagesCounter();
       getUnreadNotificationsCounter();
-    } else if (isLoggedIn === false) {
+    } else if (!isLoggedIn) {
       disconnectSockets();
       window.removeEventListener("storage", handleStorageChange);
-      console.log("disconnecting sockets!!!!!!!!!!", isLoggedIn);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
