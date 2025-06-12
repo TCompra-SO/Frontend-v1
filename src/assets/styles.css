@@ -1753,7 +1753,6 @@ body {
   font-weight: 600;
   padding: 20px;
   border-radius: 0.9rem;
-  height: calc(100vh - 768px);
 }
 .section-galeria {
   position: relative;
