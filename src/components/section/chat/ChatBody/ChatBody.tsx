@@ -102,10 +102,14 @@ export default function ChatBody(props: ChatBodyProps) {
 
   const checkVisibilityOfFirsttMessage = useCallback(
     (chatId: string, messageId: string) => {
-      if (!chatContainerRef.current || !firstMessageRef.current) return;
+      const msgRef =
+        firstMessageRef.current ?? props.messages.length == 1
+          ? lastMessageRef.current
+          : null;
+      if (!chatContainerRef.current || !msgRef) return;
 
       const chatRect = chatContainerRef.current.getBoundingClientRect();
-      const firstRect = firstMessageRef.current.getBoundingClientRect();
+      const firstRect = msgRef.getBoundingClientRect();
 
       const visibleTop = Math.max(firstRect.top, chatRect.top);
       const visibleBottom = Math.min(firstRect.bottom, chatRect.bottom);
@@ -114,7 +118,7 @@ export default function ChatBody(props: ChatBodyProps) {
       const elementHeight = firstRect.height;
 
       const atLeastHalfVisible = visibleHeight >= elementHeight / 2;
-
+      console.log(atLeastHalfVisible, messageId);
       if (atLeastHalfVisible)
         markAsRead({
           messagesIds: [messageId],
