@@ -101,9 +101,9 @@ export default function ChatBody(props: ChatBodyProps) {
   /** Verificar si el primer mensaje es parcialmente visible */
 
   const checkVisibilityOfFirsttMessage = useCallback(
-    (chatId: string, messageId: string) => {
+    (chatId: string, messageId: string, messagesLength: number) => {
       const msgRef =
-        firstMessageRef.current ?? props.messages.length == 1
+        firstMessageRef.current ?? messagesLength == 1
           ? lastMessageRef.current
           : null;
       if (!chatContainerRef.current || !msgRef) return;
@@ -169,7 +169,8 @@ export default function ChatBody(props: ChatBodyProps) {
       // });
       checkVisibilityOfFirsttMessage(
         props.messages[0].chatId,
-        props.messages[0].uid
+        props.messages[0].uid,
+        props.messages.length
       );
     }
 
