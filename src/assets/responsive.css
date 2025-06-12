@@ -444,7 +444,7 @@
   }
   .header-requerimiento {
     max-width: calc(100% - 60px);
-    margin: auto 30px;
+    margin: auto 20px;
   }
   .section-detalles {
     padding: 20px !important;
@@ -585,6 +585,10 @@
 
   .mch-2 {
     display: none;
+  }
+
+  .header-menu {
+    padding: 0 20px !important;
   }
 
   .user-opt {
@@ -841,10 +845,38 @@
   .archivo-preview {
     max-height: calc(100vh - 453px);
   }
+  .cont-prime-h {
+    width: 1170px;
+  }
+  .header-menu {
+    padding: 0 30px;
+  }
 }
 
 @media (min-width: 2026px) {
   .modulo-chat {
     grid-template-columns: repeat(auto-fill, minmax(9%, 1fr));
+  }
+}
+
+/* Medidas Minimas */
+
+@media (max-width: 992px) {
+  .cont-prime-h {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cont-prime {
+    max-width: 1170px;
+  }
+
+  .cont-prime-h {
+    width: 1170px;
+  }
+
+  .header-menu {
+    padding: 0 30px;
   }
 }

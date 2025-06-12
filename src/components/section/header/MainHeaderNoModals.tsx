@@ -179,81 +179,77 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
   };
 
   return (
-    <header>
-      {isLoggedIn ? (
-        <div
-          className={`t-flex header-tc  ${
-            currentSection == pageRoutes.home
-              ? "header-menu home"
-              : currentSection == pageRoutes.productDetail
-              ? "header-menu"
-              : ""
-          }`}
-        >
-          {props.onShowMenu && (
-            <>
-              <i
-                className="fa-solid fa-bars i-menu"
-                style={showMenuButtonStyle}
-                onClick={() => props.onShowMenu?.(true)}
-              ></i>
-              <div></div>
-            </>
-          )}
-          {(currentSection == pageRoutes.home ||
-            currentSection == pageRoutes.productDetail) && (
-            <img
-              src={logoSrc}
-              className="logo-header"
-              alt="Logo"
-              style={{
-                flex: "0 0 auto",
-                cursor:
-                  currentSection == pageRoutes.productDetail
-                    ? "pointer"
-                    : "inherit",
-              }}
-              onClick={
-                currentSection == pageRoutes.productDetail
-                  ? () => navigate(pageRoutes.home)
-                  : undefined
-              }
-            />
-          )}
+    <div className="t-flex j-conten header-menu">
+      <header className="cont-prime-h">
+        {isLoggedIn ? (
           <div
-            className="t-flex options-tc"
-            style={{
-              maxWidth: "100%",
-              minWidth: 0,
-              justifyContent: "flex-end",
-            }}
+            className={`t-flex header-tc  ${
+              currentSection == pageRoutes.home ? "home" : ""
+            }`}
           >
-            {isPremium && <Premium />}
-            {width > windowSize.md && (
+            {props.onShowMenu && (
               <>
-                <Chat />
-                <Notifications />
+                <i
+                  className="fa-solid fa-bars i-menu"
+                  style={showMenuButtonStyle}
+                  onClick={() => props.onShowMenu?.(true)}
+                ></i>
+                <div></div>
               </>
             )}
-            <UserName />
-            <Dropdown
-              menu={{ items: dropdownItems, onClick: onClick }}
-              trigger={["click"]}
-              placement="bottomRight"
-            >
-              <i
-                className="fa-regular fa-caret-down"
+            {(currentSection == pageRoutes.home ||
+              currentSection == pageRoutes.productDetail) && (
+              <img
+                src={logoSrc}
+                className="logo-header"
+                alt="Logo"
                 style={{
-                  padding: "5px",
-                  marginLeft: "-5px",
-                  cursor: "pointer",
+                  flex: "0 0 auto",
+                  cursor:
+                    currentSection == pageRoutes.productDetail
+                      ? "pointer"
+                      : "inherit",
                 }}
-              ></i>
-            </Dropdown>
+                onClick={
+                  currentSection == pageRoutes.productDetail
+                    ? () => navigate(pageRoutes.home)
+                    : undefined
+                }
+              />
+            )}
+            <div
+              className="t-flex options-tc"
+              style={{
+                maxWidth: "100%",
+                minWidth: 0,
+                justifyContent: "flex-end",
+              }}
+            >
+              {isPremium && <Premium />}
+              {width > windowSize.md && (
+                <>
+                  <Chat />
+                  <Notifications />
+                </>
+              )}
+              <UserName />
+              <Dropdown
+                menu={{ items: dropdownItems, onClick: onClick }}
+                trigger={["click"]}
+                placement="bottomRight"
+              >
+                <i
+                  className="fa-regular fa-caret-down"
+                  style={{
+                    padding: "5px",
+                    marginLeft: "-5px",
+                    cursor: "pointer",
+                  }}
+                ></i>
+              </Dropdown>
+            </div>
           </div>
-        </div>
-      ) : (
-        <header>
+        ) : (
           <div className="t-flex header-tc header-menu">
             <img
               src={logoSrc}
@@ -283,8 +279,8 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
               </ButtonContainer>
             </div>
           </div>
-        </header>
-      )}
-    </header>
+        )}
+      </header>
+    </div>
   );
 }
