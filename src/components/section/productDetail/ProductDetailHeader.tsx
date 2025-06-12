@@ -17,37 +17,39 @@ export default function ProductDetailHeader(props: ProductDetailHeaderProps) {
 
   return (
     <div className="section-guia t-flex j-items">
-      <div className="t-flex f-column gap-10 header-requerimiento">
-        <h1 className="m-0 text-truncate">{props.reqTitle}</h1>
-        <div className="t-flex breadcrumb-req">
-          <a
-            className="ruta-req"
-            onClick={() => {
-              navigate(pageRoutes.home);
-            }}
-          >
-            {t("home")}
-          </a>
-          <div>/</div>
-          <a
-            className="ruta-req"
-            onClick={() => {
-              if (props.type) updateType(props.type);
-              navigate(pageRoutes.home);
-            }}
-          >
-            {t(
-              props.type == RequirementType.GOOD
-                ? "goods"
-                : props.type == RequirementType.SERVICE
-                ? "services"
-                : props.type == RequirementType.SALE
-                ? "sales"
-                : ""
-            )}
-          </a>
-          <div>/</div>
-          <div className="text-truncate">{props.reqTitle}</div>
+      <div className="t-flex f-column gap-10 header-requerimiento j-items">
+        <div className="cont-prime wd-100">
+          <h1 className="m-0 text-truncate">{props.reqTitle}</h1>
+          <div className="t-flex breadcrumb-req">
+            <a
+              className="ruta-req"
+              onClick={() => {
+                navigate(pageRoutes.home);
+              }}
+            >
+              {t("home")}
+            </a>
+            <div>/</div>
+            <a
+              className="ruta-req"
+              onClick={() => {
+                if (props.type) updateType(props.type);
+                navigate(pageRoutes.home);
+              }}
+            >
+              {t(
+                props.type == RequirementType.GOOD
+                  ? "goods"
+                  : props.type == RequirementType.SERVICE
+                  ? "services"
+                  : props.type == RequirementType.SALE
+                  ? "sales"
+                  : ""
+              )}
+            </a>
+            <div>/</div>
+            <div className="text-truncate">{props.reqTitle}</div>
+          </div>
         </div>
       </div>
     </div>

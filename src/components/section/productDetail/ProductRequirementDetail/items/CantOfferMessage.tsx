@@ -281,76 +281,77 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
         onClose={handleCloseModal}
         style={mainModalScrollStyle}
       />
-
-      <div className="t-flex f-column j-conten j-items oferta-check gap-10">
-        {props.loading ? (
-          <SimpleLoading style={{ width: "15vw" }} />
-        ) : (
-          <>
-            <i className="fa-regular fa-circle-exclamation fa-3x"></i>
-            <div className="aviso-h">
-              <div className="cantidad-estd">{mainText}</div>
-              {optionalText && (
-                <div className="detalles-estd">{optionalText}</div>
-              )}
-            </div>
-            {props.motive == CantOfferMotives.ALREADY_MADE_OFFER && (
-              <ButtonContainer
-                style={{ height: "auto" }}
-                className="btn btn-default btn-sm"
-                icon={<i className="fa-regular fa-trash"></i>}
-                onClick={deleteOffer}
-                loading={loadingDelete}
-              >
-                {t("deleteOffer")}
-              </ButtonContainer>
-            )}
-            {props.motive == CantOfferMotives.CHANGED_STATE && (
-              <ButtonContainer
-                style={{ height: "auto" }}
-                className="btn btn-default btn-sm"
-                icon={<i className="fa-regular fa-house"></i>}
-                onClick={() => navigate(pageRoutes.home)}
-              >
-                {t("goTo") + t("home")}
-              </ButtonContainer>
-            )}
-            {(props.motive == CantOfferMotives.IS_CREATOR ||
-              props.motive == CantOfferMotives.SUBUSER_IS_CREATOR) && (
-              <ButtonContainer
-                style={{ height: "auto" }}
-                className="btn btn-default btn-sm"
-                icon={<i className="fa-regular fa-columns"></i>}
-                onClick={() => seeRequirementDetails()}
-              >
-                {t("goTo") + t("controlPanel")}
-              </ButtonContainer>
-            )}
-            {props.motive == CantOfferMotives.SUBUSER_MADE_OFFER && (
-              <ButtonContainer
-                style={{ height: "auto" }}
-                className="btn btn-default btn-sm"
-                icon={<i className="fa-regular fa-columns"></i>}
-                onClick={() => navigate(pageRoutes.users)}
-              >
-                {t("goTo") + t("controlPanel")}
-              </ButtonContainer>
-            )}
-            {props.motive == CantOfferMotives.ONLY_CERTIFIED &&
-              entityType == EntityType.COMPANY &&
-              props.isPremium &&
-              props.isCertified == CertificationState.NONE && (
+      <div className="t-flex gap-15 f-column form-oferta">
+        <div className="t-flex f-column j-conten j-items oferta-check gap-10">
+          {props.loading ? (
+            <SimpleLoading style={{ width: "15vw" }} />
+          ) : (
+            <>
+              <i className="fa-regular fa-circle-exclamation fa-3x"></i>
+              <div className="aviso-h">
+                <div className="cantidad-estd">{mainText}</div>
+                {optionalText && (
+                  <div className="detalles-estd">{optionalText}</div>
+                )}
+              </div>
+              {props.motive == CantOfferMotives.ALREADY_MADE_OFFER && (
                 <ButtonContainer
                   style={{ height: "auto" }}
-                  className="btn btn-green btn-sm"
-                  icon={<i className="fa-regular fa-star"></i>}
-                  onClick={openGetCertifiedModal}
+                  className="btn btn-default btn-sm"
+                  icon={<i className="fa-regular fa-trash"></i>}
+                  onClick={deleteOffer}
+                  loading={loadingDelete}
                 >
-                  {t("getCertified")}
+                  {t("deleteOffer")}
                 </ButtonContainer>
               )}
-          </>
-        )}
+              {props.motive == CantOfferMotives.CHANGED_STATE && (
+                <ButtonContainer
+                  style={{ height: "auto" }}
+                  className="btn btn-default btn-sm"
+                  icon={<i className="fa-regular fa-house"></i>}
+                  onClick={() => navigate(pageRoutes.home)}
+                >
+                  {t("goTo") + t("home")}
+                </ButtonContainer>
+              )}
+              {(props.motive == CantOfferMotives.IS_CREATOR ||
+                props.motive == CantOfferMotives.SUBUSER_IS_CREATOR) && (
+                <ButtonContainer
+                  style={{ height: "auto" }}
+                  className="btn btn-default btn-sm"
+                  icon={<i className="fa-regular fa-columns"></i>}
+                  onClick={() => seeRequirementDetails()}
+                >
+                  {t("goTo") + t("controlPanel")}
+                </ButtonContainer>
+              )}
+              {props.motive == CantOfferMotives.SUBUSER_MADE_OFFER && (
+                <ButtonContainer
+                  style={{ height: "auto" }}
+                  className="btn btn-default btn-sm"
+                  icon={<i className="fa-regular fa-columns"></i>}
+                  onClick={() => navigate(pageRoutes.users)}
+                >
+                  {t("goTo") + t("controlPanel")}
+                </ButtonContainer>
+              )}
+              {props.motive == CantOfferMotives.ONLY_CERTIFIED &&
+                entityType == EntityType.COMPANY &&
+                props.isPremium &&
+                props.isCertified == CertificationState.NONE && (
+                  <ButtonContainer
+                    style={{ height: "auto" }}
+                    className="btn btn-green btn-sm"
+                    icon={<i className="fa-regular fa-star"></i>}
+                    onClick={openGetCertifiedModal}
+                  >
+                    {t("getCertified")}
+                  </ButtonContainer>
+                )}
+            </>
+          )}
+        </div>
       </div>
     </>
   );

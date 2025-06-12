@@ -250,7 +250,11 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
             </div>
           </div>
         ) : (
-          <div className="t-flex header-tc header-menu">
+          <div
+            className={`t-flex header-tc  ${
+              currentSection == pageRoutes.home ? "home" : ""
+            }`}
+          >
             <img
               src={logoSrc}
               alt="Logo"

@@ -87,25 +87,29 @@ export default function Home() {
   return (
     <>
       <Search />
-      <div className="t-flex f-column gap-20 section-detalles home-det">
-        <div className="t-flex f-column gap-20 home-1">
-          {isPremium && (
-            <>
-              <CompanyFilter />
-              <CompanyData />
-              <div className="titulo req-t">
-                {t("homeTableFirstHalf")}{" "}
-                <span>{t("homeTableSecondHalf")}</span>
-              </div>
-            </>
-          )}
-          <HomeTable
-            content={tableContent}
-            loadingTable={loadingRequirementList}
-            onChangePageAndPageSize={handleChangePageAndPageSize}
-          />
+      <div className="t-flex f-column section-detalles j-items">
+        <div className="cont-prime">
+          <div className="gap-20 home-det">
+            <div className="t-flex f-column gap-20 home-1">
+              {isPremium && (
+                <>
+                  <CompanyFilter />
+                  <CompanyData />
+                  <div className="titulo req-t">
+                    {t("homeTableFirstHalf")}{" "}
+                    <span>{t("homeTableSecondHalf")}</span>
+                  </div>
+                </>
+              )}
+              <HomeTable
+                content={tableContent}
+                loadingTable={loadingRequirementList}
+                onChangePageAndPageSize={handleChangePageAndPageSize}
+              />
+            </div>
+            <Ads />
+          </div>
         </div>
-        <Ads />
       </div>
       <Footer />
     </>
