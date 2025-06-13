@@ -22,7 +22,7 @@ export default function BudgetField(props: BudgetFieldProps) {
     >
       <InputNumberContainer
         min={0}
-        max={99999}
+        max={9999999}
         step={0.1}
         precision={1}
         className="form-control"

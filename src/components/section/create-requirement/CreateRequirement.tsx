@@ -273,7 +273,6 @@ export default function CreateRequirement(props: CreateRequirementProps) {
 
     if (type == RequirementType.SALE) data.state_article = values.itemCondition;
 
-    console.log(values, data);
     props.setApiParams({
       service: getCreateRecordService(type),
       method: "post",
