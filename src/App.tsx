@@ -35,6 +35,7 @@ import {
 } from "./utilities/globals.ts";
 import { MainSocketsProvider } from "./contexts/MainSocketsContext.tsx";
 import { setIsUserLoading } from "./redux/loadingUserSlice.ts";
+import AdminGuard from "./components/guards/AdminGuard.tsx";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
@@ -183,6 +184,18 @@ function App() {
                             <MainLayout>
                               <Suspense fallback={<LoadingPage />}>
                                 <Routes>
+                                  <Route
+                                    path={`${pageRoutes.admin}`}
+                                    element={
+                                      <AuthRoleGuard
+                                        allowedRoles={RolesForSection.profile}
+                                      >
+                                        <AdminGuard>
+                                          <MyProfile />
+                                        </AdminGuard>
+                                      </AuthRoleGuard>
+                                    }
+                                  />
                                   <Route
                                     path={`${pageRoutes.profile}`}
                                     element={

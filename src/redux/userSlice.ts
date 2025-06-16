@@ -55,6 +55,7 @@ export const userSlice = createSlice({
       state.image = action.payload.image;
       state.categories = action.payload.categories ?? [];
       state.isPremium = action.payload.isPremium ? true : false;
+      state.isSystemAdmin = action.payload.isSystemAdmin;
     },
     setUid: (state, action) => {
       state.uid = action.payload;
@@ -73,7 +74,6 @@ export const userSlice = createSlice({
     },
     setIsLoggedIn: (state, action) => {
       state.isLoggedIn = action.payload;
-      console.log("setting", state.isLoggedIn);
     },
     setUserImage: (
       state,

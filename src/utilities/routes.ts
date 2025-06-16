@@ -16,6 +16,7 @@ export const ApiMainRoutes = {
   notification: "notification/",
   chat: "chat/",
   plan: "plan/",
+  admin: "admin/",
 };
 
 export const ApiRoutes = {
@@ -194,6 +195,7 @@ export const pageRoutes = {
   allPurchaseOrders: "/all-ordenes-de-compra",
   allSalesOrders: "/all-ordenes-de-venta",
   statistics: "/statistics",
+  admin: "admin/",
 };
 
 export const pageSubRoutes = {

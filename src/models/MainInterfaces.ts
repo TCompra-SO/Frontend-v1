@@ -158,6 +158,7 @@ export interface BaseUser extends DisplayUser {
   categories?: number[];
   planID: string;
   isPremium: boolean;
+  isSystemAdmin?: boolean;
 }
 
 export interface UserCounters {

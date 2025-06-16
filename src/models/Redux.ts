@@ -23,6 +23,7 @@ export interface MainUserState {
 export interface UserState extends MainUserState {
   token: string;
   lastSession: string;
+  isSystemAdmin?: boolean;
 }
 
 export interface LoadingState {

@@ -124,6 +124,15 @@ export const RolesForSection: {
     [UserRoles.BUYER]: true,
     [UserRoles.LEGAL]: true,
   },
+  admin: {
+    // Sólo una cuenta principal tiene acceso
+    [UserRoles.NONE]: false,
+    [UserRoles.ADMIN]: true,
+    [UserRoles.SELLER_BUYER]: false,
+    [UserRoles.SELLER]: false,
+    [UserRoles.BUYER]: false,
+    [UserRoles.LEGAL]: false,
+  },
 };
 
 export const RolesForSubSection: {

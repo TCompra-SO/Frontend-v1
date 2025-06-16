@@ -1196,9 +1196,19 @@ Contenedor para área de texto. Soporta todas las propiedades de TextArea de Ant
 
 ### Guards
 
+#### AdminGuard
+
+Componente que protege las rutas basado en si el usuario es un administrador del sistema. Si no lo es, es redirigido a la página de home.
+
+_Props_
+
+| Nombre     | Tipo        | Descripción                                                           |
+| ---------- | ----------- | --------------------------------------------------------------------- |
+| `children` | `ReactNode` | Contenido a renderizar si el usuario es un administrador del sistema. |
+
 #### AuthRoleGuard
 
-Componente que protege las rutas basado en roles de usuario. Si el usuario no tiene permisos, es redirigido a página de home.
+Componente que protege las rutas basado en roles de usuario. Si el usuario no tiene permisos, es redirigido a la página de home.
 
 _Props_
 
