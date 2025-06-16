@@ -781,7 +781,7 @@ const resources = {
       confirmPassword: "Confirme contraseña",
       docNumberNotFound: "No se encontraron datos para el documento provisto",
       mustProvideValidDoc: "Debe ingresar un  documento válido",
-      clickOnSearchIcon: "Haga click on 🔍 para buscar",
+      clickOnSearchIcon: "Haga click en 🔍 para buscar",
       passwordsMusMatch: "Las contraseñas deben ser iguales",
       noRecoveryCodeForUser: "Este usuario no tiene código de recuperación",
       agreeToTermsAndConditions: "Acepto los Términos y Condiciones",
