@@ -34,6 +34,9 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
   const typeID = useSelector((state: MainState) => state.user.typeID);
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
+  const isSystemAdmin = useSelector(
+    (state: MainState) => state.user.isSystemAdmin
+  );
   const [currentSection, setCurrentSection] = useState(pageRoutes.home);
   const logout = useLogout();
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -83,10 +86,6 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
       label: controlItem,
     },
     {
-      key: "admin",
-      label: adminItem,
-    },
-    {
       key: "logout",
       label: logoutItem,
     },
@@ -100,52 +99,66 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
   useEffect(() => {
     if (width > windowSize.md) {
       setShowMenuButtonStyle({ display: "none" });
-      setDropdownItems([
-        {
-          key: "profile",
-          label: profileItem,
-        },
-        {
-          key: "control",
-          label: controlItem,
-        },
-        {
-          key: "admin",
-          label: adminItem,
-        },
-        {
-          key: "logout",
-          label: logoutItem,
-        },
-      ]);
+      setDropdownItems(
+        [
+          {
+            key: "profile",
+            label: profileItem,
+          },
+          {
+            key: "control",
+            label: controlItem,
+          },
+          {
+            key: "logout",
+            label: logoutItem,
+          },
+        ].concat(
+          isSystemAdmin
+            ? [
+                {
+                  key: "admin",
+                  label: adminItem,
+                },
+              ]
+            : []
+        )
+      );
     } else {
       setShowMenuButtonStyle({});
-      setDropdownItems([
-        {
-          key: "notification",
-          label: notifItem,
-        },
-        {
-          key: "chat",
-          label: chatItem,
-        },
-        {
-          key: "profile",
-          label: profileItem,
-        },
-        {
-          key: "control",
-          label: controlItem,
-        },
-        {
-          key: "admin",
-          label: adminItem,
-        },
-        {
-          key: "logout",
-          label: logoutItem,
-        },
-      ]);
+      setDropdownItems(
+        [
+          {
+            key: "notification",
+            label: notifItem,
+          },
+          {
+            key: "chat",
+            label: chatItem,
+          },
+          {
+            key: "profile",
+            label: profileItem,
+          },
+          {
+            key: "control",
+            label: controlItem,
+          },
+          {
+            key: "logout",
+            label: logoutItem,
+          },
+        ].concat(
+          isSystemAdmin
+            ? [
+                {
+                  key: "admin",
+                  label: adminItem,
+                },
+              ]
+            : []
+        )
+      );
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { MainState, UserState } from "../../models/Redux";
+import { MainState } from "../../models/Redux";
 import { Navigate } from "react-router-dom";
 import { navigateToAfterLoggingOut } from "../../utilities/globals";
 import { ReactNode } from "react";
@@ -12,7 +12,9 @@ export default function AdminGuard(props: AdminGuardProps) {
   const isLoading = useSelector(
     (state: MainState) => state.loadingUser.isLoading
   );
-  const isSystemAdmin = useSelector((state: UserState) => state.isSystemAdmin);
+  const isSystemAdmin = useSelector(
+    (state: MainState) => state.user.isSystemAdmin
+  );
 
   if (isLoading) {
     return null;

@@ -84,6 +84,12 @@ export const userSlice = createSlice({
     ) => {
       state.image = action.payload;
     },
+    setIsSystemAdmin: (
+      state,
+      action: { payload: boolean | undefined; type: string }
+    ) => {
+      state.isSystemAdmin = action.payload;
+    },
   },
 });
 
@@ -97,5 +103,6 @@ export const {
   setUserImage,
   setUserName,
   setToken,
+  setIsSystemAdmin,
 } = userSlice.actions;
 export default userSlice.reducer;
