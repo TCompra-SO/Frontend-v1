@@ -3,7 +3,7 @@ import Premium from "./items/Premium";
 import Chat from "./items/Chat";
 import UserName from "./items/UserName";
 import Logout from "./items/Logout";
-import { CSSProperties, ReactNode, useEffect, useState } from "react";
+import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
 import ProfileMenu from "./items/ProfileMenu";
 import useWindowSize from "../../../hooks/useWindowSize";
 import { windowSize } from "../../../utilities/globals";
@@ -18,6 +18,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { UserRoles } from "../../../utilities/types";
 import ControlPanel from "./items/ControlPanel";
 import Notifications from "./items/Notifications";
+import Admin from "./items/Admin";
 
 interface MainHeaderNoModalsProps {
   onShowMenu?: (show: boolean) => void;
@@ -35,6 +36,7 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
   const [currentSection, setCurrentSection] = useState(pageRoutes.home);
   const logout = useLogout();
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [showMenuButtonStyle, setShowMenuButtonStyle] = useState<CSSProperties>(
     { display: "none" }
   );
@@ -57,17 +59,17 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
       {t("logout")}
     </Space>
   );
-  const notifItem: ReactNode = (
-    // <Space style={{ margin: "-10px 0" }}>
-    //   <Notifications forDropdown />
-    //   {t("notifications")}
-    // </Space>
-    <Notifications forDropdown includeText />
-  );
+  const notifItem: ReactNode = <Notifications forDropdown includeText />;
   const chatItem: ReactNode = (
     <Space style={{ margin: "-10px 0" }}>
       <Chat forDropdown />
       {t("chat")}
+    </Space>
+  );
+  const adminItem: ReactNode = (
+    <Space style={{ margin: "-10px 0" }}>
+      <Admin />
+      {t("admin")}
     </Space>
   );
 
@@ -79,6 +81,10 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
     {
       key: "control",
       label: controlItem,
+    },
+    {
+      key: "admin",
+      label: adminItem,
     },
     {
       key: "logout",
@@ -104,6 +110,10 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
           label: controlItem,
         },
         {
+          key: "admin",
+          label: adminItem,
+        },
+        {
           key: "logout",
           label: logoutItem,
         },
@@ -126,6 +136,10 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
         {
           key: "control",
           label: controlItem,
+        },
+        {
+          key: "admin",
+          label: adminItem,
         },
         {
           key: "logout",
@@ -232,13 +246,14 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
                   <Notifications />
                 </>
               )}
-              <UserName />
+              <UserName onClick={() => dropdownRef.current?.click()} />
               <Dropdown
                 menu={{ items: dropdownItems, onClick: onClick }}
                 trigger={["click"]}
                 placement="bottomRight"
               >
                 <i
+                  ref={dropdownRef}
                   className="fa-regular fa-caret-down"
                   style={{
                     padding: "5px",

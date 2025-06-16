@@ -1351,6 +1351,10 @@ _Props_
 
 ##### Items
 
+###### Admin
+
+Componente mostrado sólo a cuenta(s) administradora(s). Redirige a panel de administración.
+
 ###### Chat
 
 Componente de ícono de chat con indicador de mensajes no leídos. Al hacer click en él, redirecciona a sección de chat.
@@ -1391,6 +1395,12 @@ Componente de ícono de perfil de usuario.
 ###### UserName
 
 Componente que muestra la imagen de perfil y nombre del usuario.
+
+_Props_
+
+| Nombre     | Tipo         | Descripción                                                      |
+| ---------- | ------------ | ---------------------------------------------------------------- |
+| `onClick?` | `() => void` | Función a ejecutar cuando se hace click en el nombre de usuario. |
 
 #### Home
 
