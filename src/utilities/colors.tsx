@@ -197,4 +197,5 @@ export const sectionIcons: Record<any, string> = {
   allOffers: "fa-regular fa-ballot-check",
   certificate: "fa-regular fa-file-certificate",
   myCertificates: "fa-regular fa-files",
+  admin: "fa-regular fa-user-crown",
 };

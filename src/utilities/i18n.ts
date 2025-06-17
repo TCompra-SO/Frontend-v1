@@ -568,6 +568,7 @@ const resources = {
       state: "State",
       chatBotTooltip: "Chat with us",
       options: "Options",
+      administrator: "Administrator",
     },
   },
   es: {
@@ -1146,6 +1147,7 @@ const resources = {
       state: "Estado",
       chatBotTooltip: "Chatea con nosotros",
       options: "Opciones",
+      administrator: "Administrador",
     },
   },
 };

@@ -185,6 +185,9 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
       case "chat":
         navigate(`${pageRoutes.chat}`);
         break;
+      case "admin":
+        navigate(`${pageRoutes.admin}`);
+        break;
       case "control":
         switch (typeID) {
           case UserRoles.ADMIN:

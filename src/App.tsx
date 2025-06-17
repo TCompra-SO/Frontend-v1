@@ -36,6 +36,7 @@ import {
 import { MainSocketsProvider } from "./contexts/MainSocketsContext.tsx";
 import { setIsUserLoading } from "./redux/loadingUserSlice.ts";
 import AdminGuard from "./components/guards/AdminGuard.tsx";
+import AdminSales from "./pages/admin/AdminSales.tsx";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
@@ -191,7 +192,7 @@ function App() {
                                         allowedRoles={RolesForSection.profile}
                                       >
                                         <AdminGuard>
-                                          <MyProfile />
+                                          <AdminSales />
                                         </AdminGuard>
                                       </AuthRoleGuard>
                                     }

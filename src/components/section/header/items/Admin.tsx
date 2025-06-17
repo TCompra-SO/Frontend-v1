@@ -1,7 +1,9 @@
+import { sectionIcons } from "../../../../utilities/colors";
+
 export default function Admin() {
   return (
     <div>
-      <i className="fa-regular fa-user-crown i-main"></i>
+      <i className={`${sectionIcons["admin"]} i-main`}></i>
     </div>
   );
 }
