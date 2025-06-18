@@ -33,6 +33,11 @@ interface LoadingDataContextType {
   idAndActionQueue: Record<string, Action>;
   updateIdAndActionQueue: (id: string, action: Action) => void;
   deleteFromIdAndActionQueue: (id: string) => void;
+
+  // Para acciones de admin
+  idAndActionAdminQueue: Record<string, Action>;
+  updateIdAndActionAdminQueue: (id: string, action: Action) => void;
+  deleteFromIdAndActionAdminQueue: (id: string) => void;
 }
 
 export const LoadingDataContext = createContext<LoadingDataContextType>({
@@ -57,6 +62,9 @@ export const LoadingDataContext = createContext<LoadingDataContextType>({
   idAndActionQueue: {},
   updateIdAndActionQueue: () => {},
   deleteFromIdAndActionQueue: () => {},
+  idAndActionAdminQueue: {},
+  updateIdAndActionAdminQueue: () => {},
+  deleteFromIdAndActionAdminQueue: () => {},
   changeCertificationStateLoading: false,
   updateChangeCertificationStateLoading: () => {},
   // changeSubUserStatusLoading: false,
@@ -87,6 +95,9 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
   // const [changeSubUserStatusLoading, setChangeSubUserStatusLoading] =
   //   useState(false);
   const [idAndActionQueue, setIdAndActionQueue] = useState<
+    Record<string, Action>
+  >({});
+  const [idAndActionAdminQueue, setIdAndActionAdminQueue] = useState<
     Record<string, Action>
   >({});
 
@@ -149,6 +160,21 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
     });
   }
 
+  function updateIdAndActionAdminQueue(id: string, action: Action) {
+    setIdAndActionAdminQueue((prev) => ({
+      ...prev,
+      [id]: action,
+    }));
+  }
+
+  function deleteFromIdAndActionAdminQueue(id: string) {
+    setIdAndActionAdminQueue((prev) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { [id]: _, ...rest } = prev;
+      return rest;
+    });
+  }
+
   return (
     <LoadingDataContext.Provider
       value={{
@@ -164,6 +190,7 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
         changeCertificationStateLoading,
         // changeSubUserStatusLoading,
         idAndActionQueue,
+        idAndActionAdminQueue,
         updateMyPurchaseOrdersLoadingPdf,
         updateSubUserPurchaseOrdersLoadingPdf,
         updateAllPurchaseOrdersLoadingPdf,
@@ -175,6 +202,8 @@ export function LoadingDataProvider({ children }: { children: ReactNode }) {
         updateCreateRequirementLoading,
         updateIdAndActionQueue,
         deleteFromIdAndActionQueue,
+        updateIdAndActionAdminQueue,
+        deleteFromIdAndActionAdminQueue,
         updateChangeCertificationStateLoading,
         // updateChangeSubUserStatusLoading,
       }}

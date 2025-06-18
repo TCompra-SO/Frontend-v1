@@ -355,6 +355,8 @@ const resources = {
       maxCharMessage: "Enter up to",
       userSuspendedSuccessfully: "User suspended successfully",
       userReactivatedSuccessfully: "User reactivated successfully",
+      saleValidatedSuccessfully: "Sale validated successfully",
+      saleInvalidatedSuccessfully: "Sale set as invalid successfully",
       noDocumentsForCertification:
         "No documents available. Click 'Add certificates' to add new files.",
       noRefreshTokenMsg: "Your session has expired. Please log in again.",
@@ -932,6 +934,9 @@ const resources = {
       maxCharMessage: "Puede ingresar hasta",
       userSuspendedSuccessfully: "Usuario suspendido exitosamente",
       userReactivatedSuccessfully: "Usuario reactivado exitosamente",
+      saleValidatedSuccessfully: "Liquidación validada exitosamente",
+      saleInvalidatedSuccessfully:
+        "Liquidación marcada como inválida exitosamente",
       noDocumentsForCertification:
         "No hay documentos disponibles. Haga click en 'Agregar certificados' para añadir nuevos archivos.",
       noRefreshTokenMsg:

@@ -90,6 +90,7 @@ import {
   selectSaleOfferService,
   uploadDocsSaleService,
   uploadImagesSaleService,
+  validateSaleService,
 } from "../services/requests/sale/saleService";
 import {
   cancelReqOfferService,
@@ -737,6 +738,11 @@ export function getSearchRecordsService(
   if (type == RequirementType.GOOD) return searchRequirementsService();
   if (type == RequirementType.SERVICE) return searchServicesService();
   if (type == RequirementType.SALE) return searchSalesService();
+  return null;
+}
+
+export function getValidateRecordService(type: RequirementType) {
+  if (type == RequirementType.SALE) return validateSaleService();
   return null;
 }
 

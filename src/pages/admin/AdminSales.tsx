@@ -34,10 +34,12 @@ import { MainState } from "../../models/Redux";
 import { useSelector } from "react-redux";
 import { getRequirementFromData } from "../../services/general/generalServices";
 import useShowNotification from "../../hooks/utilHooks";
+import { useValidateSale } from "../../hooks/adminHooks";
 
 export default function AdminSales() {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
+  const { validateSale } = useValidateSale();
   const uid = useSelector((state: MainState) => state.user.uid);
   const [usersCache, setUsersCache] = useState<Map<string, any>>(new Map());
   const [type] = useState<RequirementType>(RequirementType.SALE);
@@ -181,7 +183,10 @@ export default function AdminSales() {
     }
   }
 
-  function handleOnButtonClick(action: Action, requirement: Requirement) {}
+  function handleOnButtonClick(action: Action, requirement: Requirement) {
+    if (action == Action.VALIDATE) validateSale(requirement.key, true);
+    else if (action == Action.INVALIDATE) validateSale(requirement.key, false);
+  }
 
   return (
     <TablePageContent

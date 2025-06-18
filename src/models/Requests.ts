@@ -320,3 +320,8 @@ export interface GetUnreadNotificationsCounterRequest {
 export interface ChatBotRequest {
   message: string;
 }
+
+export interface ValidateSaleRequest {
+  requirementId: string;
+  value: boolean;
+}

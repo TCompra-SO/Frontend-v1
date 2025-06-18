@@ -18,6 +18,7 @@ export default function ViewColumn(
     allPurchaseOrdersViewOffers,
     allSalesOrdersViewOffers,
     idAndActionQueue,
+    idAndActionAdminQueue,
   } = useContext(LoadingDataContext);
 
   const col: ColumnType<KeyInterface> = {
@@ -88,6 +89,10 @@ export default function ViewColumn(
                 ? allSalesOrdersViewOffers
                 : type == TableTypes.RECEIVED_CERT
                 ? idAndActionQueue[record.key]
+                  ? true
+                  : false
+                : TableTypes.ADMIN_SALES
+                ? idAndActionAdminQueue[record.key]
                   ? true
                   : false
                 : false
