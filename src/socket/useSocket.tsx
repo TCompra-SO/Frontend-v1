@@ -12,6 +12,7 @@ import { MainState } from "../models/Redux";
 import { SocketResponse } from "../models/Interfaces";
 import { SearchTableRequest } from "../models/Requests";
 import { hasNoSortNorFilter } from "../utilities/globalFunctions";
+import { connectHomeSocket } from "./connectHomeSocket";
 
 let socketAPI: Socket | null = null;
 let extraSocketAPI: Socket | null = null;
@@ -25,7 +26,8 @@ export default function useSocket(
     payload: SocketResponse,
     canAddRowUpdate: boolean
   ) => void,
-  orderType?: OrderTableType
+  orderType?: OrderTableType,
+  getUseFilter?: () => boolean
 ) {
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const uid = useSelector((state: MainState) => state.user.uid);
@@ -36,6 +38,7 @@ export default function useSocket(
     return () => {
       disconnectSockets();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -48,69 +51,78 @@ export default function useSocket(
 
   useEffect(() => {
     if (!socketAPI) {
-      if (
-        tableType == TableTypes.MY_DOCUMENTS ||
-        tableType == TableTypes.SENT_CERT ||
-        tableType == TableTypes.RECEIVED_CERT ||
-        tableType == TableTypes.USERS
-      )
-        socketAPI = io(import.meta.env.VITE_USERS_SOCKET_URL);
-      else if (subType == RequirementType.GOOD)
-        socketAPI = io(import.meta.env.VITE_REQUIREMENTS_SOCKET_URL);
-      else if (subType == RequirementType.SERVICE)
-        socketAPI = io(import.meta.env.VITE_SERVICES_SOCKET_URL);
-      else if (subType == RequirementType.SALE) {
-        socketAPI = io(import.meta.env.VITE_SALES_SOCKET_URL);
-      }
-      if (socketAPI) {
-        socketAPI.on("connect", () => {
-          console.log("Connected");
-          const roomName = getRoomName();
-          if (roomName) socketAPI?.emit("joinRoom", roomName + mainUid);
-        });
+      if (tableType == TableTypes.ADMIN_SALES && getUseFilter) {
+        socketAPI = connectHomeSocket(
+          RequirementType.SALE,
+          () => pageRef.current,
+          getUseFilter, // ch4
+          updateChangesQueue
+        );
+      } else {
+        if (
+          tableType == TableTypes.MY_DOCUMENTS ||
+          tableType == TableTypes.SENT_CERT ||
+          tableType == TableTypes.RECEIVED_CERT ||
+          tableType == TableTypes.USERS
+        )
+          socketAPI = io(import.meta.env.VITE_USERS_SOCKET_URL);
+        else if (subType == RequirementType.GOOD)
+          socketAPI = io(import.meta.env.VITE_REQUIREMENTS_SOCKET_URL);
+        else if (subType == RequirementType.SERVICE)
+          socketAPI = io(import.meta.env.VITE_SERVICES_SOCKET_URL);
+        else if (subType == RequirementType.SALE) {
+          socketAPI = io(import.meta.env.VITE_SALES_SOCKET_URL);
+        }
+        if (socketAPI) {
+          socketAPI.on("connect", () => {
+            console.log("Connected");
+            const roomName = getRoomName();
+            if (roomName) socketAPI?.emit("joinRoom", roomName + mainUid);
+          });
 
-        socketAPI.on("joinedRoom", (message) => {
-          console.log(message);
-        });
+          socketAPI.on("joinedRoom", (message) => {
+            console.log(message);
+          });
 
-        socketAPI.on("updateRoom", (data: SocketResponse) => {
-          console.log("Received", data);
-          try {
-            const isAllTypeTableVar = isAllTypeTable();
-            const canAddRow = pageRef.current == 1;
+          socketAPI.on("updateRoom", (data: SocketResponse) => {
+            console.log("Received", data);
+            try {
+              const isAllTypeTableVar = isAllTypeTable();
+              const canAddRow = pageRef.current == 1;
 
-            if (
-              // Agregar cambios a cola si la tabla es de  tipo All o si el cambio pertenece a usuario
-              (isAllTypeTableVar ||
-                (!isAllTypeTableVar && uid == data.userId)) &&
-              (data.typeSocket == SocketChangeType.DELETE ||
-                data.typeSocket == SocketChangeType.UPDATE_FIELD ||
-                data.typeSocket == SocketChangeType.UPDATE ||
-                (data.typeSocket == SocketChangeType.CREATE &&
-                  canAddRow &&
-                  searchTableRequestRef.current &&
-                  hasNoSortNorFilter(searchTableRequestRef.current)))
-            ) {
-              if (tableType == TableTypes.MY_DOCUMENTS) {
-                // caso especial: lista de certificados agregados
-                if (data.typeSocket == SocketChangeType.CREATE)
-                  data.dataPack.data.forEach((cert) => {
-                    updateChangesQueue(
-                      { ...data, dataPack: { data: [cert] } },
-                      canAddRow
-                    );
-                  });
-                else if (
-                  data.typeSocket == SocketChangeType.DELETE ||
-                  data.typeSocket == SocketChangeType.UPDATE_FIELD
-                )
-                  updateChangesQueue(data, canAddRow);
-              } else updateChangesQueue(data, canAddRow);
+              if (
+                // Agregar cambios a cola si la tabla es de  tipo All o si el cambio pertenece a usuario
+                (isAllTypeTableVar ||
+                  (!isAllTypeTableVar && uid == data.userId)) &&
+                (data.typeSocket == SocketChangeType.DELETE ||
+                  data.typeSocket == SocketChangeType.UPDATE_FIELD ||
+                  data.typeSocket == SocketChangeType.UPDATE ||
+                  (data.typeSocket == SocketChangeType.CREATE &&
+                    canAddRow &&
+                    searchTableRequestRef.current &&
+                    hasNoSortNorFilter(searchTableRequestRef.current)))
+              ) {
+                if (tableType == TableTypes.MY_DOCUMENTS) {
+                  // caso especial: lista de certificados agregados
+                  if (data.typeSocket == SocketChangeType.CREATE)
+                    data.dataPack.data.forEach((cert) => {
+                      updateChangesQueue(
+                        { ...data, dataPack: { data: [cert] } },
+                        canAddRow
+                      );
+                    });
+                  else if (
+                    data.typeSocket == SocketChangeType.DELETE ||
+                    data.typeSocket == SocketChangeType.UPDATE_FIELD
+                  )
+                    updateChangesQueue(data, canAddRow);
+                } else updateChangesQueue(data, canAddRow);
+              }
+            } catch (e) {
+              console.log(e);
             }
-          } catch (e) {
-            console.log(e);
-          }
-        });
+          });
+        }
       }
     }
 
@@ -170,7 +182,7 @@ export default function useSocket(
       socketAPI.removeAllListeners();
       socketAPI.disconnect();
       socketAPI = null;
-      console.log("Disconnected");
+      console.log("Disconnected", tableType);
     }
     if (extraSocketAPI) {
       extraSocketAPI.removeAllListeners();

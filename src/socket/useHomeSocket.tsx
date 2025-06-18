@@ -4,6 +4,7 @@ import { homePageSize } from "../utilities/globals";
 import { HomeContext } from "../contexts/Homecontext";
 import { SocketResponse } from "../models/Interfaces";
 import { RequirementType, SocketChangeType } from "../utilities/types";
+import { connectHomeSocket } from "./connectHomeSocket";
 
 let socketHomeAPI: Socket | null = null;
 
@@ -26,47 +27,55 @@ export default function useHomeSocket() {
       getData(true);
     }
 
-    if (!socketHomeAPI) {
-      if (type == RequirementType.GOOD)
-        socketHomeAPI = io(import.meta.env.VITE_REQUIREMENTS_SOCKET_URL);
-      else if (type == RequirementType.SERVICE)
-        socketHomeAPI = io(import.meta.env.VITE_SERVICES_SOCKET_URL);
-      else if (type == RequirementType.SALE)
-        socketHomeAPI = io(import.meta.env.VITE_SALES_SOCKET_URL);
+    if (!socketHomeAPI)
+      socketHomeAPI = connectHomeSocket(
+        type,
+        () => pageRef.current,
+        () => useFilterRef.current,
+        updateChangesQueue
+      );
 
-      if (socketHomeAPI) {
-        socketHomeAPI.on("connect", () => {
-          console.log("Connected");
-          socketHomeAPI?.emit(
-            "joinRoom",
-            type == RequirementType.GOOD
-              ? "homeRequerimentProduct"
-              : type == RequirementType.SERVICE
-              ? "homeRequerimentService"
-              : "homeRequerimentLiquidation"
-          );
-        });
+    // if (!socketHomeAPI) {
+    //   if (type == RequirementType.GOOD)
+    //     socketHomeAPI = io(import.meta.env.VITE_REQUIREMENTS_SOCKET_URL);
+    //   else if (type == RequirementType.SERVICE)
+    //     socketHomeAPI = io(import.meta.env.VITE_SERVICES_SOCKET_URL);
+    //   else if (type == RequirementType.SALE)
+    //     socketHomeAPI = io(import.meta.env.VITE_SALES_SOCKET_URL);
 
-        socketHomeAPI.on("joinedRoom", (message) => {
-          console.log(message);
-        });
+    //   if (socketHomeAPI) {
+    //     socketHomeAPI.on("connect", () => {
+    //       console.log("Connected");
+    //       socketHomeAPI?.emit(
+    //         "joinRoom",
+    //         type == RequirementType.GOOD
+    //           ? "homeRequerimentProduct"
+    //           : type == RequirementType.SERVICE
+    //           ? "homeRequerimentService"
+    //           : "homeRequerimentLiquidation"
+    //       );
+    //     });
 
-        socketHomeAPI.on("updateRoom", (payload: SocketResponse) => {
-          console.log("Nuevos datos recibido:", payload);
-          try {
-            const canAddRow: boolean =
-              pageRef.current == 1 && !useFilterRef.current;
-            if (
-              payload.typeSocket == SocketChangeType.UPDATE ||
-              (payload.typeSocket == SocketChangeType.CREATE && canAddRow)
-            )
-              updateChangesQueue(payload, canAddRow);
-          } catch (e) {
-            console.log(e);
-          }
-        });
-      }
-    }
+    //     socketHomeAPI.on("joinedRoom", (message) => {
+    //       console.log(message);
+    //     });
+
+    //     socketHomeAPI.on("updateRoom", (payload: SocketResponse) => {
+    //       console.log("Nuevos datos recibido:", payload);
+    //       try {
+    //         const canAddRow: boolean =
+    //           pageRef.current == 1 && !useFilterRef.current;
+    //         if (
+    //           payload.typeSocket == SocketChangeType.UPDATE ||
+    //           (payload.typeSocket == SocketChangeType.CREATE && canAddRow)
+    //         )
+    //           updateChangesQueue(payload, canAddRow);
+    //       } catch (e) {
+    //         console.log(e);
+    //       }
+    //     });
+    //   }
+    // }
 
     return () => {
       if (socketHomeAPI) {

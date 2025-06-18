@@ -4,8 +4,8 @@ import { SocketResponse } from "../models/Interfaces";
 
 export function connectHomeSocket(
   type: RequirementType,
-  currentPage: number,
-  useFilter: boolean,
+  getCurrentPage: () => number,
+  getUseFilter: () => boolean | null,
   updateChangesQueue: (
     payload: SocketResponse,
     canAddRowUpdate: boolean
@@ -39,7 +39,7 @@ export function connectHomeSocket(
     socketHomeAPI.on("updateRoom", (payload: SocketResponse) => {
       console.log("Nuevos datos recibido:", payload);
       try {
-        const canAddRow: boolean = currentPage == 1 && !useFilter;
+        const canAddRow: boolean = getCurrentPage() == 1 && !getUseFilter();
         if (
           payload.typeSocket == SocketChangeType.UPDATE ||
           (payload.typeSocket == SocketChangeType.CREATE && canAddRow)
@@ -50,4 +50,6 @@ export function connectHomeSocket(
       }
     });
   }
+
+  return socketHomeAPI;
 }

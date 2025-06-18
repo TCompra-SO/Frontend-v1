@@ -16,6 +16,7 @@ import { OnChangePageAndPageSizeType } from "../../../utilities/types";
 
 export interface TablePageContentRef {
   resetSearchValue: () => void;
+  getSearchValue: () => string;
 }
 
 interface TablePageContentProps {
@@ -40,6 +41,7 @@ const TablePageContent = forwardRef<TablePageContentRef, TablePageContentProps>(
 
     useImperativeHandle(ref, () => ({
       resetSearchValue: () => setSearchValue(""),
+      getSearchValue: () => searchValue,
     }));
 
     function onChangeSearchValue(e: ChangeEvent<HTMLInputElement>) {

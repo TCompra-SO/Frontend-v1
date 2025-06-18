@@ -83,7 +83,7 @@ export default function AdminSales() {
     setRequirementList,
     total,
     setTotal,
-    currentPageSize
+    currentPageSize // ch4
   );
   const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
     addNewRow,
@@ -98,11 +98,15 @@ export default function AdminSales() {
       resetChangesQueue
     );
   useSocket(
-    TableTypes.REQUIREMENT,
+    TableTypes.ADMIN_SALES,
     type,
     currentPage,
     apiParams.dataToSend,
-    updateChangesQueue
+    updateChangesQueue,
+    undefined,
+    searchValueRef.current
+      ? () => searchValueRef.current?.getSearchValue() != ""
+      : undefined
   );
 
   /** Actualiza el contenido de tabla */
