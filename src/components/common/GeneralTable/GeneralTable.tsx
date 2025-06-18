@@ -907,10 +907,10 @@ export default function GeneralTable(props: GeneralTableProps) {
         undefined,
         true
       ),
-      ActionColumn(
-        props.content.type,
+      ViewColumn(
+        TableTypes.ADMIN_SALES,
         props.content.onButtonClick,
-        visibility[TableColumns.ACTION]
+        visibility[TableColumns.VIEW]
       ),
     ];
     return columns;

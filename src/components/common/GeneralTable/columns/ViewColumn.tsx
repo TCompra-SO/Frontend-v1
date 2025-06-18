@@ -1,11 +1,11 @@
 import { ColumnType } from "antd/es/table";
 import ButtonContainer from "../../../containers/ButtonContainer";
 import { useTranslation } from "react-i18next";
-import { Action, TableTypes } from "../../../../utilities/types";
+import { Action, ActionLabel, TableTypes } from "../../../../utilities/types";
 import { useContext } from "react";
 import { LoadingDataContext } from "../../../../contexts/LoadingDataContext";
 import { viewColumnKey } from "../../../../utilities/globals";
-import { KeyInterface } from "../../../../models/MainInterfaces";
+import { KeyInterface, Requirement } from "../../../../models/MainInterfaces";
 
 export default function ViewColumn(
   type: TableTypes,
@@ -48,6 +48,12 @@ export default function ViewColumn(
         case TableTypes.SENT_CERT:
         case TableTypes.RECEIVED_CERT:
           action = Action.VIEW;
+          break;
+        case TableTypes.ADMIN_SALES:
+          action = (record as Requirement).valid
+            ? Action.INVALIDATE
+            : Action.VALIDATE;
+          break;
       }
 
       return (
@@ -56,9 +62,22 @@ export default function ViewColumn(
             onClick={() => onButtonClick(action, record)}
             className="btn btn-border-default btn-sm t-flex seleccionar-tb"
             children={
-              <>
-                {t("view")} <i className="fa-solid fa-eye"></i>
-              </>
+              type == TableTypes.ADMIN_SALES ? (
+                <>
+                  {t(ActionLabel[action])}{" "}
+                  <i
+                    className={
+                      action == Action.VALIDATE
+                        ? "fa-regular fa-circle-check"
+                        : "fa-regular fa-circle-xmark"
+                    }
+                  ></i>
+                </>
+              ) : (
+                <>
+                  {t("view")} <i className="fa-solid fa-eye"></i>
+                </>
+              )
             }
             disabled={
               type == TableTypes.PURCHASE_ORDER_SUBUSER

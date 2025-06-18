@@ -82,6 +82,7 @@ export const ApiRoutes = {
     cancel: "canceled/",
     searchMainFilters: "searchMainFilters",
     searchRequirements: "searchProductsByUser",
+    validate: "validate/",
   },
   requirement: {
     create: "create/",

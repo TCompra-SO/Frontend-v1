@@ -37,6 +37,7 @@ export interface RequirementItemSubUser extends BaseRequirementOffer {
   numberOffers: number;
   state: RequirementState;
   coin: number;
+  valid?: boolean;
 }
 
 export interface BasicRequirement extends RequirementItemSubUser {

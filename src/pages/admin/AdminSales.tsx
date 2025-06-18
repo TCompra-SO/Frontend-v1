@@ -6,12 +6,14 @@ import { sectionIcons } from "../../utilities/colors";
 import {
   Action,
   EntityType,
+  // OnChangePageAndPageSizeTypeParams,
   RequirementType,
   TableColumns,
   TableTypes,
 } from "../../utilities/types";
 import { useEffect, useRef, useState } from "react";
 import {
+  PaginationDataResponse,
   SocketDataPackType,
   TableTypeRequirement,
 } from "../../models/Interfaces";
@@ -53,6 +55,11 @@ export default function AdminSales() {
     handleSearch,
     reset,
   } = useFilterSortPaginationForTable();
+  // const [lastSearchParams, setLastSearchParams] =
+  //   useState<OnChangePageAndPageSizeTypeParams>({
+  //     page: currentPage,
+  //     pageSize: currentPageSize,
+  //   });
   const [tableContent, setTableContent] = useState<TableTypeRequirement>({
     type: TableTypes.REQUIREMENT,
     data: requirementList,
@@ -122,15 +129,7 @@ export default function AdminSales() {
   }, [type]);
 
   useEffect(() => {
-    if (responseData) {
-      setData();
-    } else if (error) {
-      setCurrentPage(1);
-      setTotal(0);
-      setRequirementList([]);
-      setLoadingTable(false);
-      showNotification("error", errorMsg);
-    }
+    setTableData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
@@ -138,7 +137,21 @@ export default function AdminSales() {
    * Funciones
    */
 
+  async function setTableData() {
+    if (responseData) {
+      await setData();
+    } else if (error) {
+      setCurrentPage(1);
+      setTotal(0);
+      setRequirementList([]);
+      setLoadingTable(false);
+      showNotification("error", errorMsg);
+    }
+  }
+
   async function setData() {
+    let success: boolean = false;
+    let totalPages: number = 0;
     try {
       const cache = new Map<string, any>();
       setUsersCache(cache);
@@ -148,14 +161,18 @@ export default function AdminSales() {
         })
       );
       setUsersCache(cache);
-      setTotal(responseData.res?.totalDocuments);
       setRequirementList(data.filter((req) => req !== null));
+      const pagResponse: PaginationDataResponse = responseData.res;
+      setTotal(pagResponse.totalDocuments);
+      totalPages = pagResponse.totalPages;
+      success = responseData.res?.currentPage <= responseData.res?.totalPages;
     } catch (error) {
       console.log(error);
       showNotification("error", t(defaultErrorMsg));
     } finally {
       setLoadingTable(false);
     }
+    return { success, totalPages };
   }
 
   function clearSearchValue() {
@@ -180,6 +197,7 @@ export default function AdminSales() {
           fieldNameSearchRequestRequirement,
           searchTable,
           setLoadingTable
+          // setLastSearchParams
         )
       }
       ref={searchValueRef}

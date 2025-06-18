@@ -149,21 +149,18 @@ export default function StateColumn(
         ? (value, record) => record.state == value
         : undefined,
 
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-    }) => (
-      <CustomFilterDropdown
-        setSelectedKeys={setSelectedKeys}
-        selectedKeys={selectedKeys}
-        confirm={confirm}
-        clearFilters={clearFilters}
-        filters={filters}
-        filteredInfo={filteredInfo}
-      />
-    ),
+    filterDropdown: noFilter
+      ? undefined
+      : ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+          <CustomFilterDropdown
+            setSelectedKeys={setSelectedKeys}
+            selectedKeys={selectedKeys}
+            confirm={confirm}
+            clearFilters={clearFilters}
+            filters={filters}
+            filteredInfo={filteredInfo}
+          />
+        ),
 
     render: (_, record) => {
       let label: string = "";

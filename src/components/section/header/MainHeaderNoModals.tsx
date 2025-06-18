@@ -76,20 +76,31 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
     </Space>
   );
 
-  const [dropdownItems, setDropdownItems] = useState([
-    {
-      key: "profile",
-      label: profileItem,
-    },
-    {
-      key: "control",
-      label: controlItem,
-    },
-    {
-      key: "logout",
-      label: logoutItem,
-    },
-  ]);
+  const [dropdownItems, setDropdownItems] = useState(
+    [
+      {
+        key: "profile",
+        label: profileItem,
+      },
+      {
+        key: "control",
+        label: controlItem,
+      },
+      {
+        key: "logout",
+        label: logoutItem,
+      },
+    ].concat(
+      isSystemAdmin
+        ? [
+            {
+              key: "admin",
+              label: adminItem,
+            },
+          ]
+        : []
+    )
+  );
 
   useEffect(() => {
     setCurrentSection(getSectionFromRoute(location.pathname));

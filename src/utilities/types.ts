@@ -71,6 +71,7 @@ export enum TableTypes {
   SENT_CERT = 12,
   RECEIVED_CERT = 13,
   HOME = 14,
+  ADMIN_SALES = 18,
 }
 
 export enum EntityType {
@@ -172,6 +173,8 @@ export enum Action {
   REACTIVATE = 39,
   VIEW_CERTIFICATION = 40,
   VIEW_CAT_LAST_REQUIREMENTS = 41,
+  VALIDATE = 42,
+  INVALIDATE = 43,
 }
 
 export const ActionLabel: {
@@ -219,6 +222,8 @@ export const ActionLabel: {
   [Action.REACTIVATE]: "reactivate",
   [Action.VIEW_CERTIFICATION]: "view",
   [Action.VIEW_CAT_LAST_REQUIREMENTS]: "view",
+  [Action.VALIDATE]: "validate",
+  [Action.INVALIDATE]: "invalidate",
 };
 
 export const ActionByStateRequirement: {

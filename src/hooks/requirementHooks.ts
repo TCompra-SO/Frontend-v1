@@ -729,9 +729,7 @@ export function useGetRequirementList(contextType: RequirementType) {
         setRequirements(data.filter((req) => req !== null));
         setTotal(responseData.res?.totalDocuments);
         totalPages = responseData.res?.totalPages;
-        if (responseData.res?.currentPage > responseData.res?.totalPages)
-          success = false;
-        else success = true;
+        success = responseData.res?.currentPage <= responseData.res?.totalPages;
       } else if (error) {
         if (type == latestTypeRef.current) {
           setTotal(0);

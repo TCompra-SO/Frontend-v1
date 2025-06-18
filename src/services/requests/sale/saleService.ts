@@ -148,3 +148,12 @@ export function uploadImagesSaleService(): HttpService {
     type: "SA-IM-UP",
   };
 }
+
+export function validateSaleService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.validate
+    }`,
+    type: "SA-VAL",
+  };
+}

@@ -260,9 +260,11 @@ export function useFilterSortPaginationForTable() {
     { page, pageSize, sorter, filters }: OnChangePageAndPageSizeTypeParams,
     fieldNameObj: Record<string, string>,
     searchTable: (params: SearchTableTypeParams) => void,
-    setLoadingTable?: (val: boolean) => void
+    setLoadingTable?: (val: boolean) => void,
+    setLastSearchParams?: (val: OnChangePageAndPageSizeTypeParams) => void
   ) {
     setLoadingTable?.(true);
+    setLastSearchParams?.({ page, pageSize, sorter, filters });
     setCurrentPageSize(pageSize);
     setCurrentPage(page);
     const newFilteredInfo = getNewFilteredInfo(filteredInfo, filters);
