@@ -39,22 +39,7 @@ import ActionColumn from "./columns/ActionColumn";
 import CategoryColumn from "./columns/CategoryColumn";
 import { TableType } from "../../../models/Interfaces";
 import RequirementColumn from "./columns/RequirementColumn";
-import {
-  // OfferItemSubUser,
-  // Offer,
-  // PurchaseOrder,
-  // PurchaseOrderItemSubUser,
-  // RequirementItemSubUser,
-  Requirement,
-  // BasicRequirement,
-  // BasicOffer,
-  // BasicPurchaseOrder,
-  // BaseRequirementOffer,
-  // CertificateFile,
-  // CertificationItem,
-  // SubUserBase,
-  // KeyInterface,
-} from "../../../models/MainInterfaces";
+import { Requirement } from "../../../models/MainInterfaces";
 import { useTranslation } from "react-i18next";
 import GeneralColumnString from "./columns/GeneralColumnString";
 import GeneralColumnNumber from "./columns/GeneralColumnNumber";
@@ -74,89 +59,13 @@ interface GeneralTableProps {
   onRowAction?: boolean;
   onChangePageAndPageSize?: OnChangePageAndPageSizeType;
   total?: number;
+  admin?: boolean;
 }
 
 export default function GeneralTable(props: GeneralTableProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const pageSizeOptions = pageSizeOptionsSt;
-
-  // let columns1:
-  //   | ColumnsType<KeyInterface>
-  //   | ColumnsType<Offer>
-  //   | ColumnsType<Requirement>
-  //   | ColumnsType<PurchaseOrder>
-  //   | ColumnsType<BasicOffer>
-  //   | ColumnsType<BasicRequirement>
-  //   | ColumnsType<BasicPurchaseOrder>
-  //   | ColumnsType<SubUserBase>
-  //   | ColumnsType<RequirementItemSubUser>
-  //   | ColumnsType<CertificateFile>
-  //   | ColumnsType<CertificationItem>
-  //   | ColumnsType<SubUserBase | Requirement>
-  //   | ColumnsType<Offer | Requirement>
-  //   | ColumnsType<Offer | PurchaseOrder>
-  //   | ColumnsType<PurchaseOrderItemSubUser | PurchaseOrder>
-  //   | ColumnsType<Offer | PurchaseOrder | Requirement>
-  //   | ColumnsType<Offer | Requirement | SubUserBase>
-  //   | ColumnsType<Offer | PurchaseOrder | SubUserBase>
-  //   | ColumnsType<Offer | PurchaseOrder | Requirement | SubUserBase>
-  //   | ColumnsType<Offer | Requirement | RequirementItemSubUser>
-  //   | ColumnsType<SubUserBase | PurchaseOrder | BaseRequirementOffer>
-  //   | ColumnsType<Requirement | Offer | PurchaseOrder | RequirementItemSubUser>
-  //   | ColumnsType<
-  //       RequirementItemSubUser | OfferItemSubUser | PurchaseOrderItemSubUser
-  //     >
-  //   | ColumnsType<
-  //       | Requirement
-  //       | Offer
-  //       | PurchaseOrder
-  //       | RequirementItemSubUser
-  //       | OfferItemSubUser
-  //       | PurchaseOrderItemSubUser
-  //     >
-  //   | ColumnsType<
-  //       | Requirement
-  //       | Offer
-  //       | PurchaseOrder
-  //       | RequirementItemSubUser
-  //       | OfferItemSubUser
-  //       | PurchaseOrderItemSubUser
-  //       | BasicRequirement
-  //       | BasicOffer
-  //       | BasicPurchaseOrder
-  //     >
-  //   | ColumnsType<
-  //       | SubUserBase
-  //       | BaseRequirementOffer
-  //       | BasicPurchaseOrder
-  //       | CertificateFile
-  //     >
-  //   | ColumnsType<
-  //       | Requirement
-  //       | Offer
-  //       | PurchaseOrder
-  //       | RequirementItemSubUser
-  //       | OfferItemSubUser
-  //       | PurchaseOrderItemSubUser
-  //       | BasicRequirement
-  //       | BasicOffer
-  //       | BasicPurchaseOrder
-  //       | CertificationItem
-  //     >
-  //   | ColumnsType<
-  //       | Requirement
-  //       | Offer
-  //       | PurchaseOrder
-  //       | RequirementItemSubUser
-  //       | OfferItemSubUser
-  //       | PurchaseOrderItemSubUser
-  //       | BasicRequirement
-  //       | BasicOffer
-  //       | BasicPurchaseOrder
-  //       | CertificationItem
-  //       | SubUserBase
-  //     > = [];
 
   // Hacer visibles todas las columnas inicialmente
   const visibility: { [key in TableColumns]: boolean } = Object.keys(
@@ -212,11 +121,13 @@ export default function GeneralTable(props: GeneralTableProps) {
     },
   };
 
+  let columns: any = [];
+
   switch (props.content.type) {
     case TableTypes.HOME: {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const [expandedRowKey, setExpandedRowKey] = useState<string | null>(null);
-      const columns = getHomeTableColumns();
+      columns = getHomeTableColumns();
       return (
         <Table
           onRow={
@@ -250,152 +161,74 @@ export default function GeneralTable(props: GeneralTableProps) {
       );
     }
     case TableTypes.REQUIREMENT: {
-      const columns = getRequirementTableColumns();
-      return (
-        <Table
-          dataSource={props.content.data}
-          loading={props.loading}
-          columns={columns as ColumnsType<AnyObject>}
-          {...tableProps}
-        ></Table>
-      );
+      columns = props.admin
+        ? getAdminSalesTableColumns()
+        : getRequirementTableColumns();
+
+      break;
     }
     case TableTypes.OFFER: {
-      const columns = getOfferTableColumns();
-      return (
-        <Table
-          dataSource={props.content.data}
-          loading={props.loading}
-          columns={columns as ColumnsType<AnyObject>}
-          {...tableProps}
-        ></Table>
-      );
+      columns = getOfferTableColumns();
+      break;
     }
     case TableTypes.PURCHASE_ORDER:
     case TableTypes.SALES_ORDER: {
-      const columns = getPurchaseOrderTableColumns();
-      return (
-        <Table
-          dataSource={props.content.data}
-          loading={props.loading}
-          columns={columns as ColumnsType<AnyObject>}
-          {...tableProps}
-        ></Table>
-      );
+      columns = getPurchaseOrderTableColumns();
+      break;
     }
     case TableTypes.USERS: {
-      const columns = getUsersTableColumns();
-      return (
-        <Table
-          dataSource={props.content.data}
-          loading={props.loading}
-          columns={columns as ColumnsType<AnyObject>}
-          {...tableProps}
-        ></Table>
-      );
+      columns = getUsersTableColumns();
+      break;
     }
     case TableTypes.REQUIREMENT_SUBUSER: {
-      const columns = getRequirementSubUserColumns();
-      return (
-        <Table
-          dataSource={props.content.data}
-          loading={props.loading}
-          columns={columns as ColumnsType<AnyObject>}
-          {...tableProps}
-        ></Table>
-      );
+      columns = getRequirementSubUserColumns();
+      break;
     }
     case TableTypes.OFFER_SUBUSER: {
-      const columns = getOfferSubUserColumns();
-      return (
-        <Table
-          dataSource={props.content.data}
-          loading={props.loading}
-          columns={columns as ColumnsType<AnyObject>}
-          {...tableProps}
-        ></Table>
-      );
+      columns = getOfferSubUserColumns();
+      break;
     }
     case TableTypes.PURCHASE_ORDER_SUBUSER:
     case TableTypes.SALES_ORDER_SUBUSER: {
-      const columns = getPurchaseOrderSubUserColumns();
-      return (
-        <Table
-          dataSource={props.content.data}
-          loading={props.loading}
-          columns={columns as ColumnsType<AnyObject>}
-          {...tableProps}
-        ></Table>
-      );
+      columns = getPurchaseOrderSubUserColumns();
+      break;
     }
     case TableTypes.ALL_REQUIREMENTS: {
-      const columns = getAllRequirementsTableColumns();
-      return (
-        <Table
-          dataSource={props.content.data}
-          loading={props.loading}
-          columns={columns as ColumnsType<AnyObject>}
-          {...tableProps}
-        ></Table>
-      );
+      columns = getAllRequirementsTableColumns();
+      break;
     }
     case TableTypes.ALL_OFFERS: {
-      const columns = getAllOffersTableColumns();
-      return (
-        <Table
-          dataSource={props.content.data}
-          loading={props.loading}
-          columns={columns as ColumnsType<AnyObject>}
-          {...tableProps}
-        ></Table>
-      );
+      columns = getAllOffersTableColumns();
+      break;
     }
     case TableTypes.ALL_PURCHASE_ORDERS:
     case TableTypes.ALL_SALES_ORDERS: {
-      const columns = getAllPurchaseOrdersTableColumns();
-      return (
-        <Table
-          dataSource={props.content.data}
-          loading={props.loading}
-          columns={columns as ColumnsType<AnyObject>}
-          {...tableProps}
-        ></Table>
-      );
+      columns = getAllPurchaseOrdersTableColumns();
+      break;
     }
     case TableTypes.MY_DOCUMENTS: {
-      const columns = getMyDocumentsCertificateColumns();
-      return (
-        <Table
-          dataSource={props.content.data}
-          loading={props.loading}
-          columns={columns as ColumnsType<AnyObject>}
-          {...tableProps}
-        ></Table>
-      );
+      columns = getMyDocumentsCertificateColumns();
+      break;
     }
     case TableTypes.SENT_CERT: {
-      const columns = getCertificatesSentColumns();
-      return (
-        <Table
-          dataSource={props.content.data}
-          loading={props.loading}
-          columns={columns as ColumnsType<AnyObject>}
-          {...tableProps}
-        ></Table>
-      );
+      columns = getCertificatesSentColumns();
+      break;
     }
     case TableTypes.RECEIVED_CERT: {
-      const columns = getCertificatesReceivedColumns();
-      return (
-        <Table
-          dataSource={props.content.data}
-          loading={props.loading}
-          columns={columns as ColumnsType<AnyObject>}
-          {...tableProps}
-        ></Table>
-      );
+      columns = getCertificatesReceivedColumns();
+      break;
     }
   }
+
+  if (columns.length)
+    return (
+      <Table
+        dataSource={props.content.data}
+        loading={props.loading}
+        columns={columns as ColumnsType<AnyObject>}
+        {...tableProps}
+      ></Table>
+    );
 
   function getRequirementTableColumns() {
     const columns = [
@@ -1027,6 +860,57 @@ export default function GeneralTable(props: GeneralTableProps) {
         TableTypes.REQUIREMENT,
         props.content.onButtonClick,
         visibility[TableColumns.VIEW]
+      ),
+    ];
+    return columns;
+  }
+
+  function getAdminSalesTableColumns() {
+    const columns = [
+      ImageColumn(false, visibility[TableColumns.IMAGE]),
+      NameColumn(
+        props.content.type,
+        props.content.nameColumnHeader,
+        visibility[TableColumns.NAME],
+        props.content.fieldSort,
+        undefined,
+        true
+      ),
+      LocationColumn(
+        visibility[TableColumns.LOCATION],
+        props.content.fieldSort,
+        true
+      ),
+      GeneralDateColumn(
+        t("dateColumn"),
+        reqDateColumnKey,
+        visibility[TableColumns.PUBLISH_DATE],
+        props.content.fieldSort,
+        true
+      ),
+      PriceColumn(
+        visibility[TableColumns.PRICE],
+        props.content.fieldSort,
+        true
+      ),
+      OffersColumn(
+        props.content.type,
+        props.content.onButtonClick,
+        visibility[TableColumns.OFFERS],
+        props.content.fieldSort,
+        true
+      ),
+      StateColumn(
+        props.content.type,
+        visibility[TableColumns.STATE],
+        props.content.filteredInfo,
+        undefined,
+        true
+      ),
+      ActionColumn(
+        props.content.type,
+        props.content.onButtonClick,
+        visibility[TableColumns.ACTION]
       ),
     ];
     return columns;

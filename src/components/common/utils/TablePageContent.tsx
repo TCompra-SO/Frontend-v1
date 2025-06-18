@@ -30,6 +30,7 @@ interface TablePageContentProps {
   loading?: boolean;
   onChangePageAndPageSize?: OnChangePageAndPageSizeType;
   total?: number;
+  admin?: boolean;
 }
 
 const TablePageContent = forwardRef<TablePageContentRef, TablePageContentProps>(
@@ -93,6 +94,7 @@ const TablePageContent = forwardRef<TablePageContentRef, TablePageContentProps>(
                 loading={props.loading}
                 onChangePageAndPageSize={props.onChangePageAndPageSize}
                 total={props.total}
+                admin={props.admin}
               />
             </div>
           )}

@@ -23,10 +23,6 @@ import useSearchTable, {
 import useSocketQueueHook, {
   useActionsForRow,
 } from "../../hooks/socketQueueHook";
-import {
-  transformDataToBasicRequirement,
-  transformDataToRequirement,
-} from "../../utilities/transform";
 import useSocket from "../../socket/useSocket";
 import {
   defaultErrorMsg,
@@ -40,12 +36,12 @@ import useShowNotification from "../../hooks/utilHooks";
 export default function AdminSales() {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
-  const dataUser = useSelector((state: MainState) => state.user);
-  const mainDataUser = useSelector((state: MainState) => state.mainUser);
+  const uid = useSelector((state: MainState) => state.user.uid);
   const [usersCache, setUsersCache] = useState<Map<string, any>>(new Map());
   const [type] = useState<RequirementType>(RequirementType.SALE);
   const [total, setTotal] = useState(0);
   const [requirementList, setRequirementList] = useState<Requirement[]>([]);
+  const [loadingTable, setLoadingTable] = useState(true);
   const searchValueRef = useRef<TablePageContentRef>(null);
   const {
     currentPage,
@@ -71,9 +67,9 @@ export default function AdminSales() {
     filteredInfo,
   });
   const { addNewRow, updateRow } = useActionsForRow(
-    TableTypes.REQUIREMENT,
+    TableTypes.HOME,
     (data: SocketDataPackType) =>
-      transformDataToRequirement(data, type, dataUser, mainDataUser),
+      getRequirementFromData(data, type, undefined, undefined, usersCache),
     requirementList,
     setRequirementList,
     total,
@@ -84,10 +80,10 @@ export default function AdminSales() {
     addNewRow,
     updateRow
   );
-  const { searchTable, responseData, error, errorMsg, loading, apiParams } =
+  const { searchTable, responseData, error, errorMsg, apiParams } =
     useSearchTable(
-      dataUser.uid,
-      TableTypes.REQUIREMENT,
+      uid,
+      TableTypes.HOME,
       EntityType.SUBUSER,
       type,
       resetChangesQueue
@@ -121,7 +117,7 @@ export default function AdminSales() {
   useEffect(() => {
     clearSearchValue();
     reset();
-    searchTable({ page: 1, pageSize: currentPageSize });
+    searchTable({ page: 1, pageSize: currentPageSize }, setLoadingTable);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
@@ -132,7 +128,7 @@ export default function AdminSales() {
       setCurrentPage(1);
       setTotal(0);
       setRequirementList([]);
-      // setLoadingTable(false);
+      setLoadingTable(false);
       showNotification("error", errorMsg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -158,7 +154,7 @@ export default function AdminSales() {
       console.log(error);
       showNotification("error", t(defaultErrorMsg));
     } finally {
-      // setLoadingTable(false);
+      setLoadingTable(false);
     }
   }
 
@@ -177,15 +173,18 @@ export default function AdminSales() {
       subtitle={`${t("sales")}`}
       subtitleIcon={<i className={`${sectionIcons["admin"]} sub-icon`}></i>}
       table={tableContent}
-      loading={loading}
+      loading={loadingTable}
       onChangePageAndPageSize={(params) =>
         handleChangePageAndPageSize(
           params,
           fieldNameSearchRequestRequirement,
-          searchTable
+          searchTable,
+          setLoadingTable
         )
       }
       ref={searchValueRef}
+      onSearch={(e) => handleSearch(e, searchTable)}
+      admin
     />
   );
 }

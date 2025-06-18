@@ -21,6 +21,7 @@ import {
   tableSearchAfterMseconds,
 } from "../utilities/globals";
 import {
+  getHomeFilterService,
   getParamsFromSorterAndFilter,
   getSearchOffersService,
   getSearchOrdersByClientService,
@@ -196,6 +197,9 @@ export default function useSearchTable(
           service = getSearchOrdersByProviderService(stSubType);
         else if (stOrderType == OrderTableType.RECEIVED)
           service = getSearchOrdersByClientService(stSubType);
+        break;
+      case TableTypes.HOME:
+        service = getHomeFilterService(stSubType);
         break;
     }
     return service;

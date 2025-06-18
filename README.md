@@ -360,6 +360,7 @@ _Props_
 | `loading?`                 | `boolean`                     | Estado de carga de la tabla. Muestra spinner si es `true`.                                                                                                                                                                 |
 | `onRowAction?`             | `boolean`                     | Si es `true`, se habilita la función al hacer click en las filas de la tabla de tipo HOME.                                                                                                                                 |
 | `onChangePageAndPageSize?` | `OnChangePageAndPageSizeType` | Función ejecutada cuando se produce un cambio en la tabla. Utiliza como parámetros los datos de paginación, filtros, orden y los datos fuente actuales de la tabla.                                                        |
+| `admin?`                   | `boolean`                     | Indica si la tabla es para sección de administración.                                                                                                                                                                      |
 
 ##### Columns
 
@@ -532,6 +533,7 @@ _Props_
 | `hidden`        | `boolean`    | Si es `true`, la columna estará oculta (valor por defecto: `false`).   |
 | `filteredInfo?` | `Filters`    | Información de filtros aplicados a la columna.                         |
 | `extraParam?`   | `any`        | Parámetro adicional para modificar el comportamiento en ciertos casos. |
+| `noFilter?`     | `boolean`    | Indica si se muestra el filtro.                                        |
 
 ###### TypeColumn
 
@@ -1062,19 +1064,20 @@ Componente contenedor para páginas con tablas. Incluye cabecera, buscador y tab
 
 _Props_
 
-| Nombre                     | Tipo                          | Descripción                                |
-| -------------------------- | ----------------------------- | ------------------------------------------ |
-| `title`                    | `string`                      | Título principal de la página.             |
-| `subtitle?`                | `string`                      | Subtítulo de la página.                    |
-| `titleIcon`                | `ReactNode`                   | Icono para el título.                      |
-| `subtitleIcon?`            | `ReactNode`                   | Icono para el subtítulo.                   |
-| `table?`                   | `TableType`                   | Configuración y datos de la tabla.         |
-| `onSearch?`                | `(e: ChangeEvent) => void`    | Callback para búsqueda.                    |
-| `additionalContentHeader?` | `ReactNode`                   | Contenido adicional en la cabecera.        |
-| `hideSearch?`              | `boolean`                     | Oculta el campo de búsqueda.               |
-| `loading?`                 | `boolean`                     | Estado de carga para la tabla.             |
-| `onChangePageAndPageSize?` | `OnChangePageAndPageSizeType` | Callback para paginación, filtros y orden. |
-| `total?`                   | `number`                      | Total de registros para paginación.        |
+| Nombre                     | Tipo                          | Descripción                                           |
+| -------------------------- | ----------------------------- | ----------------------------------------------------- |
+| `title`                    | `string`                      | Título principal de la página.                        |
+| `subtitle?`                | `string`                      | Subtítulo de la página.                               |
+| `titleIcon`                | `ReactNode`                   | Icono para el título.                                 |
+| `subtitleIcon?`            | `ReactNode`                   | Icono para el subtítulo.                              |
+| `table?`                   | `TableType`                   | Configuración y datos de la tabla.                    |
+| `onSearch?`                | `(e: ChangeEvent) => void`    | Callback para búsqueda.                               |
+| `additionalContentHeader?` | `ReactNode`                   | Contenido adicional en la cabecera.                   |
+| `hideSearch?`              | `boolean`                     | Oculta el campo de búsqueda.                          |
+| `loading?`                 | `boolean`                     | Estado de carga para la tabla.                        |
+| `onChangePageAndPageSize?` | `OnChangePageAndPageSizeType` | Callback para paginación, filtros y orden.            |
+| `total?`                   | `number`                      | Total de registros para paginación.                   |
+| `admin?`                   | `boolean`                     | Indica si la tabla es para sección de administración. |
 
 _Ref_
 

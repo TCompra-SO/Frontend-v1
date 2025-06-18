@@ -661,7 +661,7 @@ export function isCertificationTableTypes(n: any) {
 
 /** Funciones que retornan el servicio correcto según tipo */
 
-export function getHomeFilterService(type: RequirementType) {
+export function getHomeFilterService(type: RequirementType | undefined) {
   if (type == RequirementType.GOOD) return homeRequirementFilterService();
   if (type == RequirementType.SERVICE) return homeServiceFilterService();
   if (type == RequirementType.SALE) return homeSaleFilterService();

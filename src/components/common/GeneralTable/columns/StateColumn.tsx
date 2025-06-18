@@ -38,7 +38,8 @@ export default function StateColumn(
   type: TableTypes,
   hidden: boolean = false,
   filteredInfo?: Filters,
-  extraParam?: any
+  extraParam?: any,
+  noFilter?: boolean
 ) {
   const { t } = useTranslation();
   const filters: StrictColumnFilterItem[] | undefined =
@@ -141,7 +142,7 @@ export default function StateColumn(
     width: "113px",
     hidden,
     filteredValue: filteredInfo?.[stateColumnKey] ?? null,
-    filters,
+    filters: noFilter ? undefined : filters,
 
     onFilter:
       type == TableTypes.SENT_CERT || type == TableTypes.RECEIVED_CERT
