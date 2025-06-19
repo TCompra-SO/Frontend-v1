@@ -82,6 +82,7 @@ export default function Requirements() {
     handleSearch,
     reset,
   } = useFilterSortPaginationForTable();
+  const typeRef = useRef(type);
   const [loadingTable, setLoadingTable] = useState(true);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [total, setTotal] = useState(0);
@@ -94,7 +95,7 @@ export default function Requirements() {
   const [tableContent, setTableContent] = useState<TableTypeRequirement>({
     type: TableTypes.REQUIREMENT,
     data: requirementList,
-    subType: type,
+    subType: typeRef.current,
     hiddenColumns: [TableColumns.CATEGORY],
     nameColumnHeader: t(getLabelFromRequirementType(type)),
     onButtonClick: handleOnButtonClick,
@@ -139,6 +140,7 @@ export default function Requirements() {
   useEffect(() => {
     setTableContent((prev) => ({
       ...prev,
+      // subType: typeRef.current,
       data: requirementList,
       nameColumnHeader: t(getLabelFromRequirementType(type)),
       total,
@@ -195,6 +197,7 @@ export default function Requirements() {
   /* Obtener lista inicialmente */
 
   useEffect(() => {
+    typeRef.current = type;
     clearSearchValue();
     reset();
     searchTable({ page: 1, pageSize: currentPageSize }, setLoadingTable);

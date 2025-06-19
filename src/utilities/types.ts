@@ -366,6 +366,7 @@ export enum TableColumns {
   OFFER = 20,
   USERNAME = 21,
   SUBTYPE = 22,
+  VALIDATION = 23,
 }
 
 export enum UserClass {

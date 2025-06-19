@@ -327,6 +327,7 @@ export interface TableTypeSalesOrderSubUser extends TableHiddenColumns {
 export interface TableTypeAllRequirements extends TableHiddenColumns {
   type: TableTypes.ALL_REQUIREMENTS;
   data: BasicRequirement[];
+  subType: RequirementType;
 }
 
 export interface TableTypeAllOffers extends TableHiddenColumns {

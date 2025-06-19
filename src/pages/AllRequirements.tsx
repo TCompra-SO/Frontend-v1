@@ -56,6 +56,7 @@ export default function AllRequirements() {
   const [tableContent, setTableContent] = useState<TableTypeAllRequirements>({
     type: TableTypes.ALL_REQUIREMENTS,
     data: requirementList,
+    subType: type,
     hiddenColumns: [],
     nameColumnHeader: t(getLabelFromRequirementType(type)),
     onButtonClick: handleOnButtonClick,

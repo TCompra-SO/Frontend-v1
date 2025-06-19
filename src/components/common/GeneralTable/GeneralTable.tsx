@@ -2,6 +2,7 @@ import { Table, TableProps } from "antd";
 import {
   OnChangePageAndPageSizeType,
   OrderTableType,
+  RequirementType,
   TableColumns,
   TableTypes,
 } from "../../../utilities/types";
@@ -52,6 +53,7 @@ import { useState } from "react";
 import { getProductDetailRoute } from "../../../utilities/globalFunctions";
 import { ColumnsType } from "antd/lib/table";
 import { AnyObject } from "antd/es/_util/type";
+import ValidColumn from "./columns/ValidColumn";
 
 interface GeneralTableProps {
   content: TableType;
@@ -163,7 +165,7 @@ export default function GeneralTable(props: GeneralTableProps) {
     case TableTypes.REQUIREMENT: {
       columns = props.admin
         ? getAdminSalesTableColumns()
-        : getRequirementTableColumns();
+        : getRequirementTableColumns(props.content.subType);
 
       break;
     }
@@ -194,7 +196,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       break;
     }
     case TableTypes.ALL_REQUIREMENTS: {
-      columns = getAllRequirementsTableColumns();
+      columns = getAllRequirementsTableColumns(props.content.subType);
       break;
     }
     case TableTypes.ALL_OFFERS: {
@@ -230,7 +232,7 @@ export default function GeneralTable(props: GeneralTableProps) {
       ></Table>
     );
 
-  function getRequirementTableColumns() {
+  function getRequirementTableColumns(subType: RequirementType) {
     const columns = [
       ImageColumn(false, visibility[TableColumns.IMAGE]),
       NameColumn(
@@ -268,6 +270,22 @@ export default function GeneralTable(props: GeneralTableProps) {
         visibility[TableColumns.ACTION]
       ),
     ];
+    console.log(subType);
+    if (subType == RequirementType.SALE) {
+      const penultimateIndex = Math.max(columns.length - 1, 0);
+      columns.splice(
+        penultimateIndex,
+        0,
+        ValidColumn(
+          props.content.type,
+          subType,
+          visibility[TableColumns.VALIDATION],
+          props.content.filteredInfo,
+          true
+        )
+      );
+    }
+
     return columns;
   }
 
@@ -364,7 +382,7 @@ export default function GeneralTable(props: GeneralTableProps) {
     return [];
   }
 
-  function getAllRequirementsTableColumns() {
+  function getAllRequirementsTableColumns(subType: RequirementType) {
     const columns = [
       NameColumn(
         props.content.type,
@@ -415,6 +433,20 @@ export default function GeneralTable(props: GeneralTableProps) {
         visibility[TableColumns.VIEW]
       ),
     ];
+    if (subType == RequirementType.SALE) {
+      const penultimateIndex = Math.max(columns.length - 1, 0);
+      columns.splice(
+        penultimateIndex,
+        0,
+        ValidColumn(
+          props.content.type,
+          subType,
+          visibility[TableColumns.VALIDATION],
+          props.content.filteredInfo,
+          true
+        )
+      );
+    }
     return columns;
   }
 
