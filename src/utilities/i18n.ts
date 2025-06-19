@@ -365,6 +365,10 @@ const resources = {
       messageSentSuccessfully: "Message sent successfully",
       generatingPDF: "Generating PDF...",
       chatBotGreeting: "Hello, how can I help you?",
+      saleMustBeReviewed:
+        "Your sale listing has been submitted for review. It will go live once approved.",
+      createSaleSubtitle:
+        "Sales are reviewed and validated before being published",
       // Other
       characters: "characters",
       yes: "Yes",
@@ -943,6 +947,10 @@ const resources = {
       messageSentSuccessfully: "Mensaje enviado exitosamente",
       generatingPDF: "Generando PDF...",
       chatBotGreeting: "Hola, ¿cómo puedo ayudarte?",
+      saleMustBeReviewed:
+        "Tu liquidación ha sido enviada para validación. Será revisada antes de ser publicada.",
+      createSaleSubtitle:
+        "Las liquidaciones son revisadas y validadas antes de ser publicadas",
       // Other
       characters: "caracteres",
       yes: "Sí",

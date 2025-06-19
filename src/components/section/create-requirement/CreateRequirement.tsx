@@ -375,13 +375,31 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         style={{ maxHeight: "calc(100vh - 170px)" }}
       >
         <div className="t-flex t-wrap mr-sub">
-          <div className="sub-titulo" style={{ fontSize: "26px" }}>
-            <i
-              className="fa-regular fa-paste sub-icon"
-              style={{ fontSize: "24px" }}
-            ></i>{" "}
-            {t("newRequirement")}
-          </div>
+          {type == RequirementType.SALE ? (
+            <>
+              <i
+                className="fa-regular fa-paste sub-icon"
+                style={{ fontSize: "24px" }}
+              ></i>
+              <div
+                className="sub-titulo sub-calificar"
+                style={{ fontSize: "26px" }}
+              >
+                <div>{t("newRequirement")}</div>
+                <div className="calificar-detalle">
+                  {t("createSaleSubtitle")}
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="sub-titulo" style={{ fontSize: "26px" }}>
+              <i
+                className="fa-regular fa-paste sub-icon"
+                style={{ fontSize: "24px" }}
+              ></i>{" "}
+              {t("newRequirement")}
+            </div>
+          )}
         </div>
         <Flex
           justify="center"

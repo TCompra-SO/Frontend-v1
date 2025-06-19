@@ -176,6 +176,8 @@ export default function CreateRequirementFloatButton() {
               : "createSaleSuccess"
           )
         );
+        if (type == RequirementType.SALE)
+          showNotification("success", t("saleMustBeReviewed"));
       } else {
         showNotification(
           "warning",
@@ -185,6 +187,8 @@ export default function CreateRequirementFloatButton() {
               : "createSaleSuccessNoDocOrImages"
           )
         );
+        if (type == RequirementType.SALE)
+          showNotification("success", t("saleMustBeReviewed"));
       }
       if (!avoidClosingModal) setIsOpenModal(false);
       updateCreateRequirementLoading(false);
