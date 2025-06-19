@@ -1,13 +1,14 @@
 import { useTranslation } from "react-i18next";
 import { Requirement } from "../../../../../models/MainInterfaces";
 import { ListsContext } from "../../../../../contexts/ListsContext";
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { defaultCountry } from "../../../../../utilities/globals";
 import {
   ImagePreviewGroupContainer,
   ImagePreviewGroupContainerRef,
 } from "../../../../containers/ImagePreviewGroupContainer";
 import { getCityObj } from "../../../../../utilities/globalFunctions";
+import { IdValueMap } from "../../../../../models/Interfaces";
 
 interface BasicDataRequirementProps {
   requirement: Requirement | undefined;
@@ -18,7 +19,11 @@ export default function BasicDataRequirement(props: BasicDataRequirementProps) {
   const context = useContext(ListsContext);
   const { countryData, currencyData } = context;
   const childRef = useRef<ImagePreviewGroupContainerRef>(null);
-  const cities = getCityObj(countryData, defaultCountry);
+  const [cities, setCities] = useState<IdValueMap>({});
+
+  useEffect(() => {
+    setCities(getCityObj(countryData, defaultCountry));
+  }, [countryData]);
 
   function handleOpenPreview() {
     if (

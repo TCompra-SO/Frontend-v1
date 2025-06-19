@@ -165,7 +165,7 @@ export function useDniRules(required: boolean) {
     },
     {
       min: Lengths.dni.min,
-      max: Lengths.dni.max,
+      max: Lengths.dni.min,
       validator: useTrimmedMinMaxValidator(),
     },
   ]);
@@ -179,7 +179,7 @@ export function useRucRules(required: boolean) {
     },
     {
       min: Lengths.ruc.min,
-      max: Lengths.ruc.max,
+      max: Lengths.ruc.min,
       validator: useTrimmedMinMaxValidator(),
     },
   ]);

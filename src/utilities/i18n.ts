@@ -24,6 +24,7 @@ const resources = {
       offersColumn: "Offers",
       priceColumn: "Price",
       stateColumn: "State",
+      validationColumn: "Validation",
       // Requirement types
       good: "Good",
       service: "Service",
@@ -100,6 +101,7 @@ const resources = {
       generateCodeAgain: "Generate the code again",
       generateCodeAgainInAFewSeconds:
         "Generate the code again in a few seconds",
+      generateCodeAgainInAminute: "Generate the code again in a minute",
       userAlreadyValidated: "This use has already been validated",
       generateCodeFirst: "Generate a validation code first",
       expiredCode: "The code has expired; please generate a new one",
@@ -366,6 +368,10 @@ const resources = {
       messageSentSuccessfully: "Message sent successfully",
       generatingPDF: "Generating PDF...",
       chatBotGreeting: "Hello, how can I help you?",
+      saleMustBeReviewed:
+        "Your sale listing has been submitted for review. It will go live once approved.",
+      createSaleSubtitle:
+        "Sales are reviewed and validated before being published",
       // Other
       characters: "characters",
       yes: "Yes",
@@ -572,6 +578,7 @@ const resources = {
       chatBotTooltip: "Chat with us",
       options: "Options",
       administrator: "Administrator",
+      documentType: "Document type",
     },
   },
   es: {
@@ -594,6 +601,7 @@ const resources = {
       offersColumn: "Ofertas",
       priceColumn: "Cotización",
       stateColumn: "Estado",
+      validationColumn: "Validación",
       // Requirement types
       good: "Bien",
       service: "Servicio",
@@ -669,6 +677,7 @@ const resources = {
       generateCodeAgain: "Genere el código nuevamente",
       generateCodeAgainInAFewSeconds:
         "Genere el código nuevamente en algunos segundos",
+      generateCodeAgainInAminute: "Genere el código nuevamente en 1 minuto",
       userAlreadyValidated: "Este usuario ya está validado",
       generateCodeFirst: "Genere un código de validación primero",
       expiredCode: "El código ha expirado, genere otro nuevamente",
@@ -947,6 +956,10 @@ const resources = {
       messageSentSuccessfully: "Mensaje enviado exitosamente",
       generatingPDF: "Generando PDF...",
       chatBotGreeting: "Hola, ¿cómo puedo ayudarte?",
+      saleMustBeReviewed:
+        "Tu liquidación ha sido enviada para validación. Será revisada antes de ser publicada.",
+      createSaleSubtitle:
+        "Las liquidaciones son revisadas y validadas antes de ser publicadas",
       // Other
       characters: "caracteres",
       yes: "Sí",
@@ -1155,6 +1168,7 @@ const resources = {
       chatBotTooltip: "Chatea con nosotros",
       options: "Opciones",
       administrator: "Administrador",
+      documentType: "Tipo de documento",
     },
   },
 };

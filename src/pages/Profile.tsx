@@ -17,7 +17,7 @@ import {
   profileUserService,
 } from "../services/requests/authService";
 import { useTranslation } from "react-i18next";
-import { DocType } from "../utilities/types";
+import { Action, DocType, ModalTypes } from "../utilities/types";
 import { DefaultOptionType } from "antd/es/select";
 import React from "react";
 import {
@@ -33,6 +33,7 @@ import AboutMeField from "../components/common/formFields/AboutMeField";
 import { useHandleChangeImage } from "../hooks/useHandleChangeImage";
 import useShowNotification from "../hooks/utilHooks";
 import NameField from "../components/common/formFields/NameField";
+import ModalContainer from "../components/containers/ModalContainer";
 // import LocationField from "../components/common/formFields/LocationField";
 
 interface ProfileProps {
@@ -54,6 +55,7 @@ export default function Profile(props: ProfileProps) {
   const [imageSrc, setImageSrc] = useState(defaultUserImage);
   const [profileSuccess, setProfileSuccess] = useState(false);
   const [cities, setCities] = useState<IdValueObj[]>([]);
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const [apiParams, setApiParams] = useState<useApiParams<ProfileRequest>>({
     service: null,
     method: "get",
@@ -101,6 +103,16 @@ export default function Profile(props: ProfileProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
+  useEffect(() => {
+    if (profileSuccess) {
+      setIsOpenModal(true);
+    }
+  }, [profileSuccess]);
+
+  /**
+   * Funciones
+   */
+
   function SetCountriesAndCities() {
     const showCountry = countryData[defaultCountry]
       ? defaultCountry
@@ -111,8 +123,12 @@ export default function Profile(props: ProfileProps) {
     }
   }
 
-  function handleCountryChange(_: string, object: DefaultOptionType) {
-    setCities(countryData[object.id].cities);
+  function handleCountryChange(
+    _: string,
+    object: DefaultOptionType | undefined
+  ) {
+    if (!object) setCities([]);
+    else setCities(countryData[object.id].cities);
     form.setFieldsValue({ city: null });
   }
 
@@ -169,6 +185,28 @@ export default function Profile(props: ProfileProps) {
 
   return (
     <>
+      <ModalContainer
+        destroyOnClose
+        content={{
+          type: ModalTypes.CONFIRM,
+          data: {
+            onAnswer: () => {
+              props.openValidateCodeModal();
+              setIsOpenModal(false);
+              props.closeProfileModal();
+            },
+            text: t("sendValidationCode"),
+            showOnlyAcceptButton: true,
+          },
+          action: Action.NONE,
+        }}
+        isOpen={isOpenModal}
+        onClose={() => {
+          setIsOpenModal(false);
+          props.closeProfileModal();
+        }}
+      />
+
       <div className="modal-login">
         <div className="login-box text-center wd-50">
           <h1 className="text-left" style={{ margin: "0 0 5px 0" }}>
@@ -363,7 +401,7 @@ export default function Profile(props: ProfileProps) {
                     className="btn btn-default wd-100"
                   />
                 )}
-                {profileSuccess && (
+                {/* {profileSuccess && (
                   <ButtonContainer
                     onClick={() => {
                       props.openValidateCodeModal();
@@ -373,7 +411,7 @@ export default function Profile(props: ProfileProps) {
                     children={t("sendValidationCode")}
                     className="btn btn-default wd-100"
                   />
-                )}
+                )} */}
               </Form.Item>
             </div>
           </Form>

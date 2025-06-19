@@ -101,7 +101,7 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           erroMsg = "userNotFound";
           break;
         case 409:
-          erroMsg = "generateCodeAgainInAFewSeconds";
+          erroMsg = "generateCodeAgainInAminute";
           break;
         case 410:
           erroMsg = "completeProfile";
@@ -139,9 +139,9 @@ export default function httpErrorInterceptor(error: any, type: string): string {
       break;
     case getNameReniecService("").type:
       switch (code) {
-        // case 400:
-        //   erroMsg = "noDNIorRUCprovided";
-        //   break;
+        case 422:
+          erroMsg = "invalidDocNumber";
+          break;
         case 400:
           erroMsg = "invalidDocNumber";
           break;

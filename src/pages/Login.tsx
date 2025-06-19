@@ -67,20 +67,31 @@ export default function Login(props: LoginProps) {
   const [isOpenModalTerms, setIsOpenModalTerms] = useState(false);
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
   const [docType, setDocType] = useState(DocType.DNI);
+  const [docTypeSelected, setDocTypeSelected] = useState(false);
+  const [gotUserName, setGotUserName] = useState(false);
   const [form] = Form.useForm();
   const [apiParams, setApiParams] = useState<
-    useApiParams<RegisterRequest | LoginRequest | GetNameReniecRequest>
+    useApiParams<RegisterRequest | LoginRequest>
   >({
     service: null,
     method: "get",
   });
   const { loading, responseData, error, errorMsg, fetchData } = useApi<
-    RegisterRequest | LoginRequest | GetNameReniecRequest
+    RegisterRequest | LoginRequest
+  >(apiParams);
+  const [apiParamsReniec, setApiParamsReniec] = useState<
+    useApiParams<GetNameReniecRequest>
   >({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
+    service: null,
+    method: "get",
   });
+  const {
+    loading: loadingReniec,
+    responseData: responseDatareniec,
+    error: errorReniec,
+    errorMsg: errorMsgReniec,
+    fetchData: fetchDataReniec,
+  } = useApi<GetNameReniecRequest>(apiParamsReniec);
 
   useEffect(() => {
     if (responseData) {
@@ -89,17 +100,8 @@ export default function Login(props: LoginProps) {
         equalServices(apiParams.service, registerService())
       )
         afterSubmit();
-      else if (equalServices(apiParams.service, getNameReniecService(""))) {
-        form.setFieldValue("name", responseData.data);
-        setValidDoc(true);
-      }
     } else if (error) {
       showNotification("error", errorMsg);
-
-      if (equalServices(apiParams.service, getNameReniecService(""))) {
-        setValidDoc(false);
-      }
-
       if (equalServices(apiParams.service, loginService())) {
         checkToOpenCreateProfileModal(error);
       }
@@ -111,6 +113,27 @@ export default function Login(props: LoginProps) {
     if (apiParams.service) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
+
+  useEffect(() => {
+    if (apiParamsReniec.service) fetchDataReniec();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsReniec]);
+
+  useEffect(() => {
+    if (responseDatareniec) {
+      form.setFieldValue("name", responseDatareniec.data);
+      setValidDoc(true);
+    } else if (errorReniec) {
+      showNotification("error", errorMsgReniec);
+      setValidDoc(false);
+      setGotUserName(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDatareniec, errorReniec]);
+
+  /**
+   * Funciones
+   */
 
   function checkToOpenCreateProfileModal(error: AxiosError<any, any>) {
     if (
@@ -141,20 +164,26 @@ export default function Login(props: LoginProps) {
   }
 
   function handleChangeTypeDoc(type: string) {
+    setDocTypeSelected(true);
     form.resetFields(["document", "name"]);
     setDocType(type);
+    setGotUserName(false);
   }
 
   function getUserName() {
-    form
-      .validateFields(["document"])
-      .then((value) => {
-        setApiParams({
-          service: getNameReniecService(value["document"].trim()),
-          method: "get",
+    if (!loadingReniec && !gotUserName)
+      form
+        .validateFields(["document"])
+        .then((value) => {
+          setGotUserName(true);
+          setApiParamsReniec({
+            service: getNameReniecService(value["document"].trim()),
+            method: "get",
+          });
+        })
+        .catch(() => {
+          setGotUserName(false);
         });
-      })
-      .catch(() => {});
   }
 
   function HandleSubmit(values: any) {
@@ -297,10 +326,16 @@ export default function Login(props: LoginProps) {
             >
               {loginType == LoginType.REGISTER && (
                 <>
-                  <Form.Item>
+                  <Form.Item
+                    name="documentType"
+                    style={{ width: "100%" }}
+                    label={t("documentType")}
+                    labelCol={{ span: 0 }}
+                    rules={[{ required: true }]}
+                  >
                     <SelectContainer
                       className="form-control"
-                      defaultValue={DocType.DNI}
+                      placeholder={t("documentType")}
                       onChange={handleChangeTypeDoc}
                       options={[
                         { label: DocType.DNI, value: DocType.DNI },
@@ -309,55 +344,73 @@ export default function Login(props: LoginProps) {
                     ></SelectContainer>
                   </Form.Item>
 
-                  <div className="t-flex" style={{ alignItems: "center" }}>
-                    <Form.Item
-                      name="document"
-                      label={docType}
-                      labelCol={{ span: 0 }}
-                      style={{ width: "100%" }}
-                      rules={docType == DocType.DNI ? dniRules : rucRules}
-                    >
+                  {docTypeSelected && (
+                    <>
                       <div className="t-flex" style={{ alignItems: "center" }}>
-                        <InputContainer
-                          type="text"
-                          className="form-control"
-                          style={{ flexGrow: 1 }}
-                          placeholder={docType}
-                          onChange={() => resetFields(["name"])}
-                        />
-                        <i
-                          className="fas fa-search"
-                          style={{
-                            marginLeft: "7px",
-                            cursor: "pointer",
-                            background: "#ffe9f7",
-                            color: "#bc1373",
-                            padding: "13px",
-                            borderRadius: "0.6rem",
-                          }}
-                          onClick={getUserName}
-                        ></i>
+                        <Form.Item
+                          name="document"
+                          label={docType}
+                          labelCol={{ span: 0 }}
+                          style={{ width: "100%" }}
+                          rules={docType == DocType.DNI ? dniRules : rucRules}
+                        >
+                          <div
+                            className="t-flex"
+                            style={{ alignItems: "center" }}
+                          >
+                            <InputContainer
+                              type="text"
+                              className="form-control"
+                              style={{ flexGrow: 1 }}
+                              placeholder={docType}
+                              onChange={() => {
+                                resetFields(["name"]);
+                                setGotUserName(false);
+                              }}
+                              onBlur={getUserName}
+                            />
+                            <i
+                              className={
+                                loadingReniec
+                                  ? "fa-solid fa-hourglass-clock"
+                                  : "fas fa-search"
+                              }
+                              style={{
+                                marginLeft: "7px",
+                                cursor: loadingReniec
+                                  ? "not-allowed"
+                                  : "pointer",
+                                background: "#ffe9f7",
+                                color: "#bc1373",
+                                padding: "13px",
+                                borderRadius: "0.6rem",
+                              }}
+                              onClick={getUserName}
+                            ></i>
+                          </div>
+                        </Form.Item>
                       </div>
-                    </Form.Item>
-                  </div>
-                  <div className="t-flex">
-                    <Form.Item
-                      name="name"
-                      style={{ width: "100%" }}
-                      label={t("name")}
-                      labelCol={{ span: 0 }}
-                      rules={[
-                        { required: true, message: t("clickOnSearchIcon") },
-                      ]}
-                    >
-                      <InputContainer
-                        disabled
-                        className="form-control"
-                        placeholder={t("name")}
-                        style={{ flexGrow: 1 }}
-                      />
-                    </Form.Item>
-                  </div>
+
+                      <div className="t-flex">
+                        <Form.Item
+                          name="name"
+                          style={{ width: "100%" }}
+                          label={t("name")}
+                          labelCol={{ span: 0 }}
+                          rules={[
+                            { required: true, message: t("clickOnSearchIcon") },
+                          ]}
+                        >
+                          <InputContainer
+                            disabled
+                            className="form-control"
+                            placeholder={t("name")}
+                            style={{ flexGrow: 1 }}
+                          />
+                        </Form.Item>
+                      </div>
+                    </>
+                  )}
                 </>
               )}
               <div className="t-flex">
@@ -415,7 +468,7 @@ export default function Login(props: LoginProps) {
                 {loginType == LoginType.REGISTER && (
                   <Checkbox
                     onChange={onChangeAgreeToTermsAndConditions}
-                    style={{}}
+                    style={{ alignItems: "flex-start", display: "flex" }}
                   >
                     <a
                       onClick={() => setIsOpenModalTerms(true)}

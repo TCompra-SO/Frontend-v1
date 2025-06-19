@@ -880,3 +880,12 @@
     padding: 0 30px;
   }
 }
+
+@media (min-width: 1400px) {
+  .cont-prime {
+    max-width: 1314px;
+  }
+  .cont-prime-h {
+    width: 1314px;
+  }
+}
