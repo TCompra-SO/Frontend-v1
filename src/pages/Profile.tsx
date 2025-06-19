@@ -201,7 +201,10 @@ export default function Profile(props: ProfileProps) {
           action: Action.NONE,
         }}
         isOpen={isOpenModal}
-        onClose={() => setIsOpenModal(false)}
+        onClose={() => {
+          setIsOpenModal(false);
+          props.closeProfileModal();
+        }}
       />
 
       <div className="modal-login">
