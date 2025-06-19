@@ -67,6 +67,7 @@ export default function Login(props: LoginProps) {
   const [isOpenModalTerms, setIsOpenModalTerms] = useState(false);
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
   const [docType, setDocType] = useState(DocType.DNI);
+  const [docTypeSelected, setDocTypeSelected] = useState(false);
   const [form] = Form.useForm();
   const [apiParams, setApiParams] = useState<
     useApiParams<RegisterRequest | LoginRequest | GetNameReniecRequest>
@@ -141,6 +142,7 @@ export default function Login(props: LoginProps) {
   }
 
   function handleChangeTypeDoc(type: string) {
+    setDocTypeSelected(true);
     form.resetFields(["document", "name"]);
     setDocType(type);
   }
@@ -297,10 +299,16 @@ export default function Login(props: LoginProps) {
             >
               {loginType == LoginType.REGISTER && (
                 <>
-                  <Form.Item>
+                  <Form.Item
+                    name="documentType"
+                    style={{ width: "100%" }}
+                    label={t("documentType")}
+                    labelCol={{ span: 0 }}
+                    rules={[{ required: true }]}
+                  >
                     <SelectContainer
                       className="form-control"
-                      defaultValue={DocType.DNI}
+                      placeholder={t("documentType")}
                       onChange={handleChangeTypeDoc}
                       options={[
                         { label: DocType.DNI, value: DocType.DNI },
@@ -309,55 +317,63 @@ export default function Login(props: LoginProps) {
                     ></SelectContainer>
                   </Form.Item>
 
-                  <div className="t-flex" style={{ alignItems: "center" }}>
-                    <Form.Item
-                      name="document"
-                      label={docType}
-                      labelCol={{ span: 0 }}
-                      style={{ width: "100%" }}
-                      rules={docType == DocType.DNI ? dniRules : rucRules}
-                    >
+                  {docTypeSelected && (
+                    <>
                       <div className="t-flex" style={{ alignItems: "center" }}>
-                        <InputContainer
-                          type="text"
-                          className="form-control"
-                          style={{ flexGrow: 1 }}
-                          placeholder={docType}
-                          onChange={() => resetFields(["name"])}
-                        />
-                        <i
-                          className="fas fa-search"
-                          style={{
-                            marginLeft: "7px",
-                            cursor: "pointer",
-                            background: "#ffe9f7",
-                            color: "#bc1373",
-                            padding: "13px",
-                            borderRadius: "0.6rem",
-                          }}
-                          onClick={getUserName}
-                        ></i>
+                        <Form.Item
+                          name="document"
+                          label={docType}
+                          labelCol={{ span: 0 }}
+                          style={{ width: "100%" }}
+                          rules={docType == DocType.DNI ? dniRules : rucRules}
+                        >
+                          <div
+                            className="t-flex"
+                            style={{ alignItems: "center" }}
+                          >
+                            <InputContainer
+                              type="text"
+                              className="form-control"
+                              style={{ flexGrow: 1 }}
+                              placeholder={docType}
+                              onChange={() => resetFields(["name"])}
+                            />
+                            <i
+                              className="fas fa-search"
+                              style={{
+                                marginLeft: "7px",
+                                cursor: "pointer",
+                                background: "#ffe9f7",
+                                color: "#bc1373",
+                                padding: "13px",
+                                borderRadius: "0.6rem",
+                              }}
+                              onClick={getUserName}
+                            ></i>
+                          </div>
+                        </Form.Item>
                       </div>
-                    </Form.Item>
-                  </div>
-                  <div className="t-flex">
-                    <Form.Item
-                      name="name"
-                      style={{ width: "100%" }}
-                      label={t("name")}
-                      labelCol={{ span: 0 }}
-                      rules={[
-                        { required: true, message: t("clickOnSearchIcon") },
-                      ]}
-                    >
-                      <InputContainer
-                        disabled
-                        className="form-control"
-                        placeholder={t("name")}
-                        style={{ flexGrow: 1 }}
-                      />
-                    </Form.Item>
-                  </div>
+
+                      <div className="t-flex">
+                        <Form.Item
+                          name="name"
+                          style={{ width: "100%" }}
+                          label={t("name")}
+                          labelCol={{ span: 0 }}
+                          rules={[
+                            { required: true, message: t("clickOnSearchIcon") },
+                          ]}
+                        >
+                          <InputContainer
+                            disabled
+                            className="form-control"
+                            placeholder={t("name")}
+                            style={{ flexGrow: 1 }}
+                          />
+                        </Form.Item>
+                      </div>
+                    </>
+                  )}
                 </>
               )}
               <div className="t-flex">

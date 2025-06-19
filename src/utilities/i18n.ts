@@ -568,6 +568,7 @@ const resources = {
       state: "State",
       chatBotTooltip: "Chat with us",
       options: "Options",
+      documentType: "Document type",
     },
   },
   es: {
@@ -1146,6 +1147,7 @@ const resources = {
       state: "Estado",
       chatBotTooltip: "Chatea con nosotros",
       options: "Opciones",
+      documentType: "Tipo de documento",
     },
   },
 };
