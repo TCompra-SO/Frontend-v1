@@ -247,7 +247,7 @@ export function getCityObj(countryData: CountryCities, countryToShow?: string) {
     ? defaultCountry
     : Object.keys(countryData)[0];
 
-  const loadedCities = countryData[showCountry].cities.reduce(
+  const loadedCities = countryData[showCountry]?.cities?.reduce(
     (acc: IdValueMap, { id, value }: IdValueObj) => {
       acc[id] = { value };
       return acc;

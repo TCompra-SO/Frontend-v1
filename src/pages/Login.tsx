@@ -68,20 +68,30 @@ export default function Login(props: LoginProps) {
   const [loginType, setLoginType] = useState(LoginType.LOGIN);
   const [docType, setDocType] = useState(DocType.DNI);
   const [docTypeSelected, setDocTypeSelected] = useState(false);
+  const [gotUserName, setGotUserName] = useState(false);
   const [form] = Form.useForm();
   const [apiParams, setApiParams] = useState<
-    useApiParams<RegisterRequest | LoginRequest | GetNameReniecRequest>
+    useApiParams<RegisterRequest | LoginRequest>
   >({
     service: null,
     method: "get",
   });
   const { loading, responseData, error, errorMsg, fetchData } = useApi<
-    RegisterRequest | LoginRequest | GetNameReniecRequest
+    RegisterRequest | LoginRequest
+  >(apiParams);
+  const [apiParamsReniec, setApiParamsReniec] = useState<
+    useApiParams<GetNameReniecRequest>
   >({
-    service: apiParams.service,
-    method: apiParams.method,
-    dataToSend: apiParams.dataToSend,
+    service: null,
+    method: "get",
   });
+  const {
+    loading: loadingReniec,
+    responseData: responseDatareniec,
+    error: errorReniec,
+    errorMsg: errorMsgReniec,
+    fetchData: fetchDataReniec,
+  } = useApi<GetNameReniecRequest>(apiParamsReniec);
 
   useEffect(() => {
     if (responseData) {
@@ -90,17 +100,8 @@ export default function Login(props: LoginProps) {
         equalServices(apiParams.service, registerService())
       )
         afterSubmit();
-      else if (equalServices(apiParams.service, getNameReniecService(""))) {
-        form.setFieldValue("name", responseData.data);
-        setValidDoc(true);
-      }
     } else if (error) {
       showNotification("error", errorMsg);
-
-      if (equalServices(apiParams.service, getNameReniecService(""))) {
-        setValidDoc(false);
-      }
-
       if (equalServices(apiParams.service, loginService())) {
         checkToOpenCreateProfileModal(error);
       }
@@ -112,6 +113,27 @@ export default function Login(props: LoginProps) {
     if (apiParams.service) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiParams]);
+
+  useEffect(() => {
+    if (apiParamsReniec.service) fetchDataReniec();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiParamsReniec]);
+
+  useEffect(() => {
+    if (responseDatareniec) {
+      form.setFieldValue("name", responseDatareniec.data);
+      setValidDoc(true);
+    } else if (errorReniec) {
+      showNotification("error", errorMsgReniec);
+      setValidDoc(false);
+      setGotUserName(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseDatareniec, errorReniec]);
+
+  /**
+   * Funciones
+   */
 
   function checkToOpenCreateProfileModal(error: AxiosError<any, any>) {
     if (
@@ -145,18 +167,23 @@ export default function Login(props: LoginProps) {
     setDocTypeSelected(true);
     form.resetFields(["document", "name"]);
     setDocType(type);
+    setGotUserName(false);
   }
 
   function getUserName() {
-    form
-      .validateFields(["document"])
-      .then((value) => {
-        setApiParams({
-          service: getNameReniecService(value["document"].trim()),
-          method: "get",
+    if (!loadingReniec && !gotUserName)
+      form
+        .validateFields(["document"])
+        .then((value) => {
+          setGotUserName(true);
+          setApiParamsReniec({
+            service: getNameReniecService(value["document"].trim()),
+            method: "get",
+          });
+        })
+        .catch(() => {
+          setGotUserName(false);
         });
-      })
-      .catch(() => {});
   }
 
   function HandleSubmit(values: any) {
@@ -336,13 +363,23 @@ export default function Login(props: LoginProps) {
                               className="form-control"
                               style={{ flexGrow: 1 }}
                               placeholder={docType}
-                              onChange={() => resetFields(["name"])}
+                              onChange={() => {
+                                resetFields(["name"]);
+                                setGotUserName(false);
+                              }}
+                              onBlur={getUserName}
                             />
                             <i
-                              className="fas fa-search"
+                              className={
+                                loadingReniec
+                                  ? "fa-solid fa-hourglass-clock"
+                                  : "fas fa-search"
+                              }
                               style={{
                                 marginLeft: "7px",
-                                cursor: "pointer",
+                                cursor: loadingReniec
+                                  ? "not-allowed"
+                                  : "pointer",
                                 background: "#ffe9f7",
                                 color: "#bc1373",
                                 padding: "13px",
@@ -431,7 +468,7 @@ export default function Login(props: LoginProps) {
                 {loginType == LoginType.REGISTER && (
                   <Checkbox
                     onChange={onChangeAgreeToTermsAndConditions}
-                    style={{}}
+                    style={{ alignItems: "flex-start", display: "flex" }}
                   >
                     <a
                       onClick={() => setIsOpenModalTerms(true)}

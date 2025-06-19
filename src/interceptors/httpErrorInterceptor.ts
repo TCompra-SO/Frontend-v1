@@ -139,9 +139,9 @@ export default function httpErrorInterceptor(error: any, type: string): string {
       break;
     case getNameReniecService("").type:
       switch (code) {
-        // case 400:
-        //   erroMsg = "noDNIorRUCprovided";
-        //   break;
+        case 422:
+          erroMsg = "invalidDocNumber";
+          break;
         case 400:
           erroMsg = "invalidDocNumber";
           break;

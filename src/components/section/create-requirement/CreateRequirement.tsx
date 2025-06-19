@@ -97,7 +97,8 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   const [form] = Form.useForm();
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [showDocListToCetificate, setShowDocListToCetificate] = useState(false);
+  const [showDocListToCertificate, setShowDocListToCertificate] =
+    useState(false);
   const [certificatesRequired, setCertificatesRequired] = useState("");
   const [formDataImg, setFormDataImg] = useState<FormData | null>(null);
   const [formDataDoc, setFormDataDoc] = useState<FormData | null>(null);
@@ -201,7 +202,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   useEffect(() => {
     if (requiredDocs !== null) {
       setCertificatesRequired(requiredDocs);
-      if (!requiredDocs && showDocListToCetificate) setIsOpenModal(true);
+      if (!requiredDocs && showDocListToCertificate) setIsOpenModal(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requiredDocs]);
@@ -212,9 +213,9 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   }, [certificatesRequired]);
 
   useEffect(() => {
-    if (!showDocListToCetificate) setCertificatesRequired("");
+    if (!showDocListToCertificate) setCertificatesRequired("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showDocListToCetificate]);
+  }, [showDocListToCertificate]);
 
   useEffect(() => {
     if (errorRequiredDocs) setCertificatesRequired("");
@@ -226,7 +227,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     if (newtype != type) {
       setType(newtype);
       props.setType(newtype);
-      setShowDocListToCetificate(false);
+      setShowDocListToCertificate(false);
       form.resetFields();
     }
   }
@@ -235,8 +236,8 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     const val: number[] | undefined = form.getFieldValue("canOffer");
     if (val) {
       const show: boolean = val.includes(certifiedCompaniesOpt);
-      if (!showDocListToCetificate && show) getRequiredDocsCert(mainUid);
-      setShowDocListToCetificate(show);
+      if (!showDocListToCertificate && show) getRequiredDocsCert(mainUid);
+      setShowDocListToCertificate(show);
     }
   }
 
@@ -348,7 +349,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
 
   function handleWhoCanOfferField(val: any) {
     if (Array.isArray(val) && !val.includes(certifiedCompaniesOpt))
-      setShowDocListToCetificate(false);
+      setShowDocListToCertificate(false);
   }
 
   return (
@@ -459,7 +460,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
                     handleOptionChange={handleWhoCanOfferField}
                   />
                 </div>
-                {showDocListToCetificate && (
+                {showDocListToCertificate && (
                   <div>
                     <DocumentsCertifCR />
                   </div>
