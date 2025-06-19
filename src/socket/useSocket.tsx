@@ -27,7 +27,7 @@ export default function useSocket(
     canAddRowUpdate: boolean
   ) => void,
   orderType?: OrderTableType,
-  getUseFilter?: () => boolean
+  getUseFilter?: () => boolean | null
 ) {
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const uid = useSelector((state: MainState) => state.user.uid);

@@ -97,7 +97,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     setTotalRequirementList,
     homePageSize,
     retrieveLastSearchRequeriments,
-    useFilter
+    () => useFilter
   );
   const { updateChangesQueue, resetChangesQueue } = useSocketQueueHook(
     addNewRow,

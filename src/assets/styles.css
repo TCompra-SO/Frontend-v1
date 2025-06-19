@@ -1349,6 +1349,17 @@ body {
   border-radius: 50%;
   font-size: 24px;
 }
+.btn-red {
+  color: #fff !important;
+  background: #b41001 !important;
+}
+.btn-red:hover {
+  background: #9f1500 !important;
+}
+.btn-red.focus,
+.btn-red:focus {
+  background: #9f1500 !important;
+}
 .btn-green {
   color: #fff !important;
   background: #01b43e !important;

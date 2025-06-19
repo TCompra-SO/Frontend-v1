@@ -30,6 +30,7 @@ export default function ViewColumn(
     fixed: "right",
     hidden,
     render: (_, record) => {
+      let buttonClass = "btn-border-default";
       let action: Action = Action.VIEW_REQUIREMENTS;
       switch (type) {
         case TableTypes.REQUIREMENT:
@@ -50,18 +51,19 @@ export default function ViewColumn(
         case TableTypes.RECEIVED_CERT:
           action = Action.VIEW;
           break;
-        case TableTypes.ADMIN_SALES:
-          action = (record as Requirement).valid
-            ? Action.INVALIDATE
-            : Action.VALIDATE;
+        case TableTypes.ADMIN_SALES: {
+          const isValid = (record as Requirement).valid;
+          action = isValid ? Action.INVALIDATE : Action.VALIDATE;
+          buttonClass = isValid ? "btn-red" : "btn-green";
           break;
+        }
       }
 
       return (
         <div className="t-flex c-ofertas" style={{ padding: "7px 0" }}>
           <ButtonContainer
             onClick={() => onButtonClick(action, record)}
-            className="btn btn-border-default btn-sm t-flex seleccionar-tb"
+            className={`btn ${buttonClass} btn-sm t-flex seleccionar-tb`}
             children={
               type == TableTypes.ADMIN_SALES ? (
                 <>

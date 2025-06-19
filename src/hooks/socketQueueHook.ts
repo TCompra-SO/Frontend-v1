@@ -84,7 +84,7 @@ export function useActionsForRow(
   setTotal: (total: number) => void,
   pageSize: number,
   callback?: () => any,
-  useFilter?: boolean | null
+  getUseFilter?: () => boolean | null
 ) {
   async function addNewRow(
     data: SocketResponse,
@@ -115,7 +115,7 @@ export function useActionsForRow(
           if (tableType == TableTypes.HOME) {
             const requirement: Requirement = updElem as Requirement;
             if (requirement.state != RequirementState.PUBLISHED) {
-              if (!useFilter) {
+              if (!getUseFilter?.()) {
                 const prevLen = list.length;
                 const newList = list.filter(
                   (item) => (item.key ?? item.uid) !== data.key
