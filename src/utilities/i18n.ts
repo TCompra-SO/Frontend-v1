@@ -100,6 +100,7 @@ const resources = {
       generateCodeAgain: "Generate the code again",
       generateCodeAgainInAFewSeconds:
         "Generate the code again in a few seconds",
+      generateCodeAgainInAminute: "Generate the code again in a minute",
       userAlreadyValidated: "This use has already been validated",
       generateCodeFirst: "Generate a validation code first",
       expiredCode: "The code has expired; please generate a new one",
@@ -666,6 +667,7 @@ const resources = {
       generateCodeAgain: "Genere el código nuevamente",
       generateCodeAgainInAFewSeconds:
         "Genere el código nuevamente en algunos segundos",
+      generateCodeAgainInAminute: "Genere el código nuevamente en 1 minuto",
       userAlreadyValidated: "Este usuario ya está validado",
       generateCodeFirst: "Genere un código de validación primero",
       expiredCode: "El código ha expirado, genere otro nuevamente",

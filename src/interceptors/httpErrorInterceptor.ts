@@ -101,7 +101,7 @@ export default function httpErrorInterceptor(error: any, type: string): string {
           erroMsg = "userNotFound";
           break;
         case 409:
-          erroMsg = "generateCodeAgainInAFewSeconds";
+          erroMsg = "generateCodeAgainInAminute";
           break;
         case 410:
           erroMsg = "completeProfile";

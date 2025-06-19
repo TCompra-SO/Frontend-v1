@@ -78,7 +78,7 @@ const stepsForgotPass: StepsItemContent[] = [
   },
 ];
 
-const expireInSeconds = 60;
+const expireInSeconds = 120;
 const timeoutToValidate = 5;
 
 interface ValidateCodeProps {
