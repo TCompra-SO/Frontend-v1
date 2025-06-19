@@ -120,7 +120,7 @@ function App() {
           token: {
             colorPrimary: primaryColor,
             colorBgContainer: mainBackgroundColor,
-            fontFamily: "Rubik",
+            fontFamily: "Jost",
             fontSize: 16,
           },
           components: {
