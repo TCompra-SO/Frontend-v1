@@ -111,6 +111,7 @@ export const requirementColumnKey: string = "requirementTitle";
 export const stateColumnKey: string = "state";
 export const typeColumnKey: string = "type";
 export const viewColumnKey: string = "view";
+export const validationColumnKey: string = "valid";
 
 // Columnas custom - son los nombres de los campos definidos en las interfaces
 export const reqDateColumnKey: string = "publishDate";
@@ -153,6 +154,7 @@ export const fieldNameSearchRequestRequirement: Record<string, string> = {
   [titleColumnKey]: "name",
   [reqExpDateColumnKey]: "completion_date",
   [stateColumnKey]: "stateID",
+  [validationColumnKey]: "valid",
 };
 export const fieldNameSearchRequestOffer: Record<string, string> = {
   [nameColumnKey]: "name",

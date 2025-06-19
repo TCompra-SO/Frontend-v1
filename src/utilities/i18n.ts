@@ -24,6 +24,7 @@ const resources = {
       offersColumn: "Offers",
       priceColumn: "Price",
       stateColumn: "State",
+      validationColumn: "Validation",
       // Requirement types
       good: "Good",
       service: "Service",
@@ -596,6 +597,7 @@ const resources = {
       offersColumn: "Ofertas",
       priceColumn: "Cotización",
       stateColumn: "Estado",
+      validationColumn: "Validación",
       // Requirement types
       good: "Bien",
       service: "Servicio",
