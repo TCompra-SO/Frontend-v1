@@ -4,7 +4,7 @@ import mainUserReducer from "./mainUserSlice";
 import loadingReducer from "./loadingSlice";
 import loadingUserSlice from "./loadingUserSlice";
 
-export default configureStore({
+export const store = configureStore({
   reducer: {
     user: userReducer,
     mainUser: mainUserReducer,
@@ -12,3 +12,6 @@ export default configureStore({
     loadingUser: loadingUserSlice,
   },
 });
+
+export type AppDispatch = typeof store.dispatch;
+export default store;

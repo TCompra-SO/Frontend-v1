@@ -14,7 +14,7 @@ export interface MainUserState {
   sellerCount?: number;
   typeEntity: EntityType;
   document: string;
-  isLoggedIn?: boolean;
+  isLoggedIn: boolean;
   image?: string;
   isPremium: boolean;
   categories: number[];

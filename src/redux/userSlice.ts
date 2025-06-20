@@ -1,10 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { UserState } from "../models/Redux";
 import { EntityType, UserRoles } from "../utilities/types";
 import { BaseUser } from "../models/MainInterfaces";
 import { encryptData } from "../utilities/crypto";
 import { userDataKey } from "../utilities/globals";
 import { LoginResponse } from "../models/Interfaces";
+
+export const loginUser = createAsyncThunk(
+  "user/loginUser",
+  async (subUser: BaseUser, { dispatch }) => {
+    dispatch(setBaseUser(subUser));
+    dispatch(setIsLoggedIn(true));
+  }
+);
 
 export const userInitialState: UserState = {
   token: "",
@@ -16,7 +24,7 @@ export const userInitialState: UserState = {
   typeEntity: EntityType.PERSON,
   document: "",
   isPremium: false,
-  isLoggedIn: undefined,
+  isLoggedIn: false,
   categories: [],
   lastSession: "",
 };

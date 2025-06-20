@@ -76,7 +76,7 @@ export default function AdminSales() {
     filteredInfo,
   });
   const { addNewRow, updateRow } = useActionsForRow(
-    TableTypes.HOME,
+    TableTypes.ADMIN_SALES,
     (data: SocketDataPackType) =>
       getRequirementFromData(data, type, undefined, undefined, usersCache),
     requirementList,

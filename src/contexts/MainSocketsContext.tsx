@@ -1,9 +1,9 @@
-import { createContext, ReactNode, useEffect } from "react";
+import { createContext, ReactNode, useEffect, useRef } from "react";
 import useUserSocket from "../socket/useUserSocket";
 import { useTCNotification } from "../socket/useTCNotification";
 import { useChatSocket } from "../socket/useChatSocket";
 import { MainState } from "../models/Redux";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   expiresInKey,
   loginKey,
@@ -12,8 +12,7 @@ import {
   refreshExpiresInKey,
 } from "../utilities/globals";
 import { useNavigate } from "react-router-dom";
-import { useLoadUserInfo } from "../hooks/authHooks";
-import { setIsLoggedIn } from "../redux/userSlice";
+import { useLoadUserInfo, useLogout } from "../hooks/authHooks";
 import {
   getCountMessageUnReadS,
   getUnreadNotificationsCounterS,
@@ -70,8 +69,8 @@ export const MainSocketsContext = createContext<MainSocketsContextType>({
 
 export function MainSocketsProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const loadUserInfo = useLoadUserInfo();
+  const logout = useLogout();
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const uid = useSelector((state: MainState) => state.user.uid);
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
@@ -79,6 +78,7 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
   const userData = useUserSocket();
   const notificationData = useTCNotification();
   const chatData = useChatSocket();
+  const isLoggedInRef = useRef(isLoggedIn);
 
   useEffect(() => {
     window.addEventListener("storage", handleStorageChange);
@@ -86,12 +86,12 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
     return () => {
       disconnectSockets();
       window.removeEventListener("storage", handleStorageChange);
-      console.log("destroying MainSocketsProvider");
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
+    isLoggedInRef.current = isLoggedIn;
     if (isLoggedIn) {
       userData.connectUserSocket();
       notificationData.connectNotificationSocket();
@@ -99,22 +99,25 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
       chatData.connectChatSocket();
       getUnreadChatMessagesCounter();
       getUnreadNotificationsCounter();
-    } else if (!isLoggedIn) {
+    } else {
       disconnectSockets();
-      window.removeEventListener("storage", handleStorageChange);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
 
   async function handleStorageChange(event: StorageEvent) {
     if (
+      isLoggedInRef.current &&
       event.key === logoutKey &&
       event.newValue &&
       event.oldValue !== event.newValue
     ) {
-      dispatch(setIsLoggedIn(false));
+      await logout();
       navigate(navigateToAfterLoggingOut);
-    } else if (
+    }
+
+    if (
+      !isLoggedInRef.current &&
       event.key === loginKey &&
       event.newValue &&
       event.oldValue !== event.newValue
@@ -123,7 +126,7 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
       localStorage.removeItem(loginKey);
     }
     // Eliminar tiempo de expiración de tokens
-    else if (
+    if (
       event.key == expiresInKey &&
       event.oldValue !== null &&
       event.newValue === null

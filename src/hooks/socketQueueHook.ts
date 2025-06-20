@@ -112,8 +112,11 @@ export function useActionsForRow(
         const updElem = await transformData(data.dataPack.data[0]);
 
         if (updElem) {
-          if (tableType == TableTypes.HOME) {
-            const requirement: Requirement = updElem as Requirement;
+          const requirement: Requirement = updElem as Requirement;
+          if (
+            tableType == TableTypes.HOME ||
+            tableType == TableTypes.ADMIN_SALES
+          ) {
             if (requirement.state != RequirementState.PUBLISHED) {
               if (!getUseFilter?.()) {
                 const prevLen = list.length;
@@ -122,9 +125,13 @@ export function useActionsForRow(
                 );
                 setList(newList);
                 setTotal(total - (prevLen - newList.length));
-                if (newList.length == 0) callback?.(); // callback recarga la página de home
+                if (newList.length == 0) callback?.(); // callback debería recargar la página de home
               }
-            } else insertElementInArray(updElem);
+            } else if (
+              (tableType == TableTypes.HOME && requirement.valid) ||
+              tableType == TableTypes.ADMIN_SALES
+            )
+              insertElementInArray(updElem);
           } else if (
             tableType == TableTypes.REQUIREMENT ||
             tableType == TableTypes.ALL_REQUIREMENTS
@@ -149,13 +156,18 @@ export function useActionsForRow(
         }
       } else if (
         tableType == TableTypes.HOME ||
+        tableType == TableTypes.ADMIN_SALES ||
         tableType == TableTypes.REQUIREMENT ||
         tableType == TableTypes.ALL_REQUIREMENTS
       ) {
         // caso republicar requerimiento
         const updElem = await transformData(data.dataPack.data[0]);
         if (updElem && updElem.state == RequirementState.PUBLISHED && canAddRow)
-          addNewRow(data, updElem, tableType == TableTypes.HOME);
+          addNewRow(
+            data,
+            updElem,
+            tableType == TableTypes.HOME || tableType == TableTypes.ADMIN_SALES
+          );
       }
     } catch (e) {
       console.log(e);
@@ -170,7 +182,7 @@ export function useActionsForRow(
       );
       setList(newList);
       setTotal(total - (prevLen - newList.length));
-      if (newList.length == 0) callback?.(); // recargar página
+      if (newList.length == 0) callback?.(); // callback debería recargar página
     } catch (e) {
       console.log(e);
     }

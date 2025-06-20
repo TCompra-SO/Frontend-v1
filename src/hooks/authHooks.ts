@@ -15,7 +15,7 @@ import {
   setMainUser,
 } from "../redux/mainUserSlice";
 import {
-  setBaseUser,
+  loginUser,
   setEmail,
   setFullUser,
   setIsLoggedIn,
@@ -27,7 +27,7 @@ import {
 } from "../redux/userSlice";
 
 import { useDispatch, useSelector } from "react-redux";
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { MainState } from "../models/Redux";
 import { decryptData } from "../utilities/crypto";
 import { getBaseUserForUserSubUser } from "../services/general/generalServices";
@@ -41,6 +41,7 @@ import makeRequest, {
 import { logoutService } from "../services/requests/authService";
 import { LogoutRequest } from "../models/Requests";
 import { setIsLoading } from "../redux/loadingSlice";
+import { AppDispatch } from "../redux/store";
 
 export function useLogin() {
   const { t } = useTranslation();
@@ -98,11 +99,18 @@ export function useLogout() {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const uid = useSelector((state: MainState) => state.user.uid);
+  const isLoggedInRef = useRef(isLoggedIn);
+  const uidRef = useRef(uid);
   const { setTokenExpiration, setRefreshTokenExpiration } =
     useContext(MainSocketsContext);
 
+  useEffect(() => {
+    isLoggedInRef.current = isLoggedIn;
+    uidRef.current = uid;
+  }, [isLoggedIn, uid]);
+
   async function logout() {
-    if (isLoggedIn) {
+    if (isLoggedInRef.current) {
       dispatch(setIsLoading(true));
       const refreshToken = localStorage.getItem(refreshTokenKey);
       if (refreshToken) {
@@ -110,7 +118,7 @@ export function useLogout() {
           service: logoutService(),
           method: "post",
           dataToSend: {
-            userId: uid,
+            userId: uidRef.current,
             refreshToken,
           },
         });
@@ -129,6 +137,7 @@ export function useLogout() {
       localStorage.setItem(logoutKey, Date.now().toString());
       localStorage.removeItem(logoutKey);
       dispatch(setIsLoading(false));
+      dispatch(setIsLoggedIn(false));
     }
   }
 
@@ -136,7 +145,7 @@ export function useLogout() {
 }
 
 export function useLoadUserInfo() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const {
     setTokenExpiration,
     setRefreshTokenExpiration,
@@ -199,25 +208,23 @@ export function useLoadUserInfo() {
             true
           );
           if (!user) {
-            dispatch(setIsLoggedIn(false));
             logout();
             return;
           } else {
             dispatch(setMainUser(user));
           }
           if (subUser) {
-            dispatch(setBaseUser(subUser));
+            dispatch(loginUser(subUser));
           }
-          dispatch(setIsLoggedIn(user && subUser ? true : false));
-          if (!(user && subUser)) logout();
+          if (!(user && subUser)) {
+            logout();
+          }
           return;
         }
-        dispatch(setIsLoggedIn(false));
         logout();
         return;
       }
     }
-    dispatch(setIsLoggedIn(false));
     logout();
   }
 

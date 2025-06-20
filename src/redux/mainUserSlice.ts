@@ -13,6 +13,7 @@ export const mainUserInitialState: MainUserState = {
   document: "",
   isPremium: false,
   categories: [],
+  isLoggedIn: false,
 };
 
 export const mainUserSlice = createSlice({

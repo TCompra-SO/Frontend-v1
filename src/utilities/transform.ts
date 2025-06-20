@@ -66,6 +66,7 @@ export function transformDataToRequirement(
   req.image = data.images;
   req.document = data.files;
   req.used = data.state_article;
+  req.valid = data.valid;
   if (data.winOffer) {
     req.offerId = data.winOffer.uid;
     req.offerUserId = data.winOffer.entityID;
