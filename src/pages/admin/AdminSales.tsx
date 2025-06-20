@@ -97,7 +97,7 @@ export default function AdminSales() {
   const { searchTable, responseData, error, errorMsg, apiParams } =
     useSearchTable(
       uid,
-      TableTypes.HOME,
+      TableTypes.ADMIN_SALES,
       EntityType.SUBUSER,
       type,
       resetChangesQueue

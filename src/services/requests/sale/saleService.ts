@@ -113,6 +113,15 @@ export function cancelSaleService(): HttpService {
   };
 }
 
+export function adminHomeSaleFilterService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.requirements}${
+      ApiRoutes.requirements.searchMainFiltersAdmin
+    }`,
+    type: "SA-AD-FI",
+  };
+}
+
 export function homeSaleFilterService(): HttpService {
   return {
     url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.requirements}${

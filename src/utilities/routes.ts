@@ -81,6 +81,7 @@ export const ApiRoutes = {
     culminate: "culminate/",
     cancel: "canceled/",
     searchMainFilters: "searchMainFilters",
+    searchMainFiltersAdmin: "searchMainFiltersAdmin",
     searchRequirements: "searchProductsByUser",
     validate: "validate/",
   },

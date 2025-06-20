@@ -21,6 +21,7 @@ import {
   tableSearchAfterMseconds,
 } from "../utilities/globals";
 import {
+  getAdminHomeFilterService,
   getHomeFilterService,
   getParamsFromSorterAndFilter,
   getSearchOffersService,
@@ -201,6 +202,8 @@ export default function useSearchTable(
       case TableTypes.HOME:
         service = getHomeFilterService(stSubType);
         break;
+      case TableTypes.ADMIN_SALES:
+        service = getAdminHomeFilterService(stSubType);
     }
     return service;
   }

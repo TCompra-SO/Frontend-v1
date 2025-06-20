@@ -77,6 +77,7 @@ import {
   uploadImagesServiceService,
 } from "../services/requests/service/serviceService";
 import {
+  adminHomeSaleFilterService,
   cancelSaleService,
   createSaleService,
   culminateSaleService,
@@ -661,6 +662,11 @@ export function isCertificationTableTypes(n: any) {
 }
 
 /** Funciones que retornan el servicio correcto según tipo */
+
+export function getAdminHomeFilterService(type: RequirementType | undefined) {
+  if (type == RequirementType.SALE) return adminHomeSaleFilterService();
+  return null;
+}
 
 export function getHomeFilterService(type: RequirementType | undefined) {
   if (type == RequirementType.GOOD) return homeRequirementFilterService();
