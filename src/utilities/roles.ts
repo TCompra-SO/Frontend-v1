@@ -1,5 +1,5 @@
 import { pageRoutes, pageSubRoutes } from "./routes";
-import { UserRoles } from "./types";
+import { RequirementType, UserRoles } from "./types";
 
 export const RolesForSection: {
   [key in keyof typeof pageRoutes]: Record<UserRoles, boolean>;
@@ -327,3 +327,41 @@ export const RolesForSubSection: {
 //     },
 //   },
 // };
+
+export const roleCanCreateRequirementType: {
+  [key in UserRoles]: RequirementType[];
+} = {
+  [UserRoles.NONE]: [],
+  [UserRoles.ADMIN]: [
+    RequirementType.GOOD,
+    RequirementType.SERVICE,
+    RequirementType.SALE,
+  ],
+  [UserRoles.SELLER_BUYER]: [
+    RequirementType.GOOD,
+    RequirementType.SERVICE,
+    RequirementType.SALE,
+  ],
+  [UserRoles.SELLER]: [RequirementType.SALE],
+  [UserRoles.BUYER]: [RequirementType.GOOD, RequirementType.SERVICE],
+  [UserRoles.LEGAL]: [],
+};
+
+export const roleCanOfferRequirementType: {
+  [key in UserRoles]: RequirementType[];
+} = {
+  [UserRoles.NONE]: [],
+  [UserRoles.ADMIN]: [
+    RequirementType.GOOD,
+    RequirementType.SERVICE,
+    RequirementType.SALE,
+  ],
+  [UserRoles.SELLER_BUYER]: [
+    RequirementType.GOOD,
+    RequirementType.SERVICE,
+    RequirementType.SALE,
+  ],
+  [UserRoles.SELLER]: [RequirementType.GOOD, RequirementType.SERVICE],
+  [UserRoles.BUYER]: [RequirementType.SALE],
+  [UserRoles.LEGAL]: [],
+};

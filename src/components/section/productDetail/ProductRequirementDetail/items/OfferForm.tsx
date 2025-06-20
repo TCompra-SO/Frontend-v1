@@ -35,7 +35,6 @@ import {
   RequirementState,
   RequirementType,
   SystemNotificationType,
-  UserRoles,
 } from "../../../../../utilities/types";
 import React from "react";
 import CantOfferMessage from "./CantOfferMessage";
@@ -56,6 +55,7 @@ import useSystemNotification from "../../../../../hooks/useSystemNotification";
 import dayjs from "dayjs";
 import { defaultErrorMsg } from "../../../../../utilities/globals";
 import { ListsContext } from "../../../../../contexts/ListsContext";
+import { roleCanOfferRequirementType } from "../../../../../utilities/roles";
 
 function RowContainer({ children }: { children: ReactNode }) {
   return (
@@ -265,12 +265,7 @@ export default function OfferForm(props: OfferFormProps) {
         setCantOfferMotive(CantOfferMotives.IS_CREATOR);
         return;
       } else if (
-        role == UserRoles.LEGAL ||
-        role == UserRoles.NONE ||
-        (role == UserRoles.BUYER &&
-          props.requirement.type != RequirementType.SALE) ||
-        (role == UserRoles.SELLER &&
-          props.requirement.type == RequirementType.SALE)
+        !roleCanOfferRequirementType[role].includes(props.requirement.type)
       ) {
         setCantOfferMotive(CantOfferMotives.NO_ALLOWED_ROLE);
         return;
