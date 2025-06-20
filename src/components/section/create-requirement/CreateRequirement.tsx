@@ -53,6 +53,7 @@ import { LoadingDataContext } from "../../../contexts/LoadingDataContext";
 import SimpleLoading from "../../../pages/utils/SimpleLoading";
 import { ListsContext } from "../../../contexts/ListsContext";
 import { sectionIcons } from "../../../utilities/colors";
+import { roleCanCreateRequirementType } from "../../../utilities/roles";
 
 interface CreateRequirementProps extends CommonModalProps {
   closeModal: () => void;
@@ -94,8 +95,11 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   const uid = useSelector((state: MainState) => state.user.uid);
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
+  const role = useSelector((state: MainState) => state.user.typeID);
   const [form] = Form.useForm();
-  const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
+  const [type, setType] = useState<RequirementType>(
+    roleCanCreateRequirementType[role][0] ?? RequirementType.GOOD
+  );
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [showDocListToCertificate, setShowDocListToCertificate] =
     useState(false);
@@ -385,7 +389,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
                 className="sub-titulo sub-calificar"
                 style={{ fontSize: "26px" }}
               >
-                <div>{t("newRequirement")}</div>
+                <div>{t("newSale")}</div>
                 <div className="calificar-detalle">
                   {t("createSaleSubtitle")}
                 </div>
@@ -414,42 +418,57 @@ export default function CreateRequirement(props: CreateRequirementProps) {
           className="t-flex mr-sub"
           style={createRequirementLoading ? { display: "none" } : undefined}
         >
-          <ButtonContainer
-            common
-            className={`btn btn-grey wd-33 ${
-              type == RequirementType.GOOD ? "active" : ""
-            }`}
-            onClick={() => {
-              changeTab(RequirementType.GOOD);
-            }}
-          >
-            <i className={sectionIcons[RequirementType.GOOD]}></i>{" "}
-            <span className="req-btn-info">{t("goods")}</span>
-          </ButtonContainer>
-          <ButtonContainer
-            common
-            className={`btn btn-grey wd-33 ${
-              type == RequirementType.SERVICE ? "active" : ""
-            }`}
-            onClick={() => {
-              changeTab(RequirementType.SERVICE);
-            }}
-          >
-            <i className="fa-regular fa-hand-holding-magic"></i>{" "}
-            <span className="req-btn-info">{t("services")}</span>
-          </ButtonContainer>
-          <ButtonContainer
-            common
-            className={`btn btn-grey wd-33 ${
-              type == RequirementType.SALE ? "active" : ""
-            }`}
-            onClick={() => {
-              changeTab(RequirementType.SALE);
-            }}
-          >
-            <i className="fa-regular fa-basket-shopping"></i>{" "}
-            <span className="req-btn-info">{t("sales")}</span>
-          </ButtonContainer>
+          {roleCanCreateRequirementType[role].includes(
+            RequirementType.GOOD
+          ) && (
+            <ButtonContainer
+              common
+              className={`btn btn-grey  ${
+                type == RequirementType.GOOD ? "active" : ""
+              }`}
+              onClick={() => {
+                changeTab(RequirementType.GOOD);
+              }}
+              style={{ flexGrow: 1 }}
+            >
+              <i className={sectionIcons[RequirementType.GOOD]}></i>{" "}
+              <span className="req-btn-info">{t("goods")}</span>
+            </ButtonContainer>
+          )}
+          {roleCanCreateRequirementType[role].includes(
+            RequirementType.SERVICE
+          ) && (
+            <ButtonContainer
+              common
+              className={`btn btn-grey  ${
+                type == RequirementType.SERVICE ? "active" : ""
+              }`}
+              onClick={() => {
+                changeTab(RequirementType.SERVICE);
+              }}
+              style={{ flexGrow: 1 }}
+            >
+              <i className="fa-regular fa-hand-holding-magic"></i>{" "}
+              <span className="req-btn-info">{t("services")}</span>
+            </ButtonContainer>
+          )}
+          {roleCanCreateRequirementType[role].includes(
+            RequirementType.SALE
+          ) && (
+            <ButtonContainer
+              common
+              className={`btn btn-grey  ${
+                type == RequirementType.SALE ? "active" : ""
+              }`}
+              onClick={() => {
+                changeTab(RequirementType.SALE);
+              }}
+              style={{ flexGrow: 1 }}
+            >
+              <i className="fa-regular fa-basket-shopping"></i>{" "}
+              <span className="req-btn-info">{t("sales")}</span>
+            </ButtonContainer>
+          )}
         </div>
 
         <Form

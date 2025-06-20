@@ -18,6 +18,7 @@ import useShowNotification, {
 import { ProcessFlag, RequirementType } from "../../../utilities/types";
 import { LoadingDataContext } from "../../../contexts/LoadingDataContext";
 import { ChatBot, ChatBotRef } from "../../common/utils/ChatBot";
+import { roleCanCreateRequirementType } from "../../../utilities/roles";
 
 const CreateRequirement = lazy(
   () => import("../create-requirement/CreateRequirement")
@@ -34,6 +35,7 @@ export default function CreateRequirementFloatButton() {
   const { showNotification } = useShowNotification();
   const isLoading = useSelector((state: MainState) => state.loading.isLoading);
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
+  const role = useSelector((state: MainState) => state.user.typeID);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isHomePage, setIsHomePage] = useState(true);
   const [isChatPage, setIsChatPage] = useState(false);
@@ -41,7 +43,9 @@ export default function CreateRequirementFloatButton() {
   const [reqSuccess, setReqSuccess] = useState(ProcessFlag.NOT_INI);
   const [docSuccess, setDocSuccess] = useState(ProcessFlag.NOT_INI);
   const [imgSuccess, setImgSuccess] = useState(ProcessFlag.NOT_INI);
-  const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
+  const [type, setType] = useState<RequirementType>(
+    roleCanCreateRequirementType[role][0] ?? RequirementType.GOOD
+  );
 
   const [avoidClosingModal, setAvoidClosingModal] = useState(false);
   const [showChatBotTooltip, setShowChatBotTooltip] = useState<
@@ -243,7 +247,7 @@ export default function CreateRequirementFloatButton() {
                 onClick={() => navigate(pageRoutes.home)}
               />
             )}
-            {isLoggedIn && (
+            {isLoggedIn && roleCanCreateRequirementType[role].length && (
               <>
                 {!isChatPage && (
                   <FloatButton
@@ -257,7 +261,10 @@ export default function CreateRequirementFloatButton() {
                 <FloatButton
                   icon={<i className="fa-solid fa-plus" />}
                   type="primary"
-                  tooltip={{ title: t("createRequirement"), placement: "left" }}
+                  tooltip={{
+                    title: t("createRequirement"),
+                    placement: "left",
+                  }}
                   onClick={() => setIsOpenModal(true)}
                 />
               </>
