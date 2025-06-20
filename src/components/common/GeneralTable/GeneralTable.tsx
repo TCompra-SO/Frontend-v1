@@ -270,7 +270,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         visibility[TableColumns.ACTION]
       ),
     ];
-    console.log(subType);
+
     if (subType == RequirementType.SALE) {
       const penultimateIndex = Math.max(columns.length - 1, 0);
       columns.splice(
@@ -279,6 +279,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         ValidColumn(
           props.content.type,
           subType,
+          t,
           visibility[TableColumns.VALIDATION],
           props.content.filteredInfo,
           true
@@ -404,7 +405,6 @@ export default function GeneralTable(props: GeneralTableProps) {
         visibility[TableColumns.PUBLISH_DATE],
         props.content.fieldSort
       ),
-      // CategoryColumn(props.content.type, visibility[TableColumns.CATEGORY]),
       LocationColumn(
         visibility[TableColumns.LOCATION],
         props.content.fieldSort
@@ -441,6 +441,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         ValidColumn(
           props.content.type,
           subType,
+          t,
           visibility[TableColumns.VALIDATION],
           props.content.filteredInfo,
           true

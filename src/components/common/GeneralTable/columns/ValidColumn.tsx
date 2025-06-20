@@ -1,6 +1,5 @@
 import { ColumnType } from "antd/es/table";
-import { Requirement } from "../../../../models/MainInterfaces";
-import { useTranslation } from "react-i18next";
+import { BasicRequirement } from "../../../../models/MainInterfaces";
 import {
   Filters,
   TableTypes,
@@ -9,17 +8,19 @@ import {
 import { validationColumnKey } from "../../../../utilities/globals";
 import { StrictColumnFilterItem } from "../../../../models/Interfaces";
 import CustomFilterDropdown from "../../utils/CustomFilterDropdown";
+import { TFunction } from "i18next";
 
 export default function ValidColumn(
   type: TableTypes,
   subType: RequirementType,
+  t: TFunction,
   hidden: boolean = false,
   filteredInfo?: Filters,
   noFilter?: boolean
 ) {
-  const { t } = useTranslation();
   const filters: StrictColumnFilterItem[] | undefined =
-    type == TableTypes.REQUIREMENT && subType == RequirementType.SALE
+    (type == TableTypes.REQUIREMENT || type == TableTypes.ALL_REQUIREMENTS) &&
+    subType == RequirementType.SALE
       ? [
           {
             text: t("validFem"),
@@ -32,7 +33,7 @@ export default function ValidColumn(
         ]
       : undefined;
 
-  const col: ColumnType<Requirement> = {
+  const col: ColumnType<BasicRequirement> = {
     title: t("validationColumn"),
     key: validationColumnKey,
     align: "center",
@@ -61,7 +62,11 @@ export default function ValidColumn(
       let className: string = "";
 
       try {
-        if (type == TableTypes.REQUIREMENT && subType == RequirementType.SALE) {
+        if (
+          (type == TableTypes.REQUIREMENT ||
+            type == TableTypes.ALL_REQUIREMENTS) &&
+          subType == RequirementType.SALE
+        ) {
           const valid = record.valid;
           label = t(valid ? "validFem" : "invalidFem");
           className = `cont-estado ${valid ? "es-atendido" : "es-cancelado"}`;

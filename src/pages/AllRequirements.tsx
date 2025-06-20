@@ -100,6 +100,7 @@ export default function AllRequirements() {
   useEffect(() => {
     setTableContent((prev) => ({
       ...prev,
+      subType: type,
       nameColumnHeader: t(getLabelFromRequirementType(type)),
       data: requirementList,
       total,
