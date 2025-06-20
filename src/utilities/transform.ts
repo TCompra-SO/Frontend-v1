@@ -160,52 +160,58 @@ export async function transformFromGetRequirementByIdToRequirement(
   data: any,
   type: RequirementType
 ) {
-  let user: BaseUser | undefined = undefined;
-  let subUser: BaseUser | undefined = undefined;
-  const { responseData }: any = await makeRequest({
-    service: getBaseDataUserService(data.userID),
-    method: "get",
-  });
-  if (responseData) {
-    ({ user, subUser } = transformToBaseUser(responseData.data[0]));
-  }
-
-  if (user) {
-    const req: Requirement = {
-      description: data.description,
-      title: data.name,
-      key: data.uid,
-      category: data.categoryID,
-      location: data.cityID,
-      price: data.budget,
-      coin: data.currencyID,
-      paymentMethod: data.payment_methodID,
-      expirationDate: data.completion_date,
-      deliveryTime: data.submission_dateID,
-      warranty: data.warranty,
-      warrantyTime: data.durationID,
-      allowedBidder: data.allowed_bidersID,
-      publishDate: data.publish_date,
-      state: data.stateID,
-      image: data.images,
-      document: data.files,
-      user,
-      subUser,
-      numberOffers: data.number_offers,
-      type,
-      userName: data.userName,
-      subUserName: data.subUserName,
-      used: data.state_article,
-    };
-    if (data.winOffer) {
-      req.offerId = data.winOffer.uid;
-      req.offerUserId = data.winOffer.entityID;
-      if (data.winOffer.entityID != data.winOffer.userID)
-        req.offerSubUserId = data.winOffer.userID;
+  try {
+    let user: BaseUser | undefined = undefined;
+    let subUser: BaseUser | undefined = undefined;
+    const { responseData }: any = await makeRequest({
+      service: getBaseDataUserService(data.userID),
+      method: "get",
+    });
+    if (responseData) {
+      ({ user, subUser } = transformToBaseUser(responseData.data[0]));
     }
-    return req;
+
+    if (user) {
+      const req: Requirement = {
+        description: data.description,
+        title: data.name,
+        key: data.uid,
+        category: data.categoryID,
+        location: data.cityID,
+        price: data.budget,
+        coin: data.currencyID,
+        paymentMethod: data.payment_methodID,
+        expirationDate: data.completion_date,
+        deliveryTime: data.submission_dateID,
+        warranty: data.warranty,
+        warrantyTime: data.durationID,
+        allowedBidder: data.allowed_bidersID,
+        publishDate: data.publish_date,
+        state: data.stateID,
+        image: data.images,
+        document: data.files,
+        user,
+        subUser,
+        numberOffers: data.number_offers,
+        type,
+        userName: data.userName,
+        subUserName: data.subUserName,
+        used: data.state_article,
+        valid: data.valid,
+      };
+      if (data.winOffer) {
+        req.offerId = data.winOffer.uid;
+        req.offerUserId = data.winOffer.entityID;
+        if (data.winOffer.entityID != data.winOffer.userID)
+          req.offerSubUserId = data.winOffer.userID;
+      }
+      return req;
+    }
+    return null;
+  } catch (e) {
+    console.log(e);
+    return null;
   }
-  return null;
 }
 
 export function transformToOffer(

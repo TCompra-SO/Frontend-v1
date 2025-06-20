@@ -74,7 +74,7 @@ export default function ProductDetail() {
         response.data[0],
         val
       );
-      if (req) setRequirement(req);
+      if (req && req.valid) setRequirement(req);
       else navigate(pageRoutes.home);
     } else navigate(pageRoutes.home);
   }

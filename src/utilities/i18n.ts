@@ -243,6 +243,7 @@ const resources = {
       improveYourCompanysImage: "Improve significantly your company's image.",
       cantOfferToYourOwnRequirement: "You cannot offer to your own requirement",
       cantOfferToYourOwnSale: "You cannot offer to your own sale",
+      saleNoLongerAvailable: "This sale is no longer available",
       alreadyMadeOffer: "You have already made an offer",
       requirementNotFound: "The requirement could not be found",
       saleNotFound: "The sale could not be found",
@@ -827,6 +828,7 @@ const resources = {
       cantOfferToYourOwnRequirement:
         "No puedes ofertar a tu propio requerimiento",
       cantOfferToYourOwnSale: "No puedes ofertar a tu propia liquidación",
+      saleNoLongerAvailable: "Esta liquidación ya no está disponible",
       alreadyMadeOffer: "Ya haz realizado una oferta",
       requirementNotFound: "No se ha podido encontrar el requerimiento",
       saleNotFound: "No se ha podido encontrar la liquidación",

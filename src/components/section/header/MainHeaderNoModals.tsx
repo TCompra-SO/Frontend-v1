@@ -80,21 +80,21 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
     { key: string; label: ReactNode }[]
   >([]);
 
-  // useEffect(() => {
-  //   setDropdownItems(
-  //     dropdownItems.concat(
-  //       isSystemAdmin && !dropdownItems.find((it) => it.key == "admin")
-  //         ? [
-  //             {
-  //               key: "admin",
-  //               label: adminItem,
-  //             },
-  //           ]
-  //         : []
-  //     )
-  //   );
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [isSystemAdmin]);
+  useEffect(() => {
+    setDropdownItems(
+      dropdownItems.concat(
+        isSystemAdmin && !dropdownItems.find((it) => it.key == "admin")
+          ? [
+              {
+                key: "admin",
+                label: adminItem,
+              },
+            ]
+          : []
+      )
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSystemAdmin]);
 
   useEffect(() => {
     setCurrentSection(getSectionFromRoute(location.pathname));
@@ -118,17 +118,16 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
             key: "logout",
             label: logoutItem,
           },
-        ]
-        // .concat(
-        //   isSystemAdmin
-        //     ? [
-        //         {
-        //           key: "admin",
-        //           label: adminItem,
-        //         },
-        //       ]
-        //     : []
-        // )
+        ].concat(
+          isSystemAdmin
+            ? [
+                {
+                  key: "admin",
+                  label: adminItem,
+                },
+              ]
+            : []
+        )
       );
     } else {
       setShowMenuButtonStyle({});
@@ -154,17 +153,16 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
             key: "logout",
             label: logoutItem,
           },
-        ]
-        // .concat(
-        //   isSystemAdmin
-        //     ? [
-        //         {
-        //           key: "admin",
-        //           label: adminItem,
-        //         },
-        //       ]
-        //     : []
-        // )
+        ].concat(
+          isSystemAdmin
+            ? [
+                {
+                  key: "admin",
+                  label: adminItem,
+                },
+              ]
+            : []
+        )
       );
     }
 

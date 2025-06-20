@@ -231,6 +231,9 @@ export default function httpErrorInterceptor(error: any, type: string): string {
         case 401:
           erroMsg = "saleNotFound";
           break;
+        case 423:
+          erroMsg = "saleNoLongerAvailable";
+          break;
       }
       break;
     case uploadDocsRequirementService().type:
