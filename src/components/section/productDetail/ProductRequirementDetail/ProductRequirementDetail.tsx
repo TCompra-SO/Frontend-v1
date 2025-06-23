@@ -15,8 +15,11 @@ export default function ProductRequirementDetail(
 ) {
   return (
     <div className="t-flex f-column section-detalles j-items">
-      <div className="cont-prime t-flex f-column gap-20">
-        <h1 className="titulo-requ m-0 text-truncate">
+      <div className="cont-prime t-flex f-column gap-20 wd-100">
+        <h1
+          className="titulo-requ m-0 text-truncate"
+          style={{ lineHeight: 1.2 }}
+        >
           {props.requirement?.title}
         </h1>
         <div className="requ-oferta gap-20 bl-1">
