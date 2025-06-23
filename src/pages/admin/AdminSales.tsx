@@ -6,6 +6,7 @@ import { sectionIcons } from "../../utilities/colors";
 import {
   Action,
   EntityType,
+  ModalTypes,
   // OnChangePageAndPageSizeTypeParams,
   RequirementType,
   TableColumns,
@@ -13,11 +14,15 @@ import {
 } from "../../utilities/types";
 import { useEffect, useRef, useState } from "react";
 import {
+  ModalContent,
   PaginationDataResponse,
   SocketDataPackType,
   TableTypeRequirement,
 } from "../../models/Interfaces";
-import { getLabelFromRequirementType } from "../../utilities/globalFunctions";
+import {
+  getInitialModalData,
+  getLabelFromRequirementType,
+} from "../../utilities/globalFunctions";
 import { Requirement } from "../../models/MainInterfaces";
 import useSearchTable, {
   useFilterSortPaginationForTable,
@@ -29,17 +34,23 @@ import useSocket from "../../socket/useSocket";
 import {
   defaultErrorMsg,
   fieldNameSearchRequestRequirement,
+  mainModalScrollStyle,
+  noPaginationPageSize,
 } from "../../utilities/globals";
 import { MainState } from "../../models/Redux";
 import { useSelector } from "react-redux";
 import { getRequirementFromData } from "../../services/general/generalServices";
 import useShowNotification from "../../hooks/utilHooks";
 import { useValidateSale } from "../../hooks/adminHooks";
+import { useGetOffersByRequirementId } from "../../hooks/requirementHooks";
+import ModalContainer from "../../components/containers/ModalContainer";
 
 export default function AdminSales() {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
   const { validateSale } = useValidateSale();
+  const { getOffersByRequirementId, modalDataOffersByRequirementId } =
+    useGetOffersByRequirementId();
   const uid = useSelector((state: MainState) => state.user.uid);
   const [usersCache, setUsersCache] = useState<Map<string, any>>(new Map());
   const [type] = useState<RequirementType>(RequirementType.SALE);
@@ -47,6 +58,10 @@ export default function AdminSales() {
   const [requirementList, setRequirementList] = useState<Requirement[]>([]);
   const [loadingTable, setLoadingTable] = useState(true);
   const searchValueRef = useRef<TablePageContentRef>(null);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [dataModal, setDataModal] = useState<ModalContent>(
+    getInitialModalData()
+  );
   const {
     currentPage,
     currentPageSize,
@@ -145,6 +160,20 @@ export default function AdminSales() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
 
+  /** Mostrar datos de liquidación */
+
+  useEffect(() => {
+    if (
+      modalDataOffersByRequirementId.type === ModalTypes.DETAILED_REQUIREMENT
+    ) {
+      setDataModal({
+        ...modalDataOffersByRequirementId,
+      });
+      setIsOpenModal(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [modalDataOffersByRequirementId]);
+
   /**
    * Funciones
    */
@@ -194,30 +223,57 @@ export default function AdminSales() {
   }
 
   function handleOnButtonClick(action: Action, requirement: Requirement) {
-    if (action == Action.VALIDATE) validateSale(requirement.key, true);
-    else if (action == Action.INVALIDATE) validateSale(requirement.key, false);
+    switch (action) {
+      case Action.VALIDATE:
+        validateSale(requirement.key, true);
+        break;
+      case Action.INVALIDATE:
+        validateSale(requirement.key, false);
+        break;
+      case Action.SHOW_OFFERS:
+        getOffersByRequirementId(
+          TableTypes.REQUIREMENT,
+          requirement.key,
+          requirement.type,
+          true,
+          1,
+          noPaginationPageSize,
+          action,
+          requirement
+        );
+        break;
+    }
   }
 
   return (
-    <TablePageContent
-      title={t("administrator")}
-      titleIcon={<i className={`${sectionIcons[type]} c-default`}></i>}
-      subtitle={`${t("sales")}`}
-      subtitleIcon={<i className={`${sectionIcons["admin"]} sub-icon`}></i>}
-      table={tableContent}
-      loading={loadingTable}
-      onChangePageAndPageSize={(params) =>
-        handleChangePageAndPageSize(
-          params,
-          fieldNameSearchRequestRequirement,
-          searchTable,
-          setLoadingTable
-          // setLastSearchParams
-        )
-      }
-      ref={searchValueRef}
-      onSearch={(e) => handleSearch(e, searchTable)}
-      admin
-    />
+    <>
+      <ModalContainer
+        destroyOnClose
+        content={dataModal}
+        isOpen={isOpenModal}
+        onClose={() => setIsOpenModal(false)}
+        style={mainModalScrollStyle}
+      />
+      <TablePageContent
+        title={t("administrator")}
+        titleIcon={<i className={`${sectionIcons[type]} c-default`}></i>}
+        subtitle={`${t("sales")}`}
+        subtitleIcon={<i className={`${sectionIcons["admin"]} sub-icon`}></i>}
+        table={tableContent}
+        loading={loadingTable}
+        onChangePageAndPageSize={(params) =>
+          handleChangePageAndPageSize(
+            params,
+            fieldNameSearchRequestRequirement,
+            searchTable,
+            setLoadingTable
+            // setLastSearchParams
+          )
+        }
+        ref={searchValueRef}
+        onSearch={(e) => handleSearch(e, searchTable)}
+        admin
+      />
+    </>
   );
 }

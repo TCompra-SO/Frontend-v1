@@ -91,7 +91,7 @@ export default function GeneralTable(props: GeneralTableProps) {
         props.content.type == TableTypes.OFFER_SUBUSER ||
         props.content.type == TableTypes.PURCHASE_ORDER_SUBUSER
           ? 1000
-          : 1000,
+          : 950,
     },
     style: { width: "100%" },
     bordered: false,

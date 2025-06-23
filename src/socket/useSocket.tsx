@@ -55,7 +55,7 @@ export default function useSocket(
         socketAPI = connectHomeSocket(
           RequirementType.SALE,
           () => pageRef.current,
-          getUseFilter, // ch4
+          getUseFilter,
           updateChangesQueue
         );
       } else {
