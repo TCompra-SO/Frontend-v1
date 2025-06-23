@@ -13,6 +13,7 @@ import {
   Action,
   ModalTypes,
   OrderTableType,
+  RequirementDetailType,
   RequirementType,
   TableTypes,
 } from "../utilities/types";
@@ -259,7 +260,7 @@ export default function AllSalesOrders() {
           TableTypes.ALL_SALES_ORDERS,
           purchaseOrder.requirementId,
           purchaseOrder.type,
-          true,
+          RequirementDetailType.ORDER,
           1,
           noPaginationPageSize,
           action,

@@ -7,7 +7,11 @@ import {
   defaultCountry,
 } from "../../../../utilities/globals";
 import { useContext, useEffect, useState } from "react";
-import { CommonFilter, filterLabels } from "../../../../utilities/types";
+import {
+  CommonFilter,
+  filterLabels,
+  RequirementDetailType,
+} from "../../../../utilities/types";
 import { OfferFilters } from "../../../../models/Interfaces";
 import { requirementDetailContext } from "../../../../contexts/RequirementDetailContext";
 import { useTranslation } from "react-i18next";
@@ -18,7 +22,7 @@ import {
 } from "../../../../utilities/globalFunctions";
 
 interface RequirementOfferFiltersProps {
-  fromPurchaseOrder: boolean;
+  type: RequirementDetailType;
   filters?: OfferFilters;
 }
 
@@ -124,7 +128,7 @@ export default function RequirementOfferFilters(
                       options={commonList}
                       style={{ marginTop: "5px" }}
                       className="form-control"
-                      disabled={props.fromPurchaseOrder}
+                      disabled={props.type == RequirementDetailType.ORDER}
                     />
                   </Form.Item>
                 </Flex>
@@ -135,7 +139,7 @@ export default function RequirementOfferFilters(
                   <b style={{ color: "#92acbf" }}>{t("locationColumn")}</b>
                   <Form.Item name="location" style={{ width: "100%" }}>
                     <SelectContainer
-                      disabled={props.fromPurchaseOrder}
+                      disabled={props.type == RequirementDetailType.ORDER}
                       options={[{ label: t("all"), value: allSelect }].concat(
                         getCityListForSelect(countryData, showCountry)
                       )}
@@ -151,7 +155,7 @@ export default function RequirementOfferFilters(
                   <b style={{ color: "#92acbf" }}>{t("delivery")}</b>
                   <Form.Item name="deliveryTime" style={{ width: "100%" }}>
                     <SelectContainer
-                      disabled={props.fromPurchaseOrder}
+                      disabled={props.type == RequirementDetailType.ORDER}
                       options={[{ label: t("all"), value: allSelect }].concat(
                         getListForSelectIdValueMap(deliveryTimeData)
                       )}
@@ -167,7 +171,7 @@ export default function RequirementOfferFilters(
                   <b style={{ color: "#92acbf" }}>{t("warranty")}</b>
                   <Form.Item name="warranty" style={{ width: "100%" }}>
                     <SelectContainer
-                      disabled={props.fromPurchaseOrder}
+                      disabled={props.type == RequirementDetailType.ORDER}
                       options={commonList}
                       style={{ marginTop: "5px" }}
                       className="form-control"

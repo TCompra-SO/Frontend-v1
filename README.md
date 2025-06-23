@@ -545,6 +545,21 @@ _Props_
 | -------- | --------- | -------------------------------------------------------------------- |
 | `hidden` | `boolean` | Si es `true`, la columna estará oculta (valor por defecto: `false`). |
 
+###### ValidColumn
+
+Muestra si un requerimiento (liquidación) es válido o no.
+
+_Props_
+
+| Nombre          | Tipo              | Descripción                                                          |
+| --------------- | ----------------- | -------------------------------------------------------------------- |
+| `type`          | `TableTypes`      | Tipo de tabla.                                                       |
+| `subType`       | `RequirementType` | Subtipo de tabla.                                                    |
+| `hidden`        | `boolean`         | Si es `true`, la columna estará oculta (valor por defecto: `false`). |
+| `filteredInfo?` | `Filters`         | Información de filtros aplicados a la columna.                       |
+| `t`             | `TFunction`       | Función para obtener traducción.                                     |
+| `noFilter?`     | `boolean`         | Indica si se muestra el filtro.                                      |
+
 ###### ViewColumn
 
 Muestra un botón para visualizar datos relacionados a la fila.
@@ -835,16 +850,16 @@ Componente principal para visualización detallada de un requerimiento y sus ofe
 
 _Props_
 
-| Nombre                       | Tipo                          | Descripción                                                    |
-| ---------------------------- | ----------------------------- | -------------------------------------------------------------- |
-| `offerList`                  | `Offer[]`                     | Listado de ofertas asociadas al requerimiento.                 |
-| `requirement`                | `Requirement`                 | Datos completos del requerimiento.                             |
-| `forPurchaseOrder`           | `boolean`                     | Indica si el modal funciona como historial de orden de compra. |
-| `filters?`                   | `OfferFilters`                | Filtros aplicados a las ofertas.                               |
-| `orderId?`                   | `string`                      | ID de la orden de compra.                                      |
-| `onClose`                    | `() => any`                   | Función para cerrar el modal.                                  |
-| `setDataModalSelectOffer?`   | `(val: ModalContent) => void` | Maneja datos del modal de selección de oferta.                 |
-| `setIsOpenModalSelectOffer?` | `(val: boolean) => void`      | Controla visibilidad del modal de selección de oferta.         |
+| Nombre                       | Tipo                          | Descripción                                                     |
+| ---------------------------- | ----------------------------- | --------------------------------------------------------------- |
+| `offerList`                  | `Offer[]`                     | Listado de ofertas asociadas al requerimiento.                  |
+| `requirement`                | `Requirement`                 | Datos completos del requerimiento.                              |
+| `type`                       | `RequirementDetailType`       | Indica qué tipo de modal es (para órden, requerimiento, admin). |
+| `filters?`                   | `OfferFilters`                | Filtros aplicados a las ofertas.                                |
+| `orderId?`                   | `string`                      | ID de la orden de compra.                                       |
+| `onClose`                    | `() => any`                   | Función para cerrar el modal.                                   |
+| `setDataModalSelectOffer?`   | `(val: ModalContent) => void` | Maneja datos del modal de selección de oferta.                  |
+| `setIsOpenModalSelectOffer?` | `(val: boolean) => void`      | Controla visibilidad del modal de selección de oferta.          |
 
 ###### RequirementInfo
 
@@ -878,10 +893,10 @@ Componente de filtros interactivos para ofertas de requerimientos.
 
 _Props_
 
-| Nombre              | Tipo           | Descripción                                       |
-| ------------------- | -------------- | ------------------------------------------------- |
-| `fromPurchaseOrder` | `boolean`      | Desactiva filtros cuando es para orden de compra. |
-| `filters?`          | `OfferFilters` | Valores iniciales de los filtros.                 |
+| Nombre     | Tipo                    | Descripción                                                               |
+| ---------- | ----------------------- | ------------------------------------------------------------------------- |
+| `type`     | `RequirementDetailType` | Indica a qué tipo de modal perteneces (para órden, requerimiento, admin). |
+| `filters?` | `OfferFilters`          | Valores iniciales de los filtros.                                         |
 
 ###### RequirementOfferList
 
@@ -889,15 +904,15 @@ Componente para listado y gestión de ofertas asociadas a un requerimiento, con 
 
 _Props_
 
-| Nombre                       | Tipo                          | Descripción                                  |
-| ---------------------------- | ----------------------------- | -------------------------------------------- |
-| `offers`                     | `Offer[]`                     | Listado completo de ofertas.                 |
-| `requirement`                | `Requirement`                 | Requerimiento asociado.                      |
-| `forPurchaseOrder`           | `boolean`                     | Indica si es para flujo de orden de compra.  |
-| `onClose`                    | `() => any`                   | Función para cerrar el modal padre.          |
-| `setDataModalSelectOffer?`   | `(val: ModalContent) => void` | Maneja datos del modal de selección.         |
-| `setIsOpenModalSelectOffer?` | `(val: boolean) => void`      | Controla visibilidad del modal de selección. |
-| `orderId?`                   | `string`                      | ID de orden de compra asociada.              |
+| Nombre                       | Tipo                          | Descripción                                                              |
+| ---------------------------- | ----------------------------- | ------------------------------------------------------------------------ |
+| `offers`                     | `Offer[]`                     | Listado completo de ofertas.                                             |
+| `requirement`                | `Requirement`                 | Requerimiento asociado.                                                  |
+| `type`                       | `RequirementDetailType`       | Indica a qué tipo de modal pertenece (para órden, requerimiento, admin). |
+| `onClose`                    | `() => any`                   | Función para cerrar el modal padre.                                      |
+| `setDataModalSelectOffer?`   | `(val: ModalContent) => void` | Maneja datos del modal de selección.                                     |
+| `setIsOpenModalSelectOffer?` | `(val: boolean) => void`      | Controla visibilidad del modal de selección.                             |
+| `orderId?`                   | `string`                      | ID de orden de compra asociada.                                          |
 
 ###### RequirementOfferListItemHeader
 
@@ -905,16 +920,16 @@ Componente de encabezado para ítems de ofertas en requerimientos, con acciones 
 
 _Props_
 
-| Nombre                       | Tipo                                                                   | Descripción                                            |
-| ---------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------ |
-| `requirementId`              | `string`                                                               | ID del requerimiento asociado.                         |
-| `requirementTitle`           | `string`                                                               | Título del requerimiento.                              |
-| `offer`                      | `Offer`                                                                | Datos completos de la oferta.                          |
-| `style?`                     | `React.CSSProperties`                                                  | Estilos adicionales para el contenedor.                |
-| `onClose`                    | `() => any`                                                            | Función para cerrar modales padres.                    |
-| `showActions`                | `{ forPurchaseOrder: false, ... }` o `{ forPurchaseOrder: true, ... }` | Configuración de acciones disponibles según contexto.  |
-| `setDataModalSelectOffer?`   | `(val: ModalContent) => void`                                          | Maneja datos del modal de selección de oferta.         |
-| `setIsOpenModalSelectOffer?` | `(val: boolean) => void`                                               | Controla visibilidad del modal de selección de oferta. |
+| Nombre                       | Tipo                                                                                                                                            | Descripción                                            |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `requirementId`              | `string`                                                                                                                                        | ID del requerimiento asociado.                         |
+| `requirementTitle`           | `string`                                                                                                                                        | Título del requerimiento.                              |
+| `offer`                      | `Offer`                                                                                                                                         | Datos completos de la oferta.                          |
+| `style?`                     | `React.CSSProperties`                                                                                                                           | Estilos adicionales para el contenedor.                |
+| `onClose`                    | `() => any`                                                                                                                                     | Función para cerrar modales padres.                    |
+| `showActions`                | `{ type: RequirementDetailType.REQUIREMENT, ... }`, `{ type: RequirementDetailType.ORDER, ... }` o `{ type: RequirementDetailType.ADMIN, ... }` | Configuración de acciones disponibles según contexto.  |
+| `setDataModalSelectOffer?`   | `(val: ModalContent) => void`                                                                                                                   | Maneja datos del modal de selección de oferta.         |
+| `setIsOpenModalSelectOffer?` | `(val: boolean) => void`                                                                                                                        | Controla visibilidad del modal de selección de oferta. |
 
 #### Utils
 

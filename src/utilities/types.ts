@@ -568,3 +568,9 @@ export const filterLabels: {
   [CommonFilter.ASC]: "ascending",
   [CommonFilter.DESC]: "descending",
 };
+
+export enum RequirementDetailType {
+  REQUIREMENT = 1,
+  ORDER = 2,
+  ADMIN = 3,
+}

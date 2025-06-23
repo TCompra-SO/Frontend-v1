@@ -14,6 +14,7 @@ import {
   RequirementType,
   EntityType,
   RateStartCountType,
+  RequirementDetailType,
 } from "../../../../utilities/types";
 import { useTranslation } from "react-i18next";
 import { useContext, useState } from "react";
@@ -36,7 +37,7 @@ interface RequirementOfferListItemProps {
   onClose: () => any;
   showActions:
     | {
-        forPurchaseOrder: false;
+        type: RequirementDetailType.REQUIREMENT;
         requirement: Requirement;
         onSelectionSuccess: (offerId: string) => void;
         onCancelSuccess?: (offerId: string) => void;
@@ -44,7 +45,8 @@ interface RequirementOfferListItemProps {
         notificationTargetData: NotificationTargetData;
         requirementTitle: string;
       }
-    | { forPurchaseOrder: true; orderId?: string };
+    | { type: RequirementDetailType.ORDER; orderId?: string }
+    | { type: RequirementDetailType.ADMIN };
   setDataModalSelectOffer?: (val: ModalContent) => void;
   setIsOpenModalSelectOffer?: (val: boolean) => void;
 }
@@ -62,8 +64,10 @@ export default function RequirementOfferListItemHeader({
     data: {},
     action: Action.NONE,
   });
-  const items = [
-    {
+  const items = [];
+
+  if (props.showActions.type != RequirementDetailType.ADMIN) {
+    items.push({
       key: Action.CHAT,
       label: t("chat"),
       onClick: () => {
@@ -77,49 +81,49 @@ export default function RequirementOfferListItemHeader({
         });
       },
       icon: <i className="fa-regular fa-comment"></i>,
-    },
-  ];
+    });
 
-  if (!props.showActions.forPurchaseOrder) {
-    if (props.offer.state == OfferState.WINNER)
+    if (props.showActions.type != RequirementDetailType.ORDER) {
+      if (props.offer.state == OfferState.WINNER)
+        items.push({
+          label: t(ActionLabel[Action.CANCEL_PURCHASE_ORDER]),
+          key: Action.CANCEL_PURCHASE_ORDER,
+          onClick: () => onOpenModal(Action.CANCEL_PURCHASE_ORDER),
+          icon: <i className="fa-regular fa-ban"></i>,
+        });
+      if (
+        props.offer.state == OfferState.ACTIVE &&
+        props.showActions.requirement.state == RequirementState.PUBLISHED
+      ) {
+        items.push({
+          label: t(ActionLabel[Action.SELECT_OFFER]),
+          key: Action.SELECT_OFFER,
+          onClick: () => onOpenModal(Action.SELECT_OFFER),
+          icon: <i className="fa-regular fa-circle-check"></i>,
+        });
+      }
+      if (
+        props.offer.state == OfferState.CANCELED &&
+        props.offer.canceledByCreator &&
+        !props.offer.cancelRated
+      )
+        items.push({
+          label: t(ActionLabel[Action.RATE_CANCELED]),
+          key: Action.RATE_CANCELED,
+          onClick: () => onOpenModal(Action.RATE_CANCELED),
+          icon: <i className="fa-regular fa-star"></i>,
+        });
+    } else if (props.showActions.orderId) {
+      const oi = props.showActions.orderId;
       items.push({
-        label: t(ActionLabel[Action.CANCEL_PURCHASE_ORDER]),
-        key: Action.CANCEL_PURCHASE_ORDER,
-        onClick: () => onOpenModal(Action.CANCEL_PURCHASE_ORDER),
-        icon: <i className="fa-regular fa-ban"></i>,
-      });
-    if (
-      props.offer.state == OfferState.ACTIVE &&
-      props.showActions.requirement.state == RequirementState.PUBLISHED
-    ) {
-      items.push({
-        label: t(ActionLabel[Action.SELECT_OFFER]),
-        key: Action.SELECT_OFFER,
-        onClick: () => onOpenModal(Action.SELECT_OFFER),
-        icon: <i className="fa-regular fa-circle-check"></i>,
+        label: t(ActionLabel[Action.DOWNLOAD_PURCHASE_ORDER]),
+        key: Action.DOWNLOAD_PURCHASE_ORDER,
+        onClick: () => {
+          downloadPdfOrder(oi, props.offer.type);
+        },
+        icon: <i className="fa-regular fa-arrow-down-to-line"></i>,
       });
     }
-    if (
-      props.offer.state == OfferState.CANCELED &&
-      props.offer.canceledByCreator &&
-      !props.offer.cancelRated
-    )
-      items.push({
-        label: t(ActionLabel[Action.RATE_CANCELED]),
-        key: Action.RATE_CANCELED,
-        onClick: () => onOpenModal(Action.RATE_CANCELED),
-        icon: <i className="fa-regular fa-star"></i>,
-      });
-  } else if (props.showActions.orderId) {
-    const oi = props.showActions.orderId;
-    items.push({
-      label: t(ActionLabel[Action.DOWNLOAD_PURCHASE_ORDER]),
-      key: Action.DOWNLOAD_PURCHASE_ORDER,
-      onClick: () => {
-        downloadPdfOrder(oi, props.offer.type);
-      },
-      icon: <i className="fa-regular fa-arrow-down-to-line"></i>,
-    });
   }
 
   function handleOnCloseModal() {
@@ -127,13 +131,13 @@ export default function RequirementOfferListItemHeader({
   }
 
   function onRateCancelError(id: string) {
-    if (!props.showActions.forPurchaseOrder) {
+    if (props.showActions.type == RequirementDetailType.REQUIREMENT) {
       props.showActions.onRateCancel?.(id, true);
     }
   }
 
   function onOpenModal(action: Action) {
-    if (!props.showActions.forPurchaseOrder) {
+    if (props.showActions.type == RequirementDetailType.REQUIREMENT) {
       switch (action) {
         case Action.CANCEL_PURCHASE_ORDER:
           setDataModal({
@@ -293,18 +297,20 @@ export default function RequirementOfferListItemHeader({
               <span className="req-btn-info">{t("finishedOffer")}</span>
             </div>
           )}
-          <Dropdown
-            trigger={["click"]}
-            menu={{ items }}
-            placement="bottomRight"
-          >
-            <Tooltip title={t("options")}>
-              <i
-                className="fa-solid fa-ellipsis-vertical mas-acciones"
-                style={{ color: "#fff", background: primaryColor }}
-              ></i>
-            </Tooltip>
-          </Dropdown>
+          {props.showActions.type != RequirementDetailType.ADMIN && (
+            <Dropdown
+              trigger={["click"]}
+              menu={{ items }}
+              placement="bottomRight"
+            >
+              <Tooltip title={t("options")}>
+                <i
+                  className="fa-solid fa-ellipsis-vertical mas-acciones"
+                  style={{ color: "#fff", background: primaryColor }}
+                ></i>
+              </Tooltip>
+            </Dropdown>
+          )}
         </div>
       </div>
     </>

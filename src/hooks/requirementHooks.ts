@@ -16,6 +16,7 @@ import {
   Action,
   EntityType,
   ModalTypes,
+  RequirementDetailType,
   RequirementType,
   TableTypes,
 } from "../utilities/types";
@@ -264,7 +265,7 @@ export function useGetOffersByRequirementId() {
     type: RequirementType;
     requirementId: string;
     filters: OfferFilters | undefined;
-    forPurchaseOrder: boolean;
+    requirementDetailType: RequirementDetailType;
     purchaseOrderId: string | undefined;
     tableType: TableTypes;
   }>({
@@ -272,7 +273,7 @@ export function useGetOffersByRequirementId() {
     type: RequirementType.GOOD,
     requirementId: "",
     filters: undefined,
-    forPurchaseOrder: false,
+    requirementDetailType: RequirementDetailType.REQUIREMENT,
     purchaseOrderId: undefined,
     tableType: TableTypes.REQUIREMENT,
   });
@@ -311,7 +312,8 @@ export function useGetOffersByRequirementId() {
           // Obtener filtros para órdenes en caso de que no existan
           let filters: OfferFilters | undefined = undefined;
           if (
-            requirementData.forPurchaseOrder &&
+            requirementData.requirementDetailType ==
+              RequirementDetailType.ORDER &&
             requirementData.purchaseOrderId &&
             !requirementData.filters
           ) {
@@ -393,7 +395,7 @@ export function useGetOffersByRequirementId() {
                 data: {
                   offerList: offerArray.filter((offer) => offer !== null),
                   requirement: req,
-                  forPurchaseOrder: requirementData.forPurchaseOrder,
+                  type: requirementData.requirementDetailType,
                   filters: requirementData.filters ?? filters,
                   orderId: requirementData.purchaseOrderId,
                 },
@@ -431,7 +433,7 @@ export function useGetOffersByRequirementId() {
     tableType: TableTypes,
     reqId: string,
     typeReq: RequirementType,
-    forPurchaseOrder: boolean,
+    requirementDetailType: RequirementDetailType,
     page: number,
     pageSize: number,
     action: Action,
@@ -459,7 +461,7 @@ export function useGetOffersByRequirementId() {
       type: typeReq,
       requirement: req,
       filters,
-      forPurchaseOrder,
+      requirementDetailType,
       purchaseOrderId,
       tableType,
     });

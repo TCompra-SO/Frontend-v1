@@ -5,11 +5,12 @@ import RequirementOfferList from "./RequirementOfferList";
 import { Offer, Requirement } from "../../../../models/MainInterfaces";
 import { ModalContent, OfferFilters } from "../../../../models/Interfaces";
 import { RequirementDetailProvider } from "../../../../contexts/RequirementDetailProvider";
+import { RequirementDetailType } from "../../../../utilities/types";
 
 interface RequirementDetailProps {
   offerList: Offer[];
   requirement: Requirement;
-  forPurchaseOrder: boolean;
+  type: RequirementDetailType;
   filters?: OfferFilters;
   orderId?: string;
   onClose: () => any;
@@ -26,7 +27,7 @@ export default function RequirementDetail(props: RequirementDetailProps) {
 
           {props.offerList.length > 0 && (
             <RequirementOfferFilters
-              fromPurchaseOrder={props.forPurchaseOrder}
+              type={props.type}
               filters={props.filters}
             ></RequirementOfferFilters>
           )}
@@ -34,7 +35,7 @@ export default function RequirementDetail(props: RequirementDetailProps) {
           <RequirementOfferList
             offers={props.offerList}
             requirement={props.requirement}
-            forPurchaseOrder={props.forPurchaseOrder}
+            type={props.type}
             onClose={props.onClose}
             setDataModalSelectOffer={props.setDataModalSelectOffer}
             setIsOpenModalSelectOffer={props.setIsOpenModalSelectOffer}

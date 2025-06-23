@@ -223,7 +223,7 @@ export default function ModalContainer(props: ModalContainerProps) {
           <RequirementDetail
             offerList={props.content.data.offerList}
             requirement={props.content.data.requirement}
-            forPurchaseOrder={props.content.data.forPurchaseOrder}
+            type={props.content.data.type}
             filters={props.content.data.filters}
             onClose={props.onClose}
             setDataModalSelectOffer={

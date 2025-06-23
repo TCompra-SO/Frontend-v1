@@ -13,6 +13,7 @@ import {
   SocketChangeType,
   RTNotificationType,
   ChatMessageType,
+  RequirementDetailType,
 } from "../utilities/types";
 import {
   OfferItemSubUser,
@@ -72,7 +73,7 @@ export interface ModalDetailedRequirement extends CommonModalType {
   data: {
     offerList: Offer[];
     requirement: Requirement;
-    forPurchaseOrder: boolean;
+    type: RequirementDetailType;
     filters?: OfferFilters;
     orderId?: string;
   };

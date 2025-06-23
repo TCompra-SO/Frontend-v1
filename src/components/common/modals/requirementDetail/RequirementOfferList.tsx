@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import {
   CommonFilter,
   OfferState,
+  RequirementDetailType,
   RequirementState,
 } from "../../../../utilities/types";
 import { requirementDetailContext } from "../../../../contexts/RequirementDetailContext";
@@ -17,7 +18,7 @@ import { Flex, Pagination } from "antd";
 interface RequirementOfferListProps {
   offers: Offer[];
   requirement: Requirement;
-  forPurchaseOrder: boolean;
+  type: RequirementDetailType;
   onClose: () => any;
   setDataModalSelectOffer?: (val: ModalContent) => void;
   setIsOpenModalSelectOffer?: (val: boolean) => void;
@@ -101,7 +102,9 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
               : Infinity;
           return bVal - aVal;
         });
-      return props.forPurchaseOrder ? prev.concat(unmatchedOffers) : prev;
+      return props.type == RequirementDetailType.ORDER
+        ? prev.concat(unmatchedOffers)
+        : prev;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
@@ -188,7 +191,7 @@ export default function RequirementOfferList(props: RequirementOfferListProps) {
                 <RequirementOfferListItemHeader
                   offer={offer}
                   showActions={{
-                    forPurchaseOrder: props.forPurchaseOrder,
+                    type: props.type,
                     requirement: reqCopy,
                     onSelectionSuccess: handleSuccessfulSelection,
                     onCancelSuccess: handleCancelSuccess,

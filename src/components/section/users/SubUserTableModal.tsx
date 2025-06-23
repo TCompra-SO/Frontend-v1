@@ -5,6 +5,7 @@ import {
   ModalTypes,
   OnChangePageAndPageSizeType,
   OrderTableType,
+  RequirementDetailType,
   RequirementType,
   TableTypes,
 } from "../../../utilities/types";
@@ -177,7 +178,7 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
           TableTypes.PURCHASE_ORDER_SUBUSER,
           po.requirementId,
           po.type,
-          true,
+          RequirementDetailType.ORDER,
           1,
           noPaginationPageSize,
           action,

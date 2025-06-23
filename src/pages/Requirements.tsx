@@ -7,6 +7,7 @@ import {
   RequirementType,
   TableTypes,
   EntityType,
+  RequirementDetailType,
 } from "../utilities/types";
 import { Requirement } from "../models/MainInterfaces";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -160,7 +161,7 @@ export default function Requirements() {
         TableTypes.REQUIREMENT,
         copy.requirementId,
         copy.requirementType,
-        false,
+        RequirementDetailType.REQUIREMENT,
         1,
         noPaginationPageSize,
         Action.SHOW_OFFERS,
@@ -296,7 +297,7 @@ export default function Requirements() {
           TableTypes.REQUIREMENT,
           requirement.key,
           requirement.type,
-          true,
+          RequirementDetailType.ORDER,
           1,
           noPaginationPageSize,
           action,
@@ -309,7 +310,7 @@ export default function Requirements() {
           TableTypes.REQUIREMENT,
           requirement.key,
           requirement.type,
-          false,
+          RequirementDetailType.REQUIREMENT,
           1,
           noPaginationPageSize,
           action,
