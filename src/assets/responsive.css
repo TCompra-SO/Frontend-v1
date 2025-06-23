@@ -292,7 +292,7 @@
   }
   .titulo-requ {
     font-size: 1.4em;
-    line-height: 0.7;
+    /* line-height: 0.7; */
   }
   .det-c {
     flex-direction: column;
@@ -443,7 +443,7 @@
     height: 35px;
   }
   .header-requerimiento {
-    max-width: calc(100% - 60px);
+    max-width: calc(100% - 40px);
     margin: auto 20px;
   }
   .section-detalles {

@@ -19,7 +19,9 @@ export default function ProductDetailHeader(props: ProductDetailHeaderProps) {
     <div className="section-guia t-flex j-items">
       <div className="t-flex f-column gap-10 header-requerimiento j-items">
         <div className="cont-prime wd-100">
-          <h1 className="m-0 text-truncate">{props.reqTitle}</h1>
+          <h1 className="m-0 text-truncate" style={{ lineHeight: 1.2 }}>
+            {props.reqTitle}
+          </h1>
           <div className="t-flex breadcrumb-req">
             <a
               className="ruta-req"

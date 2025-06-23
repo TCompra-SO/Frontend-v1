@@ -12,30 +12,6 @@ body {
   overflow-x: hidden;
 }
 
-.contenedor {
-  background-color: #510839;
-
-  display: flex;
-
-  justify-content: center;
-
-  align-items: center;
-
-  flex-direction: column;
-
-  gap: 25px;
-
-  padding: 40px;
-}
-
-.text-truncate {
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-
-  white-space: nowrap;
-}
-
 /* Scroll */
 
 ::-webkit-scrollbar {
@@ -46,9 +22,6 @@ body {
 ::-webkit-scrollbar-thumb {
   background: rgb(0, 0, 0, 0.3);
   border-radius: 8px;
-}
-.scroller {
-  width: 6px;
 }
 
 /* Solo en Firefox */
@@ -745,7 +718,7 @@ body {
   margin: 0;
   font-size: 1.5rem;
   text-align: justify;
-  line-height: 1.08;
+  line-height: 1.2;
   -webkit-line-clamp: 2;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -1715,7 +1688,7 @@ body {
 }
 .header-requerimiento {
   width: 100%;
-  max-width: 100%;
+  max-width: calc(100% - 80px);
   margin: auto 40px;
   z-index: 9;
   height: 100%;
@@ -2368,7 +2341,7 @@ body {
   margin: 0;
   font-size: 1.5rem !important;
   text-align: justify;
-  line-height: 1.08;
+  line-height: 1.2;
 }
 .ofer-req-2 {
   color: #3b4c56;

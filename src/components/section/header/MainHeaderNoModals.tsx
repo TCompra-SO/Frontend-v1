@@ -217,7 +217,16 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
 
   return (
     <div className="t-flex j-conten header-menu">
-      <header className="cont-prime-h">
+      <header
+        className={
+          !(
+            currentSection == pageRoutes.home ||
+            currentSection == pageRoutes.productDetail
+          )
+            ? " wd-100"
+            : "cont-prime-h"
+        }
+      >
         {isLoggedIn ? (
           <div
             className={`t-flex header-tc  ${
