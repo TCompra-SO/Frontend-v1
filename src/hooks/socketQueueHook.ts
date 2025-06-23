@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   RequirementState,
+  RequirementType,
   SocketChangeType,
   TableTypes,
 } from "../utilities/types";
@@ -95,10 +96,22 @@ export function useActionsForRow(
       const newElem =
         transformedData ?? (await transformData(data.dataPack.data[0]));
       if (newElem) {
-        if (list.length >= pageSize)
-          setList([newElem, ...list.slice(0, list.length - 1)]);
-        else setList([newElem, ...list]);
-        if (increaseTotal) setTotal(total + 1);
+        let insert: boolean = false;
+        if (tableType == TableTypes.HOME) {
+          // Verificar que sea una liquidación válida
+          const requirement: Requirement = newElem as Requirement;
+          if (
+            requirement.type != RequirementType.SALE ||
+            (requirement.type == RequirementType.SALE && requirement.valid)
+          )
+            insert = true;
+        } else insert = true;
+        if (insert) {
+          if (list.length >= pageSize)
+            setList([newElem, ...list.slice(0, list.length - 1)]);
+          else setList([newElem, ...list]);
+          if (increaseTotal) setTotal(total + 1);
+        }
       }
     } catch (e) {
       console.log(e);
@@ -109,16 +122,24 @@ export function useActionsForRow(
     try {
       const ind = list.findIndex((item) => (item.key ?? item.uid) === data.key);
       if (ind != -1) {
+        // actualizar elemento
         const updElem = await transformData(data.dataPack.data[0]);
 
         if (updElem) {
-          const requirement: Requirement = updElem as Requirement;
           if (
             tableType == TableTypes.HOME ||
             tableType == TableTypes.ADMIN_SALES
           ) {
-            if (requirement.state != RequirementState.PUBLISHED) {
+            // Cambio a estado no publicado o publicado-inválido implica eliminar elemento
+            const requirement: Requirement = updElem as Requirement;
+
+            if (
+              requirement.state != RequirementState.PUBLISHED ||
+              (requirement.state == RequirementState.PUBLISHED &&
+                !requirement.valid)
+            ) {
               if (!getUseFilter?.()) {
+                // no filtros
                 const prevLen = list.length;
                 const newList = list.filter(
                   (item) => (item.key ?? item.uid) !== data.key
@@ -128,7 +149,12 @@ export function useActionsForRow(
                 if (newList.length == 0) callback?.(); // callback debería recargar la página de home
               }
             } else if (
-              (tableType == TableTypes.HOME && requirement.valid) ||
+              //  cambio a estado publicado o publicado-válido implica insertar elemento
+              (tableType == TableTypes.HOME &&
+                requirement.type == RequirementType.SALE &&
+                requirement.valid) ||
+              (tableType == TableTypes.HOME &&
+                requirement.type != RequirementType.SALE) ||
               tableType == TableTypes.ADMIN_SALES
             )
               insertElementInArray(updElem);
@@ -154,20 +180,41 @@ export function useActionsForRow(
             else insertElementInArray(updElem);
           } else insertElementInArray(updElem);
         }
-      } else if (
-        tableType == TableTypes.HOME ||
-        tableType == TableTypes.ADMIN_SALES ||
-        tableType == TableTypes.REQUIREMENT ||
-        tableType == TableTypes.ALL_REQUIREMENTS
-      ) {
-        // caso republicar requerimiento
-        const updElem = await transformData(data.dataPack.data[0]);
-        if (updElem && updElem.state == RequirementState.PUBLISHED && canAddRow)
-          addNewRow(
-            data,
-            updElem,
-            tableType == TableTypes.HOME || tableType == TableTypes.ADMIN_SALES
-          );
+      } else {
+        // insertar nuevo elemento
+        if (
+          tableType == TableTypes.HOME ||
+          tableType == TableTypes.ADMIN_SALES
+        ) {
+          // caso republicar requerimiento
+          const updElem = await transformData(data.dataPack.data[0]);
+          const requirement: Requirement = updElem as Requirement;
+          if (
+            tableType == TableTypes.ADMIN_SALES ||
+            (tableType == TableTypes.HOME &&
+              (requirement.type != RequirementType.SALE ||
+                (requirement.type == RequirementType.SALE &&
+                  requirement.valid)))
+          )
+            if (
+              requirement &&
+              requirement.state == RequirementState.PUBLISHED &&
+              canAddRow
+            )
+              addNewRow(data, requirement, true);
+        } else if (
+          tableType == TableTypes.REQUIREMENT ||
+          tableType == TableTypes.ALL_REQUIREMENTS
+        ) {
+          // caso republicar requerimiento
+          const updElem = await transformData(data.dataPack.data[0]);
+          if (
+            updElem &&
+            updElem.state == RequirementState.PUBLISHED &&
+            canAddRow
+          )
+            addNewRow(data, updElem, false);
+        }
       }
     } catch (e) {
       console.log(e);
