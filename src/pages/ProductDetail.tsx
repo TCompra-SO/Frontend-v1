@@ -75,12 +75,12 @@ export default function ProductDetail() {
         response.data[0],
         val
       );
-      if (
-        req &&
-        (req.type != RequirementType.SALE ||
-          (req.type == RequirementType.SALE && req.valid))
-      )
-        setRequirement(req);
+      // if (
+      //   req &&
+      //   (req.type != RequirementType.SALE ||
+      //     (req.type == RequirementType.SALE && req.valid))
+      // )
+      if (req) setRequirement(req);
       else navigate(pageRoutes.home);
     } else navigate(pageRoutes.home);
   }

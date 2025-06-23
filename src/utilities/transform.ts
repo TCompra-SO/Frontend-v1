@@ -196,6 +196,7 @@ export async function transformFromGetRequirementByIdToRequirement(
       userName: data.userName,
       subUserName: data.subUserName,
       used: data.state_article,
+      valid: data.valid,
     };
     if (data.winOffer) {
       req.offerId = data.winOffer.uid;
