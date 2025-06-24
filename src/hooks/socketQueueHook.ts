@@ -130,12 +130,13 @@ export function useActionsForRow(
             tableType == TableTypes.HOME ||
             tableType == TableTypes.ADMIN_SALES
           ) {
-            // Cambio a estado no publicado o publicado-inválido implica eliminar elemento
+            // Cambio a estado no publicado (ambos) o publicado-inválido (solo home) implica eliminar elemento
             const requirement: Requirement = updElem as Requirement;
 
             if (
               requirement.state != RequirementState.PUBLISHED ||
-              (requirement.state == RequirementState.PUBLISHED &&
+              (tableType == TableTypes.HOME &&
+                requirement.state == RequirementState.PUBLISHED &&
                 !requirement.valid)
             ) {
               if (!getUseFilter?.()) {
