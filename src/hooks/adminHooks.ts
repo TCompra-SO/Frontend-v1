@@ -40,10 +40,11 @@ export function useValidateSale() {
   useEffect(() => {
     try {
       if (responseData) {
+        console.log(responseData);
         showNotification(
           "success",
           t(
-            responseData.res?.value
+            responseData.value
               ? "saleValidatedSuccessfully"
               : "saleInvalidatedSuccessfully"
           )
