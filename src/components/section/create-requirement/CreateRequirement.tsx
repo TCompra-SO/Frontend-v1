@@ -19,6 +19,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import {
   certifiedCompaniesOpt,
   mainModalScrollStyle,
+  windowSize,
 } from "../../../utilities/globals";
 import { CreateRequirementRequest } from "../../../models/Requests";
 import { CommonModalProps, useApiParams } from "../../../models/Interfaces";
@@ -54,6 +55,7 @@ import SimpleLoading from "../../../pages/utils/SimpleLoading";
 import { ListsContext } from "../../../contexts/ListsContext";
 import { sectionIcons } from "../../../utilities/colors";
 import { roleCanCreateRequirementType } from "../../../utilities/roles";
+import useWindowSize from "../../../hooks/useWindowSize";
 
 interface CreateRequirementProps extends CommonModalProps {
   closeModal: () => void;
@@ -92,6 +94,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   const { getRequiredDocsCert, requiredDocs, errorRequiredDocs } =
     useGetRequiredDocsCert();
   const { showNotification } = useShowNotification();
+  const { width } = useWindowSize();
   const uid = useSelector((state: MainState) => state.user.uid);
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
@@ -110,6 +113,11 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   const formDataDocRef = useRef(formDataDoc);
   const typeRef = useRef(type);
   const [warrantyRequired, setWarrantyRequired] = useState(false);
+  const [buttonWidth, setButtonWidth] = useState("wd-25");
+
+  useEffect(() => {
+    setButtonWidth(width < windowSize.xs ? "wd-100" : "wd-25");
+  }, [width]);
 
   useEffect(() => {
     typeRef.current = type;
@@ -588,7 +596,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
             </Row>
             <div className="t-flex t-wrap up-footer">
               <div className="footer-text">{t("allDataIsImportant")}</div>
-              <div className="wd-25">
+              <div className={buttonWidth}>
                 <ButtonContainer
                   loading={loading || loadingDoc || loadingImg}
                   htmlType="submit"

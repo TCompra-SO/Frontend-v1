@@ -372,6 +372,12 @@ const resources = {
         "Your sale listing has been submitted for review. It will go live once approved.",
       createSaleSubtitle:
         "Sales are reviewed and validated before being published",
+      sellerRoleInfo:
+        "A seller is only permitted to create sales and to submit offers for goods and services requirements.",
+      buyerRoleInfo:
+        "A buyer is only permitted to create requirements for goods and services, and to submit offers for sales.",
+      sellerBuyerRoleInfo:
+        "A buyer/seller is permitted to submit offers and create sales, goods and services requirements.",
       // Other
       characters: "characters",
       yes: "Yes",
@@ -963,6 +969,12 @@ const resources = {
         "Tu liquidación ha sido enviada para validación. Será revisada antes de ser publicada.",
       createSaleSubtitle:
         "Las liquidaciones son revisadas y validadas antes de ser publicadas",
+      sellerRoleInfo:
+        "Un vendedor sólo puede crear liquidaciones y hacer ofertas a requerimienos de bienes y servicios.",
+      buyerRoleInfo:
+        "Un comprador sólo puede crear requerimientos de bienes y servicios y hacer ofertas a liquidaciones.",
+      sellerBuyerRoleInfo:
+        "Un vendedor/comprador puede crear y hacer ofertas requerimientos y liquidaciones.",
       // Other
       characters: "caracteres",
       yes: "Sí",

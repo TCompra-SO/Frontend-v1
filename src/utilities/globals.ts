@@ -88,6 +88,7 @@ export const browserIdKey: string = "brId";
 
 /* Window size (>=) */
 export const windowSize = {
+  xs: 476,
   sm: 576,
   md: 768,
   lg: 992,

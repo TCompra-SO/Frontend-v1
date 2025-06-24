@@ -331,11 +331,12 @@ Campo de selección para elegir el tipo de usuario.
 
 _Props_
 
-| Nombre      | Tipo        | Descripción                                                            |
-| ----------- | ----------- | ---------------------------------------------------------------------- |
-| `edit?`     | `boolean`   | Indica si el campo está en modo edición. No utilizado directamente.    |
-| `value?`    | `UserRoles` | Valor inicial del campo. Se usa como `initialValue` en el `Form.Item`. |
-| `onlyItem?` | `boolean`   | Si es `true`, se retorna solo el `Form.Item` sin envoltorio adicional. |
+| Nombre      | Tipo                 | Descripción                                                            |
+| ----------- | -------------------- | ---------------------------------------------------------------------- |
+| `edit?`     | `boolean`            | Indica si el campo está en modo edición. No utilizado directamente.    |
+| `value?`    | `UserRoles`          | Valor inicial del campo. Se usa como `initialValue` en el `Form.Item`. |
+| `onlyItem?` | `boolean`            | Si es `true`, se retorna solo el `Form.Item` sin envoltorio adicional. |
+| `onChange?` | `(val: any) => void` | Callback al cambiar de valor.                                          |
 
 ##### WarrantyField
 
