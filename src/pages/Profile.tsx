@@ -349,6 +349,9 @@ export default function Profile(props: ProfileProps) {
                     ]}
                   >
                     <SelectContainer
+                      showSearch
+                      allowClear
+                      optionFilterProp="label"
                       placeholder={t("select")}
                       className="form-control"
                       options={getListForSelectIdValueMap(categoryData)}
@@ -367,6 +370,9 @@ export default function Profile(props: ProfileProps) {
                     ]}
                   >
                     <SelectContainer
+                      showSearch
+                      allowClear
+                      optionFilterProp="label"
                       placeholder={t("select")}
                       className="form-control"
                       options={getListForSelectIdValueMap(categoryData)}
@@ -385,6 +391,9 @@ export default function Profile(props: ProfileProps) {
                     ]}
                   >
                     <SelectContainer
+                      showSearch
+                      allowClear
+                      optionFilterProp="label"
                       placeholder={t("select")}
                       className="form-control"
                       options={getListForSelectIdValueMap(categoryData)}
