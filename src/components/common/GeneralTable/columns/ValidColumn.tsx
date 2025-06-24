@@ -69,7 +69,6 @@ export default function ValidColumn(
           subType == RequirementType.SALE
         ) {
           const valid = record.valid;
-          // label = t(valid ? "validFem" : "invalidFem");
           label = valid ? (
             <i className="fa-solid fa-check"></i>
           ) : (
