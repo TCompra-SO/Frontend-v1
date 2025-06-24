@@ -189,6 +189,38 @@ body {
   background: #bc1373 !important;
 }
 
+.btn-border-red {
+  color: #d80000 !important;
+  border: 2px solid #d80000 !important;
+}
+
+.btn-border-red:hover {
+  color: #fff !important;
+  background: #d80000 !important;
+}
+
+.btn-border-red.focus,
+.btn-border-red:focus {
+  color: #fff !important;
+  background: #d80000 !important;
+}
+
+.btn-border-green {
+  color: #01b43e !important;
+  border: 2px solid #01b43e !important;
+}
+
+.btn-border-green:hover {
+  color: #fff !important;
+  background: #01b43e !important;
+}
+
+.btn-border-green.focus,
+.btn-border-green:focus {
+  color: #fff !important;
+  background: #01b43e !important;
+}
+
 /* Formularios */
 
 .form-control {

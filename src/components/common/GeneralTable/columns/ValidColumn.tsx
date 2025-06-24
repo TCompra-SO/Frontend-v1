@@ -9,6 +9,7 @@ import { validationColumnKey } from "../../../../utilities/globals";
 import { StrictColumnFilterItem } from "../../../../models/Interfaces";
 import CustomFilterDropdown from "../../utils/CustomFilterDropdown";
 import { TFunction } from "i18next";
+import { ReactNode } from "react";
 
 export default function ValidColumn(
   type: TableTypes,
@@ -58,7 +59,7 @@ export default function ValidColumn(
         ),
 
     render: (_, record) => {
-      let label: string = "";
+      let label: ReactNode = "";
       let className: string = "";
 
       try {
@@ -68,7 +69,12 @@ export default function ValidColumn(
           subType == RequirementType.SALE
         ) {
           const valid = record.valid;
-          label = t(valid ? "validFem" : "invalidFem");
+          // label = t(valid ? "validFem" : "invalidFem");
+          label = valid ? (
+            <i className="fa-solid fa-check"></i>
+          ) : (
+            <i className="fa-solid fa-xmark"></i>
+          );
           className = `cont-estado ${valid ? "es-atendido" : "es-cancelado"}`;
         }
       } catch (e) {

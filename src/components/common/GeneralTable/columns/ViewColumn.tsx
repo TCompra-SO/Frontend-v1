@@ -54,7 +54,7 @@ export default function ViewColumn(
         case TableTypes.ADMIN_SALES: {
           const isValid = (record as Requirement).valid;
           action = isValid ? Action.INVALIDATE : Action.VALIDATE;
-          buttonClass = isValid ? "btn-red" : "btn-green";
+          buttonClass = isValid ? "btn-border-red" : "btn-border-green";
           break;
         }
       }
