@@ -1148,7 +1148,7 @@ const resources = {
       howToBuy: "¿Cómo vender?",
       needTo: "Necesitas",
       buy: "comprar",
-      lotsAndStocks: "Lots & Stocks",
+      lotsAndStocks: "Lotes & Stocks",
       liquidateYour: "Liquida tus",
       advertising: "Publicidad",
       companyFilter: "Filtro de empresas",

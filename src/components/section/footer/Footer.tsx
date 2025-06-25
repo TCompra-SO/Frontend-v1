@@ -33,9 +33,19 @@ export default function Footer() {
             © {dayjs().year()} Tcompra.com. {t("allRightsReserved")}
           </div>
           <div className="min-menu t-flex gap-5">
-            <a href="#">{t("aboutUs")}</a>
+            <a
+              href={`${import.meta.env.VITE_LANDING_PAGE}#AboutUs`}
+              target="_blank"
+            >
+              {t("aboutUs")}
+            </a>
             <div>|</div>
-            <a href="#">{t("FAQ")}</a>
+            <a
+              href={`${import.meta.env.VITE_LANDING_PAGE}#FAQ`}
+              target="_blank"
+            >
+              {t("FAQ")}
+            </a>
           </div>
         </div>
       </div>
