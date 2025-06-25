@@ -7,9 +7,7 @@ import { navigateToAfterLoggingOut } from "../../utilities/globals";
 
 interface AuthRoleGuardProps {
   children: ReactNode;
-  allowedRoles:
-    | Record<UserRoles, boolean>
-    | Record<string, Record<UserRoles, boolean>>;
+  allowedRoles?: Record<UserRoles, boolean>;
 }
 
 export default function AuthRoleGuard({
@@ -25,7 +23,7 @@ export default function AuthRoleGuard({
     return null;
   }
 
-  if (!isLoading && !allowedRoles[typeId]) {
+  if (!isLoading && allowedRoles && !allowedRoles[typeId]) {
     return <Navigate to={navigateToAfterLoggingOut} />;
   }
 

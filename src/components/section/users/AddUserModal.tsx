@@ -31,6 +31,9 @@ import PasswordField from "../../common/formFields/PasswordField";
 import { newPasswordService } from "../../../services/requests/authService";
 import { SubUserProfile } from "../../../models/MainInterfaces";
 import useShowNotification from "../../../hooks/utilHooks";
+import { UserRoles } from "../../../utilities/types";
+import useWindowSize from "../../../hooks/useWindowSize";
+import { windowSize } from "../../../utilities/globals";
 
 interface AddUserModalProps {
   onClose: () => void;
@@ -42,12 +45,15 @@ export default function AddUserModal(props: AddUserModalProps) {
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
   const [form] = Form.useForm();
+  const { width } = useWindowSize();
   const [passSuccess, setPassSuccess] = useState(false);
   const [roleSuccess, setRoleSuccess] = useState(false);
   const [profileSuccess, setProfileSuccess] = useState(false);
   const [changePassword, setChangePassword] = useState(false);
   const [token] = useState(useSelector((state: MainState) => state.user.token));
   const [validDoc, setValidDoc] = useState(false);
+  const [infoText, setInfoText] = useState("allDataIsImportant");
+  const [buttonWidth, setButtonWidth] = useState("wd-25");
   const uid = useSelector((state: MainState) => state.user.uid);
 
   const [loadingRegisterUser, setLoadingRegisterUser] = useState<
@@ -110,6 +116,10 @@ export default function AddUserModal(props: AddUserModalProps) {
   });
 
   /** useEffects */
+
+  useEffect(() => {
+    setButtonWidth(width < windowSize.xs ? "wd-100" : "wd-25");
+  }, [width]);
 
   useEffect(() => {
     if (props.edit && props.userData?.document) {
@@ -320,6 +330,22 @@ export default function AddUserModal(props: AddUserModalProps) {
     }
   }
 
+  function handleOnTypeUserChange(val: any) {
+    switch (val) {
+      case UserRoles.BUYER:
+        setInfoText("buyerRoleInfo");
+        break;
+      case UserRoles.SELLER:
+        setInfoText("sellerRoleInfo");
+        break;
+      case UserRoles.SELLER_BUYER:
+        setInfoText("sellerBuyerRoleInfo");
+        break;
+      default:
+        setInfoText("allDataIsImportant");
+    }
+  }
+
   return (
     <div className="modal-card img-bg">
       <div className="t-flex t-wrap mr-sub">
@@ -366,7 +392,11 @@ export default function AddUserModal(props: AddUserModalProps) {
               <PhoneField edit={props.edit} value={props.userData?.phone} />
             </Col>
             <Col xs={24} sm={24} md={8} lg={8} xl={8}>
-              <UserTypeField edit={props.edit} value={props.userData?.typeID} />
+              <UserTypeField
+                edit={props.edit}
+                value={props.userData?.typeID}
+                onChange={handleOnTypeUserChange}
+              />
             </Col>
           </Row>
           {props.edit && (
@@ -379,9 +409,11 @@ export default function AddUserModal(props: AddUserModalProps) {
               </Col>
             </Row>
           )}
-          <div className="t-flex t-wrap up-footer">
-            <div className="footer-text">{t("allDataIsImportant")}</div>
-            <div className="wd-25">
+          <div className="t-flex t-wrap up-footer gap-15">
+            <div className="footer-text" style={{ flex: "1 1 0", minWidth: 0 }}>
+              {t(infoText)}
+            </div>
+            <div className={buttonWidth}>
               <ButtonContainer
                 className="btn btn-default wd-100"
                 htmlType="submit"

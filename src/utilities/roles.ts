@@ -17,7 +17,7 @@ export const RolesForSection: {
     [UserRoles.BUYER]: true,
     [UserRoles.SELLER_BUYER]: true,
     [UserRoles.NONE]: false,
-    [UserRoles.SELLER]: false,
+    [UserRoles.SELLER]: true,
     [UserRoles.LEGAL]: false,
   },
   myOffers: {
@@ -25,7 +25,7 @@ export const RolesForSection: {
     [UserRoles.SELLER]: true,
     [UserRoles.SELLER_BUYER]: true,
     [UserRoles.NONE]: false,
-    [UserRoles.BUYER]: false,
+    [UserRoles.BUYER]: true,
     [UserRoles.LEGAL]: false,
   },
   myPurchaseOrders: {
@@ -136,8 +136,63 @@ export const RolesForSection: {
 };
 
 export const RolesForSubSection: {
-  [key: string]: Record<string, Record<UserRoles, boolean>>;
+  [key: string]: Record<
+    string | number,
+    Record<UserRoles, boolean> | Record<UserRoles, boolean>
+  >;
 } = {
+  [pageRoutes.myRequirements]: {
+    [RequirementType.GOOD]: {
+      [UserRoles.NONE]: false,
+      [UserRoles.ADMIN]: true,
+      [UserRoles.BUYER]: true,
+      [UserRoles.LEGAL]: false,
+      [UserRoles.SELLER]: false,
+      [UserRoles.SELLER_BUYER]: true,
+    },
+    [RequirementType.SERVICE]: {
+      [UserRoles.NONE]: false,
+      [UserRoles.ADMIN]: true,
+      [UserRoles.BUYER]: true,
+      [UserRoles.LEGAL]: false,
+      [UserRoles.SELLER]: false,
+      [UserRoles.SELLER_BUYER]: true,
+    },
+    [RequirementType.SALE]: {
+      [UserRoles.NONE]: false,
+      [UserRoles.ADMIN]: true,
+      [UserRoles.BUYER]: false,
+      [UserRoles.LEGAL]: false,
+      [UserRoles.SELLER]: true,
+      [UserRoles.SELLER_BUYER]: true,
+    },
+  },
+  [pageRoutes.myOffers]: {
+    [RequirementType.GOOD]: {
+      [UserRoles.NONE]: false,
+      [UserRoles.ADMIN]: true,
+      [UserRoles.BUYER]: false,
+      [UserRoles.LEGAL]: false,
+      [UserRoles.SELLER]: true,
+      [UserRoles.SELLER_BUYER]: true,
+    },
+    [RequirementType.SERVICE]: {
+      [UserRoles.NONE]: false,
+      [UserRoles.ADMIN]: true,
+      [UserRoles.BUYER]: false,
+      [UserRoles.LEGAL]: false,
+      [UserRoles.SELLER]: true,
+      [UserRoles.SELLER_BUYER]: true,
+    },
+    [RequirementType.SALE]: {
+      [UserRoles.NONE]: false,
+      [UserRoles.ADMIN]: true,
+      [UserRoles.BUYER]: true,
+      [UserRoles.LEGAL]: false,
+      [UserRoles.SELLER]: false,
+      [UserRoles.SELLER_BUYER]: true,
+    },
+  },
   [pageRoutes.myPurchaseOrders]: {
     [pageSubRoutes.issued]: {
       // requerimiento: comprador emite órdenes de compra

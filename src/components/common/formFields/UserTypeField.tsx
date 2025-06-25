@@ -10,6 +10,7 @@ interface UserTypeFieldProps {
   edit?: boolean;
   value?: UserRoles;
   onlyItem?: boolean;
+  onChange?: (val: any) => void;
 }
 
 export default function UserTypeField(props: UserTypeFieldProps) {
@@ -28,6 +29,7 @@ export default function UserTypeField(props: UserTypeFieldProps) {
         placeholder={t("select")}
         options={getListForSelectIdValueMap(userRolesData)}
         className="form-control"
+        onChange={props.onChange}
       />
     </Form.Item>
   );
