@@ -17,7 +17,7 @@ export const RolesForSection: {
     [UserRoles.BUYER]: true,
     [UserRoles.SELLER_BUYER]: true,
     [UserRoles.NONE]: false,
-    [UserRoles.SELLER]: false,
+    [UserRoles.SELLER]: true,
     [UserRoles.LEGAL]: false,
   },
   myOffers: {
@@ -25,7 +25,7 @@ export const RolesForSection: {
     [UserRoles.SELLER]: true,
     [UserRoles.SELLER_BUYER]: true,
     [UserRoles.NONE]: false,
-    [UserRoles.BUYER]: false,
+    [UserRoles.BUYER]: true,
     [UserRoles.LEGAL]: false,
   },
   myPurchaseOrders: {
@@ -136,8 +136,63 @@ export const RolesForSection: {
 };
 
 export const RolesForSubSection: {
-  [key: string]: Record<string, Record<UserRoles, boolean>>;
+  [key: string]: Record<
+    string | number,
+    Record<UserRoles, boolean> | Record<UserRoles, boolean>
+  >;
 } = {
+  [pageRoutes.myRequirements]: {
+    [RequirementType.GOOD]: {
+      [UserRoles.NONE]: false,
+      [UserRoles.ADMIN]: true,
+      [UserRoles.BUYER]: true,
+      [UserRoles.LEGAL]: false,
+      [UserRoles.SELLER]: false,
+      [UserRoles.SELLER_BUYER]: true,
+    },
+    [RequirementType.SERVICE]: {
+      [UserRoles.NONE]: false,
+      [UserRoles.ADMIN]: true,
+      [UserRoles.BUYER]: true,
+      [UserRoles.LEGAL]: false,
+      [UserRoles.SELLER]: false,
+      [UserRoles.SELLER_BUYER]: true,
+    },
+    [RequirementType.SALE]: {
+      [UserRoles.NONE]: false,
+      [UserRoles.ADMIN]: true,
+      [UserRoles.BUYER]: false,
+      [UserRoles.LEGAL]: false,
+      [UserRoles.SELLER]: true,
+      [UserRoles.SELLER_BUYER]: true,
+    },
+  },
+  [pageRoutes.myOffers]: {
+    [RequirementType.GOOD]: {
+      [UserRoles.NONE]: false,
+      [UserRoles.ADMIN]: true,
+      [UserRoles.BUYER]: false,
+      [UserRoles.LEGAL]: false,
+      [UserRoles.SELLER]: true,
+      [UserRoles.SELLER_BUYER]: true,
+    },
+    [RequirementType.SERVICE]: {
+      [UserRoles.NONE]: false,
+      [UserRoles.ADMIN]: true,
+      [UserRoles.BUYER]: false,
+      [UserRoles.LEGAL]: false,
+      [UserRoles.SELLER]: true,
+      [UserRoles.SELLER_BUYER]: true,
+    },
+    [RequirementType.SALE]: {
+      [UserRoles.NONE]: false,
+      [UserRoles.ADMIN]: true,
+      [UserRoles.BUYER]: true,
+      [UserRoles.LEGAL]: false,
+      [UserRoles.SELLER]: false,
+      [UserRoles.SELLER_BUYER]: true,
+    },
+  },
   [pageRoutes.myPurchaseOrders]: {
     [pageSubRoutes.issued]: {
       // requerimiento: comprador emite órdenes de compra
@@ -179,154 +234,6 @@ export const RolesForSubSection: {
     },
   },
 };
-
-// export const RolesForSection: {
-//   [key in keyof typeof pageRoutes]: Record<UserRoles, boolean>;
-// } = {
-//   home: {
-//     [UserRoles.NONE]: true,
-//     [UserRoles.ADMIN]: true,
-//     [UserRoles.BUYER]: true,
-//     [UserRoles.LEGAL]: true,
-//     [UserRoles.SELLER]: true,
-//     [UserRoles.SELLER_BUYER]: true,
-//   },
-//   search: {
-//     [UserRoles.ADMIN]: true,
-//     [UserRoles.BUYER]: true,
-//     [UserRoles.LEGAL]: true,
-//     [UserRoles.SELLER]: true,
-//     [UserRoles.SELLER_BUYER]: true,
-//     [UserRoles.NONE]: true,
-//   },
-//   myRequirements: {
-//     [UserRoles.ADMIN]: true,
-//     [UserRoles.BUYER]: true,
-//     [UserRoles.SELLER_BUYER]: true,
-//     [UserRoles.NONE]: true,
-//     [UserRoles.SELLER]: true,
-//     [UserRoles.LEGAL]: true,
-//   },
-//   myOffers: {
-//     [UserRoles.ADMIN]: true,
-//     [UserRoles.SELLER]: true,
-//     [UserRoles.SELLER_BUYER]: true,
-//     [UserRoles.NONE]: true,
-//     [UserRoles.BUYER]: true,
-//     [UserRoles.LEGAL]: true,
-//   },
-//   myPurchaseOrders: {
-//     [UserRoles.NONE]: true,
-//     [UserRoles.ADMIN]: true,
-//     [UserRoles.BUYER]: true,
-//     [UserRoles.LEGAL]: true,
-//     [UserRoles.SELLER]: true,
-//     [UserRoles.SELLER_BUYER]: true,
-//   },
-//   users: {
-//     [UserRoles.ADMIN]: true,
-//     [UserRoles.NONE]: true,
-//     [UserRoles.SELLER_BUYER]: true,
-//     [UserRoles.SELLER]: true,
-//     [UserRoles.BUYER]: true,
-//     [UserRoles.LEGAL]: true,
-//   },
-//   profile: {
-//     [UserRoles.NONE]: true,
-//     [UserRoles.ADMIN]: true,
-//     [UserRoles.SELLER_BUYER]: true,
-//     [UserRoles.SELLER]: true,
-//     [UserRoles.BUYER]: true,
-//     [UserRoles.LEGAL]: true,
-//   },
-//   chat: {
-//     [UserRoles.NONE]: true,
-//     [UserRoles.ADMIN]: true,
-//     [UserRoles.SELLER_BUYER]: true,
-//     [UserRoles.SELLER]: true,
-//     [UserRoles.BUYER]: true,
-//     [UserRoles.LEGAL]: true,
-//   },
-//   allRequirements: {
-//     [UserRoles.NONE]: true,
-//     [UserRoles.ADMIN]: true,
-//     [UserRoles.SELLER_BUYER]: true,
-//     [UserRoles.SELLER]: true,
-//     [UserRoles.BUYER]: true,
-//     [UserRoles.LEGAL]: true,
-//   },
-//   allOffers: {
-//     [UserRoles.NONE]: true,
-//     [UserRoles.ADMIN]: true,
-//     [UserRoles.SELLER_BUYER]: true,
-//     [UserRoles.SELLER]: true,
-//     [UserRoles.BUYER]: true,
-//     [UserRoles.LEGAL]: true,
-//   },
-//   certificates: {
-//     [UserRoles.NONE]: true,
-//     [UserRoles.ADMIN]: true,
-//     [UserRoles.SELLER_BUYER]: true,
-//     [UserRoles.SELLER]: true,
-//     [UserRoles.BUYER]: true,
-//     [UserRoles.LEGAL]: true,
-//   },
-//   allPurchaseOrders: {
-//     [UserRoles.NONE]: true,
-//     [UserRoles.ADMIN]: true,
-//     [UserRoles.SELLER_BUYER]: true,
-//     [UserRoles.SELLER]: true,
-//     [UserRoles.BUYER]: true,
-//     [UserRoles.LEGAL]: true,
-//   },
-//   statistics: {
-//     [UserRoles.NONE]: true,
-//     [UserRoles.ADMIN]: true,
-//     [UserRoles.SELLER_BUYER]: true,
-//     [UserRoles.SELLER]: true,
-//     [UserRoles.BUYER]: true,
-//     [UserRoles.LEGAL]: true,
-//   },
-// };
-
-// export const RolesForSubSection: {
-//   [key: string]: Record<string, Record<UserRoles, boolean>>;
-// } = {
-//   [pageRoutes.myPurchaseOrders]: {
-//     [pageSubRoutes.issued]: {
-//       [UserRoles.NONE]: true,
-//       [UserRoles.ADMIN]: true,
-//       [UserRoles.BUYER]: true,
-//       [UserRoles.LEGAL]: true,
-//       [UserRoles.SELLER]: true,
-//       [UserRoles.SELLER_BUYER]: true,
-//     },
-//     [pageSubRoutes.issuedSales]: {
-//       [UserRoles.NONE]: true,
-//       [UserRoles.ADMIN]: true,
-//       [UserRoles.BUYER]: true,
-//       [UserRoles.LEGAL]: true,
-//       [UserRoles.SELLER]: true,
-//       [UserRoles.SELLER_BUYER]: true,
-//     },
-//     [pageSubRoutes.received]: {
-//       [UserRoles.NONE]: true,
-//       [UserRoles.ADMIN]: true,
-//       [UserRoles.BUYER]: true,
-//       [UserRoles.LEGAL]: true,
-//       [UserRoles.SELLER]: true,
-//       [UserRoles.SELLER_BUYER]: true,
-//     },
-//     [pageSubRoutes.receivedSales]: {
-//       [UserRoles.NONE]: true,
-//       [UserRoles.ADMIN]: true,
-//       [UserRoles.BUYER]: true,
-//       [UserRoles.LEGAL]: true,
-//       [UserRoles.SELLER]: true,
-//       [UserRoles.SELLER_BUYER]: true,
-//     },
-//   },
-// };
 
 export const roleCanCreateRequirementType: {
   [key in UserRoles]: RequirementType[];

@@ -37,6 +37,7 @@ import { MainSocketsProvider } from "./contexts/MainSocketsContext.tsx";
 import { setIsUserLoading } from "./redux/loadingUserSlice.ts";
 import AdminGuard from "./components/guards/AdminGuard.tsx";
 import AdminSales from "./pages/admin/AdminSales.tsx";
+import { RequirementType } from "./utilities/types.ts";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
@@ -222,7 +223,9 @@ function App() {
                                       element={
                                         <AuthRoleGuard
                                           allowedRoles={
-                                            RolesForSection.myRequirements
+                                            RolesForSubSection[
+                                              pageRoutes.myRequirements
+                                            ]?.[RequirementType.GOOD]
                                           }
                                         >
                                           <Requirements />
@@ -234,7 +237,9 @@ function App() {
                                       element={
                                         <AuthRoleGuard
                                           allowedRoles={
-                                            RolesForSection.myRequirements
+                                            RolesForSubSection[
+                                              pageRoutes.myRequirements
+                                            ]?.[RequirementType.SERVICE]
                                           }
                                         >
                                           <Requirements />
@@ -246,7 +251,9 @@ function App() {
                                       element={
                                         <AuthRoleGuard
                                           allowedRoles={
-                                            RolesForSection.myRequirements
+                                            RolesForSubSection[
+                                              pageRoutes.myRequirements
+                                            ]?.[RequirementType.SALE]
                                           }
                                         >
                                           <Requirements />
@@ -270,7 +277,9 @@ function App() {
                                       element={
                                         <AuthRoleGuard
                                           allowedRoles={
-                                            RolesForSection.myOffers
+                                            RolesForSubSection[
+                                              pageRoutes.myOffers
+                                            ]?.[RequirementType.GOOD]
                                           }
                                         >
                                           <Offers />
@@ -282,7 +291,9 @@ function App() {
                                       element={
                                         <AuthRoleGuard
                                           allowedRoles={
-                                            RolesForSection.myOffers
+                                            RolesForSubSection[
+                                              pageRoutes.myOffers
+                                            ]?.[RequirementType.SERVICE]
                                           }
                                         >
                                           <Offers />
@@ -294,7 +305,9 @@ function App() {
                                       element={
                                         <AuthRoleGuard
                                           allowedRoles={
-                                            RolesForSection.myOffers
+                                            RolesForSubSection[
+                                              pageRoutes.myOffers
+                                            ]?.[RequirementType.SALE]
                                           }
                                         >
                                           <Offers />
@@ -331,7 +344,7 @@ function App() {
                                             allowedRoles={
                                               RolesForSubSection[
                                                 pageRoutes.myPurchaseOrders
-                                              ][pageSubRoutes.issued]
+                                              ]?.[pageSubRoutes.issued]
                                             }
                                           >
                                             <PurchaseOrders />
@@ -345,7 +358,7 @@ function App() {
                                             allowedRoles={
                                               RolesForSubSection[
                                                 pageRoutes.myPurchaseOrders
-                                              ][pageSubRoutes.issued]
+                                              ]?.[pageSubRoutes.issued]
                                             }
                                           >
                                             <PurchaseOrders />
@@ -370,7 +383,7 @@ function App() {
                                             allowedRoles={
                                               RolesForSubSection[
                                                 pageRoutes.myPurchaseOrders
-                                              ][pageSubRoutes.received]
+                                              ]?.[pageSubRoutes.received]
                                             }
                                           >
                                             <PurchaseOrders />
@@ -384,7 +397,7 @@ function App() {
                                             allowedRoles={
                                               RolesForSubSection[
                                                 pageRoutes.myPurchaseOrders
-                                              ][pageSubRoutes.received]
+                                              ]?.[pageSubRoutes.received]
                                             }
                                           >
                                             <PurchaseOrders />
@@ -410,7 +423,7 @@ function App() {
                                           allowedRoles={
                                             RolesForSubSection[
                                               pageRoutes.mySalesOrders
-                                            ][pageSubRoutes.issued]
+                                            ]?.[pageSubRoutes.issued]
                                           }
                                         >
                                           <SalesOrders />
@@ -424,7 +437,7 @@ function App() {
                                           allowedRoles={
                                             RolesForSubSection[
                                               pageRoutes.mySalesOrders
-                                            ][pageSubRoutes.received]
+                                            ]?.[pageSubRoutes.received]
                                           }
                                         >
                                           <SalesOrders />
