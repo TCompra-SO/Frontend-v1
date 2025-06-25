@@ -26,6 +26,7 @@ import {
   selectSaleOfferService,
   uploadDocsSaleService,
   uploadImagesSaleService,
+  validateSaleService,
 } from "../services/requests/sale/saleService";
 import { registerScoreService } from "../services/requests/scoreService";
 import { createServiceOfferService } from "../services/requests/service/serviceOfferService";
@@ -312,6 +313,12 @@ export default function httpErrorInterceptor(error: any, type: string): string {
       switch (code) {
         case 500:
           erroMsg = "certificationVerificationError";
+      }
+      break;
+    case validateSaleService().type:
+      switch (code) {
+        case 404:
+          erroMsg = "saleToValidateNotFound";
       }
       break;
     case "": // No mostrar mensaje

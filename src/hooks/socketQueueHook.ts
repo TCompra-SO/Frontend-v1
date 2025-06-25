@@ -130,12 +130,12 @@ export function useActionsForRow(
             tableType == TableTypes.HOME ||
             tableType == TableTypes.ADMIN_SALES
           ) {
-            // Cambio a estado no publicado (ambos) o publicado-inválido (solo home) implica eliminar elemento
             const requirement: Requirement = updElem as Requirement;
-
+            // Cambio a estado no publicado (ambos) o publicado-inválido (solo home) implica eliminar elemento
             if (
               requirement.state != RequirementState.PUBLISHED ||
               (tableType == TableTypes.HOME &&
+                requirement.type == RequirementType.SALE &&
                 requirement.state == RequirementState.PUBLISHED &&
                 !requirement.valid)
             ) {
@@ -149,16 +149,19 @@ export function useActionsForRow(
                 setTotal(total - (prevLen - newList.length));
                 if (newList.length == 0) callback?.(); // callback debería recargar la página de home
               }
-            } else if (
-              //  cambio a estado publicado o publicado-válido implica insertar elemento
-              (tableType == TableTypes.HOME &&
+              return;
+            }
+            //  estado publicado o publicado-válido implica actualizar elemento
+            if (
+              requirement.state == RequirementState.PUBLISHED &&
+              ((tableType == TableTypes.HOME &&
                 requirement.type == RequirementType.SALE &&
                 requirement.valid) ||
-              (tableType == TableTypes.HOME &&
-                requirement.type != RequirementType.SALE) ||
-              tableType == TableTypes.ADMIN_SALES
+                (tableType == TableTypes.HOME &&
+                  requirement.type != RequirementType.SALE) ||
+                tableType == TableTypes.ADMIN_SALES)
             )
-              insertElementInArray(updElem);
+              updateElementInArray(updElem);
           } else if (
             tableType == TableTypes.REQUIREMENT ||
             tableType == TableTypes.ALL_REQUIREMENTS
@@ -178,8 +181,8 @@ export function useActionsForRow(
                 requirement,
                 ...list.filter((item) => (item.key ?? item.uid) !== data.key),
               ]);
-            else insertElementInArray(updElem);
-          } else insertElementInArray(updElem);
+            else updateElementInArray(updElem);
+          } else updateElementInArray(updElem);
         }
       } else {
         // insertar nuevo elemento
@@ -252,14 +255,14 @@ export function useActionsForRow(
             });
           }
         });
-        insertElementInArray(newObj);
+        updateElementInArray(newObj);
       }
     } catch (e) {
       console.log(e);
     }
   }
 
-  function insertElementInArray(updElem: any) {
+  function updateElementInArray(updElem: any) {
     setList((prevList: any[]) => {
       const index = prevList.findIndex(
         (item: any) => (item.key ?? item.uid) === (updElem.key ?? updElem.uid)

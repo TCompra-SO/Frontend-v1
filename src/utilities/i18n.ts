@@ -373,6 +373,7 @@ const resources = {
         "Your sale listing has been submitted for review. It will go live once approved.",
       createSaleSubtitle:
         "Sales are reviewed and validated before being published",
+      saleToValidateNotFound: "Sale with published state not found",
       // Other
       characters: "characters",
       yes: "Yes",
@@ -965,6 +966,8 @@ const resources = {
         "Tu liquidación ha sido enviada para validación. Será revisada antes de ser publicada.",
       createSaleSubtitle:
         "Las liquidaciones son revisadas y validadas antes de ser publicadas",
+      saleToValidateNotFound:
+        "No se ha encontrado liquidación con estado publicado",
       // Other
       characters: "caracteres",
       yes: "Sí",
