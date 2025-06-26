@@ -748,6 +748,13 @@ export default function Sidebar(props: SidebarProps) {
             <i className="fa-regular fa-chart-line text-center i-btn"></i>,
             t("statistics")
           )}
+        {RolesForSection.admin[typeID] &&
+          getMenuButton(
+            false,
+            `${pageRoutes.admin}`,
+            <i className={`${sectionIcons["admin"]} text-center i-btn`}></i>,
+            t("admin")
+          )}
       </div>
       {/* <div className="menu-tc-2 t-flex">
         <ButtonContainer
