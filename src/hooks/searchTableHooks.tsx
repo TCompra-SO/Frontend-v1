@@ -239,19 +239,26 @@ export function useFilterSortPaginationForTable() {
       debounce(
         (
           e: ChangeEvent<HTMLInputElement>,
-          searchTable: (params: SearchTableTypeParams) => void
+          searchTable: (
+            params: SearchTableTypeParams,
+            setLoadingTable?: (val: boolean) => void
+          ) => void,
+          setLoadingTable?: (val: boolean) => void
         ) => {
           setSearchValue(e.target.value);
           setCurrentPage(1);
-          searchTable({
-            page: 1,
-            pageSize: currentPageSize,
-            keyWords: e.target.value,
-            fieldName: fieldSort?.fieldName,
-            orderType: fieldSort?.orderType,
-            filterColumn: fieldFilter?.filterColumn,
-            filterData: fieldFilter?.filterData,
-          });
+          searchTable(
+            {
+              page: 1,
+              pageSize: currentPageSize,
+              keyWords: e.target.value,
+              fieldName: fieldSort?.fieldName,
+              orderType: fieldSort?.orderType,
+              filterColumn: fieldFilter?.filterColumn,
+              filterData: fieldFilter?.filterData,
+            },
+            setLoadingTable
+          );
         },
         tableSearchAfterMseconds
       ),
@@ -266,6 +273,7 @@ export function useFilterSortPaginationForTable() {
     setLoadingTable?: (val: boolean) => void,
     setLastSearchParams?: (val: OnChangePageAndPageSizeTypeParams) => void
   ) {
+    console.log(11111, setLoadingTable);
     setLoadingTable?.(true);
     setLastSearchParams?.({ page, pageSize, sorter, filters });
     setCurrentPageSize(pageSize);

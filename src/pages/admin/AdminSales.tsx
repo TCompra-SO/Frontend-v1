@@ -272,7 +272,7 @@ export default function AdminSales() {
           )
         }
         ref={searchValueRef}
-        onSearch={(e) => handleSearch(e, searchTable)}
+        onSearch={(e) => handleSearch(e, searchTable, setLoadingTable)}
         admin
       />
     </>

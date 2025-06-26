@@ -455,7 +455,7 @@ export default function Requirements() {
           <i className={`${sectionIcons["requirement"]} sub-icon`}></i>
         }
         table={tableContent}
-        onSearch={(e) => handleSearch(e, searchTable)}
+        onSearch={(e) => handleSearch(e, searchTable, setLoadingTable)}
         loading={loadingTable}
         onChangePageAndPageSize={(params) =>
           handleChangePageAndPageSize(
