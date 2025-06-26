@@ -1,8 +1,11 @@
-import { lazy, useEffect, useState } from "react";
+import { lazy, useEffect, useRef, useState } from "react";
 import MainHeaderNoModals from "./MainHeaderNoModals.tsx";
 import NoContentModalContainer from "../../containers/NoContentModalContainer.tsx";
 import ValidateCode from "../../common/modals/ValidateCode.tsx";
 import { loginKey } from "../../../utilities/globals.ts";
+import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { MainState } from "../../../models/Redux.ts";
 
 const Login = lazy(() => import("./../../../pages/Login.tsx"));
 const Profile = lazy(() => import("./../../../pages/Profile.tsx"));
@@ -12,11 +15,17 @@ interface MainHeaderProps {
 }
 
 export default function MainHeader(props: MainHeaderProps) {
+  const location = useLocation();
+  const isLoadingUser = useSelector(
+    (state: MainState) => state.loadingUser.isLoading
+  );
+  const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
   const [isOpenValCodeModal, setIsOpenValCodeModal] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [docType, setDocType] = useState("");
+  const hasOpenedLogin = useRef(false);
 
   /** Cerrar modal al iniciar sesión */
 
@@ -27,6 +36,22 @@ export default function MainHeader(props: MainHeaderProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  /** Abrir modal de login */
+
+  useEffect(() => {
+    if (!isLoadingUser && !hasOpenedLogin.current && !isLoggedIn) {
+      const pathIsHome = location.pathname === "/";
+      if (pathIsHome) {
+        const queryParams = new URLSearchParams(location.search);
+        const login = queryParams.get("login");
+        if (login === "true") {
+          handleOpenModal(true);
+          hasOpenedLogin.current = true;
+        }
+      }
+    }
+  }, [location, isLoadingUser]);
 
   /** Funciones */
 
