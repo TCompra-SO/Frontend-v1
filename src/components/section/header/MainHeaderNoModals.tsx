@@ -214,7 +214,14 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
   };
 
   return (
-    <div className="t-flex j-conten header-menu">
+    <div
+      className="t-flex j-conten header-menu"
+      style={
+        currentSection == pageRoutes.home
+          ? { position: "relative", zIndex: 1 }
+          : {}
+      }
+    >
       <header
         className={
           !(

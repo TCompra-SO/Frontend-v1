@@ -7,14 +7,17 @@ import { HomeContext } from "../../../contexts/Homecontext";
 import { useApiParams } from "../../../models/Interfaces";
 import { getStatisticsService } from "../../../services/requests/reportsService";
 import useApi from "../../../hooks/useApi";
-import { masterUid } from "../../../utilities/globals";
+import { masterUid, windowSize } from "../../../utilities/globals";
 import { transformToStatistics } from "../../../utilities/transform";
 import { StatisticsData } from "../../../models/MainInterfaces";
 import { sectionIcons } from "../../../utilities/colors";
 import { RequirementType } from "../../../utilities/types";
+import { Carousel } from "antd";
+import useWindowSize from "../../../hooks/useWindowSize";
 
 export default function Search() {
   const { t } = useTranslation();
+  const { width } = useWindowSize();
   const { updateKeywordSearch } = useContext(HomeContext);
   const [keyword, setKeyword] = useState("");
   const [data, setData] = useState<StatisticsData>();
@@ -23,6 +26,12 @@ export default function Search() {
     method: "get",
   });
   const { responseData, fetchData } = useApi(apiParams);
+  const [imgIndex, setImgIndex] = useState(0);
+  const [carouselHeight, setCarouselHeight] = useState(520);
+
+  useEffect(() => {
+    if (width <= windowSize.sm) setCarouselHeight(420);
+  }, [width]);
 
   useEffect(() => {
     if (apiParams.service) {
@@ -52,9 +61,16 @@ export default function Search() {
 
   return (
     <>
-      <div className="text-center t-flex f-column gap-20 slider-desc">
+      <div
+        className="text-center t-flex f-column gap-20 slider-desc"
+        style={{ zIndex: 1 }}
+      >
         <div className="home-t ht-s1">
-          <h2 className="m-0">{t("homeTitle")}</h2>
+          <h2 className="m-0">
+            {t(`homeTitle${imgIndex}`) == `homeTitle${imgIndex}`
+              ? "homeTitle"
+              : t(`homeTitle${imgIndex}`)}
+          </h2>
           <h3 className="m-0">{t("homeSubtitle")}</h3>
         </div>
         <div className="t-flex gap-10 ht-s2" style={{ width: "50%" }}>
@@ -134,7 +150,53 @@ export default function Search() {
           </div>
         )}
       </div>
-      <div className="section-slider t-flex j-conten j-items"></div>
+      <Carousel
+        arrows
+        autoplay
+        infinite={true}
+        style={{
+          position: "relative",
+          marginTop: -79,
+          height: carouselHeight,
+        }}
+        afterChange={() => {
+          setImgIndex(imgIndex >= 4 ? 0 : imgIndex + 1);
+        }}
+      >
+        <div>
+          <div
+            className="section-slider t-flex j-conten j-items"
+            style={{ marginTop: 0 }}
+          ></div>
+        </div>
+        <div>
+          <div
+            className="section-slider t-flex j-conten j-items"
+            style={{
+              backgroundImage: "url('/src/assets/images/back-02.jpg')",
+              marginTop: 0,
+            }}
+          ></div>
+        </div>
+        <div>
+          <div
+            className="section-slider t-flex j-conten j-items"
+            style={{
+              backgroundImage: "url('/src/assets/images/back-03.jpg')",
+              marginTop: 0,
+            }}
+          ></div>
+        </div>
+        <div>
+          <div
+            className="section-slider t-flex j-conten j-items"
+            style={{
+              backgroundImage: "url('/src/assets/images/back-04.jpg')",
+              marginTop: 0,
+            }}
+          ></div>
+        </div>
+      </Carousel>
     </>
   );
 }

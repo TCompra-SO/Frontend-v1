@@ -308,6 +308,14 @@ const resources = {
       requirementBelongsToCompany: "Requirement belongs to your company",
       saleBelongsToCompany: "Sale belongs to your company",
       homeTitle: "The first platform for Requirements and Offers in Peru",
+      homeTitle0: "Still buying like it's 2010? Evolve with Tcompra",
+      homeTitle1:
+        "Don’t sell slow. Clear out stock. Compare prices. Close deals. All in one platform.",
+      homeTitle2:
+        "Get quote prices in minutes, compare in seconds, decide like a giant",
+      homeTitle3: "If getting quote prices is complicated, it's not Tcompra",
+      homeTitle4:
+        "Tcompra: the app that turns your requirements into real business",
       homeSubtitle: "We Facilitate the Purchase and Sale of Goods and Services",
       allRightsReserved: "All rights reserved",
       immerseYourselfInBusiness: "Immerse yourself in the new era of business",
@@ -905,6 +913,14 @@ const resources = {
       requirementBelongsToCompany: "El requerimiento pertenece tu empresa",
       saleBelongsToCompany: "La liquidación pertenece a tu empresa",
       homeTitle: "La primera plataforma de Requerimientos y Ofertas del Perú",
+      homeTitle0: "¿Aún compras como en 2010? Evoluciona con Tcompra",
+      homeTitle1:
+        "No vendas lento. Liquida. Cotiza. Cierra. En un solo portal.",
+      homeTitle2:
+        "Cotiza en minutos, compara en segundos, decide como un gigante.",
+      homeTitle3: "Si cotizar es complicado, no es Tcompra",
+      homeTitle4:
+        "Tcompra: la app que convierte tus requerimientos en negocios reales",
       homeSubtitle: "Facilitamos la Compra y Venta de Bienes y Servicios",
       allRightsReserved: "Todos los derechos reservados",
       immerseYourselfInBusiness: "Sumérgete en la nueva era de los negocios",
