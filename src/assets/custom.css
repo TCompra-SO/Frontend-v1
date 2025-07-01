@@ -303,3 +303,30 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
 .ant-float-btn-group {
   bottom: 20px;
 }
+
+/* Para términos y condiciones */
+.tc-subtitulo {
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-top: 20px;
+  display: block;
+}
+
+.tc-lista-condiciones {
+  list-style: decimal inside;
+  margin-left: 20px;
+  padding-left: 0;
+}
+
+.tc-lista-condiciones li {
+  margin-bottom: 5px;
+}
+
+.tc-item-titulo {
+  font-weight: bold;
+}
+
+.tc-seccion {
+  margin-bottom: 30px;
+  line-height: 1.3;
+}

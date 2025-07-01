@@ -30,43 +30,183 @@ export default function TermsAndConditionsModal(
         <div className="t-flex alert-base">
           <h1>{t("termsAndConditions")}</h1>
           <div>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ac
-            aliquet lorem. Aliquam porta tristique nisi porta rhoncus. Quisque
-            ultricies porta est ac dapibus. Aenean vel magna at dolor vestibulum
-            sollicitudin in ut urna. Maecenas eget ex vitae ante pretium
-            sagittis. Praesent porttitor sem et libero mollis sollicitudin. Nunc
-            consequat libero lacus, a lacinia tellus laoreet in. Sed et dui
-            orci. Praesent id sagittis enim. Maecenas vel ultrices nisi. Vivamus
-            nec quam ac quam rutrum porttitor. Donec non rhoncus augue. Aliquam
-            mollis lacus at arcu interdum, in pretium ex pretium. Orci varius
-            natoque penatibus et magnis dis parturient montes, nascetur
-            ridiculus mus. Quisque finibus mi nunc, at aliquam leo suscipit non.
-            Sed viverra porttitor arcu sed efficitur. Pellentesque porta mauris
-            quis nisi rhoncus semper. Donec in convallis mi. Proin leo mauris,
-            placerat eget lorem quis, pellentesque pharetra quam. Fusce
-            vestibulum, lacus et auctor convallis, enim lectus ultrices turpis,
-            ac volutpat dui erat ac sem. Nam gravida ante et purus suscipit, non
-            molestie risus hendrerit. In efficitur vehicula risus id suscipit.
-            Donec luctus erat sed eros dapibus maximus. Sed tincidunt in urna
-            fringilla viverra. In nec vulputate ligula. Aenean convallis
-            pulvinar purus, at auctor nisl pulvinar et. Donec accumsan nibh
-            orci. Vestibulum at erat id ligula auctor viverra. Praesent finibus
-            sodales urna ut hendrerit. Aenean eros odio, pulvinar at condimentum
-            at, eleifend eu sapien. Etiam lacus neque, tempor eget neque et,
-            condimentum vestibulum lacus. Duis id tincidunt ligula. Integer eget
-            feugiat nunc. Nullam iaculis eros sed massa porta ultrices. Quisque
-            eu dolor tellus. Fusce ullamcorper massa nec augue sagittis
-            placerat. Nulla dignissim tellus congue tellus pretium, ut dapibus
-            enim luctus. Nulla at efficitur neque. Curabitur eu massa ac sem
-            dapibus condimentum a et est. Nulla ut pulvinar metus. Aenean
-            suscipit, quam et porta sollicitudin, erat velit mattis arcu, in
-            blandit libero enim vel libero. Pellentesque aliquam ex sed nisi
-            finibus fringilla. Sed vestibulum commodo luctus. Pellentesque
-            habitant morbi tristique senectus et netus et malesuada fames ac
-            turpis egestas. Etiam tortor arcu, ullamcorper nec bibendum ac,
-            vulputate consectetur elit. Quisque vel facilisis nunc, at aliquam
-            tortor. Donec vitae sodales lectus, sit amet suscipit justo. Nam
-            vitae dolor non elit lobortis pharetra non nec sem.
+            <div className="tc-seccion">
+              <span className="tc-subtitulo">
+                📄 Términos y Condiciones de Uso
+              </span>
+              <ol className="tc-lista-condiciones">
+                <li>
+                  <span className="tc-item-titulo">
+                    Aceptación de términos:
+                  </span>{" "}
+                  Al registrarse en Tcompra.com, el usuario acepta estos
+                  términos.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">
+                    Descripción del servicio:
+                  </span>{" "}
+                  Tcompra.com permite publicar requerimientos, recibir
+                  cotizaciones, emitir órdenes de compra, publicar liquidaciones
+                  y usar chat interno.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Registro y cuentas:</span> El
+                  usuario debe proporcionar datos reales. Las empresas pueden
+                  crear subusuarios con permisos diferenciados.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Obligaciones:</span> Usar la
+                  plataforma de buena fe. No publicaciones fraudulentas ni
+                  requerimientos ilegales.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">
+                    Publicación de contenido:
+                  </span>{" "}
+                  El contenido no debe infringir derechos de terceros ni ser
+                  inapropiado.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">
+                    Penalidades por mal uso:
+                  </span>{" "}
+                  Más de 5 anulaciones injustificadas de OC o cancelaciones de
+                  requerimientos en una semana pueden derivar en suspensión.
+                  Malas prácticas (espionaje comercial, lenguaje ofensivo)
+                  conllevan suspensión o bloqueo.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Moderación:</span>{" "}
+                  Tcompra.com se reserva el derecho de auditar publicaciones y
+                  chats.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">
+                    Relación entre usuarios:
+                  </span>{" "}
+                  Tcompra.com no es parte del contrato final entre comprador y
+                  proveedor.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">
+                    Limitación de responsabilidad:
+                  </span>{" "}
+                  No se responsabiliza por pérdidas indirectas o interrupciones
+                  de servicio.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Modificaciones:</span> Los
+                  términos pueden actualizarse.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Ley aplicable:</span> Según
+                  la jurisdicción de Tcompra.com.
+                </li>
+              </ol>
+            </div>
+
+            <div className="tc-seccion">
+              <span className="tc-subtitulo">🔐 Política de Privacidad</span>
+              <ol className="tc-lista-condiciones">
+                <li>
+                  <span className="tc-item-titulo">Responsable:</span>{" "}
+                  Tcompra.com.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Datos:</span> Registro
+                  (empresa, contacto), datos transaccionales, IP y cookies.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Finalidad:</span> Gestionar
+                  cuentas, operaciones y analítica.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Compartir datos:</span> Solo
+                  con usuarios para la transacción y autoridades si es
+                  obligatorio.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Derechos:</span> Acceso,
+                  rectificación o eliminación escribiendo a soporte@tcompra.com.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Seguridad:</span> Medidas
+                  técnicas y organizativas.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Conservación:</span> Mientras
+                  dure la relación o por obligación legal.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Cambios:</span> Se
+                  comunicarán oportunamente.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Contacto:</span>{" "}
+                  soporte@tcompra.com
+                </li>
+              </ol>
+            </div>
+
+            <div className="tc-seccion">
+              <span className="tc-subtitulo">🍪 Política de Cookies</span>
+              <ol className="tc-lista-condiciones">
+                <li>
+                  <span className="tc-item-titulo">Uso:</span> Cookies propias y
+                  de terceros para optimizar navegación y recordar preferencias.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Qué son:</span> Archivos que
+                  almacenan información de la visita.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Tipos:</span> Técnicas,
+                  personalización, analíticas, de terceros.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Consentimiento:</span> Al
+                  usar la web, aceptas cookies. Puedes deshabilitarlas desde el
+                  navegador.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Cambios:</span> Se informarán
+                  cambios.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Contacto:</span>{" "}
+                  soporte@tcompra.com
+                </li>
+              </ol>
+            </div>
+
+            <div className="tc-seccion">
+              <span className="tc-subtitulo">🤖 Aviso de Uso de IA</span>
+              <ol className="tc-lista-condiciones">
+                <li>
+                  <span className="tc-item-titulo">Uso de IA:</span> Sugerencias
+                  automáticas de proveedores, filtros inteligentes,
+                  recomendaciones.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Limitación:</span> El usuario
+                  decide. La IA no sustituye criterio humano.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Privacidad:</span> Datos
+                  procesados según la política vigente. Datos para IA pueden
+                  anonimizarse.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Actualizaciones:</span> Se
+                  comunicará cualquier nuevo uso de IA.
+                </li>
+                <li>
+                  <span className="tc-item-titulo">Contacto:</span>{" "}
+                  soporte@tcompra.com
+                </li>
+              </ol>
+            </div>
           </div>
           <div className="t-flex gap-15 wd-100 alert-btn">
             <ButtonContainer
