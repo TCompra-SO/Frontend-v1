@@ -433,6 +433,8 @@ export interface IdValueMap {
 export interface CategoryIdValue extends IdValue {
   parentId: number;
   parentName: string;
+  icon?: string;
+  parentIcon?: string;
 }
 
 export interface CategoryIdValueMap {

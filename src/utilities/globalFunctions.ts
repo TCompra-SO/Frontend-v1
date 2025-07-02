@@ -221,6 +221,7 @@ export function getListForSelectIdValueMap(data: IdValueMap) {
 // Transforma objeto de datos de categoría para select de Antd
 export function getListForSelectCategoryIdValueMap(data: CategoryIdValueMap) {
   try {
+    console.log(data);
     const categorySections: Record<
       number,
       {
@@ -234,18 +235,19 @@ export function getListForSelectCategoryIdValueMap(data: CategoryIdValueMap) {
       const data: CategoryIdValue = category[1];
       if (categorySections[data.parentId] === undefined)
         categorySections[data.parentId] = {
-          label: data.parentName,
+          label:
+            (data.parentIcon ? data.parentIcon + " " : "") + data.parentName,
           title: data.parentName,
           options: [
             {
-              label: "⚒️" + data.value,
+              label: (data.icon ? data.icon + " " : "") + data.value,
               value: catId,
             },
           ],
         };
       else
         categorySections[data.parentId].options.push({
-          label: data.value,
+          label: (data.icon ? data.icon + " " : "") + data.value,
           value: catId,
         });
     });

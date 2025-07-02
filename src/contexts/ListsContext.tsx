@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import {
+  CategoryIdValue,
   CategoryIdValueMap,
-  CategoryIdValueObj,
   CountryCities,
   IdValueAliasMap,
   IdValueAliasObj,
@@ -173,9 +173,9 @@ export function ListsProvider({ children }: ListsProviderProps) {
         categoryResponseData.reduce(
           (
             acc: CategoryIdValueMap,
-            { id, value, parentId, parentName }: CategoryIdValueObj
+            { id, ...rest }: CategoryIdValue & { id: number }
           ) => {
-            acc[id] = { value, parentId, parentName };
+            acc[id] = rest;
             return acc;
           },
           {}
