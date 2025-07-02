@@ -1,5 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import {
+  CategoryIdValueMap,
+  CategoryIdValueObj,
   CountryCities,
   IdValueAliasMap,
   IdValueAliasObj,
@@ -27,7 +29,7 @@ interface ListsContextType {
   tlds: string[];
   countryList: IdValueObj[];
   countryData: CountryCities;
-  categoryData: IdValueMap;
+  categoryData: CategoryIdValueMap;
   currencyData: IdValueAliasMap;
   paymentMethodData: IdValueMap;
   deliveryTimeData: IdValueMap;
@@ -74,7 +76,7 @@ export function ListsProvider({ children }: ListsProviderProps) {
       method: "get",
     });
 
-  const [categoryData, setCategoryList] = useState<IdValueMap>({});
+  const [categoryData, setCategoryData] = useState<CategoryIdValueMap>({});
   const { responseData: categoryResponseData, fetchData: categoryFetchData } =
     useApi<any>({
       service: categoriesService(),
@@ -167,10 +169,13 @@ export function ListsProvider({ children }: ListsProviderProps) {
 
   useEffect(() => {
     if (categoryResponseData) {
-      setCategoryList(
+      setCategoryData(
         categoryResponseData.reduce(
-          (acc: IdValueMap, { id, value }: IdValueObj) => {
-            acc[id] = { value };
+          (
+            acc: CategoryIdValueMap,
+            { id, value, parentId, parentName }: CategoryIdValueObj
+          ) => {
+            acc[id] = { value, parentId, parentName };
             return acc;
           },
           {}

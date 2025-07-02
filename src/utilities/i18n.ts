@@ -388,6 +388,8 @@ const resources = {
         "A buyer is only permitted to create requirements for goods and services, and to submit offers for sales.",
       sellerBuyerRoleInfo:
         "A buyer/seller is permitted to submit offers and create sales, goods and services requirements.",
+      agreeToSaleTermsAndConditions:
+        "I accept the Terms and Conditions for liquidations",
       // Other
       characters: "characters",
       yes: "Yes",
@@ -920,7 +922,7 @@ const resources = {
         "Cotiza en minutos, compara en segundos, decide como un gigante.",
       homeTitle3: "Si cotizar es complicado, no es Tcompra",
       homeTitle4:
-        "Tcompra: la app que convierte tus requerimientos en negocios reales",
+        "Tcompra: la plataforma que convierte tus requerimientos en negocios reales",
       homeSubtitle: "Facilitamos la Compra y Venta de Bienes y Servicios",
       allRightsReserved: "Todos los derechos reservados",
       immerseYourselfInBusiness: "Sumérgete en la nueva era de los negocios",
@@ -996,6 +998,8 @@ const resources = {
         "Un comprador sólo puede crear requerimientos de bienes y servicios y hacer ofertas a liquidaciones.",
       sellerBuyerRoleInfo:
         "Un vendedor/comprador puede crear y hacer ofertas requerimientos y liquidaciones.",
+      agreeToSaleTermsAndConditions:
+        "Acepto los Términos y Condiciones de liquidaciones",
       // Other
       characters: "caracteres",
       yes: "Sí",

@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { Form } from "antd";
 import { ListsContext } from "../../../contexts/ListsContext";
 import SelectContainer from "../../containers/SelectContainer";
-import { getListForSelectIdValueMap } from "../../../utilities/globalFunctions";
+import { getListForSelectCategoryIdValueMap } from "../../../utilities/globalFunctions";
 
 interface CategoryFieldProps {
   showLabelPlaceholder?: boolean;
@@ -29,7 +29,7 @@ export default function CategoryField(props: CategoryFieldProps) {
         optionFilterProp="label"
         placeholder={t(props.showLabelPlaceholder ? "category" : "select")}
         className="form-control"
-        options={getListForSelectIdValueMap(categoryData)}
+        options={getListForSelectCategoryIdValueMap(categoryData)}
       />
     </Form.Item>
   );

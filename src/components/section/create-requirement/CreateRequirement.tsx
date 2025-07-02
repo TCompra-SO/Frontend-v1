@@ -1,4 +1,4 @@
-import { Col, Flex, Form, Row, UploadFile } from "antd";
+import { Checkbox, Col, Flex, Form, Row, UploadFile } from "antd";
 import { useTranslation } from "react-i18next";
 import EmailCR from "../../common/formFields/EmailCR";
 import DocumentsCertifCR from "../../common/formFields/DocumentsCertifCR";
@@ -56,6 +56,7 @@ import { ListsContext } from "../../../contexts/ListsContext";
 import { sectionIcons } from "../../../utilities/colors";
 import { roleCanCreateRequirementType } from "../../../utilities/roles";
 import useWindowSize from "../../../hooks/useWindowSize";
+import TermsAndConditionsModal from "../../common/modals/TermsAndConditionsModal";
 
 interface CreateRequirementProps extends CommonModalProps {
   closeModal: () => void;
@@ -114,6 +115,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   const typeRef = useRef(type);
   const [warrantyRequired, setWarrantyRequired] = useState(false);
   const [buttonWidth, setButtonWidth] = useState("wd-25");
+  const [isOpenModalTerms, setIsOpenModalTerms] = useState(false);
 
   useEffect(() => {
     setButtonWidth(width < windowSize.xs ? "wd-100" : "wd-25");
@@ -382,6 +384,11 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         style={mainModalScrollStyle}
       />
 
+      <TermsAndConditionsModal
+        isOpen={isOpenModalTerms}
+        onClose={() => setIsOpenModalTerms(false)}
+      />
+
       <div
         className="modal-card img-bg scroll-y"
         style={{ maxHeight: "calc(100vh - 170px)" }}
@@ -595,7 +602,19 @@ export default function CreateRequirement(props: CreateRequirementProps) {
               </Col>
             </Row>
             <div className="t-flex t-wrap up-footer">
-              <div className="footer-text">{t("allDataIsImportant")}</div>
+              {type == RequirementType.SALE ? (
+                <Checkbox style={{ alignItems: "flex-start", display: "flex" }}>
+                  <a
+                    onClick={() => setIsOpenModalTerms(true)}
+                    className="forgot-password text-left"
+                    style={{ width: "100%" }}
+                  >
+                    {t("agreeToSaleTermsAndConditions")}
+                  </a>
+                </Checkbox>
+              ) : (
+                <div className="footer-text">{t("allDataIsImportant")}</div>
+              )}
               <div className={buttonWidth}>
                 <ButtonContainer
                   loading={loading || loadingDoc || loadingImg}

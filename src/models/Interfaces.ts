@@ -413,14 +413,30 @@ export interface IdValueObj {
   value: string;
 }
 
+export interface CategoryIdValueObj extends IdValueObj {
+  parentId: number;
+  parentName: string;
+}
+
 export interface IdValueAliasObj extends IdValueObj {
   alias: string;
 }
 
+export interface IdValue {
+  value: string;
+}
+
 export interface IdValueMap {
-  [id: number]: {
-    value: string;
-  };
+  [id: number]: IdValue;
+}
+
+export interface CategoryIdValue extends IdValue {
+  parentId: number;
+  parentName: string;
+}
+
+export interface CategoryIdValueMap {
+  [id: number]: CategoryIdValue;
 }
 
 export interface IdValueAliasMap {

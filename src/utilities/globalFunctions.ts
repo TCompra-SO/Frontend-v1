@@ -1,4 +1,6 @@
 import {
+  CategoryIdValue,
+  CategoryIdValueMap,
   CountryCities,
   HttpService,
   IdValueMap,
@@ -155,6 +157,7 @@ import {
   ChatMessage,
   UserCounters,
 } from "../models/MainInterfaces";
+import { ReactNode } from "react";
 
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
@@ -213,6 +216,45 @@ export function getListForSelectIdValueMap(data: IdValueMap) {
     label: value,
     value: Number(id),
   }));
+}
+
+// Transforma objeto de datos de categoría para select de Antd
+export function getListForSelectCategoryIdValueMap(data: CategoryIdValueMap) {
+  try {
+    const categorySections: Record<
+      number,
+      {
+        label: ReactNode;
+        title: string;
+        options: { label: string; value: number }[];
+      }
+    > = {};
+    Object.entries(data).forEach((category) => {
+      const catId = Number(category[0]);
+      const data: CategoryIdValue = category[1];
+      if (categorySections[data.parentId] === undefined)
+        categorySections[data.parentId] = {
+          label: data.parentName,
+          title: data.parentName,
+          options: [
+            {
+              label: "⚒️" + data.value,
+              value: catId,
+            },
+          ],
+        };
+      else
+        categorySections[data.parentId].options.push({
+          label: data.value,
+          value: catId,
+        });
+    });
+
+    return Object.values(categorySections);
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
 }
 
 // Retorna la lista de ciudades para select de Antd
