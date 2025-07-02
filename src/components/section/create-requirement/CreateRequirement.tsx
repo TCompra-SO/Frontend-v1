@@ -14,6 +14,7 @@ import {
   ProcessFlag,
   RequirementType,
   ResponseRequestType,
+  TermsAndConditionsType,
 } from "../../../utilities/types";
 import { useContext, useEffect, useRef, useState } from "react";
 import {
@@ -387,6 +388,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
       <TermsAndConditionsModal
         isOpen={isOpenModalTerms}
         onClose={() => setIsOpenModalTerms(false)}
+        type={TermsAndConditionsType.SALES}
       />
 
       <div
@@ -603,15 +605,34 @@ export default function CreateRequirement(props: CreateRequirementProps) {
             </Row>
             <div className="t-flex t-wrap up-footer">
               {type == RequirementType.SALE ? (
-                <Checkbox style={{ alignItems: "flex-start", display: "flex" }}>
-                  <a
-                    onClick={() => setIsOpenModalTerms(true)}
-                    className="forgot-password text-left"
-                    style={{ width: "100%" }}
+                <Form.Item
+                  name="checkbox"
+                  labelCol={{ span: 0 }}
+                  valuePropName="checked"
+                  validateTrigger="onChange"
+                  rules={[
+                    {
+                      validator: (_, value) =>
+                        value
+                          ? Promise.resolve()
+                          : Promise.reject(
+                              new Error(t("mustAgreeToTermsAndConditions"))
+                            ),
+                    },
+                  ]}
+                >
+                  <Checkbox
+                    style={{ alignItems: "flex-start", display: "flex" }}
                   >
-                    {t("agreeToSaleTermsAndConditions")}
-                  </a>
-                </Checkbox>
+                    <a
+                      onClick={() => setIsOpenModalTerms(true)}
+                      className="forgot-password text-left"
+                      style={{ width: "100%" }}
+                    >
+                      {t("agreeToSaleTermsAndConditions")}
+                    </a>
+                  </Checkbox>
+                </Form.Item>
               ) : (
                 <div className="footer-text">{t("allDataIsImportant")}</div>
               )}

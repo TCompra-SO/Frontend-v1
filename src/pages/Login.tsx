@@ -12,6 +12,7 @@ import {
   DocType,
   ModalTypes,
   RegisterTypeId,
+  TermsAndConditionsType,
 } from "../utilities/types";
 import useApi from "../hooks/useApi";
 import {
@@ -281,6 +282,7 @@ export default function Login(props: LoginProps) {
       <TermsAndConditionsModal
         isOpen={isOpenModalTerms}
         onClose={() => setIsOpenModalTerms(false)}
+        type={TermsAndConditionsType.GENERAL}
       />
 
       <div className="modal-login">

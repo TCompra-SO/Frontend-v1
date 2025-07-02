@@ -574,3 +574,8 @@ export enum RequirementDetailType {
   ORDER = 2,
   ADMIN = 3,
 }
+
+export enum TermsAndConditionsType {
+  GENERAL = 1,
+  SALES = 2,
+}
