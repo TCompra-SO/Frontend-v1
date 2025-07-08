@@ -1,13 +1,11 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: true, // Permite conexiones desde cualquier IP
-    port: 3000, // El puerto en el que Vite está corriendo
-    hmr: {
-      overlay: false,
-    },
+    allowedHosts: ["tcompra.com"],
+    host: true, // Esto permite aceptar conexiones externas
+    port: 3000, // o el puerto que estés usando
   },
 });
