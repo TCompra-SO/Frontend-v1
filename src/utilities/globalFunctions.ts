@@ -221,7 +221,6 @@ export function getListForSelectIdValueMap(data: IdValueMap) {
 // Transforma objeto de datos de categoría para select de Antd
 export function getListForSelectCategoryIdValueMap(data: CategoryIdValueMap) {
   try {
-    console.log(data);
     const categorySections: Record<
       number,
       {
