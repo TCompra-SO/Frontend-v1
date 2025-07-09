@@ -112,17 +112,14 @@ export function useLogout() {
   async function logout() {
     if (isLoggedInRef.current) {
       dispatch(setIsLoading(true));
-      const refreshToken = localStorage.getItem(refreshTokenKey);
-      if (refreshToken) {
-        await makeRequest<LogoutRequest>({
-          service: logoutService(),
-          method: "post",
-          dataToSend: {
-            userId: uidRef.current,
-            refreshToken,
-          },
-        });
-      }
+      await makeRequest<LogoutRequest>({
+        service: logoutService(),
+        method: "post",
+        dataToSend: {
+          userId: uidRef.current,
+        },
+      });
+
       localStorage.removeItem(tokenKey);
       localStorage.removeItem(refreshTokenKey);
       localStorage.removeItem(userDataKey);
