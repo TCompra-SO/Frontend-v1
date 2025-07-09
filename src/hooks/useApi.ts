@@ -11,6 +11,8 @@ import {
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 
+axios.defaults.withCredentials = true;
+
 export interface UseApiType {
   saveInQueue?: boolean;
   functionToExecute: (

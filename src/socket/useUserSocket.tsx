@@ -195,8 +195,8 @@ export default function useUserSocket() {
     const success = await refreshToken(isAccessToken);
     // Si no se pudo refrescar token, cerrar sesión después de un tiempo
     if (success === false) {
+      // No eliminar refreshTokenKey, ya que es necesario para logout
       localStorage.removeItem(tokenKey);
-      localStorage.removeItem(refreshTokenKey);
       localStorage.removeItem(expiresInKey);
       localStorage.removeItem(refreshExpiresInKey);
       setTokenExpiration(null);

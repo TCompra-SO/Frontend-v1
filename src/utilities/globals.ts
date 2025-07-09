@@ -65,7 +65,7 @@ export const randomShortKeyLength: number = 8;
 // En segundos
 export const inactivityTime = 30;
 export const remainingTokenTime = 60;
-export const logoutAfterNoTokenRefreshTime = 10;
+export const logoutAfterNoTokenRefreshTime = 3;
 export const intervalToRetryRefreshingToken = 2;
 export const attemptsToRetryRefreshingToken = 3;
 
