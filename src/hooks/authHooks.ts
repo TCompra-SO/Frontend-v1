@@ -199,6 +199,7 @@ export function useLoadUserInfo() {
       logout();
       return;
     }
+    logout();
   }
 
   return loadUserInfo;
