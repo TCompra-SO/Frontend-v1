@@ -32,9 +32,12 @@ export default function useApi<T = any>(
       type: "error",
       description: null,
     },
-  }
+  },
+  useReduxToken?: boolean
 ) {
-  const userToken = useSelector((state: MainState) => state.user.token);
+  const userToken = useReduxToken
+    ? useSelector((state: MainState) => state.user.token)
+    : undefined;
   const { t } = useTranslation();
   const [loading, setLoading] = useState<boolean | undefined>(undefined);
   const [responseData, setResponseData] = useState<ResponseRequestType>(null);

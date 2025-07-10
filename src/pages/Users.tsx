@@ -61,7 +61,6 @@ export default function Users() {
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
   const { changeSubUserStatus } = useChangeSubUserStatus();
-  const token = useSelector((state: MainState) => state.user.token);
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
   const mainEntityType = useSelector(
     (state: MainState) => state.mainUser.typeEntity
@@ -413,7 +412,6 @@ export default function Users() {
         setApiParamsUser({
           service: getSubUserService(user.uid),
           method: "get",
-          token,
         });
         break;
       case Action.VIEW_REQUIREMENTS:

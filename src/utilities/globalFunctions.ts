@@ -433,13 +433,11 @@ export function getNestedValue(dataIndex: string, record: any) {
 }
 
 // Hace una solicitud http
-export default async function makeRequest<T = any>({
-  service,
-  method,
-  dataToSend,
-  token,
-}: useApiParams<T>) {
-  const userToken = store.getState().user.token;
+export default async function makeRequest<T = any>(
+  { service, method, dataToSend, token }: useApiParams<T>,
+  useReduxToken?: boolean
+) {
+  const userToken = useReduxToken ? store.getState().user.token : undefined;
   let responseData: ResponseRequestType = null;
   let errorMsg: ErrorMsgRequestType = null;
   let error: ErrorRequestType = null;
