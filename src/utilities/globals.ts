@@ -247,4 +247,4 @@ export const userCounterKeys: Record<keyof UserCounters, true> = {
 };
 
 // Cookies
-export const csrfTokenName = "X-CSRF-Token";
+export const csrfTokenName = "TC-CS-T";
