@@ -7,6 +7,7 @@ export function createReqOfferService(): HttpService {
       ApiRoutes.offers.create
     }`,
     type: "OFRE-CRE",
+    cookieAllowed: true,
   };
 }
 
@@ -16,6 +17,7 @@ export function getReqOfferByIdService(id: string): HttpService {
       ApiRoutes.offers.getDetailOffer
     }${id}`,
     type: "OFRE-GET-ID",
+    cookieAllowed: true,
   };
 }
 
@@ -29,6 +31,7 @@ export function getReqOffersByRequirementIdService(
       ApiRoutes.offers.getOffersByRequirement
     }${reqId}/${page}/${pageSize}`,
     type: "OFRE-GET-RID",
+    cookieAllowed: true,
   };
 }
 
@@ -38,6 +41,7 @@ export function getBasicRateDataReqOfferService(id: string): HttpService {
       ApiRoutes.offers.getBasicRateData
     }${id}`,
     type: "OFRE-BA-RA",
+    cookieAllowed: true,
   };
 }
 
@@ -52,6 +56,7 @@ export function getReqOffersByEntityService(
       ApiRoutes.offers.getOffersByEntity
     }${id}/${page}/${pageSize}`,
     type: "OFRE-GET-ENT",
+    cookieAllowed: true,
   };
 }
 
@@ -66,6 +71,7 @@ export function getReqOffersBySubUserService(
       ApiRoutes.offers.getOffersBySubUser
     }${id}/${page}/${pageSize}`,
     type: "OFRE-GET-SUB",
+    cookieAllowed: true,
   };
 }
 
@@ -75,6 +81,7 @@ export function deleteReqOfferService(id: string): HttpService {
       ApiRoutes.offers.delete
     }${id}`,
     type: "OFRE-DEL",
+    cookieAllowed: true,
   };
 }
 
@@ -84,6 +91,7 @@ export function culminateReqOfferService(): HttpService {
       ApiRoutes.offers.culminate
     }`,
     type: "OFRE-CUL",
+    cookieAllowed: true,
   };
 }
 
@@ -96,6 +104,7 @@ export function getValidationReqOfferService(
       ApiRoutes.offers.getValidation
     }${userId}/${requirementId}`,
     type: "OFRE-VAL",
+    cookieAllowed: true,
   };
 }
 
@@ -105,6 +114,7 @@ export function cancelReqOfferService(): HttpService {
       ApiRoutes.offers.cancel
     }`,
     type: "OFRE-CAN",
+    cookieAllowed: true,
   };
 }
 
@@ -114,6 +124,7 @@ export function searchReqOffersService(): HttpService {
       ApiRoutes.offers.searchOffers
     }`,
     type: "OFRE-SE-OF",
+    cookieAllowed: true,
   };
 }
 
@@ -123,6 +134,7 @@ export function uploadDocsReqOfferService(): HttpService {
       ApiRoutes.documents.uploadDocumentsOffer
     }`,
     type: "OFRE-DO-UP",
+    cookieAllowed: true,
   };
 }
 
@@ -132,5 +144,6 @@ export function uploadImagesReqOfferService(): HttpService {
       ApiRoutes.images.uploadImagesOffer
     }`,
     type: "OFRE-IM-UP",
+    cookieAllowed: true,
   };
 }

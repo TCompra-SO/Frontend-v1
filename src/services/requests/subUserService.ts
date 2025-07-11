@@ -7,6 +7,7 @@ export function registerSubUserService(): HttpService {
       ApiRoutes.subUser.register
     }`,
     type: "SU-REG",
+    cookieAllowed: true,
   };
 }
 
@@ -16,6 +17,7 @@ export function getSubUserService(uid: string): HttpService {
       ApiRoutes.subUser.getUser
     }${uid}`,
     type: "SU-GET",
+    cookieAllowed: true,
   };
 }
 
@@ -25,6 +27,7 @@ export function changeRoleSubUserService(): HttpService {
       ApiRoutes.subUser.changeRole
     }`,
     type: "SU-CH-RO",
+    cookieAllowed: true,
   };
 }
 
@@ -34,6 +37,7 @@ export function updateProfileSubUserService(): HttpService {
       ApiRoutes.subUser.update
     }`,
     type: "SU-UP-PR",
+    cookieAllowed: true,
   };
 }
 
@@ -43,6 +47,7 @@ export function searchSubUsersService(): HttpService {
       ApiRoutes.subUser.searchSubUser
     }`,
     type: "SU-SE",
+    cookieAllowed: true,
   };
 }
 
@@ -52,5 +57,6 @@ export function changeStatusSubUserService(): HttpService {
       ApiRoutes.subUser.changeStatus
     }`,
     type: "SU-UP-ST",
+    cookieAllowed: true,
   };
 }

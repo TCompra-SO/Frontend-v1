@@ -7,6 +7,7 @@ export function createSaleOfferService(): HttpService {
       ApiRoutes.offers.create
     }`,
     type: "OFSA-CRE",
+    cookieAllowed: true,
   };
 }
 
@@ -16,6 +17,7 @@ export function getSaleOfferByIdService(id: string): HttpService {
       ApiRoutes.offers.getDetailOffer
     }${id}`,
     type: "OFSA-GET-ID",
+    cookieAllowed: true,
   };
 }
 
@@ -29,6 +31,7 @@ export function getSaleOffersBySaleIdService(
       ApiRoutes.offers.getOffersByRequirement
     }${reqId}/${page}/${pageSize}`,
     type: "OFSA-GET-RID",
+    cookieAllowed: true,
   };
 }
 
@@ -38,6 +41,7 @@ export function getBasicRateDataSaleOfferService(id: string): HttpService {
       ApiRoutes.offers.getBasicRateData
     }${id}`,
     type: "OFSA-BA-RA",
+    cookieAllowed: true,
   };
 }
 
@@ -52,6 +56,7 @@ export function getSaleOffersByEntityService(
       ApiRoutes.offers.getOffersByEntity
     }${id}/${page}/${pageSize}`,
     type: "OFSA-GET-ENT",
+    cookieAllowed: true,
   };
 }
 
@@ -66,6 +71,7 @@ export function getSaleOffersBySubUserService(
       ApiRoutes.offers.getOffersBySubUser
     }${id}/${page}/${pageSize}`,
     type: "OFSA-GET-SUB",
+    cookieAllowed: true,
   };
 }
 
@@ -75,6 +81,7 @@ export function deleteSaleOfferService(id: string): HttpService {
       ApiRoutes.offers.delete
     }${id}`,
     type: "OFSA-DEL",
+    cookieAllowed: true,
   };
 }
 
@@ -84,6 +91,7 @@ export function culminateSaleOfferService(): HttpService {
       ApiRoutes.offers.culminate
     }`,
     type: "OFSA-CUL",
+    cookieAllowed: true,
   };
 }
 
@@ -96,6 +104,7 @@ export function getValidationSaleOfferService(
       ApiRoutes.offers.getValidation
     }${userId}/${requirementId}`,
     type: "OFSA-VAL",
+    cookieAllowed: true,
   };
 }
 
@@ -105,6 +114,7 @@ export function cancelSaleOfferService(): HttpService {
       ApiRoutes.offers.cancel
     }`,
     type: "OFSA-CAN",
+    cookieAllowed: true,
   };
 }
 
@@ -114,6 +124,7 @@ export function searchSaleOffersService(): HttpService {
       ApiRoutes.offers.searchOffers
     }`,
     type: "OFSA-SE-OF",
+    cookieAllowed: true,
   };
 }
 
@@ -123,6 +134,7 @@ export function uploadDocsSaleOfferService(): HttpService {
       ApiRoutes.documents.uploadDocumentsOffer
     }`,
     type: "OFSA-DO-UP",
+    cookieAllowed: true,
   };
 }
 
@@ -132,5 +144,6 @@ export function uploadImagesSaleOfferService(): HttpService {
       ApiRoutes.images.uploadImagesOffer
     }`,
     type: "OFSA-IM-UP",
+    cookieAllowed: true,
   };
 }

@@ -8,6 +8,7 @@ export function getReqPurchaseOrderPDFService(id: string): HttpService {
       ApiMainRoutes.purchaseOrder
     }${ApiRoutes.purchaseOrder.getPurchaseOrderPDF}${id}`,
     type: "PO-PDF",
+    cookieAllowed: true,
   };
 }
 
@@ -17,6 +18,7 @@ export function getReqPurchaseOrderByIdService(id: string): HttpService {
       ApiMainRoutes.purchaseOrder
     }${ApiRoutes.purchaseOrder.getPurchaseOrderById}${id}`,
     type: "PO-ID",
+    cookieAllowed: true,
   };
 }
 
@@ -34,6 +36,7 @@ export function getReqPurchaseOrdersByClientEntityService(
       ApiRoutes.purchaseOrder.getPurchaseOrdersByClient
     }${id}/${userRole}/${page}/${pageSize}`,
     type: "PO-GET-ENT-C",
+    cookieAllowed: true,
   };
 }
 
@@ -51,6 +54,7 @@ export function getReqPurchaseOrdersByProviderEntityService(
       ApiRoutes.purchaseOrder.getPurchaseOrdersByProvider
     }${id}/${userRole}/${page}/${pageSize}`,
     type: "PO-GET-ENT-P",
+    cookieAllowed: true,
   };
 }
 
@@ -60,6 +64,7 @@ export function searchReqPurchaseOrdersByClientService(): HttpService {
       ApiMainRoutes.purchaseOrder
     }${ApiRoutes.purchaseOrder.searchPurchaseOrdersByClient}`,
     type: "PO-SE-CL",
+    cookieAllowed: true,
   };
 }
 
@@ -69,5 +74,6 @@ export function searchReqPurchaseOrdersByProviderService(): HttpService {
       ApiMainRoutes.purchaseOrder
     }${ApiRoutes.purchaseOrder.searchPurchaseOrdersByProvider}`,
     type: "PO-SE-PR",
+    cookieAllowed: true,
   };
 }

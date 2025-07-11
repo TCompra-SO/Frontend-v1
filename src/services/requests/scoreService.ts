@@ -7,5 +7,6 @@ export function registerScoreService(): HttpService {
       ApiRoutes.score.registerScore
     }`,
     type: "SC-REG",
+    cookieAllowed: true,
   };
 }

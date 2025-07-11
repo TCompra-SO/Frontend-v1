@@ -7,6 +7,7 @@ export function createServiceOfferService(): HttpService {
       ApiRoutes.offers.create
     }`,
     type: "OFSE-CRE",
+    cookieAllowed: true,
   };
 }
 
@@ -16,6 +17,7 @@ export function getServiceOfferByIdService(id: string): HttpService {
       ApiRoutes.offers.getDetailOffer
     }${id}`,
     type: "OFSE-GET-ID",
+    cookieAllowed: true,
   };
 }
 
@@ -29,6 +31,7 @@ export function getServiceOffersByServiceIdService(
       ApiRoutes.offers.getOffersByRequirement
     }${reqId}/${page}/${pageSize}`,
     type: "OFSE-GET-RID",
+    cookieAllowed: true,
   };
 }
 
@@ -38,6 +41,7 @@ export function getBasicRateDataServiceOfferService(id: string): HttpService {
       ApiRoutes.offers.getBasicRateData
     }${id}`,
     type: "OFSE-BA-RA",
+    cookieAllowed: true,
   };
 }
 
@@ -52,6 +56,7 @@ export function getServiceOffersByEntityService(
       ApiRoutes.offers.getOffersByEntity
     }${id}/${page}/${pageSize}`,
     type: "OFSE-GET-ENT",
+    cookieAllowed: true,
   };
 }
 
@@ -66,6 +71,7 @@ export function getServiceOffersBySubUserService(
       ApiRoutes.offers.getOffersBySubUser
     }${id}/${page}/${pageSize}`,
     type: "OFSE-GET-SUB",
+    cookieAllowed: true,
   };
 }
 
@@ -75,6 +81,7 @@ export function deleteServiceOfferService(id: string): HttpService {
       ApiRoutes.offers.delete
     }${id}`,
     type: "OFSE-DEL",
+    cookieAllowed: true,
   };
 }
 
@@ -84,6 +91,7 @@ export function culminateServiceOfferService(): HttpService {
       ApiRoutes.offers.culminate
     }`,
     type: "OFSE-CUL",
+    cookieAllowed: true,
   };
 }
 
@@ -96,6 +104,7 @@ export function getValidationServiceOfferService(
       ApiRoutes.offers.getValidation
     }${userId}/${requirementId}`,
     type: "OFSE-VAL",
+    cookieAllowed: true,
   };
 }
 
@@ -105,6 +114,7 @@ export function cancelServiceOfferService(): HttpService {
       ApiRoutes.offers.cancel
     }`,
     type: "OFSE-CAN",
+    cookieAllowed: true,
   };
 }
 
@@ -114,6 +124,7 @@ export function searchServiceOffersService(): HttpService {
       ApiRoutes.offers.searchOffers
     }`,
     type: "OFSE-SE-OF",
+    cookieAllowed: true,
   };
 }
 
@@ -123,6 +134,7 @@ export function uploadDocsServiceOfferService(): HttpService {
       ApiRoutes.documents.uploadDocumentsOffer
     }`,
     type: "OFSE-DO-UP",
+    cookieAllowed: true,
   };
 }
 
@@ -132,5 +144,6 @@ export function uploadImagesServiceOfferService(): HttpService {
       ApiRoutes.images.uploadImagesOffer
     }`,
     type: "OFSE-IM-UP",
+    cookieAllowed: true,
   };
 }

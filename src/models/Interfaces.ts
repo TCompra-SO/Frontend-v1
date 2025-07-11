@@ -393,6 +393,7 @@ export type TableType =
 export interface HttpService {
   url: string;
   type: string;
+  cookieAllowed: boolean;
 }
 
 export interface useApiParams<T = any> {

@@ -7,5 +7,6 @@ export function getStatisticsService(companyId: string): HttpService {
       ApiRoutes.reports.statistics
     }${companyId}`,
     type: "RE-ST",
+    cookieAllowed: true,
   };
 }
