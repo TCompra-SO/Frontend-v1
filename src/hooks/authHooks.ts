@@ -35,7 +35,10 @@ import { MainSocketsContext } from "../contexts/MainSocketsContext";
 import makeRequest, {
   getTokenExpirationTime,
 } from "../utilities/globalFunctions";
-import { logoutService } from "../services/requests/authService";
+import {
+  getCsrfTokenService,
+  logoutService,
+} from "../services/requests/authService";
 import { LogoutRequest } from "../models/Requests";
 import { setIsLoading } from "../redux/loadingSlice";
 import { AppDispatch } from "../redux/store";
@@ -138,18 +141,8 @@ export function useLoadUserInfo() {
     refreshTokenAndHandleResult,
   } = useContext(MainSocketsContext);
   const logout = useLogout();
-
-  // function checkToken() {
-  //   try {
-  //     // check if token has expired.refresh token
-  //     // return true;
-  //     throw Error;
-  //   } catch (err) {
-  //     console.log("error in token");
-  //     logout();
-  //     return false;
-  //   }
-  // }
+  const { showNotification } = useShowNotification();
+  const { t } = useTranslation();
 
   async function loadUserInfo(refreshAccessToken: boolean) {
     if (refreshAccessToken) await refreshTokenAndHandleResult(true);
@@ -194,12 +187,27 @@ export function useLoadUserInfo() {
         if (!(user && subUser)) {
           logout();
         }
+        // Si se cargó con exito los datos del usuario, solicitar CSRF token
+        await requestCSRFToken();
         return;
       }
       logout();
       return;
     }
     logout();
+  }
+
+  /**
+   * Obtiene el CSRF token en un cookie
+   */
+  async function requestCSRFToken() {
+    const { error } = await makeRequest({
+      service: getCsrfTokenService(),
+      method: "get",
+    });
+    if (error) {
+      showNotification("warning", t("CSRFTokenError"));
+    }
   }
 
   return loadUserInfo;

@@ -10,6 +10,8 @@ import {
 } from "../utilities/types";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
+import { csrfTokenName } from "../utilities/globals";
+import { getCookie } from "../utilities/globalFunctions";
 
 axios.defaults.withCredentials = true;
 
@@ -35,9 +37,11 @@ export default function useApi<T = any>(
   },
   useReduxToken?: boolean
 ) {
-  const userToken = useReduxToken
-    ? useSelector((state: MainState) => state.user.token)
-    : undefined;
+  let userToken: string | undefined = useSelector(
+    (state: MainState) => state.user.token
+  );
+  userToken = useReduxToken ? userToken : undefined;
+  const csrfToken = getCookie(csrfTokenName);
   const { t } = useTranslation();
   const [loading, setLoading] = useState<boolean | undefined>(undefined);
   const [responseData, setResponseData] = useState<ResponseRequestType>(null);
@@ -66,6 +70,7 @@ export default function useApi<T = any>(
                   : userToken
                   ? `Bearer ${userToken}`
                   : undefined,
+                [csrfTokenName]: csrfToken,
                 "Content-Type": "application/json",
               }
             : {

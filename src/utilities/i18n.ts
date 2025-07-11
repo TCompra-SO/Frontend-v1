@@ -247,7 +247,7 @@ const resources = {
       alreadyMadeOffer: "You have already made an offer",
       requirementNotFound: "The requirement could not be found",
       saleNotFound: "The sale could not be found",
-      errorOccurredLoginAgain: "An error occurred. Log in again",
+      errorOccurredLoginAgain: "An error occurred. Please, log in again",
       offerCreatedSuccessfully: "Offer created successfully",
       offerCreatedSuccessfullyNoDocOrImages:
         "Offer created successfully, but there were errors uploading files and/or images",
@@ -390,6 +390,7 @@ const resources = {
         "A buyer/seller is permitted to submit offers and create sales, goods and services requirements.",
       agreeToSaleTermsAndConditions:
         "I accept the Terms and Conditions for liquidations",
+      CSRFTokenError: "An error occurred. Reload page, please.",
       // Other
       characters: "characters",
       yes: "Yes",
@@ -1000,6 +1001,7 @@ const resources = {
         "Un vendedor/comprador puede crear y hacer ofertas requerimientos y liquidaciones.",
       agreeToSaleTermsAndConditions:
         "Acepto los Términos y Condiciones de liquidaciones",
+      CSRFTokenError: "Se produjo un error. Por favor, recargue la página.",
       // Other
       characters: "caracteres",
       yes: "Sí",

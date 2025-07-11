@@ -153,3 +153,12 @@ export function logoutService(): HttpService {
     type: "AU-LOG-OU",
   };
 }
+
+export function getCsrfTokenService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+      ApiRoutes.auth.getCsrfToken
+    }`,
+    type: "AU-GET-CSRF",
+  };
+}

@@ -245,3 +245,6 @@ export const userCounterKeys: Record<keyof UserCounters, true> = {
   numSellingOrdersProvider: true,
   numSellingOrdersClient: true,
 };
+
+// Cookies
+export const csrfTokenName = "X-CSRF-Token";

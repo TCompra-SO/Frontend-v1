@@ -9,6 +9,7 @@ import {
   useApiParams,
 } from "../models/Interfaces";
 import {
+  csrfTokenName,
   defaultCountry,
   fieldNameSearchRequestAllOrderClient,
   fieldNameSearchRequestAllOrderProvider,
@@ -438,6 +439,7 @@ export default async function makeRequest<T = any>(
   useReduxToken?: boolean
 ) {
   const userToken = useReduxToken ? store.getState().user.token : undefined;
+  const csrfToken = getCookie(csrfTokenName);
   let responseData: ResponseRequestType = null;
   let errorMsg: ErrorMsgRequestType = null;
   let error: ErrorRequestType = null;
@@ -454,6 +456,7 @@ export default async function makeRequest<T = any>(
             : userToken
             ? `Bearer ${userToken}`
             : undefined,
+          [csrfTokenName]: csrfToken,
           "Content-Type": "application/json",
         },
       };
@@ -1070,4 +1073,11 @@ export function isChatMessage(
   obj: ChatMessage | BasicChatMessage
 ): obj is ChatMessage {
   return "chatId" in obj;
+}
+
+// Obtener cookie
+export function getCookie(name: string) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(";").shift();
 }
