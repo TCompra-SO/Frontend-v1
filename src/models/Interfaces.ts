@@ -393,6 +393,7 @@ export type TableType =
 export interface HttpService {
   url: string;
   type: string;
+  cookieAllowed: boolean;
 }
 
 export interface useApiParams<T = any> {
@@ -589,8 +590,6 @@ export interface LoginResponse {
     lastSession: string;
     premium: boolean;
   }[];
-  refreshToken: string;
-  accessToken: string;
   accessExpiresIn: number;
   refreshExpiresIn: number;
 }
@@ -601,14 +600,11 @@ export interface NotificationSearchData {
 }
 
 export interface RefreshAccessTokenResponse {
-  accessToken: string;
   expiresIn: number;
 }
 
 export interface RefreshRefreshTokenResponse {
-  accessToken: string;
   accessExpiresIn: number;
-  refreshToken: string;
   refreshExpiresIn: number;
 }
 

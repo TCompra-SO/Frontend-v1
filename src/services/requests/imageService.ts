@@ -7,5 +7,6 @@ export function uploadAvatarService(): HttpService {
       ApiRoutes.image.uploadAvatar
     }`,
     type: "IM-UP-AV",
+    cookieAllowed: true,
   };
 }

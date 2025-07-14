@@ -7,6 +7,7 @@ export function createChatService(): HttpService {
       ApiRoutes.chat.createChat
     }`,
     type: "CH-CR-CH",
+    cookieAllowed: true,
   };
 }
 
@@ -16,6 +17,7 @@ export function getChatService(): HttpService {
       ApiRoutes.chat.getChat
     }`,
     type: "CH-GE-CH",
+    cookieAllowed: true,
   };
 }
 
@@ -25,6 +27,7 @@ export function createChatMessageService(): HttpService {
       ApiRoutes.chat.createMessage
     }`,
     type: "CH-CR-ME",
+    cookieAllowed: true,
   };
 }
 
@@ -34,6 +37,7 @@ export function markChatMessagesAsReadService(): HttpService {
       ApiRoutes.chat.readMessages
     }`,
     type: "CH-RE-ME",
+    cookieAllowed: true,
   };
 }
 
@@ -43,6 +47,7 @@ export function getChatMessagesService(): HttpService {
       ApiRoutes.chat.getMessages
     }`,
     type: "CH-GE-MES",
+    cookieAllowed: true,
   };
 }
 
@@ -52,6 +57,7 @@ export function getChatMessageService(): HttpService {
       ApiRoutes.chat.getMessage
     }`,
     type: "CH-GE-ME",
+    cookieAllowed: true,
   };
 }
 
@@ -61,6 +67,7 @@ export function getChatListService(): HttpService {
       ApiRoutes.chat.getChatUsersData
     }`,
     type: "CH-GE-CL",
+    cookieAllowed: true,
   };
 }
 
@@ -70,6 +77,7 @@ export function getArchivedChatListService(): HttpService {
       ApiRoutes.chat.getArchivedChats
     }`,
     type: "CH-GE-ACL",
+    cookieAllowed: true,
   };
 }
 
@@ -79,6 +87,7 @@ export function changeStateConnectionService(): HttpService {
       ApiRoutes.chat.changeStateConnection
     }`,
     type: "CH-CH-CO",
+    cookieAllowed: true,
   };
 }
 
@@ -88,6 +97,7 @@ export function searchChatService(): HttpService {
       ApiRoutes.chat.searchChat
     }`,
     type: "CH-SE-CH",
+    cookieAllowed: true,
   };
 }
 
@@ -97,6 +107,7 @@ export function archiveChatService(): HttpService {
       ApiRoutes.chat.archiveChat
     }`,
     type: "CH-AR-CH",
+    cookieAllowed: true,
   };
 }
 
@@ -106,6 +117,7 @@ export function getCountMessageUnReadService(userId: string): HttpService {
       ApiRoutes.chat.getCountMessageUnRead
     }${userId}`,
     type: "CH-CO-UN",
+    cookieAllowed: true,
   };
 }
 
@@ -115,5 +127,6 @@ export function getChatStateService(): HttpService {
       ApiRoutes.chat.getChatState
     }`,
     type: "CH-GE-ST",
+    cookieAllowed: true,
   };
 }

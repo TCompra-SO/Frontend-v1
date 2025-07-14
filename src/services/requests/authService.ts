@@ -7,6 +7,7 @@ export function loginService(): HttpService {
       ApiRoutes.auth.login
     }`,
     type: "AU-LOG",
+    cookieAllowed: true,
   };
 }
 
@@ -16,6 +17,7 @@ export function profileCompanyService(): HttpService {
       ApiRoutes.auth.profileCompany
     }`,
     type: "AU-PR-CO",
+    cookieAllowed: true,
   };
 }
 
@@ -25,6 +27,7 @@ export function profileUserService(): HttpService {
       ApiRoutes.auth.profileUser
     }`,
     type: "AU-PR-US",
+    cookieAllowed: true,
   };
 }
 
@@ -34,6 +37,7 @@ export function updateProfileCompanyService(): HttpService {
       ApiRoutes.auth.updateCompany
     }`,
     type: "AU-UP-PR-CO",
+    cookieAllowed: true,
   };
 }
 
@@ -43,6 +47,7 @@ export function updateProfileUserService(): HttpService {
       ApiRoutes.auth.updateUser
     }`,
     type: "AU-UP-PR-US",
+    cookieAllowed: true,
   };
 }
 
@@ -52,6 +57,7 @@ export function registerService(): HttpService {
       ApiRoutes.auth.register
     }`,
     type: "AU-REG",
+    cookieAllowed: true,
   };
 }
 
@@ -61,6 +67,7 @@ export function sendCodeService(): HttpService {
       ApiRoutes.auth.sendCode
     }`,
     type: "AU-SE-CO",
+    cookieAllowed: true,
   };
 }
 
@@ -70,6 +77,7 @@ export function validateCodeService(): HttpService {
       ApiRoutes.auth.validateCode
     }`,
     type: "AU-VA-CO",
+    cookieAllowed: true,
   };
 }
 
@@ -79,6 +87,7 @@ export function sendCodeRecoveryService(): HttpService {
       ApiRoutes.auth.sendCodeRecovery
     }`,
     type: "AU-SE-CO-RE",
+    cookieAllowed: true,
   };
 }
 
@@ -88,6 +97,7 @@ export function recoverPasswordService(): HttpService {
       ApiRoutes.auth.recoverPassword
     }`,
     type: "AU-RE-PA",
+    cookieAllowed: true,
   };
 }
 
@@ -97,6 +107,7 @@ export function newPasswordService(): HttpService {
       ApiRoutes.auth.newPassword
     }`,
     type: "AU-NE-PA",
+    cookieAllowed: true,
   };
 }
 
@@ -106,6 +117,7 @@ export function getBaseDataUserService(uid: string): HttpService {
       ApiRoutes.auth.getBaseDataUser
     }${uid}`,
     type: "AU-GE-BD-US",
+    cookieAllowed: true,
   };
 }
 
@@ -115,6 +127,7 @@ export function getUserService(uid: string): HttpService {
       ApiRoutes.auth.getUser
     }${uid}`,
     type: "AU-GE-US",
+    cookieAllowed: true,
   };
 }
 
@@ -124,6 +137,7 @@ export function searchCompanyByNameService(name: string): HttpService {
       ApiRoutes.auth.searchCompanyByName
     }${name}`,
     type: "AU-SE-CO-NA",
+    cookieAllowed: true,
   };
 }
 
@@ -133,6 +147,7 @@ export function refreshAccessTokenService(): HttpService {
       ApiRoutes.auth.refreshAccessToken
     }`,
     type: "AU-RE-AC-TO",
+    cookieAllowed: true,
   };
 }
 
@@ -142,6 +157,7 @@ export function refreshRefreshTokenService(): HttpService {
       ApiRoutes.auth.refreshRefreshToken
     }`,
     type: "AU-RE-RE-TO",
+    cookieAllowed: true,
   };
 }
 
@@ -151,5 +167,16 @@ export function logoutService(): HttpService {
       ApiRoutes.auth.logout
     }`,
     type: "AU-LOG-OU",
+    cookieAllowed: true,
+  };
+}
+
+export function getCsrfTokenService(): HttpService {
+  return {
+    url: `${import.meta.env.VITE_API_BASE_URL}${ApiMainRoutes.auth}${
+      ApiRoutes.auth.getCsrfToken
+    }`,
+    type: "AU-GET-CSRF",
+    cookieAllowed: true,
   };
 }

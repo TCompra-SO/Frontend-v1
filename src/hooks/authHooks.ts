@@ -5,8 +5,6 @@ import {
   refreshExpiresInKey,
   refreshingRefreshTokenKey,
   refreshingTokenKey,
-  refreshTokenKey,
-  tokenKey,
   userDataKey,
 } from "../utilities/globals";
 import {
@@ -19,7 +17,6 @@ import {
   setEmail,
   setFullUser,
   setIsLoggedIn,
-  setToken,
   setUid,
   setUser,
   setUserName,
@@ -38,7 +35,10 @@ import { MainSocketsContext } from "../contexts/MainSocketsContext";
 import makeRequest, {
   getTokenExpirationTime,
 } from "../utilities/globalFunctions";
-import { logoutService } from "../services/requests/authService";
+import {
+  getCsrfTokenService,
+  logoutService,
+} from "../services/requests/authService";
 import { LogoutRequest } from "../models/Requests";
 import { setIsLoading } from "../redux/loadingSlice";
 import { AppDispatch } from "../redux/store";
@@ -53,14 +53,8 @@ export function useLogin() {
     const loginResponse: LoginResponse = responseData.res;
     dispatch(setUser(loginResponse));
 
-    if (
-      loginResponse &&
-      loginResponse.accessToken &&
-      loginResponse.refreshToken
-    ) {
+    if (loginResponse) {
       dispatch(setIsLoading(true));
-      localStorage.setItem(tokenKey, loginResponse.accessToken);
-      localStorage.setItem(refreshTokenKey, loginResponse.refreshToken);
       if (loginResponse.accessExpiresIn) {
         const tokenExp = getTokenExpirationTime(loginResponse.accessExpiresIn);
         localStorage.setItem(expiresInKey, tokenExp.toString());
@@ -112,19 +106,14 @@ export function useLogout() {
   async function logout() {
     if (isLoggedInRef.current) {
       dispatch(setIsLoading(true));
-      const refreshToken = localStorage.getItem(refreshTokenKey);
-      if (refreshToken) {
-        await makeRequest<LogoutRequest>({
-          service: logoutService(),
-          method: "post",
-          dataToSend: {
-            userId: uidRef.current,
-            refreshToken,
-          },
-        });
-      }
-      localStorage.removeItem(tokenKey);
-      localStorage.removeItem(refreshTokenKey);
+      await makeRequest<LogoutRequest>({
+        service: logoutService(),
+        method: "post",
+        dataToSend: {
+          userId: uidRef.current,
+        },
+      });
+
       localStorage.removeItem(userDataKey);
       localStorage.removeItem(expiresInKey);
       localStorage.removeItem(refreshExpiresInKey);
@@ -152,80 +141,73 @@ export function useLoadUserInfo() {
     refreshTokenAndHandleResult,
   } = useContext(MainSocketsContext);
   const logout = useLogout();
-
-  // function checkToken() {
-  //   try {
-  //     // check if token has expired.refresh token
-  //     // return true;
-  //     throw Error;
-  //   } catch (err) {
-  //     console.log("error in token");
-  //     logout();
-  //     return false;
-  //   }
-  // }
+  const { showNotification } = useShowNotification();
+  const { t } = useTranslation();
 
   async function loadUserInfo(refreshAccessToken: boolean) {
-    let refreshTokenData = localStorage.getItem(refreshTokenKey);
-    if (refreshTokenData) {
-      if (refreshAccessToken) await refreshTokenAndHandleResult(true);
-      const userData = localStorage.getItem(userDataKey);
-      const tokenData = localStorage.getItem(tokenKey);
-      const expiresIn = localStorage.getItem(expiresInKey);
-      const refreshExpiresIn = localStorage.getItem(refreshExpiresInKey);
-      refreshTokenData = localStorage.getItem(refreshTokenKey);
-      if (
-        tokenData &&
-        refreshTokenData &&
-        userData &&
-        expiresIn !== null &&
-        refreshExpiresIn !== null
-      ) {
-        const userInfo = JSON.parse(decryptData(userData));
-        setTokenExpiration(Number(expiresIn));
-        setRefreshTokenExpiration(Number(refreshExpiresIn));
-        // if (!checkToken()) return;
-        if (userInfo) {
-          // localStorage.setItem(tokenKey, userInfo.token);
-          dispatch(setToken(tokenData));
-          dispatch(
-            setUser({
-              token: userInfo.token,
-              dataUser: [
-                {
-                  uid: userInfo.uid,
-                  name: userInfo.name,
-                  email: userInfo.email,
-                  typeID: userInfo.typeID,
-                  planID: userInfo.planID,
-                  type: userInfo.typeEntity,
-                },
-              ],
-            })
-          );
-          const { user, subUser } = await getBaseUserForUserSubUser(
-            userInfo.uid,
-            true
-          );
-          if (!user) {
-            logout();
-            return;
-          } else {
-            dispatch(setMainUser(user));
-          }
-          if (subUser) {
-            dispatch(loginUser(subUser));
-          }
-          if (!(user && subUser)) {
-            logout();
-          }
+    if (refreshAccessToken) await refreshTokenAndHandleResult(true);
+    const userData = localStorage.getItem(userDataKey);
+    const expiresIn = localStorage.getItem(expiresInKey);
+    const refreshExpiresIn = localStorage.getItem(refreshExpiresInKey);
+    if (userData && expiresIn !== null && refreshExpiresIn !== null) {
+      const userInfo = JSON.parse(decryptData(userData));
+      setTokenExpiration(Number(expiresIn));
+      setRefreshTokenExpiration(Number(refreshExpiresIn));
+      // if (!checkToken()) return;
+      if (userInfo) {
+        // localStorage.setItem(tokenKey, userInfo.token);
+        dispatch(
+          setUser({
+            token: userInfo.token,
+            dataUser: [
+              {
+                uid: userInfo.uid,
+                name: userInfo.name,
+                email: userInfo.email,
+                typeID: userInfo.typeID,
+                planID: userInfo.planID,
+                type: userInfo.typeEntity,
+              },
+            ],
+          })
+        );
+        const { user, subUser } = await getBaseUserForUserSubUser(
+          userInfo.uid,
+          true
+        );
+        if (!user) {
+          logout();
           return;
+        } else {
+          dispatch(setMainUser(user));
         }
-        logout();
+        if (subUser) {
+          dispatch(loginUser(subUser));
+        }
+        if (!(user && subUser)) {
+          logout();
+        }
+        // Si se cargó con exito los datos del usuario, solicitar CSRF token
+        await requestCSRFToken();
         return;
       }
+      logout();
+      return;
     }
     logout();
+  }
+
+  /**
+   * Obtiene el CSRF token en un cookie
+   */
+  async function requestCSRFToken() {
+    const { error } = await makeRequest({
+      service: getCsrfTokenService(),
+      method: "get",
+    });
+    if (error) {
+      showNotification("warning", t("CSRFTokenError"));
+    }
   }
 
   return loadUserInfo;

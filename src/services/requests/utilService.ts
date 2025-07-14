@@ -5,6 +5,7 @@ export function TLDsService(): HttpService {
   return {
     url: "https://data.iana.org/TLD/tlds-alpha-by-domain.txt",
     type: "",
+    cookieAllowed: false,
   };
 }
 
@@ -14,6 +15,7 @@ export function countriesService(): HttpService {
       ApiRoutes.util.countries
     }`,
     type: "UT-COU",
+    cookieAllowed: true,
   };
 }
 
@@ -23,6 +25,7 @@ export function categoriesService(): HttpService {
       ApiRoutes.util.categories
     }`,
     type: "UT-CAT",
+    cookieAllowed: true,
   };
 }
 
@@ -32,6 +35,7 @@ export function tenureService(): HttpService {
       ApiRoutes.util.utilData.name
     }${ApiRoutes.util.utilData.items.tenure}`,
     type: "UT-TEN",
+    cookieAllowed: true,
   };
 }
 
@@ -41,6 +45,7 @@ export function currencyService(): HttpService {
       ApiRoutes.util.utilData.name
     }${ApiRoutes.util.utilData.items.currency}`,
     type: "UT-CUR",
+    cookieAllowed: true,
   };
 }
 
@@ -50,6 +55,7 @@ export function paymentMethodService(): HttpService {
       ApiRoutes.util.utilData.name
     }${ApiRoutes.util.utilData.items.methodPayment}`,
     type: "UT-PA-ME",
+    cookieAllowed: true,
   };
 }
 
@@ -59,6 +65,7 @@ export function deliveryTimeService(): HttpService {
       ApiRoutes.util.utilData.name
     }${ApiRoutes.util.utilData.items.deliveryTime}`,
     type: "UT-DE-TI",
+    cookieAllowed: true,
   };
 }
 
@@ -68,6 +75,7 @@ export function whoCanOfferService(): HttpService {
       ApiRoutes.util.utilData.name
     }${ApiRoutes.util.utilData.items.typeBidders}`,
     type: "UT-WH-CA-OF",
+    cookieAllowed: true,
   };
 }
 
@@ -77,6 +85,7 @@ export function getNameReniecService(doc: string): HttpService {
       ApiRoutes.root.getName
     }${doc}`,
     type: "UT-GE-NA-RE",
+    cookieAllowed: true,
   };
 }
 
@@ -86,6 +95,7 @@ export function userRolesService(): HttpService {
       ApiRoutes.util.userRoles
     }`,
     type: "UT-US-RO",
+    cookieAllowed: true,
   };
 }
 
@@ -95,5 +105,6 @@ export function chatBotService(): HttpService {
       ApiRoutes.util.chatBot
     }`,
     type: "UT-CH-BO",
+    cookieAllowed: true,
   };
 }

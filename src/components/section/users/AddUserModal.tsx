@@ -50,7 +50,6 @@ export default function AddUserModal(props: AddUserModalProps) {
   const [roleSuccess, setRoleSuccess] = useState(false);
   const [profileSuccess, setProfileSuccess] = useState(false);
   const [changePassword, setChangePassword] = useState(false);
-  const [token] = useState(useSelector((state: MainState) => state.user.token));
   const [validDoc, setValidDoc] = useState(false);
   const [infoText, setInfoText] = useState("allDataIsImportant");
   const [buttonWidth, setButtonWidth] = useState("wd-25");
@@ -74,7 +73,6 @@ export default function AddUserModal(props: AddUserModalProps) {
   >({
     service: null,
     method: "get",
-    token,
   });
   const [apiParamsChangeRole, setApiParamsChangeRole] = useState<
     useApiParams<ChangeRoleSubUserRequest>
@@ -302,7 +300,6 @@ export default function AddUserModal(props: AddUserModalProps) {
         service: newPasswordService(),
         method: "post",
         dataToSend: password,
-        token: token,
       });
     }
 

@@ -9,6 +9,7 @@ import {
   useApiParams,
 } from "../models/Interfaces";
 import {
+  csrfTokenName,
   defaultCountry,
   fieldNameSearchRequestAllOrderClient,
   fieldNameSearchRequestAllOrderProvider,
@@ -433,38 +434,28 @@ export function getNestedValue(dataIndex: string, record: any) {
 }
 
 // Hace una solicitud http
-export default async function makeRequest<T = any>({
-  service,
-  method,
-  dataToSend,
-  token,
-}: useApiParams<T>) {
-  const userToken = store.getState().user.token;
+export default async function makeRequest<T = any>(
+  apiParams: useApiParams<T>,
+  useReduxToken?: boolean
+) {
+  const { service } = apiParams;
+  const reduxToken = useReduxToken ? store.getState().user.token : undefined;
+  const csrfToken = getCookie(csrfTokenName);
   let responseData: ResponseRequestType = null;
   let errorMsg: ErrorMsgRequestType = null;
   let error: ErrorRequestType = null;
 
   if (service) {
-    try {
-      const config: AxiosRequestConfig = {
-        method: method,
-        url: service.url,
-        data: dataToSend,
-        headers: {
-          Authorization: token
-            ? `Bearer ${token}`
-            : userToken
-            ? `Bearer ${userToken}`
-            : undefined,
-          "Content-Type": "application/json",
-        },
-      };
-      const result: AxiosResponse = await axios(config);
-      responseData = result.data;
-    } catch (err) {
-      console.log("HTTP error:", err);
-      error = err as AxiosError;
-      errorMsg = i18next.t(httpErrorInterceptor(err, service.type));
+    const config = getAxiosConfig(apiParams, reduxToken, csrfToken);
+    if (config) {
+      try {
+        const result: AxiosResponse = await axios(config);
+        responseData = result.data;
+      } catch (err) {
+        console.log("HTTP error:", err);
+        error = err as AxiosError;
+        errorMsg = i18next.t(httpErrorInterceptor(err, service.type));
+      }
     }
   }
   return { responseData, error, errorMsg };
@@ -1072,4 +1063,48 @@ export function isChatMessage(
   obj: ChatMessage | BasicChatMessage
 ): obj is ChatMessage {
   return "chatId" in obj;
+}
+
+// Obtener cookie
+export function getCookie(name: string) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(";").shift();
+}
+
+// Retorna configuración de axios para solicitud http
+export function getAxiosConfig(
+  { service, method, dataToSend, token, includeHeader = true }: useApiParams,
+  reduxToken: string | undefined,
+  csrfToken: string | undefined
+) {
+  if (service) {
+    // Orden de prioridad
+    // - token pasado como parámetro
+    // - token de redux
+    const headers: Record<string, string | undefined> | undefined =
+      includeHeader
+        ? {
+            Authorization: token
+              ? `Bearer ${token}`
+              : reduxToken
+              ? `Bearer ${reduxToken}`
+              : undefined,
+
+            "Content-Type": "application/json",
+          }
+        : undefined;
+    // Si se va a enviar cookies (backend), enviar CSRF token en header
+    if (service.cookieAllowed && headers) headers[csrfTokenName] = csrfToken;
+
+    const config: AxiosRequestConfig = {
+      method: method,
+      url: service.url,
+      data: dataToSend,
+      headers,
+      withCredentials: service.cookieAllowed,
+    };
+    return config;
+  }
+  return null;
 }

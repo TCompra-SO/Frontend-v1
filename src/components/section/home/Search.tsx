@@ -71,7 +71,7 @@ export default function Search() {
               ? "homeTitle"
               : t(`homeTitle${imgIndex}`)}
           </h2>
-          <h3 className="m-0">{t("homeSubtitle")}</h3>
+          <h3 className="m-0 highlighted-text">{t("homeSubtitle")}</h3>
         </div>
         <div className="t-flex gap-10 ht-s2" style={{ width: "50%" }}>
           <InputContainer

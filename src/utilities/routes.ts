@@ -41,6 +41,7 @@ export const ApiRoutes = {
     searchCompanyByName: "searchCompany/",
     refreshAccessToken: "refreshAccessToken",
     refreshRefreshToken: "refreshToken",
+    getCsrfToken: "getCsrfToken/",
   },
   util: {
     chatBot: "chatBot/",

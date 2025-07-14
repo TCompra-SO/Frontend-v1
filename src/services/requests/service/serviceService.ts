@@ -10,6 +10,7 @@ export function getServicesService(
       ApiRoutes.requirements.getRequirements
     }${page}/${pageSize}`,
     type: "SE-GET-ALL",
+    cookieAllowed: true,
   };
 }
 
@@ -19,6 +20,7 @@ export function createServiceService(): HttpService {
       ApiRoutes.requirements.create
     }`,
     type: "SE-CRE",
+    cookieAllowed: true,
   };
 }
 
@@ -31,6 +33,7 @@ export function getServiceByIdService(
       ApiRoutes.requirements.getRequirement
     }${reqId}`,
     type: showErrorMessage ? "SE-GET-ID" : "",
+    cookieAllowed: true,
   };
 }
 
@@ -40,6 +43,7 @@ export function selectServiceOfferService(): HttpService {
       ApiRoutes.requirements.selectOffer
     }`,
     type: "SE-SE-OF",
+    cookieAllowed: true,
   };
 }
 
@@ -49,6 +53,7 @@ export function getBasicRateDataServiceService(id: string): HttpService {
       ApiRoutes.requirements.getBasicRateData
     }${id}`,
     type: "SE-BA-RA",
+    cookieAllowed: true,
   };
 }
 
@@ -58,6 +63,7 @@ export function deleteServiceService(id: string): HttpService {
       ApiRoutes.requirements.delete
     }${id}`,
     type: "SE-DEL",
+    cookieAllowed: true,
   };
 }
 
@@ -67,6 +73,7 @@ export function republishServiceService(): HttpService {
       ApiRoutes.requirements.republish
     }`,
     type: "SE-REP",
+    cookieAllowed: true,
   };
 }
 
@@ -81,6 +88,7 @@ export function getServicesByEntityService(
       ApiRoutes.requirements.getRequirementsByEntity
     }${id}/${page}/${pageSize}`,
     type: "SE-GET-ENT",
+    cookieAllowed: true,
   };
 }
 
@@ -95,6 +103,7 @@ export function getServicesBySubUserService(
       ApiRoutes.requirements.getRequirementsBySubUser
     }${id}/${page}/${pageSize}`,
     type: "SE-GET-SUB",
+    cookieAllowed: true,
   };
 }
 
@@ -104,6 +113,7 @@ export function culminateServiceService(): HttpService {
       ApiRoutes.requirements.culminate
     }`,
     type: "SE-CUL",
+    cookieAllowed: true,
   };
 }
 
@@ -113,6 +123,7 @@ export function cancelServiceService(): HttpService {
       ApiRoutes.requirements.cancel
     }`,
     type: "SE-CAN",
+    cookieAllowed: true,
   };
 }
 
@@ -122,6 +133,7 @@ export function homeServiceFilterService(): HttpService {
       ApiRoutes.requirements.searchMainFilters
     }`,
     type: "SE-HO-FI",
+    cookieAllowed: true,
   };
 }
 
@@ -131,6 +143,7 @@ export function searchServicesService(): HttpService {
       ApiRoutes.requirements.searchRequirements
     }`,
     type: "SE-SE-RE",
+    cookieAllowed: true,
   };
 }
 
@@ -140,6 +153,7 @@ export function uploadDocsServiceService(): HttpService {
       ApiRoutes.documents.uploadDocumentsReq
     }`,
     type: "SE-DO-UP",
+    cookieAllowed: true,
   };
 }
 
@@ -149,5 +163,6 @@ export function uploadImagesServiceService(): HttpService {
       ApiRoutes.images.uploadImagesReq
     }`,
     type: "SE-IM-UP",
+    cookieAllowed: true,
   };
 }

@@ -7,5 +7,6 @@ export function getAllPlansService(): HttpService {
       ApiRoutes.plan.getAllPlans
     }`,
     type: "PL-GE-AL",
+    cookieAllowed: true,
   };
 }

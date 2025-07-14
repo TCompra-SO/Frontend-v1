@@ -57,7 +57,6 @@ export default function MyProfile() {
   const [form] = Form.useForm();
   const [passwordForm] = Form.useForm();
   const [imageSrc, setImageSrc] = useState(defaultUserImage);
-  const [token] = useState(useSelector((state: MainState) => state.user.token));
   const fileInputRef = useRef<InputRef>(null);
   const uid = useSelector((state: MainState) => state.user.uid);
   const mainUid = useSelector((state: MainState) => state.mainUser.uid);
@@ -68,7 +67,6 @@ export default function MyProfile() {
   const [apiParams, setApiParams] = useState<useApiParams<NewPasswordRequest>>({
     service: null,
     method: "get",
-    token,
   });
   const { loading, responseData, error, errorMsg, fetchData } =
     useApi<NewPasswordRequest>(apiParams);
@@ -98,7 +96,6 @@ export default function MyProfile() {
   const [apiParamsImage, setApiParamsImage] = useState<useApiParams<FormData>>({
     service: null,
     method: "get",
-    token,
     includeHeader: false,
   });
   const {
@@ -166,7 +163,6 @@ export default function MyProfile() {
   >({
     service: null,
     method: "get",
-    token,
   });
 
   const {
@@ -304,7 +300,7 @@ export default function MyProfile() {
       if (entityType == EntityType.COMPANY) {
         data.age = values.tenure;
         data.specialtyID = censorText(values.specialty.trim());
-        data.about_me = censorText(values.aboutMe.trim());
+        data.about_me = values.aboutMe ? censorText(values.aboutMe.trim()) : "";
       }
       setApiParamsForm({
         service:
@@ -331,7 +327,6 @@ export default function MyProfile() {
       service: newPasswordService(),
       method: "post",
       dataToSend: passwordData,
-      token: token,
     });
   }
 

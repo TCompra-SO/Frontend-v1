@@ -248,18 +248,12 @@ export interface ChangeStatusRequest extends IncludeNotificationRequest {
   status: boolean;
 }
 
-export interface RefreshAccessTokenRequest {
-  accessToken: string;
-  refreshToken: string;
-}
+export interface RefreshAccessTokenRequest {}
 
-export interface RefreshRefreshTokenRequest {
-  refreshToken: string;
-}
+export interface RefreshRefreshTokenRequest {}
 
 export interface LogoutRequest {
   userId: string;
-  refreshToken: string;
 }
 
 export interface CreateChatRequest {

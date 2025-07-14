@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import httpErrorInterceptor from "../interceptors/httpErrorInterceptor";
 import { SystemNotificationData, useApiParams } from "../models/Interfaces";
@@ -10,6 +10,8 @@ import {
 } from "../utilities/types";
 import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
+import { csrfTokenName } from "../utilities/globals";
+import { getAxiosConfig, getCookie } from "../utilities/globalFunctions";
 
 export interface UseApiType {
   saveInQueue?: boolean;
@@ -22,7 +24,7 @@ export interface UseApiType {
 }
 
 export default function useApi<T = any>(
-  { service, method, dataToSend, token, includeHeader = true }: useApiParams<T>,
+  apiParams: useApiParams<T>,
   { functionToExecute }: UseApiType = {
     saveInQueue: false,
     functionToExecute: () => {},
@@ -30,9 +32,15 @@ export default function useApi<T = any>(
       type: "error",
       description: null,
     },
-  }
+  },
+  useReduxToken?: boolean
 ) {
-  const userToken = useSelector((state: MainState) => state.user.token);
+  const { service } = apiParams;
+  let reduxToken: string | undefined = useSelector(
+    (state: MainState) => state.user.token
+  );
+  reduxToken = useReduxToken ? reduxToken : undefined;
+  const csrfToken = getCookie(csrfTokenName);
   const { t } = useTranslation();
   const [loading, setLoading] = useState<boolean | undefined>(undefined);
   const [responseData, setResponseData] = useState<ResponseRequestType>(null);
@@ -48,35 +56,20 @@ export default function useApi<T = any>(
   async function fetchData() {
     reset();
     if (service) {
-      setLoading(true);
-      try {
-        const config: AxiosRequestConfig = {
-          method: method,
-          url: service.url,
-          data: dataToSend,
-          headers: includeHeader
-            ? {
-                Authorization: token
-                  ? `Bearer ${token}`
-                  : userToken
-                  ? `Bearer ${userToken}`
-                  : undefined,
-                "Content-Type": "application/json",
-              }
-            : {
-                Authorization: token ? `Bearer ${token}` : undefined,
-              },
-        };
-        // console.log(config);
-        const result: AxiosResponse = await axios(config);
-        setResponseData(result.data);
-      } catch (err) {
-        console.log("HTTP error:", err);
-        const errorMsg_ = t(httpErrorInterceptor(err, service.type));
-        setErrorMsg(errorMsg_);
-        setError(err as AxiosError);
-      } finally {
-        setLoading(false);
+      const config = getAxiosConfig(apiParams, reduxToken, csrfToken);
+      if (config) {
+        setLoading(true);
+        try {
+          const result: AxiosResponse = await axios(config);
+          setResponseData(result.data);
+        } catch (err) {
+          console.log("HTTP error:", err);
+          const errorMsg_ = t(httpErrorInterceptor(err, service.type));
+          setErrorMsg(errorMsg_);
+          setError(err as AxiosError);
+        } finally {
+          setLoading(false);
+        }
       }
     }
   }

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { useLogout } from "../hooks/authHooks";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { MainState } from "../models/Redux";
 import {
   expiresInKey,
@@ -9,9 +9,7 @@ import {
   refreshExpiresInKey,
   refreshingRefreshTokenKey,
   refreshingTokenKey,
-  refreshTokenKey,
   remainingTokenTime,
-  tokenKey,
 } from "../utilities/globals";
 import makeRequest, {
   getTokenExpirationTime,
@@ -24,7 +22,6 @@ import {
   RefreshAccessTokenRequest,
   RefreshRefreshTokenRequest,
 } from "../models/Requests";
-import { setToken } from "../redux/userSlice";
 import useShowNotification from "../hooks/utilHooks";
 import { useTranslation } from "react-i18next";
 import {
@@ -37,7 +34,6 @@ let socketUserAPI: Socket | null = null;
 
 export default function useUserSocket() {
   const logout = useLogout();
-  const dispatch = useDispatch();
   const { t } = useTranslation();
   const { showNotification } = useShowNotification();
   const uid = useSelector((state: MainState) => state.user.uid);
@@ -195,8 +191,6 @@ export default function useUserSocket() {
     const success = await refreshToken(isAccessToken);
     // Si no se pudo refrescar token, cerrar sesión después de un tiempo
     if (success === false) {
-      localStorage.removeItem(tokenKey);
-      localStorage.removeItem(refreshTokenKey);
       localStorage.removeItem(expiresInKey);
       localStorage.removeItem(refreshExpiresInKey);
       setTokenExpiration(null);
@@ -231,65 +225,48 @@ export default function useUserSocket() {
       if (!isAccesToken)
         localStorage.setItem(refreshingRefreshTokenKey, "true");
 
-      const accessToken = localStorage.getItem(tokenKey);
-      const refreshToken = localStorage.getItem(refreshTokenKey);
-      if (
-        (isAccesToken && accessToken && refreshToken) ||
-        (!isAccesToken && refreshToken)
-      ) {
-        let apiParams:
-          | useApiParams<RefreshAccessTokenRequest>
-          | useApiParams<RefreshRefreshTokenRequest>
-          | null = null;
-        if (isAccesToken && accessToken && refreshToken) {
-          const apiParams2: useApiParams<RefreshAccessTokenRequest> = {
-            service: refreshAccessTokenService(),
-            method: "post",
-            dataToSend: {
-              accessToken,
-              refreshToken,
-            },
-          };
-          apiParams = apiParams2;
-        } else if (!isAccesToken && refreshToken) {
-          const apiParams2: useApiParams<RefreshRefreshTokenRequest> = {
-            service: refreshRefreshTokenService(),
-            method: "post",
-            dataToSend: {
-              refreshToken,
-            },
-          };
-          apiParams = apiParams2;
-        }
-
-        if (apiParams) {
-          const { responseData, errorMsg } = await makeRequest(apiParams);
-          if (responseData) {
-            if (isAccesToken) {
-              const respData = responseData as RefreshAccessTokenResponse;
-              saveToken(respData.accessToken, respData.expiresIn, true);
-              window.dispatchEvent(new Event(refreshingTokenKey));
-              socketUserAPI?.emit("authenticate", respData.accessToken);
-              console.log(`Token actualizado correctamente`);
-              return true;
-            } else {
-              const respData = responseData as RefreshRefreshTokenResponse;
-              saveToken(respData.accessToken, respData.accessExpiresIn, true);
-              saveToken(
-                respData.refreshToken,
-                respData.refreshExpiresIn,
-                false
-              );
-              window.dispatchEvent(new Event(refreshingTokenKey));
-              window.dispatchEvent(new Event(refreshingRefreshTokenKey));
-              socketUserAPI?.emit("authenticate", respData.accessToken);
-              console.log("Refresh token actualizado correctamente");
-              return true;
-            }
-          }
-          throw new Error(errorMsg ?? "Refresh token error");
-        }
+      let apiParams:
+        | useApiParams<RefreshAccessTokenRequest>
+        | useApiParams<RefreshRefreshTokenRequest>
+        | null = null;
+      if (isAccesToken) {
+        const apiParams2: useApiParams<RefreshAccessTokenRequest> = {
+          service: refreshAccessTokenService(),
+          method: "post",
+          dataToSend: {},
+        };
+        apiParams = apiParams2;
+      } else if (!isAccesToken) {
+        const apiParams2: useApiParams<RefreshRefreshTokenRequest> = {
+          service: refreshRefreshTokenService(),
+          method: "post",
+          dataToSend: {},
+        };
+        apiParams = apiParams2;
       }
+
+      if (apiParams) {
+        const { responseData, errorMsg } = await makeRequest(apiParams);
+        if (responseData) {
+          if (isAccesToken) {
+            const respData = responseData as RefreshAccessTokenResponse;
+            saveToken(respData.expiresIn, true);
+            window.dispatchEvent(new Event(refreshingTokenKey));
+            console.log(`Token actualizado correctamente`);
+            return true;
+          } else {
+            const respData = responseData as RefreshRefreshTokenResponse;
+            saveToken(respData.accessExpiresIn, true);
+            saveToken(respData.refreshExpiresIn, false);
+            window.dispatchEvent(new Event(refreshingTokenKey));
+            window.dispatchEvent(new Event(refreshingRefreshTokenKey));
+            console.log("Refresh token actualizado correctamente");
+            return true;
+          }
+        }
+        throw new Error(errorMsg ?? "Refresh token error");
+      }
+
       return false;
     } catch (error) {
       console.error("Error al refrescar el token:", error);
@@ -301,19 +278,13 @@ export default function useUserSocket() {
     }
   }
 
-  function saveToken(
-    newToken: string,
-    newExpiresIn: number,
-    isAccesToken: boolean
-  ) {
+  function saveToken(newExpiresIn: number, isAccesToken: boolean) {
     const tokenExp = getTokenExpirationTime(newExpiresIn);
     localStorage.setItem(
       isAccesToken ? expiresInKey : refreshExpiresInKey,
       tokenExp.toString()
     );
-    localStorage.setItem(isAccesToken ? tokenKey : refreshTokenKey, newToken);
     if (isAccesToken) {
-      dispatch(setToken(newToken));
       setTokenExpiration(tokenExp);
     } else setRefreshTokenExpiration(tokenExp);
   }

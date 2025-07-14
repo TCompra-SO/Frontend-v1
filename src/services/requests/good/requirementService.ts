@@ -10,6 +10,7 @@ export function getRequirementsService(
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.getRequirements}${page}/${pageSize}`,
     type: "RE-GET-ALL",
+    cookieAllowed: true,
   };
 }
 
@@ -19,6 +20,7 @@ export function createRequirementService(): HttpService {
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.create}`,
     type: "RE-CRE",
+    cookieAllowed: true,
   };
 }
 
@@ -31,6 +33,7 @@ export function getRequirementByIdService(
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.getRequirement}${reqId}`,
     type: showErrorMessage ? "RE-GET-ID" : "",
+    cookieAllowed: true,
   };
 }
 
@@ -40,6 +43,7 @@ export function selectRequirementOfferService(): HttpService {
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.selectOffer}`,
     type: "RE-SE-OF",
+    cookieAllowed: true,
   };
 }
 
@@ -49,6 +53,7 @@ export function getBasicRateDataReqService(id: string): HttpService {
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.getBasicRateData}${id}`,
     type: "RE-BA-RA",
+    cookieAllowed: true,
   };
 }
 
@@ -58,6 +63,7 @@ export function deleteRequirementService(id: string): HttpService {
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.delete}${id}`,
     type: "RE-DEL",
+    cookieAllowed: true,
   };
 }
 
@@ -67,6 +73,7 @@ export function republishRequirementService(): HttpService {
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.republish}`,
     type: "RE-REP",
+    cookieAllowed: true,
   };
 }
 
@@ -83,6 +90,7 @@ export function getRequirementsByEntityService(
       ApiRoutes.requirements.getRequirementsByEntity
     }${id}/${page}/${pageSize}`,
     type: "RE-GET-ENT",
+    cookieAllowed: true,
   };
 }
 
@@ -99,6 +107,7 @@ export function getRequirementsBySubUserService(
       ApiRoutes.requirements.getRequirementsBySubUser
     }${id}/${page}/${pageSize}`,
     type: "RE-GET-SUB",
+    cookieAllowed: true,
   };
 }
 
@@ -108,6 +117,7 @@ export function culminateRequirementService(): HttpService {
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.culminate}`,
     type: "RE-CUL",
+    cookieAllowed: true,
   };
 }
 
@@ -117,6 +127,7 @@ export function cancelRequirementService(): HttpService {
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.cancel}`,
     type: "RE-CAN",
+    cookieAllowed: true,
   };
 }
 
@@ -126,6 +137,7 @@ export function homeRequirementFilterService(): HttpService {
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.searchMainFilters}`,
     type: "RE-HO-FI",
+    cookieAllowed: true,
   };
 }
 
@@ -135,6 +147,7 @@ export function searchRequirementsService(): HttpService {
       ApiMainRoutes.requirements
     }${ApiRoutes.requirements.searchRequirements}`,
     type: "RE-SE-RE",
+    cookieAllowed: true,
   };
 }
 
@@ -144,6 +157,7 @@ export function uploadDocsRequirementService(): HttpService {
       ApiRoutes.documents.uploadDocumentsReq
     }`,
     type: "RE-DO-UP",
+    cookieAllowed: true,
   };
 }
 
@@ -153,5 +167,6 @@ export function uploadImagesRequirementService(): HttpService {
       ApiRoutes.images.uploadImagesReq
     }`,
     type: "RE-IM-UP",
+    cookieAllowed: true,
   };
 }

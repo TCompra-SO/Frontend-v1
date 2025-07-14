@@ -8,6 +8,7 @@ export function uploadCertificateService(): HttpService {
       ApiRoutes.certificate.uploadCertificate
     }`,
     type: "CE-UPL",
+    cookieAllowed: true,
   };
 }
 
@@ -21,6 +22,7 @@ export function getCertificatesService(
       ApiRoutes.certificate.getCertificates
     }${userId}/${page}/${pageSize}`,
     type: "CE-GET",
+    cookieAllowed: true,
   };
 }
 
@@ -30,6 +32,7 @@ export function searchCertificatesService(): HttpService {
       ApiRoutes.certificate.searchCertificates
     }`,
     type: "CE-SEA",
+    cookieAllowed: true,
   };
 }
 
@@ -39,6 +42,7 @@ export function sendCertificationRequestService(): HttpService {
       ApiRoutes.certificate.sendCertificationRequest
     }`,
     type: "CE-SEN",
+    cookieAllowed: true,
   };
 }
 
@@ -48,6 +52,7 @@ export function updateCertificationStateService(): HttpService {
       ApiRoutes.certificate.updateCertificationState
     }`,
     type: "CE-UPD",
+    cookieAllowed: true,
   };
 }
 
@@ -61,6 +66,7 @@ export function getSentRequestsByEntityService(
       ApiRoutes.certificate.getSentRequestsByEntity
     }${userId}/${page}/${pageSize}`,
     type: "CE-GE-SE",
+    cookieAllowed: true,
   };
 }
 
@@ -70,6 +76,7 @@ export function searchSentRequestsByEntityService(): HttpService {
       ApiRoutes.certificate.searchSentRequestByEntity
     }`,
     type: "CE-SE-SE",
+    cookieAllowed: true,
   };
 }
 
@@ -83,6 +90,7 @@ export function getReceivedRequestsByEntityService(
       ApiRoutes.certificate.getReceivedRequestsByEntity
     }${userId}/${page}/${pageSize}`,
     type: "CE-GE-RE",
+    cookieAllowed: true,
   };
 }
 
@@ -92,6 +100,7 @@ export function searchReceivedRequestsByEntityService(): HttpService {
       ApiRoutes.certificate.searchReceivedRequestByEntity
     }`,
     type: "CE-SE-RE",
+    cookieAllowed: true,
   };
 }
 
@@ -101,6 +110,7 @@ export function deleteCertificateService(certId: string): HttpService {
       ApiRoutes.certificate.deleteCertificate
     }${certId}`,
     type: "CE-DEL",
+    cookieAllowed: true,
   };
 }
 
@@ -110,6 +120,7 @@ export function resendCertificatesService(): HttpService {
       ApiRoutes.certificate.resendCertificates
     }`,
     type: "CE-RES",
+    cookieAllowed: true,
   };
 }
 
@@ -122,6 +133,7 @@ export function verifyCertificationService(
       ApiRoutes.certificate.verifyCertification
     }${userId}/${companyIdToVerify}`,
     type: "CE-VER",
+    cookieAllowed: true,
   };
 }
 
@@ -131,6 +143,7 @@ export function updateRequiredDocumentsService(): HttpService {
       ApiRoutes.certificate.updateRequiredDocuments
     }`,
     type: "CE-UPD-DOC",
+    cookieAllowed: true,
   };
 }
 
@@ -140,6 +153,7 @@ export function getRequiredDocumentsService(companyId: string): HttpService {
       ApiRoutes.certificate.getRequiredDocuments
     }${companyId}`,
     type: "CE-GET-DOC",
+    cookieAllowed: true,
   };
 }
 
@@ -152,5 +166,6 @@ export function getCertificateRequestService(
       ApiRoutes.certificate.getCertificateRequest
     }${type}/${requestId}`,
     type: "CE-GET-REQ",
+    cookieAllowed: true,
   };
 }

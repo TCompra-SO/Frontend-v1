@@ -12,6 +12,7 @@ export function getNotificationsService(
       ApiRoutes.notification.getNotifications
     }${mainUserId}/${userId}/${page}/${pageSize}`,
     type: "NO-GET",
+    cookieAllowed: true,
   };
 }
 
@@ -21,6 +22,7 @@ export function readNotificationService(notificationId: string): HttpService {
       ApiRoutes.notification.readNotification
     }${notificationId}`,
     type: "NO-REA",
+    cookieAllowed: true,
   };
 }
 
@@ -30,5 +32,6 @@ export function getUnreadNotificationsCounterService(): HttpService {
       ApiRoutes.notification.getUnreadNotificationsCounter
     }`,
     type: "NO-UN-CO",
+    cookieAllowed: true,
   };
 }

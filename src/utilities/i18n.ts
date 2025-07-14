@@ -247,7 +247,7 @@ const resources = {
       alreadyMadeOffer: "You have already made an offer",
       requirementNotFound: "The requirement could not be found",
       saleNotFound: "The sale could not be found",
-      errorOccurredLoginAgain: "An error occurred. Log in again",
+      errorOccurredLoginAgain: "An error occurred. Please, log in again",
       offerCreatedSuccessfully: "Offer created successfully",
       offerCreatedSuccessfullyNoDocOrImages:
         "Offer created successfully, but there were errors uploading files and/or images",
@@ -310,13 +310,13 @@ const resources = {
       homeTitle: "The first platform for Requirements and Offers in Peru",
       homeTitle0: "Still buying like it's 2010? Evolve with Tcompra",
       homeTitle1:
-        "Don’t sell slow. Clear out stock. Compare prices. Close deals. All in one platform.",
+        "Don't sell slow. Clear out stock. Compare prices. Close deals. All in one platform.",
       homeTitle2:
         "Get quote prices in minutes, compare in seconds, decide like a giant",
       homeTitle3: "If getting quote prices is complicated, it's not Tcompra",
       homeTitle4:
         "Tcompra: the app that turns your requirements into real business",
-      homeSubtitle: "We Facilitate the Purchase and Sale of Goods and Services",
+      homeSubtitle: "Buy, sell and liquidate your stock in one place",
       allRightsReserved: "All rights reserved",
       immerseYourselfInBusiness: "Immerse yourself in the new era of business",
       exchangeGoodsAndServices: "Exchange goods and services",
@@ -390,6 +390,7 @@ const resources = {
         "A buyer/seller is permitted to submit offers and create sales, goods and services requirements.",
       agreeToSaleTermsAndConditions:
         "I accept the Terms and Conditions for liquidations",
+      CSRFTokenError: "An error occurred. Reload page, please.",
       // Other
       characters: "characters",
       yes: "Yes",
@@ -923,7 +924,7 @@ const resources = {
       homeTitle3: "Si cotizar es complicado, no es Tcompra",
       homeTitle4:
         "Tcompra: la plataforma que convierte tus requerimientos en negocios reales",
-      homeSubtitle: "Facilitamos la Compra y Venta de Bienes y Servicios",
+      homeSubtitle: "Compra, vende y liquida en un solo lugar",
       allRightsReserved: "Todos los derechos reservados",
       immerseYourselfInBusiness: "Sumérgete en la nueva era de los negocios",
       exchangeGoodsAndServices: "Intercambia bienes y servicios",
@@ -1000,6 +1001,7 @@ const resources = {
         "Un vendedor/comprador puede crear y hacer ofertas requerimientos y liquidaciones.",
       agreeToSaleTermsAndConditions:
         "Acepto los Términos y Condiciones de liquidaciones",
+      CSRFTokenError: "Se produjo un error. Por favor, recargue la página.",
       // Other
       characters: "caracteres",
       yes: "Sí",
