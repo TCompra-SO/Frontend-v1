@@ -286,6 +286,42 @@ export default function TermsAndConditionsModal(
                       </li>
                     </ul>
                   </p>
+                  <table border={1}>
+                    <thead>
+                      <tr>
+                        <th>Categoría</th>
+                        <th>Cantidad mínima aceptada</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Maquinaria pesada y equipos industriales</td>
+                        <td>Por unidad (individual), por lote</td>
+                      </tr>
+                      <tr>
+                        <td>Electrónica y tecnología</td>
+                        <td>
+                          A partir de 1 unidad, media docena, docena, pack, lote
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Alimentos y bebidas</td>
+                        <td>Por caja, por lata</td>
+                      </tr>
+                      <tr>
+                        <td>Ropa, calzado y accesorios</td>
+                        <td>A partir de 1 docena, por lote</td>
+                      </tr>
+                      <tr>
+                        <td>Productos para el hogar</td>
+                        <td>A partir de 1 docena, por lote</td>
+                      </tr>
+                      <tr>
+                        <td>Muebles</td>
+                        <td>A partir media docena, por lote</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
                 <div className="tc-seccion">
                   <span className="tc-subtitulo">4. Precio de Liquidación</span>
