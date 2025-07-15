@@ -24,7 +24,13 @@ const CreateRequirement = lazy(
   () => import("../create-requirement/CreateRequirement")
 );
 
-export default function CreateRequirementFloatButton() {
+interface CreateRequirementFloatButtonProps {
+  openLoginModal: () => void;
+}
+
+export default function CreateRequirementFloatButton(
+  props: CreateRequirementFloatButtonProps
+) {
   const { t } = useTranslation();
   const { updateCreateRequirementLoading, createRequirementLoading } =
     useContext(LoadingDataContext);
@@ -228,6 +234,23 @@ export default function CreateRequirementFloatButton() {
     if (chatBotRef.current) chatBotRef.current.scrollToBottom();
   }
 
+  function handleClickOnChat() {
+    if (!isLoggedIn) {
+      props.openLoginModal();
+      return;
+    }
+    if (isLoggedIn && roleCanCreateRequirementType[role].length)
+      navigate(pageRoutes.chat);
+  }
+
+  function handleClickOnCreateRequirement() {
+    if (isLoggedIn && roleCanCreateRequirementType[role].length)
+      setIsOpenModal(true);
+    else if (!isLoggedIn) {
+      props.openLoginModal();
+    }
+  }
+
   return (
     <>
       {!isLoading &&
@@ -247,14 +270,15 @@ export default function CreateRequirementFloatButton() {
                 onClick={() => navigate(pageRoutes.home)}
               />
             )}
-            {isLoggedIn && roleCanCreateRequirementType[role].length && (
+            {((isLoggedIn && roleCanCreateRequirementType[role].length) ||
+              !isLoggedIn) && (
               <>
                 {!isChatPage && (
                   <FloatButton
                     icon={<i className="fa-regular fa-comment" />}
                     type="primary"
                     tooltip={{ title: t("chat"), placement: "left" }}
-                    onClick={() => navigate(pageRoutes.chat)}
+                    onClick={handleClickOnChat}
                   />
                 )}
 
@@ -265,7 +289,7 @@ export default function CreateRequirementFloatButton() {
                     title: t("createRequirement"),
                     placement: "left",
                   }}
-                  onClick={() => setIsOpenModal(true)}
+                  onClick={handleClickOnCreateRequirement}
                 />
               </>
             )}
