@@ -1349,6 +1349,12 @@ _Props_
 
 Componente para mostrar una lista de botones flotantes. Además del botón para abrir formulario para crear requerimiento, se muestra condicionalmente botones para ir a home, a la sección de chat y un botón para abrir el chat bot.
 
+_Props_
+
+| Nombre           | Tipo         | Descripción                                                                                                        |
+| ---------------- | ------------ | ------------------------------------------------------------------------------------------------------------------ |
+| `openLoginModal` | `() => void` | Función para abrir el modal de login cuando el usuario no está logueado y hace click en ciertos botones flotantes. |
+
 #### Footer
 
 ##### Footer
@@ -1366,6 +1372,12 @@ _Props_
 | Nombre        | Tipo                      | Descripción                                              |
 | ------------- | ------------------------- | -------------------------------------------------------- |
 | `onShowMenu?` | `(show: boolean) => void` | Callback para controlar la visibilidad del menú lateral. |
+
+_Ref_
+
+| Nombre           | Tipo         | Descripción             |
+| ---------------- | ------------ | ----------------------- |
+| `openloginModal` | `() => void` | Abre el modal de login. |
 
 ##### MainHeaderNoModals
 

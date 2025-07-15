@@ -41,6 +41,7 @@ import { setIsUserLoading } from "./redux/loadingUserSlice.ts";
 import AdminGuard from "./components/guards/AdminGuard.tsx";
 import AdminSales from "./pages/admin/AdminSales.tsx";
 import { RequirementType } from "./utilities/types.ts";
+import { HelmetProvider } from "react-helmet-async";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
@@ -184,19 +185,21 @@ function App() {
                             </Suspense>
                           }
                         />
-                        <Route
-                          path={`${pageRoutes.productDetail}/:${typeParamNameInRoute}/:${reqIdParamNameInRoute}`}
-                          element={
-                            <Suspense fallback={<LoadingPage />}>
-                              <AuthRoleGuard
-                                allowedRoles={RolesForSection.productDetail}
-                              >
-                                <MainHeader ref={mainHeaderRef} />
-                                <ProductDetail />
-                              </AuthRoleGuard>
-                            </Suspense>
-                          }
-                        />
+                        <HelmetProvider>
+                          <Route
+                            path={`${pageRoutes.productDetail}/:${typeParamNameInRoute}/:${reqIdParamNameInRoute}`}
+                            element={
+                              <Suspense fallback={<LoadingPage />}>
+                                <AuthRoleGuard
+                                  allowedRoles={RolesForSection.productDetail}
+                                >
+                                  <MainHeader ref={mainHeaderRef} />
+                                  <ProductDetail />
+                                </AuthRoleGuard>
+                              </Suspense>
+                            }
+                          />
+                        </HelmetProvider>
                         <Route
                           path="*"
                           element={
