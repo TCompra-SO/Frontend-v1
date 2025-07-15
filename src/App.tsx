@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, RefObject, Suspense, useEffect, useRef, useState } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { App as AntdApp, ConfigProvider, theme } from "antd";
 import LoadingCond from "./pages/utils/LoadingCond.tsx";
@@ -24,7 +24,10 @@ import { RolesForSection, RolesForSubSection } from "./utilities/roles.ts";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "./redux/loadingSlice.ts";
 import { useLoadUserInfo } from "./hooks/authHooks.ts";
-import MainHeader from "./components/section/header/MainHeader.tsx";
+import {
+  MainHeader,
+  MainHeaderRef,
+} from "./components/section/header/MainHeader.tsx";
 import { LoadingDataProvider } from "./contexts/LoadingDataContext.tsx";
 import { getSectionFromRoute } from "./utilities/globalFunctions.ts";
 import { ModalsProvider } from "./contexts/ModalsContext.tsx";
@@ -63,7 +66,13 @@ const CreateRequirementFloatButton = lazy(
 );
 const currentLanguage = i18n.language;
 
-function MainLayout({ children }: { children: React.ReactNode }) {
+function MainLayout({
+  children,
+  mainHeaderRef,
+}: {
+  children: React.ReactNode;
+  mainHeaderRef: RefObject<MainHeaderRef>;
+}) {
   const location = useLocation();
   const [showMenu, setShowMenu] = useState(false);
 
@@ -76,7 +85,7 @@ function MainLayout({ children }: { children: React.ReactNode }) {
       <Sidebar showMenu={showMenu} changeShowMenu={handleShowMenu} />
 
       <div className="col-datos">
-        <MainHeader onShowMenu={handleShowMenu} />
+        <MainHeader onShowMenu={handleShowMenu} ref={mainHeaderRef} />
 
         <div
           className={
@@ -114,6 +123,12 @@ function UserDataLoader() {
 }
 
 function App() {
+  const mainHeaderRef = useRef<MainHeaderRef>(null);
+
+  function openLoginModal() {
+    if (mainHeaderRef.current) mainHeaderRef.current.openloginModal();
+  }
+
   return (
     <>
       <ConfigProvider
@@ -155,14 +170,16 @@ function App() {
                 <ListsProvider>
                   <LoadingDataProvider>
                     <Suspense fallback={<LoadingPage />}>
-                      <CreateRequirementFloatButton />
+                      <CreateRequirementFloatButton
+                        openLoginModal={openLoginModal}
+                      />
                       <LoadingCond></LoadingCond>
                       <Routes>
                         <Route
                           path={`${pageRoutes.home}`}
                           element={
                             <Suspense fallback={<LoadingPage />}>
-                              <MainHeader />
+                              <MainHeader ref={mainHeaderRef} />
                               <Home></Home>
                             </Suspense>
                           }
@@ -174,7 +191,7 @@ function App() {
                               <AuthRoleGuard
                                 allowedRoles={RolesForSection.productDetail}
                               >
-                                <MainHeader />
+                                <MainHeader ref={mainHeaderRef} />
                                 <ProductDetail />
                               </AuthRoleGuard>
                             </Suspense>
@@ -183,7 +200,7 @@ function App() {
                         <Route
                           path="*"
                           element={
-                            <MainLayout>
+                            <MainLayout mainHeaderRef={mainHeaderRef}>
                               <Suspense fallback={<LoadingPage />}>
                                 <Routes>
                                   <Route
