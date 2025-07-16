@@ -18,10 +18,12 @@ import {
 import { RequirementType } from "../utilities/types";
 import { ListsContext } from "../contexts/ListsContext";
 import { Helmet } from "react-helmet-async";
+import { useTranslation } from "react-i18next";
 
 export default function ProductDetail() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { requirementId } = useParams<Params>();
   const { type } = useParams<Params>();
   const [requirement, setRequirement] = useState<Requirement>();
@@ -78,6 +80,7 @@ export default function ProductDetail() {
       setSeo(generateSEOTags(requirement));
       console.log(generateSEOTags(requirement));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requirement]);
 
   /**
@@ -103,26 +106,26 @@ export default function ProductDetail() {
 
   function generateSEOTags(requirement: Requirement) {
     const safeTitle = escapeHTML(requirement.title.trim());
-    const safeDescription = escapeHTML(requirement.description.trim());
     const categoryName = categoryData?.[requirement?.category]?.value ?? "";
+    let safeDescription = escapeHTML(requirement.description.trim());
 
-    const seoTitle = `${safeTitle} | ${categoryName}`;
-    const seoDescription = safeDescription.slice(0, 160); // Google usually shows up to 160 chars
-
-    const schema = {
-      "@context": "https://schema.org/",
-      "@type": "Product",
-      name: safeTitle,
-      description: safeDescription,
-      category: categoryName,
-    };
+    if (requirement.type == RequirementType.SALE)
+      safeDescription = t("seoSale") + ": " + safeDescription;
+    else if (requirement.type == RequirementType.GOOD)
+      safeDescription = t("seoRequiredProduct") + ": " + safeDescription;
+    else if (requirement.type == RequirementType.SERVICE)
+      safeDescription = t("seoRequiredService") + ": " + safeDescription;
 
     return {
-      titleTag: `<title>${seoTitle}</title>`,
-      metaDescription: `<meta name="description" content="${seoDescription}">`,
-      schemaJSONLD: `<script type="application/ld+json">${JSON.stringify(
-        schema
-      )}</script>`,
+      seoTitle: `${safeTitle} | ${categoryName}`,
+      seoDescription: safeDescription.slice(0, 160),
+      schema: {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        name: safeTitle,
+        description: safeDescription,
+        category: categoryName,
+      },
     };
   }
 

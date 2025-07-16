@@ -601,6 +601,9 @@ const resources = {
       options: "Options",
       administrator: "Administrator",
       documentType: "Document type",
+      seoRequiredProduct: "Required product",
+      seoRequiredService: "Required service",
+      seoSale: "Liquidation sale",
     },
   },
   es: {
@@ -1214,6 +1217,9 @@ const resources = {
       options: "Opciones",
       administrator: "Administrador",
       documentType: "Tipo de documento",
+      seoRequiredProduct: "Producto requerido",
+      seoRequiredService: "Servicio requerido",
+      seoSale: "Liquidación en venta",
     },
   },
 };
