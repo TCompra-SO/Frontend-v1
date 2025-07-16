@@ -5,6 +5,7 @@ import {
   allSelect,
   commonModalWidth,
   defaultCountry,
+  initialOfferFilters,
 } from "../../../../utilities/globals";
 import { useContext, useEffect, useState } from "react";
 import {
@@ -70,6 +71,7 @@ export default function RequirementOfferFilters(
   function onChangeFilters(changedValues: any, allValues: OfferFilters) {
     let location: string = filterNames.location;
     let deliveryTime: string = filterNames.deliveryTime;
+    const initialFilters = initialOfferFilters;
 
     if (changedValues.location) {
       location =
@@ -92,10 +94,13 @@ export default function RequirementOfferFilters(
       form.setFieldValue("price", allValues.price);
     }
 
-    updateFilters(allValues, {
-      location,
-      deliveryTime,
-    });
+    updateFilters(
+      { ...initialFilters, ...allValues },
+      {
+        location,
+        deliveryTime,
+      }
+    );
   }
 
   return (

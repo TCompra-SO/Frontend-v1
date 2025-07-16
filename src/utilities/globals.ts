@@ -1,5 +1,6 @@
 import { pageRoutes } from "./routes";
 import { Requirement, UserCounters } from "../models/MainInterfaces";
+import { OfferFilters } from "../models/Interfaces";
 
 export const dateFormat: string = "DD-MM-YYYY";
 export const dateFormatHomeSearch: string = "YYYY-MM-DD";
@@ -248,3 +249,10 @@ export const userCounterKeys: Record<keyof UserCounters, true> = {
 
 // Cookies
 export const csrfTokenName = "TC-CS-T";
+
+export const initialOfferFilters: OfferFilters = {
+  price: allSelect,
+  location: allSelect,
+  deliveryTime: allSelect,
+  warranty: allSelect,
+};
