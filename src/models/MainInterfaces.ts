@@ -83,7 +83,7 @@ export interface Offer extends BasicOffer {
   description?: string;
   warranty?: number;
   warrantyTime?: TimeMeasurement;
-  deliveryTime: number;
+  deliveryTime?: number;
   location: number;
   image?: string[];
   document?: string[];

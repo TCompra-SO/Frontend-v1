@@ -562,7 +562,6 @@ export default function OfferForm(props: OfferFormProps) {
                 {props.requirement.type == RequirementType.SALE ? (
                   <RowContainer>
                     <LocationField onlyItem />
-                    <DeliveryTimeField showDifferentPlaceholder />
                     <CurrencyField showDifferentPlaceholder disabled />
                     <BudgetField required greaterThanZero />
                   </RowContainer>

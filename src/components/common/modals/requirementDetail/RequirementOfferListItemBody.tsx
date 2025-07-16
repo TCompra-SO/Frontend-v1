@@ -2,7 +2,11 @@ import { Offer } from "../../../../models/MainInterfaces";
 import { dateFormat, defaultCountry } from "../../../../utilities/globals";
 
 import { useTranslation } from "react-i18next";
-import { TimeMeasurement, EntityType } from "../../../../utilities/types";
+import {
+  TimeMeasurement,
+  EntityType,
+  RequirementType,
+} from "../../../../utilities/types";
 import { ListsContext } from "../../../../contexts/ListsContext";
 import { useContext, useEffect, useState } from "react";
 import dayjs from "dayjs";
@@ -43,26 +47,31 @@ export default function RequirementOfferListItemBody(
               {t("tenure")}: {props.offer.user.tenure} {t("years")}
             </div>
           )}
-        {deliveryTimeData && deliveryTimeData[props.offer.deliveryTime] && (
-          <div className="tag-gray">
-            {t("delivery")}: {deliveryTimeData[props.offer.deliveryTime].value}
-          </div>
-        )}
+        {deliveryTimeData &&
+          props.offer.deliveryTime &&
+          deliveryTimeData[props.offer.deliveryTime] && (
+            <div className="tag-gray">
+              {t("delivery")}:{" "}
+              {deliveryTimeData[props.offer.deliveryTime].value}
+            </div>
+          )}
 
-        {props.offer.warranty && props.offer.warrantyTime !== undefined ? (
-          <div className="tag-gray">
-            {t("warranty")}: {props.offer.warranty}{" "}
-            {props.offer.warrantyTime == TimeMeasurement.DAYS
-              ? t("days")
-              : props.offer.warrantyTime == TimeMeasurement.MONTHS
-              ? t("months")
-              : t("years")}
-          </div>
-        ) : (
-          <div className="tag-gray">
-            {t("warranty")}: {t("no")}
-          </div>
-        )}
+        {(props.offer.type == RequirementType.GOOD ||
+          props.offer.type == RequirementType.SERVICE) &&
+          (props.offer.warranty && props.offer.warrantyTime !== undefined ? (
+            <div className="tag-gray">
+              {t("warranty")}: {props.offer.warranty}{" "}
+              {props.offer.warrantyTime == TimeMeasurement.DAYS
+                ? t("days")
+                : props.offer.warrantyTime == TimeMeasurement.MONTHS
+                ? t("months")
+                : t("years")}
+            </div>
+          ) : (
+            <div className="tag-gray">
+              {t("warranty")}: {t("no")}
+            </div>
+          ))}
         {props.showUserData && (
           <div className="tag-gray">
             {props.offer.subUser

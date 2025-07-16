@@ -79,10 +79,11 @@ export default function OfferDetailModal(props: OfferDetailModalProps) {
                 {dayjs(props.offer.publishDate).format(dateFormat)}
               </div>
               {deliveryTimeData &&
+                props.offer.deliveryTime &&
                 deliveryTimeData[props.offer.deliveryTime] && (
                   <div className="badge-grey-border">
                     {t("deliveryTime")}:{" "}
-                    {deliveryTimeData[props.offer.deliveryTime]?.value}
+                    {deliveryTimeData[props.offer.deliveryTime].value}
                   </div>
                 )}
             </div>
