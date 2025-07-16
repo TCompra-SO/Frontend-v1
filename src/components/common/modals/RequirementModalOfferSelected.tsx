@@ -18,6 +18,7 @@ import {
   ErrorRequestType,
   filterLabels,
   OrderTableType,
+  RequirementType,
   ResponseRequestType,
   SystemNotificationType,
 } from "../../../utilities/types";
@@ -116,6 +117,9 @@ export default function RequirementModalOfferSelected({
         <i className="fa-regular fa-circle-exclamation sub-icon"></i>
         <div className="alert-info">{t("selectOfferConfirmation")}</div>
         <Row gutter={8} style={{ width: "100%" }}>
+          {props.requirement.type == RequirementType.SALE && (
+            <Col xs={0} sm={0} md={6} lg={6} xl={6}></Col>
+          )}
           <Col xs={12} sm={12} md={6} lg={6} xl={6}>
             <Flex vertical align="center">
               <b style={{ color: "#92acbf" }}>{t("priceColumn")}</b>
@@ -152,41 +156,45 @@ export default function RequirementModalOfferSelected({
             </Flex>
           </Col>
 
-          <Col xs={12} sm={12} md={6} lg={6} xl={6}>
-            <Flex vertical align="center">
-              <b style={{ color: "#92acbf" }}>{t("delivery")}</b>
-              <SelectContainer
-                options={[
-                  {
-                    value: filters.deliveryTime,
-                    label: filterNames.deliveryTime,
-                  },
-                ]}
-                style={{ width: "100%" }}
-                className="form-control"
-                defaultValue={filters.deliveryTime}
-                disabled
-              />
-            </Flex>
-          </Col>
+          {props.requirement.type !== RequirementType.SALE && (
+            <>
+              <Col xs={12} sm={12} md={6} lg={6} xl={6}>
+                <Flex vertical align="center">
+                  <b style={{ color: "#92acbf" }}>{t("delivery")}</b>
+                  <SelectContainer
+                    options={[
+                      {
+                        value: filters.deliveryTime,
+                        label: filterNames.deliveryTime,
+                      },
+                    ]}
+                    style={{ width: "100%" }}
+                    className="form-control"
+                    defaultValue={filters.deliveryTime}
+                    disabled
+                  />
+                </Flex>
+              </Col>
 
-          <Col xs={12} sm={12} md={6} lg={6} xl={6}>
-            <Flex vertical align="center">
-              <b style={{ color: "#92acbf" }}>{t("warranty")}</b>
-              <SelectContainer
-                options={[
-                  {
-                    value: filters.warranty,
-                    label: t(filterLabels[filters.warranty]),
-                  },
-                ]}
-                style={{ width: "100%" }}
-                className="form-control"
-                defaultValue={filters.warranty}
-                disabled
-              />
-            </Flex>
-          </Col>
+              <Col xs={12} sm={12} md={6} lg={6} xl={6}>
+                <Flex vertical align="center">
+                  <b style={{ color: "#92acbf" }}>{t("warranty")}</b>
+                  <SelectContainer
+                    options={[
+                      {
+                        value: filters.warranty,
+                        label: t(filterLabels[filters.warranty]),
+                      },
+                    ]}
+                    style={{ width: "100%" }}
+                    className="form-control"
+                    defaultValue={filters.warranty}
+                    disabled
+                  />
+                </Flex>
+              </Col>
+            </>
+          )}
         </Row>
         <div className="t-flex wd-100">
           <TextAreaContainer
