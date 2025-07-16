@@ -136,9 +136,10 @@ Campo para seleccionar el tiempo de entrega.
 
 _Props_
 
-| Nombre                      | Tipo      | Descripción                                                                                        |
-| --------------------------- | --------- | -------------------------------------------------------------------------------------------------- |
-| `showDifferentPlaceholder?` | `boolean` | Si se establece como `true`, se usa un placeholder diferente de "select" en el campo de selección. |
+| Nombre                      | Tipo              | Descripción                                                                                        |
+| --------------------------- | ----------------- | -------------------------------------------------------------------------------------------------- |
+| `showDifferentPlaceholder?` | `boolean`         | Si se establece como `true`, se usa un placeholder diferente de "select" en el campo de selección. |
+| `type`                      | `RequirementType` | Tipo de requerimiento para determinar cuántas opciones mostrar.                                    |
 
 ##### DescriptionCRField
 

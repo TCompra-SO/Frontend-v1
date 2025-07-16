@@ -568,7 +568,10 @@ export default function OfferForm(props: OfferFormProps) {
                 ) : (
                   <RowContainer>
                     <LocationField onlyItem />
-                    <DeliveryTimeField showDifferentPlaceholder />
+                    <DeliveryTimeField
+                      showDifferentPlaceholder
+                      type={props.requirement.type}
+                    />
                     <CurrencyField showDifferentPlaceholder disabled />
                   </RowContainer>
                 )}

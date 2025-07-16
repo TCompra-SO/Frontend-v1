@@ -565,7 +565,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
               </Col>
               <Col xs={24} sm={24} md={6} lg={6} xl={6}>
                 <LabelForCreateRequirement label={"deliveryTime"} />
-                <DeliveryTimeField />
+                <DeliveryTimeField type={type} />
               </Col>
               {(type == RequirementType.GOOD ||
                 type == RequirementType.SERVICE) && (
