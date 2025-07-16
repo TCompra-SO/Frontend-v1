@@ -28,6 +28,7 @@ export default function RequirementDetail(props: RequirementDetailProps) {
           {props.offerList.length > 0 && (
             <RequirementOfferFilters
               type={props.type}
+              requirementType={props.requirement.type}
               filters={props.filters}
             ></RequirementOfferFilters>
           )}

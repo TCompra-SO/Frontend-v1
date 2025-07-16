@@ -894,10 +894,11 @@ Componente de filtros interactivos para ofertas de requerimientos.
 
 _Props_
 
-| Nombre     | Tipo                    | Descripción                                                               |
-| ---------- | ----------------------- | ------------------------------------------------------------------------- |
-| `type`     | `RequirementDetailType` | Indica a qué tipo de modal perteneces (para órden, requerimiento, admin). |
-| `filters?` | `OfferFilters`          | Valores iniciales de los filtros.                                         |
+| Nombre            | Tipo                    | Descripción                                                               |
+| ----------------- | ----------------------- | ------------------------------------------------------------------------- |
+| `type`            | `RequirementDetailType` | Indica a qué tipo de modal perteneces (para órden, requerimiento, admin). |
+| `filters?`        | `OfferFilters`          | Valores iniciales de los filtros.                                         |
+| `requirementType` | `RequirementType`       | Indica el tipo de requerimiento.                                          |
 
 ###### RequirementOfferList
 

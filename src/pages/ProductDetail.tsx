@@ -78,7 +78,6 @@ export default function ProductDetail() {
   useEffect(() => {
     if (requirement) {
       setSeo(generateSEOTags(requirement));
-      console.log(generateSEOTags(requirement));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requirement]);

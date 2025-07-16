@@ -11,6 +11,7 @@ import {
   CommonFilter,
   filterLabels,
   RequirementDetailType,
+  RequirementType,
 } from "../../../../utilities/types";
 import { OfferFilters } from "../../../../models/Interfaces";
 import { requirementDetailContext } from "../../../../contexts/RequirementDetailContext";
@@ -24,6 +25,7 @@ import {
 interface RequirementOfferFiltersProps {
   type: RequirementDetailType;
   filters?: OfferFilters;
+  requirementType: RequirementType;
 }
 
 export default function RequirementOfferFilters(
@@ -115,7 +117,13 @@ export default function RequirementOfferFilters(
                 width: "85vw",
               }}
             >
-              <Col xs={12} sm={12} md={6} lg={6} xl={6}>
+              <Col
+                xs={12}
+                sm={12}
+                md={props.requirementType !== RequirementType.SALE ? 6 : 12}
+                lg={props.requirementType !== RequirementType.SALE ? 6 : 12}
+                xl={props.requirementType !== RequirementType.SALE ? 6 : 12}
+              >
                 <Flex vertical align="center">
                   <b style={{ color: "#92acbf" }}>{t("price")}</b>
                   <Form.Item
@@ -134,7 +142,13 @@ export default function RequirementOfferFilters(
                 </Flex>
               </Col>
 
-              <Col xs={12} sm={12} md={6} lg={6} xl={6}>
+              <Col
+                xs={12}
+                sm={12}
+                md={props.requirementType !== RequirementType.SALE ? 6 : 12}
+                lg={props.requirementType !== RequirementType.SALE ? 6 : 12}
+                xl={props.requirementType !== RequirementType.SALE ? 6 : 12}
+              >
                 <Flex vertical align="center">
                   <b style={{ color: "#92acbf" }}>{t("locationColumn")}</b>
                   <Form.Item name="location" style={{ width: "100%" }}>
@@ -150,35 +164,41 @@ export default function RequirementOfferFilters(
                 </Flex>
               </Col>
 
-              <Col xs={12} sm={12} md={6} lg={6} xl={6}>
-                <Flex vertical align="center">
-                  <b style={{ color: "#92acbf" }}>{t("delivery")}</b>
-                  <Form.Item name="deliveryTime" style={{ width: "100%" }}>
-                    <SelectContainer
-                      disabled={props.type == RequirementDetailType.ORDER}
-                      options={[{ label: t("all"), value: allSelect }].concat(
-                        getListForSelectIdValueMap(deliveryTimeData)
-                      )}
-                      style={{ marginTop: "5px" }}
-                      className="form-control"
-                    />
-                  </Form.Item>
-                </Flex>
-              </Col>
+              {props.requirementType !== RequirementType.SALE && (
+                <>
+                  <Col xs={12} sm={12} md={6} lg={6} xl={6}>
+                    <Flex vertical align="center">
+                      <b style={{ color: "#92acbf" }}>{t("delivery")}</b>
+                      <Form.Item name="deliveryTime" style={{ width: "100%" }}>
+                        <SelectContainer
+                          disabled={props.type == RequirementDetailType.ORDER}
+                          options={[
+                            { label: t("all"), value: allSelect },
+                          ].concat(
+                            getListForSelectIdValueMap(deliveryTimeData)
+                          )}
+                          style={{ marginTop: "5px" }}
+                          className="form-control"
+                        />
+                      </Form.Item>
+                    </Flex>
+                  </Col>
 
-              <Col xs={12} sm={12} md={6} lg={6} xl={6}>
-                <Flex vertical align="center">
-                  <b style={{ color: "#92acbf" }}>{t("warranty")}</b>
-                  <Form.Item name="warranty" style={{ width: "100%" }}>
-                    <SelectContainer
-                      disabled={props.type == RequirementDetailType.ORDER}
-                      options={commonList}
-                      style={{ marginTop: "5px" }}
-                      className="form-control"
-                    />
-                  </Form.Item>
-                </Flex>
-              </Col>
+                  <Col xs={12} sm={12} md={6} lg={6} xl={6}>
+                    <Flex vertical align="center">
+                      <b style={{ color: "#92acbf" }}>{t("warranty")}</b>
+                      <Form.Item name="warranty" style={{ width: "100%" }}>
+                        <SelectContainer
+                          disabled={props.type == RequirementDetailType.ORDER}
+                          options={commonList}
+                          style={{ marginTop: "5px" }}
+                          className="form-control"
+                        />
+                      </Form.Item>
+                    </Flex>
+                  </Col>
+                </>
+              )}
             </Row>
           </Form>
         }
