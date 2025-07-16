@@ -144,8 +144,11 @@ export function useLoadUserInfo() {
   const { showNotification } = useShowNotification();
   const { t } = useTranslation();
 
-  async function loadUserInfo(refreshAccessToken: boolean) {
-    if (refreshAccessToken) await refreshTokenAndHandleResult(true);
+  async function loadUserInfo(
+    refreshAccessToken: boolean,
+    showNotif: boolean = true
+  ) {
+    if (refreshAccessToken) await refreshTokenAndHandleResult(true, showNotif);
     const userData = localStorage.getItem(userDataKey);
     const expiresIn = localStorage.getItem(expiresInKey);
     const refreshExpiresIn = localStorage.getItem(refreshExpiresInKey);

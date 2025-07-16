@@ -131,49 +131,6 @@ export default function useUserSocket() {
           isAccessToken ? "" : "refresh"
         } token: ${timeLeft} segundos`
       );
-      // // Refrescar token si queda menos de cierto tiempo
-      // if (
-      //   timeLeft -
-      //     (attemptsToRetryRefreshingToken + 1) *
-      //       intervalToRetryRefreshingToken <=
-      //   remainingTokenTime -
-      //     (attemptsToRetryRefreshingToken + 1) * intervalToRetryRefreshingToken
-      // ) {
-      //   let count = 0;
-      //   // Interval para reintentar refrescar el token si hubo un error
-      //   retryInterval = setInterval(async () => {
-      //     const success = await refreshToken(isAccessToken);
-      //     // Si no se pudo refrescar token, cerrar sesión después de un tiempo
-      //     if (
-      //       success === false &&
-      //       count + 1 === attemptsToRetryRefreshingToken
-      //     ) {
-      //       localStorage.removeItem(tokenKey);
-      //       localStorage.removeItem(refreshTokenKey);
-      //       localStorage.removeItem(expiresInKey);
-      //       localStorage.removeItem(refreshExpiresInKey);
-      //       setTokenExpiration(null);
-      //       setRefreshTokenExpiration(null);
-      //       showNotification("error", t("noRefreshTokenMsg"));
-      //       clearInterval(retryInterval!);
-      //       retryInterval = null;
-      //       logoutTimeout.current = setTimeout(() => {
-      //         logout();
-      //       }, logoutAfterNoTokenRefreshTime * 1000);
-      //     }
-      //     if (
-      //       success === null ||
-      //       success ||
-      //       count + 1 === attemptsToRetryRefreshingToken
-      //     ) {
-      //       console.log("clear interval");
-      //       clearInterval(retryInterval!);
-      //       retryInterval = null;
-      //       return;
-      //     }
-      //     count += 1;
-      //   }, intervalToRetryRefreshingToken * 1000);
-      // }
 
       // Refrescar token si queda menos de cierto tiempo
       if (timeLeft <= remainingTokenTime) {
@@ -187,7 +144,10 @@ export default function useUserSocket() {
     };
   }
 
-  async function refreshTokenAndHandleResult(isAccessToken: boolean) {
+  async function refreshTokenAndHandleResult(
+    isAccessToken: boolean,
+    showNotif: boolean = true
+  ) {
     const success = await refreshToken(isAccessToken);
     // Si no se pudo refrescar token, cerrar sesión después de un tiempo
     if (success === false) {
@@ -195,7 +155,7 @@ export default function useUserSocket() {
       localStorage.removeItem(refreshExpiresInKey);
       setTokenExpiration(null);
       setRefreshTokenExpiration(null);
-      showNotification("error", t("noRefreshTokenMsg"));
+      if (showNotif) showNotification("error", t("noRefreshTokenMsg"));
       logoutTimeout.current = setTimeout(() => {
         logout();
       }, logoutAfterNoTokenRefreshTime * 1000);

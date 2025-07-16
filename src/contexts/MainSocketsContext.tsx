@@ -122,7 +122,7 @@ export function MainSocketsProvider({ children }: { children: ReactNode }) {
       event.newValue &&
       event.oldValue !== event.newValue
     ) {
-      await loadUserInfo(false);
+      await loadUserInfo(false, false);
       localStorage.removeItem(loginKey);
     }
     // Eliminar tiempo de expiración de tokens
