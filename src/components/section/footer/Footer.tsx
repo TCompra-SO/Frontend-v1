@@ -162,15 +162,14 @@ export default function Footer() {
                 </div>
               </div>
 
-              <div className="contact-items">
+              {/* <div className="contact-items">
                 <div className="icon">
                   <i className="fa-regular fa-phone-alt"></i>
                 </div>
-
                 <div className="content">
                   <a href="tel:+51987456321">(+51) 987456321</a>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
