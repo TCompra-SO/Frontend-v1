@@ -14,10 +14,12 @@ export default function Footer() {
           </div>
 
           <div className="copyright" style={{ opacity: 1 }}>
-            <button className="btn btn-default">
-              <span className="req-btn-info">{t("start")}</span>{" "}
-              <i className="far fa-arrow-right"></i>
-            </button>
+            <a href={`${import.meta.env.VITE_LANDING_PAGE}`} target="_blank">
+              <button className="btn btn-default">
+                <span className="req-btn-info">{t("start")}</span>{" "}
+                <i className="far fa-arrow-right"></i>
+              </button>
+            </a>
           </div>
         </div>
         <hr className="wd-100 hr-cl-fo"></hr>
