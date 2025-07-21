@@ -39,6 +39,7 @@ import { useLogin, useRegister } from "../hooks/authHooks";
 import useShowNotification from "../hooks/utilHooks";
 import TermsAndConditionsModal from "../components/common/modals/TermsAndConditionsModal";
 import { browserIdKey } from "../utilities/globals";
+import logoBlack from "../assets/images/logo-black.svg";
 
 const LoginType = {
   LOGIN: "login",
@@ -288,7 +289,7 @@ export default function Login(props: LoginProps) {
       <div className="modal-login">
         <div className="login-box text-center">
           <img
-            src="/src/assets/images/logo-black.svg"
+            src={logoBlack}
             alt=""
             style={{ padding: "0 70px", marginBottom: "15px" }}
           />

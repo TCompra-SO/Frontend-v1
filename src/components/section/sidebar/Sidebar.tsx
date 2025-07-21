@@ -20,6 +20,7 @@ import {
 import { EntityType, RequirementType } from "../../../utilities/types";
 import { MainSocketsContext } from "../../../contexts/MainSocketsContext";
 import { sectionIcons } from "../../../utilities/colors";
+import logoWhite from "../../../assets/images/logo-white.svg";
 
 const menuToggles: {
   [key in (typeof pageRoutes)[keyof typeof pageRoutes]]: {
@@ -192,7 +193,7 @@ export default function Sidebar(props: SidebarProps) {
       )}
       <div>
         <img
-          src="/src/assets/images/logo-white.svg"
+          src={logoWhite}
           style={{ width: "100%", cursor: "pointer" }}
           onClick={() => redirectTo(pageRoutes.home)}
         ></img>

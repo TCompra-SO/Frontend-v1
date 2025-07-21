@@ -1,6 +1,8 @@
 import { pageRoutes } from "./routes";
 import { Requirement, UserCounters } from "../models/MainInterfaces";
 import { OfferFilters } from "../models/Interfaces";
+import userDef from "../assets/images/user-default.svg";
+import prodDef from "../assets/images/img-prod.svg";
 
 export const dateFormat: string = "DD-MM-YYYY";
 export const dateFormatHomeSearch: string = "YYYY-MM-DD";
@@ -32,9 +34,8 @@ export const allItems: number = 0;
 
 export const navigateToAfterLoggingOut = pageRoutes.home;
 
-export const defaultUserImage: string = "/src/assets/images/user-default.svg";
-export const defaultRequirementImage: string =
-  "/src/assets/images/img-prod.svg";
+export const defaultUserImage: string = userDef;
+export const defaultRequirementImage: string = prodDef;
 
 export const onlyLettersAndNumbers: RegExp = /[^a-zA-Z0-9áéíóúÁÉÍÓÚ]/g;
 

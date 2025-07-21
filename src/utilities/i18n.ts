@@ -391,6 +391,8 @@ const resources = {
       agreeToSaleTermsAndConditions:
         "I accept the Terms and Conditions for liquidations",
       CSRFTokenError: "An error occurred. Reload page, please.",
+      footerText:
+        "Dive into the new era of business with our innovative platform.",
       // Other
       characters: "characters",
       yes: "Yes",
@@ -604,6 +606,16 @@ const resources = {
       seoRequiredProduct: "Required product",
       seoRequiredService: "Required service",
       seoSale: "Liquidation sale",
+      video: "Video",
+      how: "How?",
+      seeMore: "See more",
+      start: "Start",
+      policies: "Policies",
+      privacyPolicy: "Privacy Policy",
+      help: "Help",
+      customerService: "Customer Service",
+      contactUs: "ContactUs",
+      videos: "Videos",
     },
   },
   es: {
@@ -1005,6 +1017,8 @@ const resources = {
       agreeToSaleTermsAndConditions:
         "Acepto los Términos y Condiciones de liquidaciones",
       CSRFTokenError: "Se produjo un error. Por favor, recargue la página.",
+      footerText:
+        "Sumérgete en la nueva era de los negocios con nuestra innovadora plataforma.",
       // Other
       characters: "caracteres",
       yes: "Sí",
@@ -1220,6 +1234,16 @@ const resources = {
       seoRequiredProduct: "Producto requerido",
       seoRequiredService: "Servicio requerido",
       seoSale: "Liquidación en venta",
+      video: "Video",
+      how: "¿Cómo?",
+      seeMore: "Ver más",
+      start: "Empezar",
+      policies: "Políticas",
+      privacyPolicy: "Política de Privacidad",
+      help: "Ayuda",
+      customerService: "Atención al Cliente",
+      contactUs: "Contactos",
+      videos: "Videos",
     },
   },
 };

@@ -14,6 +14,9 @@ import { sectionIcons } from "../../../utilities/colors";
 import { RequirementType } from "../../../utilities/types";
 import { Carousel } from "antd";
 import useWindowSize from "../../../hooks/useWindowSize";
+import back2 from "../../../assets/images/back-02.jpg";
+import back3 from "../../../assets/images/back-03.jpg";
+import back4 from "../../../assets/images/back-04.jpg";
 
 export default function Search() {
   const { t } = useTranslation();
@@ -65,15 +68,20 @@ export default function Search() {
         className="text-center t-flex f-column gap-20 slider-desc"
         style={{ zIndex: 1 }}
       >
-        <div className="home-t ht-s1">
-          <h2 className="m-0">
+        <div className="home-t ht-s1" style={{ lineHeight: 1.5 }}>
+          <h2 className="m-0" style={{ fontSize: "28px" }}>
             {t(`homeTitle${imgIndex}`) == `homeTitle${imgIndex}`
               ? "homeTitle"
               : t(`homeTitle${imgIndex}`)}
           </h2>
-          <h3 className="m-0 highlighted-text">{t("homeSubtitle")}</h3>
+          <h3
+            className="m-0 highlighted-text"
+            style={{ fontSize: "22px", fontWeight: 600 }}
+          >
+            {t("homeSubtitle")}
+          </h3>
         </div>
-        <div className="t-flex gap-10 ht-s2" style={{ width: "50%" }}>
+        <div className="t-flex gap-10 ht-s2" style={{ width: "30%" }}>
           <InputContainer
             type="text"
             className="form-control form-buscar"
@@ -92,12 +100,12 @@ export default function Search() {
         {data && (
           <div className="t-flex gap-5 f-column j-items">
             <div
-              className="text-left t-flex gap-10 ht-s3"
+              className="text-left t-flex gap-20 ht-s3"
               style={{ fontWeight: 600, fontSize: "1.17em" }}
             >
               Publicados en total: 📈
             </div>
-            <div className="text-left t-flex gap-10 ht-s3">
+            <div className="text-left t-flex gap-20 ht-s3">
               <div className="t-flex count-req gap-10">
                 <div className="icon-home">
                   <i className={sectionIcons[RequirementType.GOOD]}></i>
@@ -173,7 +181,7 @@ export default function Search() {
           <div
             className="section-slider t-flex j-conten j-items"
             style={{
-              backgroundImage: "url('/src/assets/images/back-02.jpg')",
+              backgroundImage: `url(${back2})`,
               marginTop: 0,
             }}
           ></div>
@@ -182,7 +190,7 @@ export default function Search() {
           <div
             className="section-slider t-flex j-conten j-items"
             style={{
-              backgroundImage: "url('/src/assets/images/back-03.jpg')",
+              backgroundImage: `url(${back3})`,
               marginTop: 0,
             }}
           ></div>
@@ -191,7 +199,7 @@ export default function Search() {
           <div
             className="section-slider t-flex j-conten j-items"
             style={{
-              backgroundImage: "url('/src/assets/images/back-04.jpg')",
+              backgroundImage: `url(${back4})`,
               marginTop: 0,
             }}
           ></div>

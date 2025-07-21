@@ -20,6 +20,7 @@ import { MainSocketsContext } from "../contexts/MainSocketsContext";
 import { useChatFunctions } from "../hooks/chatHooks";
 import { MainState } from "../models/Redux";
 import { useSelector } from "react-redux";
+import chatImg from "../assets/images/chat.svg";
 
 export default function Chat() {
   const { t } = useTranslation();
@@ -370,11 +371,7 @@ export default function Chat() {
           />
         ) : (
           <div className="card-white mch-2 t-flex j-conten j-items f-column">
-            <img
-              src="/src/assets/images/chat.svg"
-              alt=""
-              className="chat-pre"
-            />
+            <img src={chatImg} alt="" className="chat-pre" />
             <div className="pre-chat">
               <div className="info-chat1">{`${t("appName")} ${t(
                 "keepsYouConnected"

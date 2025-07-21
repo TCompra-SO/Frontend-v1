@@ -1,4 +1,4 @@
-/* Estilos para pantallas pequeñas (móviles) */
+/* Estilos para pantallas pequeñas (móviles) Oficial */
 @media (max-width: 350px) {
   .modal-card {
     padding: 25px !important;
@@ -145,14 +145,11 @@
   }
   .image-send {
     width: 75px !important;
-
     height: 75px !important;
   }
-
   .space-img {
     display: none;
   }
-
   .chat-fecha {
     font-size: 12px;
   }
@@ -579,10 +576,8 @@
   }
   .modulo-chat {
     display: flex;
-
     flex-direction: column;
   }
-
   .mch-2 {
     display: none;
   }
@@ -601,6 +596,10 @@
     justify-content: center !important;
     gap: 8px !important;
     margin-top: 8px;
+  }
+
+  .footer-s1 {
+    grid-template-columns: repeat(auto-fill, minmax(40%, 1fr));
   }
 }
 
@@ -725,32 +724,23 @@
   }
   .tc-chat {
     height: calc(100vh - 118px);
-
     padding: 20px;
   }
-
   .mch-1,
   .mch-2 {
     height: calc(100vh - 208px) !important;
   }
-
   .img-chat-2 {
     min-width: 45px;
-
     width: 45px;
-
     height: 45px;
   }
-
   .chat-online-2 {
     left: 32px;
-
     top: 30px;
   }
-
   .image-send {
     width: 90px;
-
     height: 90px;
   }
 
@@ -825,16 +815,12 @@
   .modulo-chat {
     grid-template-columns: repeat(auto-fill, minmax(7%, 1fr));
   }
-
   .mch-1 {
     padding: 21px;
-
     height: calc(100vh - 228px);
   }
-
   .mch-2 {
     padding: 21px;
-
     height: calc(100vh - 228px);
   }
 
@@ -850,6 +836,10 @@
   }
   .header-menu {
     padding: 0 30px;
+  }
+
+  .footer-s1 {
+    gap: 20px;
   }
 }
 
@@ -871,11 +861,9 @@
   .cont-prime {
     max-width: 1170px;
   }
-
   .cont-prime-h {
     width: 1170px;
   }
-
   .header-menu {
     padding: 0 30px;
   }

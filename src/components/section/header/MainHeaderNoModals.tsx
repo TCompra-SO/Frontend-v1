@@ -19,6 +19,9 @@ import { UserRoles } from "../../../utilities/types";
 import ControlPanel from "./items/ControlPanel";
 import Notifications from "./items/Notifications";
 import Admin from "./items/Admin";
+import logoWhite from "../../../assets/images/logo-white.svg";
+import logoBlack from "../../../assets/images/logo-black.svg";
+import favicon from "../../../assets/images/favicon.svg";
 
 interface MainHeaderNoModalsProps {
   onShowMenu?: (show: boolean) => void;
@@ -30,7 +33,7 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const { width } = useWindowSize();
-  const [logoSrc, setLogoSrc] = useState("/src/assets/images/logo-white.svg");
+  const [logoSrc, setLogoSrc] = useState(logoWhite);
   const typeID = useSelector((state: MainState) => state.user.typeID);
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
@@ -171,10 +174,9 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
 
   useEffect(() => {
     if (width > windowSize.sm) {
-      if (currentSection == pageRoutes.home)
-        setLogoSrc("/src/assets/images/logo-white.svg");
-      else setLogoSrc("/src/assets/images/logo-black.svg");
-    } else setLogoSrc("/src/assets/images/favicon.svg");
+      if (currentSection == pageRoutes.home) setLogoSrc(logoWhite);
+      else setLogoSrc(logoBlack);
+    } else setLogoSrc(favicon);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [width, currentSection]);

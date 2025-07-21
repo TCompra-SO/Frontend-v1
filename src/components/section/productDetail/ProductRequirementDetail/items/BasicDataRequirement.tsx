@@ -9,6 +9,7 @@ import {
 } from "../../../../containers/ImagePreviewGroupContainer";
 import { getCityObj } from "../../../../../utilities/globalFunctions";
 import { IdValueMap } from "../../../../../models/Interfaces";
+import header from "../../../../../assets/images/header-01.svg";
 
 interface BasicDataRequirementProps {
   requirement: Requirement | undefined;
@@ -59,7 +60,7 @@ export default function BasicDataRequirement(props: BasicDataRequirementProps) {
         src={
           props.requirement?.image && props.requirement.image.length > 0
             ? props.requirement.image[0]
-            : "/src/assets/images/header-01.svg"
+            : header
         }
         alt=""
         className="img-slider-req"
