@@ -64,21 +64,39 @@ export default function Footer() {
 
             <ul className="list-items">
               <li>
-                <a href="nosotros.html">{t("aboutUs")}</a>
+                <a
+                  href={`${import.meta.env.VITE_LANDING_PAGE}aboutUs/`}
+                  target="_blank"
+                >
+                  {t("aboutUs")}
+                </a>
               </li>
 
               <li>
-                <a href="politicas-de-privacidad.html">{t("privacyPolicy")}</a>
+                <a
+                  href={`${import.meta.env.VITE_LANDING_PAGE}politics/`}
+                  target="_blank"
+                >
+                  {t("privacyPolicy")}
+                </a>
               </li>
 
               <li>
-                <a href="terminos-condiciones.html">
+                <a
+                  href={`${import.meta.env.VITE_LANDING_PAGE}terms/`}
+                  target="_blank"
+                >
                   {t("termsAndConditions")}
                 </a>
               </li>
 
               <li>
-                <a href="liquidacion.html">{t("sale")}</a>
+                <a
+                  href={`${import.meta.env.VITE_LANDING_PAGE}liquidations/`}
+                  target="_blank"
+                >
+                  {t("sale")}
+                </a>
               </li>
             </ul>
           </div>
@@ -90,20 +108,36 @@ export default function Footer() {
 
             <ul className="list-items">
               <li>
-                <a href="preguntas-frecuentes.html">{t("FAQ")}</a>
+                <a
+                  href={`${import.meta.env.VITE_LANDING_PAGE}questions/`}
+                  target="_blank"
+                >
+                  {t("FAQ")}
+                </a>
               </li>
 
               <li>
-                <a href="como-comprar.html">{t("howToBuy")}</a>
+                <a
+                  href={`${import.meta.env.VITE_LANDING_PAGE}howPay/`}
+                  target="_blank"
+                >
+                  {t("howToBuy")}
+                </a>
               </li>
 
               <li>
-                <a href="como-vender.html">{t("howToSell")}</a>
+                <a
+                  href={`${import.meta.env.VITE_LANDING_PAGE}howSale/`}
+                  target="_blank"
+                >
+                  {t("howToSell")}
+                </a>
               </li>
 
-              <li>
-                <a href="contactos.html">{t("customerService")}</a>
-              </li>
+              {/* <li>
+                <a href={`${import.meta.env.VITE_LANDING_PAGE}aboutUs/`}
+                  target="_blank">{t("customerService")}</a>
+              </li> */}
             </ul>
           </div>
 

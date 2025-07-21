@@ -22,7 +22,7 @@ export default function Ads() {
           <div className="tpub-1">{t("howToBuy")}</div>
           <div className="tpub-2">{t("exchangeGoodsAndServices")}</div>
           <a
-            href={`${import.meta.env.VITE_LANDING_PAGE}#howToBuy`}
+            href={`${import.meta.env.VITE_LANDING_PAGE}howPay/`}
             target="_blank"
             className="btn btn-border-white btn-sm t-flex seleccionar-tb"
           >
@@ -34,7 +34,7 @@ export default function Ads() {
           <div className="tpub-1">{t("howToSell")}</div>
           <div className="tpub-2">{t("findYourBestSupplier")}</div>
           <a
-            href={`${import.meta.env.VITE_LANDING_PAGE}#howToSell`}
+            href={`${import.meta.env.VITE_LANDING_PAGE}howSale/`}
             target="_blank"
             className="btn btn-border-white btn-sm t-flex seleccionar-tb"
           >
@@ -61,7 +61,7 @@ export default function Ads() {
             style={{ fontSize: "40px", marginTop: "10px" }}
           ></i>
           <a
-            href={`${import.meta.env.VITE_LANDING_PAGE}#`}
+            href={`${import.meta.env.VITE_LANDING_PAGE}liquidations/`}
             target="_blank"
             className="btn btn-border-white btn-sm t-flex seleccionar-tb"
           >
