@@ -14,7 +14,7 @@ import { sectionIcons } from "../../../utilities/colors";
 import { RequirementType } from "../../../utilities/types";
 import { Carousel } from "antd";
 import useWindowSize from "../../../hooks/useWindowSize";
-import back1 from "../../../assets/images/back-01.jpg";
+import back1 from "../../../assets/images/back-01.jpeg";
 import back2 from "../../../assets/images/back-02.jpg";
 import back3 from "../../../assets/images/back-03.jpg";
 import back4 from "../../../assets/images/back-04.jpg";
