@@ -35,6 +35,7 @@ export default function Search() {
 
   useEffect(() => {
     if (width <= windowSize.sm) setCarouselHeight(420);
+    else setCarouselHeight(520);
   }, [width]);
 
   useEffect(() => {
