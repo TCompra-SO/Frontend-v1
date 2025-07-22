@@ -47,7 +47,7 @@ export const searchSinceLength: number = 3;
 export const typeParamNameInRoute: string = "type";
 export const reqIdParamNameInRoute: string = "requirementId";
 
-export const homePageSize: number = pageSizeOptionsSt[0];
+export const homePageSize: number = 20;
 export const notificationPageSize: number = 5;
 export const certificatesToSendPageSize: number = 5;
 

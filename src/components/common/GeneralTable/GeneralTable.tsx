@@ -28,6 +28,7 @@ import {
   companyNameColumnName,
   companyDocumentColumnName,
   certRequestCreationDateColumnKey,
+  homePageSize,
 } from "../../../utilities/globals";
 import ImageColumn from "./columns/ImageColumn";
 import NameColumn from "./columns/NameColumn";
@@ -111,6 +112,8 @@ export default function GeneralTable(props: GeneralTableProps) {
     },
     pagination: {
       pageSizeOptions,
+      pageSize:
+        props.content.type == TableTypes.HOME ? homePageSize : undefined,
       showSizeChanger: props.content.type != TableTypes.HOME,
       // onChange: props.onChangePageAndPageSize,
       total: props.total ?? props.content.total,
