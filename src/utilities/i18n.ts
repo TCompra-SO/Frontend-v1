@@ -1009,7 +1009,7 @@ const resources = {
       saleToValidateNotFound:
         "No se ha encontrado liquidación con estado publicado",
       sellerRoleInfo:
-        "Un vendedor sólo puede crear liquidaciones y hacer ofertas a requerimienos de bienes y servicios.",
+        "Un vendedor sólo puede crear liquidaciones y hacer ofertas a requerimientos de bienes y servicios.",
       buyerRoleInfo:
         "Un comprador sólo puede crear requerimientos de bienes y servicios y hacer ofertas a liquidaciones.",
       sellerBuyerRoleInfo:
