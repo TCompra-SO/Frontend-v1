@@ -71,6 +71,9 @@ export default function Sidebar(props: SidebarProps) {
   const navigate = useNavigate();
   const typeID = useSelector((state: MainState) => state.user.typeID);
   const entityType = useSelector((state: MainState) => state.user.typeEntity);
+  const isSystemAdmin = useSelector(
+    (state: MainState) => state.user.isSystemAdmin
+  );
   const { globalNumUnreadMessages } = useContext(MainSocketsContext);
   const [menuStyle] = useState<CSSProperties>({ display: "inherit" });
   const [focusExists, setFocusExists] = useState(false);
@@ -750,6 +753,7 @@ export default function Sidebar(props: SidebarProps) {
             t("statistics")
           )}
         {RolesForSection.admin[typeID] &&
+          isSystemAdmin &&
           getMenuButton(
             false,
             `${pageRoutes.admin}`,
