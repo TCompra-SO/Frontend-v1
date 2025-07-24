@@ -31,6 +31,19 @@ export default function ActionColumn(
   const { myPurchaseOrdersLoadingPdf, idAndActionQueue } =
     useContext(LoadingDataContext);
 
+  function checkSubActions(action: Action, record: any) {
+    let onClickCallback = undefined;
+    let children = undefined;
+    if (Object.prototype.hasOwnProperty.call(SubActions, action))
+      children = SubActions[action].map((a) => ({
+        key: `${action.toString()}-${a.toString()}`,
+        label: t(ActionLabel[a]),
+        onClick: () => onButtonClick(action, record, a),
+      }));
+    else onClickCallback = () => onButtonClick(action, record);
+    return { children, onClickCallback };
+  }
+
   function getActions(
     record: any,
     key: number,
@@ -133,15 +146,20 @@ export default function ActionColumn(
                 (!state && action == Action.SUSPEND)
               )
                 return acc;
+              const { children, onClickCallback } = checkSubActions(
+                action,
+                record
+              );
               acc.push({
                 key: action,
                 label: t(ActionLabel[action]),
-                onClick: () => onButtonClick(action, record),
+                onClick: onClickCallback,
                 disabled:
                   (action == Action.REACTIVATE || action == Action.SUSPEND) &&
                   idAndActionQueue[uid]
                     ? true
                     : false,
+                children,
               });
               return acc;
             },
@@ -149,20 +167,16 @@ export default function ActionColumn(
           );
         default:
           return ActionByState[key].map((action: Action) => {
+            const { children, onClickCallback } = checkSubActions(
+              action,
+              record
+            );
             return {
               key: action,
               label: t(ActionLabel[action]),
-              onClick: Object.prototype.hasOwnProperty.call(SubActions, action)
-                ? undefined
-                : () => onButtonClick(action, record),
+              onClick: onClickCallback,
               disabled: idAndActionQueue[record?.key] ? true : false,
-              children: Object.prototype.hasOwnProperty.call(SubActions, action)
-                ? SubActions[action].map((a) => ({
-                    key: `${action.toString()}-${a.toString()}`,
-                    label: t(ActionLabel[a]),
-                    onClick: () => onButtonClick(action, record, a),
-                  }))
-                : undefined,
+              children,
             };
           });
       }
