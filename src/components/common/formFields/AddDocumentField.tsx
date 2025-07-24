@@ -103,6 +103,13 @@ export const AddDocumentField = forwardRef<
         style={{ display: "none" }}
         beforeUpload={checkDocBeforeUpload}
         showUploadList={!onlyUpload}
+        // iconRender={() => <img src={logoBlack}></img>}
+        iconRender={() => (
+          <i
+            style={{ color: "rgba(34, 139, 34, 0.6)", fontSize: "35px" }}
+            className="fa-regular fa-file-circle-check"
+          ></i>
+        )}
       >
         <div style={{ display: "none" }} ref={fileInputRefDoc} />
         {customChild
