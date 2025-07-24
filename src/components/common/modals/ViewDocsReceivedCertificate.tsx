@@ -16,7 +16,7 @@ import {
   ResponseRequestType,
   SystemNotificationType,
 } from "../../../utilities/types";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { CommonModalProps, ModalContent } from "../../../models/Interfaces";
 import ModalContainer from "../../containers/ModalContainer";
 import { mainModalScrollStyle } from "../../../utilities/globals";
@@ -47,12 +47,17 @@ export default function ViewDocsReceivedCertificate(
   const { showNotification } = useShowNotification();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [certApproved, setCertApproved] = useState(false);
+  const certApprovedRef = useRef(certApproved);
   const [note, setNote] = useState("");
   const { loading } = props.useApiHook;
   const [resendLoading, setResendLoading] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>(
     getInitialModalData()
   );
+
+  useEffect(() => {
+    certApprovedRef.current = certApproved;
+  }, [certApproved]);
 
   /** Para certificar o rechazar */
 
@@ -66,7 +71,11 @@ export default function ViewDocsReceivedCertificate(
         if (responseData) {
           showNotification(
             "success",
-            t(certApproved ? "certificationApproved" : "certificationRejected")
+            t(
+              certApprovedRef.current
+                ? "certificationApproved"
+                : "certificationRejected"
+            )
           );
           props.onClose();
         } else if (error) {
