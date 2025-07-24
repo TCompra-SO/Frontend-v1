@@ -12,6 +12,11 @@ export default function DescriptionParagraph(props: DescriptionParagraphProps) {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
 
+  function changeAndStopPropagation(event: any) {
+    event.stopPropagation();
+    setExpanded(!expanded);
+  }
+
   return (
     <>
       {props.text && (
@@ -25,9 +30,15 @@ export default function DescriptionParagraph(props: DescriptionParagraphProps) {
             expanded,
             onExpand: (_, info) => setExpanded(info.expanded),
             symbol: (expanded: boolean) => {
-              return expanded
-                ? t("paragraphSymbolLess")
-                : t("paragraphSymbolMore");
+              return expanded ? (
+                <span onClick={changeAndStopPropagation}>
+                  {t("paragraphSymbolLess")}
+                </span>
+              ) : (
+                <span onClick={changeAndStopPropagation}>
+                  {t("paragraphSymbolMore")}
+                </span>
+              );
             },
           }}
         />

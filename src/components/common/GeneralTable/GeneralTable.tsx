@@ -152,7 +152,16 @@ export default function GeneralTable(props: GeneralTableProps) {
           expandable={{
             expandedRowRender: (record) => {
               const rec = record as Requirement;
-              return <RequirementInfo requirement={rec} forHome />;
+              return (
+                <div
+                  onClick={() =>
+                    navigate(getProductDetailRoute(rec.key, rec.type))
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  <RequirementInfo requirement={rec} forHome />
+                </div>
+              );
             },
             expandRowByClick: true,
             showExpandColumn: false,
