@@ -421,3 +421,23 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
 .call-to-action.bounce-in {
   animation: bounceIn 0.8s ease;
 }
+
+/* Search bar highlight */
+
+@keyframes pulseBorder {
+  0% {
+    box-shadow: 0 0 0px 0 rgba(188, 19, 115, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 8px 4px rgba(188, 19, 115, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 0px 0 rgba(188, 19, 115, 0.7);
+  }
+}
+
+.highlight-search {
+  animation: pulseBorder 1.5s ease-in-out infinite;
+  border: 2px solid #bc1373;
+  border-radius: 4px;
+}

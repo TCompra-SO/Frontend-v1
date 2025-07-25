@@ -14,7 +14,9 @@ export default function CompanyFilter() {
 
   return (
     <div className="card-white back-filter">
-      <div className="t-filtro">{t("companyFilter")}</div>
+      <div className="t-filtro" style={{ marginBottom: "10px" }}>
+        {t("companyFilter")}
+      </div>
       <SelectCompanyField onCompanySelected={updateUserId} />
     </div>
   );

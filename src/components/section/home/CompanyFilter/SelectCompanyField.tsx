@@ -62,7 +62,7 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
       style={{ width: "100%" }}
       placeholder={t("companyName")}
       className={`form-control ${
-        props.forHomeFilter ? "f-empresa" : "form-filter"
+        props.forHomeFilter ? "f-empresa" : "form-filter highlight-search "
       }`}
       notFoundContent={
         loadingCompanyList ? (
