@@ -86,7 +86,7 @@ export default function Search() {
         <div className="t-flex gap-10 ht-s2" style={{ width: "30%" }}>
           <InputContainer
             type="text"
-            className="form-control form-buscar highlight-search"
+            className="form-control form-buscar"
             placeholder={t("search")}
             count={{
               max: Lengths.keywords.max,

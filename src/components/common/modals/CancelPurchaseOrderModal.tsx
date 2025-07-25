@@ -167,6 +167,7 @@ export default function CancelPurchaseOrderModal(
           <ButtonContainer
             children={t("cancelButton")}
             onClick={props.onClose}
+            common
             className="btn btn-second alert-boton"
           />
         </div>

@@ -214,6 +214,7 @@ export default function RequirementModalOfferSelected({
           />
           <ButtonContainer
             children={t("cancelButton")}
+            common
             className="btn btn-second alert-boton"
             onClick={props.onClose}
           />

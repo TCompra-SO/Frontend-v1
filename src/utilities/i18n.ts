@@ -389,7 +389,7 @@ const resources = {
       sellerBuyerRoleInfo:
         "A buyer/seller is permitted to submit offers and create sales, goods and services requirements.",
       agreeToSaleTermsAndConditions:
-        "I accept the Terms and Conditions for liquidations",
+        "You must accept the Terms and Conditions when creating liquidations",
       CSRFTokenError: "An error occurred. Reload page, please.",
       footerText:
         "Dive into the new era of business with our innovative platform.",
@@ -1015,7 +1015,7 @@ const resources = {
       sellerBuyerRoleInfo:
         "Un vendedor/comprador puede crear y hacer ofertas requerimientos y liquidaciones.",
       agreeToSaleTermsAndConditions:
-        "Acepto los Términos y Condiciones de liquidaciones",
+        "Debe aceptar los Términos y Condiciones al crear la liquidación",
       CSRFTokenError: "Se produjo un error. Por favor, recargue la página.",
       footerText:
         "Sumérgete en la nueva era de los negocios con nuestra innovadora plataforma.",

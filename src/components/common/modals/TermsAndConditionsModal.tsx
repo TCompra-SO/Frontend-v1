@@ -8,7 +8,7 @@ import {
 import { TermsAndConditionsType } from "../../../utilities/types";
 
 interface TermsAndConditionsModalProps {
-  onClose: () => void;
+  onClose: (accepted?: boolean) => void;
   isOpen: boolean;
   type: TermsAndConditionsType;
 }
@@ -26,7 +26,7 @@ export default function TermsAndConditionsModal(
       style={mainModalScrollStyle}
       closable={true}
       maskClosable={true}
-      onClose={props.onClose}
+      onClose={() => props.onClose(false)}
     >
       <div className="modal-card">
         <div className="t-flex tc-alert-base">
@@ -385,9 +385,15 @@ export default function TermsAndConditionsModal(
               </div>
               <div className="t-flex gap-15 wd-100 alert-btn">
                 <ButtonContainer
-                  onClick={() => props.onClose()}
+                  onClick={() => props.onClose(true)}
                   children={t("acceptButton")}
                   className="btn btn-default alert-boton"
+                />
+                <ButtonContainer
+                  onClick={() => props.onClose(false)}
+                  children={t("cancelButton")}
+                  common
+                  className="btn btn-second alert-boton"
                 />
               </div>
             </>

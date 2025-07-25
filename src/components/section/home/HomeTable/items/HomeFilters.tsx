@@ -250,6 +250,7 @@ export default function HomeFilters() {
                 {t("search")}
               </ButtonContainer>
               <ButtonContainer
+                common
                 className="btn btn-second alert-boton"
                 icon={
                   <i className="fa-solid fa-magnifying-glass-arrows-rotate"></i>

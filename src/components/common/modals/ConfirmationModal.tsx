@@ -37,6 +37,7 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
             <ButtonContainer
               onClick={() => closeModal(false)}
               children={t("cancelButton")}
+              common
               className="btn btn-second alert-boton"
             />
           )}
