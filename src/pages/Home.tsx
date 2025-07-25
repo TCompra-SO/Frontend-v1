@@ -96,8 +96,7 @@ export default function Home() {
                   <CompanyFilter />
                   <CompanyData />
                   <div className="titulo req-t">
-                    {t("homeTableFirstHalf")}{" "}
-                    <span>{t("homeTableSecondHalf")}</span>
+                    {t("homeTableFirstHalf")} {t("homeTableSecondHalf")}
                   </div>
                 </>
               )}
