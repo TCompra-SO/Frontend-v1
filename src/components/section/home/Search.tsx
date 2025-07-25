@@ -95,8 +95,19 @@ export default function Search() {
             onChange={(e) => setKeyword(e.target.value)}
             onKeyUp={handleKeyUp}
           />
-          <ButtonContainer className="btn btn-default" onClick={search}>
-            <i className="fa-regular fa-search"></i>
+          <ButtonContainer
+            className="btn  "
+            onClick={search}
+            common
+            style={{
+              fontSize: "1.8rem",
+              background: "rgb(220 146 194 / 41%)",
+              padding: "0.2rem 0.6rem",
+              color: "#fff",
+            }}
+          >
+            {/* <i className="fa-regular fa-search"></i> */}
+            <i className="fa-regular fa-magnifying-glass-arrow-right"></i>
           </ButtonContainer>
         </div>
         {data && (
