@@ -876,6 +876,18 @@ export default function GeneralTable(props: GeneralTableProps) {
         null,
         true
       ),
+      OffersColumn(
+        TableTypes.HOME,
+        props.content.onButtonClick,
+        visibility[TableColumns.OFFERS],
+        props.content.fieldSort,
+        true
+      ),
+      PriceColumn(
+        visibility[TableColumns.PRICE],
+        props.content.fieldSort,
+        true
+      ),
       CategoryColumn(visibility[TableColumns.CATEGORY]),
       LocationColumn(
         visibility[TableColumns.LOCATION],
@@ -886,18 +898,6 @@ export default function GeneralTable(props: GeneralTableProps) {
         t("dateColumn"),
         "publishDate",
         visibility[TableColumns.PUBLISH_DATE],
-        props.content.fieldSort,
-        true
-      ),
-      PriceColumn(
-        visibility[TableColumns.PRICE],
-        props.content.fieldSort,
-        true
-      ),
-      OffersColumn(
-        TableTypes.HOME,
-        props.content.onButtonClick,
-        visibility[TableColumns.OFFERS],
         props.content.fieldSort,
         true
       ),

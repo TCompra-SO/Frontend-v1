@@ -66,6 +66,7 @@ export default function RequirementInfoNoTags(
         text={props.description}
         rows={props.forHome ? 3 : undefined}
         className={props.forHome ? "ofer-req-2-no-clamp" : "info-req-no-clamp"}
+        forResizableColumn={props.forHome}
       />
     </>
   );

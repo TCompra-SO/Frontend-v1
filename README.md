@@ -996,11 +996,12 @@ Componente para mostrar texto con funcionalidad de expandir/colapsar.
 
 _Props_
 
-| Nombre       | Tipo                  | Descripción                                                          |
-| ------------ | --------------------- | -------------------------------------------------------------------- |
-| `text`       | `string \| undefined` | Texto a mostrar. Si es `undefined`, no se renderiza el componente.   |
-| `className?` | `string`              | Clases CSS adicionales para personalizar el estilo.                  |
-| `rows?`      | `number`              | Número máximo de filas a mostrar cuando está colapsado (default: 3). |
+| Nombre                | Tipo                  | Descripción                                                                           |
+| --------------------- | --------------------- | ------------------------------------------------------------------------------------- |
+| `text`                | `string \| undefined` | Texto a mostrar. Si es `undefined`, no se renderiza el componente.                    |
+| `className?`          | `string`              | Clases CSS adicionales para personalizar el estilo.                                   |
+| `rows?`               | `number`              | Número máximo de filas a mostrar cuando está colapsado (default: 3).                  |
+| `forResizableColumn?` | `boolean`             | Indica si se usa en un componente dentro de una columna de tabla con ancho cambiante. |
 
 ##### FrontImage
 
