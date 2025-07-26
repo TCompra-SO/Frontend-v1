@@ -82,21 +82,27 @@ export default function ChatBody(props: ChatBodyProps) {
 
   /** Para mostrar o no date divider on top */
 
-  const checkVisibilityOfLastMessage = useCallback(() => {
-    if (!chatContainerRef.current || !lastMessageRef.current) return;
+  const checkVisibilityOfLastMessage = useCallback(
+    (messagesLength: number) => {
+      const msgRef =
+        lastMessageRef.current ?? messagesLength == 1
+          ? firstMessageRef.current
+          : null;
+      if (!chatContainerRef.current || !msgRef) return;
 
-    const chatRect = chatContainerRef.current.getBoundingClientRect();
-    const lastRect = lastMessageRef.current.getBoundingClientRect();
+      const chatRect = chatContainerRef.current.getBoundingClientRect();
+      const lastRect = msgRef.getBoundingClientRect();
+      const fullyVisible =
+        lastRect.top >= chatRect.top && lastRect.bottom <= chatRect.bottom;
 
-    const fullyVisible =
-      lastRect.top >= chatRect.top && lastRect.bottom <= chatRect.bottom;
-
-    setShowDivider(!fullyVisible);
-    if (!fullyVisible) {
-      setLocked(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [locked]);
+      setShowDivider(!fullyVisible);
+      if (!fullyVisible) {
+        setLocked(true);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [locked]
+  );
 
   /** Verificar si el primer mensaje es parcialmente visible */
 
@@ -110,7 +116,6 @@ export default function ChatBody(props: ChatBodyProps) {
 
       const chatRect = chatContainerRef.current.getBoundingClientRect();
       const firstRect = msgRef.getBoundingClientRect();
-
       const visibleTop = Math.max(firstRect.top, chatRect.top);
       const visibleBottom = Math.min(firstRect.bottom, chatRect.bottom);
       const visibleHeight = Math.max(0, visibleBottom - visibleTop);
@@ -118,7 +123,7 @@ export default function ChatBody(props: ChatBodyProps) {
       const elementHeight = firstRect.height;
 
       const atLeastHalfVisible = visibleHeight >= elementHeight / 2;
-      console.log(atLeastHalfVisible, messageId);
+
       if (atLeastHalfVisible)
         markAsRead({
           messagesIds: [messageId],
@@ -153,8 +158,7 @@ export default function ChatBody(props: ChatBodyProps) {
 
     // Mostrar fecha de mensaje superior en base a date dividers
     insertDatedividers();
-    checkVisibilityOfLastMessage();
-
+    checkVisibilityOfLastMessage(props.messages.length);
     // Marcar mensajes como leído
     if (
       props.messages.length &&
@@ -213,13 +217,13 @@ export default function ChatBody(props: ChatBodyProps) {
     } else prevChatMessagesLength.current = 0;
   }, [props.messages]);
 
+  /** Funciones */
+
   function scrollToBottom() {
     if (divRef.current) {
       divRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }
-
-  /** Funciones */
 
   function insertDatedividers() {
     const chatContainer = chatContainerRef.current;
@@ -442,10 +446,10 @@ export default function ChatBody(props: ChatBodyProps) {
                     return (
                       <Fragment key={msg.uid}>
                         {index == 0 && <div ref={divRef} />}
-                        {isLast ? (
-                          <div ref={lastMessageRef}>{messageNode}</div>
-                        ) : index == 0 ? (
+                        {isLast ? ( // Se ha invertido los refs debido a flex-direction: column-reverse
                           <div ref={firstMessageRef}>{messageNode}</div>
+                        ) : index == 0 ? (
+                          <div ref={lastMessageRef}>{messageNode}</div>
                         ) : (
                           messageNode
                         )}

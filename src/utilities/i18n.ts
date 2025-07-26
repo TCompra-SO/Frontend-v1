@@ -614,8 +614,10 @@ const resources = {
       privacyPolicy: "Privacy Policy",
       help: "Help",
       customerService: "Customer Service",
-      contactUs: "ContactUs",
+      contactUs: "Contact Us",
       videos: "Videos",
+      or: "or",
+      RUC: "RUC",
     },
   },
   es: {
@@ -1244,6 +1246,8 @@ const resources = {
       customerService: "Atención al Cliente",
       contactUs: "Contactos",
       videos: "Videos",
+      or: "o",
+      RUC: "RUC",
     },
   },
 };

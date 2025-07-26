@@ -60,7 +60,7 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
       allowClear
       value={value}
       style={{ width: "100%" }}
-      placeholder={t("companyName")}
+      placeholder={`${t("companyName")} ${t("or")} ${t("RUC")}`}
       className={`form-control ${
         props.forHomeFilter ? "f-empresa" : "form-filter"
       }`}

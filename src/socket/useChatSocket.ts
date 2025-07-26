@@ -115,6 +115,7 @@ export function useChatSocket() {
             } else if (payload.type == ChatMessageType.READ) {
               if (payload.numUnreadMessages > 0)
                 setGlobalNumUnreadMessages(payload.numUnreadMessages);
+              else setGlobalNumUnreadMessages(0);
             }
           } catch (e) {
             console.log(e);
