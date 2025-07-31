@@ -72,7 +72,7 @@ export default function CompanyData() {
 
   return (
     <>
-      {userId ? (
+      {userId.id ? (
         <div className="t-flex f-column gap-15">
           {!loadingUser ? (
             user && (

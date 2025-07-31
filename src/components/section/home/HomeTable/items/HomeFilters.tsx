@@ -19,6 +19,7 @@ import {
 import dayjs from "dayjs";
 import { HomeContext } from "../../../../../contexts/Homecontext";
 import { HomeFilterRequest } from "../../../../../models/Requests";
+import { DisplayUser } from "../../../../../models/MainInterfaces";
 
 export default function HomeFilters() {
   const { t } = useTranslation();
@@ -27,6 +28,9 @@ export default function HomeFilters() {
   const divRef = useRef<HTMLDivElement>(null);
   const [form] = Form.useForm();
   const [hideFilters, setHideFilters] = useState(true);
+  const [customCompanyList, setCustomCompanyList] = useState<
+    DisplayUser[] | undefined
+  >(undefined);
   const [searchFromNotifCompleted, setSearchFromNotifCompleted] =
     useState<boolean>(true);
   const {
@@ -117,14 +121,22 @@ export default function HomeFilters() {
   /** Obtener datos de empresa buscada en filtro de empresas superior */
 
   useEffect(() => {
-    if (userId.id) {
+    if (!userId.id) setCustomCompanyList(undefined);
+    if (userId.id && form.getFieldValue("companyId") != userId.id) {
       setHideFilters(false);
+      setCustomCompanyList([
+        {
+          uid: userId.id,
+          name: userId.name,
+          document: "",
+        },
+      ]);
       form.resetFields();
-      // form.setFieldValue("companyId", userId.id);
-      // form.validateFields().then(
-      //   () => search(form.getFieldsValue()),
-      //   () => form.resetFields()
-      // );
+      form.setFieldValue("companyId", userId.id);
+      form.validateFields().then(
+        () => search(form.getFieldsValue()),
+        () => form.resetFields()
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
@@ -252,6 +264,7 @@ export default function HomeFilters() {
                       form.setFieldValue("companyId", companyId);
                     }}
                     forHomeFilter
+                    customList={customCompanyList}
                   />
                 </Form.Item>
               ) : (

@@ -12,10 +12,12 @@ import { debounce } from "lodash";
 import { getSearchString } from "../../../../utilities/globalFunctions";
 import SimpleLoading from "../../../../pages/utils/SimpleLoading";
 import { useSearchCompanyByName } from "../../../../hooks/utilHooks";
+import { DisplayUser } from "../../../../models/MainInterfaces";
 
 interface SelectCompanyFieldProps {
   forHomeFilter?: boolean;
-  onCompanySelected: (companyId: string, companyName: string) => void;
+  onCompanySelected?: (companyId: string, companyName: string) => void;
+  customList?: DisplayUser[];
 }
 
 export default function SelectCompanyField(props: SelectCompanyFieldProps) {
@@ -23,6 +25,17 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
   const { loadingCompanyList, searchCompanyByName, clearList, companyList } =
     useSearchCompanyByName();
   const [value, setValue] = useState<string>();
+  const [customList, setCustomList] = useState<DisplayUser[] | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    setCustomList(props.customList);
+    if (props.customList?.length) {
+      setValue(props.customList[0].uid);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.customList]);
 
   useEffect(() => {
     return () => {
@@ -34,6 +47,7 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
   const searchCompany = useMemo(
     () =>
       debounce((newValue: string) => {
+        setCustomList(undefined);
         const temp = getSearchString(newValue);
         if (typeof temp === "string" && temp.length >= searchSinceLength) {
           searchCompanyByName(temp);
@@ -48,7 +62,7 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
   function handleChange(companyId: string) {
     const companyName = companyList.find((x) => x.uid == companyId)?.name ?? "";
     setValue(companyId);
-    props.onCompanySelected(companyId, companyName);
+    props.onCompanySelected?.(companyId, companyName);
   }
 
   return (
@@ -70,7 +84,7 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
       onSearch={searchCompany}
       onClear={() => clearList()}
       filterOption={false}
-      options={companyList.map((comp) => ({
+      options={(customList ?? companyList).map((comp) => ({
         value: comp.uid,
         label: (
           <>
