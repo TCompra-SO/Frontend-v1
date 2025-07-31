@@ -38,6 +38,7 @@ export const defaultUserImage: string = userDef;
 export const defaultRequirementImage: string = prodDef;
 
 export const onlyLettersAndNumbers: RegExp = /[^a-zA-Z0-9áéíóúÁÉÍÓÚ]/g;
+export const rucFormat: RegExp = /^\d{11}$/;
 
 export const inputSearchAfterMseconds: number = 400;
 export const tableSearchAfterMseconds: number = 400;

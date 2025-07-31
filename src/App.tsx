@@ -183,7 +183,7 @@ function App() {
                       <LoadingCond></LoadingCond>
                       <Routes>
                         <Route
-                          path={`${pageRoutes.home}`}
+                          path={`${pageRoutes.home}/:companyId?`}
                           element={
                             <Suspense fallback={<LoadingPage />}>
                               <MainHeader ref={mainHeaderRef} />
