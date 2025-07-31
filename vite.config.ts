@@ -7,18 +7,16 @@ export default defineConfig({
     allowedHosts: ["tcompra.com", "www.tcompra.com"],
     host: true,
     port: 3000,
-    // headers: {
-    //   "Content-Security-Policy": `
-    //     default-src 'self';
-    //     script-src 'self';
-    //     style-src 'self' https://fonts.googleapis.com https://site-assets.fontawesome.com;
-    //     font-src 'self' https://fonts.gstatic.com https://site-assets.fontawesome.com;
-    //     object-src 'none';
-    //     base-uri 'self';
-    //     frame-src 'self'
-    //   `
-    //     .replace(/\s{2,}/g, " ")
-    //     .trim(),
-    // },
+    headers: {
+      "Content-Security-Policy": `
+        
+        font-src 'self' https://fonts.gstatic.com https://site-assets.fontawesome.com;
+        object-src 'none';
+        base-uri 'self';
+        frame-src 'self'
+      `
+        .replace(/\s{2,}/g, " ")
+        .trim(),
+    },
   },
 });

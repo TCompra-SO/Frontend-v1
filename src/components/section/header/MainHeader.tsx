@@ -68,6 +68,7 @@ export const MainHeader = forwardRef<MainHeaderRef, MainHeaderProps>(
           }
         }
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location, isLoadingUser]);
 
     /** Funciones */
