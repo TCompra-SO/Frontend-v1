@@ -59,6 +59,7 @@ export const masterUid: string = "dlGMHRyyAidgFMDqmLBO";
 export const pageSizeOfferList: number = 5;
 
 export const checkToMarkMsgAsReadWhileScrolling: number = 200; //ms
+export const intervalToMarkMsgAsRead: number = 1000; //ms
 export const timeoutToSendMsgToChatbot: number = 4; // s
 
 // Debe ser menor que la longitud de uids

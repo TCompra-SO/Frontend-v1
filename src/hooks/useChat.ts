@@ -212,13 +212,20 @@ export function useChat() {
       });
   }
 
-  function markMsgAsRead(messageId: string) {
+  function markMsgAsRead(startMessageId: string, endMessageId: string) {
     setChatMessageList((prevList) => {
-      const objInd = prevList.findIndex((item) => item.uid == messageId);
-      if (objInd != -1) {
-        const ownerIsCurrentUser = prevList[objInd].userId == uid;
+      const endObjInd = prevList.findIndex((item) => item.uid == endMessageId);
+      const startObjInd = prevList.findIndex(
+        (item) => item.uid == startMessageId
+      );
+      if (startObjInd != -1) {
+        const ownerIsCurrentUser = prevList[startObjInd].userId == uid;
         const updatedList = [...prevList];
-        for (let i = objInd; i < updatedList.length; i++) {
+        for (
+          let i = startObjInd;
+          i <= (endObjInd != -1 ? endObjInd : prevList.length - 1); // Si no se encuentra endObjInd (la lista no cargó hasta ese elemento), verificar solo en la lista actual
+          i++
+        ) {
           if (
             (ownerIsCurrentUser && updatedList[i].userId == uid) ||
             (!ownerIsCurrentUser && updatedList[i].userId != uid)

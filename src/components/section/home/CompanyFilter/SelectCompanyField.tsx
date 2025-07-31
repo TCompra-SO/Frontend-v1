@@ -15,7 +15,7 @@ import { useSearchCompanyByName } from "../../../../hooks/utilHooks";
 
 interface SelectCompanyFieldProps {
   forHomeFilter?: boolean;
-  onCompanySelected: (companyId: string) => void;
+  onCompanySelected: (companyId: string, companyName: string) => void;
 }
 
 export default function SelectCompanyField(props: SelectCompanyFieldProps) {
@@ -45,13 +45,10 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
     []
   );
 
-  function onCompanySelected(companyId: string) {
-    props.onCompanySelected(companyId);
-  }
-
   function handleChange(companyId: string) {
+    const companyName = companyList.find((x) => x.uid == companyId)?.name ?? "";
     setValue(companyId);
-    onCompanySelected(companyId);
+    props.onCompanySelected(companyId, companyName);
   }
 
   return (

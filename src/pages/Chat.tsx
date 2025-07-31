@@ -127,8 +127,11 @@ export default function Chat() {
   /** Marcar mensaje como leído */
 
   useEffect(() => {
-    if (chatMessageRead.endMessageId) {
-      markMsgAsRead(chatMessageRead.endMessageId);
+    if (chatMessageRead.endMessageId && chatMessageRead.startMessageId) {
+      markMsgAsRead(
+        chatMessageRead.startMessageId,
+        chatMessageRead.endMessageId
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatMessageRead]);

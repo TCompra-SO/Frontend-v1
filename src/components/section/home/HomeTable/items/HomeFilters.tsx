@@ -42,6 +42,7 @@ export default function HomeFilters() {
     updateKeywordSearch,
     notificationSearchData,
     resetNotificationSearchData,
+    userId,
   } = useContext(HomeContext);
   const [homeFilter, setHomeFilter] = useState<HomeFilterRequest>({
     page: 1,
@@ -112,6 +113,21 @@ export default function HomeFilters() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [homeFilter, page, searchFromNotifCompleted]);
+
+  /** Obtener datos de empresa buscada en filtro de empresas superior */
+
+  useEffect(() => {
+    if (userId.id) {
+      setHideFilters(false);
+      form.resetFields();
+      // form.setFieldValue("companyId", userId.id);
+      // form.validateFields().then(
+      //   () => search(form.getFieldsValue()),
+      //   () => form.resetFields()
+      // );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   /**
    * Funciones

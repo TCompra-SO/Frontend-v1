@@ -8,7 +8,7 @@ export default function CompanyFilter() {
   const { updateUserId } = useContext(HomeContext);
 
   useEffect(() => {
-    return () => updateUserId("");
+    return () => updateUserId("", "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import {
   checkToMarkMsgAsReadWhileScrolling,
   dateFormatChatBody,
+  intervalToMarkMsgAsRead,
   randomShortKeyLength,
   windowSize,
 } from "../../../../utilities/globals";
@@ -79,15 +80,15 @@ export default function ChatBody(props: ChatBodyProps) {
   const firstMessageRef = useRef<HTMLDivElement | null>(null);
   const [showDivider, setShowDivider] = useState(false);
   const [locked, setLocked] = useState(false);
+  let foundUnreadMsg: boolean = false;
 
   /** Para mostrar o no date divider on top */
 
   const checkVisibilityOfLastMessage = useCallback(
     (messagesLength: number) => {
       const msgRef =
-        lastMessageRef.current ?? messagesLength == 1
-          ? firstMessageRef.current
-          : null;
+        lastMessageRef.current ??
+        (messagesLength == 1 ? firstMessageRef.current : null);
       if (!chatContainerRef.current || !msgRef) return;
 
       const chatRect = chatContainerRef.current.getBoundingClientRect();
@@ -99,19 +100,16 @@ export default function ChatBody(props: ChatBodyProps) {
       if (!fullyVisible) {
         setLocked(true);
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [locked]
   );
 
-  /** Verificar si el primer mensaje es parcialmente visible */
+  /** Verificar si el primer mensaje es parcialmente visible para marcar como leído */
 
   const checkVisibilityOfFirsttMessage = useCallback(
-    (chatId: string, messageId: string, messagesLength: number) => {
-      const msgRef =
-        firstMessageRef.current ?? messagesLength == 1
-          ? lastMessageRef.current
-          : null;
+    (chatId: string, messageId: string, userId: string) => {
+      const msgRef = firstMessageRef.current;
       if (!chatContainerRef.current || !msgRef) return;
 
       const chatRect = chatContainerRef.current.getBoundingClientRect();
@@ -124,12 +122,13 @@ export default function ChatBody(props: ChatBodyProps) {
 
       const atLeastHalfVisible = visibleHeight >= elementHeight / 2;
 
-      if (atLeastHalfVisible)
+      if (atLeastHalfVisible) {
         markAsRead({
           messagesIds: [messageId],
           chatId,
-          userId: props.chatData.userId,
+          userId,
         });
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -139,13 +138,43 @@ export default function ChatBody(props: ChatBodyProps) {
     if (props.chatData.uid) setLocked(false);
   }, [props.chatData]);
 
+  /** Scroll al mensaje más actual */
+
+  useEffect(() => {
+    let firstTime: boolean = false;
+    if (props.messages.length > 0) {
+      if (prevChatMessagesLength.current == 0) {
+        // primera vez que se abre chat
+        firstTime = true;
+        scrollToBottom();
+        checkLastNotOwnedMsgAfterOpeningChat();
+      }
+      prevChatMessagesLength.current = props.messages.length;
+    } else prevChatMessagesLength.current = 0;
+
+    // Marcar 1er mensaje como leído
+    if (
+      !firstTime &&
+      props.messages.length &&
+      !props.messages[0].read &&
+      props.messages[0].userId !== uid
+    ) {
+      checkVisibilityOfFirsttMessage(
+        props.messages[0].chatId,
+        props.messages[0].uid,
+        props.messages[0].userId
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.messages]);
+
   /** Cuando la lista de mensajes cambia... */
 
   useEffect(() => {
     const chatContainer = chatContainerRef.current;
     if (!chatContainer) return;
 
-    // Cargar más elementos en infinite scroller si no hay scroll y
+    // Cargar más elementos en infinite scroller si no hay scroll
     if (
       props.messages.length &&
       props.hasMore &&
@@ -159,24 +188,6 @@ export default function ChatBody(props: ChatBodyProps) {
     // Mostrar fecha de mensaje superior en base a date dividers
     insertDatedividers();
     checkVisibilityOfLastMessage(props.messages.length);
-    // Marcar mensajes como leído
-    if (
-      props.messages.length &&
-      !props.messages[0].read &&
-      props.messages[0].userId !== uid
-      //&& props.messages[0].uid.length > 8
-    ) {
-      // markAsRead({
-      //   messagesIds: [props.messages[0].uid],
-      //   chatId: props.messages[0].chatId,
-      //   userId: uid,
-      // });
-      checkVisibilityOfFirsttMessage(
-        props.messages[0].chatId,
-        props.messages[0].uid,
-        props.messages.length
-      );
-    }
 
     // Scroll to bottom cuando usuario envia muevo mensaje.
     if (
@@ -197,24 +208,19 @@ export default function ChatBody(props: ChatBodyProps) {
 
     chatContainer.addEventListener("scroll", debounceScroll);
 
+    // Cada x segundos, verificar si el último mensaje recibido no leído es visible para marcarlo como leído
+    const intervalId = setInterval(() => {
+      checkLastNotOwnedMsg();
+    }, intervalToMarkMsgAsRead);
+
     return () => {
       observerRef.current?.disconnect();
       observerDownRef.current?.disconnect();
+      clearInterval(intervalId);
       chatContainer.removeEventListener("scroll", debounceScroll);
       debounceScroll.cancel();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.messages]);
-
-  /** Scroll al mensaje más actual */
-
-  useEffect(() => {
-    if (props.messages.length > 0) {
-      prevChatMessagesLength.current = props.messages.length;
-      if (prevChatMessagesLength.current == 0) {
-        scrollToBottom();
-      }
-    } else prevChatMessagesLength.current = 0;
   }, [props.messages]);
 
   /** Funciones */
@@ -223,6 +229,38 @@ export default function ChatBody(props: ChatBodyProps) {
     if (divRef.current) {
       divRef.current.scrollIntoView({ behavior: "smooth" });
     }
+  }
+
+  function checkLastNotOwnedMsgAfterOpeningChat() {
+    for (let i = 0; i < props.messages.length; i++) {
+      if (props.messages[i].userId != uid && !props.messages[i].read) {
+        markAsRead({
+          messagesIds: [props.messages[i].uid],
+          chatId: props.messages[i].chatId,
+          userId: props.messages[i].userId,
+        });
+        break;
+      }
+    }
+  }
+
+  function checkLastNotOwnedMsg() {
+    const msgRef = firstMessageRef?.current;
+    if (!chatContainerRef.current || !msgRef) return;
+
+    const chatRect = chatContainerRef.current.getBoundingClientRect();
+    const lastRect = msgRef.getBoundingClientRect();
+    const fullyVisible =
+      lastRect.top >= chatRect.top && lastRect.bottom <= chatRect.bottom;
+
+    const i = props.messages.findIndex((x) => x.userId != uid && !x.read);
+
+    if (fullyVisible && i != -1)
+      markAsRead({
+        messagesIds: [props.messages[i].uid],
+        chatId: props.messages[i].chatId,
+        userId: props.messages[i].userId,
+      });
   }
 
   function insertDatedividers() {
@@ -341,7 +379,6 @@ export default function ChatBody(props: ChatBodyProps) {
     const rect = container.getBoundingClientRect();
 
     const el = document.elementFromPoint(rect.left + 10, rect.bottom - 5);
-
     if (el) {
       const messageEl = el.closest("[data-message-id]");
       if (messageEl) {
@@ -352,12 +389,13 @@ export default function ChatBody(props: ChatBodyProps) {
             ind != -1 &&
             !props.messages[ind].read &&
             props.messages[ind].userId !== uid
-          )
+          ) {
             markAsRead({
               messagesIds: [messageId],
-              chatId: props.chatData.uid,
-              userId: props.chatData.userId,
+              chatId: props.messages[ind].chatId,
+              userId: props.messages[ind].userId,
             });
+          }
         }
       }
     }
@@ -436,6 +474,10 @@ export default function ChatBody(props: ChatBodyProps) {
                         userName={props.chatData.userName}
                       />
                     );
+                    const ownedByOtherUser = foundUnreadMsg
+                      ? false
+                      : msg.userId != uid && !msg.read;
+                    if (ownedByOtherUser) foundUnreadMsg = true;
                     const shouldInsertDivider =
                       (index < array.length - 1 &&
                         !isSameDay(
@@ -446,9 +488,9 @@ export default function ChatBody(props: ChatBodyProps) {
                     return (
                       <Fragment key={msg.uid}>
                         {index == 0 && <div ref={divRef} />}
-                        {isLast ? ( // Se ha invertido los refs debido a flex-direction: column-reverse
+                        {ownedByOtherUser ? (
                           <div ref={firstMessageRef}>{messageNode}</div>
-                        ) : index == 0 ? (
+                        ) : isLast ? (
                           <div ref={lastMessageRef}>{messageNode}</div>
                         ) : (
                           messageNode

@@ -17,8 +17,8 @@ import { homePageSize } from "../utilities/globals";
 interface HomeContextType {
   type: RequirementType;
   updateType: (val: RequirementType) => void;
-  userId: string;
-  updateUserId: (id: string) => void;
+  userId: { id: string; name: string };
+  updateUserId: (id: string, name: string) => void;
   useFilter: boolean | null;
   updateUseFilter: (val: boolean) => void;
   requirementList: Requirement[];
@@ -45,7 +45,7 @@ interface HomeContextType {
 }
 
 export const HomeContext = createContext<HomeContextType>({
-  userId: "",
+  userId: { id: "", name: "" },
   updateUserId: () => {},
   useFilter: null,
   updateUseFilter: () => {},
@@ -71,7 +71,10 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   const [requirementList, setRequirementList] = useState<Requirement[]>([]);
   const [totalRequirementList, setTotalRequirementList] = useState(0);
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
-  const [userId, setUserId] = useState("");
+  const [userId, setUserId] = useState<{ id: string; name: string }>({
+    id: "",
+    name: "",
+  });
   const [useFilter, setUseFilter] = useState<null | boolean>(null);
   const [notificationSearchData, setNotificationSearchData] =
     useState<NotificationSearchData>({
@@ -123,7 +126,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   }, [totalRequirementListOrig]);
 
   useEffect(() => {
-    if (!isLoggedIn) setUserId("");
+    if (!isLoggedIn) setUserId({ id: "", name: "" });
   }, [isLoggedIn]);
 
   useEffect(() => {
@@ -177,8 +180,8 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  function updateUserId(id: string) {
-    setUserId(id);
+  function updateUserId(id: string, name: string) {
+    setUserId({ id, name });
   }
 
   function updateType(val: RequirementType) {

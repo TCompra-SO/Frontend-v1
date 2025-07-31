@@ -610,6 +610,7 @@ export interface RefreshRefreshTokenResponse {
 
 export interface ChatMessageRead {
   endMessageId: string;
+  startMessageId: string;
 }
 
 export interface NewMessageSingleChatSocketResponse {

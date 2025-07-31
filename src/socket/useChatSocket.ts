@@ -40,6 +40,7 @@ export function useChatSocket() {
   } | null>(null);
   const [chatMessageRead, setChatMessageRead] = useState<ChatMessageRead>({
     endMessageId: "",
+    startMessageId: "",
   });
   const [lastChatMessageReceived, setLastChatMessageReceived] =
     useState<ChatMessage | null>(null);
@@ -195,7 +196,7 @@ export function useChatSocket() {
       setGlobalNumUnreadMessages(0);
       setCurrentChatUnreadMessages({ unreadMessages: 0 });
     }
-    setChatMessageRead({ endMessageId: "" });
+    setChatMessageRead({ endMessageId: "", startMessageId: "" });
     setLastChatMessageReceived(null);
     setNewMessageAndChatData(null);
   }
