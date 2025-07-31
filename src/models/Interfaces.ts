@@ -621,6 +621,7 @@ export interface MessageReadSingleChatSocketResponse {
   numUnreadMessages: number;
   res: ChatMessageRead;
   type: ChatMessageType.READ;
+  userReceiving: string;
 }
 
 export type SingleChatSocketResponse =

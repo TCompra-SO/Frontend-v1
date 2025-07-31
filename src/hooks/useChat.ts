@@ -214,11 +214,11 @@ export function useChat() {
 
   function markMsgAsRead(messageId: string) {
     setChatMessageList((prevList) => {
-      const obj = prevList.find((item) => item.uid == messageId);
-      if (obj) {
-        const ownerIsCurrentUser = obj.userId == uid;
+      const objInd = prevList.findIndex((item) => item.uid == messageId);
+      if (objInd != -1) {
+        const ownerIsCurrentUser = prevList[objInd].userId == uid;
         const updatedList = [...prevList];
-        for (let i = 0; i < updatedList.length; i++) {
+        for (let i = objInd; i < updatedList.length; i++) {
           if (
             (ownerIsCurrentUser && updatedList[i].userId == uid) ||
             (!ownerIsCurrentUser && updatedList[i].userId != uid)
@@ -226,7 +226,6 @@ export function useChat() {
             if (!updatedList[i].read) updatedList[i].read = true;
             else break;
           }
-          if (updatedList[i].uid == messageId) break;
         }
         return updatedList;
       }

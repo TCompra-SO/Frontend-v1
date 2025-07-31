@@ -153,9 +153,10 @@ export function useChatSocket() {
               payload.res?.endMessageId
             ) {
               setChatMessageRead(payload.res);
-              setCurrentChatUnreadMessages({
-                unreadMessages: payload.numUnreadMessages,
-              });
+              if (payload.userReceiving == uid)
+                setCurrentChatUnreadMessages({
+                  unreadMessages: payload.numUnreadMessages,
+                });
             }
           } catch (e) {
             console.log(e);
