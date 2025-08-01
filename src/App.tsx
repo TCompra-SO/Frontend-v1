@@ -43,6 +43,7 @@ import AdminSales from "./pages/admin/AdminSales.tsx";
 import { RequirementType } from "./utilities/types.ts";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
+import CompanyProfileGuard from "./components/guards/CompanyProfileGuard.tsx";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Requirements = lazy(() => import("./pages/Requirements.tsx"));
@@ -188,6 +189,17 @@ function App() {
                             <Suspense fallback={<LoadingPage />}>
                               <MainHeader ref={mainHeaderRef} />
                               <Home></Home>
+                            </Suspense>
+                          }
+                        />
+                        <Route
+                          path={`${pageRoutes.home}p/:companyId`}
+                          element={
+                            <Suspense fallback={<LoadingPage />}>
+                              {/* <CompanyProfileGuard> */}
+                              <MainHeader ref={mainHeaderRef} />
+                              <Home></Home>
+                              {/* </CompanyProfileGuard> */}
                             </Suspense>
                           }
                         />

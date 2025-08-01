@@ -33,10 +33,10 @@ export default function CompanyData() {
   /** Obtener datos de usuario buscado */
 
   useEffect(() => {
-    if (userId.id) {
+    if (userId.uid) {
       getUserData();
-      if (userId.id != mainUid) {
-        verifyCertificationState(userId.id);
+      if (userId.uid != mainUid) {
+        verifyCertificationState(userId.uid);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,7 +48,7 @@ export default function CompanyData() {
     try {
       setLoadingUser(true);
       setUser(null);
-      const { user, error, errorMsg } = await getFullUser(userId.id);
+      const { user, error, errorMsg } = await getFullUser(userId.uid);
       if (user) setUser(user);
       else if (error) showNotification("error", errorMsg);
     } catch (err) {
@@ -72,14 +72,14 @@ export default function CompanyData() {
 
   return (
     <>
-      {userId.id ? (
+      {userId.uid ? (
         <div className="t-flex f-column gap-15">
           {!loadingUser ? (
             user && (
               <>
                 <BasicCompanyData user={user} />
                 <DetailedCompanyData user={user} />
-                {userId.id != mainUid && certifState !== null && (
+                {userId.uid != mainUid && certifState !== null && (
                   <CertificationData
                     state={certifState}
                     user={user}

@@ -16,7 +16,7 @@ import { DisplayUser } from "../../../../models/MainInterfaces";
 
 interface SelectCompanyFieldProps {
   forHomeFilter?: boolean;
-  onCompanySelected?: (companyId: string, companyName: string) => void;
+  onCompanySelected?: (user: DisplayUser) => void;
   customList?: DisplayUser[];
 }
 
@@ -60,9 +60,17 @@ export default function SelectCompanyField(props: SelectCompanyFieldProps) {
   );
 
   function handleChange(companyId: string) {
-    const companyName = companyList.find((x) => x.uid == companyId)?.name ?? "";
+    const ind = companyList.findIndex((x) => x.uid == companyId);
     setValue(companyId);
-    props.onCompanySelected?.(companyId, companyName);
+    if (ind != -1) {
+      props.onCompanySelected?.(companyList[ind]);
+    } else {
+      props.onCompanySelected?.({
+        uid: "",
+        name: "",
+        document: "",
+      });
+    }
   }
 
   return (

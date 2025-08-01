@@ -121,18 +121,13 @@ export default function HomeFilters() {
   /** Obtener datos de empresa buscada en filtro de empresas superior */
 
   useEffect(() => {
-    if (!userId.id) setCustomCompanyList(undefined);
-    if (userId.id && form.getFieldValue("companyId") != userId.id) {
+    console.log(44444444, userId);
+    if (!userId.uid) setCustomCompanyList(undefined);
+    if (userId.uid && form.getFieldValue("companyId") != userId.uid) {
       setHideFilters(false);
-      setCustomCompanyList([
-        {
-          uid: userId.id,
-          name: userId.name,
-          document: "",
-        },
-      ]);
+      setCustomCompanyList([userId]);
       form.resetFields();
-      form.setFieldValue("companyId", userId.id);
+      form.setFieldValue("companyId", userId.uid);
       form.validateFields().then(
         () => search(form.getFieldsValue()),
         () => form.resetFields()

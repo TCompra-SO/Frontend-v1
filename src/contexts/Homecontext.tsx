@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { Requirement } from "../models/MainInterfaces";
+import { DisplayUser, Requirement } from "../models/MainInterfaces";
 import { useGetRequirementList } from "../hooks/requirementHooks";
 import { HomeFilterRequest } from "../models/Requests";
 import { MainState } from "../models/Redux";
@@ -17,8 +17,8 @@ import { homePageSize } from "../utilities/globals";
 interface HomeContextType {
   type: RequirementType;
   updateType: (val: RequirementType) => void;
-  userId: { id: string; name: string };
-  updateUserId: (id: string, name: string) => void;
+  userId: DisplayUser;
+  updateUserId: (user: DisplayUser) => void;
   useFilter: boolean | null;
   updateUseFilter: (val: boolean) => void;
   requirementList: Requirement[];
@@ -45,7 +45,11 @@ interface HomeContextType {
 }
 
 export const HomeContext = createContext<HomeContextType>({
-  userId: { id: "", name: "" },
+  userId: {
+    uid: "",
+    name: "",
+    document: "",
+  },
   updateUserId: () => {},
   useFilter: null,
   updateUseFilter: () => {},
@@ -71,9 +75,10 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   const [requirementList, setRequirementList] = useState<Requirement[]>([]);
   const [totalRequirementList, setTotalRequirementList] = useState(0);
   const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
-  const [userId, setUserId] = useState<{ id: string; name: string }>({
-    id: "",
+  const [userId, setUserId] = useState<DisplayUser>({
+    uid: "",
     name: "",
+    document: "",
   });
   const [useFilter, setUseFilter] = useState<null | boolean>(null);
   const [notificationSearchData, setNotificationSearchData] =
@@ -126,7 +131,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   }, [totalRequirementListOrig]);
 
   useEffect(() => {
-    if (!isLoggedIn) setUserId({ id: "", name: "" });
+    if (!isLoggedIn) setUserId({ uid: "", name: "", document: "" });
   }, [isLoggedIn]);
 
   useEffect(() => {
@@ -180,8 +185,8 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  function updateUserId(id: string, name: string) {
-    setUserId({ id, name });
+  function updateUserId(user: DisplayUser) {
+    setUserId(user);
   }
 
   function updateType(val: RequirementType) {

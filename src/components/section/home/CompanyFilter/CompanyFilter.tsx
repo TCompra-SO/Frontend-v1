@@ -16,13 +16,17 @@ export default function CompanyFilter() {
     if (companyId && rucFormat.test(companyId)) {
       searchCompanyByName(companyId);
     }
-    return () => updateUserId("", "");
+    return () =>
+      updateUserId({
+        uid: "",
+        name: "",
+        document: "",
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (companyList.length)
-      updateUserId(companyList[0].uid, companyList[0].name);
+    if (companyList.length) updateUserId(companyList[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [companyList]);
 
