@@ -202,22 +202,30 @@ export function useTCNotification() {
     const { result, val } = isRequirementType(notification.targetType);
     if (result && val !== null) {
       if (notification.targetId) {
-        if (notification.action == Action.VIEW_REQUIREMENT) {
+        if (
+          notification.action == Action.VIEW_REQUIREMENT ||
+          notification.action == Action.FINISH_REQUIREMENT
+        ) {
           updateDetailedRequirementModalData({
             requirement: undefined,
             requirementId: notification.targetId,
             requirementType: val,
+            actionIsFinish: notification.action == Action.FINISH_REQUIREMENT,
           });
           navigate(
             `${pageRoutes.myRequirements}/${getRequirementTypeSubRoute(val)}`
           );
           return;
-        } else if (notification.action == Action.VIEW_OFFER) {
+        } else if (
+          notification.action == Action.VIEW_OFFER ||
+          notification.action == Action.FINISH_OFFER
+        ) {
           updateDetailedOfferModalData({
             offerId: notification.targetId,
             offerType: val,
             offer: undefined,
             orderId: notification.extraTargetId,
+            actionIsFinish: notification.action == Action.FINISH_OFFER,
           });
           navigate(`${pageRoutes.myOffers}/${getRequirementTypeSubRoute(val)}`);
           return;

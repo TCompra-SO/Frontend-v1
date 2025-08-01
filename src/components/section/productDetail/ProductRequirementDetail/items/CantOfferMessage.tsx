@@ -256,6 +256,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
           requirement: props.requirement,
           requirementId: props.requirement.key,
           requirementType: props.requirement.type,
+          actionIsFinish: false,
         });
         navigate(
           pageRoutes.myRequirements +

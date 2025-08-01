@@ -42,6 +42,7 @@ import {
   getBaseUserForUserSubUser,
   getFullUser,
   getOfferById,
+  getRequirementById,
 } from "../services/general/generalServices";
 import {
   useCancelRequirement,
@@ -155,20 +156,52 @@ export default function Requirements() {
   /** Verificar si hay una solicitud pendiente */
 
   useEffect(() => {
-    if (detailedRequirementModalData.requirementId) {
-      const copy = { ...detailedRequirementModalData };
-      getOffersByRequirementId(
-        TableTypes.REQUIREMENT,
-        copy.requirementId,
-        copy.requirementType,
-        RequirementDetailType.REQUIREMENT,
-        1,
-        noPaginationPageSize,
-        Action.SHOW_OFFERS,
-        copy.requirement
-      );
-      resetDetailedRequirementModalData();
+    async function processPendingRequest() {
+      if (detailedRequirementModalData.requirementId) {
+        const copy = { ...detailedRequirementModalData };
+        resetDetailedRequirementModalData();
+        if (copy.actionIsFinish) {
+          // acción para culminar
+          let requirement = copy.requirement;
+          if (!copy.requirement) {
+            const { requirement: req } = await getRequirementById(
+              copy.requirementId,
+              copy.requirementType
+            );
+            if (req) requirement = req;
+          }
+          if (
+            requirement &&
+            requirement.state == RequirementState.SELECTED &&
+            requirement.offerId
+          ) {
+            getBasicRateData(
+              requirement.key,
+              requirement.key,
+              requirement.offerId,
+              true,
+              true,
+              Action.FINISH,
+              requirement.type,
+              requirement.title
+            );
+          }
+        } else
+          getOffersByRequirementId(
+            // acción para ver ofertas
+            TableTypes.REQUIREMENT,
+            copy.requirementId,
+            copy.requirementType,
+            RequirementDetailType.REQUIREMENT,
+            1,
+            noPaginationPageSize,
+            Action.SHOW_OFFERS,
+            copy.requirement
+          );
+      }
     }
+
+    processPendingRequest();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [detailedRequirementModalData]);
 

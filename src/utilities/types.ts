@@ -175,6 +175,8 @@ export enum Action {
   VIEW_CAT_LAST_REQUIREMENTS = 41,
   VALIDATE = 42,
   INVALIDATE = 43,
+  FINISH_REQUIREMENT = 44,
+  FINISH_OFFER = 45,
 }
 
 export const ActionLabel: {
@@ -224,6 +226,8 @@ export const ActionLabel: {
   [Action.VIEW_CAT_LAST_REQUIREMENTS]: "view",
   [Action.VALIDATE]: "validate",
   [Action.INVALIDATE]: "invalidate",
+  [Action.FINISH_REQUIREMENT]: "finish",
+  [Action.FINISH_OFFER]: "finish",
 };
 
 export const ActionByStateRequirement: {

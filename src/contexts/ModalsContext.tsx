@@ -11,6 +11,7 @@ interface DetailedRequirementModalDataType {
   requirement: Requirement | undefined;
   requirementId: string;
   requirementType: RequirementType;
+  actionIsFinish: boolean;
 }
 
 interface DetailedOfferModalDataType {
@@ -18,9 +19,11 @@ interface DetailedOfferModalDataType {
   offerType: RequirementType;
   offer: Offer | undefined;
   orderId?: string;
+  actionIsFinish: boolean;
 }
 
-interface ViewHistoryModalDataType extends DetailedRequirementModalDataType {
+interface ViewHistoryModalDataType
+  extends Omit<DetailedRequirementModalDataType, "actionIsFinish"> {
   filters?: OfferFilters;
   purchaseOrderId: string;
 }
@@ -64,6 +67,7 @@ function getInitialDetailedRequirementModalData(): DetailedRequirementModalDataT
     requirement: undefined,
     requirementId: "",
     requirementType: RequirementType.GOOD,
+    actionIsFinish: false,
   };
 }
 
@@ -73,6 +77,7 @@ function getInitialDetailedOfferModalData(): DetailedOfferModalDataType {
     offerType: RequirementType.GOOD,
     offer: undefined,
     orderId: undefined,
+    actionIsFinish: false,
   };
 }
 

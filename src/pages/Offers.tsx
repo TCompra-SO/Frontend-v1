@@ -46,7 +46,10 @@ import useSearchTable, {
 } from "../hooks/searchTableHooks";
 import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
-import { getBasicRateDataS } from "../services/general/generalServices";
+import {
+  getBasicRateDataS,
+  getOfferById,
+} from "../services/general/generalServices";
 import { sectionIcons } from "../utilities/colors";
 
 export default function Offers() {
@@ -166,19 +169,49 @@ export default function Offers() {
   /** Verificar si hay una solicitud pendiente */
 
   useEffect(() => {
-    if (detailedOfferModalData.offerId) {
-      const copy = { ...detailedOfferModalData };
-      getOfferDetail(
-        copy.offerId,
-        copy.offerType,
-        true,
-        Action.OFFER_DETAIL,
-        true,
-        copy.offer,
-        copy.orderId
-      );
-      resetDetailedOfferModalData();
+    async function processPendingRequest() {
+      if (detailedOfferModalData.offerId) {
+        const copy = { ...detailedOfferModalData };
+        resetDetailedOfferModalData();
+        if (copy.actionIsFinish) {
+          // acción para culminar
+          let offer = copy.offer;
+          if (!copy.offer) {
+            const { offer: off } = await getOfferById(
+              copy.offerId,
+              copy.offerType,
+              dataUser, // valores de usuario sólo provistos para evitar buscar al ofertante
+              mainDataUser
+            );
+            if (off) offer = off;
+          }
+          if (offer && offer.state == OfferState.WINNER) {
+            getBasicRateData(
+              offer.key,
+              offer.key,
+              offer.requirementId,
+              false,
+              false,
+              Action.FINISH,
+              offer.type,
+              offer.title
+            );
+          }
+        } else
+          getOfferDetail(
+            // acción para ver detalle de oferta
+            copy.offerId,
+            copy.offerType,
+            true,
+            Action.OFFER_DETAIL,
+            true,
+            copy.offer,
+            copy.orderId
+          );
+      }
     }
+
+    processPendingRequest();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [detailedOfferModalData]);
 
