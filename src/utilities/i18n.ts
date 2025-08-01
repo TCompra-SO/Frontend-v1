@@ -393,6 +393,9 @@ const resources = {
       CSRFTokenError: "An error occurred. Reload page, please.",
       footerText:
         "Dive into the new era of business with our innovative platform.",
+      cantFinishRequirement: "This transaction can no longer be completed.",
+      cantFinishSale: "This transaction can no longer be completed.",
+      cantFinishOffer: "This transaction can no longer be completed.",
       // Other
       characters: "characters",
       yes: "Yes",
@@ -1021,6 +1024,9 @@ const resources = {
       CSRFTokenError: "Se produjo un error. Por favor, recargue la página.",
       footerText:
         "Sumérgete en la nueva era de los negocios con nuestra innovadora plataforma.",
+      cantFinishRequirement: "Este requerimiento ya no puede ser culminado.",
+      cantFinishSale: "Esta liquidación ya no puede ser culminada.",
+      cantFinishOffer: "Esta oferta ya no puede ser culminada.",
       // Other
       characters: "caracteres",
       yes: "Sí",

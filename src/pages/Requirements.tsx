@@ -185,7 +185,13 @@ export default function Requirements() {
               requirement.type,
               requirement.title
             );
-          }
+          } else
+            showNotification(
+              "info",
+              copy.requirementType == RequirementType.SALE
+                ? t("cantFinishSale")
+                : t("cantFinishRequirement")
+            );
         } else
           getOffersByRequirementId(
             // acción para ver ofertas

@@ -196,7 +196,7 @@ export default function Offers() {
               offer.type,
               offer.title
             );
-          }
+          } else showNotification("info", t("cantFinishOffer"));
         } else
           getOfferDetail(
             // acción para ver detalle de oferta
