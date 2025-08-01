@@ -30,6 +30,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import SimpleLoading from "../../../../pages/utils/SimpleLoading";
 import {
   generateShortId,
+  getProductDetailRoute,
   isSameDay,
 } from "../../../../utilities/globalFunctions";
 import { useChatFunctions } from "../../../../hooks/chatHooks";
@@ -38,6 +39,7 @@ import { MainState } from "../../../../models/Redux";
 import { transformToChatMessage } from "../../../../utilities/transform";
 import { debounce } from "lodash";
 import { useGetBannedWords } from "../../../../hooks/utilHooks";
+import { useNavigate } from "react-router-dom";
 
 const loadingSpinner: ReactNode = (
   <Flex justify="center">
@@ -58,6 +60,7 @@ interface ChatBodyProps {
 }
 
 export default function ChatBody(props: ChatBodyProps) {
+  const navigate = useNavigate();
   const { censorText } = useGetBannedWords();
   const { t } = useTranslation();
   const { width } = useWindowSize();
@@ -136,7 +139,7 @@ export default function ChatBody(props: ChatBodyProps) {
 
   useEffect(() => {
     if (props.chatData.uid) setLocked(false);
-    // console.log(props.chatData);
+    console.log(props.chatData);
   }, [props.chatData]);
 
   /** Scroll al mensaje más actual */
@@ -402,6 +405,13 @@ export default function ChatBody(props: ChatBodyProps) {
     }
   }
 
+  function goToRequirement() {
+    if (props.chatData.requirementId && props.chatData.type)
+      navigate(
+        getProductDetailRoute(props.chatData.requirementId, props.chatData.type)
+      );
+  }
+
   return (
     <div
       className="card-white mch-2 t-flex f-column gap-5"
@@ -426,7 +436,13 @@ export default function ChatBody(props: ChatBodyProps) {
           <div className="usuario-chat text-truncate">
             {props.chatData.userName}
           </div>
-          <div className="requ-chat text-truncate">{props.chatData.title}</div>
+          <div
+            className="requ-chat text-truncate"
+            onClick={goToRequirement}
+            style={{ cursor: "pointer" }}
+          >
+            {props.chatData.title}
+          </div>
         </div>
         <div className="chat-close" onClick={props.onCloseChat}>
           <i className="fa-regular fa-circle-xmark"></i>
