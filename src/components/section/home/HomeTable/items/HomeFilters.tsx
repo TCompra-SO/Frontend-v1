@@ -179,6 +179,7 @@ export default function HomeFilters() {
 
   function resetFilters(keepUsingFilterMode?: boolean) {
     form.resetFields();
+    setCustomCompanyList(undefined);
     updateKeywordSearch("");
     if (!keepUsingFilterMode) updateUseFilter(false);
   }

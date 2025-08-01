@@ -193,13 +193,13 @@ function App() {
                           }
                         />
                         <Route
-                          path={`${pageRoutes.home}p/:companyId`}
+                          path={`${pageRoutes.companyProfile}/:companyId`}
                           element={
                             <Suspense fallback={<LoadingPage />}>
-                              {/* <CompanyProfileGuard> */}
-                              <MainHeader ref={mainHeaderRef} />
-                              <Home></Home>
-                              {/* </CompanyProfileGuard> */}
+                              <CompanyProfileGuard>
+                                <MainHeader ref={mainHeaderRef} />
+                                <Home></Home>
+                              </CompanyProfileGuard>
                             </Suspense>
                           }
                         />

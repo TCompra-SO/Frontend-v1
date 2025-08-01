@@ -417,7 +417,11 @@ export function getPenultimateSegmentFromRoute(pathname: string) {
 
 export function getSectionFromRoute(pathname: string) {
   const pathSegments = pathname.split("/");
-  if (pathSegments.length <= 1 || pathSegments[1] === "")
+  if (
+    pathSegments.length <= 1 ||
+    pathSegments[1] === "" ||
+    pathSegments[1] === pageRoutes.companyProfile.slice(1)
+  )
     return pageRoutes.home;
   return "/" + pathSegments[1];
 }

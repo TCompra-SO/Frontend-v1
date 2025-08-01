@@ -184,6 +184,7 @@ export const ApiRoutes = {
 
 export const pageRoutes = {
   home: "/",
+  companyProfile: "/p",
   profile: "/perfil",
   productDetail: "/detalle",
   myRequirements: "/mis-requerimientos",
