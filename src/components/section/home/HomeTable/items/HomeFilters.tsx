@@ -121,7 +121,6 @@ export default function HomeFilters() {
   /** Obtener datos de empresa buscada en filtro de empresas superior */
 
   useEffect(() => {
-    console.log(44444444, userId);
     if (!userId.uid) setCustomCompanyList(undefined);
     if (userId.uid && form.getFieldValue("companyId") != userId.uid) {
       setHideFilters(false);
@@ -133,7 +132,7 @@ export default function HomeFilters() {
           () => search(form.getFieldsValue()),
           () => form.resetFields()
         );
-      }, 5000);
+      }, 2600);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);

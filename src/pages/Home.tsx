@@ -59,7 +59,6 @@ export default function Home(props: HomeProps) {
   /** Mostrar datos iniciales */
 
   useEffect(() => {
-    console.log("=======", requirementList.length);
     setTableContent((prevContent) => ({
       ...prevContent,
       page,
