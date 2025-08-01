@@ -728,6 +728,7 @@ export function useGetRequirementList(contextType: RequirementType) {
           })
         );
         setUsersCache(cache);
+        console.log("*********", data.filter((req) => req !== null).length);
         setRequirements(data.filter((req) => req !== null));
         setTotal(responseData.res?.totalDocuments);
         totalPages = responseData.res?.totalPages;

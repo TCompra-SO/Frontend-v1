@@ -128,10 +128,12 @@ export default function HomeFilters() {
       setCustomCompanyList([userId]);
       form.resetFields();
       form.setFieldValue("companyId", userId.uid);
-      form.validateFields().then(
-        () => search(form.getFieldsValue()),
-        () => form.resetFields()
-      );
+      setTimeout(() => {
+        form.validateFields().then(
+          () => search(form.getFieldsValue()),
+          () => form.resetFields()
+        );
+      }, 5000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);

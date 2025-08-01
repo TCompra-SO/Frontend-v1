@@ -123,6 +123,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
 
   // Copia de lista de requerimientos
   useEffect(() => {
+    console.log("homecontext", requirementListOrig.length);
     setRequirementList(requirementListOrig);
   }, [requirementListOrig]);
 
@@ -154,6 +155,11 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   ) {
     resetChangesQueue();
     setLastSearchParams({
+      page,
+      pageSize,
+      params,
+    });
+    console.log(".............", {
       page,
       pageSize,
       params,
