@@ -136,6 +136,7 @@ export default function ChatBody(props: ChatBodyProps) {
 
   useEffect(() => {
     if (props.chatData.uid) setLocked(false);
+    console.log(props.chatData);
   }, [props.chatData]);
 
   /** Scroll al mensaje más actual */
