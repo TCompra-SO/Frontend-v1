@@ -15,6 +15,7 @@ interface CompanyProfileGuardProps {
 
 export default function CompanyProfileGuard(props: CompanyProfileGuardProps) {
   const { companyId } = useParams();
+  const isPremium = useSelector((state: MainState) => state.user.isPremium);
   const isLoadingGlobal = useSelector(
     (state: MainState) => state.loadingUser.isLoading
   );
@@ -57,10 +58,10 @@ export default function CompanyProfileGuard(props: CompanyProfileGuardProps) {
   }, [companyId]);
 
   if (isLoadingGlobal || loading) {
-    return null; // show nothing (or a loader)
+    return null;
   }
 
-  if (companyExists === false) {
+  if (companyExists === false || !isPremium) {
     return <Navigate to={pageRoutes.home} />;
   }
 

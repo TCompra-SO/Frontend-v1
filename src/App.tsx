@@ -188,7 +188,7 @@ function App() {
                           element={
                             <Suspense fallback={<LoadingPage />}>
                               <MainHeader ref={mainHeaderRef} />
-                              <Home></Home>
+                              <Home openLoginModal={openLoginModal}></Home>
                             </Suspense>
                           }
                         />
@@ -198,7 +198,7 @@ function App() {
                             <Suspense fallback={<LoadingPage />}>
                               <CompanyProfileGuard>
                                 <MainHeader ref={mainHeaderRef} />
-                                <Home></Home>
+                                <Home openLoginModal={openLoginModal}></Home>
                               </CompanyProfileGuard>
                             </Suspense>
                           }

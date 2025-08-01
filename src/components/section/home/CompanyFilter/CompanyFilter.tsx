@@ -5,8 +5,13 @@ import SelectCompanyField from "./SelectCompanyField";
 import { useParams } from "react-router-dom";
 import { useSearchCompanyByName } from "../../../../hooks/utilHooks";
 import { rucFormat } from "../../../../utilities/globals";
+import SelectContainer from "../../../containers/SelectContainer";
 
-export default function CompanyFilter() {
+interface CompanyFilterProps {
+  openLoginModal?: () => void;
+}
+
+export default function CompanyFilter(props: CompanyFilterProps) {
   const { t } = useTranslation();
   const { updateUserId } = useContext(HomeContext);
   const { searchCompanyByName, companyList } = useSearchCompanyByName();
@@ -36,7 +41,28 @@ export default function CompanyFilter() {
         <i className="fa-solid fa-building-magnifying-glass"></i>{" "}
         {t("companyFilter")}
       </div>
-      <SelectCompanyField onCompanySelected={updateUserId} />
+      {props.openLoginModal ? (
+        <SelectContainer
+          showSearch
+          allowClear
+          placeholder={`${t("companyName")} ${t("or")} ${t("RUC")}`}
+          className={`form-control form-filter`}
+          style={{ width: "100%" }}
+          onSearch={() => props.openLoginModal?.()}
+          styles={{
+            popup: {
+              root: {
+                display: "none",
+              },
+            },
+          }}
+          onInputKeyDown={(e) => {
+            e.stopPropagation(); // Stops dropdown from appearing
+          }}
+        ></SelectContainer>
+      ) : (
+        <SelectCompanyField onCompanySelected={updateUserId} />
+      )}
     </div>
   );
 }

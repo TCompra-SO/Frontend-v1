@@ -23,7 +23,11 @@ import { useSelector } from "react-redux";
 import useHomeSocket from "../socket/useHomeSocket.tsx";
 import { getProductDetailRoute } from "../utilities/globalFunctions.ts";
 
-export default function Home() {
+interface HomeProps {
+  openLoginModal: () => void;
+}
+
+export default function Home(props: HomeProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   useHomeSocket();
@@ -47,7 +51,6 @@ export default function Home() {
     hiddenColumns: [TableColumns.CATEGORY],
     nameColumnHeader: t("goods"),
     onButtonClick: (action: Action, req: Requirement) => {
-      console.log(req);
       if (action == Action.VIEW_REQUIREMENT)
         navigate(getProductDetailRoute(req.key, req.type));
     },
@@ -91,15 +94,17 @@ export default function Home() {
         <div className="cont-prime">
           <div className="gap-20 home-det">
             <div className="t-flex f-column gap-20 home-1">
-              {isPremium && (
+              {isPremium ? (
                 <>
                   <CompanyFilter />
                   <CompanyData />
-                  <div className="titulo req-t">
-                    {t("homeTableFirstHalf")} {t("homeTableSecondHalf")}
-                  </div>
                 </>
+              ) : (
+                <CompanyFilter openLoginModal={props.openLoginModal} />
               )}
+              <div className="titulo req-t">
+                {t("homeTableFirstHalf")} {t("homeTableSecondHalf")}
+              </div>
               <HomeTable
                 content={tableContent}
                 loadingTable={loadingRequirementList}
