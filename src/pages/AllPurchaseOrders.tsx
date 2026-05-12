@@ -38,7 +38,7 @@ import {
 } from "../utilities/globals";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import { useGetOffersByRequirementId } from "../hooks/requirementHooks";
-import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
+import useShowNotification, { useDownloadPdfOrder, useShowLoadingMessage } from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
@@ -255,6 +255,8 @@ export default function AllPurchaseOrders() {
     }
   }
 
+
+
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
     switch (action) {
       case Action.DOWNLOAD_PURCHASE_ORDER:
@@ -305,9 +307,8 @@ export default function AllPurchaseOrders() {
         )}`}
         subtitleIcon={
           <i
-            className={`${
-              sectionIcons[type == OrderTableType.ISSUED ? "sent" : "received"]
-            } sub-icon`}
+            className={`${sectionIcons[type == OrderTableType.ISSUED ? "sent" : "received"]
+              } sub-icon`}
           ></i>
         }
         table={tableContent}

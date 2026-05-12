@@ -18,7 +18,7 @@ export interface UseApiType {
   functionToExecute: (
     response: ResponseRequestType,
     error: ErrorRequestType,
-    errorMsg: ErrorMsgRequestType
+    errorMsg: ErrorMsgRequestType,
   ) => void;
   SystemNotificationData?: SystemNotificationData;
 }
@@ -33,14 +33,15 @@ export default function useApi<T = any>(
       description: null,
     },
   },
-  useReduxToken?: boolean
+  useReduxToken?: boolean,
 ) {
   const { service } = apiParams;
   let reduxToken: string | undefined = useSelector(
-    (state: MainState) => state.user.token
+    (state: MainState) => state.user.token,
   );
   reduxToken = useReduxToken ? reduxToken : undefined;
   const csrfToken = getCookie(csrfTokenName);
+  console.log(csrfToken);
   const { t } = useTranslation();
   const [loading, setLoading] = useState<boolean | undefined>(undefined);
   const [responseData, setResponseData] = useState<ResponseRequestType>(null);

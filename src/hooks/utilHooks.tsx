@@ -52,7 +52,7 @@ export default function useShowNotification() {
       let description: string = "";
       let senderImage: string | undefined = "";
       let senderName: string = "";
-      let callback = () => {};
+      let callback = () => { };
       if (params.type == RTNotificationType.NOTIFICATION) {
         title = params.content.title;
         description = params.content.body;
@@ -70,13 +70,11 @@ export default function useShowNotification() {
         )
           description = params.content.message;
         else if (params.content.images)
-          description = `${t("chatMessageImagesDocs")} ${
-            params.content.images.length
-          } ${t("chatMessageImages")}.`;
+          description = `${t("chatMessageImagesDocs")} ${params.content.images.length
+            } ${t("chatMessageImages")}.`;
         else if (params.content.documents)
-          description = `${t("chatMessageImagesDocs")} ${
-            params.content.documents.length
-          } ${t("chatMessageDocs")}.`;
+          description = `${t("chatMessageImagesDocs")} ${params.content.documents.length
+            } ${t("chatMessageDocs")}.`;
       }
       api.open({
         key,
@@ -190,7 +188,7 @@ export function useSearchCompanyByName() {
     companyList,
   };
 }
-
+/*ANTIGUO PDF 
 export function useDownloadPdfOrder() {
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
@@ -229,6 +227,7 @@ export function useDownloadPdfOrder() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataPdf, errorPdf]);
 
+  
   function downloadPdfOrder(id: string, type: RequirementType) {
     setApiParamsPdf({
       service: getGetOrderPDFService(type)?.(id),
@@ -238,6 +237,62 @@ export function useDownloadPdfOrder() {
 
   return downloadPdfOrder;
 }
+*/
+
+//NUEVA FUNCION
+export function useDownloadPdfOrder() {
+  const { showLoadingMessage } = useShowLoadingMessage();
+  const { showNotification } = useShowNotification();
+  const { updateMyPurchaseOrdersLoadingPdf } =
+    useContext(LoadingDataContext);
+
+  const [apiParamsPdf, setApiParamsPdf] = useState<useApiParams>({
+    service: null,
+    method: "get",
+  });
+
+  const {
+    loading: loadingPdf,
+    responseData: responseDataPdf,
+    error: errorPdf,
+    errorMsg: errorMsgPdf,
+    fetchData: fetchDataPdf,
+  } = useApi(apiParamsPdf);
+
+
+  console.log("open", responseDataPdf)
+  // 🔄 Loading
+  useEffect(() => {
+    updateMyPurchaseOrdersLoadingPdf(loadingPdf);
+    showLoadingMessage(loadingPdf, "generatingPDF");
+  }, [loadingPdf]);
+
+  // 🔄 Ejecutar request cuando cambien params
+  useEffect(() => {
+    if (apiParamsPdf.service) fetchDataPdf();
+  }, [apiParamsPdf]);
+
+  // 🔄 Manejar respuesta
+  useEffect(() => {
+    if (responseDataPdf) {
+      // Aquí le pasamos un nombre de archivo dinámico si quieres
+      openPurchaseOrderPdf(responseDataPdf as Blob, `order-${Date.now()}.pdf`);
+    } else if (errorPdf) {
+      showNotification("error", errorMsgPdf);
+    }
+  }, [responseDataPdf, errorPdf]);
+
+  function downloadPdfOrder(id: string, type: RequirementType) {
+    setApiParamsPdf({
+      service: getGetOrderPDFService(type)?.(id),
+      method: "get",
+    });
+  }
+
+  return downloadPdfOrder;
+}
+
+
 
 export function useRedirectToChat() {
   const navigate = useNavigate();

@@ -17,7 +17,7 @@ export default function CategoryColumn(hidden: boolean = false) {
     title: t("categoryColumn"),
     dataIndex: "category",
     key: categoryColumnKey,
-    align: "center",
+    //align: "center",
     sorter: (a, b) =>
       categoryData[a.category]?.value.localeCompare(
         categoryData[b.category]?.value

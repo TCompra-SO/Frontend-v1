@@ -31,9 +31,7 @@ body {
 
 .text-truncate {
   overflow: hidden;
-
   text-overflow: ellipsis;
-
   white-space: nowrap;
 }
 
@@ -88,7 +86,7 @@ body {
 
 .btn {
   display: inline-block;
-  font-family: "Jost", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 500;
   line-height: 1.5;
   color: #212529;
@@ -102,16 +100,19 @@ body {
   background-color: transparent;
   border: 1px solid transparent !important;
   padding: 0.6rem 0.9rem;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   border-radius: 0.8rem;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition:
+    color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 
 .btn-sm {
   padding: 0.56rem;
 
-  font-size: 0.8rem;
+  font-size: 0.65rem;
 
   font-weight: 600;
 
@@ -226,7 +227,7 @@ body {
 
 .form-control {
   padding: 0.475rem 0.85rem;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 400;
   line-height: 1.5;
   color: #92acbf !important;
@@ -237,7 +238,9 @@ body {
   background-clip: padding-box;
   border: none;
   border-radius: 0.6rem;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 
 .form-control:focus {
@@ -357,7 +360,7 @@ body {
   background: #bc1373;
   padding: 1px 6px;
   border-radius: 15px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -389,24 +392,27 @@ body {
 }
 
 .options-tc img {
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
   object-fit: cover;
   border-radius: 50%;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -2px rgb(0 0 0 / 5%);
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 10%),
+    0 4px 6px -2px rgb(0 0 0 / 5%);
 }
 
 .avatar-l {
-  width: 45px;
-  min-width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+
   display: flex;
   align-items: center;
   justify-content: center;
   background: #bc1373;
   color: #fff;
   border-radius: 50%;
-  font-size: 26px;
+  font-size: 24px;
 }
 
 .header-tc {
@@ -435,13 +441,16 @@ body {
 }
 
 .titulo {
-  font-size: 28px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 600;
 }
 
 .sub-titulo {
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .sub-icon {
@@ -496,7 +505,7 @@ body {
   color: #92acbf;
   text-decoration: none;
   display: inline-block;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .image-box {
@@ -580,7 +589,7 @@ body {
 .titulo-input {
   color: #3b4c56;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 14px;
 }
 .multimedia-subir {
   background: #ffe9f7;
@@ -673,7 +682,7 @@ body {
 
 .info-categoria {
   font-weight: 600;
-  font-size: 15px;
+  font-size: 13px;
   color: rgb(59 76 86 / 80%);
 }
 .c-estados {
@@ -776,7 +785,7 @@ body {
 .badge-default {
   background: #bc1373;
   color: #fff;
-  font-size: 16px;
+  font-size: 0.8rem;
   font-weight: 600;
   padding: 12px 14px;
   border-radius: 0.9rem;
@@ -817,12 +826,13 @@ body {
   color: #3b4c56;
   font-weight: 600;
   width: 300px;
-  line-height: 1.5;
+  line-height: 1.6;
   text-align: justify;
   -webkit-line-clamp: 3;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  font-size: 14px;
 }
 
 .info-req-no-clamp {
@@ -834,12 +844,12 @@ body {
 }
 .precio-req {
   color: #bc1373;
-  font-size: 32px;
+  font-size: 26px;
 }
 .badge-grey-border {
   border: 3px solid #92acbf;
   color: #92acbf;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 600;
   padding: 8px 9px;
   border-radius: 0.9rem;
@@ -897,9 +907,9 @@ body {
   overflow: hidden;
 }
 .img-oferta {
-  min-width: 55px;
-  width: 55px;
-  height: 55px;
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
   object-fit: cover;
   border-radius: 50%;
   margin-right: 10px;
@@ -917,7 +927,7 @@ body {
 }
 .usuario-name {
   font-weight: 600;
-  font-size: 20px;
+  font-size: 18px;
 }
 .usuario-badge {
   border: 3px solid #bc1373;
@@ -947,8 +957,8 @@ body {
   align-items: center;
 }
 .detalles-oferta {
-  font-weight: 600;
-  font-size: 18px;
+  font-weight: 500;
+  font-size: 14px;
   color: rgb(59 76 86 / 80%);
 }
 .mas-detalle {
@@ -1109,9 +1119,9 @@ body {
   font-weight: 600;
 }
 .user-empresa {
-  width: 40px;
-  min-width: 40px;
-  height: 40px;
+  width: 37px;
+  min-width: 37px;
+  height: 37px;
   background: #bc1373;
   color: #fff;
   font-weight: 600;
@@ -1171,8 +1181,8 @@ body {
   background: #ffebeb;
   color: #d80000;
   font-weight: 600;
-  font-size: 26px;
-  padding: 15px;
+  font-size: 18px;
+  padding: 10px;
   border-radius: 1.2rem;
   text-align: center;
 }
@@ -1480,7 +1490,7 @@ body {
 }
 .doc-name {
   color: #3b4c56;
-  font-size: 22px;
+  font-size: 16px;
   font-weight: 600;
 }
 .col-documento {
@@ -1546,7 +1556,7 @@ body {
   color: #fff;
 }
 .user-name {
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 600;
   margin-bottom: 10px;
 }
@@ -1555,7 +1565,7 @@ body {
   background: rgb(81 8 57 / 25%);
 }
 .dato-contact1 {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
 }
 .dato-contact2 {
@@ -1590,11 +1600,11 @@ body {
 }
 .dato-cantidad1 {
   color: #fff;
-  font-size: 18px;
+  font-size: 16px;
 }
 .dato-cantidad2 {
   color: rgb(255 255 255 / 80%);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
 }
 .card-personal {
@@ -1966,13 +1976,13 @@ body {
 }
 .ti-1 {
   color: #fff;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
 }
 .ti-2 {
   color: #fff;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
 }
 .slider-desc {
   position: absolute;
@@ -2010,7 +2020,7 @@ body {
   background-position: top right;
 }
 .t-filtro {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
 }
 .form-filter {
@@ -2042,8 +2052,8 @@ body {
   font-weight: 600;
 }
 .about-2 {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
 }
 .icon-empresa-d {
   font-size: 24px;
@@ -2062,12 +2072,12 @@ body {
   border-radius: 0.9rem;
   font-weight: 500;
   gap: 5px;
-  font-size: 14px;
+  font-size: 13px;
 }
 .empresa-cantidad {
   color: #fff;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 13px;
 }
 .about-me {
   background: #fff;
@@ -2097,13 +2107,13 @@ body {
 }
 .rubro-1 {
   color: #3b4c56;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
 }
 .rubro-2 {
   color: rgb(59 76 86 / 70%);
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
 }
 .card-datos-emp {
   background: #fff;
@@ -2164,7 +2174,7 @@ body {
   padding: 20px;
 }
 .list-requ {
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 600;
   flex: 1;
   text-align: center;
@@ -2232,12 +2242,12 @@ body {
   cursor: pointer;
 }
 .tpub-1 {
-  font-size: 26px;
+  font-size: 18px;
   font-weight: 600;
 }
 .tpub-2 {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   line-height: 1.2;
 }
 .tpub-3 {
@@ -2366,7 +2376,7 @@ body {
 .titulo-req-2 {
   color: #3b4c56;
   margin: 0;
-  font-size: 1.5rem !important;
+  font-size: 1.2rem !important;
   text-align: justify;
   line-height: 1.08;
 }
@@ -2470,7 +2480,7 @@ body {
 }
 .usuario-chat {
   font-weight: 600;
-  font-size: 18px;
+  font-size: 14px;
   color: #3b4c56;
   line-height: 1;
 }
@@ -2588,7 +2598,9 @@ body {
   appearance: none;
   border: none;
   border-radius: 0.6rem;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 .form-transparent:focus {
   outline: 0;
@@ -2641,7 +2653,7 @@ body {
   background: #ffe9f7;
   color: #bc1373;
   padding: 12px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   line-height: 1.1;
   border-top-right-radius: 0.9rem;
@@ -2683,7 +2695,7 @@ body {
   background: #f3f7fa;
   color: #3b4c56;
   padding: 12px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   line-height: 1.1;
   border-top-right-radius: 0.9rem;
@@ -2742,7 +2754,10 @@ body {
   bottom: 23px;
   right: 15px;
   color: #fff;
-  text-shadow: 1px 1px 2px black, 0 0 1em black, 0 0 0.2em black;
+  text-shadow:
+    1px 1px 2px black,
+    0 0 1em black,
+    0 0 0.2em black;
 }
 .file-min-2 {
   /* height: 55px !important;
@@ -2809,4 +2824,8 @@ body {
 }
 .certificado-bloque:hover {
   background: #c8ced3;
+}
+
+.ant-pagination {
+  font-size: 13px;
 }

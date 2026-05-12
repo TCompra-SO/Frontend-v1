@@ -15,6 +15,7 @@ export default function DocumentColumn(
   onButtonClick: (action: Action, data: any) => void,
   hidden: boolean = false
 ) {
+  { console.log("dentro ordenes de venta"); }
   const { t } = useTranslation();
   const {
     allPurchaseOrdersLoadingPdf,
@@ -42,15 +43,17 @@ export default function DocumentColumn(
               type == TableTypes.ALL_PURCHASE_ORDERS
                 ? allPurchaseOrdersLoadingPdf
                 : type == TableTypes.ALL_SALES_ORDERS
-                ? allSalesOrdersLoadingPdf
-                : type == TableTypes.PURCHASE_ORDER_SUBUSER
-                ? subUserPurchaseOrdersLoadingPdf
-                : undefined
+                  ? allSalesOrdersLoadingPdf
+                  : type == TableTypes.PURCHASE_ORDER_SUBUSER
+                    ? subUserPurchaseOrdersLoadingPdf
+                    : undefined
             }
           />
+
         </div>
       );
     },
   };
+
   return col;
 }

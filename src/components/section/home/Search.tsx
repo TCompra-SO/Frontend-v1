@@ -71,14 +71,14 @@ export default function Search() {
         style={{ zIndex: 1 }}
       >
         <div className="home-t ht-s1" style={{ lineHeight: 1.5 }}>
-          <h2 className="m-0" style={{ fontSize: "28px" }}>
+          <h2 className="m-0" style={{ fontSize: "24px" }}>
             {t(`homeTitle${imgIndex}`) == `homeTitle${imgIndex}`
               ? "homeTitle"
               : t(`homeTitle${imgIndex}`)}
           </h2>
           <h3
             className="m-0 highlighted-text"
-            style={{ fontSize: "22px", fontWeight: 600 }}
+            style={{ fontSize: "20px", fontWeight: 600 }}
           >
             {t("homeSubtitle")}
           </h3>
@@ -86,6 +86,7 @@ export default function Search() {
         <div className="t-flex gap-10 ht-s2" style={{ width: "30%" }}>
           <InputContainer
             type="text"
+            size="small"
             className="form-control form-buscar"
             placeholder={t("search")}
             count={{
@@ -100,14 +101,14 @@ export default function Search() {
             onClick={search}
             common
             style={{
-              fontSize: "1.8rem",
+              fontSize: "1.2rem",
               background: "rgb(220 146 194 / 41%)",
               padding: "0.2rem 0.6rem",
               color: "#fff",
             }}
           >
             {/* <i className="fa-regular fa-search"></i> */}
-            <i className="fa-regular fa-magnifying-glass-arrow-right"></i>
+            <i className="fa-regular fa-search"></i>
           </ButtonContainer>
         </div>
         {data && (

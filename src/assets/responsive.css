@@ -31,9 +31,9 @@
     align-items: start;
   }
   .img-oferta {
-    min-width: 50px;
-    width: 50px;
-    height: 50px;
+    min-width: 40px;
+    width: 40px;
+    height: 40px;
     margin-right: 5px;
   }
   .oferta-acciones {

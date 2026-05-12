@@ -1,11 +1,11 @@
 /* @import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&amp;display=swap"); Oficial */
-@import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 /* Primarios */
 
 body {
-  font-family: "Jost", sans-serif;
-  font-size: 16px;
+  font-family: "Poppins", sans-serif !important;
+  font-size: 14px;
   font-weight: normal;
   line-height: 28px;
   padding: 0;
@@ -82,7 +82,7 @@ a {
 
 .btn {
   display: inline-block;
-  font-family: "Jost", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 600;
   line-height: 1.5;
   color: #212529;
@@ -96,16 +96,19 @@ a {
   background-color: transparent;
   border: 1px solid transparent !important;
   padding: 0.6rem 0.9rem;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   border-radius: 0.8rem;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition:
+    color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 
 .btn-sm {
   padding: 0.56rem;
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-size: 0.65rem;
+  font-weight: 600;
   line-height: 1.5;
 }
 
@@ -257,7 +260,7 @@ a {
 
 .form-control {
   padding: 0.475rem 0.85rem;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 400;
   line-height: 1.5;
   color: #92acbf !important;
@@ -268,7 +271,9 @@ a {
   background-clip: padding-box;
   border: none;
   border-radius: 0.6rem;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 
 .form-control:focus {
@@ -386,7 +391,7 @@ a {
   background: #bc1373;
   padding: 1px 6px;
   border-radius: 15px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -418,24 +423,26 @@ a {
 }
 
 .options-tc img {
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
   object-fit: cover;
   border-radius: 50%;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -2px rgb(0 0 0 / 5%);
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 10%),
+    0 4px 6px -2px rgb(0 0 0 / 5%);
 }
 
 .avatar-l {
-  width: 45px;
-  min-width: 45px;
-  height: 45px;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #bc1373;
   color: #fff;
   border-radius: 50%;
-  font-size: 26px;
+  font-size: 24px;
 }
 
 .header-tc {
@@ -464,13 +471,16 @@ a {
 }
 
 .titulo {
-  font-size: 28px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 600;
 }
 
 .sub-titulo {
-  font-size: 26px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .sub-icon {
@@ -529,7 +539,7 @@ a {
   color: #92acbf;
   text-decoration: none;
   display: inline-block;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .image-box {
@@ -603,8 +613,8 @@ a {
   width: 300px;
 }
 .info-categoria {
-  font-weight: 700;
-  font-size: 15px;
+  font-weight: 600;
+  font-size: 13px;
   color: rgb(59 76 86 / 80%);
 }
 .c-estados {
@@ -714,7 +724,7 @@ a {
 .titulo-input {
   color: #3b4c56;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 14px;
 }
 .multimedia-subir {
   background: #ffe9f7;
@@ -798,9 +808,10 @@ a {
   align-items: center;
 }
 .tags-req-2 {
-  font-size: 1.5rem !important;
+  font-size: 1.2rem !important;
   line-height: 1.08;
   gap: 8px;
+  color: #3b4c56;
 }
 .tags-req-2 .user-empresa {
   width: 25px;
@@ -811,7 +822,7 @@ a {
 .badge-default {
   background: #bc1373;
   color: #fff;
-  font-size: 16px;
+  font-size: 0.8rem;
   font-weight: 600;
   padding: 12px 14px;
   border-radius: 0.9rem;
@@ -850,8 +861,8 @@ a {
 }
 .info-req {
   color: #3b4c56;
-  font-weight: 700;
-  line-height: 1.5;
+  font-weight: 600;
+  line-height: 1.6;
   text-align: justify;
   -webkit-line-clamp: 3;
   display: -webkit-box;
@@ -864,15 +875,21 @@ a {
   line-height: 1.5;
   text-align: justify;
 }
+
+.titulo-requ {
+  font-size: 1.8em;
+  /* line-height: 0.7; */
+}
+
 .precio-req {
   color: #bc1373;
-  font-size: 32px;
+  font-size: 26px;
 }
 .badge-grey-border {
   border: 3px solid #92acbf;
   color: #92acbf;
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
   padding: 8px 9px;
   border-radius: 0.9rem;
   line-height: 1;
@@ -929,9 +946,9 @@ a {
   overflow: hidden;
 }
 .img-oferta {
-  min-width: 55px;
-  width: 55px;
-  height: 55px;
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
   object-fit: cover;
   border-radius: 50%;
   margin-right: 10px;
@@ -949,7 +966,7 @@ a {
 }
 .usuario-name {
   font-weight: 600;
-  font-size: 20px;
+  font-size: 18px;
 }
 .usuario-badge {
   border: 3px solid #bc1373;
@@ -979,8 +996,8 @@ a {
   align-items: center;
 }
 .detalles-oferta {
-  font-weight: 600;
-  font-size: 18px;
+  font-weight: 500;
+  font-size: 14px;
   color: rgb(59 76 86 / 80%);
 }
 .mas-detalle {
@@ -1141,9 +1158,9 @@ a {
   font-weight: 600;
 }
 .user-empresa {
-  min-width: 40px;
-  width: 40px;
-  height: 40px;
+  min-width: 37px;
+  width: 37px;
+  height: 37px;
   background: #bc1373;
   color: #fff;
   font-weight: 600;
@@ -1176,7 +1193,7 @@ a {
 }
 .valor-start-2 {
   position: absolute;
-  width: 24.74px;
+  width: 26.74px;
   color: #fff;
   font-weight: 500;
   font-size: 12px;
@@ -1519,7 +1536,7 @@ a {
 }
 .doc-name {
   color: #3b4c56;
-  font-size: 22px;
+  font-size: 16px;
   font-weight: 600;
 }
 .col-documento {
@@ -1575,7 +1592,7 @@ a {
   color: #fff;
 }
 .user-name {
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 600;
   margin-bottom: 10px;
 }
@@ -1584,12 +1601,12 @@ a {
   background: rgb(81 8 57 / 25%);
 }
 .dato-contact1 {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
 }
 .dato-contact2 {
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
 }
 .card-rubros {
   background: #fff;
@@ -1619,11 +1636,11 @@ a {
 }
 .dato-cantidad1 {
   color: #fff;
-  font-size: 18px;
+  font-size: 16px;
 }
 .dato-cantidad2 {
   color: rgb(255 255 255 / 80%);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
 }
 .card-personal {
@@ -1814,7 +1831,7 @@ a {
   font-weight: 600;
 }
 .det-2 {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 700;
   color: #510839;
   background: #fff;
@@ -1831,15 +1848,16 @@ a {
   line-height: 1;
 }
 .ub-1 {
-  font-size: 20px;
+  font-size: 18px;
 }
 .ub-2 {
   opacity: 0.7;
   line-height: 1.3;
+  font-size: 14px;
 }
 .det-2 span {
   color: rgb(81 8 57 / 50%);
-  font-size: 14px;
+  font-size: 12px;
 }
 .p-start-2 {
   color: #f9a825;
@@ -1971,6 +1989,17 @@ a {
 .form-buscar {
   flex: 1;
 }
+
+.form-buscar.ant-input-sm,
+.form-buscar.form-control {
+  height: 35px !important; /* Altura reducida */
+  padding-top: 2px !important; /* Menos espacio superior */
+  padding-bottom: 2px !important; /* Menos espacio inferior */
+  font-size: 13px !important; /* Texto acorde al tamaño */
+  min-height: auto !important; /* Quita restricciones de Bootstrap */
+  line-height: 1 !important;
+}
+
 .logo-header {
   height: 48px;
 }
@@ -2007,13 +2036,13 @@ a {
 }
 .ti-1 {
   color: #fff;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
 }
 .ti-2 {
   color: #fff;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
 }
 .slider-desc {
   position: absolute;
@@ -2051,8 +2080,8 @@ a {
   background-position: top right;
 }
 .t-filtro {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 600;
 }
 .t-filtro > i {
   color: #bc1373;
@@ -2071,8 +2100,8 @@ a {
 .premium-empresa {
   background: #f9a825;
   color: #fff;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 500;
   padding: 7px;
   border-radius: 0.5rem;
   line-height: 0;
@@ -2082,12 +2111,12 @@ a {
   width: calc(100% - 145px);
 }
 .about-1 {
-  font-size: 26px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 600;
 }
 .about-2 {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
 }
 .icon-empresa-d {
   font-size: 24px;
@@ -2104,14 +2133,14 @@ a {
   text-align: center;
   padding: 8px;
   border-radius: 0.9rem;
-  font-weight: 700;
+  font-weight: 600;
   gap: 5px;
-  font-size: 14px;
+  font-size: 13px;
 }
 .empresa-cantidad {
   color: #fff;
-  font-weight: 600;
-  font-size: 14px;
+  font-weight: 500;
+  font-size: 13px;
 }
 .about-me {
   background: #fff;
@@ -2119,13 +2148,13 @@ a {
   border-radius: 1.2rem;
   flex: 1;
   color: #92acbf;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 600;
   line-height: 1;
   text-align: center;
 }
 .btn-certificate {
-  font-size: 18px;
+  font-size: 14px;
 }
 .i-rubro-2 {
   min-width: 50px;
@@ -2141,13 +2170,13 @@ a {
 }
 .rubro-1 {
   color: #3b4c56;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 600;
 }
 .rubro-2 {
   color: rgb(59 76 86 / 70%);
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
 }
 .card-datos-emp {
   background: #fff;
@@ -2178,13 +2207,13 @@ a {
 }
 .datosem-1 {
   color: #510839;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 600;
 }
 .datosem-2 {
   color: rgb(81 8 57 / 70%);
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
 }
 .req-t {
   color: #3b4c56;
@@ -2208,8 +2237,8 @@ a {
   padding: 20px;
 }
 .list-requ {
-  font-size: 26px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 600;
   flex: 1;
   text-align: center;
   line-height: 1;
@@ -2294,12 +2323,12 @@ a {
   cursor: pointer;
 }
 .tpub-1 {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 700;
 }
 .tpub-2 {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   line-height: 1.2;
 }
 .tpub-3 {
@@ -2432,7 +2461,7 @@ a {
 .titulo-req-2 {
   color: #3b4c56;
   margin: 0;
-  font-size: 1.5rem !important;
+  font-size: 1.2rem !important;
   text-align: justify;
   line-height: 1.08;
 }
@@ -2536,7 +2565,7 @@ a {
 }
 .usuario-chat {
   font-weight: 600;
-  font-size: 18px;
+  font-size: 14px;
   color: #3b4c56;
   line-height: 1;
 }
@@ -2654,7 +2683,9 @@ a {
   appearance: none;
   border: none;
   border-radius: 0.6rem;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 .form-transparent:focus {
   outline: 0;
@@ -2707,7 +2738,7 @@ a {
   background: #ffe9f7;
   color: #bc1373;
   padding: 12px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   line-height: 1.1;
   border-top-right-radius: 0.9rem;
@@ -2749,7 +2780,7 @@ a {
   background: #f3f7fa;
   color: #3b4c56;
   padding: 12px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   line-height: 1.1;
   border-top-right-radius: 0.9rem;
@@ -2808,7 +2839,10 @@ a {
   bottom: 23px;
   right: 15px;
   color: #fff;
-  text-shadow: 1px 1px 2px black, 0 0 1em black, 0 0 0.2em black;
+  text-shadow:
+    1px 1px 2px black,
+    0 0 1em black,
+    0 0 0.2em black;
 }
 .file-min-2 {
   height: 55px !important;
@@ -2899,7 +2933,7 @@ a {
   position: relative;
 }
 .list-items li a {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.7);
   position: relative;
@@ -2965,4 +2999,21 @@ a {
 }
 .foo-a:hover {
   color: #bc1373;
+}
+
+.ant-typography {
+  font-size: 14px;
+}
+
+.ant-select-item {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.ant-app {
+  font-size: 14px;
+}
+
+.ant-pagination {
+  font-size: 13px;
 }

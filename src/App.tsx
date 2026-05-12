@@ -146,7 +146,7 @@ function App() {
           token: {
             colorPrimary: primaryColor,
             colorBgContainer: mainBackgroundColor,
-            fontFamily: "Jost",
+            fontFamily: "'Poppins', sans-serif",
             fontSize: 16,
           },
           components: {
@@ -260,7 +260,7 @@ function App() {
                                         <AuthRoleGuard
                                           allowedRoles={
                                             RolesForSubSection[
-                                              pageRoutes.myRequirements
+                                            pageRoutes.myRequirements
                                             ]?.[RequirementType.GOOD]
                                           }
                                         >
@@ -274,7 +274,7 @@ function App() {
                                         <AuthRoleGuard
                                           allowedRoles={
                                             RolesForSubSection[
-                                              pageRoutes.myRequirements
+                                            pageRoutes.myRequirements
                                             ]?.[RequirementType.SERVICE]
                                           }
                                         >
@@ -288,7 +288,7 @@ function App() {
                                         <AuthRoleGuard
                                           allowedRoles={
                                             RolesForSubSection[
-                                              pageRoutes.myRequirements
+                                            pageRoutes.myRequirements
                                             ]?.[RequirementType.SALE]
                                           }
                                         >
@@ -314,7 +314,7 @@ function App() {
                                         <AuthRoleGuard
                                           allowedRoles={
                                             RolesForSubSection[
-                                              pageRoutes.myOffers
+                                            pageRoutes.myOffers
                                             ]?.[RequirementType.GOOD]
                                           }
                                         >
@@ -328,7 +328,7 @@ function App() {
                                         <AuthRoleGuard
                                           allowedRoles={
                                             RolesForSubSection[
-                                              pageRoutes.myOffers
+                                            pageRoutes.myOffers
                                             ]?.[RequirementType.SERVICE]
                                           }
                                         >
@@ -342,7 +342,7 @@ function App() {
                                         <AuthRoleGuard
                                           allowedRoles={
                                             RolesForSubSection[
-                                              pageRoutes.myOffers
+                                            pageRoutes.myOffers
                                             ]?.[RequirementType.SALE]
                                           }
                                         >
@@ -379,7 +379,7 @@ function App() {
                                           <AuthRoleGuard
                                             allowedRoles={
                                               RolesForSubSection[
-                                                pageRoutes.myPurchaseOrders
+                                              pageRoutes.myPurchaseOrders
                                               ]?.[pageSubRoutes.issued]
                                             }
                                           >
@@ -393,7 +393,7 @@ function App() {
                                           <AuthRoleGuard
                                             allowedRoles={
                                               RolesForSubSection[
-                                                pageRoutes.myPurchaseOrders
+                                              pageRoutes.myPurchaseOrders
                                               ]?.[pageSubRoutes.issued]
                                             }
                                           >
@@ -418,7 +418,7 @@ function App() {
                                           <AuthRoleGuard
                                             allowedRoles={
                                               RolesForSubSection[
-                                                pageRoutes.myPurchaseOrders
+                                              pageRoutes.myPurchaseOrders
                                               ]?.[pageSubRoutes.received]
                                             }
                                           >
@@ -432,7 +432,7 @@ function App() {
                                           <AuthRoleGuard
                                             allowedRoles={
                                               RolesForSubSection[
-                                                pageRoutes.myPurchaseOrders
+                                              pageRoutes.myPurchaseOrders
                                               ]?.[pageSubRoutes.received]
                                             }
                                           >
@@ -458,7 +458,7 @@ function App() {
                                         <AuthRoleGuard
                                           allowedRoles={
                                             RolesForSubSection[
-                                              pageRoutes.mySalesOrders
+                                            pageRoutes.mySalesOrders
                                             ]?.[pageSubRoutes.issued]
                                           }
                                         >
@@ -472,7 +472,7 @@ function App() {
                                         <AuthRoleGuard
                                           allowedRoles={
                                             RolesForSubSection[
-                                              pageRoutes.mySalesOrders
+                                            pageRoutes.mySalesOrders
                                             ]?.[pageSubRoutes.received]
                                           }
                                         >

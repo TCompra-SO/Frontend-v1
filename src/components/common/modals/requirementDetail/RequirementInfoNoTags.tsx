@@ -34,7 +34,7 @@ export default function RequirementInfoNoTags(
           <div
             className={`${props.forHome ? "" : "badge-default "}text-truncate`}
             style={
-              props.forHome ? { fontSize: "25px", fontWeight: "bold" } : {}
+              props.forHome ? { fontSize: "1.2rem !important", fontWeight: "bold" } : {}
             }
           >
             {props.user.name}

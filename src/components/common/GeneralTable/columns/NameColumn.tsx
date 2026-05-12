@@ -108,19 +108,19 @@ export default function NameColumn(
             {(type == TableTypes.REQUIREMENT ||
               type == TableTypes.USERS ||
               type == TableTypes.ALL_REQUIREMENTS) && (
-              <div
-                className="text-truncate info-categoria"
-                style={{ textAlign: "left" }}
-              >
-                {(type == TableTypes.REQUIREMENT ||
-                  type == TableTypes.ALL_REQUIREMENTS) &&
-                categoryData
-                  ? categoryData[(record as Requirement).category]?.value
-                  : null}
-                {type == TableTypes.USERS &&
-                  t(getLabelFromRole((record as SubUserBase).typeID))}
-              </div>
-            )}
+                <div
+                  className="text-truncate info-categoria"
+                  style={{ textAlign: "left" }}
+                >
+                  {(type == TableTypes.REQUIREMENT ||
+                    type == TableTypes.ALL_REQUIREMENTS) &&
+                    categoryData
+                    ? categoryData[(record as Requirement).category]?.value
+                    : null}
+                  {type == TableTypes.USERS &&
+                    t(getLabelFromRole((record as SubUserBase).typeID))}
+                </div>
+              )}
           </div>
         </>
       );

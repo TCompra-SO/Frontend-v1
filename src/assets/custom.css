@@ -296,12 +296,20 @@ form div.ant-form-item-explain .ant-form-item-explain-error:not(:first-child) {
   white-space: nowrap;
 }
 
+.ant-table-wrapper .ant-table {
+  font-size: 14px;
+  font-family: Poppins;
+}
 /* Para botones flotantes */
 .ant-float-btn-group-circle {
   gap: 10px;
 }
 .ant-float-btn-group {
   bottom: 20px;
+}
+
+.ant-float-btn-icon {
+  width: unset !important;
 }
 
 /* Para términos y condiciones */

@@ -192,7 +192,7 @@ export function checkDoc(file: File) {
 // Determina si dos servicios http son iguales
 export function equalServices(
   serv1: HttpService | null | undefined,
-  serv2: HttpService | null | undefined
+  serv2: HttpService | null | undefined,
 ) {
   if (serv1 && serv2) return serv1.type === serv2.type;
   if (!serv1 && !serv2) return true;
@@ -262,17 +262,17 @@ export function getListForSelectCategoryIdValueMap(data: CategoryIdValueMap) {
 // Retorna la lista de ciudades para select de Antd
 export function getCityListForSelect(
   countryData: CountryCities,
-  countryToShow?: string
+  countryToShow?: string,
 ) {
   const showCountry = countryToShow
     ? countryData[countryToShow]
       ? countryToShow
       : countryData[defaultCountry]
-      ? defaultCountry
-      : Object.keys(countryData)[0]
+        ? defaultCountry
+        : Object.keys(countryData)[0]
     : countryData[defaultCountry]
-    ? defaultCountry
-    : Object.keys(countryData)[0];
+      ? defaultCountry
+      : Object.keys(countryData)[0];
 
   return Object.keys(countryData).length > 0
     ? countryData[showCountry].cities.map((cit: IdValueObj) => {
@@ -287,18 +287,18 @@ export function getCityObj(countryData: CountryCities, countryToShow?: string) {
     ? countryData[countryToShow]
       ? countryToShow
       : countryData[defaultCountry]
-      ? defaultCountry
-      : Object.keys(countryData)[0]
+        ? defaultCountry
+        : Object.keys(countryData)[0]
     : countryData[defaultCountry]
-    ? defaultCountry
-    : Object.keys(countryData)[0];
+      ? defaultCountry
+      : Object.keys(countryData)[0];
 
   const loadedCities = countryData[showCountry]?.cities?.reduce(
     (acc: IdValueMap, { id, value }: IdValueObj) => {
       acc[id] = { value };
       return acc;
     },
-    {}
+    {},
   );
 
   return loadedCities;
@@ -307,7 +307,7 @@ export function getCityObj(countryData: CountryCities, countryToShow?: string) {
 // Retorna la llave del nombre del tipo de requerimiento
 export function getLabelFromRequirementType(
   type: RequirementType,
-  plural: boolean = true
+  plural: boolean = true,
 ) {
   switch (type) {
     case RequirementType.GOOD:
@@ -324,7 +324,7 @@ export function getLabelFromRequirementType(
 // Retorna la llave del nombre del tipo de orden de compra
 export function getLabelFromPurchaseOrderType(
   type: OrderTableType,
-  plural: boolean = false
+  plural: boolean = false,
 ) {
   switch (type) {
     case OrderTableType.ISSUED:
@@ -350,7 +350,7 @@ export function calculateFinalScore(scores: number[]) {
 export function openDocument(documentUrl: string) {
   window.open(
     documentUrl,
-    "_blank"
+    "_blank",
     // "width=800,height=600,top=100,left=100,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes"
   );
 }
@@ -371,7 +371,7 @@ export function getRouteType(pathname: string) {
 
 export function getPurchaseOrderType(
   pathname: string,
-  noRequirementType?: boolean
+  noRequirementType?: boolean,
 ) {
   const segment = noRequirementType
     ? getLastSegmentFromRoute(pathname)
@@ -440,7 +440,7 @@ export function getNestedValue(dataIndex: string, record: any) {
 // Hace una solicitud http
 export default async function makeRequest<T = any>(
   apiParams: useApiParams<T>,
-  useReduxToken?: boolean
+  useReduxToken?: boolean,
 ) {
   const { service } = apiParams;
   const reduxToken = useReduxToken ? store.getState().user.token : undefined;
@@ -500,7 +500,7 @@ export function getPdfSrc(data: string) {
   if (data) {
     const byteCharacters = atob(data);
     const byteNumbers = Array.from(byteCharacters, (char) =>
-      char.charCodeAt(0)
+      char.charCodeAt(0),
     );
     const byteArray = new Uint8Array(byteNumbers);
     const blob = new Blob([byteArray], { type: "application/pdf" });
@@ -510,16 +510,28 @@ export function getPdfSrc(data: string) {
   return null;
 }
 
-// Mostrar pdf de orden de compra
-export function openPurchaseOrderPdf(responseData: any) {
-  const pdfSrc = getPdfSrc(responseData.data);
-  if (pdfSrc) {
-    window.open(
-      pdfSrc,
-      "_blank"
-      // "width=800,height=1000,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes"
-    );
+export function openPurchaseOrderPdf(
+  pdfData: string | Blob,
+  filename = "order.pdf",
+) {
+  let blob: Blob;
+
+  // Si ya es un Blob, usar directamente
+  if (pdfData instanceof Blob) {
+    blob = pdfData;
+  } else {
+    // Convertir string a Blob
+    blob = new Blob([pdfData], { type: "application/pdf" });
   }
+
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
 }
 
 // Genera un identificador unico
@@ -536,7 +548,7 @@ export function generateShortId(): string {
 // Procesa string de búsqueda
 export function getSearchString(
   val: string | undefined,
-  returnUndefined: boolean = false
+  returnUndefined: boolean = false,
 ) {
   const search = val
     ?.trim()
@@ -560,7 +572,7 @@ export function getInitialTableRequest(userId: string, userType: EntityType) {
 export function getParamsFromSorterAndFilter(
   sorter: SorterResult<any> | SorterResult<any>[] | undefined,
   filter: Record<string, FilterValue | null> | undefined,
-  fieldNameObj: Record<string, string>
+  fieldNameObj: Record<string, string>,
 ) {
   let fs: FieldSort | undefined = undefined;
   let ff: FieldFilter | undefined = undefined;
@@ -606,7 +618,7 @@ export function getParamsFromSorterAndFilter(
 // Función para mostrar ícono de sort en columna si la columna está ordenada
 export function getSortOrderFromFieldSort(
   columnKey: string,
-  fieldSort: FieldSort | undefined
+  fieldSort: FieldSort | undefined,
 ) {
   return fieldSort?.columnKey == columnKey
     ? fieldSort?.orderType
@@ -624,7 +636,7 @@ export function getFieldNameObjForOrders(
     | TableTypes.SALES_ORDER
     | TableTypes.ALL_PURCHASE_ORDERS
     | TableTypes.ALL_SALES_ORDERS,
-  type: OrderTableType
+  type: OrderTableType,
 ) {
   if (
     tableType == TableTypes.ALL_PURCHASE_ORDERS ||
@@ -777,7 +789,7 @@ export function getCancelRecordService(type: RequirementType) {
 }
 
 export function getSearchRecordsService(
-  type: RequirementType | OrderTableType | undefined
+  type: RequirementType | OrderTableType | undefined,
 ) {
   if (type == RequirementType.GOOD) return searchRequirementsService();
   if (type == RequirementType.SERVICE) return searchServicesService();
@@ -849,7 +861,7 @@ export function getCancelOfferService(type: RequirementType) {
 }
 
 export function getSearchOffersService(
-  type: RequirementType | OrderTableType | undefined
+  type: RequirementType | OrderTableType | undefined,
 ) {
   if (type == RequirementType.GOOD) return searchReqOffersService();
   if (type == RequirementType.SERVICE) return searchServiceOffersService();
@@ -901,7 +913,7 @@ export function getGetOrderByIdService(type: RequirementType) {
 }
 
 export function getSearchOrdersByClientService(
-  type: RequirementType | OrderTableType | undefined
+  type: RequirementType | OrderTableType | undefined,
 ) {
   if (type == RequirementType.GOOD)
     return searchReqPurchaseOrdersByClientService();
@@ -912,7 +924,7 @@ export function getSearchOrdersByClientService(
 }
 
 export function getSearchOrdersByProviderService(
-  type: RequirementType | OrderTableType | undefined
+  type: RequirementType | OrderTableType | undefined,
 ) {
   if (type == RequirementType.GOOD)
     return searchReqPurchaseOrdersByProviderService();
@@ -970,7 +982,7 @@ export function getOrderTableTypeSubRoute(type: OrderTableType) {
 
 // Retorna la subruta correspondiente al tipo de tabla de certificados
 export function getCertificationTableTypeSubRoute(
-  type: CertificationTableType
+  type: CertificationTableType,
 ) {
   switch (type) {
     case CertificationTableType.SENT:
@@ -1011,7 +1023,7 @@ export function isUserCounterKey(key: string): key is keyof UserCounters {
 // Retorna 2da lista sin objectos con uids repetidos que aparecen en la 1ra
 export function filterByMissingUIds<T extends { uid: string }>(
   array1: T[],
-  array2: T[]
+  array2: T[],
 ): T[] {
   const idsInArray1 = new Set(array1.map((item) => item.uid));
   return array2.filter((item) => !idsInArray1.has(item.uid));
@@ -1019,7 +1031,7 @@ export function filterByMissingUIds<T extends { uid: string }>(
 
 // Retorna lista con elementos con uids únicas
 export function filterUniqueOrFirstRepeated<T extends { uid: string }>(
-  arr: T[]
+  arr: T[],
 ): T[] {
   const seen = new Map<string, T>();
 
@@ -1064,7 +1076,7 @@ export function countChar(text: string, char: string) {
 
 // Type guard
 export function isChatMessage(
-  obj: ChatMessage | BasicChatMessage
+  obj: ChatMessage | BasicChatMessage,
 ): obj is ChatMessage {
   return "chatId" in obj;
 }
@@ -1080,7 +1092,7 @@ export function getCookie(name: string) {
 export function getAxiosConfig(
   { service, method, dataToSend, token, includeHeader = true }: useApiParams,
   reduxToken: string | undefined,
-  csrfToken: string | undefined
+  csrfToken: string | undefined,
 ) {
   if (service) {
     // Orden de prioridad
@@ -1092,8 +1104,8 @@ export function getAxiosConfig(
             Authorization: token
               ? `Bearer ${token}`
               : reduxToken
-              ? `Bearer ${reduxToken}`
-              : undefined,
+                ? `Bearer ${reduxToken}`
+                : undefined,
 
             "Content-Type": "application/json",
           }

@@ -204,9 +204,9 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     });
 
     return () => {
-      props.setAdditionalApiParams({ functionToExecute: () => {} });
-      props.setAdditionalApiParamsImg({ functionToExecute: () => {} });
-      props.setAdditionalApiParamsDoc({ functionToExecute: () => {} });
+      props.setAdditionalApiParams({ functionToExecute: () => { } });
+      props.setAdditionalApiParamsImg({ functionToExecute: () => { } });
+      props.setAdditionalApiParamsDoc({ functionToExecute: () => { } });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -301,7 +301,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     }
 
     if (type == RequirementType.SALE) data.state_article = values.itemCondition;
-
+    console.log(data)
     props.setApiParams({
       service: getCreateRecordService(type),
       method: "post",
@@ -387,7 +387,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
         content={{
           type: ModalTypes.CONFIRM,
           data: {
-            onAnswer: () => {},
+            onAnswer: () => { },
             text: t("noSavedRequiredDocListCertification"),
             showOnlyAcceptButton: true,
           },
@@ -454,54 +454,51 @@ export default function CreateRequirement(props: CreateRequirementProps) {
           {roleCanCreateRequirementType[role].includes(
             RequirementType.GOOD
           ) && (
-            <ButtonContainer
-              common
-              className={`btn btn-grey  ${
-                type == RequirementType.GOOD ? "active" : ""
-              }`}
-              onClick={() => {
-                changeTab(RequirementType.GOOD);
-              }}
-              style={{ flexGrow: 1 }}
-            >
-              <i className={sectionIcons[RequirementType.GOOD]}></i>{" "}
-              <span className="req-btn-info">{t("goods")}</span>
-            </ButtonContainer>
-          )}
+              <ButtonContainer
+                common
+                className={`btn btn-grey  ${type == RequirementType.GOOD ? "active" : ""
+                  }`}
+                onClick={() => {
+                  changeTab(RequirementType.GOOD);
+                }}
+                style={{ flexGrow: 1 }}
+              >
+                <i className={sectionIcons[RequirementType.GOOD]}></i>{" "}
+                <span className="req-btn-info">{t("goods")}</span>
+              </ButtonContainer>
+            )}
           {roleCanCreateRequirementType[role].includes(
             RequirementType.SERVICE
           ) && (
-            <ButtonContainer
-              common
-              className={`btn btn-grey  ${
-                type == RequirementType.SERVICE ? "active" : ""
-              }`}
-              onClick={() => {
-                changeTab(RequirementType.SERVICE);
-              }}
-              style={{ flexGrow: 1 }}
-            >
-              <i className="fa-regular fa-hand-holding-magic"></i>{" "}
-              <span className="req-btn-info">{t("services")}</span>
-            </ButtonContainer>
-          )}
+              <ButtonContainer
+                common
+                className={`btn btn-grey  ${type == RequirementType.SERVICE ? "active" : ""
+                  }`}
+                onClick={() => {
+                  changeTab(RequirementType.SERVICE);
+                }}
+                style={{ flexGrow: 1 }}
+              >
+                <i className="fa-regular fa-hand-holding-magic"></i>{" "}
+                <span className="req-btn-info">{t("services")}</span>
+              </ButtonContainer>
+            )}
           {roleCanCreateRequirementType[role].includes(
             RequirementType.SALE
           ) && (
-            <ButtonContainer
-              common
-              className={`btn btn-grey  ${
-                type == RequirementType.SALE ? "active" : ""
-              }`}
-              onClick={() => {
-                changeTab(RequirementType.SALE);
-              }}
-              style={{ flexGrow: 1 }}
-            >
-              <i className="fa-regular fa-basket-shopping"></i>{" "}
-              <span className="req-btn-info">{t("sales")}</span>
-            </ButtonContainer>
-          )}
+              <ButtonContainer
+                common
+                className={`btn btn-grey  ${type == RequirementType.SALE ? "active" : ""
+                  }`}
+                onClick={() => {
+                  changeTab(RequirementType.SALE);
+                }}
+                style={{ flexGrow: 1 }}
+              >
+                <i className="fa-regular fa-basket-shopping"></i>{" "}
+                <span className="req-btn-info">{t("sales")}</span>
+              </ButtonContainer>
+            )}
         </div>
 
         <Form
@@ -585,24 +582,24 @@ export default function CreateRequirement(props: CreateRequirementProps) {
               </Col>
               {(type == RequirementType.GOOD ||
                 type == RequirementType.SERVICE) && (
-                <>
-                  <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-                    <LabelForCreateRequirement label={"warranty"} />
-                    <WarrantyField
-                      required={warrantyRequired}
-                      onChange={() => checkWarrantyField()}
-                    />
-                  </Col>
-                  <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-                    <LabelForCreateRequirement label={"warrantyDuration"} />
-                    <DurationField
-                      required={warrantyRequired}
-                      name="duration"
-                      onChange={() => checkWarrantyField()}
-                    />
-                  </Col>
-                </>
-              )}
+                  <>
+                    <Col xs={24} sm={24} md={6} lg={6} xl={6}>
+                      <LabelForCreateRequirement label={"warranty"} />
+                      <WarrantyField
+                        required={warrantyRequired}
+                        onChange={() => checkWarrantyField()}
+                      />
+                    </Col>
+                    <Col xs={24} sm={24} md={6} lg={6} xl={6}>
+                      <LabelForCreateRequirement label={"warrantyDuration"} />
+                      <DurationField
+                        required={warrantyRequired}
+                        name="duration"
+                        onChange={() => checkWarrantyField()}
+                      />
+                    </Col>
+                  </>
+                )}
               {type == RequirementType.SALE && (
                 <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                   <LabelForCreateRequirement label={"itemCondition"} />
