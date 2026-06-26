@@ -50,31 +50,31 @@ export const HomeContext = createContext<HomeContextType>({
     name: "",
     document: "",
   },
-  updateUserId: () => {},
+  updateUserId: () => { },
   useFilter: null,
-  updateUseFilter: () => {},
+  updateUseFilter: () => { },
   requirementList: [],
   totalRequirementList: 0,
   page: 1,
-  updatePage: () => {},
-  retrieveRequirements: () => {},
-  retrieveLastSearchRequeriments: () => {},
-  type: RequirementType.GOOD,
-  updateType: () => {},
-  updateChangesQueue: () => {},
-  resetChangesQueue: () => {},
+  updatePage: () => { },
+  retrieveRequirements: () => { },
+  retrieveLastSearchRequeriments: () => { },
+  type: RequirementType.SALE,
+  updateType: () => { },
+  updateChangesQueue: () => { },
+  resetChangesQueue: () => { },
   keywordSearch: "",
-  updateKeywordSearch: () => {},
-  notificationSearchData: { categoryId: 0, targetType: RequirementType.GOOD },
-  updateNotificationSearchData: () => {},
-  resetNotificationSearchData: () => {},
+  updateKeywordSearch: () => { },
+  notificationSearchData: { categoryId: 0, targetType: RequirementType.SALE },
+  updateNotificationSearchData: () => { },
+  resetNotificationSearchData: () => { },
 });
 
 export function HomeProvider({ children }: { children: ReactNode }) {
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const [requirementList, setRequirementList] = useState<Requirement[]>([]);
   const [totalRequirementList, setTotalRequirementList] = useState(0);
-  const [type, setType] = useState<RequirementType>(RequirementType.GOOD);
+  const [type, setType] = useState<RequirementType>(RequirementType.SALE);
   const [userId, setUserId] = useState<DisplayUser>({
     uid: "",
     name: "",
@@ -84,7 +84,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   const [notificationSearchData, setNotificationSearchData] =
     useState<NotificationSearchData>({
       categoryId: 0,
-      targetType: RequirementType.GOOD,
+      targetType: RequirementType.SALE,
     });
   const [keywordSearch, setKeywordSearch] = useState("");
   const {
@@ -143,7 +143,7 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   function resetNotificationSearchData() {
     setNotificationSearchData({
       categoryId: 0,
-      targetType: RequirementType.GOOD,
+      targetType: RequirementType.SALE,
     });
   }
 
@@ -188,10 +188,10 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   function updateUserId(user: DisplayUser) {
     setUserId(user);
   }
-
-  function updateType(val: RequirementType) {
-    setType(val);
-  }
+  /*
+    function updateType(val: RequirementType) {
+      setType(val);
+    }*/
 
   function updateKeywordSearch(val: string) {
     setKeywordSearch(val);
@@ -201,7 +201,20 @@ export function HomeProvider({ children }: { children: ReactNode }) {
     // updateType(data.targetType);
     setNotificationSearchData(data);
   }
+  console.log('EL TIPO ES', type)
 
+  function updateType(val: RequirementType) {
+    console.log(
+      "updateType llamado con:",
+      val,
+      new Error().stack
+    );
+
+    setType(val);
+  }
+  useEffect(() => {
+    console.log("TYPE CAMBIÓ:", type);
+  }, [type]);
   return (
     <HomeContext.Provider
       value={{

@@ -101,12 +101,11 @@ export default function Sidebar(props: SidebarProps) {
         if (menuToggles[section]?.hasSubsection)
           toggleMenu(section, true, middleSegment);
         focusMenu(
-          `${section}${
-            menuToggles[section]?.hasSubsection
-              ? middleSegment
-                ? `/${middleSegment}/${segment}`
-                : `/${segment}`
-              : ""
+          `${section}${menuToggles[section]?.hasSubsection
+            ? middleSegment
+              ? `/${middleSegment}/${segment}`
+              : `/${segment}`
+            : ""
           }`
         );
       }
@@ -236,9 +235,8 @@ export default function Sidebar(props: SidebarProps) {
                   false,
                   `${pageRoutes.myRequirements}/${pageSubRoutes.goods}`,
                   <i
-                    className={`${
-                      sectionIcons[RequirementType.GOOD]
-                    } text-center i-btn`}
+                    className={`${sectionIcons[RequirementType.GOOD]
+                      } text-center i-btn`}
                   ></i>,
                   t("goods")
                 )}
@@ -285,9 +283,8 @@ export default function Sidebar(props: SidebarProps) {
                   false,
                   `${pageRoutes.myOffers}/${pageSubRoutes.goods}`,
                   <i
-                    className={`${
-                      sectionIcons[RequirementType.GOOD]
-                    } text-center i-btn`}
+                    className={`${sectionIcons[RequirementType.GOOD]
+                      } text-center i-btn`}
                   ></i>,
                   t("goods")
                 )}
@@ -332,87 +329,85 @@ export default function Sidebar(props: SidebarProps) {
               {RolesForSubSection[pageRoutes.myPurchaseOrders]?.[
                 pageSubRoutes.issued
               ]?.[typeID] && (
-                <>
-                  {getMenuButton(
-                    true,
-                    `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issued}`,
-                    <i
-                      className={`${sectionIcons["sent"]} text-center i-btn`}
-                    ></i>,
-                    t("issuedPl"),
-                    <i className="fa-solid fa-chevron-down i-sub text-center"></i>
-                  )}
-                  <div
-                    className="sub-menu t-flex"
-                    style={{
-                      display: menuVisibility[
-                        `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issued}`
-                      ]
-                        ? "block"
-                        : "none",
-                    }}
-                  >
+                  <>
                     {getMenuButton(
-                      false,
-                      `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issued}/${pageSubRoutes.goods}`,
+                      true,
+                      `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issued}`,
                       <i
-                        className={`${
-                          sectionIcons[RequirementType.GOOD]
-                        } text-center i-btn`}
+                        className={`${sectionIcons["sent"]} text-center i-btn`}
                       ></i>,
-                      t("goods")
+                      t("issuedPl"),
+                      <i className="fa-solid fa-chevron-down i-sub text-center"></i>
                     )}
-                    {getMenuButton(
-                      false,
-                      `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issued}/${pageSubRoutes.services}`,
-                      <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>,
-                      t("services")
-                    )}
-                  </div>
-                </>
-              )}
+                    <div
+                      className="sub-menu t-flex"
+                      style={{
+                        display: menuVisibility[
+                          `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issued}`
+                        ]
+                          ? "block"
+                          : "none",
+                      }}
+                    >
+                      {getMenuButton(
+                        false,
+                        `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issued}/${pageSubRoutes.goods}`,
+                        <i
+                          className={`${sectionIcons[RequirementType.GOOD]
+                            } text-center i-btn`}
+                        ></i>,
+                        t("goods")
+                      )}
+                      {getMenuButton(
+                        false,
+                        `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.issued}/${pageSubRoutes.services}`,
+                        <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>,
+                        t("services")
+                      )}
+                    </div>
+                  </>
+                )}
               {RolesForSubSection[pageRoutes.myPurchaseOrders]?.[
                 pageSubRoutes.received
               ]?.[typeID] && (
-                <>
-                  {getMenuButton(
-                    true,
-                    `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.received}`,
-                    <i
-                      className={`${sectionIcons["received"]} text-center i-btn`}
-                    ></i>,
-                    t("receivedPl"),
-                    <i className="fa-solid fa-chevron-down i-sub text-center"></i>
-                  )}
-                  <div
-                    className="sub-menu t-flex"
-                    style={{
-                      display: menuVisibility[
-                        `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.received}`
-                      ]
-                        ? "block"
-                        : "none",
-                    }}
-                  >
+                  <>
                     {getMenuButton(
-                      false,
-                      `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.received}/${pageSubRoutes.goods}`,
+                      true,
+                      `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.received}`,
                       <i
-                        className={`${
-                          sectionIcons[RequirementType.GOOD]
-                        } text-center i-btn`}
+                        className={`${sectionIcons["received"]} text-center i-btn`}
                       ></i>,
-                      t("goods")
+                      t("receivedPl"),
+                      <i className="fa-solid fa-chevron-down i-sub text-center"></i>
                     )}
-                    {getMenuButton(
-                      false,
-                      `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.received}/${pageSubRoutes.services}`,
-                      <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>,
-                      t("services")
-                    )}
-                  </div>
-                </>
-              )}
+                    <div
+                      className="sub-menu t-flex"
+                      style={{
+                        display: menuVisibility[
+                          `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.received}`
+                        ]
+                          ? "block"
+                          : "none",
+                      }}
+                    >
+                      {getMenuButton(
+                        false,
+                        `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.received}/${pageSubRoutes.goods}`,
+                        <i
+                          className={`${sectionIcons[RequirementType.GOOD]
+                            } text-center i-btn`}
+                        ></i>,
+                        t("goods")
+                      )}
+                      {getMenuButton(
+                        false,
+                        `${pageRoutes.myPurchaseOrders}/${pageSubRoutes.received}/${pageSubRoutes.services}`,
+                        <i className="fa-regular fa-hand-holding-magic text-center i-btn"></i>,
+                        t("services")
+                      )}
+                    </div>
+                  </>
+                )}
             </div>
           </>
         )}
@@ -440,9 +435,8 @@ export default function Sidebar(props: SidebarProps) {
                   false,
                   `${pageRoutes.mySalesOrders}/${pageSubRoutes.issued}`,
                   <i
-                    className={`${
-                      sectionIcons[RequirementType.GOOD]
-                    } text-center i-btn`}
+                    className={`${sectionIcons[RequirementType.GOOD]
+                      } text-center i-btn`}
                   ></i>,
                   t("issuedPl")
                 )}
@@ -497,9 +491,8 @@ export default function Sidebar(props: SidebarProps) {
                   false,
                   `${pageRoutes.allRequirements}/${pageSubRoutes.goods}`,
                   <i
-                    className={`${
-                      sectionIcons[RequirementType.GOOD]
-                    } text-center i-btn`}
+                    className={`${sectionIcons[RequirementType.GOOD]
+                      } text-center i-btn`}
                   ></i>,
                   t("goods")
                 )}
@@ -540,9 +533,8 @@ export default function Sidebar(props: SidebarProps) {
                   false,
                   `${pageRoutes.allOffers}/${pageSubRoutes.goods}`,
                   <i
-                    className={`${
-                      sectionIcons[RequirementType.GOOD]
-                    } text-center i-btn`}
+                    className={`${sectionIcons[RequirementType.GOOD]
+                      } text-center i-btn`}
                   ></i>,
                   t("goods")
                 )}
@@ -652,9 +644,8 @@ export default function Sidebar(props: SidebarProps) {
                     false,
                     `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.issued}/${pageSubRoutes.goods}`,
                     <i
-                      className={`${
-                        sectionIcons[RequirementType.GOOD]
-                      } text-center i-btn`}
+                      className={`${sectionIcons[RequirementType.GOOD]
+                        } text-center i-btn`}
                     ></i>,
                     t("goods")
                   )}
@@ -688,9 +679,8 @@ export default function Sidebar(props: SidebarProps) {
                     false,
                     `${pageRoutes.allPurchaseOrders}/${pageSubRoutes.received}/${pageSubRoutes.goods}`,
                     <i
-                      className={`${
-                        sectionIcons[RequirementType.GOOD]
-                      } text-center i-btn`}
+                      className={`${sectionIcons[RequirementType.GOOD]
+                        } text-center i-btn`}
                     ></i>,
                     t("goods")
                   )}

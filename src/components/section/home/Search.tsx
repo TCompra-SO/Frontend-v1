@@ -119,6 +119,20 @@ export default function Search() {
             >
               Publicados en total: 📈
             </div>
+            <div className="t-flex count-req gap-10">
+              <div className="icon-home">
+                <i className="fa-regular fa-basket-shopping"></i>
+              </div>
+              <div className="oferta-usuario col-documento-2">
+                <div className="text-truncate ti-1" style={{ color: "#fff" }}>
+                  {data.numLiquidations}
+                </div>
+                <div className="text-truncate ti-2" style={{ color: "#fff" }}>
+                  {t("sales")}
+                </div>
+              </div>
+            </div>
+
             <div className="text-left t-flex gap-20 ht-s3">
               <div className="t-flex count-req gap-10">
                 <div className="icon-home">
@@ -142,19 +156,7 @@ export default function Search() {
                   </div>
                 </div>
               </div>
-              <div className="t-flex count-req gap-10">
-                <div className="icon-home">
-                  <i className="fa-regular fa-basket-shopping"></i>
-                </div>
-                <div className="oferta-usuario col-documento-2">
-                  <div className="text-truncate ti-1" style={{ color: "#fff" }}>
-                    {data.numLiquidations}
-                  </div>
-                  <div className="text-truncate ti-2" style={{ color: "#fff" }}>
-                    {t("sales")}
-                  </div>
-                </div>
-              </div>
+
               {/* <div className="t-flex count-req gap-10">
             <div className="icon-home">
               <i className="fa-regular fa-user-tie"></i>

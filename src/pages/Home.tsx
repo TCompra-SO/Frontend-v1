@@ -72,7 +72,7 @@ export default function Home(props: HomeProps) {
 
   useEffect(() => {
     return () => {
-      if (!notificationSearchData.categoryId) updateType(RequirementType.GOOD);
+      if (!notificationSearchData.categoryId) updateType(RequirementType.SALE);
       updatePage(1);
       updateUseFilter(false);
     };

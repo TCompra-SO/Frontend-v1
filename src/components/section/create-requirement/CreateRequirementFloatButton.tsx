@@ -60,6 +60,7 @@ export default function CreateRequirementFloatButton(
   const [openChatBot, setOpenChatBot] = useState(false);
   const chatBotRef = useRef<ChatBotRef>(null);
 
+  const showChatBot = false;
   useEffect(() => {
     return () => {
       updateCreateRequirementLoading(false);
@@ -84,7 +85,7 @@ export default function CreateRequirementFloatButton(
   /** Variables para crear requerimiento */
 
   const [additionalApiParams, setAdditionalApiParams] = useState<UseApiType>({
-    functionToExecute: () => {},
+    functionToExecute: () => { },
   });
 
   const [apiParams, setApiParams] = useState<
@@ -110,7 +111,7 @@ export default function CreateRequirementFloatButton(
 
   const [additionalApiParamsImg, setAdditionalApiParamsImg] =
     useState<UseApiType>({
-      functionToExecute: () => {},
+      functionToExecute: () => { },
     });
 
   const [apiParamsImg, setApiParamsImg] = useState<useApiParams<FormData>>({
@@ -124,7 +125,7 @@ export default function CreateRequirementFloatButton(
 
   const [additionalApiParamsDoc, setAdditionalApiParamsDoc] =
     useState<UseApiType>({
-      functionToExecute: () => {},
+      functionToExecute: () => { },
     });
 
   const [apiParamsDoc, setApiParamsDoc] = useState<useApiParams<FormData>>({
@@ -254,7 +255,7 @@ export default function CreateRequirementFloatButton(
   return (
     <>
       {!isLoading &&
-      (width > windowSize.sm || (width <= windowSize.sm && !isChatPage)) ? (
+        (width > windowSize.sm || (width <= windowSize.sm && !isChatPage)) ? (
         <>
           <FloatButton.Group shape="circle" style={{ insetInlineEnd: 15 }}>
             {!isHomePage && (
@@ -272,67 +273,71 @@ export default function CreateRequirementFloatButton(
             )}
             {((isLoggedIn && roleCanCreateRequirementType[role].length) ||
               !isLoggedIn) && (
-              <>
-                {!isChatPage && (
-                  <FloatButton
-                    icon={<i className="fa-regular fa-comment" />}
-                    type="primary"
-                    tooltip={{ title: t("chat"), placement: "left" }}
-                    onClick={handleClickOnChat}
-                  />
-                )}
+                <>
+                  {!isChatPage && (
+                    <FloatButton
+                      icon={<i className="fa-regular fa-comment" />}
+                      type="primary"
+                      tooltip={{ title: t("chat"), placement: "left" }}
+                      onClick={handleClickOnChat}
+                    />
+                  )}
 
+                  <FloatButton
+                    icon={<i className="fa-solid fa-plus" />}
+                    type="primary"
+                    tooltip={{
+                      title: t("createRequirement"),
+                      placement: "left",
+                    }}
+                    onClick={handleClickOnCreateRequirement}
+                  />
+                </>
+              )}
+
+
+            {showChatBot && (
+              <Popover
+                placement="rightBottom"
+                classNames={{
+                  root: "chatbot-popover",
+                }}
+                arrow={false}
+                content={
+                  <ChatBot
+                    ref={chatBotRef}
+                    onClose={() => closeChatBot()}
+                  ></ChatBot>
+                }
+                trigger={"click"}
+                onOpenChange={(visible) => {
+                  if (visible) {
+                    setShowChatBotTooltip(false);
+                    setOpenChatBot(visible);
+                  } else {
+                    setShowChatBotTooltip(undefined);
+                    closeChatBot();
+                  }
+                }}
+                open={openChatBot}
+              >
                 <FloatButton
-                  icon={<i className="fa-solid fa-plus" />}
+                  icon={
+                    <i
+                      className="fa-regular fa-comments-question"
+                      style={{ fontSize: "0.9em", marginLeft: "-2px" }}
+                    />
+                  }
                   type="primary"
                   tooltip={{
-                    title: t("createRequirement"),
+                    title: t("chatBotTooltip"),
                     placement: "left",
+                    open: showChatBotTooltip,
                   }}
-                  onClick={handleClickOnCreateRequirement}
+                  onClick={() => setOpenChatBot(true)}
                 />
-              </>
+              </Popover>
             )}
-            <Popover
-              placement="rightBottom"
-              classNames={{
-                root: "chatbot-popover",
-              }}
-              arrow={false}
-              content={
-                <ChatBot
-                  ref={chatBotRef}
-                  onClose={() => closeChatBot()}
-                ></ChatBot>
-              }
-              trigger={"click"}
-              onOpenChange={(visible) => {
-                if (visible) {
-                  setShowChatBotTooltip(false);
-                  setOpenChatBot(visible);
-                } else {
-                  setShowChatBotTooltip(undefined);
-                  closeChatBot();
-                }
-              }}
-              open={openChatBot}
-            >
-              <FloatButton
-                icon={
-                  <i
-                    className="fa-regular fa-comments-question"
-                    style={{ fontSize: "0.9em", marginLeft: "-2px" }}
-                  />
-                }
-                type="primary"
-                tooltip={{
-                  title: t("chatBotTooltip"),
-                  placement: "left",
-                  open: showChatBotTooltip,
-                }}
-                onClick={() => setOpenChatBot(true)}
-              />
-            </Popover>
           </FloatButton.Group>
 
           {isLoggedIn && (

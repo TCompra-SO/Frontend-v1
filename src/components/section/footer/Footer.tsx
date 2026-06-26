@@ -120,6 +120,15 @@ export default function Footer() {
 
               <li>
                 <a
+                  href={`${import.meta.env.VITE_LANDING_PAGE}document/`}
+                  target="_blank"
+                >
+                  ¿Cómo Funciona?
+                </a>
+              </li>
+
+              <li>
+                <a
                   href={`${import.meta.env.VITE_LANDING_PAGE}howPay/`}
                   target="_blank"
                 >
