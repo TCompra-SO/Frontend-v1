@@ -60,8 +60,15 @@ export const MainHeader = forwardRef<MainHeaderRef, MainHeaderProps>(
       if (!isLoadingUser && !hasOpenedLogin.current && !isLoggedIn) {
         const pathIsHome = location.pathname === "/";
         if (pathIsHome) {
-          const queryParams = new URLSearchParams(location.search);
-          const login = queryParams.get("login");
+          let login: string | null = null;
+          try {
+            const queryParams = new URLSearchParams(location.search);
+            login = queryParams.get("login");
+          } catch {
+            // Si location.search contiene % mal formado, URLSearchParams puede lanzar.
+            login = null;
+          }
+
           if (login === "true") {
             handleOpenModal(true);
             hasOpenedLogin.current = true;
