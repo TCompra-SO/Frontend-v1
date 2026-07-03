@@ -7,16 +7,14 @@ export default defineConfig({
     allowedHosts: ["tcompra.com", "www.tcompra.com"],
     host: true,
     port: 3000,
+    // Apagamos el overlay por si acaso queda algún residuo en el navegador
+    hmr: {
+      overlay: false,
+    },
     headers: {
-      "Content-Security-Policy": `
-        
-        font-src 'self' https://fonts.gstatic.com https://site-assets.fontawesome.com;
-        object-src 'none';
-        base-uri 'self';
-        frame-src 'self'
-      `
-        .replace(/\s{2,}/g, " ")
-        .trim(),
+      // Escribimos la CSP en una sola línea limpia para evitar que Vite rompa el decodeURI
+      "Content-Security-Policy":
+        "font-src 'self' https://fonts.gstatic.com https://site-assets.fontawesome.com; object-src 'none'; base-uri 'self'; frame-src 'self';",
     },
   },
 });
