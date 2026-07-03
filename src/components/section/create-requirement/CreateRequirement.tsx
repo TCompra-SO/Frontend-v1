@@ -1,4 +1,4 @@
-import { Checkbox, Col, Flex, Form, Row, UploadFile } from "antd";
+import { Col, Flex, Form, Row, UploadFile } from "antd";
 import { useTranslation } from "react-i18next";
 import EmailCR from "../../common/formFields/EmailCR";
 import DocumentsCertifCR from "../../common/formFields/DocumentsCertifCR";
@@ -429,13 +429,16 @@ export default function CreateRequirement(props: CreateRequirementProps) {
               </div>
             </>
           ) : (
-            <div className="sub-titulo" style={{ fontSize: "26px" }}>
+            <>
+
               <i
                 className="fa-regular fa-paste sub-icon"
                 style={{ fontSize: "24px" }}
               ></i>{" "}
-              {t("newRequirement")}
-            </div>
+              <div className="sub-titulo" style={{ fontSize: "26px" }}>
+                <div>{t("newRequirement")}</div>
+              </div>
+            </>
           )}
         </div>
         <Flex
