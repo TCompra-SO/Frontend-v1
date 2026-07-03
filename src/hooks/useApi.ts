@@ -41,7 +41,7 @@ export default function useApi<T = any>(
   );
   reduxToken = useReduxToken ? reduxToken : undefined;
   const csrfToken = getCookie(csrfTokenName);
-  console.log(csrfToken);
+
   const { t } = useTranslation();
   const [loading, setLoading] = useState<boolean | undefined>(undefined);
   const [responseData, setResponseData] = useState<ResponseRequestType>(null);
