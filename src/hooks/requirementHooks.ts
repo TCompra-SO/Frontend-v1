@@ -119,7 +119,7 @@ export function useCancelRequirement(additionalApiParams?: UseApiType) {
     action: Action,
     type: RequirementType,
     motive?: string,
-    notification?: NotificationData
+    notification?: NotificationData,
   ) {
     updateIdAndActionQueue(reqId, action);
     const data: CancelRequirementRequest = {
@@ -214,7 +214,7 @@ export function useCancelOffer(additionalApiParams?: UseApiType) {
     canceledByCreator: boolean,
     action: Action,
     motive?: string,
-    notification?: NotificationData
+    notification?: NotificationData,
   ) {
     updateIdAndActionQueue(offerId, action);
     const data: CancelOfferRequest = {
@@ -278,7 +278,7 @@ export function useGetOffersByRequirementId() {
     tableType: TableTypes.REQUIREMENT,
   });
   const [dataModal, setDataModal] = useState<ModalContent>(
-    getInitialModalData()
+    getInitialModalData(),
   );
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: null,
@@ -319,7 +319,7 @@ export function useGetOffersByRequirementId() {
           ) {
             const { purchaseOrder } = await getPurchaseOrderById(
               requirementData.purchaseOrderId,
-              requirementData.type
+              requirementData.type,
             );
             if (purchaseOrder) filters = purchaseOrder.filters;
           }
@@ -329,7 +329,7 @@ export function useGetOffersByRequirementId() {
             const { requirement: iniFetchedRequirement } =
               await getRequirementById(
                 requirementData.requirementId,
-                requirementData.type
+                requirementData.type,
               );
             fetchedRequirement = iniFetchedRequirement;
           }
@@ -351,12 +351,12 @@ export function useGetOffersByRequirementId() {
                       !item.subUser &&
                       !Object.prototype.hasOwnProperty.call(
                         users,
-                        item.user
+                        item.user,
                       )) ||
                     (item.subUser &&
                       !Object.prototype.hasOwnProperty.call(
                         users,
-                        item.subUser
+                        item.subUser,
                       ))
                   ) {
                     if (!pendingRequests[creator]) {
@@ -365,7 +365,7 @@ export function useGetOffersByRequirementId() {
                         method: "get",
                       }).then(({ responseData: responseDataU }: any) => {
                         const { user, subUser } = transformToBaseUser(
-                          responseDataU.data[0]
+                          responseDataU.data[0],
                         );
                         users[creator] = {
                           user: subUser ?? user,
@@ -380,12 +380,12 @@ export function useGetOffersByRequirementId() {
                     item,
                     requirementData.type,
                     users[creator].user,
-                    users[creator].mainUser
+                    users[creator].mainUser,
                   );
                 } catch (e) {
                   return null;
                 }
-              })
+              }),
             );
             if (fetchedRequirement || requirementData.requirement) {
               const req: Requirement = (fetchedRequirement ??
@@ -393,7 +393,9 @@ export function useGetOffersByRequirementId() {
               setDataModal({
                 type: ModalTypes.DETAILED_REQUIREMENT,
                 data: {
-                  offerList: offerArray.filter((offer) => offer !== null),
+                  offerList: offerArray.filter(
+                    (offer) => offer !== null,
+                  ) as Offer[],
                   requirement: req,
                   type: requirementData.requirementDetailType,
                   filters: requirementData.filters ?? filters,
@@ -439,7 +441,7 @@ export function useGetOffersByRequirementId() {
     action: Action,
     req?: Requirement,
     filters?: OfferFilters,
-    purchaseOrderId?: string
+    purchaseOrderId?: string,
   ) {
     showLoadingMessage(true);
     setAction(action);
@@ -488,7 +490,7 @@ export function useShowDetailOffer() {
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const [dataModal, setDataModal] = useState<ModalContent>(
-    getInitialModalData()
+    getInitialModalData(),
   );
 
   async function getOfferDetail(
@@ -498,7 +500,7 @@ export function useShowDetailOffer() {
     action: Action,
     showActions: boolean,
     offerData?: Offer,
-    orderId?: string
+    orderId?: string,
   ) {
     try {
       showLoadingMessage(true);
@@ -516,13 +518,13 @@ export function useShowDetailOffer() {
             ? dataUser.typeEntity == EntityType.SUBUSER
               ? mainDataUser
               : undefined
-            : undefined
+            : undefined,
         );
         if (offer) {
           const { basicRateData } = await getBasicRateDataS(
             offer.requirementId,
             false,
-            type
+            type,
           );
           if (basicRateData)
             setDataModal({
@@ -546,7 +548,7 @@ export function useShowDetailOffer() {
         const { basicRateData } = await getBasicRateDataS(
           offerData.requirementId,
           false,
-          type
+          type,
         );
         if (basicRateData)
           setDataModal({
@@ -604,7 +606,7 @@ export function useCulminate() {
     rowId: "",
   });
   const [dataModal, setDataModal] = useState<ModalContent>(
-    getInitialModalData()
+    getInitialModalData(),
   );
   const [apiParams, setApiParams] = useState<useApiParams>({
     service: null,
@@ -656,7 +658,7 @@ export function useCulminate() {
     isOffer: boolean,
     action: Action,
     type: RequirementType,
-    titleToFinish: string
+    titleToFinish: string,
   ) {
     showLoadingMessage(true);
     setDataModal({
@@ -702,7 +704,7 @@ export function useGetRequirementList(contextType: RequirementType) {
     type: RequirementType,
 
     pageSize?: number,
-    params?: HomeFilterRequest
+    params?: HomeFilterRequest,
   ) {
     let success: boolean = false;
     let totalPages: number = 0;
@@ -725,10 +727,10 @@ export function useGetRequirementList(contextType: RequirementType) {
         const data: (Requirement | null)[] = await Promise.all(
           responseData.data.map(async (e: any) => {
             return getRequirementFromData(e, type, undefined, undefined, cache);
-          })
+          }),
         );
         setUsersCache(cache);
-        setRequirements(data.filter((req) => req !== null));
+        setRequirements(data.filter((req) => req !== null) as Requirement[]);
         setTotal(responseData.res?.totalDocuments);
         totalPages = responseData.res?.totalPages;
         success = responseData.res?.currentPage <= responseData.res?.totalPages;

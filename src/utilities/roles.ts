@@ -12,6 +12,14 @@ export const RolesForSection: {
     [UserRoles.SELLER]: true,
     [UserRoles.SELLER_BUYER]: true,
   },
+  companyProfile: {
+    [UserRoles.NONE]: false,
+    [UserRoles.ADMIN]: true,
+    [UserRoles.SELLER_BUYER]: true,
+    [UserRoles.SELLER]: true,
+    [UserRoles.BUYER]: true,
+    [UserRoles.LEGAL]: true,
+  },
   myRequirements: {
     [UserRoles.ADMIN]: true,
     [UserRoles.BUYER]: true,

@@ -482,6 +482,7 @@ a {
   /* align-items: center; */
   gap: 5px;
   flex-direction: column;
+  justify-content: center;
 }
 .sub-icon {
   color: #bc1373;

@@ -38,7 +38,7 @@ import {
 } from "../utilities/globals";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
 import { useGetOffersByRequirementId } from "../hooks/requirementHooks";
-import useShowNotification, { useDownloadPdfOrder, useShowLoadingMessage } from "../hooks/utilHooks";
+import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";

@@ -293,7 +293,7 @@ export function useFilterSortPaginationForTable() {
           if (newFilteredInfo[filter])
             newFilteredInfo[filter] = newFilteredInfo[filter]?.concat(
               Math.random()
-            );
+            ) ?? null;
         });
         return newFilteredInfo;
       });

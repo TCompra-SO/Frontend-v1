@@ -203,7 +203,7 @@ export default function AdminSales() {
         })
       );
       setUsersCache(cache);
-      setRequirementList(data.filter((req) => req !== null));
+      setRequirementList(data.filter((req) => req !== null) as Requirement[]);
       const pagResponse: PaginationDataResponse = responseData.res;
       setTotal(pagResponse.totalDocuments);
       totalPages = pagResponse.totalPages;

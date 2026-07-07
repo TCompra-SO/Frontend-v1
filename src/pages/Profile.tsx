@@ -52,6 +52,7 @@ export default function Profile(props: ProfileProps) {
   const uid = useSelector((state: MainState) => state.user.uid);
   const userName = useSelector((state: MainState) => state.user.name);
   const [form] = Form.useForm();
+  // @ts-ignore
   const [imageSrc, setImageSrc] = useState(defaultUserImage);
   const [profileSuccess, setProfileSuccess] = useState(false);
   const [cities, setCities] = useState<IdValueObj[]>([]);
@@ -60,6 +61,8 @@ export default function Profile(props: ProfileProps) {
     service: null,
     method: "get",
   });
+
+
   const { loading, responseData, error, errorMsg, fetchData } =
     useApi<ProfileRequest>({
       service: apiParams.service,
@@ -168,12 +171,12 @@ export default function Profile(props: ProfileProps) {
     const file = handleChangeImage(e);
     if (file) setImageSrc(URL.createObjectURL(file));
   }
-
-  function handleClick() {
-    if (fileInputRef.current) {
-      fileInputRef.current.input!.click();
-    }
-  }
+  /*
+   function handleClick() {
+     if (fileInputRef.current) {
+       fileInputRef.current.input!.click();
+     }
+   }*/
 
   function checkDifferentCategories(values: any) {
     return (

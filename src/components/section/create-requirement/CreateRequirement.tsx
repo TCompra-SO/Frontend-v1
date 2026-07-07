@@ -420,7 +420,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
               ></i>
               <div
                 className="sub-titulo sub-calificar"
-                style={{ fontSize: "26px" }}
+                style={{ fontSize: "22px" }}
               >
                 <div>{t("newSale")}</div>
                 <div className="calificar-detalle">
@@ -435,7 +435,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
                 className="fa-regular fa-paste sub-icon"
                 style={{ fontSize: "24px" }}
               ></i>{" "}
-              <div className="sub-titulo" style={{ fontSize: "26px" }}>
+              <div className="sub-titulo" style={{ fontSize: "22px" }}>
                 <div>{t("newRequirement")}</div>
               </div>
             </>
