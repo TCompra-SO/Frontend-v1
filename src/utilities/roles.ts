@@ -253,14 +253,14 @@ export const roleCanCreateRequirementType: {
 } = {
   [UserRoles.NONE]: [],
   [UserRoles.ADMIN]: [
+    RequirementType.SALE,
     RequirementType.GOOD,
     RequirementType.SERVICE,
-    RequirementType.SALE,
   ],
   [UserRoles.SELLER_BUYER]: [
+    RequirementType.SALE,
     RequirementType.GOOD,
     RequirementType.SERVICE,
-    RequirementType.SALE,
   ],
   [UserRoles.SELLER]: [RequirementType.SALE],
   [UserRoles.BUYER]: [RequirementType.GOOD, RequirementType.SERVICE],
@@ -272,14 +272,14 @@ export const roleCanOfferRequirementType: {
 } = {
   [UserRoles.NONE]: [],
   [UserRoles.ADMIN]: [
+    RequirementType.SALE,
     RequirementType.GOOD,
     RequirementType.SERVICE,
-    RequirementType.SALE,
   ],
   [UserRoles.SELLER_BUYER]: [
+    RequirementType.SALE,
     RequirementType.GOOD,
     RequirementType.SERVICE,
-    RequirementType.SALE,
   ],
   [UserRoles.SELLER]: [RequirementType.GOOD, RequirementType.SERVICE],
   [UserRoles.BUYER]: [RequirementType.SALE],

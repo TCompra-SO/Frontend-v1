@@ -23,8 +23,8 @@ export default function BudgetField(props: BudgetFieldProps) {
       <InputNumberContainer
         min={0}
         max={9999999}
-        step={0.1}
-        precision={1}
+        step={0.01}
+        precision={2}
         className="form-control"
         placeholder={t(props.usePriceLabel ? "price" : "budget")}
         onFocus={(event) => event.target.select()}

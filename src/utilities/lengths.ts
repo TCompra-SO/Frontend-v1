@@ -53,7 +53,7 @@ export const Lengths = {
   },
   descriptionCR: {
     min: 5,
-    max: 240,
+    max: 300,
   },
   selectOfferObs: {
     min: 0,

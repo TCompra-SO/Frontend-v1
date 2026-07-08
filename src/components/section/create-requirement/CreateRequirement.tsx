@@ -455,6 +455,22 @@ export default function CreateRequirement(props: CreateRequirementProps) {
           style={createRequirementLoading ? { display: "none" } : undefined}
         >
           {roleCanCreateRequirementType[role].includes(
+            RequirementType.SALE
+          ) && (
+              <ButtonContainer
+                common
+                className={`btn btn-grey  ${type == RequirementType.SALE ? "active" : ""
+                  }`}
+                onClick={() => {
+                  changeTab(RequirementType.SALE);
+                }}
+                style={{ flexGrow: 1 }}
+              >
+                <i className={sectionIcons[RequirementType.SALE]}></i>{" "}
+                <span className="req-btn-info">{t("sales")}</span>
+              </ButtonContainer>
+            )}
+          {roleCanCreateRequirementType[role].includes(
             RequirementType.GOOD
           ) && (
               <ButtonContainer
@@ -466,7 +482,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
                 }}
                 style={{ flexGrow: 1 }}
               >
-                <i className={sectionIcons[RequirementType.GOOD]}></i>{" "}
+                <i className="fa-regular fa-dolly"></i>{" "}
                 <span className="req-btn-info">{t("goods")}</span>
               </ButtonContainer>
             )}
@@ -484,22 +500,6 @@ export default function CreateRequirement(props: CreateRequirementProps) {
               >
                 <i className="fa-regular fa-hand-holding-magic"></i>{" "}
                 <span className="req-btn-info">{t("services")}</span>
-              </ButtonContainer>
-            )}
-          {roleCanCreateRequirementType[role].includes(
-            RequirementType.SALE
-          ) && (
-              <ButtonContainer
-                common
-                className={`btn btn-grey  ${type == RequirementType.SALE ? "active" : ""
-                  }`}
-                onClick={() => {
-                  changeTab(RequirementType.SALE);
-                }}
-                style={{ flexGrow: 1 }}
-              >
-                <i className="fa-regular fa-basket-shopping"></i>{" "}
-                <span className="req-btn-info">{t("sales")}</span>
               </ButtonContainer>
             )}
         </div>
