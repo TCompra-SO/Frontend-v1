@@ -8,14 +8,15 @@ export default function Chat({ forDropdown }: { forDropdown?: boolean }) {
   const { globalNumUnreadMessages } = useContext(MainSocketsContext);
 
   return (
-    <div onClick={() => navigate(`${pageRoutes.chat}`)}>
+    <div style={{ position: "relative", display: "inline-block" }} onClick={() => navigate(`${pageRoutes.chat}`)}>
       <i
-        className={`fa-regular fa-messages  ${
-          forDropdown ? "i-main " : "i-opt"
-        }`}
+        className={`fa-regular fa-messages  ${forDropdown ? "i-main " : "i-opt"
+          }`}
       ></i>
       {!forDropdown && globalNumUnreadMessages > 0 && (
-        <b className="i-notf"></b>
+        <span className="i-notf">
+          {globalNumUnreadMessages > 99 ? "99+" : globalNumUnreadMessages}
+        </span>
       )}
     </div>
   );
