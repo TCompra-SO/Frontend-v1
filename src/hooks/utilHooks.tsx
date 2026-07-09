@@ -15,7 +15,7 @@ import {
   generateRandomKey,
   getGetOrderPDFService,
   normalizeSpanish,
-  openPurchaseOrderPdf,
+
 } from "../utilities/globalFunctions";
 import useApi from "./useApi";
 import { LoadingDataContext } from "../contexts/LoadingDataContext";
