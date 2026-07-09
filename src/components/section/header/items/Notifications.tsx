@@ -58,7 +58,7 @@ export default function Notifications(props: NotificationsProps) {
       hasMoreNotificationList &&
       notifContainerRef.current &&
       notifContainerRef.current.scrollHeight <=
-        notifContainerRef.current.clientHeight
+      notifContainerRef.current.clientHeight
     ) {
       getMoreNotifications(page);
       setPage(page + 1);
@@ -157,26 +157,44 @@ export default function Notifications(props: NotificationsProps) {
     >
       {props.includeText ? (
         <Space style={{ margin: "-10px 0" }}>
-          <div>
+          <div
+            style={{
+              position: "relative",
+              display: "inline-block",
+            }}
+          >
             <i
-              className={`fa-regular fa-bell  ${
-                props.forDropdown ? "i-main " : "i-opt"
-              }`}
+              className={`fa-regular fa-bell ${props.forDropdown ? "i-main" : "i-opt"
+                }`}
             ></i>
-            {!props.forDropdown && <b className="i-notf"></b>}
+
+            {!props.forDropdown &&
+              (newNotificationsExist || globalNumUnreadNotifications > 0) && (
+                <b className="i-notf"></b>
+              )}
           </div>
+
           {t("notifications")}
         </Space>
       ) : (
-        <div>
+        <div
+          style={{
+            position: "relative",
+            display: "inline-block",
+          }}
+        >
           <i
-            className={`fa-regular fa-bell  ${
-              props.forDropdown ? "i-main " : "i-opt"
-            }`}
+            className={`fa-regular fa-bell ${props.forDropdown ? "i-main" : "i-opt"
+              }`}
           ></i>
+
           {!props.forDropdown &&
             (newNotificationsExist || globalNumUnreadNotifications > 0) && (
-              <b className="i-notf"></b>
+              <span className="i-notf">
+                {globalNumUnreadNotifications > 99
+                  ? "99+"
+                  : globalNumUnreadNotifications}
+              </span>
             )}
         </div>
       )}

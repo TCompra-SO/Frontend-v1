@@ -53,7 +53,7 @@ export default function useApi<T = any>(
     reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, error]);
-
+  /*OLD
   async function fetchData() {
     reset();
     if (service) {
@@ -62,6 +62,38 @@ export default function useApi<T = any>(
         setLoading(true);
         try {
           const result: AxiosResponse = await axios(config);
+          setResponseData(result.data);
+        } catch (err) {
+          console.log("HTTP error:", err);
+          const errorMsg_ = t(httpErrorInterceptor(err, service.type));
+          setErrorMsg(errorMsg_);
+          setError(err as AxiosError);
+        } finally {
+          setLoading(false);
+        }
+      }
+    }
+  }
+  */
+  async function fetchData() {
+    reset();
+    if (service) {
+      // 1. Se genera la configuración base original (URL, headers, token, etc.)
+      const config = getAxiosConfig(apiParams, reduxToken, csrfToken);
+
+      if (config) {
+        setLoading(true);
+        try {
+          // 🔥 LA SOLUCIÓN CLAVE EN EL HOOK GENÉRICO:
+          // Si el servicio trae un 'responseType' (como "blob"), se lo inyectamos a Axios.
+          if (service.responseType) {
+            config.responseType = service.responseType;
+          }
+
+          // 2. Se ejecuta la petición con la configuración modificada
+          const result: AxiosResponse = await axios(config);
+
+          // 3. Guardamos la respuesta (Si es blob, result.data será un objeto Blob real)
           setResponseData(result.data);
         } catch (err) {
           console.log("HTTP error:", err);

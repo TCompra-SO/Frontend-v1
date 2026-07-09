@@ -394,6 +394,7 @@ export interface HttpService {
   url: string;
   type: string;
   cookieAllowed: boolean;
+  responseType?: "blob" | "json";
 }
 
 export interface useApiParams<T = any> {

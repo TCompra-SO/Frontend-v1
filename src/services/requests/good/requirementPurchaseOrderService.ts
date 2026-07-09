@@ -9,7 +9,7 @@ export function getReqPurchaseOrderPDFService(id: string): HttpService {
     }${ApiRoutes.purchaseOrder.getPurchaseOrderPDF}${id}`,
     type: "PO-PDF",
     cookieAllowed: true,
-    // 🔥 indica que queremos Blob
+    responseType: "blob",
   };
 }
 

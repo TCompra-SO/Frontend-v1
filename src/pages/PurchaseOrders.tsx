@@ -364,6 +364,8 @@ export default function PurchaseOrders() {
         });
         break;
       case Action.DOWNLOAD_PURCHASE_ORDER:
+        console.log("el key:", purchaseOrder.key)
+        console.log("el type:", purchaseOrder.type)
         downloadPdfOrder(purchaseOrder.key, purchaseOrder.type);
         break;
       case Action.FINISH:
@@ -455,9 +457,8 @@ export default function PurchaseOrders() {
         )}`}
         subtitleIcon={
           <i
-            className={`${
-              sectionIcons[type == OrderTableType.ISSUED ? "sent" : "received"]
-            } sub-icon`}
+            className={`${sectionIcons[type == OrderTableType.ISSUED ? "sent" : "received"]
+              } sub-icon`}
           ></i>
         }
         table={tableContent}

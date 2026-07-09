@@ -243,8 +243,7 @@ export function useDownloadPdfOrder() {
 export function useDownloadPdfOrder() {
   const { showLoadingMessage } = useShowLoadingMessage();
   const { showNotification } = useShowNotification();
-  const { updateMyPurchaseOrdersLoadingPdf } =
-    useContext(LoadingDataContext);
+  const { updateMyPurchaseOrdersLoadingPdf } = useContext(LoadingDataContext);
 
   const [apiParamsPdf, setApiParamsPdf] = useState<useApiParams>({
     service: null,
@@ -259,34 +258,70 @@ export function useDownloadPdfOrder() {
     fetchData: fetchDataPdf,
   } = useApi(apiParamsPdf);
 
-
-  console.log("open", responseDataPdf)
   // 🔄 Loading
   useEffect(() => {
     updateMyPurchaseOrdersLoadingPdf(loadingPdf);
     showLoadingMessage(loadingPdf, "generatingPDF");
   }, [loadingPdf]);
 
-  // 🔄 Ejecutar request cuando cambien params
+  // 🔄 Ejecutar request
   useEffect(() => {
     if (apiParamsPdf.service) fetchDataPdf();
   }, [apiParamsPdf]);
 
-  // 🔄 Manejar respuesta
+  // 🔄 Manejar respuesta (Limpio y directo)
+  // En tu frontend (useDownloadPdfOrder), reemplaza tu useEffect de respuesta por este:
+  // 🔄 Manejar respuesta para ABRE EN PESTAÑA NUEVA
   useEffect(() => {
     if (responseDataPdf) {
-      // Aquí le pasamos un nombre de archivo dinámico si quieres
-      openPurchaseOrderPdf(responseDataPdf as Blob, `order-${Date.now()}.pdf`);
+      try {
+        // 1. Nos aseguramos de tener un Blob con el tipo MIME correcto para PDF
+        let pdfBlob: Blob;
+
+        if (responseDataPdf instanceof Blob) {
+          // Si ya es Blob, lo clonamos asegurando el tipo application/pdf
+          pdfBlob = responseDataPdf.type === "application/pdf"
+            ? responseDataPdf
+            : new Blob([responseDataPdf], { type: "application/pdf" });
+        } else {
+          pdfBlob = new Blob([responseDataPdf], { type: "application/pdf" });
+        }
+
+        // 2. Creamos la URL del objeto
+        const fileURL = URL.createObjectURL(pdfBlob);
+
+        // 3. Forzamos la apertura en una pestaña nueva limpia
+        const newTab = window.open(fileURL, "_blank");
+
+        if (newTab) {
+          newTab.focus();
+        } else {
+          // Si el navegador tiene bloqueadas las ventanas emergentes (Pop-ups)
+          showNotification("warning", "El navegador bloqueó la pestaña. Revisa los permisos de pop-ups.");
+        }
+
+      } catch (error) {
+        console.error("Error al abrir el PDF:", error);
+        showNotification("error", "No se pudo abrir el PDF en una pestaña nueva.");
+      }
     } else if (errorPdf) {
       showNotification("error", errorMsgPdf);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataPdf, errorPdf]);
 
   function downloadPdfOrder(id: string, type: RequirementType) {
-    setApiParamsPdf({
-      service: getGetOrderPDFService(type)?.(id),
-      method: "get",
-    });
+    const baseService = getGetOrderPDFService(type)?.(id);
+
+    if (baseService) {
+      setApiParamsPdf({
+        service: {
+          ...baseService,
+          responseType: "blob" // 🔥 Inyectamos la propiedad saltándonos restricciones estrictas
+        },
+        method: "get",
+      });
+    }
   }
 
   return downloadPdfOrder;

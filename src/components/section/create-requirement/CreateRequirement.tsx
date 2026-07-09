@@ -301,7 +301,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     }
 
     if (type == RequirementType.SALE) data.state_article = values.itemCondition;
-    console.log(data)
+
     props.setApiParams({
       service: getCreateRecordService(type),
       method: "post",
@@ -436,7 +436,17 @@ export default function CreateRequirement(props: CreateRequirementProps) {
                 style={{ fontSize: "24px" }}
               ></i>{" "}
               <div className="sub-titulo" style={{ fontSize: "22px" }}>
-                <div>{t("newRequirement")}</div>
+                <div>  {t("newRequirement")}{" de "}
+                  <span
+                    style={{
+                      color: "#bc1373",
+                      fontWeight: 700,
+                    }}
+                  >
+                    {type === RequirementType.GOOD
+                      ? t("goods")
+                      : t("services")}
+                  </span></div>
               </div>
             </>
           )}
