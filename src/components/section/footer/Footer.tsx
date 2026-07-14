@@ -1,25 +1,38 @@
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import logoWhite from "../../../assets/images/logo-white.svg";
+import { useNavigate } from "react-router-dom";
+import { pageRoutes } from "../../../utilities/routes";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
   return (
     <div className="footer-h t-flex f-column j-items gap-10">
       <div className="wd-100 cont-prime">
         <div className="footer-s2">
-          <div className="min-menu t-flex gap-5">
-            <img src={logoWhite} alt="" height="55" />
+          <div
+            className="min-menu t-flex gap-5"
+            onClick={() => navigate(pageRoutes.home)}
+            style={{ cursor: "pointer" }}
+          >
+            <img src={logoWhite} alt="Logo" height={55} />
           </div>
 
           <div className="copyright" style={{ opacity: 1 }}>
-            <a href={`${import.meta.env.VITE_LANDING_PAGE}`} target="_blank">
-              <button className="btn btn-default">
-                <span className="req-btn-info">{t("start")}</span>{" "}
+            <Link
+              to="/?login=true"
+              onClick={(e) => {
+                (e.currentTarget as HTMLAnchorElement).blur();
+              }}
+            >
+              <button type="button" className="btn btn-default">
+                <span className="req-btn-info">{t("start")}</span>
                 <i className="far fa-arrow-right"></i>
               </button>
-            </a>
+            </Link>
           </div>
         </div>
         <hr className="wd-100 hr-cl-fo"></hr>

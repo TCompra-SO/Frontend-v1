@@ -22,7 +22,7 @@ import back4 from "../../../assets/images/back-04.jpg";
 export default function Search() {
   const { t } = useTranslation();
   const { width } = useWindowSize();
-  const { updateKeywordSearch } = useContext(HomeContext);
+  const { updateKeywordSearch, updateType, type } = useContext(HomeContext);
   const [keyword, setKeyword] = useState("");
   const [data, setData] = useState<StatisticsData>();
   const [apiParams] = useState<useApiParams>({
@@ -114,17 +114,20 @@ export default function Search() {
         {data && (
           <div className="t-flex gap-5 f-column j-items">
             <div
-              className="text-left t-flex gap-20 ht-s3"
-              style={{ fontWeight: 600, fontSize: "1.17em" }}
+              className="text-left t-flex gap-10 ht-s3"
+              style={{ fontWeight: 600, fontSize: "1.17em", alignItems: "center" }}
             >
-              Publicados en total: 📈
+              <i className="fa-solid fa-chart-line"></i>
+              <span>Publicados en total</span>
             </div>
 
 
 
             <div className="text-left t-flex gap-20 ht-s3">
 
-              <div className="t-flex count-req gap-10">
+              <div className={`t-flex count-req gap-10 ${type === RequirementType.SALE ? "active" : ""
+                }`} style={{ cursor: "pointer" }} onClick={() => updateType(RequirementType.SALE)}>
+
                 <div className="icon-home">
                   <i className="fa-regular fa-basket-shopping"></i>
                 </div>
@@ -138,7 +141,8 @@ export default function Search() {
                 </div>
               </div>
 
-              <div className="t-flex count-req gap-10">
+              <div className={`t-flex count-req gap-10 ${type === RequirementType.GOOD ? "active" : ""
+                }`} style={{ cursor: "pointer" }} onClick={() => updateType(RequirementType.GOOD)}>
                 <div className="icon-home">
                   <i className={sectionIcons[RequirementType?.GOOD]}></i>
                 </div>
@@ -147,7 +151,8 @@ export default function Search() {
                   <div className="text-truncate ti-2">{t("goods")}</div>
                 </div>
               </div>
-              <div className="t-flex count-req gap-10">
+              <div className={`t-flex count-req gap-10 ${type === RequirementType.SERVICE ? "active" : ""
+                }`} style={{ cursor: "pointer" }} onClick={() => updateType(RequirementType.SERVICE)}>
                 <div className="icon-home">
                   <i className="fa-regular fa-hand-holding-magic"></i>
                 </div>

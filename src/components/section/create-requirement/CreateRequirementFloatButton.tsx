@@ -61,6 +61,11 @@ export default function CreateRequirementFloatButton(
   const chatBotRef = useRef<ChatBotRef>(null);
 
   const showChatBot = false;
+
+  const userRedux = useSelector((state: MainState) => state.user);
+
+  console.log("REDUX USER COMPLETO:", userRedux);
+
   useEffect(() => {
     return () => {
       updateCreateRequirementLoading(false);

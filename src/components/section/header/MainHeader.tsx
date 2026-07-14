@@ -10,7 +10,7 @@ import MainHeaderNoModals from "./MainHeaderNoModals.tsx";
 import NoContentModalContainer from "../../containers/NoContentModalContainer.tsx";
 import ValidateCode from "../../common/modals/ValidateCode.tsx";
 import { loginKey } from "../../../utilities/globals.ts";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux.ts";
 
@@ -28,6 +28,7 @@ export interface MainHeaderRef {
 export const MainHeader = forwardRef<MainHeaderRef, MainHeaderProps>(
   function MainHeader(props, ref) {
     const location = useLocation();
+    const navigate = useNavigate();
     const isLoadingUser = useSelector(
       (state: MainState) => state.loadingUser.isLoading
     );
@@ -71,7 +72,7 @@ export const MainHeader = forwardRef<MainHeaderRef, MainHeaderProps>(
 
           if (login === "true") {
             handleOpenModal(true);
-            hasOpenedLogin.current = true;
+            hasOpenedLogin.current = false;
           }
         }
       }
@@ -96,6 +97,8 @@ export const MainHeader = forwardRef<MainHeaderRef, MainHeaderProps>(
 
     function handleCloseLoginModal() {
       setIsOpenLoginModal(false);
+      hasOpenedLogin.current = false;
+      navigate(location.pathname, { replace: true });
     }
 
     function handleOpenValCodeModal(fromProfile: boolean = false) {

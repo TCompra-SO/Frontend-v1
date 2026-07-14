@@ -31,6 +31,8 @@ import { useSelector } from "react-redux";
 import { MainState } from "../../../models/Redux";
 import useShowNotification from "../../../hooks/utilHooks";
 
+import { useLogin } from "../../../hooks/authHooks";
+
 const stepsIni: StepsItemContent[] = [
   {
     key: "sent",
@@ -105,6 +107,8 @@ export default function ValidateCode({
   const { passwordRules } = usePasswordRules(true);
   const email = useSelector((state: MainState) => state.user.email);
 
+  const login = useLogin();
+
   const [apiParams, setApiParams] = useState<
     useApiParams<
       | SendCodeRequest
@@ -164,6 +168,18 @@ export default function ValidateCode({
         equalServices(apiParams.service, validateCodeService()) ||
         equalServices(apiParams.service, recoverPasswordService())
       ) {
+        console.log("entre a la sesion");
+        console.log(responseData)
+        // Si es validación de cuenta, iniciar sesión automáticamente
+        if (
+          equalServices(apiParams.service, validateCodeService()) &&
+          !isForgotPassword
+        ) {
+          login({
+            res: responseData,
+          });
+        }
+        console.log(responseData.res);
         setValidationSuccess(true);
         next();
         form.resetFields();
@@ -367,8 +383,8 @@ export default function ValidateCode({
               >
                 {waiting
                   ? `${t("timerResendValidationCode")}(${timer}) ${t(
-                      "seconds"
-                    )}`
+                    "seconds"
+                  )}`
                   : t("resendValidationCode")}
               </a>
             </>
@@ -391,8 +407,8 @@ export default function ValidateCode({
                 mainSteps[current].key == "val"
                   ? sendData
                   : mainSteps[current].key == "done"
-                  ? handleClose
-                  : resendCode
+                    ? handleClose
+                    : resendCode
               }
               disabled={
                 mainSteps[current].key != "val"
@@ -401,14 +417,13 @@ export default function ValidateCode({
               }
               children={
                 mainSteps[current].key == "val"
-                  ? `${t(isForgotPassword ? "saveButton" : "validate")}${
-                      timerToValidate != timeoutToValidate
-                        ? ` (${timerToValidate.toFixed(0)})`
-                        : ""
-                    }`
+                  ? `${t(isForgotPassword ? "saveButton" : "validate")}${timerToValidate != timeoutToValidate
+                    ? ` (${timerToValidate.toFixed(0)})`
+                    : ""
+                  }`
                   : mainSteps[current].key == "done"
-                  ? t("acceptButton")
-                  : t("next")
+                    ? t("acceptButton")
+                    : t("next")
               }
             />
           </div>
