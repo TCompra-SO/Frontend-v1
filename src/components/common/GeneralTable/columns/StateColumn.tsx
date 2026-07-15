@@ -45,27 +45,27 @@ export default function StateColumn(
   const filters: StrictColumnFilterItem[] | undefined =
     type == TableTypes.SENT_CERT || type == TableTypes.RECEIVED_CERT
       ? [
-          {
-            text: t(CertificationStateMeta[CertificationState.CERTIFIED].label),
-            value: CertificationState.CERTIFIED,
-          },
-          {
-            text: t(CertificationStateMeta[CertificationState.PENDING].label),
-            value: CertificationState.PENDING,
-          },
-          {
-            text: t(CertificationStateMeta[CertificationState.REJECTED].label),
-            value: CertificationState.REJECTED,
-          },
-          {
-            text: t(CertificationStateMeta[CertificationState.RESENT].label),
-            value: CertificationState.RESENT,
-          },
-        ]
+        {
+          text: t(CertificationStateMeta[CertificationState.CERTIFIED].label),
+          value: CertificationState.CERTIFIED,
+        },
+        {
+          text: t(CertificationStateMeta[CertificationState.PENDING].label),
+          value: CertificationState.PENDING,
+        },
+        {
+          text: t(CertificationStateMeta[CertificationState.REJECTED].label),
+          value: CertificationState.REJECTED,
+        },
+        {
+          text: t(CertificationStateMeta[CertificationState.RESENT].label),
+          value: CertificationState.RESENT,
+        },
+      ]
       : type == TableTypes.REQUIREMENT ||
         type == TableTypes.ALL_REQUIREMENTS ||
         type == TableTypes.REQUIREMENT_SUBUSER
-      ? Object.values(RequirementState)
+        ? Object.values(RequirementState)
           .filter(
             (state) => RequirementStateMeta[Number(state) as RequirementState]
           )
@@ -77,49 +77,49 @@ export default function StateColumn(
               value: Number(state) as RequirementState,
             };
           })
-      : type == TableTypes.OFFER ||
-        type == TableTypes.ALL_OFFERS ||
-        type == TableTypes.OFFER_SUBUSER
-      ? Object.values(OfferState)
-          .filter((state) => OfferStateMeta[Number(state) as OfferState])
-          .map((state) => {
-            return {
-              text: t(OfferStateMeta[Number(state) as OfferState]?.label),
-              value: Number(state) as OfferState,
-            };
-          })
-      : type == TableTypes.PURCHASE_ORDER ||
-        type == TableTypes.ALL_PURCHASE_ORDERS ||
-        type == TableTypes.SALES_ORDER ||
-        type == TableTypes.ALL_SALES_ORDERS ||
-        type == TableTypes.PURCHASE_ORDER_SUBUSER ||
-        type == TableTypes.SALES_ORDER_SUBUSER
-      ? Object.values(PurchaseOrderState)
-          .filter(
-            (state) =>
-              PurchaseOrderStateMeta[Number(state) as PurchaseOrderState]
-          )
-          .map((state) => {
-            return {
-              text: t(
-                PurchaseOrderStateMeta[Number(state) as PurchaseOrderState]
-                  ?.label
-              ),
-              value: Number(state) as PurchaseOrderState,
-            };
-          })
-      : type == TableTypes.USERS
-      ? [
-          {
-            text: t("activeUser"),
-            value: "true",
-          },
-          {
-            text: t("suspendedUser"),
-            value: "false",
-          },
-        ]
-      : undefined;
+        : type == TableTypes.OFFER ||
+          type == TableTypes.ALL_OFFERS ||
+          type == TableTypes.OFFER_SUBUSER
+          ? Object.values(OfferState)
+            .filter((state) => OfferStateMeta[Number(state) as OfferState])
+            .map((state) => {
+              return {
+                text: t(OfferStateMeta[Number(state) as OfferState]?.label),
+                value: Number(state) as OfferState,
+              };
+            })
+          : type == TableTypes.PURCHASE_ORDER ||
+            type == TableTypes.ALL_PURCHASE_ORDERS ||
+            type == TableTypes.SALES_ORDER ||
+            type == TableTypes.ALL_SALES_ORDERS ||
+            type == TableTypes.PURCHASE_ORDER_SUBUSER ||
+            type == TableTypes.SALES_ORDER_SUBUSER
+            ? Object.values(PurchaseOrderState)
+              .filter(
+                (state) =>
+                  PurchaseOrderStateMeta[Number(state) as PurchaseOrderState]
+              )
+              .map((state) => {
+                return {
+                  text: t(
+                    PurchaseOrderStateMeta[Number(state) as PurchaseOrderState]
+                      ?.label
+                  ),
+                  value: Number(state) as PurchaseOrderState,
+                };
+              })
+            : type == TableTypes.USERS
+              ? [
+                {
+                  text: t("activeUser"),
+                  value: "true",
+                },
+                {
+                  text: t("suspendedUser"),
+                  value: "false",
+                },
+              ]
+              : undefined;
 
   const col: ColumnType<
     | Requirement
@@ -152,15 +152,15 @@ export default function StateColumn(
     filterDropdown: noFilter
       ? undefined
       : ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-          <CustomFilterDropdown
-            setSelectedKeys={setSelectedKeys}
-            selectedKeys={selectedKeys}
-            confirm={confirm}
-            clearFilters={clearFilters}
-            filters={filters}
-            filteredInfo={filteredInfo}
-          />
-        ),
+        <CustomFilterDropdown
+          setSelectedKeys={setSelectedKeys}
+          selectedKeys={selectedKeys}
+          confirm={confirm}
+          clearFilters={clearFilters}
+          filters={filters}
+          filteredInfo={filteredInfo}
+        />
+      ),
 
     render: (_, record) => {
       let label: string = "";
@@ -228,3 +228,26 @@ export default function StateColumn(
   };
   return col;
 }
+
+export const getPurchaseOrderState = (
+  order: BasicPurchaseOrder,
+  tableType: OrderTableType
+): PurchaseOrderState => {
+  if (
+    tableType === OrderTableType.ISSUED &&
+    order.state === PurchaseOrderState.PENDING &&
+    order.clientConfirmation !== OrderConfirmation.NONE
+  ) {
+    return PurchaseOrderState.FINISHED;
+  }
+
+  if (
+    tableType === OrderTableType.RECEIVED &&
+    order.state === PurchaseOrderState.PENDING &&
+    order.providerConfirmation !== OrderConfirmation.NONE
+  ) {
+    return PurchaseOrderState.FINISHED;
+  }
+
+  return order.state;
+};

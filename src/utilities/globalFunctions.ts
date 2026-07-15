@@ -160,6 +160,9 @@ import {
 } from "../models/MainInterfaces";
 import { ReactNode } from "react";
 
+import { OrderConfirmation, PurchaseOrderState } from "./types";
+import { BasicPurchaseOrder } from "../models/MainInterfaces";
+
 // Determina  si el usuario al que se va a calificar es proveedor o cliente
 // isOffer indica si a quien se califica es creador de una oferta o no
 export function getUserClass(isOffer: boolean, type: RequirementType) {
@@ -1134,3 +1137,26 @@ export function escapeHTML(str: string) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 }
+
+export const getPurchaseOrderState = (
+  order: BasicPurchaseOrder,
+  tableType: OrderTableType,
+): PurchaseOrderState => {
+  if (
+    tableType === OrderTableType.ISSUED &&
+    order.state === PurchaseOrderState.PENDING &&
+    order.clientConfirmation !== OrderConfirmation.NONE
+  ) {
+    return PurchaseOrderState.FINISHED;
+  }
+
+  if (
+    tableType === OrderTableType.RECEIVED &&
+    order.state === PurchaseOrderState.PENDING &&
+    order.providerConfirmation !== OrderConfirmation.NONE
+  ) {
+    return PurchaseOrderState.FINISHED;
+  }
+
+  return order.state;
+};

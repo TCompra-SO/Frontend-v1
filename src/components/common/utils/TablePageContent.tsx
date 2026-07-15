@@ -48,7 +48,7 @@ const TablePageContent = forwardRef<TablePageContentRef, TablePageContentProps>(
       setSearchValue(e.currentTarget.value);
       props.onSearch?.(e);
     }
-
+    console.log("props de tablepage", props)
     return (
       <>
         <ContentHeader

@@ -89,8 +89,8 @@ export default function GeneralTable(props: GeneralTableProps) {
     scroll: {
       x:
         props.content.type == TableTypes.REQUIREMENT_SUBUSER ||
-        props.content.type == TableTypes.OFFER_SUBUSER ||
-        props.content.type == TableTypes.PURCHASE_ORDER_SUBUSER
+          props.content.type == TableTypes.OFFER_SUBUSER ||
+          props.content.type == TableTypes.PURCHASE_ORDER_SUBUSER
           ? 1000
           : 950,
     },
@@ -127,7 +127,7 @@ export default function GeneralTable(props: GeneralTableProps) {
   };
 
   let columns: any = [];
-
+  console.log("props generaltable", props)
   switch (props.content.type) {
     case TableTypes.HOME: {
       // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -138,12 +138,12 @@ export default function GeneralTable(props: GeneralTableProps) {
           onRow={
             props.onRowAction
               ? (record: AnyObject) => {
-                  const rec = record as Requirement;
-                  return {
-                    onClick: () =>
-                      navigate(getProductDetailRoute(rec.key, rec.type)),
-                  };
-                }
+                const rec = record as Requirement;
+                return {
+                  onClick: () =>
+                    navigate(getProductDetailRoute(rec.key, rec.type)),
+                };
+              }
               : undefined
           }
           dataSource={props.content.data}
@@ -152,6 +152,7 @@ export default function GeneralTable(props: GeneralTableProps) {
           expandable={{
             expandedRowRender: (record) => {
               const rec = record as Requirement;
+
               return (
                 <div
                   onClick={() =>
@@ -159,6 +160,7 @@ export default function GeneralTable(props: GeneralTableProps) {
                   }
                   style={{ cursor: "pointer" }}
                 >
+
                   <RequirementInfo requirement={rec} forHome />
                 </div>
               );
@@ -279,7 +281,8 @@ export default function GeneralTable(props: GeneralTableProps) {
       ActionColumn(
         props.content.type,
         props.content.onButtonClick,
-        visibility[TableColumns.ACTION]
+        visibility[TableColumns.ACTION],
+
       ),
     ];
 
@@ -341,6 +344,7 @@ export default function GeneralTable(props: GeneralTableProps) {
   }
 
   function getPurchaseOrderTableColumns() {
+    console.log("entramos purchaseorder", props)
     if (
       props.content.type == TableTypes.PURCHASE_ORDER ||
       props.content.type == TableTypes.SALES_ORDER
@@ -385,9 +389,11 @@ export default function GeneralTable(props: GeneralTableProps) {
           props.content.type,
           props.content.onButtonClick,
           visibility[TableColumns.ACTION],
-          props.content.subType
+          props.content.subType,
+
         ),
       ];
+
       if (props.content.type == TableTypes.PURCHASE_ORDER)
         columns.splice(3, 0, TypeColumn(visibility[TableColumns.TYPE]));
       return columns;

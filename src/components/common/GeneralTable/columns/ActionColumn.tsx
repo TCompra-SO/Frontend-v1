@@ -19,14 +19,17 @@ import { ItemType } from "antd/es/menu/interface";
 import { Offer, SubUserBase } from "../../../../models/MainInterfaces";
 import { LoadingDataContext } from "../../../../contexts/LoadingDataContext";
 import { useContext } from "react";
+import { getPurchaseOrderState } from "../../../../utilities/globalFunctions";
 
 // extraParam tiene diferentes significados según el tipo de tabla
 export default function ActionColumn(
   type: TableTypes,
   onButtonClick: (action: Action, data: any, subAction?: Action) => void,
   hidden: boolean = false,
-  extraParam?: any
+  extraParam?: any,
+  orderState?: any
 ) {
+  console.log("recibo extra param", extraParam)
   const { t } = useTranslation();
   const { myPurchaseOrdersLoadingPdf, idAndActionQueue } =
     useContext(LoadingDataContext);
@@ -49,6 +52,7 @@ export default function ActionColumn(
     key: number,
     ActionByState: { [key: number]: Action[] }
   ) {
+    console.log("este es", record)
     try {
       switch (type) {
         case TableTypes.PURCHASE_ORDER:
@@ -77,8 +81,8 @@ export default function ActionColumn(
                 disabled: idAndActionQueue[record?.key]
                   ? true
                   : action == Action.DOWNLOAD_PURCHASE_ORDER
-                  ? myPurchaseOrdersLoadingPdf
-                  : false,
+                    ? myPurchaseOrdersLoadingPdf
+                    : false,
               });
               return acc;
             },
@@ -110,8 +114,8 @@ export default function ActionColumn(
                 disabled: idAndActionQueue[record?.key]
                   ? true
                   : action == Action.DOWNLOAD_PURCHASE_ORDER
-                  ? myPurchaseOrdersLoadingPdf
-                  : false,
+                    ? myPurchaseOrdersLoadingPdf
+                    : false,
               });
               return acc;
             },
@@ -156,7 +160,7 @@ export default function ActionColumn(
                 onClick: onClickCallback,
                 disabled:
                   (action == Action.REACTIVATE || action == Action.SUSPEND) &&
-                  idAndActionQueue[uid]
+                    idAndActionQueue[uid]
                     ? true
                     : false,
                 children,
@@ -215,7 +219,10 @@ export default function ActionColumn(
         case TableTypes.SALES_ORDER:
         case TableTypes.ALL_SALES_ORDERS:
           ActionByState = ActionByStatePurchaseOrder;
-          key = record.state;
+          key = getPurchaseOrderState(record, extraParam);
+          console.log("las acciones", ActionByState)
+          console.log("la key", key)
+          console.log("estado order", orderState)
           break;
         case TableTypes.MY_DOCUMENTS:
           ActionByState = ActionCertificateFiles;
