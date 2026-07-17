@@ -198,7 +198,8 @@ export default function Footer() {
         <hr className="wd-100 hr-se-fo" />
         <div className="footer-s2">
           <div className="min-menu t-flex gap-5">
-            <a href="videos.html" className="foo-a">
+            <a href="https://www.youtube.com/channel/UCMllmt4Yz6googZOS9qPlLA" className="foo-a" target="_blank"
+              rel="noopener noreferrer">
               <i className="fa-regular fa-video"></i> {t("videos")}
             </a>
           </div>

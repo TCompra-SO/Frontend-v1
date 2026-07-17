@@ -51,6 +51,7 @@ export function useLogin() {
 
   async function login(responseData: any) {
     const loginResponse: LoginResponse = responseData.res;
+
     dispatch(setUser(loginResponse));
 
     if (loginResponse) {
@@ -146,57 +147,73 @@ export function useLoadUserInfo() {
 
   async function loadUserInfo(
     refreshAccessToken: boolean,
-    showNotif: boolean = true
+    showNotif: boolean = true,
   ) {
-    if (refreshAccessToken) await refreshTokenAndHandleResult(true, showNotif);
+    // ========================= NUEVO CÓDIGO =========================
+    // Obtener la información almacenada de la sesión
     const userData = localStorage.getItem(userDataKey);
     const expiresIn = localStorage.getItem(expiresInKey);
     const refreshExpiresIn = localStorage.getItem(refreshExpiresInKey);
-    if (userData && expiresIn !== null && refreshExpiresIn !== null) {
-      const userInfo = JSON.parse(decryptData(userData));
-      setTokenExpiration(Number(expiresIn));
-      setRefreshTokenExpiration(Number(refreshExpiresIn));
-      // if (!checkToken()) return;
-      if (userInfo) {
-        // localStorage.setItem(tokenKey, userInfo.token);
-        dispatch(
-          setUser({
-            token: userInfo.token,
-            dataUser: [
-              {
-                uid: userInfo.uid,
-                name: userInfo.name,
-                email: userInfo.email,
-                typeID: userInfo.typeID,
-                planID: userInfo.planID,
-                type: userInfo.typeEntity,
-              },
-            ],
-          })
-        );
-        const { user, subUser } = await getBaseUserForUserSubUser(
-          userInfo.uid,
-          true
-        );
-        if (!user) {
-          logout();
-          return;
-        } else {
-          dispatch(setMainUser(user));
-        }
-        if (subUser) {
-          dispatch(loginUser(subUser));
-        }
-        if (!(user && subUser)) {
-          logout();
-        }
-        // Si se cargó con exito los datos del usuario, solicitar CSRF token
-        await requestCSRFToken();
-        return;
-      }
-      logout();
+
+    // Si no existe una sesión guardada, salir silenciosamente.
+    // Esto ocurre cuando el usuario entra por primera vez a la aplicación
+    // o nunca ha iniciado sesión.
+    if (!userData || expiresIn === null || refreshExpiresIn === null) {
       return;
     }
+    // ================================================================
+
+    // Solo intentar refrescar el token cuando ya existe una sesión
+    if (refreshAccessToken) {
+      await refreshTokenAndHandleResult(true, showNotif);
+    }
+
+    const userInfo = JSON.parse(decryptData(userData));
+
+    setTokenExpiration(Number(expiresIn));
+    setRefreshTokenExpiration(Number(refreshExpiresIn));
+
+    if (userInfo) {
+      dispatch(
+        setUser({
+          token: userInfo.token,
+          dataUser: [
+            {
+              uid: userInfo.uid,
+              name: userInfo.name,
+              email: userInfo.email,
+              typeID: userInfo.typeID,
+              planID: userInfo.planID,
+              type: userInfo.typeEntity,
+            },
+          ],
+        }),
+      );
+
+      const { user, subUser } = await getBaseUserForUserSubUser(
+        userInfo.uid,
+        true,
+      );
+
+      if (!user) {
+        logout();
+        return;
+      } else {
+        dispatch(setMainUser(user));
+      }
+
+      if (subUser) {
+        dispatch(loginUser(subUser));
+      }
+
+      if (!(user && subUser)) {
+        logout();
+      }
+
+      await requestCSRFToken();
+      return;
+    }
+
     logout();
   }
 
