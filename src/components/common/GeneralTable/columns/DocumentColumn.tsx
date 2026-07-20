@@ -15,14 +15,14 @@ export default function DocumentColumn(
   onButtonClick: (action: Action, data: any) => void,
   hidden: boolean = false
 ) {
-  { console.log("dentro ordenes de venta"); }
+
   const { t } = useTranslation();
   const {
     allPurchaseOrdersLoadingPdf,
     subUserPurchaseOrdersLoadingPdf,
     allSalesOrdersLoadingPdf,
   } = useContext(LoadingDataContext);
-
+  console.log("dentro ordenes de venta mm", onButtonClick);
   const col: ColumnType<PurchaseOrderItemSubUser | PurchaseOrder> = {
     title: t("document"),
     key: documentColumnKey,

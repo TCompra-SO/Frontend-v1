@@ -9,6 +9,7 @@ export function getServicePurchaseOrderPDFService(id: string): HttpService {
     }${id}`,
     type: "PO-PDF",
     cookieAllowed: true,
+    responseType: "blob",
   };
 }
 
@@ -27,7 +28,7 @@ export function getServicePurchaseOrdersByClientEntityService(
   id: string,
   userRole: UserRoles,
   page: number,
-  pageSize: number
+  pageSize: number,
 ): HttpService {
   return {
     url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.purchaseOrder}${
@@ -43,7 +44,7 @@ export function getServicePurchaseOrdersByProviderEntityService(
   id: string,
   userRole: UserRoles,
   page: number,
-  pageSize: number
+  pageSize: number,
 ): HttpService {
   return {
     url: `${import.meta.env.VITE_SERVICES_URL}${ApiMainRoutes.purchaseOrder}${

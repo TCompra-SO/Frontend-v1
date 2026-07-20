@@ -273,7 +273,10 @@ export function useDownloadPdfOrder() {
   // En tu frontend (useDownloadPdfOrder), reemplaza tu useEffect de respuesta por este:
   // 🔄 Manejar respuesta para ABRE EN PESTAÑA NUEVA
   useEffect(() => {
+    console.log("res pdf", responseDataPdf);
+    console.log("res data pdf", responseDataPdf.type);
     if (responseDataPdf) {
+
       try {
         // 1. Nos aseguramos de tener un Blob con el tipo MIME correcto para PDF
         let pdfBlob: Blob;

@@ -42,28 +42,28 @@ import { sectionIcons } from "../../../utilities/colors";
 interface SubUserTableModalProps {
   user: SubUserBase | null;
   content:
-    | {
-        tableType: TableTypes.REQUIREMENT_SUBUSER;
-        tableContent: RequirementItemSubUser[];
-        total?: number;
-      }
-    | {
-        tableType: TableTypes.OFFER_SUBUSER;
-        tableContent: OfferItemSubUser[];
-        total?: number;
-      }
-    | {
-        tableType: TableTypes.PURCHASE_ORDER_SUBUSER;
-        tableContent: PurchaseOrderItemSubUser[];
-        subType: OrderTableType;
-        total?: number;
-      }
-    | {
-        tableType: TableTypes.SALES_ORDER_SUBUSER;
-        tableContent: PurchaseOrderItemSubUser[];
-        subType: OrderTableType;
-        total?: number;
-      };
+  | {
+    tableType: TableTypes.REQUIREMENT_SUBUSER;
+    tableContent: RequirementItemSubUser[];
+    total?: number;
+  }
+  | {
+    tableType: TableTypes.OFFER_SUBUSER;
+    tableContent: OfferItemSubUser[];
+    total?: number;
+  }
+  | {
+    tableType: TableTypes.PURCHASE_ORDER_SUBUSER;
+    tableContent: PurchaseOrderItemSubUser[];
+    subType: OrderTableType;
+    total?: number;
+  }
+  | {
+    tableType: TableTypes.SALES_ORDER_SUBUSER;
+    tableContent: PurchaseOrderItemSubUser[];
+    subType: OrderTableType;
+    total?: number;
+  };
   onTabChange: (tabId: RequirementType | OrderTableType) => void;
   loading: boolean | undefined;
   tableType: TableTypes;
@@ -162,7 +162,9 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
   /** Funciones */
 
   function handleOnButtonClick(action: Action, data: any) {
+    console.log("entre sub")
     switch (action) {
+
       case Action.DOWNLOAD_PURCHASE_ORDER: {
         const po = data as PurchaseOrderItemSubUser;
         if (!loadingPdf)
@@ -238,13 +240,12 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
         </div>
         <div className="t-flex mr-sub">
           {props.tableType == TableTypes.OFFER_SUBUSER ||
-          props.tableType == TableTypes.REQUIREMENT_SUBUSER ? (
+            props.tableType == TableTypes.REQUIREMENT_SUBUSER ? (
             <>
               <ButtonContainer
                 common
-                className={`btn btn-grey wd-33 ${
-                  subType == RequirementType.GOOD ? "active" : ""
-                }`}
+                className={`btn btn-grey wd-33 ${subType == RequirementType.GOOD ? "active" : ""
+                  }`}
                 onClick={() => {
                   changeSubType(RequirementType.GOOD);
                 }}
@@ -254,9 +255,8 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
               </ButtonContainer>
               <ButtonContainer
                 common
-                className={`btn btn-grey wd-33 ${
-                  subType == RequirementType.SERVICE ? "active" : ""
-                }`}
+                className={`btn btn-grey wd-33 ${subType == RequirementType.SERVICE ? "active" : ""
+                  }`}
                 onClick={() => {
                   changeSubType(RequirementType.SERVICE);
                 }}
@@ -266,9 +266,8 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
               </ButtonContainer>
               <ButtonContainer
                 common
-                className={`btn btn-grey wd-33 ${
-                  subType == RequirementType.SALE ? "active" : ""
-                }`}
+                className={`btn btn-grey wd-33 ${subType == RequirementType.SALE ? "active" : ""
+                  }`}
                 onClick={() => {
                   changeSubType(RequirementType.SALE);
                 }}
@@ -281,9 +280,8 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
             <>
               <ButtonContainer
                 common
-                className={`btn btn-grey wd-50 ${
-                  subType == OrderTableType.ISSUED ? "active" : ""
-                }`}
+                className={`btn btn-grey wd-50 ${subType == OrderTableType.ISSUED ? "active" : ""
+                  }`}
                 onClick={() => {
                   changeSubType(OrderTableType.ISSUED);
                 }}
@@ -293,9 +291,8 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
               </ButtonContainer>
               <ButtonContainer
                 common
-                className={`btn btn-grey wd-50 ${
-                  subType == OrderTableType.RECEIVED ? "active" : ""
-                }`}
+                className={`btn btn-grey wd-50 ${subType == OrderTableType.RECEIVED ? "active" : ""
+                  }`}
                 onClick={() => {
                   changeSubType(OrderTableType.RECEIVED);
                 }}
@@ -353,28 +350,28 @@ export default function SubUserTableModal(props: SubUserTableModalProps) {
           )}
           {(props.content.tableType == TableTypes.PURCHASE_ORDER_SUBUSER ||
             props.content.tableType == TableTypes.SALES_ORDER_SUBUSER) && (
-            <div className="card-white" style={{ padding: 0 }}>
-              <div className="table-responsive">
-                <GeneralTable
-                  content={{
-                    type: props.content.tableType,
-                    data: props.content.tableContent,
-                    hiddenColumns: [],
-                    nameColumnHeader: t("purchaseOrders"),
-                    onButtonClick: handleOnButtonClick,
-                    subType: props.content.subType,
-                    total: props.content.total,
-                    page: props.currentPage,
-                    pageSize: props.currentPageSize,
-                    fieldSort: props.fieldSort,
-                    filteredInfo: props.filteredInfo,
-                  }}
-                  onChangePageAndPageSize={props.onChangePageAndPageSize}
-                  loading={props.loading}
-                />
+              <div className="card-white" style={{ padding: 0 }}>
+                <div className="table-responsive">
+                  <GeneralTable
+                    content={{
+                      type: props.content.tableType,
+                      data: props.content.tableContent,
+                      hiddenColumns: [],
+                      nameColumnHeader: t("purchaseOrders"),
+                      onButtonClick: handleOnButtonClick,
+                      subType: props.content.subType,
+                      total: props.content.total,
+                      page: props.currentPage,
+                      pageSize: props.currentPageSize,
+                      fieldSort: props.fieldSort,
+                      filteredInfo: props.filteredInfo,
+                    }}
+                    onChangePageAndPageSize={props.onChangePageAndPageSize}
+                    loading={props.loading}
+                  />
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       </div>
     </>

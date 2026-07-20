@@ -349,6 +349,7 @@ export default function PurchaseOrders() {
   }
 
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
+    console.log("purchaseOrders.tsx", purchaseOrder);
     setAction(action);
     switch (action) {
       case Action.VIEW_CUSTOMER:

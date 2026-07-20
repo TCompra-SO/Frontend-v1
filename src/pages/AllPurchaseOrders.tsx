@@ -258,15 +258,23 @@ export default function AllPurchaseOrders() {
 
 
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
+
     switch (action) {
       case Action.DOWNLOAD_PURCHASE_ORDER:
-        if (!loadingPdf)
-          setApiParamsPdf({
-            service: getGetOrderPDFService(purchaseOrder.type)?.(
-              purchaseOrder.key
-            ),
-            method: "get",
-          });
+        /*
+         if (!loadingPdf)
+           setApiParamsPdf({
+             service: getGetOrderPDFService(purchaseOrder.type)?.(
+               purchaseOrder.key
+             ),
+             method: "get",
+           });
+         */
+        const service = getGetOrderPDFService(purchaseOrder.type)?.(purchaseOrder.key);
+
+        if (service) {
+          window.open(service.url, "_blank", "noopener,noreferrer");
+        }
         break;
       case Action.VIEW_PURCHASE_ORDER:
         getOffersByRequirementId(

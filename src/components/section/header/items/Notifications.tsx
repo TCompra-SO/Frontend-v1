@@ -193,7 +193,7 @@ export default function Notifications(props: NotificationsProps) {
               <span className="i-notf">
                 {globalNumUnreadNotifications > 99
                   ? "99+"
-                  : globalNumUnreadNotifications}
+                  : globalNumUnreadNotifications + 1}
               </span>
             )}
         </div>

@@ -9,6 +9,7 @@ export function getSalesOrderPDFService(id: string): HttpService {
     }${id}`,
     type: "PO-PDF",
     cookieAllowed: true,
+    responseType: "blob",
   };
 }
 
@@ -27,7 +28,7 @@ export function getSalesOrdersByClientEntityService(
   id: string,
   userRole: UserRoles,
   page: number,
-  pageSize: number
+  pageSize: number,
 ): HttpService {
   return {
     url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.saleOrder}${
@@ -43,7 +44,7 @@ export function getSalesOrdersByProviderEntityService(
   id: string,
   userRole: UserRoles,
   page: number,
-  pageSize: number
+  pageSize: number,
 ): HttpService {
   return {
     url: `${import.meta.env.VITE_SALES_URL}${ApiMainRoutes.saleOrder}${

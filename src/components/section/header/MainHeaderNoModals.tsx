@@ -88,11 +88,11 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
       dropdownItems.concat(
         isSystemAdmin && !dropdownItems.find((it) => it.key == "admin")
           ? [
-              {
-                key: "admin",
-                label: adminItem,
-              },
-            ]
+            {
+              key: "admin",
+              label: adminItem,
+            },
+          ]
           : []
       )
     );
@@ -124,11 +124,11 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
         ].concat(
           isSystemAdmin
             ? [
-                {
-                  key: "admin",
-                  label: adminItem,
-                },
-              ]
+              {
+                key: "admin",
+                label: adminItem,
+              },
+            ]
             : []
         )
       );
@@ -159,11 +159,11 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
         ].concat(
           isSystemAdmin
             ? [
-                {
-                  key: "admin",
-                  label: adminItem,
-                },
-              ]
+              {
+                key: "admin",
+                label: adminItem,
+              },
+            ]
             : []
         )
       );
@@ -236,9 +236,8 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
       >
         {isLoggedIn ? (
           <div
-            className={`t-flex header-tc  ${
-              currentSection == pageRoutes.home ? "home" : ""
-            }`}
+            className={`t-flex header-tc  ${currentSection == pageRoutes.home ? "home" : ""
+              }`}
           >
             {props.onShowMenu && (
               <>
@@ -252,24 +251,24 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
             )}
             {(currentSection == pageRoutes.home ||
               currentSection == pageRoutes.productDetail) && (
-              <img
-                src={logoSrc}
-                className="logo-header"
-                alt="Logo"
-                style={{
-                  flex: "0 0 auto",
-                  cursor:
+                <img
+                  src={logoSrc}
+                  className="logo-header"
+                  alt="Logo"
+                  style={{
+                    flex: "0 0 auto",
+                    cursor:
+                      currentSection == pageRoutes.productDetail
+                        ? "pointer"
+                        : "inherit",
+                  }}
+                  onClick={
                     currentSection == pageRoutes.productDetail
-                      ? "pointer"
-                      : "inherit",
-                }}
-                onClick={
-                  currentSection == pageRoutes.productDetail
-                    ? () => navigate(pageRoutes.home)
-                    : undefined
-                }
-              />
-            )}
+                      ? () => navigate(pageRoutes.home)
+                      : undefined
+                  }
+                />
+              )}
             <div
               className="t-flex options-tc"
               style={{
@@ -305,9 +304,8 @@ export default function MainHeaderNoModals(props: MainHeaderNoModalsProps) {
           </div>
         ) : (
           <div
-            className={`t-flex header-tc  ${
-              currentSection == pageRoutes.home ? "home" : ""
-            }`}
+            className={`t-flex header-tc  ${currentSection == pageRoutes.home ? "home" : ""
+              }`}
           >
             <img
               src={logoSrc}

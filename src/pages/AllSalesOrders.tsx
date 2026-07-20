@@ -247,13 +247,21 @@ export default function AllSalesOrders() {
   function handleOnButtonClick(action: Action, purchaseOrder: PurchaseOrder) {
     switch (action) {
       case Action.DOWNLOAD_PURCHASE_ORDER:
-        if (!loadingPdf)
-          setApiParamsPdf({
-            service: getGetOrderPDFService(purchaseOrder.type)?.(
-              purchaseOrder.key
-            ),
-            method: "get",
-          });
+        /* if (!loadingPdf)
+           
+           setApiParamsPdf({
+             service: getGetOrderPDFService(purchaseOrder.type)?.(
+               purchaseOrder.key
+             ),
+             method: "get",
+           });
+         */
+        const service = getGetOrderPDFService(purchaseOrder.type)?.(purchaseOrder.key);
+
+        if (service) {
+          window.open(service.url, "_blank", "noopener,noreferrer");
+        }
+
         break;
       case Action.VIEW_PURCHASE_ORDER:
         getOffersByRequirementId(
@@ -296,9 +304,8 @@ export default function AllSalesOrders() {
         )}`}
         subtitleIcon={
           <i
-            className={`${
-              sectionIcons[type == OrderTableType.ISSUED ? "sent" : "received"]
-            } sub-icon`}
+            className={`${sectionIcons[type == OrderTableType.ISSUED ? "sent" : "received"]
+              } sub-icon`}
           ></i>
         }
         table={tableContent}

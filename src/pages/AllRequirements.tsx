@@ -48,6 +48,7 @@ export default function AllRequirements() {
     handleSearch,
     reset,
   } = useFilterSortPaginationForTable();
+
   const [loadingTable, setLoadingTable] = useState(true);
   const [requirementList, setRequirementList] = useState<BasicRequirement[]>(
     []
@@ -98,6 +99,7 @@ export default function AllRequirements() {
   /** Actualiza el contenido de tabla */
 
   useEffect(() => {
+
     setTableContent((prev) => ({
       ...prev,
       subType: type,
@@ -122,6 +124,7 @@ export default function AllRequirements() {
   }, [type]);
 
   useEffect(() => {
+
     if (responseData) {
       setData();
     } else if (error) {
@@ -137,6 +140,7 @@ export default function AllRequirements() {
   /* Obtiene nuevo tipo de tabla */
 
   useEffect(() => {
+
     setType(getRouteType(location.pathname));
   }, [location]);
 
@@ -149,6 +153,7 @@ export default function AllRequirements() {
   }
 
   async function setData() {
+
     try {
       const data = await Promise.all(
         responseData.data.map(async (e: any) => {
@@ -166,6 +171,7 @@ export default function AllRequirements() {
   }
 
   function handleOnButtonClick(action: Action, requirement: BasicRequirement) {
+
     if (action == Action.VIEW_REQUIREMENT)
       navigate(getProductDetailRoute(requirement.key, requirement.type));
   }

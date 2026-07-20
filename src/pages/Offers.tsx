@@ -334,7 +334,7 @@ export default function Offers() {
   }
 
   function handleOnButtonClick(action: Action, offer: Offer) {
-    console.log(offer);
+
     switch (action) {
       case Action.OFFER_DETAIL:
         getOfferDetail(

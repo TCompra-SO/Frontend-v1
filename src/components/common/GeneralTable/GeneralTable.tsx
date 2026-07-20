@@ -512,6 +512,7 @@ export default function GeneralTable(props: GeneralTableProps) {
   }
 
   function getAllPurchaseOrdersTableColumns() {
+    console.log("estamos en getallpurch", props.content.type)
     if (
       props.content.type == TableTypes.ALL_PURCHASE_ORDERS ||
       props.content.type == TableTypes.ALL_SALES_ORDERS
@@ -716,6 +717,7 @@ export default function GeneralTable(props: GeneralTableProps) {
   }
 
   function getPurchaseOrderSubUserColumns() {
+
     if (
       props.content.type == TableTypes.PURCHASE_ORDER_SUBUSER ||
       props.content.type == TableTypes.SALES_ORDER_SUBUSER
