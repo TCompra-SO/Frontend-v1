@@ -186,7 +186,7 @@ export default function AllSalesOrders() {
 
   /* Para descargar pdf de orden de compra */
 
-  const [apiParamsPdf, setApiParamsPdf] = useState<useApiParams>({
+  const [apiParamsPdf, /*setApiParamsPdf*/] = useState<useApiParams>({
     service: null,
     method: "get",
   });
