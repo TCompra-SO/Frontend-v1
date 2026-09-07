@@ -250,6 +250,7 @@ export function useDownloadPdfOrder() {
     method: "get",
   });
 
+
   const {
     loading: loadingPdf,
     responseData: responseDataPdf,
@@ -274,8 +275,10 @@ export function useDownloadPdfOrder() {
   // 🔄 Manejar respuesta para ABRE EN PESTAÑA NUEVA
   useEffect(() => {
     console.log("res pdf", responseDataPdf);
-    console.log("res data pdf", responseDataPdf.type);
+
     if (responseDataPdf) {
+      // 💡 Seguro: solo se evalúa si responseDataPdf no es null/undefined
+      console.log("res data pdf type:", responseDataPdf.type);
 
       try {
         // 1. Nos aseguramos de tener un Blob con el tipo MIME correcto para PDF
@@ -283,9 +286,10 @@ export function useDownloadPdfOrder() {
 
         if (responseDataPdf instanceof Blob) {
           // Si ya es Blob, lo clonamos asegurando el tipo application/pdf
-          pdfBlob = responseDataPdf.type === "application/pdf"
-            ? responseDataPdf
-            : new Blob([responseDataPdf], { type: "application/pdf" });
+          pdfBlob =
+            responseDataPdf.type === "application/pdf"
+              ? responseDataPdf
+              : new Blob([responseDataPdf], { type: "application/pdf" });
         } else {
           pdfBlob = new Blob([responseDataPdf], { type: "application/pdf" });
         }
@@ -300,9 +304,11 @@ export function useDownloadPdfOrder() {
           newTab.focus();
         } else {
           // Si el navegador tiene bloqueadas las ventanas emergentes (Pop-ups)
-          showNotification("warning", "El navegador bloqueó la pestaña. Revisa los permisos de pop-ups.");
+          showNotification(
+            "warning",
+            "El navegador bloqueó la pestaña. Revisa los permisos de pop-ups."
+          );
         }
-
       } catch (error) {
         console.error("Error al abrir el PDF:", error);
         showNotification("error", "No se pudo abrir el PDF en una pestaña nueva.");

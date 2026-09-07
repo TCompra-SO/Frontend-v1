@@ -180,9 +180,11 @@ export default function ValidateCode({
           });
         }
         console.log(responseData.res);
+        console.log(responseData);
         setValidationSuccess(true);
         next();
         form.resetFields();
+        console.log("inicia sesion");
       }
     } else if (error) {
       showNotification("error", errorMsg);
