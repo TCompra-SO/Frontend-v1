@@ -47,8 +47,12 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
   const { showNotification } = useShowNotification();
   const entityType = useSelector((state: MainState) => state.user.typeEntity);
   const { updateDetailedRequirementModalData } = useContext(ModalsContext);
+
   const [mainText, setMainText] = useState("");
   const [optionalText, setOptionalText] = useState("");
+  const [iconClass, setIconClass] = useState(
+    "fa-regular fa-circle-exclamation"
+  );
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState<ModalContent>(
     getInitialModalData()
@@ -94,9 +98,12 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDataDelete, errorDelete]);
 
-  /** Texto a mostrar */
+  /** Texto e ícono a mostrar */
 
   useEffect(() => {
+    // Reset por defecto
+    setIconClass("fa-regular fa-circle-exclamation");
+
     switch (props.motive) {
       case CantOfferMotives.ALREADY_MADE_OFFER:
         setMainText(t("alreadyMadeOffer"));
@@ -108,26 +115,23 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
         break;
       case CantOfferMotives.IS_CREATOR:
         setMainText(
-          `${
-            props.requirement?.type &&
+          `${props.requirement?.type &&
             props.requirement.type == RequirementType.SALE
-              ? `${t("yourSaleHas")} (${props.requirement?.numberOffers}) ${t(
-                  "offers"
-                )}`
-              : `${t("yourRequirementHas")}  (${
-                  props.requirement?.numberOffers
-                }) ${t("offers")}`
+            ? `${t("yourSaleHas")} (${props.requirement?.numberOffers}) ${t(
+              "offers"
+            )}`
+            : `${t("yourRequirementHas")}  (${props.requirement?.numberOffers
+            }) ${t("offers")}`
           }`
         );
         setOptionalText("");
         break;
       case CantOfferMotives.CHANGED_STATE:
         setMainText(
-          `${
-            props.requirement?.type &&
+          `${props.requirement?.type &&
             props.requirement.type == RequirementType.SALE
-              ? `${t("thisSaleIsNoLongerAvailable")}`
-              : `${t("thisRequirementIsNoLongerAvailable")} `
+            ? `${t("thisSaleIsNoLongerAvailable")}`
+            : `${t("thisRequirementIsNoLongerAvailable")} `
           }`
         );
         setOptionalText(
@@ -170,7 +174,9 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
         setMainText(t("onlyCertifiedCompaniesCanMakeAnOffer"));
         switch (props.isCertified) {
           case CertificationState.PENDING:
+          case CertificationState.RESENT: // RESENT se trata igual que PENDING
             setOptionalText(t("pendingCertificationMsg"));
+            setIconClass("fa-regular fa-clock"); // 🕐 reloj para "en revisión"
             break;
           case CertificationState.REJECTED:
             setOptionalText(t("rejectedCertificationMsg"));
@@ -205,7 +211,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
         break;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.motive]);
+  }, [props.motive, props.isCertified]);
 
   function handleCloseModal() {
     setIsOpenModal(false);
@@ -260,10 +266,10 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
         });
         navigate(
           pageRoutes.myRequirements +
-            "/" +
-            (props.requirement.type == RequirementType.GOOD
-              ? pageSubRoutes.goods
-              : props.requirement.type == RequirementType.SERVICE
+          "/" +
+          (props.requirement.type == RequirementType.GOOD
+            ? pageSubRoutes.goods
+            : props.requirement.type == RequirementType.SERVICE
               ? pageSubRoutes.services
               : pageSubRoutes.sales)
         );
@@ -288,13 +294,15 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
             <SimpleLoading style={{ width: "15vw" }} />
           ) : (
             <>
-              <i className="fa-regular fa-circle-exclamation fa-3x"></i>
+              <i className={`${iconClass} fa-3x`}></i>
               <div className="aviso-h">
                 <div className="cantidad-estd">{mainText}</div>
                 {optionalText && (
                   <div className="detalles-estd">{optionalText}</div>
                 )}
               </div>
+
+              {/* Botón: eliminar oferta ya realizada */}
               {props.motive == CantOfferMotives.ALREADY_MADE_OFFER && (
                 <ButtonContainer
                   style={{ height: "auto" }}
@@ -306,6 +314,8 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
                   {t("deleteOffer")}
                 </ButtonContainer>
               )}
+
+              {/* Botón: ir al home */}
               {props.motive == CantOfferMotives.CHANGED_STATE && (
                 <ButtonContainer
                   style={{ height: "auto" }}
@@ -316,17 +326,21 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
                   {t("goTo") + t("home")}
                 </ButtonContainer>
               )}
+
+              {/* Botón: ir al panel de control (creador o subusuario creador) */}
               {(props.motive == CantOfferMotives.IS_CREATOR ||
                 props.motive == CantOfferMotives.SUBUSER_IS_CREATOR) && (
-                <ButtonContainer
-                  style={{ height: "auto" }}
-                  className="btn btn-default btn-sm"
-                  icon={<i className="fa-regular fa-columns"></i>}
-                  onClick={() => seeRequirementDetails()}
-                >
-                  {t("goTo") + t("controlPanel")}
-                </ButtonContainer>
-              )}
+                  <ButtonContainer
+                    style={{ height: "auto" }}
+                    className="btn btn-default btn-sm"
+                    icon={<i className="fa-regular fa-columns"></i>}
+                    onClick={() => seeRequirementDetails()}
+                  >
+                    {t("goTo") + t("controlPanel")}
+                  </ButtonContainer>
+                )}
+
+              {/* Botón: ir al panel de control (subusuario que ofertó) */}
               {props.motive == CantOfferMotives.SUBUSER_MADE_OFFER && (
                 <ButtonContainer
                   style={{ height: "auto" }}
@@ -337,17 +351,22 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
                   {t("goTo") + t("controlPanel")}
                 </ButtonContainer>
               )}
+
+              {/* Botón: solicitar o volver a solicitar certificación */}
               {props.motive == CantOfferMotives.ONLY_CERTIFIED &&
                 entityType == EntityType.COMPANY &&
                 props.isPremium &&
-                props.isCertified == CertificationState.NONE && (
+                (props.isCertified == CertificationState.NONE ||
+                  props.isCertified == CertificationState.REJECTED) && (
                   <ButtonContainer
                     style={{ height: "auto" }}
                     className="btn btn-green btn-sm"
                     icon={<i className="fa-regular fa-star"></i>}
                     onClick={openGetCertifiedModal}
                   >
-                    {t("getCertified")}
+                    {props.isCertified == CertificationState.REJECTED
+                      ? t("reapplyForCertification")
+                      : t("getCertified")}
                   </ButtonContainer>
                 )}
             </>
