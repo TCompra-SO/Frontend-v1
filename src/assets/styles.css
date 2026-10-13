@@ -1067,7 +1067,7 @@ a {
   font-size: 20px;
   height: 35px;
   width: 35px;
-  min-width: 40px;
+  min-width: 35px;
   background: #fff;
   border-radius: 50%;
   display: flex;
@@ -1198,7 +1198,7 @@ a {
 }
 .valor-start-2 {
   position: absolute;
-  width: 24.74px;
+  width: 27px;
   color: #fff;
   font-weight: 500;
   font-size: 12px;

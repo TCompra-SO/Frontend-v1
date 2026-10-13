@@ -38,7 +38,7 @@ export default function CertificationData(props: CertificationDataProps) {
       },
       action: Action.SELECT_CERT_TO_SEND,
     });
-    setIsOpenModal(true);
+    setIsOpenModal(true); // Ojo: mantenemos tu lógica original de setIsOpenModal(true)
   }
 
   return (
@@ -51,32 +51,49 @@ export default function CertificationData(props: CertificationDataProps) {
         style={mainModalScrollStyle}
       />
 
-      {props.state == CertificationState.PENDING ? (
-        <div className="certificado-estado-1">
-          <i className="fa-regular fa-face-thinking"></i>{" "}
-          {t("pendingCertificationMsg")}
+      {/* 1. ESTADO: PENDIENTE */}
+      {props.state === CertificationState.PENDING || props.state === CertificationState.RESENT ? (
+        <div className="certificado-estado-1 t-flex f-column gap-10">
+          <div className="t-flex a-center gap-10">
+            <i className="fa-regular fa-clock"></i>
+            <span>{t("pendingCertificationProfessionalMsg", "Su solicitud de certificación se encuentra en proceso de revisión por parte de la empresa.")}</span>
+          </div>
         </div>
-      ) : props.state == CertificationState.CERTIFIED ? (
-        <div className="certificado-estado-2">
-          <i className="fa-regular fa-face-smile"></i>{" "}
-          {t("youAreCertifiedWithThisCompany")}
-        </div>
-      ) : props.state == CertificationState.REJECTED ? (
-        <div className="certificado-estado-3">
-          <i className="fa-regular fa-face-disappointed"></i>{" "}
-          {t("rejectedCertificationMsg")}
-        </div>
-      ) : (
-        <div className="t-flex j-conten">
-          <ButtonContainer
-            className="btn btn-green btn-certificate"
-            icon={<i className="fa-regular fa-diploma"></i>}
-            onClick={openGetCertifiedModal}
-          >
-            {t("getCertified")}
-          </ButtonContainer>
-        </div>
-      )}
+      ) : /* 2. ESTADO: CERTIFICADO */
+        props.state === CertificationState.CERTIFIED ? (
+          <div className="certificado-estado-2 t-flex a-center gap-10">
+            <i className="fa-regular fa-circle-check"></i>
+            <span>{t("certifiedProfessionalMsg", "Actualmente cuenta con una certificación activa con esta empresa.")}</span>
+          </div>
+        ) : /* 3. ESTADO: RECHAZADO (Muestra mensaje y botón para reintentar) */
+          props.state === CertificationState.REJECTED ? (
+            <div className="t-flex f-column gap-15 certificado-estado-3">
+              <div className="t-flex a-center gap-10">
+                <i className="fa-regular fa-triangle-exclamation"></i>
+                <span>{t("rejectedCertificationProfessionalMsg", "Su solicitud anterior no fue aprobada. Puede revisar los requisitos y volver a enviar su postulación.")}</span>
+              </div>
+              <div className="t-flex j-conten">
+                <ButtonContainer
+                  className="btn btn-green btn-certificate"
+                  icon={<i className="fa-regular fa-diploma"></i>}
+                  onClick={openGetCertifiedModal}
+                >
+                  {t("reapplyForCertification", "Volver a solicitar certificación")}
+                </ButtonContainer>
+              </div>
+            </div>
+          ) : (
+            /* 4. ESTADO: NINGUNO (Por defecto) */
+            <div className="t-flex j-conten">
+              <ButtonContainer
+                className="btn btn-green btn-certificate"
+                icon={<i className="fa-regular fa-diploma"></i>}
+                onClick={openGetCertifiedModal}
+              >
+                {t("getCertified", "Solicitar certificación")}
+              </ButtonContainer>
+            </div>
+          )}
     </>
   );
 }

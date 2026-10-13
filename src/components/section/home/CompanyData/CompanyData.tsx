@@ -68,6 +68,7 @@ export default function CompanyData() {
     } = await verifyCertificationByUserIdAndCompanyId(mainUid, userId);
     if (certResult !== null) setCertifState(certResult);
     else if (errorCert) showNotification("error", errorMsgCert);
+    console.log("estado del certificado", certResult)
   }
 
   return (
@@ -95,6 +96,7 @@ export default function CompanyData() {
               <SimpleLoading style={{ width: "15vw" }} />
             </Flex>
           )}
+
         </div>
       ) : null}
     </>
