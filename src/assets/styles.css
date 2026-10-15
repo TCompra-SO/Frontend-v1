@@ -1503,6 +1503,7 @@ a {
 .doc-upload {
   gap: 10px;
   align-items: center;
+  min-width: 0; /* 👈 solo esto */
 }
 .icon-doc {
   color: #3b4c56;
@@ -1511,9 +1512,14 @@ a {
 .doc-datos {
   gap: 10px;
   flex-direction: column;
+  min-width: 0; /* 👈 solo esto */
+  flex: 1 1 0; /* 👈 y esto */
 }
 .doc-botones {
   gap: 10px;
+  width: 100%;
+  min-width: 0; /* permite que los hijos trunquen */
+  align-items: center;
 }
 .d-contacto {
   gap: 10px;
@@ -1743,6 +1749,15 @@ a {
 }
 
 .name-doc {
+  /* 👇 truncado real */
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+
+  /* 👇 estilos visuales que ya tenías */
   color: rgb(59 76 86 / 70%);
   background: #e4eaef;
   padding: 0.56rem;
@@ -1751,6 +1766,7 @@ a {
   line-height: 1.5;
   text-align: center;
   border-radius: 0.8rem;
+  box-sizing: border-box;
 }
 
 /* Requerimiento Detalles */
@@ -3070,4 +3086,11 @@ a {
   50% {
     opacity: 0.65;
   }
+}
+
+.btn-disabled,
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }

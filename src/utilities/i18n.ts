@@ -1259,6 +1259,12 @@ const resources = {
         "Tienes 1 certificado seleccionado para enviar",
       nCertificatesSelectedToSend_other:
         "Tienes {{count}} certificados seleccionados para enviar",
+      sendN: "Enviar ({{count}})",
+      confirmRoleAndPermissions: "Confirmar rol y permisos",
+      theUserWillHaveTheRole: "El usuario tendrá el rol",
+      canCreateRequirements: "Podrá crear requerimientos de",
+      canOfferIn: "Podrá ofertar en",
+      confirm: "Confirmar",
     },
   },
 };

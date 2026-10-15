@@ -352,8 +352,9 @@ export default function SelectDocumentsToSendCertificateModal(
               className="btn alert-boton btn-green"
               onClick={() => submit()}
               loading={loading}
+              disabled={!hasSelection}
             >
-              {t("send")}
+              {hasSelection ? t("sendN", { count: certificateIds.length }) : t("send")}
             </ButtonContainer>
             <ButtonContainer
               className="btn alert-boton btn-green-o"

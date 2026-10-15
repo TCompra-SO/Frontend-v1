@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import ButtonContainer from "../../containers/ButtonContainer";
-import { Col, Form, Row } from "antd";
+import { Col, Form, Modal, Row } from "antd";
 import DniField from "../../common/formFields/DniField";
 import LocationField from "../../common/formFields/LocationField";
 import AddressField from "../../common/formFields/AddressField";
@@ -37,6 +37,7 @@ import { windowSize } from "../../../utilities/globals";
 
 interface AddUserModalProps {
   onClose: () => void;
+  onSuccess?: () => void;
   edit: boolean;
   userData?: SubUserProfile | null;
 }
@@ -54,6 +55,11 @@ export default function AddUserModal(props: AddUserModalProps) {
   const [infoText, setInfoText] = useState("allDataIsImportant");
   const [buttonWidth, setButtonWidth] = useState("wd-25");
   const uid = useSelector((state: MainState) => state.user.uid);
+
+  /** Estados para el modal de confirmación de rol */
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [pendingValues, setPendingValues] = useState<any>(null);
+  const [pendingUserType, setPendingUserType] = useState<UserRoles | null>(null);
 
   const [loadingRegisterUser, setLoadingRegisterUser] = useState<
     boolean | undefined
@@ -214,6 +220,7 @@ export default function AddUserModal(props: AddUserModalProps) {
       "success",
       `${t("registerUserSuccess")}. ${t("subUserPasswordIsDocument")}`
     );
+    props.onSuccess?.();
     props.onClose();
   }
 
@@ -230,6 +237,7 @@ export default function AddUserModal(props: AddUserModalProps) {
       profileSuccess
     ) {
       showNotification("success", `${t("userUpdatedSuccessfully")}`);
+      props.onSuccess?.();
       props.onClose();
     }
   }
@@ -248,12 +256,88 @@ export default function AddUserModal(props: AddUserModalProps) {
           method: "get",
         });
       })
-      .catch(() => {});
+      .catch(() => { });
   }
 
+  /**
+   * Intercepta el submit: valida y abre el modal de confirmación
+   * antes de crear o actualizar el subusuario.
+   */
   function submitData(values: any) {
+    if (props.edit) {
+      // Validar contraseñas antes de mostrar la confirmación
+      if (values.password1 && values.password1 !== values.password2) {
+        showNotification("error", t("passwordsMusMatch"));
+        return;
+      }
+      setPendingValues(values);
+      setPendingUserType(values.userType);
+      setShowConfirmModal(true);
+    } else {
+      if (!validDoc) {
+        showNotification("error", t("mustProvideValidDoc"));
+        return;
+      }
+      setPendingValues(values);
+      setPendingUserType(values.userType);
+      setShowConfirmModal(true);
+    }
+  }
+
+  /** Ejecuta el guardado real una vez confirmado */
+  function confirmSave() {
+    const values = pendingValues;
+    setShowConfirmModal(false);
+    setPendingValues(null);
+    setPendingUserType(null);
+    if (!values) return;
     if (props.edit) editUser(values);
     else createUser(values);
+  }
+
+  /** Cancela el guardado y limpia el estado */
+  function cancelSave() {
+    setShowConfirmModal(false);
+    setPendingValues(null);
+    setPendingUserType(null);
+  }
+
+  /** Devuelve las listas de "puede crear" / "puede ofertar" por rol */
+  function getRolePermissions(role: UserRoles | null | undefined) {
+    const goods = t("goods");
+    const services = t("services");
+    const sales = t("sales");
+
+    switch (role) {
+      case UserRoles.BUYER:
+        return {
+          roleLabel: t("buyer"),
+          roleDesc: t("buyerRoleInfo"),
+          canCreate: [goods, services],
+          canOffer: [sales],
+        };
+      case UserRoles.SELLER:
+        return {
+          roleLabel: t("sellerRole"),
+          roleDesc: t("sellerRoleInfo"),
+          canCreate: [sales],
+          canOffer: [goods, services],
+        };
+      case UserRoles.SELLER_BUYER:
+        return {
+          roleLabel: t("sellerBuyer"),
+          roleDesc: t("sellerBuyerRoleInfo"),
+          canCreate: [goods, services, sales],
+          canOffer: [goods, services, sales],
+        };
+      default:
+        return {
+          roleLabel: "",
+          roleDesc: "",
+          canCreate: [] as string[],
+          canOffer: [] as string[],
+        };
+    }
   }
 
   function createUser(values: any) {
@@ -343,85 +427,224 @@ export default function AddUserModal(props: AddUserModalProps) {
     }
   }
 
+  /** Permisos del rol pendiente de guardar (para el modal) */
+  const permissions = getRolePermissions(pendingUserType);
+
   return (
-    <div className="modal-card img-bg">
-      <div className="t-flex t-wrap mr-sub">
-        <div className="sub-titulo">
-          <i className="fa-regular fa-users sub-icon"></i>{" "}
-          {t(props.edit ? "editEmployee" : "newEmployee")}
-        </div>
-      </div>
-      <Form
-        form={form}
-        colon={false}
-        requiredMark={false}
-        onFinish={submitData}
+    <>
+      {/* Modal de confirmación de rol antes de guardar */}
+      <Modal
+        open={showConfirmModal}
+        onCancel={cancelSave}
+        footer={null}
+        centered
+        width={520}
+        destroyOnClose
+        maskClosable={false}
       >
-        <div className="t-flex form-tc">
-          <Row gutter={[15, 15]}>
-            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <DniField
-                getUserName={getUserName}
-                onChange={() => resetFields(["fullname"])}
-                edit={props.edit}
-                value={props.userData?.document}
-                isDni={true}
-                includeSearch
-              />
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <FullNameField edit={props.edit} value={props.userData?.name} />
-            </Col>
-          </Row>
-          <Row gutter={[15, 15]}>
-            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <AddressField edit={props.edit} value={props.userData?.address} />
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <EmailField edit={props.edit} value={props.userData?.email} />
-            </Col>
-          </Row>
-          <Row gutter={[15, 15]}>
-            <Col xs={24} sm={24} md={8} lg={8} xl={8}>
-              <LocationField edit={props.edit} value={props.userData?.cityID} />
-            </Col>
-            <Col xs={24} sm={24} md={8} lg={8} xl={8}>
-              <PhoneField edit={props.edit} value={props.userData?.phone} />
-            </Col>
-            <Col xs={24} sm={24} md={8} lg={8} xl={8}>
-              <UserTypeField
-                edit={props.edit}
-                value={props.userData?.typeID}
-                onChange={handleOnTypeUserChange}
-              />
-            </Col>
-          </Row>
-          {props.edit && (
-            <Row gutter={[15, 15]}>
-              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <PasswordField name={"password1"} />
-              </Col>
-              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                <PasswordField name={"password2"} confirmPassword />
-              </Col>
-            </Row>
-          )}
-          <div className="t-flex t-wrap up-footer gap-15">
-            <div className="footer-text" style={{ flex: "1 1 0", minWidth: 0 }}>
-              {t(infoText)}
+        <div className="modal-card">
+          <div className="t-flex t-wrap mr-sub">
+            <div className="sub-titulo">
+              <i className="fa-regular fa-shield-check sub-icon"></i>{" "}
+              {t("confirmRoleAndPermissions")}
             </div>
+          </div>
+
+          <div style={{ padding: "10px 0 20px" }}>
+            <div style={{ marginBottom: 12 }}>
+              {t("theUserWillHaveTheRole")}:{" "}
+              <strong style={{ color: "#bc1373" }}>
+                {permissions.roleLabel}
+              </strong>
+            </div>
+            <div
+              className="footer-text"
+              style={{ marginBottom: 20, fontStyle: "italic" }}
+            >
+              {permissions.roleDesc}
+            </div>
+
+            {/* Puede crear */}
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontWeight: 600, marginBottom: 8 }}>
+                <i
+                  className="fa-regular fa-circle-check"
+                  style={{ color: "#22c55e", marginRight: 6 }}
+                ></i>
+                {t("canCreateRequirements")}:
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 6,
+                  paddingLeft: 22,
+                }}
+              >
+                {permissions.canCreate.map((item, i) => (
+                  <span
+                    key={i}
+                    style={{
+                      background: "#ecfdf5",
+                      color: "#166534",
+                      padding: "3px 12px",
+                      borderRadius: 12,
+                      fontSize: "0.85rem",
+                      border: "1px solid #22c55e",
+                    }}
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Puede ofertar */}
+            <div style={{ marginBottom: 10 }}>
+              <div style={{ fontWeight: 600, marginBottom: 8 }}>
+                <i
+                  className="fa-regular fa-gavel"
+                  style={{ color: "#8b5cf6", marginRight: 6 }}
+                ></i>
+                {t("canOfferIn")}:
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 6,
+                  paddingLeft: 22,
+                }}
+              >
+                {permissions.canOffer.map((item, i) => (
+                  <span
+                    key={i}
+                    style={{
+                      background: "#f5f3ff",
+                      color: "#6d28d9",
+                      padding: "3px 12px",
+                      borderRadius: 12,
+                      fontSize: "0.85rem",
+                      border: "1px solid #8b5cf6",
+                    }}
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="t-flex t-wrap up-footer gap-15">
             <div className={buttonWidth}>
               <ButtonContainer
                 className="btn btn-default wd-100"
-                htmlType="submit"
-                loading={loadingRegisterUser}
+                onClick={confirmSave}
               >
-                {t("saveButton")}
+                {t("confirm")}
+              </ButtonContainer>
+            </div>
+            <div className={buttonWidth}>
+              <ButtonContainer
+                className="btn btn-default-o wd-100"
+                onClick={cancelSave}
+              >
+                {t("cancel")}
               </ButtonContainer>
             </div>
           </div>
         </div>
-      </Form>
-    </div>
+      </Modal>
+
+      {/* Formulario principal */}
+      <div className="modal-card img-bg">
+        <div className="t-flex t-wrap mr-sub">
+          <div className="sub-titulo">
+            <i className="fa-regular fa-users sub-icon"></i>{" "}
+            {t(props.edit ? "editEmployee" : "newEmployee")}
+          </div>
+        </div>
+        <Form
+          form={form}
+          colon={false}
+          requiredMark={false}
+          onFinish={submitData}
+        >
+          <div className="t-flex form-tc">
+            <Row gutter={[15, 15]}>
+              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                <DniField
+                  getUserName={getUserName}
+                  onChange={() => resetFields(["fullname"])}
+                  edit={props.edit}
+                  value={props.userData?.document}
+                  isDni={true}
+                  includeSearch
+                />
+              </Col>
+              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                <FullNameField edit={props.edit} value={props.userData?.name} />
+              </Col>
+            </Row>
+            <Row gutter={[15, 15]}>
+              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                <AddressField
+                  edit={props.edit}
+                  value={props.userData?.address}
+                />
+              </Col>
+              <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                <EmailField edit={props.edit} value={props.userData?.email} />
+              </Col>
+            </Row>
+            <Row gutter={[15, 15]}>
+              <Col xs={24} sm={24} md={8} lg={8} xl={8}>
+                <LocationField
+                  edit={props.edit}
+                  value={props.userData?.cityID}
+                />
+              </Col>
+              <Col xs={24} sm={24} md={8} lg={8} xl={8}>
+                <PhoneField edit={props.edit} value={props.userData?.phone} />
+              </Col>
+              <Col xs={24} sm={24} md={8} lg={8} xl={8}>
+                <UserTypeField
+                  edit={props.edit}
+                  value={props.userData?.typeID}
+                  onChange={handleOnTypeUserChange}
+                />
+              </Col>
+            </Row>
+            {props.edit && (
+              <Row gutter={[15, 15]}>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                  <PasswordField name={"password1"} />
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                  <PasswordField name={"password2"} confirmPassword />
+                </Col>
+              </Row>
+            )}
+            <div className="t-flex t-wrap up-footer gap-15">
+              <div
+                className="footer-text"
+                style={{ flex: "1 1 0", minWidth: 0 }}
+              >
+                {t(infoText)}
+              </div>
+              <div className={buttonWidth}>
+                <ButtonContainer
+                  className="btn btn-default wd-100"
+                  htmlType="submit"
+                  loading={loadingRegisterUser}
+                >
+                  {t("saveButton")}
+                </ButtonContainer>
+              </div>
+            </div>
+          </div>
+        </Form>
+      </div>
+    </>
   );
 }

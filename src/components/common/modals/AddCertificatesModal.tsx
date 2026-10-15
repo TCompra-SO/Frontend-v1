@@ -214,30 +214,36 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
               />
               <div className="t-flex doc-botones">
                 {docList[index]?.name && (
-                  <div className="name-doc text-truncate wd-100">
+                  <div className="name-doc" title={docList[index]?.name}>
                     {docList[index]?.name}
                   </div>
                 )}
-                <ButtonContainer
-                  className="btn btn-opaco btn-sm wd-100"
-                  onClick={(e) => handleClick(e, index)}
-                >
-                  <i
-                    className="fa-regular fa-images"
-                    style={{ marginRight: "5px" }}
-                  ></i>
-                  {t("uploadFile")}
-                </ButtonContainer>
-                <ButtonContainer
-                  className="btn btn-black btn-sm btn-trash"
-                  onClick={() => deleteBlock(index)}
-                >
-                  <i
-                    className="fa-regular fa-trash"
-                    style={{ marginRight: "5px" }}
-                  ></i>
-                  {t("delete")}
-                </ButtonContainer>
+                <div style={{ flexShrink: 0 }}>
+                  <ButtonContainer
+                    className="btn btn-opaco btn-sm"
+                    onClick={(e) => handleClick(e, index)}
+                    style={{ flexShrink: 0 }}
+                  >
+                    <i
+                      className="fa-regular fa-images"
+                      style={{ marginRight: "5px" }}
+                    ></i>
+                    {t("uploadFile")}
+                  </ButtonContainer>
+                </div>
+                <div style={{ flexShrink: 0 }}>
+                  <ButtonContainer
+                    className="btn btn-black btn-sm btn-trash"
+                    onClick={() => deleteBlock(index)}
+                    style={{ flexShrink: 0 }}
+                  >
+                    <i
+                      className="fa-regular fa-trash"
+                      style={{ marginRight: "5px" }}
+                    ></i>
+                    {t("delete")}
+                  </ButtonContainer>
+                </div>
               </div>
             </div>
           </div>

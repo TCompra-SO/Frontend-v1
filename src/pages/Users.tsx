@@ -299,6 +299,11 @@ export default function Users() {
   }, [responseDataTable, errorTable]);
 
   /** Funciones */
+  function refreshSubUserTable() {
+    clearSearchValue();
+    resetSubUser();
+    searchSubUserTable({ page: 1, pageSize: currentPageSizeSubUser });
+  }
 
   function clearSearchValue() {
     if (searchValueRef.current) {
@@ -483,11 +488,18 @@ export default function Users() {
   function getContent() {
     switch (action) {
       case Action.ADD_USER:
-        return <AddUserModal onClose={handleCloseModal} edit={false} />;
+        return (
+          <AddUserModal
+            onClose={handleCloseModal}
+            onSuccess={refreshSubUserTable}
+            edit={false}
+          />
+        );
       case Action.EDIT_USER:
         return (
           <AddUserModal
             onClose={handleCloseModal}
+            onSuccess={refreshSubUserTable}
             edit={true}
             userData={userDataEdit}
           />
@@ -558,10 +570,7 @@ export default function Users() {
             onChangePageAndPageSize={(params) =>
               handleChangePageAndPageSize(
                 params,
-                getFieldNameObjForOrders(
-                  TableTypes.PURCHASE_ORDER,
-                  subTypeOrder
-                ),
+                getFieldNameObjForOrders(TableTypes.PURCHASE_ORDER, subTypeOrder),
                 searchTable
               )
             }

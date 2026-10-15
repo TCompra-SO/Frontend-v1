@@ -1,7 +1,7 @@
 import { FloatButton, Popover } from "antd";
 import { useTranslation } from "react-i18next";
 import NoContentModalContainer from "../../containers/NoContentModalContainer";
-import { lazy, useContext, useEffect, useRef, useState } from "react";
+import { lazy, ReactNode, useContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { isChat, isHome } from "../../../utilities/globalFunctions";
 import { pageRoutes } from "../../../utilities/routes";
@@ -19,6 +19,7 @@ import { ProcessFlag, RequirementType } from "../../../utilities/types";
 import { LoadingDataContext } from "../../../contexts/LoadingDataContext";
 import { ChatBot, ChatBotRef } from "../../common/utils/ChatBot";
 import { roleCanCreateRequirementType } from "../../../utilities/roles";
+import { HomeContext } from "../../../contexts/Homecontext";
 
 const CreateRequirement = lazy(
   () => import("../create-requirement/CreateRequirement")
@@ -26,6 +27,9 @@ const CreateRequirement = lazy(
 
 interface CreateRequirementFloatButtonProps {
   openLoginModal: () => void;
+  /** Si se pasa, se renderiza este trigger (ej. un botón) y recibe la función para abrir el modal */
+  renderTrigger?: (openCreateModal: () => void) => ReactNode;
+  initialType?: RequirementType;
 }
 
 export default function CreateRequirementFloatButton(
@@ -34,6 +38,7 @@ export default function CreateRequirementFloatButton(
   const { t } = useTranslation();
   const { updateCreateRequirementLoading, createRequirementLoading } =
     useContext(LoadingDataContext);
+  const { type: homeType } = useContext(HomeContext);
   const location = useLocation();
   const navigate = useNavigate();
   const { width } = useWindowSize();
@@ -43,14 +48,19 @@ export default function CreateRequirementFloatButton(
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const role = useSelector((state: MainState) => state.user.typeID);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [openCount, setOpenCount] = useState(0);
   const [isHomePage, setIsHomePage] = useState(true);
   const [isChatPage, setIsChatPage] = useState(false);
 
   const [reqSuccess, setReqSuccess] = useState(ProcessFlag.NOT_INI);
   const [docSuccess, setDocSuccess] = useState(ProcessFlag.NOT_INI);
   const [imgSuccess, setImgSuccess] = useState(ProcessFlag.NOT_INI);
+  const effectiveInitialType = props.initialType ?? homeType;
   const [type, setType] = useState<RequirementType>(
-    roleCanCreateRequirementType[role][0] ?? RequirementType.GOOD
+    effectiveInitialType &&
+      roleCanCreateRequirementType[role].includes(effectiveInitialType)
+      ? effectiveInitialType
+      : roleCanCreateRequirementType[role][0] ?? RequirementType.GOOD
   );
 
   const [avoidClosingModal, setAvoidClosingModal] = useState(false);
@@ -250,15 +260,19 @@ export default function CreateRequirementFloatButton(
   }
 
   function handleClickOnCreateRequirement() {
-    if (isLoggedIn && roleCanCreateRequirementType[role].length)
+    if (isLoggedIn && roleCanCreateRequirementType[role].length) {
+      setOpenCount((c) => c + 1);
       setIsOpenModal(true);
-    else if (!isLoggedIn) {
+    } else if (!isLoggedIn) {
       props.openLoginModal();
     }
   }
 
   return (
     <>
+      {/* Trigger opcional que pasa quien consume el componente */}
+      {props.renderTrigger?.(() => setIsOpenModal(true))}
+
       {!isLoading &&
         (width > windowSize.sm || (width <= windowSize.sm && !isChatPage)) ? (
         <>
@@ -299,7 +313,6 @@ export default function CreateRequirementFloatButton(
                   />
                 </>
               )}
-
 
             {showChatBot && (
               <Popover
@@ -354,6 +367,8 @@ export default function CreateRequirementFloatButton(
               onClose={() => setIsOpenModal(false)}
             >
               <CreateRequirement
+                key={`create-${openCount}`}
+                initialType={effectiveInitialType}
                 closeModal={() => setIsOpenModal(false)}
                 useApiHookImg={useApiHookImg}
                 setApiParamsImg={setApiParamsImg}

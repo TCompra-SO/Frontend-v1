@@ -1461,6 +1461,7 @@ body {
   flex-direction: column;
 }
 .doc-botones {
+  min-width: 0;
   gap: 10px;
 }
 .d-contacto {
@@ -2863,4 +2864,10 @@ body {
   50% {
     opacity: 0.65;
   }
+}
+.btn-disabled,
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }

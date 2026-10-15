@@ -77,6 +77,7 @@ interface CreateRequirementProps extends CommonModalProps {
   setImgSuccess: (val: ProcessFlag) => void;
 
   setType: (val: RequirementType) => void;
+  initialType?: RequirementType;   // NUEVO
 }
 
 interface LabelForCreateRequirementProps {
@@ -103,7 +104,10 @@ export default function CreateRequirement(props: CreateRequirementProps) {
   const role = useSelector((state: MainState) => state.user.typeID);
   const [form] = Form.useForm();
   const [type, setType] = useState<RequirementType>(
-    roleCanCreateRequirementType[role][0] ?? RequirementType.GOOD
+    props.initialType &&
+      roleCanCreateRequirementType[role].includes(props.initialType)
+      ? props.initialType
+      : roleCanCreateRequirementType[role][0] ?? RequirementType.GOOD
   );
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [showDocListToCertificate, setShowDocListToCertificate] =

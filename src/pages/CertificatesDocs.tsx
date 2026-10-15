@@ -198,6 +198,9 @@ export default function CertificatesDocs() {
       case Action.ADD_CERTIFICATES:
         setDataModal({
           type: ModalTypes.ADD_CERTIFICATES,
+          data: {
+            onDocumentAdded: reloadPage,   // 👈 AQUÍ el fix
+          },
           action,
         });
         setIsOpenModal(true);

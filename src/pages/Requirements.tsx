@@ -50,13 +50,19 @@ import {
   useGetOffersByRequirementId,
 } from "../hooks/requirementHooks";
 import { ModalsContext } from "../contexts/ModalsContext";
-import useShowNotification, { useShowLoadingMessage } from "../hooks/utilHooks";
+import useShowNotification, {
+  useShowLoadingMessage,
+} from "../hooks/utilHooks";
 import useSearchTable, {
   useFilterSortPaginationForTable,
 } from "../hooks/searchTableHooks";
-import useSocketQueueHook, { useActionsForRow } from "../hooks/socketQueueHook";
+import useSocketQueueHook, {
+  useActionsForRow,
+} from "../hooks/socketQueueHook";
 import useSocket from "../socket/useSocket";
 import { sectionIcons } from "../utilities/colors";
+import ButtonContainer from "../components/containers/ButtonContainer";
+import CreateRequirementFloatButton from "../components/section/create-requirement/CreateRequirementFloatButton";
 
 export default function Requirements() {
   const { t } = useTranslation();
@@ -161,7 +167,6 @@ export default function Requirements() {
         const copy = { ...detailedRequirementModalData };
         resetDetailedRequirementModalData();
         if (copy.actionIsFinish) {
-          // acción para culminar
           let requirement = copy.requirement;
           if (!copy.requirement) {
             const { requirement: req } = await getRequirementById(
@@ -194,7 +199,6 @@ export default function Requirements() {
             );
         } else
           getOffersByRequirementId(
-            // acción para ver ofertas
             TableTypes.REQUIREMENT,
             copy.requirementId,
             copy.requirementType,
@@ -329,7 +333,6 @@ export default function Requirements() {
   }
 
   async function handleOnButtonClick(action: Action, requirement: Requirement) {
-    // console.log(requirement);
     switch (action) {
       case Action.VIEW: {
         getOffersByRequirementId(
@@ -506,6 +509,21 @@ export default function Requirements() {
         }
         total={total}
         ref={searchValueRef}
+        additionalContentHeader={
+          <CreateRequirementFloatButton
+            openLoginModal={() => { }}
+            initialType={type}
+            renderTrigger={(openCreateModal: any) => (
+              <ButtonContainer
+                className="btn btn-default btn-sm"
+                icon={<i className="fa-regular fa-plus"></i>}
+                onClick={openCreateModal}
+              >
+                {t("createRequirement")}
+              </ButtonContainer>
+            )}
+          />
+        }
       />
     </>
   );
