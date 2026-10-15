@@ -46,7 +46,7 @@ export default function AddCertificatesModal(props: AddCertificatesModalProps) {
     });
 
     return () => {
-      props.setAdditionalApiParams({ functionToExecute: () => {} });
+      props.setAdditionalApiParams({ functionToExecute: () => { } });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

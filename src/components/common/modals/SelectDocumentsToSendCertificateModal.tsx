@@ -84,6 +84,9 @@ export default function SelectDocumentsToSendCertificateModal(
   const [certificateIds, setCertificateIds] = useState<string[]>([]);
   const { loading } = props.useApiHook;
 
+  /** ¿Hay al menos un certificado seleccionado? */
+  const hasSelection = certificateIds.length > 0;
+
   /** Obtener lista de documentos */
 
   useEffect(() => {
@@ -113,6 +116,7 @@ export default function SelectDocumentsToSendCertificateModal(
     getRequiredDocsCert(props.data.userId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.data]);
+
   /** Para enviar documentos */
 
   useEffect(() => {
@@ -134,7 +138,7 @@ export default function SelectDocumentsToSendCertificateModal(
     });
 
     return () => {
-      props.setAdditionalApiParams({ functionToExecute: () => {} });
+      props.setAdditionalApiParams({ functionToExecute: () => { } });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -195,16 +199,16 @@ export default function SelectDocumentsToSendCertificateModal(
     const data: SendCertificationRequest | ResendCertificatesRequest =
       props.certificationId
         ? {
-            certificateRequestID: props.certificationId,
-            certificateIDs: certificateIds,
-            notification,
-          }
+          certificateRequestID: props.certificationId,
+          certificateIDs: certificateIds,
+          notification,
+        }
         : {
-            userID: mainUserUid,
-            companyID: props.data.userId,
-            certificateIDs: certificateIds,
-            notification,
-          };
+          userID: mainUserUid,
+          companyID: props.data.userId,
+          certificateIDs: certificateIds,
+          notification,
+        };
 
     props.setApiParams({
       service: props.certificationId
@@ -253,6 +257,28 @@ export default function SelectDocumentsToSendCertificateModal(
                   />
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Etiqueta de selección */}
+          {!loadingCertList && docs.length > 0 && (
+            <div
+              className={`t-flex gap-10 a-center cert-select-label ${hasSelection
+                ? "cert-select-label--ok"
+                : "cert-select-label--warn"
+                }`}
+            >
+              <i
+                className={`fa-regular ${hasSelection ? "fa-circle-check" : "fa-triangle-exclamation"
+                  }`}
+              ></i>
+              <span>
+                {hasSelection
+                  ? t("nCertificatesSelectedToSend", {
+                    count: certificateIds.length,
+                  })
+                  : t("selectCertificatesToSend")}
+              </span>
             </div>
           )}
 

@@ -365,7 +365,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
                     onClick={openGetCertifiedModal}
                   >
                     {props.isCertified == CertificationState.REJECTED
-                      ? t("reapplyForCertification")
+                      ? t("reapplyForCertification", "Volver a solicitar certificación")
                       : t("getCertified")}
                   </ButtonContainer>
                 )}

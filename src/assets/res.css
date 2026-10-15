@@ -2831,3 +2831,36 @@ body {
 .ant-pagination {
   font-size: 13px;
 }
+
+.cert-select-label {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  border: 1px solid transparent;
+}
+
+.cert-select-label--warn {
+  color: #b45309;
+  background-color: #fff7ed;
+  border-color: #f59e0b;
+  animation: certPulse 1.8s infinite;
+}
+
+.cert-select-label--ok {
+  color: #166534;
+  background-color: #ecfdf5;
+  border-color: #22c55e;
+}
+
+@keyframes certPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.65;
+  }
+}

@@ -1254,6 +1254,11 @@ const resources = {
       videos: "Videos",
       or: "o",
       RUC: "RUC",
+      selectCertificatesToSend: "Seleccione los certificados a enviar",
+      nCertificatesSelectedToSend_one:
+        "Tienes 1 certificado seleccionado para enviar",
+      nCertificatesSelectedToSend_other:
+        "Tienes {{count}} certificados seleccionados para enviar",
     },
   },
 };
