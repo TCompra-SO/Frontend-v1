@@ -793,6 +793,7 @@ const resources = {
       myRequirement: "Mi Requerimiento",
       mySale: "Mi liquidación",
       myOffers: "Mis Ofertas",
+      myQuotes: "Mis Cotizaciones",
       myOffer: "Mi Oferta",
       rrhh: "RR. HH.",
       createUsers: "Crear usuarios",

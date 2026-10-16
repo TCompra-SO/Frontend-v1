@@ -433,11 +433,10 @@ export default function Offers() {
         loadingConfirm={loadingDelete}
       />
       <TablePageContent
-        title={t("myOffers")}
+        title={type === RequirementType.SALE ? t("myOffers") : t("myQuotes")}
         titleIcon={<i className={`${sectionIcons[type]} c-default`}></i>}
-        subtitle={`${t("listOf")} ${t("offers")} - ${t(
-          getLabelFromRequirementType(type)
-        )}`}
+        subtitle={`${t("listOf")} ${type === RequirementType.SALE ? t("myOffers") : t("myQuotes")
+          } - ${t(getLabelFromRequirementType(type))}`}
         subtitleIcon={<i className={`${sectionIcons["offer"]} sub-icon`}></i>}
         table={tableContent}
         onSearch={(e) => handleSearch(e, searchTable)}

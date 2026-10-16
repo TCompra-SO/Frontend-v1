@@ -267,7 +267,7 @@ export default function Sidebar(props: SidebarProps) {
               true,
               pageRoutes.myOffers,
               <i className={`${sectionIcons["offer"]} text-center i-btn`}></i>,
-              t("myOffers"),
+              t("myQuotes"),
               <i className="fa-solid fa-chevron-down i-sub text-center"></i>
             )}
             <div
