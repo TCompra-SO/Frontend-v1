@@ -19,9 +19,8 @@ function CategoryData({
 
   return (
     <div
-      className={`card-datos-emp t-flex gap-10 ${
-        index == length - 1 ? "em-b" : ""
-      }`}
+      className={`card-datos-emp t-flex gap-10 ${index == length - 1 ? "em-b" : ""
+        }`}
     >
       <div className="i-rubro-2">
         <i className="fa-regular fa-layer-group"></i>
@@ -54,9 +53,8 @@ function OtherData({
 }) {
   return (
     <div
-      className={`card-white t-flex gap-10 datos-empresa-2 ${
-        expand ? "em-b" : ""
-      }`}
+      className={`card-white t-flex gap-10 datos-empresa-2 ${expand ? "em-b" : ""
+        }`}
     >
       <div className="icon-datos-e">{icon}</div>
       <div className="oferta-usuario col-documento">

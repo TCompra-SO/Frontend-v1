@@ -38,7 +38,7 @@ export default function CanOfferField(props: CanOfferFieldProps) {
         onChange={props.handleOptionChange}
         style={{ width: "100%" }}
         options={
-          props.type == RequirementType.SALE || userType !== EntityType.COMPANY
+          props.type == RequirementType.SALE || userType === EntityType.PERSON
             ? getListForSelectIdValueMap(whoCanOfferData).filter((item) => {
               if (item.value != certifiedCompaniesOpt) return item;
             })

@@ -66,6 +66,7 @@ export default function CompanyData() {
       error: errorCert,
       errorMsg: errorMsgCert,
     } = await verifyCertificationByUserIdAndCompanyId(mainUid, userId);
+    console.log("este es el main user", mainUid)
     if (certResult !== null) setCertifState(certResult);
     else if (errorCert) showNotification("error", errorMsgCert);
     console.log("estado del certificado", certResult)

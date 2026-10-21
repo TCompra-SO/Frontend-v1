@@ -383,7 +383,7 @@ export default function CreateRequirement(props: CreateRequirementProps) {
     if (Array.isArray(val) && !val.includes(certifiedCompaniesOpt))
       setShowDocListToCertificate(false);
   }
-
+  console.log("el tipo que envia", type)
   return (
     <>
       <ModalContainer

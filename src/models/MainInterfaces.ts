@@ -105,8 +105,7 @@ export interface BasicPurchaseOrderItemSubUser extends BaseInterface {
   offerId: string;
 }
 
-export interface PurchaseOrderItemSubUser
-  extends BasicPurchaseOrderItemSubUser {
+export interface PurchaseOrderItemSubUser extends BasicPurchaseOrderItemSubUser {
   subType: OrderTableType;
   filters: OfferFilters;
 }
@@ -155,11 +154,14 @@ export interface BaseUser extends DisplayUser {
   sellerScore?: number;
   customerCount?: number;
   sellerCount?: number;
-  typeEntity: EntityType;
+
+  typeEntity?: EntityType; // legacy (opcional, por si algún lado lo usa)
+  type?: EntityType; //  el que envía el backend (required)
   categories?: number[];
   planID: string;
   isPremium: boolean;
   isSystemAdmin?: boolean;
+  CompanyID?: string; // solo SubUser lo tiene
 }
 
 export interface UserCounters {
@@ -192,8 +194,7 @@ export interface FullUser extends User, UserCounters {
 }
 
 export interface SubUserBase
-  extends Omit<BaseUser, "isPremium" | "planID">,
-    UserCounters {
+  extends Omit<BaseUser, "isPremium" | "planID">, UserCounters {
   typeID: UserRoles;
   createdAt: string;
   state: boolean;
@@ -323,14 +324,12 @@ export interface NotificationTargetData {
 }
 
 export interface NotificationDataNoSender
-  extends BasicNotificationData,
-    NotificationTargetData {
+  extends BasicNotificationData, NotificationTargetData {
   timestamp: string;
 }
 
 export interface NotificationData
-  extends NotificationDataNoSender,
-    NotificationSenderData {
+  extends NotificationDataNoSender, NotificationSenderData {
   type: NotificationType;
 }
 

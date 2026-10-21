@@ -61,7 +61,7 @@ import { chatBotService } from "../requests/utilService";
 
 export async function getBaseUserForUserSubUser(
   uid: string,
-  fromLogin: boolean = false
+  fromLogin: boolean = false,
 ) {
   try {
     const { responseData, error, errorMsg } = await makeRequest({
@@ -105,7 +105,7 @@ export async function getOfferById(
   id: string,
   type: RequirementType,
   user?: BaseUser | UserState,
-  mainUser?: BaseUser | UserState
+  mainUser?: BaseUser | UserState,
 ) {
   try {
     const { responseData, error, errorMsg } = await makeRequest({
@@ -127,7 +127,7 @@ export async function getOfferById(
                 responseData.data[0],
                 type,
                 subUserN ?? userN,
-                subUserN ? userN : undefined
+                subUserN ? userN : undefined,
               )
             : null,
           errorN,
@@ -164,7 +164,7 @@ export async function getRequirementById(id: string, type: RequirementType) {
     requirement: responseData
       ? await transformFromGetRequirementByIdToRequirement(
           responseData.data[0],
-          type
+          type,
         )
       : null,
     error,
@@ -196,7 +196,7 @@ export async function getPurchaseOrderById(id: string, type: RequirementType) {
 export async function getBasicRateDataS(
   idToGetData: string,
   useOfferService: boolean,
-  type: RequirementType
+  type: RequirementType,
 ) {
   try {
     const { responseData, error, errorMsg } = await makeRequest({
@@ -238,7 +238,7 @@ export async function getRequirementFromData(
   type: RequirementType,
   user?: BaseUser,
   subUser?: BaseUser,
-  cache?: Map<string, Promise<any>>
+  cache?: Map<string, Promise<any>>,
 ) {
   try {
     if (user && subUser) {
@@ -246,7 +246,7 @@ export async function getRequirementFromData(
         data,
         type,
         data.user == data.subUser ? user : subUser,
-        user
+        user,
       );
     }
   } catch (err) {
@@ -288,14 +288,14 @@ export async function getRequirementFromData(
     }
 
     const { user: newUser, subUser: newSubUser } = transformToBaseUser(
-      respData.data[0]
+      respData.data[0],
     );
 
     return transformDataToRequirement(
       data,
       type,
       data.user == data.subUser ? newUser : newSubUser,
-      newUser
+      newUser,
     );
   } catch (err) {
     console.error(err);
@@ -306,8 +306,9 @@ export async function getRequirementFromData(
 
 export async function verifyCertificationByUserIdAndCompanyId(
   userId: string,
-  companyIdToVerify: string
+  companyIdToVerify: string,
 ) {
+  console.log("estamos en verifyCertification");
   const { responseData, error, errorMsg } = await makeRequest({
     service: verifyCertificationService(userId, companyIdToVerify),
     method: "get",
@@ -348,7 +349,7 @@ export async function getNotifications(
   mainUserId: string,
   userId: string,
   page: number,
-  pageSize: number
+  pageSize: number,
 ) {
   try {
     const { responseData, error, errorMsg } = await makeRequest({
@@ -360,7 +361,7 @@ export async function getNotifications(
       notifications:
         responseData && Array.isArray(responseData.data)
           ? responseData.data.map((obj: any) =>
-              transformToNotificationDataFromServer(obj)
+              transformToNotificationDataFromServer(obj),
             )
           : null,
       error,
@@ -413,7 +414,7 @@ export async function createChatMessage(request: CreateMessageRequest) {
 }
 
 export async function markChatMessageAsRead(
-  request: MarkChatMessagesAsReadRequest
+  request: MarkChatMessagesAsReadRequest,
 ) {
   const { responseData, error, errorMsg } =
     await makeRequest<MarkChatMessagesAsReadRequest>({
@@ -477,8 +478,8 @@ export async function getChatState(request: GetChatStateRequest, uid: string) {
         error && error.status == 404
           ? null
           : Array.isArray(responseData.data) && responseData.data.length
-          ? transformToChatListData(responseData.data[0], uid)
-          : null,
+            ? transformToChatListData(responseData.data[0], uid)
+            : null,
       errorMsg,
       error,
     };
@@ -490,7 +491,7 @@ export async function getChatState(request: GetChatStateRequest, uid: string) {
 }
 
 export async function getUnreadNotificationsCounterS(
-  request: GetUnreadNotificationsCounterRequest
+  request: GetUnreadNotificationsCounterRequest,
 ) {
   const { responseData, error, errorMsg } =
     await makeRequest<GetUnreadNotificationsCounterRequest>({

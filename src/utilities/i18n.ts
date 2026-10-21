@@ -1266,6 +1266,8 @@ const resources = {
       canCreateRequirements: "Podrá crear requerimientos de",
       canOfferIn: "Podrá ofertar en",
       confirm: "Confirmar",
+      subUserCannotRequestCertification:
+        "Tu empresa aún no está certificada. Contacta al administrador de tu empresa para poder certificarla.",
     },
   },
 };

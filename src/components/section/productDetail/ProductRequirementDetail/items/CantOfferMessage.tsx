@@ -171,18 +171,32 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
         setOptionalText("");
         break;
       case CantOfferMotives.ONLY_CERTIFIED:
-        setMainText(t("onlyCertifiedCompaniesCanMakeAnOffer"));
-        switch (props.isCertified) {
-          case CertificationState.PENDING:
-          case CertificationState.RESENT: // RESENT se trata igual que PENDING
-            setOptionalText(t("pendingCertificationMsg"));
-            setIconClass("fa-regular fa-clock"); // 🕐 reloj para "en revisión"
-            break;
-          case CertificationState.REJECTED:
-            setOptionalText(t("rejectedCertificationMsg"));
-            break;
-          default:
-            setOptionalText("");
+        // 👇 Diferenciar entre Empresa y SubUsuario
+        if (entityType === EntityType.SUBUSER) {
+          // SubUsuario: no puede solicitar certificación por su empresa
+          setMainText(
+            t(
+              "subUserCannotRequestCertification",
+              "Tu empresa aún no está certificada. Contacta al administrador de tu empresa para poder certificarla."
+            )
+          );
+          setOptionalText("");
+          setIconClass("fa-regular fa-circle-info");
+        } else {
+          // Empresa: mensaje normal + estado de su certificación
+          setMainText(t("onlyCertifiedCompaniesCanMakeAnOffer"));
+          switch (props.isCertified) {
+            case CertificationState.PENDING:
+            case CertificationState.RESENT: // RESENT se trata igual que PENDING
+              setOptionalText(t("pendingCertificationMsg"));
+              setIconClass("fa-regular fa-clock"); // 🕐 reloj para "en revisión"
+              break;
+            case CertificationState.REJECTED:
+              setOptionalText(t("rejectedCertificationMsg"));
+              break;
+            default:
+              setOptionalText("");
+          }
         }
         break;
       case CantOfferMotives.NO_ALLOWED_ROLE:
@@ -211,7 +225,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
         break;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.motive, props.isCertified]);
+  }, [props.motive, props.isCertified, entityType]); // 👈 entityType añadido a deps
 
   function handleCloseModal() {
     setIsOpenModal(false);
@@ -352,7 +366,7 @@ export default function CantOfferMessage(props: CantOfferMessageProps) {
                 </ButtonContainer>
               )}
 
-              {/* Botón: solicitar o volver a solicitar certificación */}
+              {/* Botón: solicitar o volver a solicitar certificación (solo empresa) */}
               {props.motive == CantOfferMotives.ONLY_CERTIFIED &&
                 entityType == EntityType.COMPANY &&
                 props.isPremium &&
