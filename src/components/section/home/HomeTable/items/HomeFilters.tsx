@@ -53,9 +53,11 @@ export default function HomeFilters() {
     pageSize: homePageSize,
   });
 
-  /** Reset al cambiar tipo de tabla */
+
+
 
   useEffect(() => {
+    console.log("🔴 [HomeFilters] El type del contexto cambió a:", type);
     resetFilters(searchFromNotifCompleted === false);
     if (searchFromNotifCompleted === false) {
       form.setFieldValue("category", notificationSearchData.categoryId);

@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Offer } from "../models/MainInterfaces";
+import { HomeContext } from "../contexts/Homecontext";
 import {
   Action,
   EntityType,
@@ -51,10 +52,14 @@ import {
   getOfferById,
 } from "../services/general/generalServices";
 import { sectionIcons } from "../utilities/colors";
+import { pageRoutes } from "../utilities/routes";
 
 export default function Offers() {
   const { t } = useTranslation();
   const location = useLocation();
+
+  const { updateType } = useContext(HomeContext);
+
   const dataUser = useSelector((state: MainState) => state.user);
   const mainDataUser = useSelector((state: MainState) => state.mainUser);
   const searchValueRef = useRef<TablePageContentRef>(null);
@@ -131,6 +136,15 @@ export default function Offers() {
   );
 
   /** Actualiza el contenido de tabla */
+
+  useEffect(() => {
+    //  EL CANDADO: Solo actualiza si seguimos dentro de Mis Cotizaciones
+    if (location.pathname.startsWith(pageRoutes.myOffers)) {
+      const newType = getRouteType(location.pathname);
+      setType(newType);
+      updateType(newType);
+    }
+  }, [location, updateType]);
 
   useEffect(() => {
     setTableContent((prev) => ({
@@ -272,9 +286,7 @@ export default function Offers() {
 
   /* Obtener tipo y mostrar datos */
 
-  useEffect(() => {
-    setType(getRouteType(location.pathname));
-  }, [location]);
+
 
   /** Funciones */
 

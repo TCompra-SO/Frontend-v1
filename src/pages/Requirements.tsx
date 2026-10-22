@@ -1,4 +1,5 @@
 import ModalContainer from "../components/containers/ModalContainer";
+import { HomeContext } from "../contexts/Homecontext";
 import {
   Action,
   ModalTypes,
@@ -63,10 +64,12 @@ import useSocket from "../socket/useSocket";
 import { sectionIcons } from "../utilities/colors";
 import ButtonContainer from "../components/containers/ButtonContainer";
 import CreateRequirementFloatButton from "../components/section/create-requirement/CreateRequirementFloatButton";
+import { pageRoutes } from "../utilities/routes";
 
 export default function Requirements() {
   const { t } = useTranslation();
   const location = useLocation();
+  const { updateType } = useContext(HomeContext);
   const { detailedRequirementModalData, resetDetailedRequirementModalData } =
     useContext(ModalsContext);
   const dataUser = useSelector((state: MainState) => state.user);
@@ -79,6 +82,7 @@ export default function Requirements() {
   const { cancelRequirement } = useCancelRequirement();
   const { getBasicRateData, modalDataRate } = useCulminate();
   const [type, setType] = useState(getRouteType(location.pathname));
+
   const [requirementList, setRequirementList] = useState<Requirement[]>([]);
   const {
     currentPage,
@@ -237,6 +241,15 @@ export default function Requirements() {
     }
   }, [modalDataRate]);
 
+  useEffect(() => {
+    if (location.pathname.startsWith(pageRoutes.myRequirements)) {
+      const newType = getRouteType(location.pathname);
+      setType(newType);
+      updateType(newType);
+    }
+  }, [location, updateType]);
+
+
   /* Obtener lista inicialmente */
 
   useEffect(() => {
@@ -246,9 +259,7 @@ export default function Requirements() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
-  useEffect(() => {
-    setType(getRouteType(location.pathname));
-  }, [location]);
+
 
   useEffect(() => {
     if (responseData) {

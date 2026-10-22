@@ -74,7 +74,14 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   const isLoggedIn = useSelector((state: MainState) => state.user.isLoggedIn);
   const [requirementList, setRequirementList] = useState<Requirement[]>([]);
   const [totalRequirementList, setTotalRequirementList] = useState(0);
-  const [type, setType] = useState<RequirementType>(RequirementType.SALE);
+
+  // 👇 1. INICIALIZACIÓN: Lee de sessionStorage si existe, sino usa SALE por defecto
+  const [type, setType] = useState<RequirementType>(() => {
+    const saved = sessionStorage.getItem("lastHomeType");
+
+    return saved ? (Number(saved) as RequirementType) : RequirementType.SALE;
+  });
+
   const [userId, setUserId] = useState<DisplayUser>({
     uid: "",
     name: "",
@@ -188,33 +195,25 @@ export function HomeProvider({ children }: { children: ReactNode }) {
   function updateUserId(user: DisplayUser) {
     setUserId(user);
   }
-  /*
-    function updateType(val: RequirementType) {
-      setType(val);
-    }*/
 
   function updateKeywordSearch(val: string) {
     setKeywordSearch(val);
   }
 
   function updateNotificationSearchData(data: NotificationSearchData) {
-    // updateType(data.targetType);
     setNotificationSearchData(data);
   }
-  console.log('EL TIPO ES', type)
 
+  // 👇 2. ACTUALIZACIÓN: Guarda en sessionStorage cada vez que cambia el tipo
   function updateType(val: RequirementType) {
-    console.log(
-      "updateType llamado con:",
-      val,
-      new Error().stack
-    );
+    console.log(`🔵 [HomeContext] updateType llamado con: ${val}`);
+
+    // 👇 ESTO NOS DIRÁ EL ARCHIVO Y LA LÍNEA EXACTA DEL CULPABLE
+    console.trace("🔍 Rastreo: ¿Quién está forzando este cambio?");
 
     setType(val);
+    sessionStorage.setItem("lastHomeType", val.toString());
   }
-  useEffect(() => {
-    console.log("TYPE CAMBIÓ:", type);
-  }, [type]);
   return (
     <HomeContext.Provider
       value={{
