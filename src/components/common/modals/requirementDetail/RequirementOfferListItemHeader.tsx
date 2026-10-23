@@ -1,4 +1,4 @@
-import { Dropdown, Popover, Tooltip } from "antd";
+import { Button, Dropdown, Flex, Grid, Popover, Tooltip } from "antd";
 import {
   BasicRateData,
   NotificationTargetData,
@@ -28,6 +28,7 @@ import {
   useRedirectToChat,
 } from "../../../../hooks/utilHooks";
 import { primaryColor } from "../../../../utilities/colors";
+import ButtonContainer from '../../../containers/ButtonContainer';
 
 interface RequirementOfferListItemProps {
   requirementId: string;
@@ -36,17 +37,17 @@ interface RequirementOfferListItemProps {
   style?: React.CSSProperties;
   onClose: () => any;
   showActions:
-    | {
-        type: RequirementDetailType.REQUIREMENT;
-        requirement: Requirement;
-        onSelectionSuccess: (offerId: string) => void;
-        onCancelSuccess?: (offerId: string) => void;
-        onRateCancel?: (offerId: string, showOption?: boolean) => void;
-        notificationTargetData: NotificationTargetData;
-        requirementTitle: string;
-      }
-    | { type: RequirementDetailType.ORDER; orderId?: string }
-    | { type: RequirementDetailType.ADMIN };
+  | {
+    type: RequirementDetailType.REQUIREMENT;
+    requirement: Requirement;
+    onSelectionSuccess: (offerId: string) => void;
+    onCancelSuccess?: (offerId: string) => void;
+    onRateCancel?: (offerId: string, showOption?: boolean) => void;
+    notificationTargetData: NotificationTargetData;
+    requirementTitle: string;
+  }
+  | { type: RequirementDetailType.ORDER; orderId?: string }
+  | { type: RequirementDetailType.ADMIN };
   setDataModalSelectOffer?: (val: ModalContent) => void;
   setIsOpenModalSelectOffer?: (val: boolean) => void;
 }
@@ -64,9 +65,15 @@ export default function RequirementOfferListItemHeader({
     data: {},
     action: Action.NONE,
   });
+
+  const { useBreakpoint } = Grid;
+  const screens = useBreakpoint();
+  const isMobile = !screens.md;
+
   const items = [];
 
   if (props.showActions.type != RequirementDetailType.ADMIN) {
+    /*
     items.push({
       key: Action.CHAT,
       label: t("chat"),
@@ -80,6 +87,12 @@ export default function RequirementOfferListItemHeader({
           userImage: props.offer.subUser?.image ?? props.offer.user.image,
         });
       },
+      icon: <i className="fa-regular fa-comment"></i>,
+    });*/
+    items.push({
+      key: Action.CHAT,
+      label: t("chat"),
+      onClick: () => handleChat(),
       icon: <i className="fa-regular fa-comment"></i>,
     });
 
@@ -128,6 +141,17 @@ export default function RequirementOfferListItemHeader({
 
   function handleOnCloseModal() {
     setIsOpenModal(false);
+  }
+
+  function handleChat() {
+    redirectToChat({
+      userName: props.offer.subUser?.name ?? props.offer.user.name,
+      userId: props.offer.subUser?.uid ?? props.offer.user.uid,
+      title: props.requirementTitle,
+      requirementId: props.requirementId,
+      type: props.offer.type,
+      userImage: props.offer.subUser?.image ?? props.offer.user.image,
+    });
   }
 
   function onRateCancelError(id: string) {
@@ -199,6 +223,11 @@ export default function RequirementOfferListItemHeader({
       }
     }
   }
+
+  const orderId =
+    props.showActions.type === RequirementDetailType.ORDER
+      ? props.showActions.orderId
+      : undefined;
 
   return (
     <>
@@ -297,20 +326,93 @@ export default function RequirementOfferListItemHeader({
               <span className="req-btn-info">{t("finishedOffer")}</span>
             </div>
           )}
-          {props.showActions.type != RequirementDetailType.ADMIN && (
-            <Dropdown
-              trigger={["click"]}
-              menu={{ items }}
-              placement="bottomRight"
-            >
-              <Tooltip title={t("options")}>
-                <i
-                  className="fa-solid fa-ellipsis-vertical mas-acciones"
-                  style={{ color: "#fff", background: primaryColor }}
-                ></i>
-              </Tooltip>
-            </Dropdown>
-          )}
+          {props.showActions.type != RequirementDetailType.ADMIN &&
+            (isMobile ? (
+              /* ---------- Móvil: dropdown como antes ---------- */
+              <Dropdown
+                trigger={["click"]}
+                menu={{ items }}
+                placement="bottomRight"
+              >
+                <Tooltip title={t("options")}>
+                  <i
+                    className="fa-solid fa-ellipsis-vertical mas-acciones"
+                    style={{ color: "#fff", background: primaryColor }}
+                  ></i>
+                </Tooltip>
+              </Dropdown>
+            ) : (
+              /* ---------- Escritorio: botones en línea + chat ---------- */
+              <Flex gap={10} align="center">
+                {props.showActions.type === RequirementDetailType.REQUIREMENT && (
+                  <>
+                    {/* Botón CANCELAR (Rojo con borde, siguiendo tu ejemplo) */}
+                    {props.offer.state == OfferState.WINNER && (
+                      <ButtonContainer
+                        className="btn btn-default"
+                        onClick={() => onOpenModal(Action.CANCEL_PURCHASE_ORDER)}
+                      >
+                        {t(ActionLabel[Action.CANCEL_PURCHASE_ORDER])}
+                      </ButtonContainer>
+                    )}
+
+                    {/* Botón SELECCIONAR (Verde sólido) */}
+                    {props.offer.state == OfferState.ACTIVE &&
+                      props.showActions.requirement.state == RequirementState.PUBLISHED && (
+                        <ButtonContainer
+                          className="btn btn-default" //Cambia "btn-success" por la clase que uses para el verde
+                          onClick={() => onOpenModal(Action.SELECT_OFFER)}
+                          style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                        >
+                          <i className="fa-regular fa-circle-check"></i>
+                          {t(ActionLabel[Action.SELECT_OFFER])}
+                        </ButtonContainer>
+                      )}
+
+                    {/* Botón VALORAR (Gris) */}
+                    {props.offer.state == OfferState.CANCELED &&
+                      props.offer.canceledByCreator &&
+                      !props.offer.cancelRated && (
+                        <ButtonContainer
+                          className="btn btn-default" // O la clase que uses para botones grises
+                          onClick={() => onOpenModal(Action.RATE_CANCELED)}
+                        >
+                          {t(ActionLabel[Action.RATE_CANCELED])}
+                        </ButtonContainer>
+                      )}
+                  </>
+                )}
+
+                {/* Botón DESCARGAR */}
+                {orderId && (
+                  <ButtonContainer
+                    className="btn btn-default"
+                    onClick={() => downloadPdfOrder(orderId, props.offer.type)}
+                  >
+                    {t(ActionLabel[Action.DOWNLOAD_PURCHASE_ORDER])}
+                  </ButtonContainer>
+                )}
+
+                {/* Botón CHAT (Cuadrado) */}
+                <Tooltip title={t("chat")}>
+                  <ButtonContainer
+                    className="btn btn-default" // Si tienes una clase para botones de icono, úsala aquí
+                    onClick={handleChat}
+                    aria-label={t("chat")}
+                    style={{
+                      width: "32px",
+                      height: "32px",
+                      padding: 0,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <i className="fa-regular fa-comment" style={{ fontSize: "16px" }} />
+                  </ButtonContainer>
+                </Tooltip>
+              </Flex>
+            ))}
         </div>
       </div>
     </>

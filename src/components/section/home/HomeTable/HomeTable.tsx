@@ -11,7 +11,7 @@ interface HomeTableProps {
 
 export default function HomeTable(props: HomeTableProps) {
   return (
-    <>asas
+    <>
       <HomeFilters />
       <HomeMainTable
         content={props.content}

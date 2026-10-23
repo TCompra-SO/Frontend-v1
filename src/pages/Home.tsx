@@ -33,14 +33,14 @@ export default function Home(props: HomeProps) {
   useHomeSocket();
   const isPremium = useSelector((state: MainState) => state.mainUser.isPremium);
   const {
-    updateType,
+    // updateType,
     page,
     updatePage,
     updateUseFilter,
     requirementList,
     loadingRequirementList,
     totalRequirementList,
-    notificationSearchData,
+    //  notificationSearchData,
   } = useContext(HomeContext);
   const [tableContent, setTableContent] = useState<TableTypeHome>({
     type: TableTypes.HOME,
