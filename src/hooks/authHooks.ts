@@ -79,12 +79,14 @@ export function useRegister() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { showNotification } = useShowNotification();
+  const login = useLogin(); // ← AÑADIR
 
   async function register(responseData: any, email: string) {
     showNotification("success", t("registerUserSuccess"));
     dispatch(setUid(responseData.res?.uid));
     if (responseData.res?.name) dispatch(setUserName(responseData.res?.name));
     dispatch(setEmail(email));
+    await login(responseData); // ← AÑADIR
   }
 
   return register;
