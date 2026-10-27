@@ -175,9 +175,7 @@ export default function ValidateCode({
           equalServices(apiParams.service, validateCodeService()) &&
           !isForgotPassword
         ) {
-          login({
-            res: responseData,
-          });
+          login(responseData);   // ← pasar el body DIRECTO, no envuelto en { res }
         }
         console.log(responseData.res);
         console.log(responseData);
